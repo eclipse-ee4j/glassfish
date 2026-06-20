@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,40 +27,66 @@
     </parent>
 
     <artifactId>glassfish-external-tck-microprofile-config</artifactId>
-    <packaging>jar</packaging>
-
     <name>TCK: MicroProfile Config</name>
 
     <dependencies>
-        <!-- Required dependencies for Arquillian deployments -->
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-core-impl</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-tck</artifactId>
             <version>3.0.1</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.eclipse.microprofile.config</groupId>
-            <artifactId>microprofile-config-api</artifactId>
-            <scope>provided</scope>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-managed</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.protocol</groupId>
+            <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.shrinkwrap.resolver</groupId>
+            <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.config</groupId>
+            <artifactId>microprofile-config-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
+        <testResources>
+            <testResource>
+               <directory>${basedir}/src/test/resources</directory>
+               <filtering>true</filtering>
+            </testResource>
+        </testResources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Unpack the GF install -->
                     <execution>
                         <id>unpack-glassfish</id>
                     </execution>
@@ -72,6 +98,9 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>tck-suite.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.config:microprofile-config-tck</dependency>
+                    </dependenciesToScan>
 
                     <!-- Required for org.eclipse.microprofile.config.tck.CDIPropertyNameMatchingTest -->
                     <environmentVariables>
@@ -83,7 +112,6 @@
                         <config_ordinal>45</config_ordinal>
                         <customer_name>Bob</customer_name>
                     </environmentVariables>
-
                     <systemPropertyVariables>
                         <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
                         <customer.hobby>Tennis</customer.hobby>

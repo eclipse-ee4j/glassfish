@@ -39,7 +39,6 @@
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
 
         <glassfish.home>${project.build.directory}/glassfish7</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
         <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
 
         <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
@@ -60,9 +59,7 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
@@ -134,6 +131,9 @@
                     <execution>
                         <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
@@ -145,9 +145,6 @@
                                         match="@{key}=.*" replace="@{key}=@{value}" />
                                     </sequential>
                                 </macrodef>
-
-
-                                <!-- Change configuration -->
 
                                 <tck-setting key="webServerHome" value="${glassfish.home}/glassfish"/>
                                 <tck-setting key="webServerHost" value="localhost"/>
@@ -263,9 +260,6 @@
                                 </replace>
                             </target>
                         </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
                     </execution>
 
                     <execution>
@@ -277,13 +271,11 @@
                         <configuration>
                             <target xmlns:if="ant:if" xmlns:unless="ant:unless">
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpathref="maven.plugin.classpath" />
-                                <limit maxwait="20">
-                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
-                                        <arg value="start-domain"/>
-                                        <arg value="--suspend" if:set="glassfish.suspend"/>
-                                        <env key="AS_JAVA" value="${java.home}"/>
-                                    </exec>
-                                </limit>
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
+                                    <arg value="start-domain"/>
+                                    <arg value="--suspend" if:set="glassfish.suspend"/>
+                                    <env key="AS_JAVA" value="${java.home}"/>
+                                </exec>
 
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin" failonerror="true">
                                     <arg value="init.javadb"  />
@@ -293,23 +285,22 @@
 
                                 <!-- Deploy single test -->
                                 <sequential if:set="run.test" >
-                                  <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
-                                  <echo>Deploying from ${test.dir}</echo>
+                                    <dirname property="test.dir" file="${tck.home}/src/${run.test}"/>
+                                    <echo>Deploying from ${test.dir}</echo>
 
-                                  <exec executable="${ant.home}/bin/ant" dir="${test.dir}" failonerror="true">
-                                      <arg value="deploy"  />
-                                      <env key="AS_JAVA" value="${java.home}"/>
-                                      <env key="JAVA_HOME" value="${java.home}"/>
-                                  </exec>
+                                    <exec executable="${ant.home}/bin/ant" dir="${test.dir}" failonerror="true">
+                                        <arg value="deploy"  />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                    </exec>
                                 </sequential>
 
                                 <!-- Deploy all tests -->
                                 <sequential unless:set="run.test" >
-                                  <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
-                                      <arg value="deploy.all"  />
-                                      <env key="AS_JAVA" value="${java.home}"/>
-                                      <env key="JAVA_HOME" value="${java.home}"/>
-                                  </exec>
+                                    <exec executable="${ant.home}/bin/ant" dir="${tck.tests.home}" failonerror="true">
+                                        <arg value="deploy.all"  />
+                                        <env key="AS_JAVA" value="${java.home}"/>
+                                        <env key="JAVA_HOME" value="${java.home}"/>
+                                    </exec>
                                 </sequential>
                             </target>
                         </configuration>
@@ -332,6 +323,7 @@
                                     <arg value="runclient" if:set="run.test" />
                                     <env key="AS_JAVA" value="${java.home}"/>
                                     <env key="JAVA_HOME" value="${java.home}"/>
+                                    <env key="LANGUAGE" value="en" />
                                     <env key="LC_ALL" value="C" />
                                 </exec>
 
@@ -354,7 +346,6 @@
                                         <fail status="${testResult}" message="${contents}" />
                                     </then>
                                 </if>
-
                             </target>
                         </configuration>
                     </execution>

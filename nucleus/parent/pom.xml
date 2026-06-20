@@ -145,12 +145,12 @@
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
-
-        <commons-io.version>2.18.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
-        <javassist.version>3.30.2-GA</javassist.version>
-        <asm.version>9.8</asm.version>
+        <jboss.logging.version>3.6.3.Final</jboss.logging.version>
+        <javassist.version>3.31.0-GA</javassist.version>
+        <asm.version>9.10.1</asm.version>
         <jsch.version>0.2.24</jsch.version>
         <antlr.version>2.7.8</antlr.version>
         <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
@@ -160,15 +160,18 @@
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.4</jettison.version>
-        <mimepull.version>1.10.0</mimepull.version>
+        <jettison.version>1.5.5</jettison.version>
+        <mimepull.version>1.11.0</mimepull.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.6.0</easymock.version>
-        <junit.version>5.12.1</junit.version>
+        <junit.version>5.14.4</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
+        <slf4j.version>2.0.18</slf4j.version>
+        <shrinkwrap.version>3.3.7</shrinkwrap.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
 
         <surefire.version>3.5.6</surefire.version>
 
@@ -474,12 +477,6 @@
                 <artifactId>gmbal-api-only</artifactId>
                 <version>${gmbal.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.3.2</version>
-                <scope>test</scope>
-            </dependency>
 
             <!-- GlassFish Shoal -->
             <dependency>
@@ -540,7 +537,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.10</version>
+                <version>5.0.18</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -706,13 +703,31 @@
 
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-jupiter-commons</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -726,12 +741,25 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!-- Used by some dependencies (shrinkwrap, testcontainers) in older versions -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -746,6 +774,48 @@
                 <version>${jmh.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-api</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-api</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-postgresql</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>commons-io</groupId>
@@ -755,7 +825,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.17.0</version>
+                <version>${commons-lang3.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

@@ -32,7 +32,7 @@
     <artifactId>embedded-tests</artifactId>
     <packaging>pom</packaging>
     <name>GlassFish Embedded Tests</name>
-    
+
     <properties>
         <surefire.workdir>${project.build.directory}/surefire-workdir</surefire.workdir>
         <failsafe.workdir>${project.build.directory}/failsafe-workdir</failsafe.workdir>

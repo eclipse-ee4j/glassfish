@@ -79,6 +79,8 @@
     </scm>
 
     <properties>
+        <glassfish.version>${project.version}</glassfish.version>
+
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->

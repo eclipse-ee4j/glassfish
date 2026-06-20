@@ -139,8 +139,10 @@
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
-        <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
+        <!-- Build plugins -->
+        <command.security.maven.plugin.version>1.0.22</command.security.maven.plugin.version>
+        <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->
 
@@ -168,6 +170,8 @@
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
 
+        <surefire.version>3.5.6</surefire.version>
+
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
@@ -176,8 +180,12 @@
         <cyclonedx.skip>true</cyclonedx.skip>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
+
         <!-- Overrides the value from parent and enables the one we generate. -->
         <project.build.outputTimestamp>2025-05-27T15:36:05Z</project.build.outputTimestamp>
+
+        <!-- Show to developers by default -->
+        <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
@@ -792,6 +800,12 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <!--
+                         osgiversion-maven-plugin is used implicitly in modules
+                         of glassfish-jar packaging, as configured by
+                         glassfish-build-maven-plugin (GlassFishJarLifecycle.java).
+                         Managing it here allows its version to be under control.
+                    -->
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>osgiversion-maven-plugin</artifactId>
                     <version>${hk2.plugin.version}</version>
@@ -815,11 +829,11 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>6.0.0</version>
+                    <version>6.0.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>3.15.0</version>
                     <configuration>
                         <release>11</release>
                         <excludes>
@@ -854,7 +868,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -868,16 +882,11 @@
                             <artifactId>commons-io</artifactId>
                             <version>${commons-io.version}</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-utils</artifactId>
-                            <version>4.0.2</version>
-                        </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>3.12.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -886,15 +895,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -918,7 +927,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -954,7 +963,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -964,8 +973,10 @@
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
+                        <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
+                        <includes>**/*admin,**/*.adoc,**/*.bat,**/*.java,**/*.sh,**/*.xml</includes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                         adds all property files in the tree -->
                         <resourceExcludes>
@@ -973,6 +984,13 @@
                             **/deployment/**/src/main/resources/**/*,
                             **/target/**/*,
                         </resourceExcludes>
+                        <sourceDirectories>
+                            <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                            <sourceDirectory>src/main/assembly</sourceDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
+                            <sourceDirectory>src/main/resources</sourceDirectory>
+                            <sourceDirectory>src/test/java</sourceDirectory>
+                        </sourceDirectories>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -989,7 +1007,20 @@
                     </dependencies>
                     <executions>
                         <execution>
-                            <id>${project.groupId}-${project.artifactId}-checkstyle</id>
+                            <id>checkstyle-poms</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                            <configuration>
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.basedir}</sourceDirectory>
+                                </sourceDirectories>
+                                <includes>pom.xml</includes>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>checkstyle</id>
                             <goals>
                                 <goal>check</goal>
                             </goals>
@@ -1000,7 +1031,13 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.2.7</version>
+                    <version>3.2.8</version>
+                    <configuration>
+                        <gpgArguments>
+                            <arg>--pinentry-mode</arg>
+                            <arg>loopback</arg>
+                        </gpgArguments>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
@@ -1014,11 +1051,14 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
@@ -1027,7 +1067,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.3</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1037,7 +1077,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -1055,12 +1095,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1111,7 +1155,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>9.0.1</version>
+                    <version>10.0.0</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1132,7 +1176,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.20</version>
+                    <version>${command.security.maven.plugin.version}</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>
@@ -1140,7 +1184,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.18.0</version>
+                    <version>2.21.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -2132,7 +2176,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.12</jacoco.version>
+                <jacoco.version>0.8.14</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

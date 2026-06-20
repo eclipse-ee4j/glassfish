@@ -8722,11 +8722,18 @@ the parent class loader. It&#8217;s safe to set this to <code>false</code> only 
 module that does not interact with any other modules.</p>
 </div>
 <div class="paragraph">
-<p>For a number of packages, including <code>java.<strong></code> and <code>javax.</strong></code>, symbol
-resolution is always delegated to the parent class loader regardless of
-the delegate setting. This prevents applications from overriding core
-Java runtime classes or changing the API versions of specifications that
-are part of the Jakarta EE platform.</p>
+<p>For a number of packages, symbol resolution is always delegated to the
+parent class loader regardless of the delegate setting: <code>jakarta.<strong></code>,
+<code>javax.</strong></code>, <code>sun.<strong></code>, <code>org.xml.sax.</strong></code>, <code>org.w3c.dom.<strong></code>,
+<code>org.eclipse.microprofile.</strong></code>, and the Eclipse GlassFish Jakarta Faces
+(Mojarra) and JSP standard tag library implementations (<code>com.sun.faces.<strong></code>
+and <code>org.glassfish.wasp.taglibs.standard.</strong></code>). Classes in the <code>java.*</code>
+namespace are always loaded by the JVM bootstrap class loader. This
+prevents applications from overriding core Java runtime classes or
+changing the API versions of specifications that are part of the Jakarta
+EE platform. To use a Jakarta Faces implementation bundled in the
+application instead of the one provided by the Eclipse GlassFish, set the
+<code>useBundledJsf</code> property described in <a href="#gcfjs">Table C-24</a>.</p>
 </div></div></td>
 </tr>
 <tr>
@@ -8790,6 +8797,26 @@ WAR file is undefined.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, specifies that all JAR and
 ZIP files in the <code>WEB-INF/lib</code> directory that start with a period (<code>.</code>)
 are ignored by the class loader.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>useBundledJsf</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>If <code>true</code>, the web module uses the Jakarta Faces implementation that is
+bundled in its <code>WEB-INF/lib</code> directory instead of the Mojarra
+implementation provided by the Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>By default, the <code>jakarta.faces.<strong></code> API and the <code>com.sun.faces.</strong></code>
+implementation are always loaded from the Eclipse GlassFish, regardless of
+the <code>delegate</code> attribute. Set this property to <code>true</code> (together with
+<code>delegate="false"</code>) when the application bundles its own version of
+Jakarta Faces and must use it.</p>
+</div>
+<div class="paragraph">
+<p>The <code>useMyFaces</code> property is a synonym for <code>useBundledJsf</code> and has the
+same effect.</p>
+</div></div></td>
 </tr>
 </tbody>
 </table>
@@ -21617,7 +21644,7 @@ WSDL directory (<code>META-INF/wsdl</code> or <code>WEB-INF/wsdl</code>).</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-19 18:23:20 UTC
+Last updated 2026-06-20 12:58:57 UTC
 </div>
 </div>
 </body>

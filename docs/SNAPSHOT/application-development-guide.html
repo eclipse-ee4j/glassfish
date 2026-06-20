@@ -1699,11 +1699,61 @@ components or that acts as a web service client or endpoint. For details
 about <code>glassfish-web.xml</code>, see the <a href="application-deployment-guide.html#GSDPG">Eclipse GlassFish Application Deployment Guide</a>.</p>
 </div>
 <div class="paragraph">
-<p>For a number of packages, including <code>java.<strong></code> and <code>javax.</strong></code>, symbol
-resolution is always delegated to the parent class loader regardless of
-the <code>delegate</code> setting. This prevents applications from overriding core
-Java runtime classes or changing the API versions of specifications that
-are part of the Jakarta EE platform.</p>
+<p>For a number of packages, symbol resolution is always delegated to the
+parent class loader regardless of the <code>delegate</code> setting. This prevents
+applications from overriding core Java runtime classes or changing the
+API versions of specifications that are part of the Jakarta EE platform.
+The always-delegated packages are:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javax.*</code> - Java extension classes</p>
+</li>
+<li>
+<p><code>jakarta.*</code> - Jakarta EE specification APIs</p>
+</li>
+<li>
+<p><code>sun.*</code> - JRE internal classes</p>
+</li>
+<li>
+<p><code>org.xml.sax.<strong></code> and <code>org.w3c.dom.</strong></code> - SAX and DOM classes provided by
+the JRE</p>
+</li>
+<li>
+<p><code>org.eclipse.microprofile.*</code> - MicroProfile specification APIs</p>
+</li>
+<li>
+<p><code>com.sun.faces.<strong></code> and <code>org.glassfish.wasp.taglibs.standard.</strong></code> - the
+Jakarta Faces (Mojarra) implementation and JSP standard tag library
+bundled with the Eclipse GlassFish</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>In addition, classes in the <code>java.*</code> namespace are always loaded by the
+JVM bootstrap class loader and can never be overridden by an application.</p>
+</div>
+<div class="paragraph">
+<p>As a result, setting <code>delegate="false"</code> alone does not cause an
+application to use a Jakarta Faces implementation bundled in its
+<code>WEB-INF/lib</code> directory; the <code>jakarta.faces.<strong></code> API and the
+<code>com.sun.faces.</strong></code> implementation are still loaded from the server.
+To make the application use its own bundled Jakarta Faces implementation
+instead of the one provided by the Eclipse GlassFish, set the
+<code>useBundledJsf</code> property to <code>true</code> in the <code>class-loader</code> element of the
+<code>glassfish-web.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;glassfish-web-app</span> <span class="attribute-name">error-url</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
+  <span class="tag">&lt;class-loader</span> <span class="attribute-name">delegate</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">false</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+  <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">useBundledJsf</span><span class="delimiter">&quot;</span></span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">true</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+<span class="tag">&lt;/glassfish-web-app&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For details, see "<a href="application-deployment-guide.html#class-loader">class-loader</a>" in Eclipse GlassFish Application Deployment Guide.</p>
 </div>
 </div>
 <div class="sect2">
@@ -22820,7 +22870,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-19 18:24:11 UTC
+Last updated 2026-06-20 12:59:48 UTC
 </div>
 </div>
 </body>

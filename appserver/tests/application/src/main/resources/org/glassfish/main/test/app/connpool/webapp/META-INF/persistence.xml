@@ -16,24 +16,15 @@
     SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
 -->
-<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
-        
-    
+<persistence xmlns="http://xmlns.jcp.org/xml/ns/persistence"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1"
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="MyPU" transaction-type="JTA">
-                
         <properties>
-                        
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
-                        
             <property name="jakarta.persistence.schema-generation.create-source" value="metadata"/>
-                        
             <property name="jakarta.persistence.schema-generation.drop-source" value="metadata"/>
-                        
             <property name="jakarta.persistence.sql-load-script-source" value="META-INF/load.sql"/>
-                    
         </properties>
-            
     </persistence-unit>
-        
-
 </persistence>

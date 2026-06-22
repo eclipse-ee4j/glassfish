@@ -209,7 +209,7 @@ public class SSHKeyInstaller {
         ProcessManager pm = new ProcessManager(cmdLine);
 
         LOG.log(DEBUG, () -> "Command = " + log);
-        pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
+        pm.setTimeout(DEFAULT_TIMEOUT_MSEC);
 
         if (LOG.isLoggable(DEBUG)) {
             pm.setEcho(true);

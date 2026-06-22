@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -398,7 +398,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] { path2Auths, user };
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
             pm.execute();
             auths.append(pm.getStdout());
             final StringTokenizer st = new StringTokenizer(pm.getStdout(), at);
@@ -421,7 +421,7 @@ public final class SMFService extends ServiceAdapter {
         try {
             final String[] cmd = new String[] {"/usr/bin/svcs", sn};
             ProcessManager pm = new ProcessManager(cmd);
-            pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+            pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
             int exitCode = pm.execute();
             if (exitCode == 0) {
                 exists = true;
@@ -461,7 +461,7 @@ public final class SMFService extends ServiceAdapter {
     private void validateService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "validate", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+        pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
         pm.execute();
         if (info.trace) {
             printOut("Validated the SMF Service: " + info.fqsn + " using: " + SMFService.SVCCFG);
@@ -471,7 +471,7 @@ public final class SMFService extends ServiceAdapter {
     private boolean importService() throws Exception {
         final String[] cmda = new String[] { SMFService.SVCCFG, "import", getManifestFile().getAbsolutePath() };
         final ProcessManager pm = new ProcessManager(cmda);
-        pm.setTimeoutMsec(DEFAULT_SERVICE_TIMEOUT);
+        pm.setTimeout(DEFAULT_SERVICE_TIMEOUT);
         if (info.dryRun) {
             cleanupManifest();
         }

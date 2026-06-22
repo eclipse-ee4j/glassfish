@@ -268,7 +268,7 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
         if (logger.isLoggable(Level.INFO)) {
             logger.info("Running command on DAS: " + commandListToString(fullcommand));
         }
-        pm.setTimeoutMsec(DEFAULT_TIMEOUT_MSEC);
+        pm.setTimeout(DEFAULT_TIMEOUT_MSEC);
 
         if (logger.isLoggable(Level.FINER)) {
             pm.setEcho(true);

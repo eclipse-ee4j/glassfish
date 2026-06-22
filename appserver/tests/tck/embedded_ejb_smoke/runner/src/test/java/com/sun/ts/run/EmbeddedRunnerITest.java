@@ -15,8 +15,8 @@
  */
 package com.sun.ts.run;
 
-import com.sun.javatest.Status;
 import com.sun.ts.lib.harness.ExecTSTestCmd;
+import com.sun.javatest.Status;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -125,10 +125,8 @@ public class EmbeddedRunnerITest {
 
         return String.join(":", List.of(
             localRepository + "/org/glassfish/main/tests/tck/tsharness/" + glassfishVersion + "/tsharness-" + glassfishVersion + ".jar",
-            localRepository + "/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar",
             System.getProperty("glassfish.home") + "/glassfish/lib/embedded/glassfish-embedded-static-shell.jar",
             copiedEjbJar.toString()
         ));
     }
-
 }

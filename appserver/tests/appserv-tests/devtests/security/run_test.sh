@@ -38,7 +38,7 @@ test_run(){
     "${OPENDS_HOME}/bin/start-ds"
     "${S1AS_HOME}/bin/asadmin" start-database
     "${S1AS_HOME}/bin/asadmin" start-domain ${GLASSFISH_SUSPEND}
-    
+
     cd "${APS_HOME}/devtests/security"
 
     ant "${TARGET}" | tee "${TEST_RUN_LOG}"
@@ -73,7 +73,7 @@ merge_result_files(){
 run_test_id(){
   # setup opendj (fork of opends)
   OPENDJ_VERSION='4.4.11'
-  OPENDJ_ZIP="${WORKSPACE}/bundles/opendj-${OPENDJ_VERSION}.zip"
+  OPENDJ_ZIP="${BUNDLES_DIR}/opendj-${OPENDJ_VERSION}.zip"
   if [ ! -f "${OPENDJ_ZIP}" ]; then
     curl -L -k https://github.com/OpenIdentityPlatform/OpenDJ/releases/download/4.4.11/opendj-4.4.11.zip > "${OPENDJ_ZIP}"
   fi
@@ -81,7 +81,7 @@ run_test_id(){
   rm -rf -d "${OPENDS_HOME}"
   unzip -o "${OPENDJ_ZIP}" -d "${WORKSPACE}"
 
-  unzip_test_resources "${WORKSPACE}/bundles/glassfish.zip"
+  unzip_test_resources "${BUNDLES_DIR}/glassfish.zip"
   cd `dirname ${0}`
   test_init
   get_test_target ${1}

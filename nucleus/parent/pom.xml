@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,13 +18,16 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+    child.project.url.inherit.append.path="false"
+    >
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>1.0.9</version>
+        <version>2.0.4</version>
         <relativePath />
     </parent>
 
@@ -33,8 +36,8 @@
     <version>7.0.26-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Nucleus Parent</name>
-    <description>Glassfish Nucleus Parent Project</description>
+    <name>GlassFish Nucleus Parent</name>
+    <description>${project.name} ${project.version}</description>
     <url>https://projects.eclipse.org/projects/ee4j.glassfish</url>
     <licenses>
         <license>
@@ -59,15 +62,19 @@
         </mailingList>
     </mailingLists>
 
-    <scm>
+    <scm child.scm.connection.inherit.append.path="false"
+     child.scm.developerConnection.inherit.append.path="false"
+     child.scm.url.inherit.append.path="false">
         <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
         <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
         <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
+
     <issueManagement>
         <system>IssueTracker</system>
         <url>https://github.com/eclipse-ee4j/glassfish/issues</url>
     </issueManagement>
+
     <properties>
         <!-- Jakarta Expression Language -->
         <jakarta.el-api.version>5.0.1</jakarta.el-api.version>
@@ -132,42 +139,56 @@
         <shoal.version>3.1.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
+
+        <!-- Build plugins -->
+        <command.security.maven.plugin.version>1.0.22</command.security.maven.plugin.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
 
-
         <!-- 3rd party dependencies -->
-
-        <commons-io.version>2.18.0</commons-io.version>
+        <commons-io.version>2.22.0</commons-io.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.6.1.Final</jboss.logging.version>
-        <javassist.version>3.30.2-GA</javassist.version>
-        <asm.version>9.8</asm.version>
+        <jboss.logging.version>3.6.3.Final</jboss.logging.version>
+        <javassist.version>3.31.0-GA</javassist.version>
+        <asm.version>9.10.1</asm.version>
         <jsch.version>0.2.24</jsch.version>
         <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.15</ant.version>
-        <ant.external.version>1.10.2</ant.external.version>
-        <jackson.version>2.18.3</jackson.version>
-        <fasterxml.classmate.version>1.7.0</fasterxml.classmate.version>
+        <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
+        <ant.version>1.10.17</ant.version>
+        <ant-osgi.version>1.10.17</ant-osgi.version>
+        <jackson.version>2.22.0</jackson.version>
+        <jackson-annotations.version>2.22</jackson-annotations.version>
+        <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
-        <jettison.version>1.5.4</jettison.version>
-        <mimepull.version>1.10.0</mimepull.version>
+        <jettison.version>1.5.5</jettison.version>
+        <mimepull.version>1.11.0</mimepull.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
         <easymock.version>5.6.0</easymock.version>
-        <junit.version>5.12.1</junit.version>
+        <junit.version>5.14.4</junit.version>
         <jmh.version>1.37</jmh.version>
         <osgi-resource-locator.version>1.0.4</osgi-resource-locator.version>
+        <slf4j.version>2.0.18</slf4j.version>
+        <shrinkwrap.version>3.3.7</shrinkwrap.version>
+        <testcontainers.version>2.0.5</testcontainers.version>
+
+        <surefire.version>3.5.6</surefire.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.commonResourcesDirectory>${project.build.directory}/common-resources</project.build.commonResourcesDirectory>
         <legal.doc.source>${project.build.commonResourcesDirectory}/legal</legal.doc.source>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
+        <cyclonedx.skip>true</cyclonedx.skip>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>
+
         <!-- Overrides the value from parent and enables the one we generate. -->
         <project.build.outputTimestamp>2025-05-27T15:36:05Z</project.build.outputTimestamp>
+
+        <!-- Show to developers by default -->
+        <checkstyle.consoleOutput>true</checkstyle.consoleOutput>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
         <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
@@ -371,7 +392,7 @@
                 <exclusions>
                     <exclusion>
                         <groupId>org.osgi</groupId>
-                        <artifactId>org.osgi.core</artifactId>
+                        <artifactId>osgi.core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -404,10 +425,10 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
             <dependency>
                 <groupId>org.glassfish.grizzly</groupId>
                 <artifactId>grizzly-npn-api</artifactId>
-                <!-- To provide AlpnServerNegotiator interface for grizzly-http2 -->
                 <version>${grizzly.npn.version}</version>
             </dependency>
 
@@ -455,12 +476,6 @@
                 <groupId>org.glassfish.gmbal</groupId>
                 <artifactId>gmbal-api-only</artifactId>
                 <version>${gmbal.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.shrinkwrap.resolver</groupId>
-                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-                <version>3.3.2</version>
-                <scope>test</scope>
             </dependency>
 
             <!-- GlassFish Shoal -->
@@ -522,7 +537,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.10</version>
+                <version>5.0.18</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -656,7 +671,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-annotations.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -688,13 +703,31 @@
 
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
+                <artifactId>junit-jupiter</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-jupiter-commons</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.junit.platform</groupId>
+                <artifactId>junit-platform-suite-engine</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
@@ -708,12 +741,25 @@
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
                 <version>${easymock.version}</version>
+                <scope>test</scope>
                 <exclusions>
                     <exclusion>
                         <groupId>org.ow2.asm</groupId>
                         <artifactId>asm</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <!-- Used by some dependencies (shrinkwrap, testcontainers) in older versions -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-jdk14</artifactId>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -728,6 +774,48 @@
                 <version>${jmh.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>javax.*</groupId>
+                        <artifactId>*</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-impl-api</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-api</artifactId>
+                <version>${shrinkwrap.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-junit-jupiter</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers-postgresql</artifactId>
+                <version>${testcontainers.version}</version>
+                <scope>test</scope>
+            </dependency>
 
             <dependency>
                 <groupId>commons-io</groupId>
@@ -737,18 +825,13 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.17.0</version>
+                <version>${commons-lang3.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
-                <artifactId>ant</artifactId>
-                <version>${ant.external.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.ant</groupId>
-                <artifactId>ant-launcher</artifactId>
-                <version>1.10.15</version>
+                <artifactId>ant-osgi</artifactId>
+                <version>${ant-osgi.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.github.mwiede</groupId>
@@ -787,6 +870,12 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <!--
+                         osgiversion-maven-plugin is used implicitly in modules
+                         of glassfish-jar packaging, as configured by
+                         glassfish-build-maven-plugin (GlassFishJarLifecycle.java).
+                         Managing it here allows its version to be under control.
+                    -->
                     <groupId>org.glassfish.hk2</groupId>
                     <artifactId>osgiversion-maven-plugin</artifactId>
                     <version>${hk2.plugin.version}</version>
@@ -798,16 +887,23 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.glassfish.external</groupId>
+                            <artifactId>ant-osgi</artifactId>
+                            <version>${ant-osgi.version}</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>6.0.0</version>
+                    <version>6.0.2</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.13.0</version>
+                    <version>3.15.0</version>
                     <configuration>
                         <release>11</release>
                         <excludes>
@@ -842,7 +938,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.11.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
@@ -856,16 +952,11 @@
                             <artifactId>commons-io</artifactId>
                             <version>${commons-io.version}</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.plexus</groupId>
-                            <artifactId>plexus-utils</artifactId>
-                            <version>4.0.2</version>
-                        </dependency>
                     </dependencies>
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
+                    <version>3.12.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
                         <notimestamp>false</notimestamp>
@@ -874,15 +965,15 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
-                    <version>3.4.1</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -906,7 +997,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                     <configuration>
                         <environmentVariables>
                             <LANG>en</LANG>
@@ -942,7 +1033,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-report-plugin</artifactId>
-                    <version>3.5.2</version>
+                    <version>${surefire.version}</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -952,8 +1043,10 @@
                         <suppressionsLocation>org/glassfish/qa/config/checkstyle/checkstyle-suppressions.xml</suppressionsLocation>
                         <includeTestSourceDirectory>true</includeTestSourceDirectory>
                         <skip>${checkstyle.skip}</skip>
+                        <consoleOutput>${checkstyle.consoleOutput}</consoleOutput>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*, **/module-info.java</excludes>
+                        <includes>**/*admin,**/*.adoc,**/*.bat,**/*.java,**/*.sh,**/*.xml</includes>
                         <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                         adds all property files in the tree -->
                         <resourceExcludes>
@@ -961,6 +1054,13 @@
                             **/deployment/**/src/main/resources/**/*,
                             **/target/**/*,
                         </resourceExcludes>
+                        <sourceDirectories>
+                            <sourceDirectory>src/main/asciidoc</sourceDirectory>
+                            <sourceDirectory>src/main/assembly</sourceDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
+                            <sourceDirectory>src/main/resources</sourceDirectory>
+                            <sourceDirectory>src/test/java</sourceDirectory>
+                        </sourceDirectories>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -972,12 +1072,25 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>10.21.4</version>
+                            <version>10.26.1</version>
                         </dependency>
                     </dependencies>
                     <executions>
                         <execution>
-                            <id>${project.groupId}-${project.artifactId}-checkstyle</id>
+                            <id>checkstyle-poms</id>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                            <phase>verify</phase>
+                            <configuration>
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.basedir}</sourceDirectory>
+                                </sourceDirectories>
+                                <includes>pom.xml</includes>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>checkstyle</id>
                             <goals>
                                 <goal>check</goal>
                             </goals>
@@ -988,7 +1101,13 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-gpg-plugin</artifactId>
-                    <version>3.2.7</version>
+                    <version>3.2.8</version>
+                    <configuration>
+                        <gpgArguments>
+                            <arg>--pinentry-mode</arg>
+                            <arg>loopback</arg>
+                        </gpgArguments>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.cyclonedx</groupId>
@@ -996,17 +1115,20 @@
                     <version>2.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <groupId>io.github.download-maven-plugin</groupId>
                     <artifactId>download-maven-plugin</artifactId>
-                    <version>1.13.0</version>
+                    <version>2.0.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.3.1</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.3.1</version>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-site-plugin</artifactId>
@@ -1015,7 +1137,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>exec-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.3</version>
                     <configuration>
                         <environmentVariables>
                             <AS_JAVA>${java.home}</AS_JAVA>
@@ -1025,11 +1147,17 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.7.1</version>
+                    <version>3.8.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>3.1.3</version>
+                    <version>3.1.4</version>
+                    <configuration>
+                        <!-- true would disable alternative deployment as the last module has deployment disabled -->
+                        <deployAtEnd>false</deployAtEnd>
+                        <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
+                        <skip>${deploy.skip}</skip>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <artifactId>maven-install-plugin</artifactId>
@@ -1037,12 +1165,16 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.4.2</version>
+                    <version>3.5.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>build-helper-maven-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.1</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-invoker-plugin</artifactId>
+                    <version>3.10.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.glassfish.copyright</groupId>
@@ -1093,7 +1225,7 @@
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
-                    <version>9.0.1</version>
+                    <version>10.0.0</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>
@@ -1114,7 +1246,7 @@
                 <plugin>
                     <groupId>org.glassfish.build</groupId>
                     <artifactId>command-security-maven-plugin</artifactId>
-                    <version>1.0.20</version>
+                    <version>${command.security.maven.plugin.version}</version>
                     <configuration>
                         <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                     </configuration>
@@ -1122,7 +1254,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.18.0</version>
+                    <version>2.21.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -1149,21 +1281,6 @@
                                             <comparisonMethod>maven</comparisonMethod>
                                         </rule>
                                         <rule>
-                                            <groupId>org.glassfish.external</groupId>
-                                            <artifactId>ant</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>3.2-b..</version>
-                                                </ignoreVersion>
-                                                <ignoreVersion>
-                                                    <type>regex</type>
-                                                    <version>10.0-b..</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
-                                        </rule>
-                                        <rule>
                                             <groupId>org.glassfish.hk2</groupId>
                                             <artifactId>osgi-resource-locator</artifactId>
                                             <ignoreVersions>
@@ -1174,17 +1291,6 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>2.4.0</version>
-                                                </ignoreVersion>
-                                            </ignoreVersions>
-                                            <comparisonMethod>maven</comparisonMethod>
-                                        </rule>
-                                        <rule>
-                                            <groupId>org.glassfish.external</groupId>
-                                            <artifactId>ant</artifactId>
-                                            <ignoreVersions>
-                                                <ignoreVersion>
-                                                    <type>range</type>
-                                                    <version>[2,)</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                             <comparisonMethod>maven</comparisonMethod>
@@ -2068,14 +2174,6 @@
             </plugin>
 
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <retryFailedDeploymentCount>10</retryFailedDeploymentCount>
-                    <skip>${deploy.skip}</skip>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
             </plugin>
             <plugin>
@@ -2085,98 +2183,30 @@
                 <groupId>org.glassfish.build</groupId>
                 <artifactId>command-security-maven-plugin</artifactId>
             </plugin>
-            <!--
-                Disables sbom generation inherited from parent
-            -->
-            <plugin>
-                <groupId>org.cyclonedx</groupId>
-                <artifactId>cyclonedx-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase></phase>
-                        <goals>
-                            <goal>makeAggregateBom</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <id>mac</id>
-            <activation>
-                <file>
-                    <exists>${java.home}/../Classes/classes.jar</exists>
-                </file>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>com.sun</groupId>
-                    <artifactId>tools-jar</artifactId>
-                    <version>1</version>
-                    <scope>system</scope>
-                    <systemPath>${java.home}/../Classes/classes.jar</systemPath>
-                </dependency>
-            </dependencies>
+            <id>ci</id>
+            <properties>
+                <!-- Limit unuseful noise on CI while developers should see it -->
+                <checkstyle.consoleOutput>false</checkstyle.consoleOutput>
+            </properties>
         </profile>
         <profile>
             <id>oss-release</id>
             <properties>
+                <!-- Already checked with every PR -->
+                <checkstyle.skip>true</checkstyle.skip>
+                <maven.test.skip>true</maven.test.skip>
                 <!-- Until we fix everything -->
                 <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+                <release.projectName>Eclipse GlassFish</release.projectName>
+                <release.autoPublish>false</release.autoPublish>
+                <release.waitUntil>published</release.waitUntil>
+                <cyclonedx.skip>false</cyclonedx.skip>
             </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar-no-fork</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-javadocs</id>
-                                <goals>
-                                    <goal>jar</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.cyclonedx</groupId>
-                        <artifactId>cyclonedx-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>makeAggregateBom</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
         <profile>
             <id>fast</id>
@@ -2216,7 +2246,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.12</jacoco.version>
+                <jacoco.version>0.8.14</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>
@@ -2242,8 +2272,7 @@
                     </plugins>
                 </pluginManagement>
                 <plugins>
-                    <plugin>
-                        <!-- Generates @argLine for surefire and failsafe plugins -->
+                    <plugin><!-- Generates @argLine for surefire and failsafe plugins -->
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>
@@ -2279,6 +2308,23 @@
             </build>
         </profile>
 
+        <profile>
+            <id>mac</id>
+            <activation>
+                <file>
+                    <exists>${java.home}/../Classes/classes.jar</exists>
+                </file>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>com.sun</groupId>
+                    <artifactId>tools-jar</artifactId>
+                    <version>1</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/../Classes/classes.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
         <profile>
             <id>windows</id>
             <activation>

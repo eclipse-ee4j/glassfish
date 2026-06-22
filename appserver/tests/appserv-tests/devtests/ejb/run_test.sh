@@ -279,9 +279,9 @@ get_test_target(){
 
 run_test_id(){
   if [[ ${1} = "ejb_web_all" ]]; then
-          unzip_test_resources ${WORKSPACE}/bundles/web.zip
+          unzip_test_resources ${BUNDLES_DIR}/web.zip
   else
-          unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
+          unzip_test_resources ${BUNDLES_DIR}/glassfish.zip
   fi
   dname=`pwd`
   cd `dirname ${0}`

@@ -236,7 +236,7 @@ public class Asadmin {
         command.addAll(parameters);
 
         final ProcessManager processManager = new ProcessManager(command);
-        processManager.setTimeoutMsec(timeout);
+        processManager.setTimeout(timeout);
         processManager.setEcho(false);
         for (Entry<String, String> env : this.environment.entrySet()) {
             processManager.setEnvironment(env.getKey(), env.getValue());

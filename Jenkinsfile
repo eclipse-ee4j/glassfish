@@ -257,8 +257,10 @@ pipeline {
    }
 
    options {
-      buildDiscarder(logRotator(numToKeepStr: '2'))
+      buildDiscarder(logRotator(numToKeepStr: '2', artifactNumToKeepStr: '1'))
 
+      disableConcurrentBuilds()
+     
       parallelsAlwaysFailFast()
 
       // to allow re-running a test stage

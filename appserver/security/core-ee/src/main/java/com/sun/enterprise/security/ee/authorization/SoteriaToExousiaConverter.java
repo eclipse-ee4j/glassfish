@@ -15,12 +15,13 @@
  */
 package com.sun.enterprise.security.ee.authorization;
 
+import jakarta.security.jacc.WebResourcePermission;
 import jakarta.servlet.ServletContext;
 
 import java.security.Permissions;
 
 import org.glassfish.exousia.permissions.JakartaPermissions;
-import org.glassfish.soteria.rest.RestPermissions;
+import org.glassfish.soteria.rest.RestConstraintsStore;
 
 /**
  * This class converts from staged permissions by Soteria to Exousia JakartaPermissions.
@@ -36,38 +37,72 @@ public class SoteriaToExousiaConverter {
     public static JakartaPermissions getStagedPermissionsFromContext(ServletContext servletContext) {
         JakartaPermissions jakartaPermissions = new JakartaPermissions();
 
-        if (servletContext != null && RestPermissions.hasPermissions(servletContext)) {
+        if (servletContext != null && RestConstraintsStore.hasConstraints(servletContext)) {
 
-            var excluded = RestPermissions.getExcluded(servletContext);
-            if (excluded != null) {
-                excluded.elementsAsStream()
-                        .forEach(e -> jakartaPermissions.getExcluded().add(e));
+            for (var constraints : RestConstraintsStore.getConstraints(servletContext).values()) {
+                for (var constraint : constraints) {
+
+                    WebResourcePermission permission =
+                        new WebResourcePermission(
+                            toStagedUrlPatternName(constraint.fullTemplatePath()), constraint.httpMethod());
+
+                    var securityConstraint = constraint.securityConstraint();
+
+                    switch (securityConstraint.type()) {
+                        case DENY_ALL:
+                            jakartaPermissions.getExcluded().add(permission);
+                            break;
+
+                        case PERMIT_ALL:
+                            jakartaPermissions.getUnchecked().add(permission);
+                            break;
+
+                        case ROLES_ALLOWED:
+                            for (String role : securityConstraint.roles()) {
+                                jakartaPermissions.getPerRole().computeIfAbsent(role, e -> new Permissions()).add(permission);
+                            }
+                            break;
+
+                        default:
+                            throw new IllegalStateException("Unknown access rule type: " + securityConstraint.type());
+                        }
+                }
+
             }
 
-            var unchecked = RestPermissions.getUnchecked(servletContext);
-            if (unchecked != null) {
-                unchecked.elementsAsStream()
-                         .forEach(e -> jakartaPermissions.getUnchecked().add(e));
-            }
-
-            var perRole = RestPermissions.getPerRole(servletContext);
-            if (perRole != null) {
-                perRole.entrySet().stream()
-                       .forEach(e -> jakartaPermissions.getPerRole().put(e.getKey(), copy(e.getValue())));
-            }
         }
 
         return jakartaPermissions;
     }
 
-    private static Permissions copy(Permissions source) {
-        Permissions target = new Permissions();
 
-        if (source != null) {
-            source.elementsAsStream()
-                  .forEach(target::add);
+    private static final String ESCAPED_COLON = "%3A";
+
+
+    /**
+     * Derives a context-relative, unqualified URL pattern name suitable for
+     * staging as the name argument of WebResourcePermission.
+     *
+     * This is not the final qualified URLPatternSpec. The normal constraints
+     * transformer will create the qualified form later.
+     */
+    public static String toStagedUrlPatternName(String path) {
+        if (containsTemplate(path)) {
+            throw new IllegalArgumentException(
+                "URI templates are not supported for JACC staging yet: " + path);
         }
 
-        return target;
+        if (path.equals("/")) {
+            return "";
+        }
+
+        return path.replace(":", ESCAPED_COLON);
     }
+
+
+    private static boolean containsTemplate(String path) {
+        return path.indexOf('{') >= 0 || path.indexOf('}') >= 0;
+    }
+
+
 }

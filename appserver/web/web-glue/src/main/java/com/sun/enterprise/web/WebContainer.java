@@ -1745,28 +1745,19 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
         if (webBundleDescriptor != null) {
             String resourceType = webModuleConfig.getObjectType();
-            boolean isSystem = resourceType != null && resourceType.startsWith("system-");
+            webModule.setSystemApplication(resourceType != null && resourceType.startsWith("system-"));
 
-            webModule.setSystemApplication(isSystem);
-
-            // Security will generate policy for system default web module
             if (!webModuleName.startsWith(DEFAULT_WEB_MODULE_NAME)) {
                 // TODO : v3 : dochez Need to remove dependency on security
                 Realm realm = serviceLocator.getService(Realm.class);
-                if ("null".equals(eeApplication)) {
-                    /*
-                     * Standalone webapps inherit the realm referenced by the virtual server on which they are being deployed, unless they
-                     * specify their own
-                     */
-                    if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(webBundleDescriptor, isSystem, virtualServer.getAuthRealmName());
-                        webModule.setRealm(realm);
-                    }
-                } else {
-                    if (realm != null && realm instanceof RealmInitializer) {
-                        ((RealmInitializer) realm).initializeRealm(webBundleDescriptor, isSystem, null);
-                        webModule.setRealm(realm);
-                    }
+
+                if (realm instanceof RealmInitializer realmInitializer) {
+                    String realmName = "null".equals(eeApplication)
+                            ? virtualServer.getAuthRealmName()
+                            : null;
+
+                    realmInitializer.initializeRealm(webBundleDescriptor, realmName);
+                    webModule.setRealm(realm);
                 }
             }
 

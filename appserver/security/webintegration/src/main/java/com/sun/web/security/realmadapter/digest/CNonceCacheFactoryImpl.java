@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.web.security;
+package com.sun.web.security.realmadapter.digest;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.CNonceCacheFactory;
@@ -79,6 +79,7 @@ public class CNonceCacheFactoryImpl implements CNonceCacheFactory, PostConstruct
         boolean haEnabled = (clusterName != null) && (instanceName != null) && (storeName != null);
         CNonceCache cache = null;
         Map<String, String> map = new HashMap<>();
+
         if (haEnabled) {
             cache = cHANonceCacheProvider.get();
             map.put(CLUSTER_NAME_PROP, clusterName);
@@ -86,9 +87,11 @@ public class CNonceCacheFactoryImpl implements CNonceCacheFactory, PostConstruct
         } else {
             cache = cNonceCacheProvider.get();
         }
+
         if (cache != null) {
             cache.init(cnonceCacheSize, storeName, nonceValidity, map);
         }
+
         return cache;
     }
 

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.web.security;
+package com.sun.web.security.realmadapter.digest;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

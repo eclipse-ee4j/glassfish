@@ -2141,10 +2141,10 @@ public class WebModule extends PwcWebModule implements Context {
             }
         }
 
-        if (realm instanceof RealmInitializer) {
-            ((RealmInitializer) realm).initializeRealm(this.getWebBundleDescriptor(), false, ((VirtualServer) parent).getAuthRealmName());
-            ((RealmInitializer) realm).setVirtualServer(getParent());
-            ((RealmInitializer) realm).updateWebSecurityManager();
+        if (realm instanceof RealmInitializer realmInitializer) {
+            realmInitializer.initializeRealm(this.getWebBundleDescriptor(), ((VirtualServer) parent).getAuthRealmName());
+            realmInitializer.setVirtualServer(getParent());
+            realmInitializer.updateWebSecurityManager();
             setRealm(realm);
         }
 

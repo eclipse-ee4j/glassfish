@@ -250,7 +250,6 @@ public class VersioningUtils {
      * @return a valid repository name
      */
     public static final String getRepositoryName(String appName) {
-
         return appName.replace(EXPRESSION_SEPARATOR, REPOSITORY_DASH);
     }
 
@@ -262,14 +261,13 @@ public class VersioningUtils {
      * @throws VersioningSyntaxException if getUntaggedName
      * throws exception
      */
-    public static final Boolean isUntagged(String appName)
-            throws VersioningSyntaxException {
-
+    public static final Boolean isUntagged(String appName) throws VersioningSyntaxException {
         Boolean isUntagged = false;
         String untaggedName = VersioningUtils.getUntaggedName(appName);
         if (untaggedName != null && untaggedName.equals(appName)) {
             isUntagged = true;
         }
+
         return isUntagged;
     }
 

@@ -19253,34 +19253,34 @@ the properties defined for the lifecycle module.</p>
 <div class="sect2">
 <h3 id="the-server-lifecycle-event-context"><a class="anchor" href="#the-server-lifecycle-event-context"></a>The Server Lifecycle Event Context</h3>
 <div class="paragraph">
-<p>The com.sun.appserv.server.LifecycleEventContext interface exposes
+<p>The <code>com.sun.appserv.server.LifecycleEventContext</code> interface exposes
 runtime information about the server. The lifecycle event context is
 created when the <code>LifecycleEvent</code> class is instantiated at server
-initialization. The LifecycleEventContext interface defines these
+initialization. The <code>LifecycleEventContext</code> interface defines these
 methods:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>public java.lang.String[].getCmdLineArgs()</code></p>
+<p><code>public java.lang.String[] getCmdLineArgs()</code></p>
 <div class="paragraph">
 <p>This method returns the server startup command-line arguments.</p>
 </div>
 </li>
 <li>
-<p><code>public java.lang.String.getInstallRoot()</code></p>
+<p><code>public java.lang.String getInstallRoot()</code></p>
 <div class="paragraph">
 <p>This method returns the server installation root directory.</p>
 </div>
 </li>
 <li>
-<p><code>public java.lang.String.getInstanceName()</code></p>
+<p><code>public java.lang.String getInstanceName()</code></p>
 <div class="paragraph">
 <p>This method returns the server instance name.</p>
 </div>
 </li>
 <li>
-<p><code>public javax.naming.InitialContext.getInitialContext()</code></p>
+<p><code>public javax.naming.InitialContext getInitialContext()</code></p>
 <div class="paragraph">
 <p>This method returns the initial JNDI naming context. The naming
 environment for lifecycle modules is installed after the
@@ -22870,7 +22870,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-20 12:59:48 UTC
+Last updated 2026-06-24 08:59:26 UTC
 </div>
 </div>
 </body>

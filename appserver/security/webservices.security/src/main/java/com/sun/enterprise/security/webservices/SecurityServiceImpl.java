@@ -25,6 +25,7 @@ import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
 import com.sun.enterprise.security.webservices.client.ClientSecurityPipeCreator;
 import com.sun.enterprise.web.WebModule;
 import com.sun.web.security.RealmAdapter;
+import com.sun.web.security.realmadapter.CatalinaRealmToLoginModule;
 import com.sun.xml.ws.assembler.metro.dev.ClientPipelineHook;
 
 import jakarta.inject.Inject;
@@ -119,9 +120,10 @@ public class SecurityServiceImpl implements SecurityService {
                 return authenticated;
             }
 
-            // Very questionable use of RealmAdapter!
-            RealmAdapter realmAdapter = new RealmAdapter(realmName, endpoint.getBundleDescriptor().getModuleID());
-            authenticated = realmAdapter.authenticate(request, webPrincipal);
+            CatalinaRealmToLoginModule catalinaRealmToLoginModule =
+                new CatalinaRealmToLoginModule(realmName, null, endpoint.getBundleDescriptor().getModuleID(), null, null, () -> null);
+            authenticated = catalinaRealmToLoginModule.authenticate(request, webPrincipal);
+
             if (authenticated) {
                 sendAuthenticationEvents(true, request.getRequestURI(), webPrincipal);
             } else {
@@ -179,8 +181,7 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     public boolean isUserInRole(WebModule webModule, Principal principal, String servletName, String role) {
-        if (webModule.getRealm() instanceof RealmAdapter) {
-            RealmAdapter realmAdapter = (RealmAdapter) webModule.getRealm();
+        if (webModule.getRealm() instanceof RealmAdapter realmAdapter) {
             return realmAdapter.hasRole(servletName, principal, role);
         }
 

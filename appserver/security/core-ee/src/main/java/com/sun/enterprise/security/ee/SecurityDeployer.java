@@ -59,7 +59,7 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.HAUtil;
-import org.glassfish.soteria.rest.RestPermissions;
+import org.glassfish.soteria.rest.RestConstraintsStore;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
@@ -296,12 +296,12 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
         try {
             if (webBundleDescriptor != null) {
-                if (webBundleDescriptor.isPolicyModified() || RestPermissions.hasPermissions(servletContext)) {
+                if (webBundleDescriptor.isPolicyModified() || RestConstraintsStore.hasConstraints(servletContext)) {
                     // Redo policy translation for web module
                     loadWebPolicy(servletContext, webBundleDescriptor, true);
 
                     webBundleDescriptor.setPolicyModified(false);
-                    RestPermissions.clear(servletContext);
+                    RestConstraintsStore.clear(servletContext);
                 }
 
                 String contextId = getContextID(webBundleDescriptor);

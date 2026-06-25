@@ -582,7 +582,6 @@ public class Application extends CommonResourceBundleDescriptor
         return generatedXMLDir;
     }
 
-    // START OF IASRI 4648645 - application registration name
     /**
      * Sets the registration name for this application. This name is used
      * while deploying the application. The deployment process gurantees
@@ -625,8 +624,6 @@ public class Application extends CommonResourceBundleDescriptor
         }
         return registrationName;
     }
-    // END OF IASRI 4648645
-
 
     /**
      * Returns the value of the app-name element in the application.xml if

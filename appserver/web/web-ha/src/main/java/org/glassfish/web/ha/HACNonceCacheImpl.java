@@ -17,14 +17,13 @@
 package org.glassfish.web.ha;
 
 import com.sun.enterprise.security.CNonceCacheFactory;
-import com.sun.web.security.CNonceCacheImpl;
+import com.sun.web.security.realmadapter.digest.CNonceCacheImpl;
 
 import jakarta.inject.Inject;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.glassfish.ha.store.api.BackingStore;
@@ -37,32 +36,46 @@ import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.NonceInfo;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.security.CNonceCacheFactory.CLUSTER_NAME_PROP;
+import static java.util.logging.Level.WARNING;
+
 /**
  *
  * @author vbkumarjayanti
  */
-@Service(name="HA-CNonceCache")
+@Service(name = "HA-CNonceCache")
 @PerLookup
-public class HACNonceCacheImpl  implements CNonceCache {
+public class HACNonceCacheImpl implements CNonceCache {
 
     @Inject
     private ServiceLocator services;
 
     private CNonceCacheImpl localStore;
-    private BackingStore<String, NonceInfo> backingStore = null;
-    private String storeName = null;
+    private BackingStore<String, NonceInfo> backingStore;
+    private String storeName;
     private Map<String, String> props;
-    private static final String BS_TYPE_REPLICATED ="replicated";
+    private static final String BS_TYPE_REPLICATED = "replicated";
     private static final Logger logger = LogFacade.getLogger();
 
     public HACNonceCacheImpl() {
     }
-   /**
-    * @param cnonceCacheSize the cnonceCacheSize to set
-    */
+
+    @Override
+    public void init(long size, String name, long validity, Map<String, String> props) {
+        this.storeName = name;
+        this.props = props;
+        postConstruct();
+        localStore.setCnonceCacheSize(size);
+        localStore.setNonceValidity(validity);
+
+    }
+
+    /**
+     * @param cnonceCacheSize the cnonceCacheSize to set
+     */
     @Override
     public void setCnonceCacheSize(long cnonceCacheSize) {
-       localStore.setCnonceCacheSize(cnonceCacheSize);
+        localStore.setCnonceCacheSize(cnonceCacheSize);
     }
 
     /**
@@ -78,7 +91,7 @@ public class HACNonceCacheImpl  implements CNonceCache {
      */
     @Override
     public long getCnonceCacheSize() {
-       return  localStore.getCnonceCacheSize();
+        return localStore.getCnonceCacheSize();
     }
 
     /**
@@ -101,42 +114,44 @@ public class HACNonceCacheImpl  implements CNonceCache {
 
     @Override
     public boolean containsKey(Object o) {
-       return localStore.containsKey((String)o);
+        return localStore.containsKey(o);
     }
 
     @Override
     public boolean containsValue(Object o) {
-        return localStore.containsValue((NonceInfo)o);
+        return localStore.containsValue(o);
     }
 
     @Override
     public NonceInfo get(Object o) {
-        NonceInfo ret = localStore.get((String)o);
+        NonceInfo ret = localStore.get(o);
         if (ret == null && backingStore != null) {
             try {
-                return backingStore.load((String)o, null);
+                return backingStore.load((String) o, null);
             } catch (BackingStoreException ex) {
                 // TODO exception message
-                logger.log(Level.WARNING,null,ex);
+                logger.log(WARNING, null, ex);
             }
         }
+
         return ret;
     }
 
     @Override
     public NonceInfo put(String k, NonceInfo v) {
-        NonceInfo  ret = localStore.put(k, v);
+        NonceInfo ret = localStore.put(k, v);
         if (backingStore == null) {
             return ret;
         }
+
         try {
             if (removeEldestEntry(null)) {
                 backingStore.remove(localStore.getEldestCNonce());
             }
             backingStore.save(k, v, true);
         } catch (BackingStoreException ex) {
-            //TODO: EX message
-            logger.log(Level.WARNING, null, ex);
+            // TODO: EX message
+            logger.log(WARNING, null, ex);
         }
 
         return ret;
@@ -144,23 +159,25 @@ public class HACNonceCacheImpl  implements CNonceCache {
 
     @Override
     public NonceInfo remove(Object o) {
-        NonceInfo ret = localStore.remove((String)o);
+        NonceInfo ret = localStore.remove(o);
         if (backingStore == null) {
             return ret;
         }
+
         try {
             backingStore.remove((String) o);
         } catch (BackingStoreException ex) {
-            //TODO: EX message
-            logger.log(Level.WARNING, null, ex);
+            // TODO: EX message
+            logger.log(WARNING, null, ex);
         }
+
         return ret;
     }
 
     // we do not need to support the below operation
     @Override
     public void putAll(Map<? extends String, ? extends NonceInfo> map) {
-        //localStore.putAll(map);
+        // localStore.putAll(map);
         throw new UnsupportedOperationException("putAll : Not  Supported");
     }
 
@@ -171,8 +188,8 @@ public class HACNonceCacheImpl  implements CNonceCache {
                 try {
                     backingStore.remove(s);
                 } catch (BackingStoreException ex) {
-                    //TODO: EX message
-                    logger.log(Level.WARNING, null, ex);
+                    // TODO: EX message
+                    logger.log(WARNING, null, ex);
                 }
             }
         }
@@ -194,47 +211,41 @@ public class HACNonceCacheImpl  implements CNonceCache {
         return localStore.entrySet();
     }
 
-    protected boolean removeEldestEntry(
-            Map.Entry<String, NonceInfo> eldest) {
+    protected boolean removeEldestEntry(Map.Entry<String, NonceInfo> eldest) {
         // This is called from a sync so keep it simple
         if (size() > getCnonceCacheSize()) {
             return true;
         }
+
         return false;
     }
 
     public void postConstruct() {
         localStore = new CNonceCacheImpl();
+
         try {
-            final BackingStoreConfiguration<String, NonceInfo> bsConfig =
-                    new BackingStoreConfiguration<String, NonceInfo>();
-            bsConfig.setClusterName(props.get(CNonceCacheFactory.CLUSTER_NAME_PROP)).
-                    setInstanceName(props.get(CNonceCacheFactory.INSTANCE_NAME_PROP)).
-                    setStoreName(storeName).setKeyClazz(String.class)
+            final BackingStoreConfiguration<String, NonceInfo> bsConfig = new BackingStoreConfiguration<String, NonceInfo>();
+
+            bsConfig.setClusterName(props.get(CLUSTER_NAME_PROP))
+                    .setInstanceName(props.get(CNonceCacheFactory.INSTANCE_NAME_PROP))
+                    .setStoreName(storeName)
+                    .setKeyClazz(String.class)
                     .setValueClazz(NonceInfo.class);
+
             BackingStoreFactory bsFactory = services.getService(BackingStoreFactory.class, BS_TYPE_REPLICATED);
             backingStore = bsFactory.createBackingStore(bsConfig);
         } catch (BackingStoreException ex) {
-            logger.log(Level.WARNING, null, ex);
+            logger.log(WARNING, null, ex);
         }
-    }
-
-    @Override
-    public void init(long size, String name, long validity, Map<String, String> props) {
-        this.storeName = name;
-        this.props = props;
-        postConstruct();
-        localStore.setCnonceCacheSize(size);
-        localStore.setNonceValidity(validity);
-
     }
 
     @Override
     public void destroy() {
         clear();
+
         try {
-            if (this.backingStore != null) {
-                this.backingStore.destroy();
+            if (backingStore != null) {
+                backingStore.destroy();
             }
         } catch (Exception ex) {
         }

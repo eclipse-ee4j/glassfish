@@ -33,12 +33,7 @@ import jakarta.security.jacc.EJBMethodPermission;
 import jakarta.security.jacc.PolicyContext;
 
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.security.CodeSource;
 import java.security.Principal;
-import java.security.cert.Certificate;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -335,31 +330,6 @@ public final class EJBSecurityManager implements SecurityManager {
 
 
     // ### Private methods
-
-    private static CodeSource getApplicationCodeSource(String contextId) throws Exception {
-        CodeSource result = null;
-        String archiveURI = "file:///" + contextId.replace(' ', '_');
-        try {
-            URI uri = null;
-            try {
-                uri = new URI(archiveURI);
-                if (uri != null) {
-                    result = new CodeSource(uri.toURL(), (Certificate[]) null);
-                }
-            } catch (URISyntaxException use) {
-                // manually create the URL
-                _logger.log(SEVERE, "JACC_createurierror", use);
-                throw new RuntimeException(use);
-            }
-
-        } catch (MalformedURLException mue) {
-            // should never come here.
-            _logger.log(SEVERE, "JACC_ejbsm.codesourceerror", mue);
-            throw new RuntimeException(mue);
-        }
-
-        return result;
-    }
 
     /**
      * Logs in a principal for run-as. This method is called if the run-as principal is required. The user has already logged in -

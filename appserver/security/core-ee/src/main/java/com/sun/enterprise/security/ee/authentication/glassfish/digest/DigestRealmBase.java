@@ -23,6 +23,7 @@ import com.sun.enterprise.security.auth.digest.api.Password;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.ee.authentication.glassfish.digest.impl.DigestProcessor;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -64,7 +65,6 @@ public abstract class DigestRealmBase extends Realm implements DigestRealm {
 
         @Override
         protected final boolean validate(Password passwd, DigestAlgorithmParameter[] params) throws NoSuchAlgorithmException {
-
             for (DigestAlgorithmParameter dap : params) {
                 if (A1.equals(dap.getName()) && dap instanceof Key) {
                     key = dap;
@@ -79,7 +79,7 @@ public abstract class DigestRealmBase extends Realm implements DigestRealm {
             try {
                 byte[] p1 = valueOf(key);
                 byte[] p2 = valueOf(data);
-                java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 bos.write(p1);
                 bos.write(":".getBytes());
                 bos.write(p2);
@@ -88,7 +88,6 @@ public abstract class DigestRealmBase extends Realm implements DigestRealm {
                 byte[] derivedKey = null;
                 byte[] dk = md.digest(bos.toByteArray());
                 String tmp = encode(dk);
-                // new MD5Encoder().encode(dk);
                 derivedKey = tmp.getBytes();
                 byte[] suppliedKey = clientResponse.getValue();
                 boolean result = true;

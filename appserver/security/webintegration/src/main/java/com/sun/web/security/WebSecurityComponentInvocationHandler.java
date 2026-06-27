@@ -36,19 +36,18 @@ import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocati
 public class WebSecurityComponentInvocationHandler implements RegisteredComponentInvocationHandler {
 
     @Inject
-    private InvocationManager invManager;
+    private InvocationManager invocationManager;
 
     private ComponentInvocationHandler webSecurityCompInvHandler = new ComponentInvocationHandler() {
 
         @Override
-        public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
-            throws InvocationException {
+        public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv) throws InvocationException {
             if (invType == SERVLET_INVOCATION) {
                 Object container = newInv.getContainer();
-                if (container instanceof ContainerBase) {
-                    Realm realm = ((ContainerBase) container).getRealm();
-                    if (realm instanceof RealmAdapter) {
-                        ((RealmAdapter) realm).preSetRunAsIdentity(newInv);
+                if (container instanceof ContainerBase containerBase) {
+                    Realm realm = containerBase.getRealm();
+                    if (realm instanceof RealmAdapter realmAdapter) {
+                        realmAdapter.preSetRunAsIdentity(newInv);
                     }
                 }
             }
@@ -65,14 +64,13 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
         }
 
         @Override
-        public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
-            throws InvocationException {
+        public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
             if (invType == SERVLET_INVOCATION) {
                 Object container = curInv.getContainer();
-                if (container instanceof ContainerBase) {
-                    Realm realm = ((ContainerBase) container).getRealm();
-                    if (realm instanceof RealmAdapter) {
-                        ((RealmAdapter) realm).postSetRunAsIdentity(curInv);
+                if (container instanceof ContainerBase containerBase) {
+                    Realm realm = containerBase.getRealm();
+                    if (realm instanceof RealmAdapter realmAdapter) {
+                        realmAdapter.postSetRunAsIdentity(curInv);
                     }
                 }
             }
@@ -86,7 +84,7 @@ public class WebSecurityComponentInvocationHandler implements RegisteredComponen
 
     @Override
     public void register() {
-        invManager.registerComponentInvocationHandler(SERVLET_INVOCATION, this);
+        invocationManager.registerComponentInvocationHandler(SERVLET_INVOCATION, this);
     }
 
 }

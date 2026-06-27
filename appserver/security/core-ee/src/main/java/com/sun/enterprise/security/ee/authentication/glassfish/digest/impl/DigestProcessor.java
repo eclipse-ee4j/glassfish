@@ -17,9 +17,9 @@
 package com.sun.enterprise.security.ee.authentication.glassfish.digest.impl;
 
 import com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter;
+import com.sun.enterprise.security.auth.digest.api.Key;
 import com.sun.enterprise.security.auth.digest.api.NestedDigestAlgoParam;
 import com.sun.enterprise.security.auth.digest.api.Password;
-import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import java.io.ByteArrayOutputStream;
@@ -45,7 +45,6 @@ public abstract class DigestProcessor {
     private Password passwd;
 
     private Logger _logger = LogDomains.getLogger(DigestProcessor.class, LogDomains.SECURITY_LOGGER);
-    private static final StringManager sm = StringManager.getManager(DigestProcessor.class);
     private static final char[] hexadecimal = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
     private final MD5Encoder md5Encoder = new MD5Encoder();
 
@@ -60,30 +59,28 @@ public abstract class DigestProcessor {
 
     public String createDigest(Password passwd, DigestAlgorithmParameter[] params) throws NoSuchAlgorithmException {
         try {
-            com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter data = null;
-            com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter clientResponse = null;
-            com.sun.enterprise.security.auth.digest.api.DigestAlgorithmParameter key = null;
+            DigestAlgorithmParameter data = null;
+            DigestAlgorithmParameter key = null;
             this.passwd = passwd;
+
             for (DigestAlgorithmParameter dap : params) {
-                if (A1.equals(dap.getName()) && dap instanceof com.sun.enterprise.security.auth.digest.api.Key) {
+                if (A1.equals(dap.getName()) && dap instanceof Key) {
                     key = dap;
                 } else {
                     data = dap;
                 }
             }
+
             byte[] p1 = valueOf(key);
             byte[] p2 = valueOf(data);
-            java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
             bos.write(p1);
             bos.write(":".getBytes());
             bos.write(p2);
 
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance(key.getAlgorithm());
-            byte[] derivedKey = null;
-            byte[] dk = md.digest(bos.toByteArray());
-            java.lang.String tmp = getMd5Encoder().encode(dk);
-            // new MD5Encoder().encode(dk);
-            return tmp;
+            MessageDigest md = MessageDigest.getInstance(key.getAlgorithm());
+
+            return getMd5Encoder().encode(md.digest(bos.toByteArray()));
         } catch (IOException ex) {
             Object[] parm = new String[1];
             parm[1] = ex.getMessage();
@@ -112,18 +109,19 @@ public abstract class DigestProcessor {
         if (param instanceof KeyDigestAlgoParamImpl) {
             return valueOf((KeyDigestAlgoParamImpl) param);
         }
+
         if (param instanceof NestedDigestAlgoParam) {
             return valueOf((NestedDigestAlgoParam) param);
         }
+
         if (param.getAlgorithm() == null || param.getAlgorithm().length() == 0) {
             return param.getValue();
         }
+
         MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
         md.update(param.getValue());
-        byte[] dk = md.digest();
-        String tmp = getMd5Encoder().encode(dk);
-        // new MD5Encoder().encode(dk);
-        return tmp.getBytes();
+
+        return getMd5Encoder().encode(md.digest()).getBytes();
     }
 
     /**
@@ -150,7 +148,6 @@ public abstract class DigestProcessor {
             MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
             byte[] dk = md.digest(bos.toByteArray());
             String tmp = getMd5Encoder().encode(dk);
-            // new MD5Encoder().encode(dk);
             return tmp.getBytes();
         } catch (IOException ex) {
             _logger.log(java.util.logging.Level.SEVERE, "digest.param.error", ex);
@@ -160,7 +157,6 @@ public abstract class DigestProcessor {
     }
 
     private byte[] valueOf(NestedDigestAlgoParam param) throws NoSuchAlgorithmException {
-
         ByteArrayOutputStream bos = null;
         AlgorithmParameterSpec[] datastore = param.getNestedParams();
         bos = new ByteArrayOutputStream();
@@ -172,13 +168,14 @@ public abstract class DigestProcessor {
                 bos.write(param.getDelimiter(), 0, param.getDelimiter().length);
             }
         }
+
         if (hasAlgorithm(param)) {
             MessageDigest md = MessageDigest.getInstance(param.getAlgorithm());
             byte[] dk = md.digest(bos.toByteArray());
             String tmp = getMd5Encoder().encode(dk);
-            // new MD5Encoder().encode(dk);
             return tmp.getBytes();
         }
+
         return bos.toByteArray();
     }
 

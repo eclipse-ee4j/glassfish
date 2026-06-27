@@ -47,6 +47,9 @@ import javax.security.auth.Subject;
 
 import org.glassfish.exousia.AuthorizationService;
 
+import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.DENIED;
+import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED;
+import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED_WITH_SSL;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.SoteriaToExousiaConverter.getStagedPermissionsFromContext;
@@ -97,6 +100,12 @@ public class GlassFishAuthorizationService {
 
     private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
     private final AuthorizationService exousiaAuthorizationService;
+
+    public enum Access {
+        PERMITTED,
+        PERMITTED_WITH_SSL,
+        DENIED
+    }
 
     public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register) throws PolicyContextException {
         this.register = register;
@@ -197,8 +206,8 @@ public class GlassFishAuthorizationService {
      * null, determine if the uri and Http method require a CONFIDENTIAL transport. The uri value does not include the context path,
      * and any colons occurring in the uri must be escaped.
      *
-     * @return 1 if access is permitted (as is or without SSL). -1 if the the access will be permitted after a redirect to SSL.
-     * return 0 if access will be denied independent of whether a redirect to SSL is done.
+     * @return PERMITTED if access is permitted (as is or without SSL). PERMITTED_WITH_SSL if the the access will be permitted after a redirect to SSL.
+     * return DENIED if access will be denied independent of whether a redirect to SSL is done.
      *
      * Note: this method is not intended to be called if the request is secure. it checks whether the resource can be accessed over
      * the current connection type (which is presumed to be insecure), and if an insecure connection type is not permitted it checks
@@ -207,7 +216,7 @@ public class GlassFishAuthorizationService {
      * If the request is secure, the second check is skipped, and the proper result is returned (but that is not the intended use
      * model).
      */
-    public int hasUserDataPermission(HttpServletRequest httpServletRequest, String uri, String httpMethod) {
+    public Access hasUserDataPermission(HttpServletRequest httpServletRequest, String uri, String httpMethod) {
         setSecurityInfo(httpServletRequest);
 
         boolean isGranted = false;
@@ -217,10 +226,10 @@ public class GlassFishAuthorizationService {
             isGranted = exousiaAuthorizationService.checkWebUserDataPermission(uri, httpMethod, httpServletRequest.isSecure());
         }
 
-        int result = 0;
+        Access access = DENIED;
 
         if (isGranted) {
-            result = 1;
+            access = PERMITTED;
         }
 
         if (logger.isLoggable(FINE)) {
@@ -241,11 +250,11 @@ public class GlassFishAuthorizationService {
             isGranted = exousiaAuthorizationService.checkWebUserDataPermission(uri, httpMethod, true, defaultPrincipalSet);
 
             if (isGranted) {
-                result = -1;
+                access = PERMITTED_WITH_SSL;
             }
         }
 
-        return result;
+        return access;
     }
 
     /**

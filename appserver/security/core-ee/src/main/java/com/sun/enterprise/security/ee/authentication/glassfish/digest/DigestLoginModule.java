@@ -26,10 +26,8 @@ import com.sun.logging.LogDomains;
 
 import java.security.Principal;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.security.auth.Subject;
@@ -41,6 +39,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserPrincipal;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
 /**
@@ -65,40 +64,42 @@ public class DigestLoginModule implements LoginModule {
     public final void initialize(Subject subject, CallbackHandler handler, Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
 
-        _logger.log(Level.FINE, () -> "Login module initialized: " + this.getClass().toString());
+        _logger.log(FINE, () -> "Login module initialized: " + this.getClass().toString());
     }
 
     @Override
     public final boolean login() throws LoginException {
-        Set<Object> creds = this.subject.getPrivateCredentials();
-        Iterator<Object> itr = creds.iterator();
-        while (itr.hasNext()) {
-            Object obj = itr.next();
-            if (obj instanceof DigestCredentials) {
-                digestCredentials = (DigestCredentials) obj;
+        for (Object obj : subject.getPrivateCredentials()) {
+            if (obj instanceof DigestCredentials privateDigestCredential) {
+                digestCredentials = privateDigestCredential;
                 break;
             }
-            if (obj instanceof com.sun.enterprise.security.auth.login.DigestCredentials) {
-                com.sun.enterprise.security.auth.login.DigestCredentials dc = (com.sun.enterprise.security.auth.login.DigestCredentials) obj;
+
+            if (obj instanceof com.sun.enterprise.security.auth.login.DigestCredentials privateDigestCredential) {
+                var dc = privateDigestCredential;
                 digestCredentials = new DigestCredentials(dc.getRealmName(), dc.getUserName(), dc.getParameters());
             }
         }
+
         if (digestCredentials == null) {
             throw new LoginException();
         }
+
         DigestAlgorithmParameter[] params = digestCredentials.getParameters();
         String username = digestCredentials.getUserName();
         try {
             _realm = Realm.getInstance(digestCredentials.getRealmName());
         } catch (NoSuchRealmException ex) {
-            _logger.log(Level.FINE, "", ex);
-            _logger.log(Level.SEVERE, "no.realm", digestCredentials.getRealmName());
+            _logger.log(FINE, "", ex);
+            _logger.log(SEVERE, "no.realm", digestCredentials.getRealmName());
             throw new LoginException(ex.getMessage());
         }
+
         if (!(_realm instanceof DigestRealm)) {
-            _logger.log(Level.SEVERE, "digest.realm", digestCredentials.getRealmName());
+            _logger.log(SEVERE, "digest.realm", digestCredentials.getRealmName());
             throw new LoginException("Realm" + digestCredentials.getRealmName() + " does not support Digest validation");
         }
+
         if (((DigestRealm) _realm).validate(username, params)) {
             // change to pass Password Validator
             _succeeded = true;
@@ -109,24 +110,25 @@ public class DigestLoginModule implements LoginModule {
 
     @Override
     public final boolean commit() throws LoginException {
-
         if (!_succeeded) {
             _commitSucceeded = false;
             return false;
         }
 
-        PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
+        PrincipalGroupFactory factory = Globals.get(PrincipalGroupFactory.class);
+
         _userPrincipal = factory.getPrincipalInstance(digestCredentials.getUserName(), digestCredentials.getRealmName());
-        Set<Principal> principalSet = this.subject.getPrincipals();
+        Set<Principal> principalSet = subject.getPrincipals();
         if (!principalSet.contains(_userPrincipal)) {
             principalSet.add(_userPrincipal);
         }
+
         Enumeration<String> groupsList = getGroups(digestCredentials.getUserName());
         while (groupsList.hasMoreElements()) {
-            java.lang.String value = groupsList.nextElement();
-            Group g = factory.getGroupInstance(value, digestCredentials.getRealmName());
-            if (!principalSet.contains(g)) {
-                principalSet.add(g);
+            String value = groupsList.nextElement();
+            Group group = factory.getGroupInstance(value, digestCredentials.getRealmName());
+            if (!principalSet.contains(group)) {
+                principalSet.add(group);
             }
             // cleaning the slate
         }
@@ -137,7 +139,7 @@ public class DigestLoginModule implements LoginModule {
 
     @Override
     public final boolean abort() throws LoginException {
-        _logger.log(Level.FINE, "JAAS authentication aborted.");
+        _logger.log(FINE, "JAAS authentication aborted.");
 
         if (_succeeded == false) {
             return false;

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.web.security;
+package com.sun.web.security.realmadapter.wrappers;
 
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.DispatcherType;
@@ -50,7 +50,7 @@ import org.apache.catalina.Wrapper;
 import org.apache.catalina.connector.Request;
 import org.glassfish.grizzly.http.util.DataChunk;
 
-class HttpRequestWrapper implements HttpRequest, ServletRequest {
+public class HttpRequestWrapper implements HttpRequest, ServletRequest {
 
     private final Request httpRequest;
     private final HttpServletRequest servletRequest;
@@ -58,7 +58,7 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
     private ServletRequest maskedFacade;
     private ServletRequest facade;
 
-    HttpRequestWrapper(HttpRequest request, HttpServletRequest servletRequest) {
+    public HttpRequestWrapper(HttpRequest request, HttpServletRequest servletRequest) {
         httpRequest = (Request) request;
         this.servletRequest = servletRequest;
         isDefaultContext = httpRequest.getMappingData().isDefaultContext;
@@ -324,7 +324,7 @@ class HttpRequestWrapper implements HttpRequest, ServletRequest {
     }
 
     @Override
-    public Iterator getNoteNames() {
+    public Iterator<String> getNoteNames() {
         return httpRequest.getNoteNames();
     }
 

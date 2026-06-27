@@ -64,6 +64,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
 import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_LOAD_INITIALIZED_EVENT;
+import static com.sun.enterprise.deployment.web.LoginConfiguration.DIGEST_AUTHENTICATION;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.removeRoleMapper;
 import static com.sun.enterprise.util.Utility.isEmpty;
@@ -421,7 +422,6 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         }
 
         return GlassFishAuthorizationService.linkPolicy(contextId, linkedContextId, lastInService);
-
     }
 
     void commitViaManager(String contextId) {
@@ -473,11 +473,36 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         return cleanUpDone;
     }
 
+    private void handleCNonceCacheBSInit(String appName, Set<WebBundleDescriptor> webDesc, boolean isHA) {
+        boolean hasDigest = false;
+
+        for (WebBundleDescriptor webBD : webDesc) {
+            LoginConfiguration loginConfiguration = webBD.getLoginConfiguration();
+            if (loginConfiguration != null && DIGEST_AUTHENTICATION.equals(loginConfiguration.getAuthenticationMethod())) {
+                hasDigest = true;
+                break;
+            }
+        }
+
+        if (!hasDigest) {
+            return;
+        }
+
+        // Initialize the backing stores as well for cnonce cache.
+        if (isHaEnabled() && isHA) {
+            String clusterName = haUtil.getClusterName();
+            String instanceName = haUtil.getInstanceName();
+            if (cnonceCacheFactory != null) {
+                CNonceCache cache = cnonceCacheFactory.createCNonceCache(appName, clusterName, instanceName, HA_CNONCE_BS_NAME);
+                this.appCnonceMap.put(appName, cache);
+            }
+
+        }
+    }
 
     private boolean isHaEnabled() {
         boolean haEnabled = false;
-        // lazily init the required services instead of
-        // eagerly injecting them.
+        // Lazily init the required services instead of eagerly injecting them.
         synchronized (this) {
             if (haUtil == null) {
                 haUtil = haUtilProvider.get();
@@ -497,29 +522,5 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
         }
 
         return haEnabled;
-    }
-
-    private void handleCNonceCacheBSInit(String appName, Set<WebBundleDescriptor> webDesc, boolean isHA) {
-        boolean hasDigest = false;
-        for (WebBundleDescriptor webBD : webDesc) {
-            LoginConfiguration lc = webBD.getLoginConfiguration();
-            if (lc != null && LoginConfiguration.DIGEST_AUTHENTICATION.equals(lc.getAuthenticationMethod())) {
-                hasDigest = true;
-                break;
-            }
-        }
-        if (!hasDigest) {
-            return;
-        }
-        // initialize the backing stores as well for cnonce cache.
-        if (isHaEnabled() && isHA) {
-            final String clusterName = haUtil.getClusterName();
-            final String instanceName = haUtil.getInstanceName();
-            if (cnonceCacheFactory != null) {
-                CNonceCache cache = cnonceCacheFactory.createCNonceCache(appName, clusterName, instanceName, HA_CNONCE_BS_NAME);
-                this.appCnonceMap.put(appName, cache);
-            }
-
-        }
     }
 }

@@ -57,7 +57,7 @@ public class WebComponentDescriptorImpl extends WebComponentDescriptor {
      */
     public static final String BASIC_AUTHENTICATION = "basic";
     /**
-     * Constant for Form authentication.
+     * Constant for FormInfo authentication.
      */
     public static final String FORM_AUTHENTICATION = "form";
     /**

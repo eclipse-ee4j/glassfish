@@ -29,7 +29,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-import java.security.AccessControlException;
 import java.util.logging.Logger;
 
 import org.apache.catalina.Context;
@@ -128,21 +127,17 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
     private static Request getUnwrappedCoyoteRequest(HttpServletRequest request) {
         Request coyoteRequest = null;
         ServletRequest servletRequest = request;
-        try {
 
-            ServletRequest prevRequest = null;
-            while (servletRequest != prevRequest && servletRequest instanceof ServletRequestWrapper) {
-                prevRequest = servletRequest;
-                servletRequest = ((ServletRequestWrapper) servletRequest).getRequest();
-            }
-
-            if (servletRequest instanceof RequestFacade) {
-                coyoteRequest = ((RequestFacade) servletRequest).getUnwrappedCoyoteRequest();
-            }
-
-        } catch (AccessControlException ex) {
-            LOG.log(FINE, "Programmatic login faiied to get request", ex);
+        ServletRequest previousRequest = null;
+        while (servletRequest != previousRequest && servletRequest instanceof ServletRequestWrapper servletRequestWrapper) {
+            previousRequest = servletRequest;
+            servletRequest = servletRequestWrapper.getRequest();
         }
+
+        if (servletRequest instanceof RequestFacade requestFacade) {
+            coyoteRequest = requestFacade.getUnwrappedCoyoteRequest();
+        }
+
 
         return coyoteRequest;
     }
@@ -167,16 +162,14 @@ public class WebProgrammaticLoginImpl implements WebProgrammaticLogin {
         }
 
         // Logout - clears out security context
-
         LoginContextDriver.logout();
-        // Remove principal and auth type from request
 
+        // Remove principal and auth type from request
         coyoteRequest.setUserPrincipal(null);
         coyoteRequest.setAuthType(null);
         LOG.log(FINE, "Programmatic logout removed principal from request.");
 
         // Remove from session if possible.
-
         Session realSession = getSession(coyoteRequest);
         if (realSession != null) {
             realSession.setPrincipal(null);

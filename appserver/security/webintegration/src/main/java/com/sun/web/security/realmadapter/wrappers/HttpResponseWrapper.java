@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.web.security;
+package com.sun.web.security.realmadapter.wrappers;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.ServletResponse;
@@ -32,11 +32,11 @@ import org.apache.catalina.Context;
 import org.apache.catalina.HttpResponse;
 import org.apache.catalina.Request;
 
-class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResponse {
+public class HttpResponseWrapper extends HttpServletResponseWrapper implements HttpResponse {
 
     private final HttpResponse httpResponse;
 
-    HttpResponseWrapper(HttpResponse response, HttpServletResponse servletResponse) {
+    public HttpResponseWrapper(HttpResponse response, HttpServletResponse servletResponse) {
         super(servletResponse);
         httpResponse = response;
     }

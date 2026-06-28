@@ -257,11 +257,14 @@ pipeline {
    }
 
    options {
-      buildDiscarder(logRotator(numToKeepStr: '2'))
+      // numToKeepStr - we need to know if it is changing.
+      // artifactNumToKeepStr - they are quite large, so we keep just the last products.
+      buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
 
+      // Any failure will cause interruption of other running steps
       parallelsAlwaysFailFast()
 
-      // to allow re-running a test stage
+      // to allow re-running a test stage, preserves just stashes of the most recent build
       preserveStashes()
 
       // issue related to default 'implicit' checkout, disable it
@@ -447,6 +450,18 @@ pipeline {
                }
             }
          }
+      }
+   }
+
+   post {
+      // Some files allocate a lot of disk space, but when the build succeeded, we often don't need them any more.'
+      always {
+         cleanWs()
+      }
+      success {
+         // Overwrite stashes with empty content
+         stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
+         stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
       }
    }
 }

@@ -51,7 +51,7 @@ layout: documentation
 
 * [Development version (8.0.4-SNAPSHOT)](docs#development)
 * [7.1.0 release](docs#7.1.0)
-* [7.0.25 release](docs#7.0.25)
+* [7.0.26 release](docs#7.0.26)
 * [All other versions](docs)
 
 ## Documentation for GlassFish Docker images {#docker}

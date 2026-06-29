@@ -21,10 +21,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-       <groupId>org.glassfish.main.persistence</groupId>
-       <artifactId>persistence</artifactId>
-       <version>7.1.1-SNAPSHOT</version>
-       <relativePath>../pom.xml</relativePath>
+        <groupId>org.glassfish.main.persistence</groupId>
+        <artifactId>persistence</artifactId>
+        <version>7.1.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>eclipselink-wrapper</artifactId>

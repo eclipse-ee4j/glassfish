@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+* Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
 * Copyright (c) 2018, 2021 Oracle and/or its affiliates. All rights reserved.
 *
 * This program and the accompanying materials are made available under the
@@ -168,7 +168,7 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
                               '''
                               sh """
-                              mvn -B -e clean verify -Pci -pl :${job} -amd
+                              mvn -B -e clean verify -Pci -Psnapshots -pl :${job} -amd
                               """
                            }
                         } finally {
@@ -257,11 +257,14 @@ pipeline {
    }
 
    options {
-      buildDiscarder(logRotator(numToKeepStr: '2'))
+      // numToKeepStr - we need to know if it is changing.
+      // artifactNumToKeepStr - they are quite large, so we keep just the last products.
+      buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
 
+      // Any failure will cause interruption of other running steps
       parallelsAlwaysFailFast()
 
-      // to allow re-running a test stage
+      // to allow re-running a test stage, preserves just stashes of the most recent build
       preserveStashes()
 
       // issue related to default 'implicit' checkout, disable it
@@ -285,6 +288,39 @@ pipeline {
             }
          }
       }
+      stage('Check Changes') {
+         steps {
+            checkout scm
+            container('maven') {
+               script {
+                  // Default: run tests
+                  env.SKIP_TESTS = "false"
+
+                  // Only check for docs-only changes in PR builds
+                  if (env.CHANGE_TARGET) {
+                     echo "PR build detected, checking if only docs changed..."
+
+                     def relevantChanges = sh(
+                        script: '''
+                           (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
+                        ''',
+                        returnStdout: true
+                     ).trim()
+
+
+                     if (relevantChanges == "") {
+                        env.SKIP_TESTS = "true"
+                        echo "✓ Only docs/ changes detected - tests will be skipped"
+                     } else {
+                        echo "✗ Relevant changes detected - tests will run"
+                     }
+                  } else {
+                     echo "Non-PR build - tests will always run"
+                  }
+               }
+            }
+         }
+      }
       stage('Build') {
          steps {
             checkout scm
@@ -296,10 +332,10 @@ pipeline {
                       timeout(time: 1, unit: 'HOURS') {
                          sh '''
                          # Validate the structure in all submodules (especially version ids)
-                         mvn -V -B -e -fae clean validate -Ptck,set-version-id
+                         mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
                          '''
                          sh '''
-                         mvn -B -e install -Pfastest,ci -T4C
+                         mvn -B -e install -Pfastest,ci,snapshots -T4C
                          '''
                          sh '''
                          mvn -B -e clean
@@ -331,6 +367,9 @@ pipeline {
       }
 
       stage('Test') {
+         when {
+            environment name: 'SKIP_TESTS', value: 'false'
+         }
          parallel {
             stage('main-tests') {
                steps {
@@ -342,7 +381,7 @@ pipeline {
                            dumpSysInfo()
                            timeout(time: 4, unit: 'HOURS') {
                               sh '''
-                              mvn -B -e clean verify -Pqa,ci,ci-main-tests
+                              mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
                               '''
                            }
                         } finally {
@@ -411,6 +450,18 @@ pipeline {
                }
             }
          }
+      }
+   }
+
+   post {
+      // Some files allocate a lot of disk space, but when the build succeeded, we often don't need them any more.'
+      always {
+         cleanWs()
+      }
+      success {
+         // Overwrite stashes with empty content
+         stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
+         stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
       }
    }
 }

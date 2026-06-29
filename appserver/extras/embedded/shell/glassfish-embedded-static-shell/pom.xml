@@ -94,7 +94,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>dbschema</artifactId>
+            <artifactId>dbschema-osgi</artifactId>
             <optional>true</optional>
         </dependency>
         <!-- glassfish-common -->
@@ -188,7 +188,7 @@
         <!-- glassfish-common-full -->
         <dependency>
             <groupId>org.glassfish.external</groupId>
-            <artifactId>ant</artifactId>
+            <artifactId>ant-osgi</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

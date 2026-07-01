@@ -82,6 +82,7 @@ class DBElementFactory {
         SchemaElement schema = new SchemaElement(schemaImpl);
         schema.setName(DBIdentifier.create(schemaName));
         schema.setDatabaseProductVersion(TAGLINE + SIGNATURE);
+        schema.setDriver("DBElementFactoryVirtualDB");
         return schema;
     }
 

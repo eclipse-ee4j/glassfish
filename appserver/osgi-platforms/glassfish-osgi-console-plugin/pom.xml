@@ -21,10 +21,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-       <groupId>org.glassfish.main.admingui</groupId>
-       <artifactId>admingui</artifactId>
-       <version>7.1.1-SNAPSHOT</version>
-       <relativePath>../../admingui/pom.xml</relativePath>
+        <groupId>org.glassfish.main.admingui</groupId>
+        <artifactId>admingui</artifactId>
+        <version>7.1.1-SNAPSHOT</version>
+        <relativePath>../../admingui/pom.xml</relativePath>
     </parent>
 
     <artifactId>glassfish-osgi-console-plugin</artifactId>

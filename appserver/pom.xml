@@ -73,9 +73,6 @@
     <properties>
         <glassfish.version>${project.version}</glassfish.version>
 
-        <!-- Jakarta EE platform -->
-        <jakartaee>10</jakartaee>
-
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta Faces -->
@@ -172,8 +169,8 @@
         <woodstock-json.version>2.0</woodstock-json.version>
 
         <!-- Other -->
-        <dbschema.version>6.7</dbschema.version>
-        <schema2beans.version>6.7</schema2beans.version>
+        <dbschema.version>2.9.0</dbschema.version>
+        <schema2beans.version>2.9.0</schema2beans.version>
         <derby.version>10.16.1.1</derby.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>3.0.0</maven-rar-plugin.version>
@@ -634,12 +631,12 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
-                <artifactId>dbschema</artifactId>
+                <artifactId>dbschema-osgi</artifactId>
                 <version>${dbschema.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>
-                <artifactId>schema2beans</artifactId>
+                <artifactId>schema2beans-osgi</artifactId>
                 <version>${schema2beans.version}</version>
             </dependency>
 

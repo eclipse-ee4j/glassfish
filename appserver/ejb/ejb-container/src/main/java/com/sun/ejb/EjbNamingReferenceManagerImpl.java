@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -150,9 +150,19 @@ public class EjbNamingReferenceManagerImpl implements EjbNamingReferenceManager 
 
             } catch(Exception e) {
                 // Important to make the real underlying lookup name part of the exception.
-                NamingException ne = new NamingException("Exception resolving Ejb for '" +
-                    ejbRefDesc + "' .  Actual (possibly internal) Remote JNDI name used for lookup is '" +
-                    remoteJndiName + "'");
+                StringBuilder msg = new StringBuilder("Exception resolving Ejb for '").append(ejbRefDesc)
+                    .append("'.  Actual (possibly internal) Remote JNDI name used for lookup is '")
+                    .append(remoteJndiName).append('\'');
+                if (ejbRefDesc.isLinked() && !ejbRefDesc.hasJndiName() && !ejbRefDesc.hasLookupName()) {
+                    // With no jndi-name or lookup-name, the remote name above degenerates to just
+                    // the '#<interface>' suffix, which is never bound. Spell out the real cause
+                    // rather than leaving a cryptic NameNotFoundException for that name.
+                    msg.append(". The reference is resolved only by ejb-link '").append(ejbRefDesc.getLinkName())
+                        .append("', but that link was not mapped to a bound JNDI name. Add a lookup-name")
+                        .append(" (or jndi-name) to the reference, or make sure the linked bean is part of")
+                        .append(" the same application so the ejb-link can be resolved.");
+                }
+                NamingException ne = new NamingException(msg.toString());
                 ne.initCause(e);
                 throw ne;
             } finally {

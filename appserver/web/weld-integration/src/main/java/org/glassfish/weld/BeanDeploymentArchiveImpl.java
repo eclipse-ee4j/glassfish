@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -52,7 +52,6 @@ import org.jboss.weld.bootstrap.spi.BeansXml;
 import org.jboss.weld.ejb.spi.EjbDescriptor;
 
 import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -64,7 +63,6 @@ import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_BEANS_XML;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_BECAUSE_SCOPE_ANNOTATION;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_CDI_ENABLED_ARCHIVE;
 import static org.glassfish.cdi.CDILoggerInfo.PROCESSING_WEB_INF_LIB;
-import static org.glassfish.cdi.CDILoggerInfo.SETTING_CONTEXT_CLASS_LOADER;
 import static org.glassfish.weld.WeldDeployer.WELD_BOOTSTRAP;
 import static org.glassfish.weld.connector.WeldUtils.BEANS_XML_FILENAME;
 import static org.glassfish.weld.connector.WeldUtils.CLASS_SUFFIX;
@@ -88,15 +86,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     private static final Logger LOG = CDILoggerInfo.getLogger();
 
-    // Workaround: WELD-781
+    // The classloader for this BDA. It is exposed via getModuleClassLoaderForBDA() and
+    // supplied to Weld through the per-BDA ResourceLoader SPI (see WeldDeployer.enable),
+    // so Weld loads classes and resources of this archive with the right classloader.
     private final ClassLoader moduleClassLoaderForBDA;
 
     private String id;
     private String friendlyId = "";
 
     private Collection<String> cdiAnnotatedClassNames;
-
-    private boolean deploymentComplete;
 
     private final List<String> moduleClassNames; // Names of classes in the module
     private final List<String> beanClassNames; // Names of bean classes in the module
@@ -197,18 +195,6 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     @Override
     public Collection<String> getBeanClasses() {
-        // This method is called during BeanDeployment.deployBeans, so this would
-        // be the right time to place the module classloader for the BDA as the TCL
-        if (LOG.isLoggable(FINER)) {
-            LOG.log(FINER, SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
-        }
-
-        if (!isDeploymentComplete()) {
-            // The TCL is unset at the end of deployment of CDI beans in WeldDeployer.event
-            // XXX: This is a workaround for issue https://issues.jboss.org/browse/WELD-781.
-            // Remove this as soon as the SPI comes in.
-            Thread.currentThread().setContextClassLoader(this.moduleClassLoaderForBDA);
-        }
         return beanClassNames;
     }
 
@@ -723,11 +709,4 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         return url;
     }
 
-    public boolean isDeploymentComplete() {
-        return deploymentComplete;
-    }
-
-    public void setDeploymentComplete(boolean deploymentComplete) {
-        this.deploymentComplete = deploymentComplete;
-    }
 }

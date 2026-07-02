@@ -19,6 +19,8 @@ package org.glassfish.internal.api;
 
 import com.sun.enterprise.util.net.NetUtils;
 
+import java.util.Set;
+
 import org.jvnet.hk2.annotations.Contract;
 import org.omg.CORBA.ORB;
 
@@ -39,7 +41,13 @@ public interface ORBLocator {
     // but we can't reference ORBConstants from the naming bundle!
     String FOLB_CLIENT_GROUP_INFO_SERVICE = "FolbClientGroupInfoService";
 
-    String DEFAULT_ORB_INIT_HOST = NetUtils.getHostName();
+    /**
+     * Zero ip addresses, ANY host, wildcard addresses,
+     * and the IPv6 equivalent of the wildcard address.
+     */
+    Set<String> ANY_ADDRS = Set.of("0.0.0.0", "::", "::ffff:0.0.0.0");
+
+    String DEFAULT_ORB_INIT_HOST = NetUtils.getCanonicalHostName();
     String DEFAULT_ORB_INIT_PORT = "3700";
 
     // This property is true if SSL is required to be used by
@@ -61,4 +69,18 @@ public interface ORBLocator {
      * @return an initialized ORB instance
      */
     ORB getORB();
+
+    /**
+     * If null or from {@link #ANY_ADDRS} set, returns {@link #DEFAULT_ORB_INIT_HOST}.
+     * Returns the parameter otherwise.
+     *
+     * @param hostOrAny
+     * @return host name to use for ORB initialization
+     */
+    public static String toConcreteHost(String hostOrAny) {
+        if (hostOrAny == null || ANY_ADDRS.contains(hostOrAny)) {
+            return DEFAULT_ORB_INIT_HOST;
+        }
+        return hostOrAny;
+    }
 }

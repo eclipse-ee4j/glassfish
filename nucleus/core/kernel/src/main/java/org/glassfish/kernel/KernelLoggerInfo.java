@@ -573,13 +573,6 @@ public class KernelLoggerInfo {
     public static final String exceptionDRS = LOGMSG_PREFIX + "-00088";
 
     @LogMessageInfo(
-            message = "Cannot determine host name, will use localhost exclusively",
-            cause = "An unexpected exception occurred.",
-            action = "Check the system logs and contact support.",
-            level = "SEVERE")
-    public static final String exceptionHostname = LOGMSG_PREFIX + "-00089";
-
-    @LogMessageInfo(
             message = "Internal Server error: {0}",
             cause = "An unexpected exception occurred.",
             action = "Check the system logs and contact support.",

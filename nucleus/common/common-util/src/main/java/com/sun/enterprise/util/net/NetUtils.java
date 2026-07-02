@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.util.net;
 
+import com.sun.enterprise.util.OS;
 import com.sun.enterprise.util.StringUtils;
 
 import java.io.IOException;
@@ -29,24 +30,112 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 
+/**
+ * @see <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/doc-files/net-properties.html">Network Properties</a>
+ */
 public final class NetUtils {
 
+
     private static final Logger LOG = System.getLogger(NetUtils.class.getName());
+
+    private static final String HOST_NAME = loadAndCheckHostName();
+    private static final String LOCALHOST = "localhost";
+
     /** Maximal allowed port number */
     public static final int MAX_PORT = 65535;
-    private static final String LOCALHOST_IP = "127.0.0.1";
 
     private static final int IS_RUNNING_DEFAULT_TIMEOUT = 3000;
     private static final int IS_PORT_FREE_TIMEOUT = 1000;
 
+    private static final Comparator<? super InetAddress> BEST_ADDRESS_COMPARATOR = (a, b) -> {
+        // Loopback addresses should be last
+        if (a.isLoopbackAddress() && !b.isLoopbackAddress()) {
+            return 1;
+        }
+        if (!a.isLoopbackAddress() && b.isLoopbackAddress()) {
+            return -1;
+        }
+        // Prefer addresses that have a resolvable host name
+        boolean aHasHostName = isResolved(a);
+        boolean bHasHostName = isResolved(b);
+        if (aHasHostName && !bHasHostName) {
+            return -1;
+        }
+        if (!aHasHostName && bHasHostName) {
+            return 1;
+        }
+        // Prefer host names with dots
+        boolean aHostNameHasDots = aHasHostName && a.getCanonicalHostName().contains(".");
+        boolean bHostNameHasDots = bHasHostName && b.getCanonicalHostName().contains(".");
+        if (aHostNameHasDots && !bHostNameHasDots) {
+            return -1;
+        }
+        if (!aHostNameHasDots && bHostNameHasDots) {
+            return 1;
+        }
+        // both have same host name or both don't have host name, prefer IPv4 over IPv6
+        if ((aHasHostName && a.getCanonicalHostName().equals(b.getCanonicalHostName()))
+            || (!aHasHostName && !bHasHostName)) {
+            boolean aIsIpv4 = a.getHostAddress().indexOf(':') < 0;
+            boolean bIsIpv4 = b.getHostAddress().indexOf(':') < 0;
+            if (aIsIpv4 && !bIsIpv4) {
+                return -1;
+            }
+            if (!aIsIpv4 && bIsIpv4) {
+                return 1;
+            }
+        }
+        // otherwise, sort by host name/IP
+        return a.getCanonicalHostName().compareTo(b.getCanonicalHostName());
+    };
+
     private NetUtils() {
         // Static utility class
+    }
+
+    private static String loadAndCheckHostName() {
+        final String hostName = loadHostName();
+        if (isResolvable(hostName)) {
+            LOG.log(DEBUG, "Using the host name: " + hostName);
+        } else {
+            LOG.log(WARNING, "The host name " + hostName + " is not resolvable host name. Check your DNS!");
+        }
+        return hostName;
+    }
+
+    private static String loadHostName() {
+        final String asenvHostName = System.getenv("AS_HOSTNAME");
+        if (asenvHostName != null && !asenvHostName.isBlank()) {
+            return asenvHostName;
+        }
+        // The ENV variable was not set. Now we improvise.
+        try {
+            // The best option - the host name is resolvable by DNS.
+            return InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            LOG.log(WARNING, "Unable to resolve the host name of the local host using InetAddress: " + e
+                + ". Trying to use OS standard environment options.");
+        }
+        // Some operating systems set the host name to environment options.
+        String envName = OS.isWindows() ? "COMPUTERNAME" : "HOSTNAME";
+        String envHostName = System.getenv(envName);
+        if (envHostName != null && !envHostName.isBlank()) {
+            return envHostName;
+        }
+        LOG.log(WARNING, "Unable to resolve the host name of the local host using environment option " + envName
+            + ". Using loopback host name instead.");
+        return InetAddress.getLoopbackAddress().getHostName();
     }
 
     /**
@@ -104,7 +193,7 @@ public final class NetUtils {
             return PortAvailability.OK;
         }
 
-        if (isPortFreeClient(getHostName(), portNumber)) {
+        if (isPortFreeClient(getCanonicalHostName(), portNumber)) {
             // can not setup a server socket and can not connect as a client
             // that means we don't have permission...
             return PortAvailability.noPermission;
@@ -138,7 +227,7 @@ public final class NetUtils {
      * @return true if the local/loopback host is not listening on the given port number, false otherwise.
      */
     public static boolean isPortFree(int portNumber) {
-        return isPortFree(getHostName(), portNumber);
+        return isPortFree(getCanonicalHostName(), portNumber);
     }
 
     /**
@@ -156,40 +245,19 @@ public final class NetUtils {
         return isPortFreeClient(hostName, portNumber);
     }
 
-    private static boolean isPortFreeClient(String hostName, int portNumber) {
-        if (hostName == null) {
-            hostName = getHostName();
-        }
+    private static boolean isPortFreeClient(final String hostName, final int portNumber) {
+        String host = hostName == null ? InetAddress.getLoopbackAddress().getHostAddress() : hostName;
         try (Socket socket = new Socket()) {
-            socket.connect(new InetSocketAddress(hostName, portNumber), IS_PORT_FREE_TIMEOUT);
+            socket.connect(new InetSocketAddress(host, portNumber), IS_PORT_FREE_TIMEOUT);
             return false;
         } catch (IOException e) {
-            LOG.log(TRACE, "Nobody is listening on host: " + hostName + ", port: " + portNumber, e);
+            LOG.log(TRACE, "Nobody is listening on host: " + host + ", port: " + portNumber, e);
             return true;
         }
     }
 
     private static boolean isPortFreeServer(int port) {
-        try {
-            InetAddress address;
-            try {
-                // System supplies any address mapped to the local host.
-                // That doesn't mean that it is possible to allocate port on it.
-                // The IP/host mapping could be explicitly set in /etc/hosts file, but in fact
-                // no network device has assigned it now.
-                // Then the isPortFreeServer would fail.
-                address = InetAddress.getLocalHost();
-            } catch (UnknownHostException e) {
-                LOG.log(WARNING,
-                    "Could not resolve address of the local host. I will use the loopback address temporarily.", e);
-                address = InetAddress.getLoopbackAddress();
-            }
-
-            return isPortFreeServer(port, address);
-        } catch (Exception e) {
-            LOG.log(TRACE, "Could not resolve address of the local host.", e);
-            return false;
-        }
+        return isPortFreeServer(port, InetAddress.getLoopbackAddress());
     }
 
     private static boolean isPortFreeServer(int port, InetAddress address) {
@@ -230,7 +298,7 @@ public final class NetUtils {
         Socket server = new Socket();
         try {
             if (host == null) {
-                host = getHostName();
+                host = getCanonicalHostName();
             }
             InetSocketAddress address = new InetSocketAddress(host, port);
             server.connect(address, timeoutMilliseconds);
@@ -261,23 +329,13 @@ public final class NetUtils {
             return false;
         }
 
-        if (LOCALHOST_IP.equals(address)) {
-            return true;
-        }
-
-        final String[] myIPs = getHostIPs();
-        for (String myIP : myIPs) {
-            if (address.equals(myIP)) {
+        try {
+            InetAddress inetAddress = InetAddress.getByName(address);
+            if (inetAddress.isLoopbackAddress()) {
                 return true;
             }
-        }
-
-        if (getHostName().equals(address)) {
             // if the address is same as the host name, it is considered local too
-            return true;
-        }
-        try {
-            return InetAddress.getByName(address).isLoopbackAddress();
+            return getHostAddresses().contains(inetAddress);
         } catch (UnknownHostException e) {
             LOG.log(TRACE, "Unable to resolve the address.", e);
             return false;
@@ -342,111 +400,95 @@ public final class NetUtils {
     }
 
     /**
-     * @return all the IP addresses of the local host. Never null.
+     * @return all the addresses of the local host. Never null, but may be empty.
      */
-    public static String[] getHostIPs() {
-        InetAddress[] adds = getHostAddresses();
-        String[] ips = new String[adds.length];
-        for (int i = 0; i < adds.length; i++) {
-            ips[i] = adds[i].getHostAddress();
-        }
-        return ips;
-    }
-
-    /**
-     * @return all the addresses of the local host. Never null.
-     */
-    public static InetAddress[] getHostAddresses() {
+    public static List<InetAddress> getHostAddresses() {
         try {
-            return InetAddress.getAllByName(getHostName());
-        } catch (Exception e) {
-            LOG.log(TRACE, "Could not resolve address of the local host.", e);
-            return new InetAddress[0];
+            return NetworkInterface.networkInterfaces().flatMap(NetworkInterface::inetAddresses)
+                .sorted(BEST_ADDRESS_COMPARATOR).toList();
+        } catch (SocketException e) {
+            LOG.log(WARNING, "Could not list network interfaces.", e);
+            return List.of();
         }
     }
 
-
     /**
-     * @return resolved host name of the local host (see <code>hostname</code> command on linux) or
-     *         loopback hostname.
+     * Returns the host name. There is no guarantee that it will be resolvable by DNS.
+     *
+     * @return host name of the local host or loopback hostname.
      */
     public static String getHostName() {
-        try {
-            return InetAddress.getLocalHost().getHostName();
-        } catch (Exception e) {
-            return InetAddress.getLoopbackAddress().getHostName();
-        }
+        return HOST_NAME;
     }
 
     /**
-     * This method returns the fully qualified name of the host.
+     * This method tries to choose the best fully qualified name of this host.
      * If the name can't be resolved (on Windows if there isn't a domain specified),
-     * just host name is returned
+     * just result of {@link #getHostName()} is returned
      *
      * @return fully qualified name of the local host.
-     * @throws UnknownHostException so it can be handled on a case by case basis
      */
-    public static String getCanonicalHostName() throws UnknownHostException {
-        final String defaultHostname = InetAddress.getLocalHost().getHostName();
-        // short-circuit out if user has reverse-DNS issues
+    public static String getCanonicalHostName() {
         if (Boolean.parseBoolean(System.getenv("AS_NO_REVERSE_DNS"))) {
-            return defaultHostname;
+            return HOST_NAME;
         }
-
-        // look for full name
-        // check to see if ip returned or canonical hostname is different than hostname
-        // It is possible for dhcp connected computers to have an erroneous name returned
-        // that is created by the dhcp server. If that happens, return just the default hostname
-        final String hostname = InetAddress.getLocalHost().getCanonicalHostName();
-        if (hostname.equals(InetAddress.getLocalHost().getHostAddress())
-                || !hostname.startsWith(defaultHostname)) {
-            // don't want IP or canonical hostname, this will cause a lot of problems for dhcp users
-            // get just plain host name instead
-            return defaultHostname;
-        }
-
-        // If the DNS is inconsistent between domain hosts, it is sometimes better to use
-        // any reachable public IP address. This check is not perfect - however usually if
-        // the host name doesn't contain any dots, it is already a bad name for wider networks.
-        if (!hostname.contains(".")) {
-            ThrowingPredicate<NetworkInterface> isLoopback = NetworkInterface::isLoopback;
-            try {
-                String host = NetworkInterface.networkInterfaces().filter(Predicate.not(isLoopback))
-                    .flatMap(NetworkInterface::inetAddresses)
-                    .map(InetAddress::getHostAddress)
-                    .filter(name -> name.indexOf('.') > 0)
-                    .findFirst().orElse(hostname);
-                return host;
-            } catch (SocketException e) {
-                LOG.log(WARNING, "Failed to list network interfaces.", e);
-            }
-        }
-        return hostname;
-    }
-
-    public enum PortAvailability {
-        illegalNumber, noPermission, inUse, unknown, OK
+        return getResolvableHostNames().stream().findFirst().orElseGet(() ->
+            // Don't provide any public address, just loopback.
+            InetAddress.getLoopbackAddress().getHostAddress()
+        );
     }
 
     /**
-     * Interface for accessing HTTP headers, allowing different request types to be used
-     * with the getRemoteHost method.
+     * Goes over network interfaces and collects resolvable host names of this hosts.
+     * The list is ordered, loopback host names are last.
+     * Host names with dots are preferred to those without.
+     *
+     * @return list of autodetected host names except loopbacks and unresolvable host names. Never null.
      */
-    public interface RequestInfoProvider {
-        /**
-         * Gets the value of an HTTP header.
-         *
-         * @param name the header name
-         * @return the header value, or null if not present
-         */
-        String getHeader(String name);
+    public static List<String> getResolvableHostNames() {
+        // Lists of all network interfaces is including loopbacks,
+        // but still not all known host names.
+        Stream<InetAddress> networkAddresses;
+        try {
+            networkAddresses = NetworkInterface.networkInterfaces().flatMap(NetworkInterface::inetAddresses);
+        } catch (SocketException e) {
+            LOG.log(WARNING, "Failed to list network interfaces.", e);
+            networkAddresses = Stream.empty();
+        }
+        Stream<InetAddress> specials = Stream.of(HOST_NAME, LOCALHOST).map(NetUtils::resolve).filter(Objects::nonNull);
+        return Stream.concat(networkAddresses, specials).filter(NetUtils::isResolved).sorted(BEST_ADDRESS_COMPARATOR)
+            .map(InetAddress::getCanonicalHostName).distinct().toList();
+    }
 
-        /**
-         * Gets the value of the remote host.
-         *
-         * @return remote host of the HTTP request
-         */
-        String getRemoteHost();
+
+    /**
+     * @param address
+     * @return true if the {@link InetAddress#getCanonicalHostName()} gives different result than
+     *         {@link InetAddress#getHostAddress()}
+     */
+    public static boolean isResolved(InetAddress address) {
+        return !address.getCanonicalHostName().equals(address.getHostAddress());
+    }
+
+    /**
+     * @param hostName host name or null for loopback host.
+     * @return true if the host name can be converted to an IP address.
+     */
+    public static boolean isResolvable(String hostName) {
+        boolean result = resolve(hostName) != null;
+        if (!result) {
+            LOG.log(INFO, "Host name " + hostName + " is not resolvable.");
+        }
+        return result;
+    }
+
+
+    private static InetAddress resolve(String hostName) {
+        try {
+            return InetAddress.getByName(hostName);
+        } catch (UnknownHostException e) {
+            return null;
+        }
     }
 
     /**
@@ -481,6 +523,31 @@ public final class NetUtils {
         return requestInfoProvider.getRemoteHost();
     }
 
+
+    public enum PortAvailability {
+        illegalNumber, noPermission, inUse, unknown, OK
+    }
+
+    /**
+     * Interface for accessing HTTP headers, allowing different request types to be used
+     * with the getRemoteHost method.
+     */
+    public interface RequestInfoProvider {
+        /**
+         * Gets the value of an HTTP header.
+         *
+         * @param name the header name
+         * @return the header value, or null if not present
+         */
+        String getHeader(String name);
+
+        /**
+         * Gets the value of the remote host.
+         *
+         * @return remote host of the HTTP request
+         */
+        String getRemoteHost();
+    }
 
     @FunctionalInterface
     private static interface ThrowingPredicate<T> extends Predicate<T> {

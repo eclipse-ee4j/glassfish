@@ -22,19 +22,15 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.ServerTags;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.net.NetUtils;
 
-import java.net.InetAddress;
-import java.util.List;
 import java.util.Objects;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.config.support.PropertyResolver;
-import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.jvnet.hk2.config.Dom;
 
@@ -82,7 +78,7 @@ public final class ServerHelper {
      */
     public final String getAdminHost() throws RuntimeException {
         // Look at the address for the admin-listener first
-        String addr = translateAddressAndPort(getAdminListener(config), server, config)[0];
+        String addr = translateAddressAndPort(config.getAdminListener(), server, config)[0];
         if (addr != null && !addr.equals("0.0.0.0")) {
             return addr;
         }
@@ -97,7 +93,7 @@ public final class ServerHelper {
                 // We are the DAS. Return our hostname
                 return System.getProperty(HOST_NAME.getSystemPropertyName());
             }
-            return NetUtils.getHostName();
+            return NetUtils.getCanonicalHostName();
         }
 
         String hostName = null;
@@ -109,10 +105,9 @@ public final class ServerHelper {
             if (node != null) {
                 hostName = node.getNodeHost();
             }
-            // XXX Hack to get around the fact that the default localhost
-            // node entry is malformed
+            // Hack to get around the fact that the default localhost node entry is malformed
             if (hostName == null && nodeName.equals("localhost-" + domain.getName())) {
-                return InetAddress.getLoopbackAddress().getHostName();
+                return NetUtils.getCanonicalHostName();
             }
         }
 
@@ -131,25 +126,6 @@ public final class ServerHelper {
         }
     }
 
-    public static NetworkListener getAdminListener(Config config) {
-        NetworkConfig networkConfig = config.getNetworkConfig();
-        if (networkConfig == null) {
-            throw new IllegalStateException("Can't operate without <http-service>");
-        }
-
-        List<NetworkListener> listeners = networkConfig.getNetworkListeners().getNetworkListener();
-        if (listeners == null || listeners.isEmpty()) {
-            throw new IllegalStateException("Can't operate without at least one <network-listener>");
-        }
-
-        for (NetworkListener listener : listeners) {
-            if (ServerTags.ADMIN_LISTENER_ID.equals(listener.getName())) {
-                return listener;
-            }
-        }
-        // if we can't find the admin-listener, then use the first one
-        return listeners.get(0);
-    }
 
     ///////////////////////////////////////////
     ///////////////////  all private below
@@ -159,7 +135,7 @@ public final class ServerHelper {
         if (server == null || config == null) {
             return null;
         }
-        return translateAddressAndPort(getAdminListener(config), server, config)[1];
+        return translateAddressAndPort(config.getAdminListener(), server, config)[1];
     }
 
     /**

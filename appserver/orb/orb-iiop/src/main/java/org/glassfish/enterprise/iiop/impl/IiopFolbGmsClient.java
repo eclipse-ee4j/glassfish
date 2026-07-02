@@ -138,11 +138,6 @@ class IiopFolbGmsClient implements CallBack {
         return gmsAdapter != null ;
     }
 
-    ////////////////////////////////////////////////////
-    //
-    // Action
-    //
-
     @Override
     public void processNotification(final Signal signal) {
         try {
@@ -250,18 +245,7 @@ class IiopFolbGmsClient implements CallBack {
         final int weight = Integer.parseInt(server.getLbWeight());
         LOG.log(DEBUG, "getClusterInstanceInfo: weight {0}", weight);
 
-        final String nodeName = server.getNodeRef();
-        String hostName = nodeName;
-        if (nodes != null) {
-            Node node = nodes.getNode(nodeName);
-            if (node != null) {
-                if (node.isLocal()) {
-                    hostName = NetUtils.getHostName();
-                } else {
-                    hostName = node.getNodeHost();
-                }
-            }
-        }
+        final String hostName = getHostName(server.getNodeRef());
 
         LOG.log(DEBUG, "getClusterInstanceInfo: host {0}", hostName);
 
@@ -273,8 +257,7 @@ class IiopFolbGmsClient implements CallBack {
 
         final List<SocketInfo> sinfos = new ArrayList<>();
         for (IiopListener il : listeners) {
-            SocketInfo sinfo = new SocketInfo(il.getId(), hostName, resolvePort(server, il));
-            sinfos.add(sinfo);
+            sinfos.add(new SocketInfo(il.getId(), hostName, resolvePort(server, il)));
         }
         LOG.log(DEBUG, "getClusterInstanceInfo: sinfos {0}", sinfos);
 
@@ -282,6 +265,17 @@ class IiopFolbGmsClient implements CallBack {
         LOG.log(DEBUG, "getClusterInstanceInfo: result {0}", result);
 
         return result;
+    }
+
+    private String getHostName(final String nodeName) {
+        if (nodes == null) {
+            return nodeName;
+        }
+        Node node = nodes.getNode(nodeName);
+        if (node == null) {
+            return nodeName;
+        }
+        return node.isLocal() ? NetUtils.getCanonicalHostName() : node.getNodeHost();
     }
 
 

@@ -39,14 +39,15 @@ REM
 REM  This file uses UTF-8 character encoding.
 
 endlocal
-set "AS_DERBY_INSTALL=%AS_INSTALL%\..\javadb"
-set "AS_IMQ_BIN=%AS_INSTALL%\..\mq\bin"
-set "AS_IMQ_LIB=%AS_INSTALL%\..\mq\lib"
+IF "%AS_DERBY_INSTALL%"=="" SET "AS_DERBY_INSTALL=%AS_INSTALL%\..\javadb"
+IF "%AS_IMQ_BIN%"=="" SET "AS_IMQ_BIN=%AS_INSTALL%\..\mq\bin"
+IF "%AS_IMQ_LIB%"=="" SET "AS_IMQ_LIB=%AS_INSTALL%\..\mq\lib"
 
-set "AS_CONFIG=%AS_INSTALL%\config"
-set "AS_DEF_DOMAINS_PATH=%AS_INSTALL%\domains"
-set "AS_DEF_NODES_PATH=%AS_INSTALL%\nodes"
+IF "%AS_HOSTNAME%"=="" IF NOT "%COMPUTERNAME%"=="" SET AS_HOSTNAME=%COMPUTERNAME%
+IF "%AS_CONFIG%"=="" SET "AS_CONFIG=%AS_INSTALL%\config"
+IF "%AS_DEF_DOMAINS_PATH%"=="" SET "AS_DEF_DOMAINS_PATH=%AS_INSTALL%\domains"
+IF "%AS_DEF_NODES_PATH%"=="" SET "AS_DEF_NODES_PATH=%AS_INSTALL%\nodes"
 
-set "ASADMIN_MODULEPATH=%AS_INSTALL%\lib\bootstrap"
-set "ASADMIN_JVM_OPTIONS=--enable-native-access=ALL-UNNAMED -Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager"
-set "ASADMIN_CLASSPATH=%AS_INSTALL%\admin-cli.jar;%AS_INSTALL%\lib\asadmin\*;%AS_INSTALL%\modules\admin-util.jar;%AS_INSTALL%\modules\backup.jar;%AS_INSTALL%\modules\cluster-common.jar;%AS_INSTALL%\modules\cluster-ssh.jar;%AS_INSTALL%\modules\config-api.jar;%AS_INSTALL%\modules\config-types.jar;%AS_INSTALL%\modules\common-util.jar;%AS_INSTALL%\modules\glassfish-api.jar;%AS_INSTALL%\modules\hk2.jar;%AS_INSTALL%\modules\hk2-config-generator.jar;%AS_INSTALL%\modules\internal-api.jar;%AS_INSTALL%\modules\jackson-core.jar;%AS_INSTALL%\modules\jakarta.activation-api.jar;%AS_INSTALL%\modules\jakarta.validation-api.jar;%AS_INSTALL%\modules\jakarta.xml.bind-api.jar;%AS_INSTALL%\modules\jaxb-osgi.jar;%AS_INSTALL%\modules\jettison.jar;%AS_INSTALL%\modules\jsch.jar;%AS_INSTALL%\modules\launcher.jar;%AS_INSTALL%\modules\mimepull.jar"
+IF "%ASADMIN_MODULEPATH%"=="" SET "ASADMIN_MODULEPATH=%AS_INSTALL%\lib\bootstrap"
+IF "%ASADMIN_JVM_OPTIONS%"=="" SET "ASADMIN_JVM_OPTIONS=--enable-native-access=ALL-UNNAMED -Djava.util.logging.manager=org.glassfish.main.jul.GlassFishLogManager"
+IF "%ASADMIN_CLASSPATH%"=="" SET "ASADMIN_CLASSPATH=%AS_INSTALL%\admin-cli.jar;%AS_INSTALL%\lib\asadmin\*;%AS_INSTALL%\modules\admin-util.jar;%AS_INSTALL%\modules\backup.jar;%AS_INSTALL%\modules\cluster-common.jar;%AS_INSTALL%\modules\cluster-ssh.jar;%AS_INSTALL%\modules\config-api.jar;%AS_INSTALL%\modules\config-types.jar;%AS_INSTALL%\modules\common-util.jar;%AS_INSTALL%\modules\glassfish-api.jar;%AS_INSTALL%\modules\hk2.jar;%AS_INSTALL%\modules\hk2-config-generator.jar;%AS_INSTALL%\modules\internal-api.jar;%AS_INSTALL%\modules\jackson-core.jar;%AS_INSTALL%\modules\jakarta.activation-api.jar;%AS_INSTALL%\modules\jakarta.validation-api.jar;%AS_INSTALL%\modules\jakarta.xml.bind-api.jar;%AS_INSTALL%\modules\jaxb-osgi.jar;%AS_INSTALL%\modules\jettison.jar;%AS_INSTALL%\modules\jsch.jar;%AS_INSTALL%\modules\launcher.jar;%AS_INSTALL%\modules\mimepull.jar"

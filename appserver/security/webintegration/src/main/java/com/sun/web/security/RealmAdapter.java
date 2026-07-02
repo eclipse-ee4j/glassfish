@@ -1076,16 +1076,26 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
             for (NetworkListener nwListener : networkListeners.getNetworkListener()) {
                 // Loop through the network listeners
                 String nwAddress = nwListener.getAddress();
-                InetAddress[] localHostAdresses;
                 if (nwAddress == null || nwAddress.equals("0.0.0.0")) {
                     nwAddress = NetUtils.getCanonicalHostName();
-                    if (!nwAddress.equals(hostPort[0])) {
+                    if (nwAddress.equals(hostPort[0])) {
+                        // Host names are the same, compare the ports
+                        String nwPort = nwListener.getPort();
+                        // If the listener port is different from the port
+                        // in the Host header, then request is received by WS frontend
+                        if (nwPort.equals(hostPort[1])) {
+                            isWebServerRequest = false;
+                            breakFromLoop = true;
+                        } else {
+                            isWebServerRequest = true;
+                        }
+                    } else {
                         // compare the InetAddress objects
                         // only if the hostname in the header
                         // does not match with the hostname in the
                         // listener-To avoid performance overhead
-                        localHostAdresses = NetUtils.getHostAddresses();
-                        if (localHostAdresses.length == 0) {
+                        List<InetAddress> localHostAdresses = NetUtils.getHostAddresses();
+                        if (localHostAdresses.isEmpty()) {
                             break;
                         }
                         InetAddress hostAddress = InetAddress.getByName(hostPort[0]);
@@ -1104,20 +1114,6 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                                 isWebServerRequest = true;
                             }
                         }
-                    } else {
-                        // Host names are the same, compare the ports
-                        String nwPort = nwListener.getPort();
-                        // If the listener port is different from the port
-                        // in the Host header, then request is received by WS frontend
-                        if (!nwPort.equals(hostPort[1])) {
-                            isWebServerRequest = true;
-
-                        } else {
-                            isWebServerRequest = false;
-                            breakFromLoop = true;
-
-                        }
-
                     }
                 }
                 if (breakFromLoop && !isWebServerRequest) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -230,8 +230,7 @@ final class CLIContainer {
             if (type.isAssignableFrom(CLIContainer.class)) {
                 return (V) CLIContainer.this;
             }
-            throw new IllegalStateException();
+            throw new IllegalStateException("Unsupported type: " + type);
         }
-
     }
 }

@@ -220,7 +220,7 @@ public final class PortManager {
 
     private Integer reassignPort(int num) throws TransactionFailure {
         int max = num + 100;
-        final String hostName = NetUtils.getHostName();
+        final String hostName = NetUtils.getCanonicalHostName();
         while (num < max) {
             num = getNextUnassignedPort(num);
             if (NetUtils.isPortFree(hostName, num)) {

@@ -18,10 +18,15 @@ package com.sun.enterprise.security.ee.authorization;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.servlet.ServletContext;
 
+import java.security.Permission;
 import java.security.Permissions;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.glassfish.exousia.permissions.JakartaPermissions;
+import org.glassfish.exousia.permissions.RestResourcePermission;
 import org.glassfish.soteria.rest.RestConstraintsStore;
+import org.glassfish.soteria.rest.RestConstraintsStore.RestConstraint;
 
 /**
  * This class converts from staged permissions by Soteria to Exousia JakartaPermissions.
@@ -34,17 +39,27 @@ import org.glassfish.soteria.rest.RestConstraintsStore;
  */
 public class SoteriaToExousiaConverter {
 
+    private static final String ESCAPED_COLON = "%3A";
+
+    public static Set<String> getRESTServletPathBases(ServletContext servletContext) {
+        Set<String> restBaseUrls = new HashSet<String>();
+
+        if (RestConstraintsStore.hasConstraints(servletContext)) {
+            restBaseUrls.addAll(RestConstraintsStore.getConstraints(servletContext).keySet());
+        }
+
+        return restBaseUrls;
+    }
+
     public static JakartaPermissions getStagedPermissionsFromContext(ServletContext servletContext) {
         JakartaPermissions jakartaPermissions = new JakartaPermissions();
 
-        if (servletContext != null && RestConstraintsStore.hasConstraints(servletContext)) {
+        if (RestConstraintsStore.hasConstraints(servletContext)) {
 
             for (var constraints : RestConstraintsStore.getConstraints(servletContext).values()) {
                 for (var constraint : constraints) {
 
-                    WebResourcePermission permission =
-                        new WebResourcePermission(
-                            toStagedUrlPatternName(constraint.fullTemplatePath()), constraint.httpMethod());
+                    Permission permission = toPermission(constraint);
 
                     var securityConstraint = constraint.securityConstraint();
 
@@ -75,10 +90,6 @@ public class SoteriaToExousiaConverter {
         return jakartaPermissions;
     }
 
-
-    private static final String ESCAPED_COLON = "%3A";
-
-
     /**
      * Derives a context-relative, unqualified URL pattern name suitable for
      * staging as the name argument of WebResourcePermission.
@@ -97,6 +108,18 @@ public class SoteriaToExousiaConverter {
         }
 
         return path.replace(":", ESCAPED_COLON);
+    }
+
+    private static Permission toPermission(RestConstraint constraint) {
+        String path = constraint.fullTemplatePath();
+
+        if (containsTemplate(path)) {
+            return new RestResourcePermission(path, constraint.httpMethod());
+        }
+
+        return new WebResourcePermission(
+            toStagedUrlPatternName(path),
+            constraint.httpMethod());
     }
 
 

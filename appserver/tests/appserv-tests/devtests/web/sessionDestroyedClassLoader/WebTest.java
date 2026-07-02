@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -63,7 +64,7 @@ public class WebTest {
 
         String baseUrl = "http://" + host + ":" + port + contextRoot + "/test";
 
-        HttpURLConnection conn = (HttpURLConnection)(new URL(baseUrl + "?timeout=1")).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(baseUrl + "?timeout=1").toURL().openConnection();
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected return code: " + code);
@@ -73,7 +74,7 @@ public class WebTest {
 
         Thread.sleep(4 * 1000);
 
-        conn = (HttpURLConnection) (new URL(baseUrl)).openConnection();
+        conn = (HttpURLConnection) URI.create(baseUrl).toURL().openConnection();
         conn.addRequestProperty("Cookie", JSESSIONID + "=" + sessionId1);
         code = conn.getResponseCode();
         if (code != 200) {

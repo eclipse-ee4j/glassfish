@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2021, 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package org.glassfish.main.extras.embedded.test.all;
 
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 
 import org.glassfish.embeddable.BootstrapProperties;
@@ -86,7 +88,7 @@ public class StartupITest {
         ServerUtils.createWar(war, TestServlet.class);
         String result = deployer.deploy(war);
         assertEquals(WEBAPP_NAME, result);
-        URL url = new URL("http", "localhost", HTTP_PORT, "/" + WEBAPP_NAME);
+        URL url = new URI("http", null, "localhost", HTTP_PORT, "/" + WEBAPP_NAME, null, null).toURL();
         assertEquals(RESPONSE_TEXT, ServerUtils.download(url));
     }
 }

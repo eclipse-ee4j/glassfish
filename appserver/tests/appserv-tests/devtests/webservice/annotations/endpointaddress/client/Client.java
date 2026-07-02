@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -39,7 +40,7 @@ public class Client {
        public void doTest(String[] args) {
             try {
 
-                URL serviceInfo = new URL (args[0]);
+                URL serviceInfo = URI.create(args[0]).toURL();
                 URLConnection con = serviceInfo.openConnection();
                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 

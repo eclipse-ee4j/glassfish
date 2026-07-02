@@ -19,6 +19,7 @@ package org.glassfish.main.test.app.security.jmac.http.servlet.form;
 import java.io.File;
 import java.lang.System.Logger;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.glassfish.main.itest.tools.FormAuthHttpClient;
@@ -105,7 +106,7 @@ public class HttpServletFormAuthTest {
 
     @Test
     void test() throws Exception {
-        final URL baseUrl = new URL("http://localhost:8080/" + APP_NAME);
+        final URL baseUrl = URI.create("http://localhost:8080/" + APP_NAME).toURL();
         final FormAuthHttpClient client = new FormAuthHttpClient(baseUrl, USER_NAME, USER_PASSWORD);
         final HttpURLConnection connection = client.get("index.jsp");
         try {

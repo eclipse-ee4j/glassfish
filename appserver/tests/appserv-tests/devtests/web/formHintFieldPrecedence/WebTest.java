@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -88,7 +89,7 @@ public class WebTest {
 
     private void invokeJsp() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
                           + "/jsp/formHintField.jsp?"
                           + LOCALE_CHARSET_INFO_FORM_HINT_FIELD
                           + "="
@@ -96,7 +97,7 @@ public class WebTest {
                           + "&"
                           + SUN_WEB_APP_FORM_HINT_FIELD
                           + "="
-                          + SUN_WEB_APP_FORM_HINT_FIELD_CHARSET);
+                          + SUN_WEB_APP_FORM_HINT_FIELD_CHARSET).toURL();
         System.out.println("Invoking URL: " + url.toString());
 
         URLConnection conn = url.openConnection();

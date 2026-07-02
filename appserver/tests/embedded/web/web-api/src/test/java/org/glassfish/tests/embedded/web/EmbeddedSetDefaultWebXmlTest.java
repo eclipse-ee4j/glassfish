@@ -20,6 +20,7 @@ package org.glassfish.tests.embedded.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -73,7 +74,7 @@ public class EmbeddedSetDefaultWebXmlTest {
         embedded.addContext(context, contextRoot);
 
         // test if dir listing is getting picked up from default-web.xml
-        URL servlet = new URL("http://localhost:8080/"+contextRoot);
+        URL servlet = URI.create("http://localhost:8080/"+contextRoot).toURL();
         URLConnection yc = servlet.openConnection();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
             StringBuilder sb = new StringBuilder();

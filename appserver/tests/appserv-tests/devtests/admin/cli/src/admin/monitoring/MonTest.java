@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -404,7 +405,7 @@ abstract class MonTest {
      */
     static boolean wget(int port, String uri) {
         try {
-            URL url = new URL("http://localhost:" + port + "/" + uri);
+            URL url = URI.create("http://localhost:" + port + "/" + uri).toURL();
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(60000);
             conn.getInputStream().close();

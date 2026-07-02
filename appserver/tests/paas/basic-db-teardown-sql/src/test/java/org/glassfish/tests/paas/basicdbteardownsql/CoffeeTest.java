@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.*;
@@ -153,7 +155,7 @@ public class CoffeeTest {
 
     private List<String> getDbConnectionDetails(String urlStr) throws Exception {
         List dbConnectionDetails = new ArrayList<String>();
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         URLConnection yc = url.openConnection();
         System.out.println("\nURLConnection [" + yc + "] : ");
         BufferedReader in = new BufferedReader(new InputStreamReader(
@@ -167,7 +169,7 @@ public class CoffeeTest {
 
 
     private void get(String urlStr, String result) throws Exception {
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         URLConnection yc = url.openConnection();
         System.out.println("\nURLConnection [" + yc + "] : ");
         BufferedReader in = new BufferedReader(new InputStreamReader(

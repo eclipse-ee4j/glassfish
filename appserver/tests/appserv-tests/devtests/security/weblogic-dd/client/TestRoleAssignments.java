@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +46,7 @@ class TestRoleAssignment {
 
     public void doTest() {
         try {
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
             URLConnection uconn = u.openConnection();
 
             up = Base64.getEncoder().encodeToString((username + ":" + password).getBytes(StandardCharsets.UTF_8));

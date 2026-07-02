@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +38,7 @@ public class WebTest{
             stat.addDescription("Standalone Servlet/Filter war test");
 
             System.out.println("Running test");
-            url = new URL("http://" + host  + ":" + port + contextRoot + "/ServletTest");
+            url = URI.create("http://" + host  + ":" + port + contextRoot + "/ServletTest").toURL();
             String originalLoc = url.toString();
             for (int k=0; k < 3; k++){
                 System.out.println("\n Invoking url: " + url.toString());

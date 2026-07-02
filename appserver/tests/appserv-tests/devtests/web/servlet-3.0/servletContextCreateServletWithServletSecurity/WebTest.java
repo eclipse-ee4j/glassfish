@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -79,7 +80,7 @@ public class WebTest {
 
         String urlStr = "http://" + host + ":" + port + contextPath;
         System.out.println(webMethod + " " + urlStr);
-        URL url = new URL(urlStr);
+        URL url = URI.create(urlStr).toURL();
         HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
         urlConnection.setRequestMethod(webMethod);
         if (requireAuthenticate) {

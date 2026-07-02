@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +56,7 @@ public class SimpleBVServletTestNG {
 
             String testurl = "http://" + host + ":" + port + "/" + strContextRoot + "/test/bv_10";
             //System.out.println("URL is: "+testurl);
-            URL url = new URL(testurl);
+            URL url = URI.create(testurl).toURL();
             //echo("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
@@ -128,7 +129,7 @@ public class SimpleBVServletTestNG {
 
             String testurl = "http://" + host + ":" + port + "/" + strContextRoot + "/test/bv_20";
             //System.out.println("URL is: "+testurl);
-            URL url = new URL(testurl);
+            URL url = URI.create(testurl).toURL();
             //echo("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

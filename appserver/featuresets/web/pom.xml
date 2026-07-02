@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2025, 2026 Contributors to Eclipse Foundation.
     Copyright (c) 2015, 2025 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -218,7 +218,9 @@
             </exclusions>
         </dependency>
 
-        <!-- See https://github.com/jakartaee/cdi-tck/issues/474
+        <!-- Allows using @Inject instead of @Context for injection of REST artifacts.
+             Was disabled because of https://github.com/jakartaee/cdi-tck/issues/474,
+             which was resolved by https://github.com/jakartaee/cdi-tck/pull/475 -->
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi-rs-inject</artifactId>
@@ -229,7 +231,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        -->
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>

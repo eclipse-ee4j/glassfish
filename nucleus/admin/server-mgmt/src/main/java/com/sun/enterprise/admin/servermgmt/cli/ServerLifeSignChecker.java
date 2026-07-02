@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.admin.cli.CLIConstants;
 import com.sun.enterprise.admin.servermgmt.util.CommandAction;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;
@@ -126,7 +127,7 @@ public class ServerLifeSignChecker {
             }
             return true;
         };
-        return ProcessUtils.waitFor(signOfFinishedStartup, timeout, verbose);
+        return ProcessUtils.waitFor(signOfFinishedStartup, timeout, CLIConstants.WAIT_FOR_DAS_POLLING_INTERVAL, verbose);
     }
 
     private ServerLifeSigns createTimeoutReport(final ServerLifeSigns signs) {

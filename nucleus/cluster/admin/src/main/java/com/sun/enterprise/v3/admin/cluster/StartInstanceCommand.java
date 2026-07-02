@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,6 +70,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TIMEOUT_START_SERVER;
         })
 })
 public class StartInstanceCommand implements AdminCommand {
+    private static final Duration PORT_CHECK_SLEEP = Duration.ofMillis(100);
     @Inject
     ServiceLocator locator;
 
@@ -197,7 +198,7 @@ public class StartInstanceCommand implements AdminCommand {
 
         if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
             // Make sure instance is listening
-            if (ProcessUtils.waitFor(instance::isListeningOnAdminPort, getTimeout(timeout), false)) {
+            if (ProcessUtils.waitFor(instance::isListeningOnAdminPort, getTimeout(timeout), PORT_CHECK_SLEEP, false)) {
                 return;
             }
             report.setMessage(Strings.get("start.instance.timeout", instanceName));

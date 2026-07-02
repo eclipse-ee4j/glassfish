@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -166,7 +166,7 @@ public final class ProcessUtils {
         final Supplier<Boolean> action = () -> {
             try (Socket server = new Socket()) {
                 // Force RST on close
-                server.setSoLinger(true, 0);
+                server.setSoLinger(true, 1);
                 server.setSoTimeout(timeout == null ? 0 : (int) timeout.toMillis());
                 try {
                     server.connect(endpoint.toInetSocketAddress(), SOCKET_CONNECT_TIMEOUT);
@@ -214,7 +214,7 @@ public final class ProcessUtils {
     public static boolean isListening(HostAndPort endpoint) {
         try (Socket socket = new Socket()) {
             // Force RST on close
-            socket.setSoLinger(true, 0);
+            socket.setSoLinger(true, 1);
             socket.connect(endpoint.toInetSocketAddress(), SOCKET_CONNECT_TIMEOUT);
             return true;
         } catch (IOException e) {
@@ -274,15 +274,36 @@ public final class ProcessUtils {
      * @return true if the sign returned true before timeout.
      */
     public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, boolean printDots) {
-        LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, printDots={2})", sign, timeout, printDots);
+        return waitFor(sign, timeout, null, printDots);
+    }
+
+    /**
+     * @param sign logic defining what we are waiting for.
+     * @param timeout can be null to wait indefinitely.
+     * @param interval interval for polling until the timeout. can be null to poll without an interval.
+     * @param printDots print dot each second and new line in the end.
+     * @return true if the sign returned true before timeout.
+     */
+    public static boolean waitFor(Supplier<Boolean> sign, Duration timeout, Duration interval, boolean printDots) {
+        LOG.log(DEBUG, "waitFor(sign={0}, timeout={1}, interval={2}, printDots={3})", sign, timeout, interval, printDots);
         final Instant start = Instant.now();
         final Instant deadline = timeout == null ? null : start.plus(timeout);
         final Supplier<Boolean> action = () -> {
-            while (deadline == null || Instant.now().isBefore(deadline)) {
+            Instant current = null;
+            while (deadline == null || (current = Instant.now()).isBefore(deadline)) {
                 if (sign.get()) {
                     return true;
                 }
-                Thread.onSpinWait();
+                final Duration pollingInterval = calculatePollingInterval(interval, deadline, current);
+                if (pollingInterval != null) {
+                    try {
+                        Thread.sleep(interval);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Thread.onSpinWait();
+                }
             }
             return false;
         };
@@ -293,6 +314,23 @@ public final class ProcessUtils {
         LOG.log(DEBUG,
             () -> "Waiting finished after " + millis + " ms. Action " + (result ? "succeeded." : "timed out."));
         return result;
+    }
+
+
+    private static Duration calculatePollingInterval(final Duration interval, final Instant deadline, Instant current) {
+        if (interval == null) {
+            return null;
+        }
+        if (deadline == null) {
+            return interval;
+        }
+        if (current == null) {
+            current = Instant.now();
+        }
+        if (current.isAfter(deadline)) {
+            return null;
+        }
+        return current.plus(interval).isBefore(deadline) ? interval : Duration.between(current, deadline);
     }
 
 

@@ -37,6 +37,7 @@ public final class CLIConstants {
     public static final String EOL = System.lineSeparator();
 
     public static final Duration WAIT_FOR_DAS_TIME_MS = getEnv(TIMEOUT_START_SERVER);
+    public static final Duration WAIT_FOR_DAS_POLLING_INTERVAL = Duration.ofMillis(100);
     public static final int RESTART_NORMAL = 10;
     public static final int RESTART_DEBUG_ON = 11;
     public static final int RESTART_DEBUG_OFF = 12;

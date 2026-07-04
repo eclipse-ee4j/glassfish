@@ -100,6 +100,15 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 
 Download links are available from the [GlassFish Download page](download.md).
 
+## July 4, 2026 -- Eclipse GlassFish 7.1.1 and 7.0.26 Available
+
+Eclipse GlassFish 7.1.1 and 7.0.26 are maintenance releases focused on security fixes and long-term stability of the 7.x line.
+
+GlassFish 7.1.1 additionally fixes reported regressions and backports most applicable improvements from GlassFish 8 to strengthen reliability while keeping Jakarta EE 10 compatibility.
+
+See version [7.1.1 release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.1)
+and [7.0.26 release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.26) for more details.
+
 ## June 7, 2026 -- Eclipse GlassFish 8.0.3 Available
 
 GlassFish 8.0.3 focused on security improvements, including components of GlassFish, Jakarta Faces rendering performance

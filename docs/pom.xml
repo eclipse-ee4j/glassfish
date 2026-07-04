@@ -62,7 +62,7 @@
         <glassfish.version.5x>5.1.0</glassfish.version.5x>
         <glassfish.version.6x>6.2.5</glassfish.version.6x>
         <glassfish.version.7x>7.0.26</glassfish.version.7x>
-        <glassfish.version.71x>7.1.0</glassfish.version.71x>
+        <glassfish.version.71x>7.1.1</glassfish.version.71x>
         <glassfish.version.8x>8.0.3</glassfish.version.8x>
         <glassfish.version.7x.artifact>${glassfish.version.7x}</glassfish.version.7x.artifact>
         <glassfish.version.71x.artifact>${glassfish.version.71x}</glassfish.version.71x.artifact>

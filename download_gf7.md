@@ -1,5 +1,29 @@
 # Eclipse GlassFish 7.x Downloads
 
+## Eclipse GlassFish 7.1.1
+
+Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).
+This release is corresponding with the [Jakarta EE 10](https://jakarta.ee/specifications/platform/10) specification, which is a major feature release.
+
+This maintenance release focuses on security hardening and production stability.
+Eclipse GlassFish 7.1.1 fixes known vulnerabilities and resolves regressions introduced in 7.1.0, while backporting most applicable fixes from GlassFish 8.0.2 and selected improvements from 8.0.3, notably a Jersey memory leak fix and improved Jakarta Faces rendering performance.
+
+Download:
+
+* [Eclipse GlassFish 7.1.1, Jakarta EE Platform, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-7.1.1.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/7.1.1)
+* [Eclipse GlassFish 7.1.1, Jakarta EE Web Profile, 10](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-7.1.1.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/7.1.1)
+* [Eclipse GlassFish Embedded 7.1.1, Jakarta EE Platform, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/7.1.1/glassfish-embedded-all-7.1.1.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/7.1.1)
+* [Eclipse GlassFish Embedded 7.1.1, Jakarta EE Web Profile, 10](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/7.1.1/glassfish-embedded-web-7.1.1.jar) (jar)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/7.1.1)
+
+More details:
+
+* [Eclipse GlassFish 7.1.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.1)
+* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+
 ## Eclipse GlassFish 7.1.0
 
 Eclipse GlassFish is an application server, implementing [Jakarta EE](https://jakarta.ee/about).

@@ -56,6 +56,10 @@ The project maintains the following source code repositories. An up to date list
 * https://github.com/eclipse-ee4j/glassfish-shoal
 * https://github.com/eclipse-ee4j/glassfish-spec-version-maven-plugin
 * https://github.com/eclipse-ee4j/glassfish-woodstock
+* https://github.com/eclipse-ee4j/orb
+* https://github.com/eclipse-ee4j/orb-gmbal
+* https://github.com/eclipse-ee4j/orb-gmbal-commons
+* https://github.com/eclipse-ee4j/orb-gmbal-pfl
 
 ## Third-party Content
 

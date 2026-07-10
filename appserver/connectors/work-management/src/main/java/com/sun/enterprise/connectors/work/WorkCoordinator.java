@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -56,8 +57,7 @@ public final class WorkCoordinator {
             level = "SEVERE",
             cause = "Resource Adapter throws exception during ManagedConnectionFactory.setResourceAdapter().",
             action = "[1] If you are using third party resource adapter, contact resource adapter vendor." +
-                     "[2] If you are a resource adapter developer, please check the resource adapter code.",
-            publish = true)
+                     "[2] If you are a resource adapter developer, please check the resource adapter code.")
     private static final String RAR_RA_ASSOCIATE_ERROR = "AS-RAR-05005";
 
     static final int WAIT_UNTIL_START = 1;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -80,8 +81,7 @@ public final class WorkManagerFactoryImpl implements WorkManagerFactory {
             comment = "Failed to create Work Manager instance.",
             level = "SEVERE",
             cause = "Can not initiate the Work Manager class.",
-            action = "Check the Work Manager class type.",
-            publish = true)
+            action = "Check the Work Manager class type.")
     private static final String RAR_INIT_WORK_MANAGER_ERR = "AS-RAR-05003";
 
     /**

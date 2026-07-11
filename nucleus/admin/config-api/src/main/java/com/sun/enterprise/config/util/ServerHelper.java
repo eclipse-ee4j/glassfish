@@ -107,7 +107,7 @@ public final class ServerHelper {
             }
             // Hack to get around the fact that the default localhost node entry is malformed
             if (hostName == null && nodeName.equals("localhost-" + domain.getName())) {
-                return NetUtils.getCanonicalHostName();
+                return NetUtils.getLoopbackHostName();
             }
         }
 

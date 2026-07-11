@@ -20,6 +20,7 @@ package com.sun.enterprise.admin.cli;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -97,7 +98,7 @@ public class ProgramOptions {
     static {
         Set<ParamModel> opts = new HashSet<>();
         Set<ParamModel> hopts = new HashSet<>();
-        addMetaOption(opts, HOST, 'H', String.class, false, CLIConstants.DEFAULT_HOSTNAME);
+        addMetaOption(opts, HOST, 'H', String.class, false, NetUtils.getLoopbackHostName());
         addMetaOption(opts, PORT, 'p', String.class, false, Integer.toString(CLIConstants.DEFAULT_ADMIN_PORT));
         addMetaOption(opts, USER, 'u', String.class, false, null);
         addMetaOption(opts, PASSWORDFILE, 'W', File.class, false, null);
@@ -271,7 +272,7 @@ public class ProgramOptions {
         if (ok(host)) {
             return host;
         }
-        return CLIConstants.DEFAULT_HOSTNAME;
+        return NetUtils.getLoopbackHostName();
     }
 
     /**

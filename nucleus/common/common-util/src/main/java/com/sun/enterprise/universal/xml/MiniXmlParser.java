@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +21,7 @@ import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -851,7 +852,7 @@ public class MiniXmlParser {
                             if (port >= 0) {
                                 String addr = atts.get("address");
                                 if (!GFLauncherUtils.ok(addr)) {
-                                    addr = "localhost";
+                                    addr = NetUtils.getLoopbackHostName();
                                 }
                                 if (StringUtils.isToken(addr)) {
                                     addr = sysProps.get(StringUtils.stripToken(addr));

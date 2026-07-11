@@ -189,8 +189,7 @@ public final class ProcessManager {
         LOG.log(DEBUG, "Executing command:\n  command={0}  \nenv={1}", builder.command(), builder.environment());
         final Process process = startProcess();
         try {
-            final boolean textDetected = listenProcess(process);
-            return evaluateResult(process, timeout, textDetected);
+            return evaluateResult(process, timeout);
         } finally {
             if (process.isAlive() && this.forceExit) {
                 destroy(process);
@@ -222,14 +221,16 @@ public final class ProcessManager {
         return threadOut.isTextFound() || threadErr.isTextFound();
     }
 
-    private int evaluateResult(Process process, int timeoutInMillis, boolean textDetected)
+    private int evaluateResult(Process process, int timeoutInMillis)
         throws ProcessManagerException {
+        final boolean textDetected = listenProcess(process);
         if (textToWaitFor == null) {
             if (process.isAlive()) {
                 // Process.info().command() doesn't return too much on Windows and we know the command.
                 throw new ProcessManagerTimeoutException("Process with pid " + process.pid()
                     + " is still running, timeout " + timeoutInMillis + " ms exceeded: "
-                    + process.info().commandLine().orElse(process.info().command().orElse("<unknown>")));
+                    + process.info().commandLine().orElse(process.info().command().orElse("<unknown>"))
+                    + "\nSTDOUT:\n" + getStdout() + "\nSTDERR:\n" + getStderr());
             }
             final int exitCode = process.exitValue();
             LOG.log(DEBUG, "Process finished with exit code {0}", exitCode);
@@ -286,6 +287,7 @@ public final class ProcessManager {
             // The ReaderThread can wake us up.
             LOG.log(TRACE, "Interrupted while waiting for the process death.", e);
         } finally {
+            // Note: exitValue 143 is a computed value of 128+15(SIGTERM)
             LOG.log(TRACE, "Finished waiting for process death: {0}", process);
         }
         return !process.isAlive();

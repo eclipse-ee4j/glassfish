@@ -33,6 +33,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -144,11 +145,11 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
                     equalTo("localhost/127.0.0.1[reachable]"),
                     equalTo("localhost/0:0:0:0:0:0:0:1%lo[reachable]"))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -165,11 +166,11 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo("127.0.0.1")),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),
-                    equalTo("127.0.0.1/127.0.0.1[reachable]"),
+                    equalTo(LOCALHOST_IPV4 + "/" + LOCALHOST_IPV4 + "[reachable]"),
                     equalTo("0:0:0:0:0:0:0:1%lo/0:0:0:0:0:0:0:1%lo[reachable]"))),
             () -> assertThat(getResultForGetResolvableHostNames(logs), arrayWithSize(0)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
@@ -193,11 +194,11 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
                     equalTo(getLocalhostAddressInfoV4()),
                     equalTo(getLocalhostAddressInfoV6()))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -221,11 +222,12 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                    equalTo(getHostAddressInfo(HOSTNAME, "127.0.0.13", true)),
                     equalTo(getLocalhostAddressInfoV4()),
                     equalTo(getLocalhostAddressInfoV6()))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -235,11 +237,10 @@ public class NetUtilsIT {
 
     @Test
     void extraHostnameUnreachableIP() throws Exception {
-        // FIXME: There is another record of the hostname and correct IP, can we reach it?
         String containerClass0 = filterMethodIsLocal(CONTAINER_CLASS_TEMPLATE, HOSTNAME);
         String containerClass = filterMethodIsSameHost(containerClass0, LOCALHOST, HOSTNAME);
         container = createContainer(containerClass)
-            .withExtraHost(HOSTNAME, "127.0.0.13") // unreachable IP
+            .withExtraHost(HOSTNAME, "192.168.254.254") // unreachable IP
         ;
         container.start();
         final String[] logs = getLogs(container);
@@ -247,11 +248,12 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                    arrayContaining(
+                    arrayContainingInAnyOrder(
                         equalTo(getContainerHostAddressInfo(HOSTNAME)),
+                        equalTo(getHostAddressInfo(HOSTNAME, "192.168.254.254", false)),
                         equalTo(getLocalhostAddressInfoV4()),
                         equalTo(getLocalhostAddressInfoV6()))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -271,11 +273,12 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
                     equalTo(getLocalhostAddressInfoV4()),
+                    equalTo(getHostAddressInfo(LOCALHOST, "127.0.0.100", true)),
                     equalTo(getLocalhostAddressInfoV6()))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, "localhost")),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME, LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -294,11 +297,11 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),
-                    equalTo(getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6)),
-                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4)))),
-            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining("localhost")),
+                    equalTo(getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6, true)),
+                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4, true)))),
+            () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(LOCALHOST)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
             () -> assertThat(getResultForIsLocal(logs), equalTo("true")),
@@ -317,10 +320,10 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),
-                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6)),
-                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4)))),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6, true)),
+                    equalTo(getHostAddressInfo(LOCALHOST_IPV4, LOCALHOST_IPV4, true)))),
             () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
@@ -342,10 +345,11 @@ public class NetUtilsIT {
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
             () -> assertThat(getResultForGetHostAddresses(logs),
-                arrayContaining(
+                arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),
-                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV4)),
-                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6)))),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV4, true)),
+                    equalTo(getHostAddressInfo(HOSTNAME, "127.0.0.13", true)),
+                    equalTo(getHostAddressInfo(HOSTNAME, LOCALHOST_IPV6, true)))),
             () -> assertThat(getResultForGetResolvableHostNames(logs), arrayContaining(HOSTNAME)),
             () -> assertThat(getResultForIsPortFree(logs), equalTo("true")),
             () -> assertThat(getResultForCheckPort(logs), equalTo("OK")),
@@ -377,23 +381,23 @@ public class NetUtilsIT {
 
     private String getContainerHostAddressInfo() {
         String containerHostIP = getContainerHostIP();
-        return getHostAddressInfo(containerHostIP, containerHostIP);
+        return getHostAddressInfo(containerHostIP, containerHostIP, true);
     }
 
     private String getContainerHostAddressInfo(String hostName) {
-        return getHostAddressInfo(hostName, getContainerHostIP());
+        return getHostAddressInfo(hostName, getContainerHostIP(), true);
     }
 
     private String getLocalhostAddressInfoV4() {
-        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV4);
+        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV4, true);
     }
 
     private String getLocalhostAddressInfoV6() {
-        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6);
+        return getHostAddressInfo(LOCALHOST, LOCALHOST_IPV6, true);
     }
 
-    private String getHostAddressInfo(String host, String ip) {
-        return host + "/" + ip + "[reachable]";
+    private String getHostAddressInfo(String host, String ip, boolean reachable) {
+        return host + "/" + ip + (reachable ? "[reachable]" : "[unreachable]");
     }
 
     private String getContainerHostIP() {

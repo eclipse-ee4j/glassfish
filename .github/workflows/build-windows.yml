@@ -24,7 +24,12 @@ jobs:
       run: |
         ls env: | sort Name
         cat C:\Windows\System32\drivers\etc\hosts
-        Get-NetIPConfiguration -Detailed
+        try {
+            Get-NetIPConfiguration -Detailed
+        } catch {
+            Write-Warning "Get-NetIPConfiguration -Detailed failed (known NetTCPIP bug): $_"
+            Get-NetIPConfiguration
+        }
         Get-DnsClientServerAddress
         ipconfig /all
         Get-CimInstance Win32_Processor | Format-List *

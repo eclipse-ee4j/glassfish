@@ -84,6 +84,35 @@ public class SecurityUpgradeServiceTest {
         assertThat(java.util.Collections.list(migrated.aliases()), containsInAnyOrder("alias-one", "alias-two"));
     }
 
+    @Test
+    public void rewritesJvmOptionsPointingToMigratedLegacyStores() {
+        assertEquals("-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12",
+            SecurityUpgradeService.upgradeStoreJvmOption(
+                "-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks", true, true));
+        assertEquals("-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.p12",
+            SecurityUpgradeService.upgradeStoreJvmOption(
+                "-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks", true, true));
+    }
+
+    @Test
+    public void keepsJvmOptionsWhoseStoreWasNotMigrated() {
+        String keyStoreOption = "-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.jks";
+        assertEquals(keyStoreOption, SecurityUpgradeService.upgradeStoreJvmOption(keyStoreOption, false, true));
+        String trustStoreOption = "-Djavax.net.ssl.trustStore=${com.sun.aas.instanceRoot}/config/cacerts.jks";
+        assertEquals(trustStoreOption, SecurityUpgradeService.upgradeStoreJvmOption(trustStoreOption, true, false));
+    }
+
+    @Test
+    public void keepsJvmOptionsNotReferencingTheDefaultLegacyStores() {
+        // A custom store is not migrated by the upgrade, so its reference must not be touched.
+        String customStore = "-Djavax.net.ssl.keyStore=/opt/certs/mykeystore.jks";
+        assertEquals(customStore, SecurityUpgradeService.upgradeStoreJvmOption(customStore, true, true));
+        String alreadyMigrated = "-Djavax.net.ssl.keyStore=${com.sun.aas.instanceRoot}/config/keystore.p12";
+        assertEquals(alreadyMigrated, SecurityUpgradeService.upgradeStoreJvmOption(alreadyMigrated, true, true));
+        String unrelated = "-XX:+UnlockDiagnosticVMOptions";
+        assertEquals(unrelated, SecurityUpgradeService.upgradeStoreJvmOption(unrelated, true, true));
+    }
+
     private static void writeJceksWithSecrets(File file, byte[]... secrets) throws Exception {
         KeyStore jceks = KeyStore.getInstance("JCEKS");
         jceks.load(null, MASTER_PASSWORD);

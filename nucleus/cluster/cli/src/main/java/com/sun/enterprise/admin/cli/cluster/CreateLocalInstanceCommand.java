@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,6 +43,7 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_LEGACY;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
@@ -266,7 +267,12 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
         }
 
         if (saveMasterPassword) {
-            File mp = new File(new File(getServerDirs().getServerDir(), "config"), KEYSTORE_FILENAME_DEFAULT);
+            File configDir = new File(getServerDirs().getServerDir(), "config");
+            File mp = new File(configDir, KEYSTORE_FILENAME_DEFAULT);
+            if (!mp.canRead()) {
+                // Instances created by 7.0.x or older may still use the legacy JKS store.
+                mp = new File(configDir, KEYSTORE_FILENAME_LEGACY);
+            }
             if (mp.canRead()) {
                 if (verifyMasterPassword(masterPassword)) {
                     createMasterPasswordFile(masterPassword);

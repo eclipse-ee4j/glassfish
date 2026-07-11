@@ -88,10 +88,16 @@ public class SystemPropertyConstants {
 
     public static final String TRUSTSTORE_FILENAME_DEFAULT = "cacerts.p12";
     public static final String KEYSTORE_FILENAME_DEFAULT = "keystore.p12";
+    /** Trust store file name (JKS format) used by GlassFish 7.0.x and older, before the switch to PKCS12. */
+    public static final String TRUSTSTORE_FILENAME_LEGACY = "cacerts.jks";
+    /** Key store file name (JKS format) used by GlassFish 7.0.x and older, before the switch to PKCS12. */
+    public static final String KEYSTORE_FILENAME_LEGACY = "keystore.jks";
     public static final String KEYSTORE_TYPE_DEFAULT = "PKCS12";
     public static final String KEYSTORE_PASSWORD_DEFAULT = "changeit";
 
     public static final String MASTER_PASSWORD_FILENAME = "master-password.p12";
+    /** Saved master password file name (JCEKS format) used by GlassFish 7.0.x and older. */
+    public static final String MASTER_PASSWORD_FILENAME_LEGACY = "master-password";
     public static final String MASTER_PASSWORD_PASSWORD = "master-password";
     public static final String MASTER_PASSWORD_ALIAS = "master-password";
 

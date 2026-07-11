@@ -113,6 +113,21 @@ public class SecurityLoggerInfo {
             level = "WARNING")
     public static final String securityUpgradeKeystoreNoMasterPassword = LOGMSG_PREFIX + "-01018";
 
+    @LogMessageInfo(
+            message = "Updated JVM options in configuration [{0}] to reference the PKCS12 security stores instead of"
+                    + " the legacy JKS stores.",
+            level = "INFO")
+    public static final String securityUpgradeJvmOptionsUpdated = LOGMSG_PREFIX + "-01019";
+
+    @LogMessageInfo(
+            message = "Could not update JVM options in configuration [{0}] to reference the PKCS12 security stores."
+                    + " They still reference the legacy JKS stores.",
+            cause = "The configuration change could not be applied.",
+            action = "Update the javax.net.ssl.keyStore and javax.net.ssl.trustStore JVM options manually to point to"
+                    + " the *.p12 stores.",
+            level = "WARNING")
+    public static final String securityUpgradeJvmOptionsFailed = LOGMSG_PREFIX + "-01020";
+
     // General login processing messages: start 1050
     @LogMessageInfo(
             message = "Certificate authentication requires certificate realm.",

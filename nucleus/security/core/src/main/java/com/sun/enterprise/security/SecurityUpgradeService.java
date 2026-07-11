@@ -21,6 +21,7 @@ import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.store.PasswordAdapter;
 
@@ -33,6 +34,7 @@ import java.io.FileOutputStream;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,8 +52,13 @@ import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_LEGACY;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME_LEGACY;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_LEGACY;
 
 /**
  * The only thing that needs to added Extra for SecurityService migration is the addition of the new JACC provider. This would be
@@ -79,9 +86,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     private static final String JKS = ".jks";
     private static final String NSS = ".db";
 
-    // Legacy (7.0.x and older) security store file names that need to be converted to PKCS12.
-    private static final String LEGACY_KEYSTORE = "keystore.jks";
-    private static final String LEGACY_TRUSTSTORE = "cacerts.jks";
+    // Legacy (7.0.x and older) domain-passwords store file name that needs to be converted to PKCS12.
     private static final String LEGACY_DOMAIN_PASSWORDS = "domain-passwords";
 
     private static final String TYPE_JKS = "JKS";
@@ -156,6 +161,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         // Convert legacy JKS/JCEKS security stores left over from 7.0.x or older to PKCS12,
         // since 7.1.0+ only reads the fixed *.p12 file names.
         migrateLegacyKeystores();
+        upgradeStoreJvmOptions();
 
         //Detect an NSS upgrade scenario and point to the steps wiki
 
@@ -167,22 +173,27 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     }
 
     /**
-     * Detects legacy JKS/JCEKS security stores in {@code <domain>/config} and converts them to PKCS12
-     * under the file names used by 7.1.0+ ({@code keystore.p12}, {@code cacerts.p12},
-     * {@code domain-passwords.p12}).
+     * Detects legacy JKS/JCEKS security stores in {@code <domain>/config} (and the saved master password
+     * store in the domain directory) and converts them to PKCS12 under the file names used by 7.1.0+
+     * ({@code keystore.p12}, {@code cacerts.p12}, {@code domain-passwords.p12}, {@code master-password.p12}).
      * <p>
      * The conversion is idempotent: a store is skipped if the legacy file is absent or the PKCS12 target
      * already exists. Each converted legacy file is retained with a {@value #BAK_SUFFIX} suffix instead of
      * being deleted, and any failure is logged without aborting the upgrade.
      */
     private void migrateLegacyKeystores() {
+        // The saved master password (JCEKS in the domain directory in 7.0.x and older) is protected by a
+        // fixed password, not by the master password, so it can always be migrated.
+        migrateStore(new File(env.getInstanceRoot(), MASTER_PASSWORD_FILENAME_LEGACY), TYPE_JCEKS,
+            new File(env.getInstanceRoot(), MASTER_PASSWORD_FILENAME), MASTER_PASSWORD_PASSWORD.toCharArray());
+
         File configDir = new File(env.getInstanceRoot(), DIR_CONFIG);
         if (!configDir.isDirectory()) {
             return;
         }
 
-        boolean legacyPresent = new File(configDir, LEGACY_KEYSTORE).exists()
-            || new File(configDir, LEGACY_TRUSTSTORE).exists()
+        boolean legacyPresent = new File(configDir, KEYSTORE_FILENAME_LEGACY).exists()
+            || new File(configDir, TRUSTSTORE_FILENAME_LEGACY).exists()
             || new File(configDir, LEGACY_DOMAIN_PASSWORDS).exists();
         if (!legacyPresent) {
             return;
@@ -195,9 +206,9 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
             return;
         }
 
-        migrateStore(new File(configDir, LEGACY_KEYSTORE), TYPE_JKS,
+        migrateStore(new File(configDir, KEYSTORE_FILENAME_LEGACY), TYPE_JKS,
             new File(configDir, KEYSTORE_FILENAME_DEFAULT), masterPassword);
-        migrateStore(new File(configDir, LEGACY_TRUSTSTORE), TYPE_JKS,
+        migrateStore(new File(configDir, TRUSTSTORE_FILENAME_LEGACY), TYPE_JKS,
             new File(configDir, TRUSTSTORE_FILENAME_DEFAULT), masterPassword);
         migrateStore(new File(configDir, LEGACY_DOMAIN_PASSWORDS), TYPE_JCEKS,
             new File(configDir, PasswordAdapter.PASSWORD_ALIAS_KEYSTORE), masterPassword);
@@ -228,6 +239,65 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                 legacyFile.getAbsolutePath());
             _logger.log(Level.FINE, "Legacy keystore migration failure detail", e);
         }
+    }
+
+    /**
+     * Rewrites JVM options (such as {@code -Djavax.net.ssl.keyStore}) that still point to a legacy JKS store
+     * under {@code <instanceRoot>/config} so they reference the PKCS12 successor instead, in every
+     * {@code java-config} in the domain. A reference is only rewritten when the corresponding PKCS12 store
+     * exists, i.e. after {@link #migrateLegacyKeystores()} succeeded, which also makes this idempotent.
+     */
+    private void upgradeStoreJvmOptions() {
+        File configDir = new File(env.getInstanceRoot(), DIR_CONFIG);
+        boolean keystoreMigrated = new File(configDir, KEYSTORE_FILENAME_DEFAULT).exists();
+        boolean truststoreMigrated = new File(configDir, TRUSTSTORE_FILENAME_DEFAULT).exists();
+        if (!keystoreMigrated && !truststoreMigrated) {
+            return;
+        }
+        for (Config config : configs.getConfig()) {
+            JavaConfig javaConfig = config.getJavaConfig();
+            if (javaConfig == null) {
+                continue;
+            }
+            final List<String> upgradedOptions = new ArrayList<>();
+            boolean changed = false;
+            for (String option : javaConfig.getJvmOptions()) {
+                String upgradedOption = upgradeStoreJvmOption(option, keystoreMigrated, truststoreMigrated);
+                changed |= !upgradedOption.equals(option);
+                upgradedOptions.add(upgradedOption);
+            }
+            if (!changed) {
+                continue;
+            }
+            try {
+                ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
+                    @Override
+                    public Object run(JavaConfig updatedJavaConfig) throws PropertyVetoException {
+                        updatedJavaConfig.setJvmOptions(upgradedOptions);
+                        return updatedJavaConfig;
+                    }
+                }, javaConfig);
+                _logger.log(Level.INFO, SecurityLoggerInfo.securityUpgradeJvmOptionsUpdated, config.getName());
+            } catch (TransactionFailure tf) {
+                _logger.log(Level.WARNING, SecurityLoggerInfo.securityUpgradeJvmOptionsFailed, config.getName());
+                _logger.log(Level.FINE, "JVM options upgrade failure detail", tf);
+            }
+        }
+    }
+
+    /**
+     * Returns the given JVM option rewritten to reference the PKCS12 store when it points to a legacy JKS
+     * store under a {@code config} directory (e.g. {@code ${com.sun.aas.instanceRoot}/config/keystore.jks}),
+     * or the option unchanged otherwise. Package-visible for testing.
+     */
+    static String upgradeStoreJvmOption(String option, boolean keystoreMigrated, boolean truststoreMigrated) {
+        if (keystoreMigrated && option.endsWith("/config/" + KEYSTORE_FILENAME_LEGACY)) {
+            return option.substring(0, option.length() - KEYSTORE_FILENAME_LEGACY.length()) + KEYSTORE_FILENAME_DEFAULT;
+        }
+        if (truststoreMigrated && option.endsWith("/config/" + TRUSTSTORE_FILENAME_LEGACY)) {
+            return option.substring(0, option.length() - TRUSTSTORE_FILENAME_LEGACY.length()) + TRUSTSTORE_FILENAME_DEFAULT;
+        }
+        return option;
     }
 
     /**

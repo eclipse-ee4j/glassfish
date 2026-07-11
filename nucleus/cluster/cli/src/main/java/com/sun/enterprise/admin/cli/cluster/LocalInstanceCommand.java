@@ -43,6 +43,7 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME_LEGACY;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
@@ -639,9 +640,14 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
             return null;
         }
 
-        File mp = new File(new File(nodeDirChild,"agent"), MASTER_PASSWORD_FILENAME);
+        File agentDir = new File(nodeDirChild, "agent");
+        File mp = new File(agentDir, MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
-            return null;
+            // A node created by 7.0.x or older still keeps the saved master password in a JCEKS store.
+            mp = new File(agentDir, MASTER_PASSWORD_FILENAME_LEGACY);
+            if (!mp.canRead()) {
+                return null;
+            }
         }
 
         return mp;

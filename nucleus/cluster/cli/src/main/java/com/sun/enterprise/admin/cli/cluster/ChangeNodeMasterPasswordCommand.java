@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,6 +40,7 @@ import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_AL
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_LEGACY;
 
 /**
  * The change-master-password command for a node.
@@ -136,7 +137,12 @@ public  class ChangeNodeMasterPasswordCommand extends LocalInstanceCommand {
      */
     private boolean verifyInstancePassword(File instanceDir) {
 
-        File mp = new File(new File(instanceDir, "config"), TRUSTSTORE_FILENAME_DEFAULT);
+        File configDir = new File(instanceDir, "config");
+        File mp = new File(configDir, TRUSTSTORE_FILENAME_DEFAULT);
+        if (!mp.canRead()) {
+            // Instances synchronized from 7.0.x or older may still use the legacy JKS store.
+            mp = new File(configDir, TRUSTSTORE_FILENAME_LEGACY);
+        }
         return loadAndVerifyKeystore(mp,oldPassword);
     }
 

@@ -53,11 +53,11 @@ spec:
       mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
     resources:
       limits:
-        memory: "8Gi"
-        cpu: "5500m"
+        memory: "4Gi"
+        cpu: "4000m"
       requests:
-        memory: "8Gi"
-        cpu: "5500m"
+        memory: "4Gi"
+        cpu: "4000m"
   volumes:
   - name: "jenkins-home"
     emptyDir:
@@ -276,8 +276,10 @@ pipeline {
       // show timestamps in logs
       timestamps()
 
-      // global timeout, abort after 6 hours
-      timeout(time: 8, unit: 'HOURS')
+      // global timeout, abort after 4 hours
+      timeout(time: 4, unit: 'HOURS')
+
+      disableConcurrentBuilds()
    }
 
    stages {

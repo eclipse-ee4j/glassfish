@@ -67,14 +67,17 @@ import jakarta.resource.spi.ManagedConnectionFactory;
 import jakarta.resource.spi.ResourceAdapter;
 import jakarta.resource.spi.ResourceAdapterInternalException;
 
+import java.beans.PropertyVetoException;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.channels.SelectableChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.rmi.Naming;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -111,6 +114,9 @@ import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.grizzly.LazyServiceInitializer;
 import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorConstants.DEFAULT_JMS_ADAPTER;
@@ -182,6 +188,12 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     private static final String BROKERENABLEHA = "BrokerEnableHA";
 
     private static final String DB_HADB_PROPS = "DBProps";
+    private static final String DEFAULT_ADMIN_USERNAME = "admin";
+    private static final String DEFAULT_ADMIN_PASSWORD = "admin";
+    private static final int GENERATED_ADMIN_PASSWORD_LENGTH = 32;
+    private static final char[] GENERATED_ADMIN_PASSWORD_CHARSET =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".toCharArray();
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     //Activation config properties of MQ resource adapter.
     public static final String DESTINATION = "destination";
@@ -728,6 +740,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             brkrPort = brokerPort;
             String adminUserName = jmsHost.getAdminUserName();
             String adminPassword = JmsRaUtil.getUnAliasedPwd(jmsHost.getAdminPassword());
+            boolean usesDefaultAdminCredentials = isDefaultAdminCredentials(adminUserName, adminPassword);
             List<Property> jmsHostProps= getJmsService().getProperty();
 
             String username = null;
@@ -748,6 +761,11 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
             LOG.log(FINE, "Broker UserName={0}", username);
             String brokerVarDir = getMQVarDir();
             createMQVarDirectoryIfNecessary(brokerVarDir);
+            if (brokerInstanceName == null) {
+                brokerInstanceName = getBrokerInstanceName(getJmsService());
+            }
+            adminPassword = ensureManagedBrokerAdminPasswordGeneratedOnFirstUse(jmsHost, brokerType, adminUserName,
+                adminPassword, brokerVarDir);
 
             String tmpString = getJmsService().getStartArgs();
             if (tmpString == null) {
@@ -844,6 +862,44 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
         }
 
         return properties;
+    }
+
+    private static boolean isDefaultAdminCredentials(String username, String password) {
+        return DEFAULT_ADMIN_USERNAME.equals(username) && DEFAULT_ADMIN_PASSWORD.equals(password);
+    }
+
+    private String ensureManagedBrokerAdminPasswordGeneratedOnFirstUse(JmsHost jmsHost, String brokerType, String adminUserName,
+            String adminPassword, String brokerVarDir) throws TransactionFailure {
+        if (REMOTE.equals(brokerType) || !isDefaultAdminCredentials(adminUserName, adminPassword)) {
+            return adminPassword;
+        }
+
+        Path brokerInstanceDir = getBrokerInstanceDir(brokerVarDir, brokerInstanceName);
+        if (Files.exists(brokerInstanceDir) && Files.isDirectory(brokerInstanceDir)) {
+            return adminPassword;
+        }
+
+        final String generatedPassword = generateRandomAdminPassword();
+        ConfigSupport.apply(new SingleConfigCode<JmsHost>() {
+            @Override
+            public Object run(JmsHost writableJmsHost) throws PropertyVetoException, TransactionFailure {
+                writableJmsHost.setAdminPassword(generatedPassword);
+                return writableJmsHost;
+            }
+        }, jmsHost);
+
+        LOG.log(INFO, "Generated randomized admin password for managed JMS broker instance {0}.",
+            brokerInstanceName);
+        return generatedPassword;
+    }
+
+    private static String generateRandomAdminPassword() {
+        StringBuilder password = new StringBuilder(GENERATED_ADMIN_PASSWORD_LENGTH);
+        for (int index = 0; index < GENERATED_ADMIN_PASSWORD_LENGTH; index++) {
+            int charIndex = SECURE_RANDOM.nextInt(GENERATED_ADMIN_PASSWORD_CHARSET.length);
+            password.append(GENERATED_ADMIN_PASSWORD_CHARSET[charIndex]);
+        }
+        return password.toString();
     }
 
     private String adjustForDirectMode(String brokerType) {
@@ -961,6 +1017,11 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
 
     private String getMQVarDir() {
         return new File(getServerEnvironment().getInstanceRoot(), MQ_DIR_NAME).getAbsolutePath();
+    }
+
+
+    private Path getBrokerInstanceDir(String brokerVarDir, String brokerInstanceName) {
+        return Path.of(brokerVarDir, "instances", brokerInstanceName);
     }
 
 

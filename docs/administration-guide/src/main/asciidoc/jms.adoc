@@ -962,21 +962,48 @@ Restarting an Embedded or Local Broker That Has Failed::
   failed. Instead, restart the GlassFish instance that the broker is
   servicing.
 Changing the Admin User Password for an Embedded or Local Broker::
+  For security reasons, for new installations {productName} automatically
+  generates the password for the Message Queue `admin` user when using
+  Embedded or Local JMS hosts. To set a different password, follow these
+  steps.
+
+  You can retrieve the generated password in either of the following
+  ways:
+
+  * Read the `admin-password` attribute of the JMS host in
+    domain-dir``/config/domain.xml``.
+  * When the server is running, use the
+    xref:reference-manual.adoc#get[`get`] subcommand to read the JMS host
+    password:
++
+[source]
+----
+asadmin> get configs.config.config-name.jms-service.jms-host.jms-host-name.admin-password
+----
+
   Follow these steps to change the `admin` user password for an Embedded
   or Local broker:
-  1. [[CHDDHDIE]]
-  Make sure the broker is running.
+  [[CHDDHDIE]]
+  . Make sure the broker is running.
 
-  2. [[CHDHDFAH]]
-  Use the `imqusermgr` Message Queue utility to change the password of
-  the `admin` user.
+  [[CHDHDFAH]]
+  . Use the `imqusermgr` Message Queue utility to change the password of
+    the `admin` user.
 
-  3. [[CHDCJEFG]]
-  Edit the configuration of the JMS host, changing the password of the
-  `admin` user to the new password.
+  [[CHDCJEFG]]
+  . Update the JMS host configuration with the same custom value. You can
+    store the custom value in a password alias and reference that alias
+    from the JMS host configuration:
++
+[source]
+----
+asadmin> set configs.config.server-config.jms-service.jms-host.default_JMS_host.admin-password='${ALIAS=jms-password}'
+----
++
+  For details about password aliases, see xref:security-guide.adoc#to-create-a-password-alias[To Create a Password Alias].
 
-  4. [[CHDFJECE]]
-  Restart the GlassFish instance that the broker is servicing. +
+  [[CHDFJECE]]
+  . Restart the GlassFish instance that the broker is servicing. +
   When changing the password for the brokers in a broker cluster, first
   perform steps <<CHDDHDIE, 1>> and <<CHDHDFAH, 2>> on each broker.
   Then, perform step <<CHDCJEFG, 3>>. Finally, perform

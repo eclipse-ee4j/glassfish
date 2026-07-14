@@ -49,6 +49,11 @@
             <type>zip</type>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jms</groupId>
+            <artifactId>jmsra-ext</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -73,6 +78,23 @@
                             </fileMappers>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-jmsra-ext</id>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.glassfish.main.jms</groupId>
+                                    <artifactId>jmsra-ext</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -89,6 +111,22 @@
                                 <unzip
                                     src="${project.build.directory}/imqjmsra.rar"
                                     dest="${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra"
+                                />
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>override-ra-class</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <replace
+                                    file="${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra/META-INF/ra.xml"
+                                    token="com.sun.messaging.jms.ra.ResourceAdapter"
+                                    value="org.glassfish.main.jms.ra.GlassFishResourceAdapter"
                                 />
                             </target>
                         </configuration>

@@ -23,15 +23,15 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.ResourcePool;
 import com.sun.enterprise.config.serverbeans.Resources;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.glassfish.api.naming.SimpleJndiName;
 import org.junit.jupiter.api.Test;
 
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -107,37 +107,42 @@ public class ResourcesDeployerTest {
         assertThat(result, not(hasKey("web.war")));
     }
 
-    // --- config-bean proxies (no Mockito available in this module) ---
+    // --- config-bean mocks ---
 
     private static Application application(Resources appResources, Module... modules) {
-        Map<String, Object> values = new HashMap<>();
-        values.put("getResources", appResources);
-        values.put("getModule", List.of(modules));
-        return proxy(Application.class, values);
+        Application app = createNiceMock(Application.class);
+        expect(app.getResources()).andReturn(appResources).anyTimes();
+        expect(app.getModule()).andReturn(List.of(modules)).anyTimes();
+        replay(app);
+        return app;
     }
 
     private static Module module(String name, Resources moduleResources) {
-        Map<String, Object> values = new HashMap<>();
-        values.put("getName", name);
-        values.put("getResources", moduleResources);
-        return proxy(Module.class, values);
+        Module module = createNiceMock(Module.class);
+        expect(module.getName()).andReturn(name).anyTimes();
+        expect(module.getResources()).andReturn(moduleResources).anyTimes();
+        replay(module);
+        return module;
     }
 
     private static Resources resources(Resource... resources) {
-        return proxy(Resources.class, Map.of("getResources", List.of(resources)));
+        Resources mock = createNiceMock(Resources.class);
+        expect(mock.getResources()).andReturn(List.of(resources)).anyTimes();
+        replay(mock);
+        return mock;
     }
 
     private static BindableResource jdbcResource(String jndiName) {
-        return proxy(BindableResource.class, Map.of("getJndiName", jndiName));
+        BindableResource resource = createNiceMock(BindableResource.class);
+        expect(resource.getJndiName()).andReturn(jndiName).anyTimes();
+        replay(resource);
+        return resource;
     }
 
     private static ResourcePool pool(String name) {
-        return proxy(ResourcePool.class, Map.of("getName", name));
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T> T proxy(Class<T> type, Map<String, Object> values) {
-        InvocationHandler handler = (p, method, args) -> values.get(method.getName());
-        return (T) Proxy.newProxyInstance(type.getClassLoader(), new Class<?>[] {type}, handler);
+        ResourcePool pool = createNiceMock(ResourcePool.class);
+        expect(pool.getName()).andReturn(name).anyTimes();
+        replay(pool);
+        return pool;
     }
 }

@@ -38,8 +38,8 @@ import javax.naming.InitialContext;
                         name = "java:global/env/Appclient_ModByDD_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=NoTransaction"},
                         minPoolSize = 0
                 ),
@@ -49,8 +49,8 @@ import javax.naming.InitialContext;
                         name = "java:global/env/Appclient_Annotation_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=XATransaction"},
                         minPoolSize = 0
                 ),
@@ -60,8 +60,8 @@ import javax.naming.InitialContext;
                         name = "java:app/env/Appclient_Annotation_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=NoTransaction"},
                         minPoolSize = 0
                 ),
@@ -71,8 +71,8 @@ import javax.naming.InitialContext;
                         name = "java:module/env/Appclient_Annotation_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=LocalTransaction"},
                         minPoolSize = 0
                 ),
@@ -82,8 +82,8 @@ import javax.naming.InitialContext;
                         name = "java:comp/env/Appclient_Annotation_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=LocalTransaction"},
                         minPoolSize = 0
                 )

@@ -16,17 +16,20 @@
 
 package org.glassfish.main.test.app.jms;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.junit.jupiter.api.Test;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;
-import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getGlassFishDirectory;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -59,13 +62,18 @@ public class OpenMqAdminServiceDefaultCredentialsTest {
     }
 
     private static CommandResult runImqcmd(Path passwordFile) throws IOException, InterruptedException {
-        String suffix = isWindows() ? ".exe" : "";
-        Path imqcmd = getGlassFishDirectory().toPath().resolveSibling("mq").resolve("bin").resolve("imqcmd" + suffix);
-        assertTrue(Files.isRegularFile(imqcmd), "Missing OpenMQ imqcmd executable: " + imqcmd);
-
+        // We don't use imqcmd but Java directly to run also on Windows
+        Path imqHome = Path.of(GlassFishTestEnvironment.getGlassFishDirectory().getAbsolutePath())
+                .resolveSibling("mq");
+        Path imqVarHome = GlassFishTestEnvironment.getDomain1Directory()
+                .resolve("imq");
         Process process = new ProcessBuilder(
-            imqcmd.toString(),
-            "-javahome", System.getProperty("java.home"),
+            ASADMIN.getJavaExecutable().toAbsolutePath().toString(),
+            "-cp", getMqClassPath(imqHome),
+            "-Xmx128m",
+            "-Dimq.home="+imqHome.toAbsolutePath(),
+            "-Dimq.varhome="+imqVarHome.toAbsolutePath(),
+            "com.sun.messaging.jmq.admin.apps.broker.BrokerCmd",
             "query", "bkr",
             "-b", "localhost:7676",
             "-u", "admin",
@@ -83,8 +91,12 @@ public class OpenMqAdminServiceDefaultCredentialsTest {
         return new CommandResult(process.exitValue() == 0, output);
     }
 
-    private static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().contains("windows");
+    private static String getMqClassPath(Path imqHome) {
+        Path mqLibPath = imqHome.resolve("lib");
+        return Stream.of("imqadmin.jar", "fscontext.jar")
+                .map(jar -> mqLibPath.resolve(jar).toAbsolutePath().toString())
+                .collect(Collectors.joining(File.pathSeparator));
+
     }
 
     private record CommandResult(boolean success, String output) {

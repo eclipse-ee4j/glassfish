@@ -39,8 +39,8 @@
         <name>java:global/env/Servlet_ModByDD_JMSConnectionFactory</name>
 <!--        <interface-name>jakarta.jms.ConnectionFactory</interface-name>-->
         <resource-adapter>jmsra</resource-adapter>
-        <user>admin</user>
-        <password>admin</password>
+        <user>user1</user>
+        <password>password1</password>
         <property>
             <name>org.glassfish.connector-connection-pool.transaction-support</name>
             <value>LocalTransaction</value>
@@ -53,8 +53,8 @@
         <name>java:global/env/Web_DD_JMSConnectionFactory</name>
         <interface-name>jakarta.jms.ConnectionFactory</interface-name>
 <!--        <resource-adapter>jmsra</resource-adapter>-->
-        <user>admin</user>
-        <password>admin</password>
+        <user>user1</user>
+        <password>password1</password>
         <property>
             <name>org.glassfish.connector-connection-pool.transaction-support</name>
             <value>XATransaction</value>
@@ -67,8 +67,8 @@
         <name>java:app/env/Web_DD_JMSConnectionFactory</name>
 <!--        <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>-->
-        <user>admin</user>
-        <password>admin</password>
+        <user>user1</user>
+        <password>password1</password>
         <property>
             <name>org.glassfish.connector-connection-pool.transaction-support</name>
             <value>XATransaction</value>
@@ -81,8 +81,8 @@
         <name>java:module/env/Web_DD_JMSConnectionFactory</name>
         <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>
-        <user>admin</user>
-        <password>admin</password>
+        <user>user1</user>
+        <password>password1</password>
         <property>
             <name>org.glassfish.connector-connection-pool.transaction-support</name>
             <value>XATransaction</value>
@@ -95,8 +95,8 @@
         <name>java:comp/env/Web_DD_JMSConnectionFactory</name>
         <interface-name>jakarta.jms.ConnectionFactory</interface-name>
         <resource-adapter>jmsra</resource-adapter>
-        <user>admin</user>
-        <password>admin</password>
+        <user>user1</user>
+        <password>password1</password>
         <property>
             <name>org.glassfish.connector-connection-pool.transaction-support</name>
             <value>XATransaction</value>

@@ -135,7 +135,7 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
 
             }
 
-            //gms-bind-interface is an attribute of cluster in 3.1
+            //gms-bind-interface is an a            ttribute of cluster in 3.1
             Property prop  = cluster.getProperty("gms-bind-interface-address");
             if (prop != null && prop.getValue() != null) {
                 cluster.setGmsBindInterfaceAddress(prop.getValue());
@@ -149,10 +149,12 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
                             cluster.getName()));
                 }
             }
-            Property gmsListenerPort = cluster.createChild(Property.class);
-            gmsListenerPort.setName("GMS_LISTENER_PORT");
-            gmsListenerPort.setValue(String.format("${GMS_LISTENER_PORT-%s}", cluster.getName()));
-            cluster.getProperty().add(gmsListenerPort);
+            if (cluster.getProperty("GMS_LISTENER_PORT") == null) {
+                Property gmsListenerPort = cluster.createChild(Property.class);
+                gmsListenerPort.setName("GMS_LISTENER_PORT");
+                gmsListenerPort.setValue(String.format("${GMS_LISTENER_PORT-%s}", cluster.getName()));
+                cluster.getProperty().add(gmsListenerPort);
+            }
             return cluster;
         }
     }

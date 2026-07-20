@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025, 2026 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,10 +55,8 @@ import static com.sun.enterprise.universal.process.ProcessUtils.waitWhileIsAlive
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
-import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME_LEGACY;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
-import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_LEGACY;
 import static java.lang.System.Logger.Level.DEBUG;
 
 /**
@@ -512,22 +510,15 @@ public abstract class LocalServerCommand extends CLICommand {
         }
     }
 
-    private File getJKS() {
+    protected File getJKS() {
         if (serverDirs == null) {
             return null;
         }
-        File configDir = new File(serverDirs.getServerDir(), "config");
-        File trustStore = new File(configDir, TRUSTSTORE_FILENAME_DEFAULT);
+        File trustStore = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
         if (trustStore.canRead()) {
             return trustStore;
         }
-        // A server copied from 7.0.x or older still has the JKS stores; they are migrated to PKCS12
-        // by start-domain --upgrade, which must be able to verify the master password first.
-        File legacyTrustStore = new File(configDir, TRUSTSTORE_FILENAME_LEGACY);
-        if (legacyTrustStore.canRead()) {
-            return legacyTrustStore;
-        }
-        LOG.log(DEBUG, "Neither {0} nor {1} exists or is readable.", trustStore, legacyTrustStore);
+        LOG.log(DEBUG, "File does not exist or is not readable: {0}", trustStore);
         return null;
     }
 
@@ -539,11 +530,7 @@ public abstract class LocalServerCommand extends CLICommand {
 
         File mp = new File(serverDirs.getServerDir(), MASTER_PASSWORD_FILENAME);
         if (!mp.canRead()) {
-            // A server copied from 7.0.x or older still keeps the saved master password in a JCEKS store.
-            mp = new File(serverDirs.getServerDir(), MASTER_PASSWORD_FILENAME_LEGACY);
-            if (!mp.canRead()) {
-                return null;
-            }
+            return null;
         }
 
         return mp;

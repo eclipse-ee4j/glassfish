@@ -23,16 +23,14 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import jakarta.inject.Inject;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.junit.DomainXml;
 import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
-import org.jvnet.hk2.config.types.Property;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.jvnet.hk2.config.types.Property;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(HK2JUnit5Extension.class)
 public class GmsUpgradeTestBase {

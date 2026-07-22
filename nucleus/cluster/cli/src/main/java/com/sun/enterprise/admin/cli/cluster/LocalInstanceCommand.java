@@ -19,6 +19,7 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
+import com.sun.enterprise.security.store.PasswordAdapter;
 import com.sun.enterprise.universal.io.SmartFile;
 import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.FileUtils;
@@ -35,6 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.security.Key;
+import java.security.KeyStore;
 import java.util.Properties;
 import java.util.logging.Level;
 
@@ -42,8 +45,10 @@ import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
 
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_ALIAS;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME_LEGACY;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
@@ -642,15 +647,62 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
 
         File agentDir = new File(nodeDirChild, "agent");
         File mp = new File(agentDir, MASTER_PASSWORD_FILENAME);
-        if (!mp.canRead()) {
-            // A node created by 7.0.x or older still keeps the saved master password in a JCEKS store.
-            mp = new File(agentDir, MASTER_PASSWORD_FILENAME_LEGACY);
-            if (!mp.canRead()) {
-                return null;
-            }
+        if (mp.canRead()) {
+            return mp;
         }
 
-        return mp;
+        // A node created by 7.0.x or older keeps the saved master password in a JCEKS store named
+        // "master-password" (no extension). That store lives in the node's agent directory on the
+        // instance host, outside the domain directory, so SecurityUpgradeService never converts it
+        // during "start-domain --upgrade". Convert it to PKCS12 in place on first use so that the
+        // legacy handling can be dropped in a later GlassFish version.
+        File legacy = new File(agentDir, MASTER_PASSWORD_FILENAME_LEGACY);
+        if (legacy.canRead() && migrateLegacyMasterPasswordFile(legacy, mp)) {
+            return mp;
+        }
+
+        return null;
+    }
+
+    /**
+     * Converts a legacy JCEKS {@code master-password} store written by GlassFish 7.0.x or older to the
+     * PKCS12 {@code master-password.p12} store used since 7.1.0, keeping the same fixed password and
+     * {@code master-password} alias. On success the legacy file is renamed with a {@code .bak} suffix.
+     *
+     * @return {@code true} if the PKCS12 store was written, {@code false} if the legacy store held no
+     *         saved master password or the conversion failed (best effort, never throws).
+     */
+    private boolean migrateLegacyMasterPasswordFile(File legacyFile, File targetFile) {
+        char[] password = MASTER_PASSWORD_PASSWORD.toCharArray();
+        try {
+            KeyStore legacyStore = KeyStore.getInstance("JCEKS");
+            try (FileInputStream in = new FileInputStream(legacyFile)) {
+                legacyStore.load(in, password);
+            }
+            Key masterPassword = legacyStore.getKey(MASTER_PASSWORD_ALIAS, password);
+            if (masterPassword == null) {
+                return false;
+            }
+
+            // PasswordAdapter creates a PKCS12 store because the target file name ends in ".p12".
+            PasswordAdapter target = new PasswordAdapter(targetFile.getAbsolutePath(), password);
+            target.setPasswordForAlias(MASTER_PASSWORD_ALIAS, masterPassword.getEncoded());
+
+            File backup = new File(legacyFile.getPath() + ".bak");
+            if (!legacyFile.renameTo(backup)) {
+                logger.log(Level.WARNING, "Could not rename migrated master password file {0}", legacyFile);
+            }
+            logger.log(Level.INFO, "Converted legacy master password store {0} to {1}",
+                new Object[] {legacyFile, targetFile});
+            return true;
+        } catch (Exception e) {
+            // Best effort: do not leave a half-written PKCS12 store behind and keep the legacy file.
+            if (targetFile.exists() && !targetFile.delete()) {
+                targetFile.deleteOnExit();
+            }
+            logger.log(Level.WARNING, "Could not convert legacy master password store " + legacyFile, e);
+            return false;
+        }
     }
 
     /**

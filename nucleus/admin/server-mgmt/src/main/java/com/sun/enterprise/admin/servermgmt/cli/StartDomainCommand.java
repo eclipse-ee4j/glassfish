@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import com.sun.enterprise.universal.process.ProcessStreamDrainer;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.ObjectAnalyzer;
+import com.sun.enterprise.util.io.ServerDirs;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,8 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.MASTER_PASSWORD;
 import static com.sun.enterprise.admin.cli.CLIConstants.WAIT_FOR_DAS_TIME_MS;
+import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME_LEGACY;
+import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_LEGACY;
 import static java.util.logging.Level.FINER;
 import static org.glassfish.api.admin.RuntimeType.DAS;
 
@@ -276,6 +279,44 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
             System.exit(-1);
             return -1;
         }
+    }
+
+    /**
+     * A domain copied from 7.0.x or older still has the JKS truststore; it is migrated to PKCS12
+     * only by this command's {@code --upgrade} action, which must be able to verify the master
+     * password first. Other commands can assume that {@code start-domain --upgrade} has already
+     * run and the PKCS12 store is in place.
+     */
+    @Override
+    protected File getJKS() {
+        File trustStore = super.getJKS();
+        if (trustStore != null) {
+            return trustStore;
+        }
+        ServerDirs serverDirs = getServerDirs();
+        if (serverDirs == null) {
+            return null;
+        }
+        File legacyTrustStore = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_LEGACY);
+        return legacyTrustStore.canRead() ? legacyTrustStore : null;
+    }
+
+    /**
+     * See {@link #getJKS()}: only this command needs to fall back to the legacy JCEKS master
+     * password store of a domain copied from 7.0.x or older.
+     */
+    @Override
+    protected File getMasterPasswordFile() {
+        File mpf = super.getMasterPasswordFile();
+        if (mpf != null) {
+            return mpf;
+        }
+        ServerDirs serverDirs = getServerDirs();
+        if (serverDirs == null) {
+            return null;
+        }
+        File legacyMpf = new File(serverDirs.getServerDir(), MASTER_PASSWORD_FILENAME_LEGACY);
+        return legacyMpf.canRead() ? legacyMpf : null;
     }
 
     /**

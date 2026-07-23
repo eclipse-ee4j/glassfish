@@ -41,6 +41,9 @@ public class GlassFishOsgiLauncher implements Launcher {
     // logging system may override original output streams.
     private static final PrintStream STDOUT = System.out;
     private static final PrintStream STDERR = System.err;
+    private static final String UPGRADE_STATUS_PROPERTY = "glassfish.upgrade.status";
+    private static final String UPGRADE_STATUS_SUCCEEDED = "succeeded";
+    private static final String UPGRADE_STATUS_FAILED = "failed";
 
     private volatile GlassFish gf;
     private volatile GlassFishRuntime gfr;
@@ -149,6 +152,7 @@ public class GlassFishOsgiLauncher implements Launcher {
                     if (gfr != null) {
                         gfr.shutdown();
                     }
+                    printUpgradeStatus();
                 }
                 catch (final Exception ex) {
                     STDERR.println("Error stopping framework: " + ex);
@@ -157,6 +161,15 @@ public class GlassFishOsgiLauncher implements Launcher {
             }
         });
 
+    }
+
+    private void printUpgradeStatus() {
+        final String upgradeStatus = System.getProperty(UPGRADE_STATUS_PROPERTY);
+        if (UPGRADE_STATUS_SUCCEEDED.equals(upgradeStatus)) {
+            STDOUT.println("Upgrade succeeded");
+        } else if (UPGRADE_STATUS_FAILED.equals(upgradeStatus)) {
+            STDOUT.println("Upgrade failed");
+        }
     }
 
     private void runCommand(final CommandRunner cmdRunner, final String command) {

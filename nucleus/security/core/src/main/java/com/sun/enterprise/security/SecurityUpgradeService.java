@@ -63,6 +63,11 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     private static final String NSS = ".db";
 
     private static final String JDBC_REALM_CLASSNAME = "com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm";
+        private static final String SIMPLE_JACC_PROVIDER_NAME = "simple";
+        private static final String SIMPLE_POLICY_CONFIGURATION_FACTORY =
+            "org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory";
+        private static final String SIMPLE_POLICY_PROVIDER =
+            "org.glassfish.exousia.modules.locked.SimplePolicyProvider";
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
@@ -159,31 +164,52 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
 
     private void upgradeJACCProvider(SecurityService securityService) {
         try {
-            List<JaccProvider> jaccProviders = securityService.getJaccProvider();
-            for (JaccProvider jacc : jaccProviders) {
-                if ("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory"
-                    .equals(jacc.getPolicyConfigurationFactoryProvider())) {
-                    //simple policy provider already present
-                    return;
-                }
-            }
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
                 @Override
                 public Object run(SecurityService secServ) throws PropertyVetoException, TransactionFailure {
+                    JaccProvider existing = findJaccProvider(secServ, SIMPLE_JACC_PROVIDER_NAME);
+                    if (existing != null) {
+                        if (!SIMPLE_POLICY_CONFIGURATION_FACTORY.equals(existing.getPolicyConfigurationFactoryProvider())) {
+                            existing.setPolicyConfigurationFactoryProvider(SIMPLE_POLICY_CONFIGURATION_FACTORY);
+                        }
+                        if (!SIMPLE_POLICY_PROVIDER.equals(existing.getPolicyProvider())) {
+                            existing.setPolicyProvider(SIMPLE_POLICY_PROVIDER);
+                        }
+                        return secServ;
+                    }
+
+                    for (JaccProvider jacc : secServ.getJaccProvider()) {
+                        if (SIMPLE_POLICY_CONFIGURATION_FACTORY.equals(jacc.getPolicyConfigurationFactoryProvider())) {
+                            return secServ;
+                        }
+                    }
+
                     JaccProvider jacc = secServ.createChild(JaccProvider.class);
                     //add the simple provider to the domain's security service
-                    jacc.setName("simple");
-                    jacc.setPolicyConfigurationFactoryProvider("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory");
-                    jacc.setPolicyProvider("org.glassfish.exousia.modules.locked.SimplePolicyProvider");
+                    jacc.setName(SIMPLE_JACC_PROVIDER_NAME);
+                    jacc.setPolicyConfigurationFactoryProvider(SIMPLE_POLICY_CONFIGURATION_FACTORY);
+                    jacc.setPolicyProvider(SIMPLE_POLICY_PROVIDER);
                     secServ.getJaccProvider().add(jacc);
                     return secServ;
                 }
             }, securityService);
         } catch (TransactionFailure ex) {
+            if (findJaccProvider(securityService, SIMPLE_JACC_PROVIDER_NAME) != null) {
+                return;
+            }
             Logger.getAnonymousLogger().log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
 
+    }
+
+    private JaccProvider findJaccProvider(SecurityService securityService, String jaccProviderName) {
+        for (JaccProvider jaccProvider : securityService.getJaccProvider()) {
+            if (jaccProviderName.equals(jaccProvider.getName())) {
+                return jaccProvider;
+            }
+        }
+        return null;
     }
 
     private boolean deleteFile(File path) {

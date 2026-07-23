@@ -2324,6 +2324,42 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <!--
+                        Compute bnd.version.mismatch.level used by the maven-bundle-plugin
+                        _fixupmessages instruction (see below): 'ignore' for -SNAPSHOT builds,
+                        'error' otherwise, so a release never ships a truncated SNAPSHOT package
+                        version. regex-property does not overwrite an already-set property, so this
+                        is done in two steps with a fresh property rather than a predefined default.
+                        See issue #26004.
+                    -->
+                    <execution>
+                        <id>bnd-version-mismatch-level-snapshot</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>bnd.version.mismatch.level</name>
+                            <value>${project.version}</value>
+                            <regex>.*-SNAPSHOT</regex>
+                            <replacement>ignore</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bnd-version-mismatch-level-release</id>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>bnd.version.mismatch.level</name>
+                            <value>${bnd.version.mismatch.level}</value>
+                            <regex>^(?!ignore$).+</regex>
+                            <replacement>error</replacement>
+                            <failIfNoMatch>false</failIfNoMatch>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -2411,6 +2447,16 @@
                         <_include>-osgi.bundle</_include>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-21</_runee>
+                        <!--
+                            A package version derived from a Maven SNAPSHOT (e.g. 5.0.2-SNAPSHOT)
+                            is not a valid OSGi version, so bnd truncates it (5.0.2) in the manifest
+                            and reports a "Version for package ... set to different values" warning.
+                            This is harmless during SNAPSHOT development but must not happen in a
+                            release. Promote that warning to ${bnd.version.mismatch.level}, which is
+                            'error' by default and relaxed to 'ignore' for -SNAPSHOT builds by the
+                            build-helper regex-property executions above. See issue #26004.
+                        -->
+                        <_fixupmessages>"Version for package * is set to different values*";restrict:=warning;is:=${bnd.version.mismatch.level}</_fixupmessages>
                     </instructions>
                 </configuration>
             </plugin>

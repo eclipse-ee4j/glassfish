@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -62,7 +63,7 @@ public class WebTest {
         String url = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("opening connection to " + url);
 
-        InputStream in = new URL(url).openStream();
+        InputStream in = URI.create(url).toURL().openStream();
         BufferedReader rdr = new BufferedReader(new InputStreamReader(in));
         String line = rdr.readLine();
         if (EXPECTED_RESPONSE.equals(line)) {

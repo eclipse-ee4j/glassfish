@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2002, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,6 +26,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 
@@ -183,7 +185,7 @@ public class Client {
 
     private int invokeServlet(String url) throws Exception {
 
-        URL u = new URL(url);
+        URL u = URI.create(url).toURL();
 
         HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
         int code = c1.getResponseCode();

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 import java.net.URLConnection;
 
 import static java.nio.charset.StandardCharsets.ISO_8859_1;
@@ -65,7 +65,7 @@ public class ConnectionUtils {
 
     public static HttpURLConnection openConnection(String url) {
         try {
-            return (HttpURLConnection) new URL(url).openConnection();
+            return (HttpURLConnection) URI.create(url).toURL().openConnection();
         } catch (IOException e) {
             throw new IllegalArgumentException(e);
         }

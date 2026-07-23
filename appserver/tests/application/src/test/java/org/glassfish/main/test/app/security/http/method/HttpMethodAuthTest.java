@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023 Eclipse Foundation and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +19,7 @@ package org.glassfish.main.test.app.security.http.method;
 
 import java.io.File;
 import java.lang.System.Logger;
-import java.net.URL;
+import java.net.URI;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.HttpClient10;
@@ -90,7 +91,7 @@ public class HttpMethodAuthTest {
 
     @Test
     void testServletManagerFoo() throws Exception {
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet"),
+        HttpClient10 client = new HttpClient10(URI.create("http://localhost:8080/" + APP_NAME + "/TestServlet").toURL(),
             USER_SHINGWAI_NAME, USER_SHINGWAI_PASSWORD);
         HttpResponse responseFoo = client.send("FOO", null);
         assertAll(
@@ -102,7 +103,7 @@ public class HttpMethodAuthTest {
 
     @Test
     void testServletManagerGet() throws Exception {
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet"),
+        HttpClient10 client = new HttpClient10(URI.create("http://localhost:8080/" + APP_NAME + "/TestServlet").toURL(),
             USER_SHINGWAI_NAME, USER_SHINGWAI_PASSWORD);
         HttpResponse responseGet = client.send("GET", null);
         assertAll(
@@ -113,7 +114,7 @@ public class HttpMethodAuthTest {
 
     @Test
     void testServlet2ManagerFoo() throws Exception {
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet2"),
+        HttpClient10 client = new HttpClient10(URI.create("http://localhost:8080/" + APP_NAME + "/TestServlet2").toURL(),
             USER_SHINGWAI_NAME, USER_SHINGWAI_PASSWORD);
         HttpResponse responseFoo = client.send("FOO", null);
         assertAll(
@@ -125,7 +126,7 @@ public class HttpMethodAuthTest {
 
     @Test
     void testServletEmployeeFoo() throws Exception {
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet"),
+        HttpClient10 client = new HttpClient10(URI.create("http://localhost:8080/" + APP_NAME + "/TestServlet").toURL(),
             USER_SWCHAN_NAME, USER_SWCHAN_PASSWORD);
         HttpResponse responseFoo = client.send("FOO", null);
         assertAll(
@@ -137,7 +138,7 @@ public class HttpMethodAuthTest {
 
     @Test
     void testServlet2EmployeeFoo() throws Exception {
-        HttpClient10 client = new HttpClient10(new URL("http://localhost:8080/" + APP_NAME + "/TestServlet2"),
+        HttpClient10 client = new HttpClient10(URI.create("http://localhost:8080/" + APP_NAME + "/TestServlet2").toURL(),
             USER_SWCHAN_NAME, USER_SWCHAN_PASSWORD);
         HttpResponse responseFoo = client.send("FOO", null);
         assertAll(

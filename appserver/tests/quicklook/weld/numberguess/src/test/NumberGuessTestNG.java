@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -49,8 +50,8 @@ public class NumberGuessTestNG {
     public void appDeployedFirstPagetest() throws Exception {
 
         try {
-            HttpURLConnection conn = (HttpURLConnection) 
-                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/home.xhtml").openConnection();
+            HttpURLConnection conn = (HttpURLConnection)
+                URI.create("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/home.xhtml").toURL().openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
 

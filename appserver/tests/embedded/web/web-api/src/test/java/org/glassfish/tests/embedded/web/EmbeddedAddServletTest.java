@@ -22,6 +22,7 @@ import jakarta.servlet.ServletRegistration;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -97,7 +98,7 @@ public class EmbeddedAddServletTest {
         sr.addMapping(new String[] {"/newservlet"});
         vs.addContext(context, contextRoot);
 
-        URL servlet = new URL("http://localhost:9090/"+contextRoot+"/newservlet");
+        URL servlet = URI.create("http://localhost:9090/"+contextRoot+"/newservlet").toURL();
         URLConnection yc = servlet.openConnection();
         BufferedReader in = new BufferedReader(
                                 new InputStreamReader(

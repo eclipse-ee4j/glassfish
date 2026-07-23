@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,7 +72,7 @@ public class JSFWebTestNG {
 
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/faces/greetings.jsp";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -113,7 +114,7 @@ public class JSFWebTestNG {
 
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
         System.out.println("URL is: "+testurl);
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         echo("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

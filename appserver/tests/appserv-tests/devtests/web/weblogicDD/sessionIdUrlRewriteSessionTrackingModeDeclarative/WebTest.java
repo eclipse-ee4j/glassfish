@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -103,7 +104,7 @@ public class WebTest {
             throw new Exception("Missing MYJSESSIONID in the Location response header");
         }
         System.out.println("Redirect to: " + redirectTo);
-        URL url = new URL(redirectTo);
+        URL url = URI.create(redirectTo).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -77,8 +78,8 @@ public class WebTest {
     }
 
     private void invokeJspServlet() throws Exception {
-        URL url = new URL("http://" + host  + ":" +
-                          port + contextRoot + "/abc.jsp");
+        URL url = URI.create("http://" + host  + ":" +
+                          port + contextRoot + "/abc.jsp").toURL();
         System.out.println("Invoking URL: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
@@ -102,8 +103,8 @@ public class WebTest {
 
     private void invokeDefaultServlet(String path, int[] expectedStatuses,
             String expectedResponse) throws Exception {
-        URL url = new URL("http://" + host  + ":" +
-                          port + contextRoot + path);
+        URL url = URI.create("http://" + host  + ":" +
+                          port + contextRoot + path).toURL();
         System.out.println("Invoking URL: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setInstanceFollowRedirects(false);
@@ -140,8 +141,8 @@ public class WebTest {
     }
 
     private void invokeTestServlet() throws Exception {
-        URL url = new URL("http://" + host  + ":" +
-                          port + contextRoot + "/test");
+        URL url = URI.create("http://" + host  + ":" +
+                          port + contextRoot + "/test").toURL();
         System.out.println("Invoking URL: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

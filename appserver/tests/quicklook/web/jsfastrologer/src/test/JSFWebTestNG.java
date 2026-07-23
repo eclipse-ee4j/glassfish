@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -57,8 +58,8 @@ public class JSFWebTestNG {
     public void jsfAppDeployedFirstPagetest() throws Exception {
         try {
 
-            HttpURLConnection connection = (HttpURLConnection) 
-                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/greetings.xhtml").openConnection();
+            HttpURLConnection connection = (HttpURLConnection)
+                URI.create("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/greetings.xhtml").toURL().openConnection();
             connection.connect();
             int responseCode = connection.getResponseCode();
 
@@ -89,8 +90,8 @@ public class JSFWebTestNG {
     public void jsfIndexPageBasicTest() throws Exception {
         try {
 
-            HttpURLConnection conn = (HttpURLConnection) 
-                new URL("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/index.xhtml").openConnection();
+            HttpURLConnection conn = (HttpURLConnection)
+                URI.create("http://" + m_host + ":" + m_port + "/" + strContextRoot + "/index.xhtml").toURL().openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
             BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()));

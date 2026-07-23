@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -64,7 +65,7 @@ public class WebTest {
         Thread.sleep(2000); // WORKAROUND @XXX
         String url = "http://" + host + ":" + port + contextRoot;
         System.out.println("opening connection to " + url);
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

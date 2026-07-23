@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +18,7 @@
 package test.admin;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -45,7 +47,7 @@ public class BaseAsadminTest {
 
     protected Manifest invokeURLAndGetManifest(String urls) {
         try {
-            URL url = new URL(urls);
+            URL url = URI.create(urls).toURL();
             HttpURLConnection uc = (HttpURLConnection)url.openConnection();
             uc.setRequestMethod("GET");
             uc.setRequestProperty("User-Agent", "hk2-agent");

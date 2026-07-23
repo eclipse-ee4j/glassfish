@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,6 +16,7 @@
  */
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 import com.sun.appserv.test.util.results.SimpleReporterAdapter;
@@ -39,7 +41,7 @@ public class WebTest {
 
         private static void goGet(String host, int port, String contextPath, boolean noTimeout) {
                 try {
-                        URL url = new URL("http://" + host + ":" + port + contextPath);
+                        URL url = URI.create("http://" + host + ":" + port + contextPath).toURL();
                         url.getContent();
                         stat.addStatus("web-thread-timeout" + (noTimeout ? "-debug" : ""), noTimeout ? SimpleReporterAdapter.PASS : SimpleReporterAdapter.FAIL);
                 } catch( IOException ex){

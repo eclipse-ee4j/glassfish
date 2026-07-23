@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,7 +29,7 @@ public class HelloBean implements Hello {
 
     static {
         try {
-            expectedURL = new URL("http://java.net");
+            expectedURL = URI.create("http://java.net").toURL();
             for(int i = 0; i < expectedURLs.length; i++) {
                 expectedURLs[i] = expectedURL;
             }

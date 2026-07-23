@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,7 +69,7 @@ public class HelloOSGITestNG extends AdminBaseDevTest{
          Thread.currentThread().sleep(5000);
 
         String testurl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/hello.jsp";
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
@@ -97,7 +98,7 @@ public class HelloOSGITestNG extends AdminBaseDevTest{
     public void simpleServletTest() throws Exception{
          try{
         String testurl = "http://" + host  + ":" + port + "/"+ strContextRoot + "/simpleservlet";
-        URL url = new URL(testurl);
+        URL url = URI.create(testurl).toURL();
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2026 Contributors to Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,24 +21,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main</groupId>
-        <artifactId>glassfish-parent</artifactId>
+        <groupId>org.glassfish.main.jms</groupId>
+        <artifactId>jms</artifactId>
         <version>8.0.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.glassfish.main.jms</groupId>
-    <artifactId>jms</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>jmsra-ext</artifactId>
+    <packaging>jar</packaging>
 
-    <name>GlassFish JMS modules</name>
+    <name>JMS RA Extension</name>
 
-    <modules>
-        <module>jms-core</module>
-        <module>admin</module>
-        <module>gf-jms-connector</module>
-        <module>gf-jms-injection</module>
-        <module>jmsra-ext</module>
-        <module>jmsra</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mqjmsra-ra</artifactId>
+            <version>${openmq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mqbroker-core</artifactId>
+            <version>${openmq.version}</version>
+        </dependency>
+    </dependencies>
 </project>

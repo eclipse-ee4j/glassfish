@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -400,7 +400,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         addCdiServicesToNonModuleBdas(deploymentImpl.getLibJarRootBdas(), injectionManager);
         addCdiServicesToNonModuleBdas(deploymentImpl.getRarRootBdas(), injectionManager);
 
-        ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
         invocationManager.pushAppEnvironment(new WeldApplicationEnvironment(appInfo));
         try {
             doBootstrapStartup(appInfo, bootstrap, deploymentImpl);
@@ -410,14 +409,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             throw new DeploymentException(msgPrefix + t.getMessage(), t);
         } finally {
             invocationManager.popAppEnvironment();
-
-            // The TCL is originally the EAR classloader and is reset during Bean deployment to the
-            // corresponding module classloader in BeanDeploymentArchiveImpl.getBeans
-            // for Bean classloading to succeed.
-            //
-            // The TCL is reset to its old value here.
-            Thread.currentThread().setContextClassLoader(originalClassLoader);
-            deploymentComplete(deploymentImpl);
         }
     }
 
@@ -527,12 +518,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
                     new Class[] { EjbSupport.class }, handler);
             rootServices.add(EjbSupport.class, proxyEjbSupport);
-        }
-    }
-
-    private void deploymentComplete(DeploymentImpl deploymentImpl) {
-        for (BeanDeploymentArchive oneBda : deploymentImpl.getBeanDeploymentArchives()) {
-            ((BeanDeploymentArchiveImpl) oneBda).setDeploymentComplete(true);
         }
     }
 

@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -430,9 +431,10 @@ public class MultimodeCommand extends CLICommand {
                 }
                 break;
             }
-            logger.warning("*****# " + line);
+            logger.log(Level.FINEST, "Processing line: " + line);
 
-            if (line.trim().startsWith("#")) { // ignore comment lines
+            // ignore comment lines
+            if (line.trim().startsWith("#")) {
                 continue;
             }
 

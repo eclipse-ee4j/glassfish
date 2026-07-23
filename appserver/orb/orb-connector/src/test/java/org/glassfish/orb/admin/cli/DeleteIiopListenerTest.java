@@ -100,7 +100,7 @@ public class DeleteIiopListenerTest {
      */
     @Test
     public void testExecuteSuccessDefaultTarget() {
-        parameters.set("listeneraddress", NetUtils.getHostName());
+        parameters.set("listeneraddress", NetUtils.getCanonicalHostName());
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         CreateIiopListener createCommand = services.getService(CreateIiopListener.class);

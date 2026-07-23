@@ -60,9 +60,8 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 @I18n("change.admin.password")
 public class ChangeAdminPasswordCommand extends LocalDomainCommand {
-    private ParameterMap params;
 
-    private static final LocalStringsImpl strings = new LocalStringsImpl(ChangeAdminPasswordCommand.class);
+    private static final LocalStringsImpl I18N = new LocalStringsImpl(ChangeAdminPasswordCommand.class);
 
     @Param(name = "domain_name", optional = true)
     private String userArgDomainName;
@@ -72,6 +71,8 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
 
     @Param(password = true, optional = true)
     private String newpassword;
+
+    private ParameterMap params;
 
     /**
      * Require the user to actually type the passwords unless they are in the file specified by the --passwordfile option.
@@ -89,7 +90,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             // prompt for it (if interactive)
             Console cons = System.console();
             if (cons != null && programOpts.isInteractive()) {
-                cons.printf("%s", strings.get("AdminUserDefaultPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
+                cons.printf("%s", I18N.get("AdminUserDefaultPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
                 String val = cons.readLine();
                 if (ok(val)) {
                     programOpts.setUser(val);
@@ -97,28 +98,28 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
                     programOpts.setUser(SystemPropertyConstants.DEFAULT_ADMIN_USER);
                 }
             } else {
-                //logger.info(strings.get("AdminUserRequired"));
-                throw new CommandValidationException(strings.get("AdminUserRequired"));
+                //logger.info(I18N.get("AdminUserRequired"));
+                throw new CommandValidationException(I18N.get("AdminUserRequired"));
             }
         }
 
         if (password == null) {
             // prompt for it (if interactive)
-            char[] pwdChar = getPassword("password", strings.get("AdminPassword"), null, false);
-            password = pwdChar != null ? new String(pwdChar) : null;
+            char[] pwdChar = getPassword("password", I18N.get("AdminPassword"), null, false);
+            password = pwdChar == null ? null : new String(pwdChar);
             if (password == null) {
-                throw new CommandValidationException(strings.get("AdminPwRequired"));
+                throw new CommandValidationException(I18N.get("AdminPwRequired"));
             }
             programOpts.setPassword(password.toCharArray(), ProgramOptions.PasswordLocation.USER);
         }
 
         if (newpassword == null) {
             // prompt for it (if interactive)
-            char[] pwdChar = getPassword("newpassword", strings.get("change.admin.password.newpassword"),
-                    strings.get("change.admin.password.newpassword.again"), true);
-            newpassword = pwdChar != null ? new String(pwdChar) : null;
+            char[] pwdChar = getPassword("newpassword", I18N.get("change.admin.password.newpassword"),
+                    I18N.get("change.admin.password.newpassword.again"), true);
+            newpassword = pwdChar == null ? null : new String(pwdChar);
             if (newpassword == null) {
-                throw new CommandValidationException(strings.get("AdminNewPwRequired"));
+                throw new CommandValidationException(I18N.get("AdminNewPwRequired"));
             }
         }
 
@@ -149,16 +150,18 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
         try {
             RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name, programOpts.getHost(), programOpts.getPort(),
                     programOpts.isSecure(), programOpts.getUser(), programOpts.getPassword(), logger, false, false);
+            // If the server is not listening, some environments can be configured to behave as a black hole.
+            // Example: GitHub Actions and Windows+MacOS nodes, firewalls can do that (DROP, while REJECT would be ok).
+            rac.setConnectTimeout(5000);
+            rac.setReadTimeout(10000);
             rac.executeCommand(params);
             return SUCCESS;
         } catch (CommandException ce) {
             if (ce.getCause() instanceof ConnectException) {
-                // Remote change failure - change password with default values of
-                // domaindir and domain name,if the --host option is not provided.
-                if (!NetUtils.isLocal(programOpts.getHost())) {
-                    throw ce;
+                // Remote change failure - we still can do a local change
+                if (NetUtils.isLocal(programOpts.getHost())) {
+                    return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
                 }
-                return changeAdminPasswordLocally(getDomainsDir().getPath(), getDomainName());
             }
             throw ce;
         }
@@ -167,7 +170,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
     private int changeAdminPasswordLocally(String domainDir, String domainName) throws CommandException {
 
         if (!NetUtils.isLocal(programOpts.getHost())) {
-            throw new CommandException(strings.get("CannotExecuteLocally"));
+            throw new CommandException(I18N.get("CannotExecuteLocally"));
         }
 
         try {
@@ -181,7 +184,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             //throw new exception
             if (launcher.isSecureAdminEnabled()) {
                 if (newpassword == null || newpassword.isEmpty()) {
-                    throw new CommandException(strings.get("NullNewPassword"));
+                    throw new CommandException(I18N.get("NullNewPassword"));
                 }
             }
 
@@ -189,7 +192,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
 
             if (adminKeyFile == null) {
                 //Cannot change password locally for non file realms
-                throw new CommandException(strings.get("NotFileRealmCannotChangeLocally"));
+                throw new CommandException(I18N.get("NotFileRealmCannotChangeLocally"));
             }
             //This is a FileRealm, instantiate it.
             FileRealmHelper helper = new FileRealmHelper(adminKeyFile);
@@ -197,7 +200,7 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
             //Authenticate the old password
             String[] groups = helper.authenticate(programOpts.getUser(), password.toCharArray());
             if (groups == null) {
-                throw new CommandException(strings.get("InvalidCredentials", programOpts.getUser()));
+                throw new CommandException(I18N.get("InvalidCredentials", programOpts.getUser()));
             }
             helper.updateUser(programOpts.getUser(), programOpts.getUser(), newpassword.toCharArray(), null);
             helper.persist();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,6 +16,8 @@
  */
 
 package com.sun.enterprise.admin.cli;
+
+import com.sun.enterprise.util.net.NetUtils;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
@@ -49,7 +51,7 @@ public class NewSyntaxTest {
         String[] argv = new String[] {"foo"};
         ProgramOptions po = parseCommand(argv);
 
-        assertEquals(CLIConstants.DEFAULT_HOSTNAME, po.getHost());
+        assertEquals(NetUtils.getLoopbackHostName(), po.getHost());
         assertEquals(CLIConstants.DEFAULT_ADMIN_PORT, po.getPort());
         assertNull(po.getUser());
         assertNull(po.getPassword());

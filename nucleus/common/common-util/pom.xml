@@ -31,18 +31,10 @@
 
     <name>Common Utilities</name>
 
-    <developers>
-        <developer>
-            <id>bnevins</id>
-            <name>Byron Nevins</name>
-            <url>http://blogs.sun.com/foo</url>
-            <organization>Oracle, Inc.</organization>
-            <roles>
-                <role>lead</role>
-                <role>developer</role>
-            </roles>
-        </developer>
-    </developers>
+    <properties>
+        <test.logLevel>INFO</test.logLevel>
+        <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
+    </properties>
 
     <dependencies>
         <dependency>

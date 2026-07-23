@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -90,7 +90,17 @@ public final class EnvToPropsConverter {
     }
 
 
-    private String evaluate(final String envPropertyName, final String systemPropertyName) {
+    /**
+     * <ul>
+     * <li>First tries {@link System#getProperty(String)} using the second parameter.
+     * <li>Then tries {@link System#getenv(String)} using the first parameter.
+     * </ul>
+     *
+     * @param envPropertyName
+     * @param systemPropertyName
+     * @return value or null if neither system property nor environment variable is set.
+     */
+    public String evaluate(final String envPropertyName, final String systemPropertyName) {
         if (systemPropertyName != null) {
             final String sysValue = System.getProperty(systemPropertyName);
             if (sysValue != null) {

@@ -18,6 +18,7 @@ package org.glassfish.main.itest.tools.asadmin;
 import java.io.File;
 import java.io.IOException;
 import java.lang.System.Logger;
+import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -100,6 +101,8 @@ public class Asadmin {
         this.adminPasswordFile = adminPasswordFile;
         this.terse = terse;
         withJavaHome(null);
+        // We usually do test on local computer and if not, user should use --host argument.
+        withEnv("AS_HOSTNAME", InetAddress.getLoopbackAddress().getHostName());
     }
 
     /**

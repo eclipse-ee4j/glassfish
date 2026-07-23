@@ -72,7 +72,6 @@ public final class StartServerHelper {
     private final GFLauncherInfo launchParams;
     private final List<HostAndPort> adminAddresses;
     private final ServerDirs serverDirs;
-    private final String serverTitleAndName;
     private final ServerLifeSignCheck lifeSignCheck;
 
     public StartServerHelper(boolean terse, Duration timeout, ServerDirs serverDirs, GFLauncher launcher,
@@ -80,8 +79,8 @@ public final class StartServerHelper {
         this.terse = terse;
         this.launcher = launcher;
         this.launchParams = launcher.getParameters();
-        this.serverTitleAndName = (launchParams.isDomain() ? "domain " : "instance ") + serverDirs.getServerName();
         this.adminAddresses = launchParams.getAdminAddresses();
+        LOG.log(INFO, () -> "admin addresses: " + adminAddresses);
         this.serverDirs = serverDirs;
         this.pidFile = serverDirs.getPidFile();
         this.lifeSignCheck = lifeSignCheck;
@@ -93,8 +92,8 @@ public final class StartServerHelper {
             waitForParentToDie(launcher.getPidBeforeRestart(), timeout);
             configureLoggingOfRestart(serverDirs.getRestartLogFile());
         }
-        checkFreeDebugPort(launcher.getDebugPort(), Duration.ofSeconds(10L), terse);
-        checkFreeAdminPorts(launchParams.getAdminAddresses());
+        checkFreeDebugPort(launcher.getDebugPort(), terse);
+        checkFreeAdminPorts(adminAddresses);
         deletePidFile();
     }
 
@@ -285,17 +284,17 @@ public final class StartServerHelper {
      * Fast respawn can meet with previous JVM on ports, despite the JVM is already dead.
      * So we have to wait a bit.
      */
-    private static void checkFreeDebugPort(Integer debugPort, Duration timeout, boolean terse) {
-        if (debugPort == null || NetUtils.isPortFree(debugPort)) {
+    private static void checkFreeDebugPort(Integer debugPort, boolean terse) {
+        if (debugPort == null || NetUtils.isPortFreeServer(debugPort)) {
             return;
         }
-        ProcessUtils.waitFor(() -> NetUtils.isPortFree(debugPort), Duration.ofSeconds(10L), terse);
+        ProcessUtils.waitFor(() -> NetUtils.isPortFreeServer(debugPort), Duration.ofSeconds(10L), terse);
     }
 
     private static void checkFreeAdminPorts(List<HostAndPort> endpoints) throws GFLauncherException {
         LOG.log(DEBUG, "Checking if all admin ports are free.");
         for (HostAndPort endpoint : endpoints) {
-            if (!NetUtils.isPortFree(endpoint.getHost(), endpoint.getPort())) {
+            if (!NetUtils.isPortFreeServer(endpoint.getPort())) {
                 throw new GFLauncherException("There is a process already using the admin port " + endpoint.getPort()
                     + " - it might be another instance of a GlassFish server.");
             }

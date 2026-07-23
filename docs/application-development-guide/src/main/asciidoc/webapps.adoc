@@ -1362,6 +1362,67 @@ https://docs.cometd.org/current/reference/#_bayeux[Bayeux Protocol]
 For more information about the Dojo toolkit, see
 `http://dojotoolkit.org/`.
 
+[[using-jakarta-rest]]
+
+=== Using Jakarta REST
+
+{productName} implements https://jakarta.ee/specifications/restful-ws/[Jakarta REST]
+with https://eclipse-ee4j.github.io/jersey/[Eclipse Jersey].
+
+[[injecting-jakarta-rest-artifacts-with-cdi]]
+
+==== Injecting Jakarta REST Artifacts with CDI
+
+The Jakarta REST specification requires injection of REST artifacts such as
+`UriInfo`, `Sse`, `SecurityContext`, `HttpHeaders`, `Request` or `Providers`
+via the `@Context` annotation. The `@Context` annotation is deprecated since
+Jakarta REST 3.1 in favor of a future alignment with CDI.
+
+As an extension to the specification, {productName} bundles the Jersey module
+`jersey-cdi-rs-inject`, which already allows injecting these artifacts with the
+standard CDI `@Inject` annotation:
+
+[source,java]
+----
+import jakarta.inject.Inject;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.sse.Sse;
+
+@Path("example")
+public class ExampleResource {
+
+    @Inject
+    private UriInfo uriInfo;
+
+    @Inject
+    private Sse sse;
+
+    // ...
+}
+----
+
+Unlike `@Context`, which for resources managed by CDI or Enterprise Beans is
+only supported on fields and bean properties, `@Inject` also works for
+constructor injection, following the usual CDI rules:
+
+[source,java]
+----
+@Path("example")
+@ApplicationScoped
+public class ExampleResource {
+
+    private final Sse sse;
+
+    @Inject
+    public ExampleResource(Sse sse) {
+        this.sse = sse;
+    }
+
+    // ...
+}
+----
+
 [[advanced-web-application-features]]
 
 === Advanced Web Application Features

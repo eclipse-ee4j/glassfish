@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -408,6 +408,59 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
                     }
                 }
             }
+            populateAppScopedResourcesJndiNames(dc, application, appName);
+        }
+    }
+
+    /**
+     * Publish the JNDI names of the application/module scoped resources into the deployment context.
+     * <p>
+     * Unlike the deploy path (see {@link #processArchive(DeploymentContext)}), the load path (server
+     * restart, application/application-ref enable) reads the resource configuration from domain.xml and
+     * does not produce this metadata. Without it, {@code ResourceValidator} cannot resolve app-scoped JNDI
+     * names (e.g. {@code java:app/jdbc/mydb}) from its in-memory namespace and instead falls back to a live
+     * JNDI lookup. During restart that lookup runs before the resources are bound to naming, so it fails
+     * and the application is not deployed. Populating the names here lets the validator recognize them as
+     * legitimately declared, the same way it does on a fresh deploy.
+     */
+    private void populateAppScopedResourcesJndiNames(DeploymentContext dc, Application application, String appName) {
+        Map<String, List<SimpleJndiName>> jndiNames = collectAppScopedResourceJndiNames(application, appName);
+        if (!jndiNames.isEmpty()) {
+            dc.addTransientAppMetaData(APP_SCOPED_RESOURCES_JNDI_NAMES, jndiNames);
+        }
+    }
+
+    /**
+     * Collect the JNDI names of bindable application/module scoped resources from the application
+     * configuration, keyed by scope (application name for app-scoped resources, module name for
+     * module-scoped ones), matching the layout produced on the deploy path.
+     */
+    static Map<String, List<SimpleJndiName>> collectAppScopedResourceJndiNames(Application application, String appName) {
+        Map<String, List<SimpleJndiName>> jndiNames = new HashMap<>();
+        addBindableJndiNames(jndiNames, appName, application.getResources());
+        List<Module> modules = application.getModule();
+        if (modules != null) {
+            for (Module module : modules) {
+                addBindableJndiNames(jndiNames, getActualModuleNameWithExtension(module.getName()),
+                        module.getResources());
+            }
+        }
+        return jndiNames;
+    }
+
+    private static void addBindableJndiNames(Map<String, List<SimpleJndiName>> jndiNames, String scopeName,
+            Resources resources) {
+        if (resources == null) {
+            return;
+        }
+        List<SimpleJndiName> names = new ArrayList<>();
+        for (Resource resource : resources.getResources()) {
+            if (resource instanceof BindableResource) {
+                names.add(new SimpleJndiName(((BindableResource) resource).getJndiName()));
+            }
+        }
+        if (!names.isEmpty()) {
+            jndiNames.put(scopeName, names);
         }
     }
 

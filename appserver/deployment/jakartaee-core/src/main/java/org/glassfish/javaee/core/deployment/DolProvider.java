@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,6 +31,7 @@ import com.sun.enterprise.deployment.archivist.DescriptorArchivist;
 import com.sun.enterprise.deployment.deploy.shared.DeploymentPlanArchive;
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive;
 import com.sun.enterprise.deployment.deploy.shared.Util;
+import com.sun.enterprise.deployment.util.ResourceValidator;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.v3.common.HTMLActionReporter;
@@ -109,6 +110,14 @@ public class DolProvider implements ApplicationMetaDataProvider<Application>,
 
     @Inject
     Provider<ClassLoaderHierarchy> clhProvider;
+
+    /**
+     * Never read, but must not be removed: this injection is what instantiates the validator, whose
+     * postConstruct registers it as a deployment event listener. Nothing else references its contract,
+     * so without it resource validation never runs.
+     */
+    @Inject
+    private ResourceValidator resourceValidator;
 
     private static final String WRITEOUT_XML = System.getProperty("writeout.xml");
 

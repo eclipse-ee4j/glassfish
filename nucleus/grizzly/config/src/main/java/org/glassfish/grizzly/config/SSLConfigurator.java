@@ -53,6 +53,8 @@ import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
+import static org.glassfish.grizzly.config.ssl.SSLContextFactory.ATTR_KEYSTORE_CONFIGURED;
+import static org.glassfish.grizzly.config.ssl.SSLContextFactory.ATTR_TRUSTSTORE_CONFIGURED;
 
 /**
  * @author oleksiys
@@ -157,6 +159,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             // Key store settings
             setAttribute(sslContextFactory, "keystore", ssl == null ? null : ssl.getKeyStore(),
                 KEYSTORE_FILE.getSystemPropertyName(), null);
+            markConfiguredStore(sslContextFactory, ATTR_KEYSTORE_CONFIGURED, ssl == null ? null : ssl.getKeyStore());
             setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(),
                 KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
             setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl),
@@ -165,6 +168,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             // Trust store settings
             setAttribute(sslContextFactory, "truststore", ssl == null ? null : ssl.getTrustStore(),
                 TRUSTSTORE_FILE.getSystemPropertyName(), null);
+            markConfiguredStore(sslContextFactory, ATTR_TRUSTSTORE_CONFIGURED, ssl == null ? null : ssl.getTrustStore());
             setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(),
                 TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
             setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl),
@@ -284,6 +288,21 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     private static void setAttribute(final SSLContextFactory sslContextFactory, final String name, final String value,
         final String property, final String defaultValue) {
         sslContextFactory.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
+    }
+
+    /**
+     * Records that the store is the one of the listener and not the one of the server, because the
+     * store attributes themselves are merged with the system properties of the server.
+     *
+     * @param sslContextFactory the factory which will create the {@link SSLContext}.
+     * @param name the name of the marking attribute.
+     * @param configuredStore the store configured in the ssl element, may be null.
+     */
+    private static void markConfiguredStore(final SSLContextFactory sslContextFactory, final String name,
+        final String configuredStore) {
+        if (configuredStore != null && !configuredStore.isBlank()) {
+            sslContextFactory.setAttribute(name, Boolean.TRUE.toString());
+        }
     }
 
     private static boolean isWantClientAuth(final Ssl ssl) {

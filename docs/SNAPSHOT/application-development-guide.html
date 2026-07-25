@@ -2371,12 +2371,12 @@ or the command <code>kill -QUIT</code> process_id.</p>
 </div>
 <div class="paragraph">
 <p>To send the JVM messages to a special JVM log file instead of <code>stdout</code>,
-use the following <code>asadmin create-jvm-options</code> commands:</p>
+use the following <code>asadmin create-jvm-options</code> command to route JVM
+unified logging to a file:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>asadmin create-jvm-options -XX\:+LogVMOutput
-asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log</code></pre>
+<pre class="CodeRay highlight"><code>asadmin create-jvm-options -Xlog\:all\:file=${com.sun.aas.instanceRoot}/logs/jvm.log</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2387,8 +2387,9 @@ asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
 </td>
 <td class="content">
 <div class="paragraph">
-<p>These <code>-XX</code> options are specific to the OpenJDK (or Hotspot) JVM and do
-not work with the JRockit JVM.</p>
+<p><code>-Xlog</code> is the JVM unified logging option available in the OpenJDK (or
+Hotspot) JVM. It replaces the legacy <code>-XX:+LogVMOutput</code> and <code>-XX:LogFile</code>
+options.</p>
 </div>
 </td>
 </tr>
@@ -22870,7 +22871,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-25 17:43:44 UTC
+Last updated 2026-07-25 18:03:20 UTC
 </div>
 </div>
 </body>

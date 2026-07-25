@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -78,7 +79,7 @@ public class WebTest {
         if (param != null) {
             sb.append("?").append(param);
         }
-        URL url = new URL(sb.toString());
+        URL url = URI.create(sb.toString()).toURL();
 
         System.out.println("Connecting to: " + url.toString());
 

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -46,7 +47,7 @@ public class WebTest {
     private static void goGet(String host, int port,
                               String result, String contextPath) throws Exception {
         try {
-            URL servlet = new URL("http://localhost:8080/test/SimpleWebServiceService?wsdl");
+            URL servlet = URI.create("http://localhost:8080/test/SimpleWebServiceService?wsdl").toURL();
             URLConnection yc = servlet.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));

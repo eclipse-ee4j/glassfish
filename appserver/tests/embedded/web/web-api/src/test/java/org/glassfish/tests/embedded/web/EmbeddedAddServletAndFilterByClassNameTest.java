@@ -24,6 +24,7 @@ import jakarta.servlet.ServletRegistration;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.EnumSet;
@@ -88,7 +89,7 @@ public class EmbeddedAddServletAndFilterByClassNameTest {
 
         vs.addContext(context, contextRoot);
 
-        URL servlet = new URL("http://localhost:8080/"+contextRoot+"/newFilterServlet");
+        URL servlet = URI.create("http://localhost:8080/"+contextRoot+"/newFilterServlet").toURL();
         URLConnection yc = servlet.openConnection();
         BufferedReader in = new BufferedReader(
                                 new InputStreamReader(

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,7 +46,7 @@ public class ServletTest3 extends HttpServlet {
         String port = request.getParameter("port");
         String contextRoot = request.getParameter("contextRoot");
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot + "/ServletTest2?host="+ host + "&port=" + port + "&contextRoot=" + contextRoot);
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot + "/ServletTest2?host="+ host + "&port=" + port + "&contextRoot=" + contextRoot).toURL();
         System.out.println("\n Servlet3 url: " + url.toString());
         System.out.println("================ End Servlet3 ===============");
     }

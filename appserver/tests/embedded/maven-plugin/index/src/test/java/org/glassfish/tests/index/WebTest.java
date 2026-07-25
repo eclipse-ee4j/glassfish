@@ -18,6 +18,7 @@
 package org.glassfish.tests.index;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -37,7 +38,7 @@ public class WebTest {
 
     @Test
     public void testWeb() throws Exception {
-        URL servlet = new URL("http://localhost:8080");
+        URL servlet = URI.create("http://localhost:8080").toURL();
 
         HttpClient client = HttpClient.newBuilder().build();
         HttpRequest request = HttpRequest.newBuilder()

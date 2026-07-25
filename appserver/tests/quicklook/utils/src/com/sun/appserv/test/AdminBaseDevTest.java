@@ -28,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.SortedSet;
@@ -147,7 +148,7 @@ public abstract class AdminBaseDevTest extends BaseDevTest {
 
     public static String getURL(String urlstr) {
         try {
-            URL u = new URL(urlstr);
+            URL u = URI.create(urlstr).toURL();
             URLConnection urlc = u.openConnection();
             BufferedReader ir = new BufferedReader(new InputStreamReader(urlc.getInputStream(),
                     "ISO-8859-1"));

@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.security.SecureRandom;
@@ -70,7 +71,7 @@ public class JspTest {
 
     private static void goGet(String url, String result) throws Exception {
         disableCertValidation();
-        URL servlet = new URL(url);
+        URL servlet = URI.create(url).toURL();
         HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
         try {
             System.out.println("\nURLConnection = " + uc + " : ");

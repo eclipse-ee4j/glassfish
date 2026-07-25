@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,6 +20,7 @@ import jakarta.xml.soap.MessageFactory;
 import jakarta.xml.soap.AttachmentPart;
 import jakarta.xml.soap.Name;
 
+import java.net.URI;
 import java.net.URL;
 import javax.activation.DataHandler;
 
@@ -170,7 +172,7 @@ public class SendSOAPMessageWithJMS {
         Properties P = new Properties();
         P.load(props);
 
-        return (new URL(P.getProperty("url")));
+        return (URI.create(P.getProperty("url")).toURL());
     }
 
 

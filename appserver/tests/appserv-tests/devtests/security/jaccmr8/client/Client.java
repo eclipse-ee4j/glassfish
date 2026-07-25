@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -437,7 +438,7 @@ public class Client {
         }
 
         private int invokeServlet(String url, Hashtable contentHash, String user, StringBuffer output) throws Exception {
-                URL u = new URL(url);
+                URL u = URI.create(url).toURL();
                 HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
                 c1.setAllowUserInteraction(true);
                 if ((user != null) && (user.length() > 0)) {

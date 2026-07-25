@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -143,6 +143,32 @@ public class ManagedConnectionImplTest {
         // Close is called on connectionHolder, but it was no longer linked to managedConnection1.
         // Thus connectionCount is not decreased from 1 to 0.
         assertEquals(1, managedConnection1.connectionCount);
+    }
+
+    /**
+     * Reproduces issue #24232: cleanup() can be invoked on a pooled/XA ManagedConnection
+     * whose physical connection has already been torn down (e.g. a connection marked for
+     * removal whose transaction completed and which was then destroyed). In that state both
+     * actualConnection and pooledConnection are null, so resetConnectionProperties() must
+     * not dereference them. Before the fix this threw a NullPointerException from
+     * resetAutoCommit().
+     */
+    @Test
+    public void testCleanupOnTornDownPooledConnectionDoesNotThrow() throws Exception {
+        ManagedConnectionImpl managedConnection = createManagedConnection(new MyPooledConnection(), null);
+        managedConnection.initializeConnectionType(ManagedConnectionImpl.ISPOOLEDCONNECTION);
+
+        // Application changed autoCommit (default is true), so resetConnectionProperties()
+        // would attempt to reset it on the - now absent - physical connection.
+        managedConnection.setLastAutoCommitValue(false);
+
+        // Tear the physical connection down: destroy() closes and nulls both the
+        // pooledConnection and the actualConnection for a pooled connection.
+        managedConnection.destroy();
+        assertNull(managedConnection.getActualConnection());
+
+        // cleanup() runs resetConnectionProperties() on the torn-down connection.
+        assertDoesNotThrow(managedConnection::cleanup);
     }
 
     /**

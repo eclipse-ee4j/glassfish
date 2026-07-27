@@ -43,6 +43,10 @@
             </roles>
         </developer>
     </developers>
+    <properties>
+        <test.logLevel>INFO</test.logLevel>
+        <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
+    </properties>
 
     <dependencies>
         <dependency>

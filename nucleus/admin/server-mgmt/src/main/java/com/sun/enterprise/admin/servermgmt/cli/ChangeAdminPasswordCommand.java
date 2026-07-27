@@ -149,6 +149,10 @@ public class ChangeAdminPasswordCommand extends LocalDomainCommand {
         try {
             RemoteRestAdminCommand rac = new RemoteRestAdminCommand(name, programOpts.getHost(), programOpts.getPort(),
                     programOpts.isSecure(), programOpts.getUser(), programOpts.getPassword(), logger, false, false);
+            // If the server is not listening, some environments can be configured to behave as a black hole.
+            // Example: GitHub Actions and Windows+MacOS nodes, firewalls can do that (DROP, while REJECT would be ok).
+            rac.setConnectTimeout(5_000);
+            rac.setReadTimeout(30_000);
             rac.executeCommand(params);
             return SUCCESS;
         } catch (CommandException ce) {

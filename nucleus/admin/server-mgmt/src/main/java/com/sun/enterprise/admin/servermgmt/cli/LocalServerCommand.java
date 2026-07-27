@@ -30,6 +30,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.security.KeyTool;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
-import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
 import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 import static com.sun.enterprise.universal.process.ProcessUtils.loadPid;
@@ -136,7 +136,7 @@ public abstract class LocalServerCommand extends CLICommand {
         }
         final List<HostAndPort> adminEndpointCandidates = adminEndpointCandidatesSupplier.get();
         if (adminEndpointCandidates.isEmpty()) {
-            String host = userHost == null ? DEFAULT_HOSTNAME : userHost;
+            String host = userHost == null ? NetUtils.getLoopbackHostName() : userHost;
             Integer port = userPort == null ? DEFAULT_ADMIN_PORT : userPort;
             boolean secure = userSecure == null ? false : userSecure;
             HostAndPort endpoint = new HostAndPort(host, port, secure);

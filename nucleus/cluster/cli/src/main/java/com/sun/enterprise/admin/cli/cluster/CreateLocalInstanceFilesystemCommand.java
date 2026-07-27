@@ -30,7 +30,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_HOST;
 import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_IS_SECURE;
 import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_PORT;
@@ -87,17 +86,17 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
         if (dasPropsFile.isFile()) {
             // Don't validate for local host - can't tell if it's user specified or default.
             // Just use what's in das.properties so user doesn't have to specify --host
-            if (programOpts.getHost() != null && !DEFAULT_HOSTNAME.equals(programOpts.getHost())) {
+            if (programOpts.getHost() != null && !NetUtils.getLoopbackHostName().equals(programOpts.getHost())) {
                 //validate must come before setDasDefaults
                 validateDasOptions(programOpts.getHost(), String.valueOf(programOpts.getPort()),
                         String.valueOf(programOpts.isSecure()), dasPropsFile);
             }
             setDasDefaults(dasPropsFile);
             if (!setDasDefaultsOnly) {
-                String nodeDirChildName = nodeDirChild != null ? nodeDirChild.getName() : "";
-                String nodeName = node != null ? node : nodeDirChildName;
+                String nodeDirChildName = nodeDirChild == null ? "" : nodeDirChild.getName();
+                String nodeName = node == null ? nodeDirChildName : node;
                 logger.info(Strings.get("Instance.existingDasPropertiesWarning",
-                    programOpts.getHost(), "" + programOpts.getPort(), nodeName));
+                    programOpts.getHost(), Integer.toString(programOpts.getPort()), nodeName));
             }
         }
 

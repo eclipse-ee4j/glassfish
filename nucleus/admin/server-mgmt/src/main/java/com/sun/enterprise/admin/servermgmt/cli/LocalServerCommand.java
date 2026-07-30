@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -510,15 +510,15 @@ public abstract class LocalServerCommand extends CLICommand {
         }
     }
 
-    private File getJKS() {
+    protected File getJKS() {
         if (serverDirs == null) {
             return null;
         }
-        File mp = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
-        if (mp.canRead()) {
-            return mp;
+        File trustStore = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
+        if (trustStore.canRead()) {
+            return trustStore;
         }
-        LOG.log(DEBUG, "File does not exist or is not readable: {0}", mp);
+        LOG.log(DEBUG, "File does not exist or is not readable: {0}", trustStore);
         return null;
     }
 

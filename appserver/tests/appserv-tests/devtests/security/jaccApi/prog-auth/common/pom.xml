@@ -50,10 +50,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
+            <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.70.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

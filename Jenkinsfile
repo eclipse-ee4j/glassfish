@@ -454,10 +454,6 @@ pipeline {
    }
 
    post {
-      // Some files allocate a lot of disk space, but when the build succeeded, we often don't need them any more.'
-      always {
-         cleanWs()
-      }
       success {
          // Overwrite stashes with empty content
          stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true

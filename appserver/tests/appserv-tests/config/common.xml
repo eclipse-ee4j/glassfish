@@ -1473,11 +1473,38 @@ AS_ADMIN_MASTERPASSWORD=${master.password}
 
 <!-- start Derby Database -->
 <target name="startDerby">
+    <echo message="Checking if Derby port ${db.port} is available before starting..."/>
+    <condition property="port.occupied.before">
+        <socket server="localhost" port="${db.port}"/>
+    </condition>
+    <echo message="Port ${db.port} occupied before start: ${port.occupied.before}"/>
+
     <condition property="darwin">
         <os name="Mac OS X" />
     </condition>
     <antcall target="startDerbyNonMac" />
     <antcall target="startDerbyMac" />
+
+    <echo message="Verifying Derby is listening on port ${db.port}..."/>
+    <waitfor maxwait="30" maxwaitunit="second" checkevery="2" checkeveryunit="second" timeoutproperty="derby.start.timeout">
+        <socket server="localhost" port="${db.port}"/>
+    </waitfor>
+
+    <antcall target="derby-startup-failed"/>
+
+    <echo message="Derby successfully started and listening on port ${db.port}"/>
+</target>
+
+<target name="derby-startup-failed" if="derby.start.timeout">
+    <echo message="Derby failed to start on port ${db.port} within 30 seconds"/>
+    <echo message="=== Derby Log (last 50 lines) ==="/>
+    <loadfile property="derby.log.content" srcFile="${env.S1AS_HOME}/databases/derby.log" failonerror="false">
+        <filterchain>
+            <tailfilter lines="50"/>
+        </filterchain>
+    </loadfile>
+    <echo message="${derby.log.content}"/>
+    <fail message="Derby failed to start on port ${db.port}. See Derby logs above."/>
 </target>
 
 <target name="startDerbyNonMac" depends="init-common" unless="darwin">

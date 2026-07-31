@@ -25,6 +25,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+
 /**
  * @author bhavanishankar@dev.java.net
  */

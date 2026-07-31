@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2023 Contributors to the Eclipse Foundation.
+    Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -53,18 +53,15 @@
                 <module>queryString</module>
                 <module>sessionDestroyed</module>
                 <module>standalonewar</module>
-                <!--<module>websockets</module>-->
-                <!--<module>webservice</module>-->
+                <module>websockets</module>
+                <module>webservice</module>
                 <module>secureWebApp</module>
                 <module>jsptest</module>
 
-                <!-- jsftest fails because CDI not available - fixed by adding beans.xml.
-                  Then fails on something else
-                -->
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
 <!--                <module>jsftest</module>-->
-
-                <!-- localejbs only need add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
-                <!--<module>localejbs</module>-->
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
+<!--                <module>localejbs</module>-->
                 <module>multipleApps</module>
             </modules>
         </profile>
@@ -87,12 +84,14 @@
                 <module>queryString</module>
                 <module>sessionDestroyed</module>
                 <module>standalonewar</module>
-                <!--<module>websockets</module>-->
-                <!--<module>webservice</module>-->
+                <module>websockets</module>
+                <module>webservice</module>
                 <module>secureWebApp</module>
                 <module>jsptest</module>
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
 <!--                <module>jsftest</module>-->
-                <module>localejbs</module>
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
+<!--                <module>localejbs</module>-->
                 <module>multipleApps</module>
             </modules>
         </profile>
@@ -115,12 +114,14 @@
                 <module>queryString</module>
                 <module>sessionDestroyed</module>
                 <module>standalonewar</module>
-                <!--<module>websockets</module>-->
-                <!--<module>webservice</module>-->
+                <module>websockets</module>
+                <module>webservice</module>
                 <module>secureWebApp</module>
                 <module>jsptest</module>
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
 <!--                <module>jsftest</module>-->
-                <module>localejbs</module>
+                <!-- needs add-opens=java.base/java.lang=ALL-UNNAMED set in MAVEN_OPTS to pass -->
+<!--                <module>localejbs</module>-->
                 <module>multipleApps</module>
             </modules>
         </profile>

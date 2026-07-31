@@ -15,7 +15,7 @@
 * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 */
 
-def mvnVersion = '3.9.11'
+def mvnVersion = '3.9.16'
 def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
@@ -168,7 +168,7 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
                               '''
                               sh """
-                              mvn -B -e clean verify -Psnapshots -pl :${job} -amd
+                              mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
                               """
                            }
                         } finally {
@@ -454,10 +454,6 @@ pipeline {
    }
 
    post {
-      // Some files allocate a lot of disk space, but when the build succeeded, we often don't need them any more.'
-      always {
-         cleanWs()
-      }
       success {
          // Overwrite stashes with empty content
          stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true

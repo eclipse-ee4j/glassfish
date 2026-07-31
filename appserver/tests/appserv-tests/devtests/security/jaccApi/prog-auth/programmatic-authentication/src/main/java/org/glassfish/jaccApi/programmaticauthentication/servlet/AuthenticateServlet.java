@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,19 +17,20 @@
 
 package org.glassfish.jaccApi.programmaticauthentication.servlet;
 
-import java.io.IOException;
-
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javax.security.auth.Subject;
-import jakarta.security.jacc.PolicyContext;
-import jakarta.security.jacc.PolicyContextException;
+
+import java.io.IOException;
 import java.security.Principal;
-import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.security.auth.Subject;
 
 @WebServlet(urlPatterns = "/public/authenticate")
 public class AuthenticateServlet extends HttpServlet {
@@ -51,16 +53,13 @@ public class AuthenticateServlet extends HttpServlet {
             if (subject != null) {
                 response.getWriter().write(subject.toString());
                 Set<Principal> principalsSet = subject.getPrincipals();
-//                String princiaplsInSubject = "";
-                String princiaplsInSubject = principalsSet.stream()
-                                                          .map(e -> e.getName())
-                                                          .collect(Collectors.joining(", "));
-                response.getWriter().write("Principals: " + princiaplsInSubject);
-//            response.getWriter().write("Principals in subject are :" + subject.getPrincipals().stream().map(Principal::getName()).collect(Collectors.join(",")));
+                response.getWriter().write("Principals in subject are: " + subject.getPrincipals().stream()
+                    .map(Principal::getName).distinct().collect(Collectors.joining(", ")));
             }
-        }catch (PolicyContextException e){
+        } catch (PolicyContextException e) {
             response.getWriter().write("ERROR while getting Subject");
             e.printStackTrace(response.getWriter());
+            response.getWriter().flush();
         }
 
     }

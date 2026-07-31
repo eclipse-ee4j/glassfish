@@ -36,10 +36,7 @@
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
 
-        <!-- FIXME:
-        https://github.com/jakartaee/authentication/pull/242
-        -->
-        <tck.version>3.1.0-SNAPSHOT</tck.version>
+        <tck.version>3.1.2</tck.version>
         <tck.artifactId>tck-authentication-download</tck.artifactId>
         <tck.home>${project.build.directory}/authentication-tck-${tck.version}</tck.home>
         <tck.parentPomFile>${tck.home}/tck/pom.xml</tck.parentPomFile>

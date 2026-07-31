@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,62 +17,42 @@
 
 package org.glassfish.tests.webservice;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.net.URLConnection;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 public class WebTest {
 
-    private static int count = 0;
-    private static int EXPECTED_COUNT = 3;
-
-    private String contextPath = "test";
-
-    @BeforeAll
-    public static void setup() throws IOException {
-    }
-
     @Test
     public void testWeb() throws Exception {
-        goGet("localhost", 8080, "SimpleWebServicePort", contextPath);
+        Assertions.assertTrue(goGet());
     }
 
-    private static void goGet(String host, int port,
-                              String result, String contextPath) throws Exception {
+    private static boolean goGet() throws Exception {
+        URL servlet = URI.create("http://localhost:8080/test/SimpleWebServiceService?wsdl").toURL();
+        HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
         try {
-            URL servlet = URI.create("http://localhost:8080/test/SimpleWebServiceService?wsdl").toURL();
-            URLConnection yc = servlet.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    yc.getInputStream()));
-            String line = null;
-            int index;
-            while ((line = in.readLine()) != null) {
-                System.out.println(line);
-                index = line.indexOf(result);
-                if (index != -1) {
-                    index = line.indexOf(":");
-                    String status = line.substring(index+1);
-
-                    if (status.equalsIgnoreCase("PASS")){
-                        count++;
-                    } else {
-                        return;
+            System.out.println("\nURLConnection = " + uc + " : ");
+            if (uc.getResponseCode() != 200) {
+                throw new Exception("Servlet did not return 200 OK response code");
+            }
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
+                String line = null;
+                while ((line = in.readLine()) != null) {
+                    System.err.println("RESPONSE LINE: " + line);
+                    if (line.contains("SimpleWebServicePort")) {
+                        return true;
                     }
                 }
             }
-            Assertions.assertTrue(count==3);
-
-        } catch(Exception e) {
-            e.printStackTrace();
-            throw e;
+            return false;
+        } finally {
+            uc.disconnect();
         }
-   }
-
+    }
 }

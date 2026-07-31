@@ -94,5 +94,66 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <!-- FIXME: The egf plugin doesn't do a proper cleanup, so we have to do that manually -->
+            <plugin>
+                <groupId>org.codehaus.gmavenplus</groupId>
+                <artifactId>gmavenplus-plugin</artifactId>
+                <version>5.1.0</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.groovy</groupId>
+                        <artifactId>groovy</artifactId>
+                        <version>5.0.7</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <!-- To download the plugin before the usage + to log current state. -->
+                    <execution>
+                        <id>list-properties</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <includeClasspath>PLUGIN_ONLY</includeClasspath>
+                            <scripts>
+                                <script>
+                                System.getProperties().sort().each { key, value -> println "${key} = ${value}" }
+                                </script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>clear-properties</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <scripts>
+                                <script>
+                                System.getProperties().sort().each { key, value -> println "${key} = ${value}" }
+                                System.clearProperty('catalina.home')
+                                System.clearProperty('catalina.base')
+                                System.clearProperty('com.sun.aas.instanceRoot')
+                                System.clearProperty('com.sun.aas.instanceRootURI')
+                                System.clearProperty('com.sun.aas.installRoot')
+                                System.clearProperty('com.sun.aas.installRootURI')
+                                System.clearProperty('javax.net.ssl.keyStore')
+                                System.clearProperty('javax.net.ssl.trustStore')
+                                System.clearProperty('javax.net.ssl.keyStoreType')
+                                System.clearProperty('javax.net.ssl.trustStoreType')
+                                System.clearProperty('javax.net.ssl.keyStoreProvider')
+                                System.clearProperty('javax.net.ssl.trustStoreProvider')
+                                System.clearProperty('org.glassfish.embedded.greeting')
+                                </script>
+                            </scripts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

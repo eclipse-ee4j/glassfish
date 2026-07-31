@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,30 +19,24 @@ package org.glassfish.tests.embedded.localejbs;
 
 import javax.naming.InitialContext;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author bhavanishankar@dev.java.net
  */
-
 public class LocalEjbTest {
 
-    @Test
+    @org.junit.Test
     public void testTimer() throws Exception {
-        try {
-            InitialContext ic = new InitialContext();
-            TimerEjb ejb = (TimerEjb) ic.lookup("java:global/localejbs/TimerEjb");
-            System.out.println("Looked up [" + ejb + "]");
-            ejb.createTimer();
-            System.out.println("createTimer called");
-            Thread.sleep(4000);
-            boolean result = ejb.verifyTimer();
-            System.out.println("EJB timer called: " + result);
-            Assertions.assertTrue(result);
-            System.err.println("TimerEJB successful.");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        InitialContext ic = new InitialContext();
+        TimerEjb ejb = (TimerEjb) ic.lookup("java:global/localejbs/TimerEjb");
+        System.out.println("Looked up [" + ejb + "]");
+        ejb.createTimer();
+        System.out.println("createTimer called");
+        Thread.sleep(4000);
+        boolean result = ejb.verifyTimer();
+        System.out.println("EJB timer called: " + result);
+        assertTrue(result);
+        System.err.println("TimerEJB successful.");
     }
 }

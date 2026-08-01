@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -95,8 +95,7 @@ public class EmbeddedAddHttpsListenerTest {
         listener.setPort(port);
         listener.setId(name);
 
-        String keyStorePath = root.getAbsolutePath() + keystore;
-        SslConfig sslConfig = new SslConfig(keyStorePath, null);
+        SslConfig sslConfig = new SslConfig(keystore.getAbsolutePath(), null);
         sslConfig.setKeyPassword(password.toCharArray());
         if (certname != null) {
             sslConfig.setCertNickname(certname);

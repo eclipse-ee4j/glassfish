@@ -12,8 +12,10 @@
 
     <name>GlassFish Integration Test Tools</name>
     <properties>
-        <test.logLevel>FINEST</test.logLevel>
+        <test.logLevel>INFO</test.logLevel>
         <test.logManager>org.glassfish.main.jul.GlassFishLogManager</test.logManager>
+        <!-- Slowed down processing on Jenkins and as everything is also printed to console, we don't need them. -->
+        <enableOutErrElements>false</enableOutErrElements>
     </properties>
     <dependencies>
         <dependency>

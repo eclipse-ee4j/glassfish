@@ -141,7 +141,7 @@ def generateAntPodTemplate(job) {
             } finally {
                stopVmstatLogging()
                archiveArtifacts artifacts: "${job}-results.tar.gz"
-               junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+               junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
             }
          }
       }
@@ -179,7 +179,8 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                   }
                } finally {
                   archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                  junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+                  junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                  junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
 // Makes Jenkins UI extremely slow in current version
 //                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                }
@@ -395,7 +396,8 @@ pipeline {
                post {
                   always {
                      archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
+                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
 // Makes Jenkins UI extremely slow in current version
 //                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }

@@ -180,7 +180,8 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                } finally {
                   archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
                   junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+// Makes Jenkins UI extremely slow in current version
+//                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                }
             }
          }
@@ -395,7 +396,8 @@ pipeline {
                   always {
                      archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
                      junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+// Makes Jenkins UI extremely slow in current version
+//                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }
                }
             }

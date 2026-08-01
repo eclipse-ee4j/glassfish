@@ -88,6 +88,7 @@ def dumpSysInfo() {
    uname -a || true
    env | sort || true
    df -h || true
+   hostname -I || true
    \${JAVA_HOME}/bin/jcmd || true
    mvn -version || true
    ant -version || true

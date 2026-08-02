@@ -38,7 +38,7 @@
         <faces.tck.version>4.1.1</faces.tck.version>
         <tck.root>${project.build.directory}</tck.root>
         <tck.parentPomFile>${tck.root}/faces-tck-${faces.tck.version}/tck/pom.xml</tck.parentPomFile>
-        <selenium.version>4.20.0</selenium.version>
+        <selenium.version>4.22.0</selenium.version>
     </properties>
 
     <dependencyManagement>

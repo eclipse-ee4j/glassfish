@@ -36,8 +36,9 @@
         <glassfish.lib.dir>${glassfish.home}/glassfish/lib</glassfish.lib.dir>
         <whitebox.directory>${project.build.directory}/whiteboxes</whitebox.directory>
 
-        <tck.version>11.0.1</tck.version>
-        <tck.arquillian.version>11.1.0</tck.arquillian.version>
+        <tck.version>11.0.3</tck.version>
+        <tck.common.version>11.1.1</tck.common.version>
+        <tck.arquillian.version>11.1.3</tck.arquillian.version>
         <tck.test.user1>j2ee</tck.test.user1>
         <tck.test.user2>javajoe</tck.test.user2>
         <tck.reportDirectory>${project.build.directory}/report</tck.reportDirectory>
@@ -69,7 +70,7 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>common</artifactId>
-            <version>${tck.arquillian.version}</version>
+            <version>${tck.common.version}</version>
             <scope>runtime</scope>
             <exclusions>
                 <exclusion>
@@ -123,7 +124,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -104,7 +104,6 @@ mvn clean install -Ptck -pl :jakarta-pages-tck,:javatest,:glassfish-external-tck
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>2.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>

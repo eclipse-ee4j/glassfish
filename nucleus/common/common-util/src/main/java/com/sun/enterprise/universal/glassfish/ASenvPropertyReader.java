@@ -24,7 +24,9 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
+import org.glassfish.embeddable.GlassFishVariable;
 import org.glassfish.main.jdke.props.EnvToPropsConverter;
 
 import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
@@ -50,6 +52,7 @@ import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
  */
 public class ASenvPropertyReader {
 
+    /** Mapping of env properties to system properties - just for {@link File} values */
     private static final Map<String, String> ENV_TO_SYS_PROPERTY = Map.of(
         DERBY_ROOT.getEnvName(), DERBY_ROOT.getSystemPropertyName(),
         IMQ_LIB.getEnvName(), IMQ_LIB.getSystemPropertyName(),
@@ -123,25 +126,31 @@ public class ASenvPropertyReader {
         return sb.toString();
     }
 
-
+    /**
+     * Keys: {@link GlassFishVariable#getPropertyName()}
+     */
     static class ASenvMap extends HashMap<String, String> {
 
+        private static final long serialVersionUID = 7637813272148581948L;
+
         ASenvMap(File installDir) {
-            new EnvToPropsConverter(installDir.toPath()).convert(ENV_TO_SYS_PROPERTY).entrySet()
+            EnvToPropsConverter converter = new EnvToPropsConverter(installDir.toPath());
+            converter.convert(ENV_TO_SYS_PROPERTY).entrySet()
                 .forEach(e -> this.put(e.getKey(), e.getValue().getPath()));
-            String javaHome = new File(System.getProperty(JAVA_HOME.getSystemPropertyName())).toPath().toString();
-            putIfAbsent(JAVA_ROOT.getPropertyName(), javaHome);
-            putIfAbsent(HOST_NAME.getPropertyName(), getHostname());
-            putIfAbsent(INSTALL_ROOT.getPropertyName(), installDir.toPath().toString());
-            putIfAbsent(PRODUCT_ROOT.getPropertyName(), installDir.getParentFile().toPath().toString());
+            evaluate(converter, HOST_NAME, NetUtils::getCanonicalHostName);
+            // Now defaults
+            computeIfAbsent(JAVA_ROOT, () -> new File(System.getProperty(JAVA_HOME.getSystemPropertyName())));
+            computeIfAbsent(INSTALL_ROOT, () -> installDir);
+            computeIfAbsent(PRODUCT_ROOT, () -> installDir.getParentFile());
         }
 
-        private static String getHostname() {
-            try {
-                return NetUtils.getCanonicalHostName();
-            } catch (Exception ex) {
-                return "localhost";
-            }
+        private void computeIfAbsent(GlassFishVariable variable, Supplier<File> defaultValue) {
+            computeIfAbsent(variable.getPropertyName(), k -> defaultValue.get().toPath().toString());
+        }
+
+        private void evaluate(EnvToPropsConverter converter, GlassFishVariable variable, Supplier<String> defaultValue) {
+            String value = converter.evaluate(variable.getEnvName(), variable.getSystemPropertyName());
+            put(variable.getPropertyName(), value == null ? defaultValue.get() : value);
         }
     }
 }

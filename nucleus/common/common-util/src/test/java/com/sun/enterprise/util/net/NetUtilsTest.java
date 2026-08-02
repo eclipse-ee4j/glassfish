@@ -16,24 +16,36 @@
 
 package com.sun.enterprise.util.net;
 
+import java.lang.System.Logger;
 import java.net.InetAddress;
+import java.util.List;
+import java.util.regex.Pattern;
 
+import org.hamcrest.collection.IsEmptyCollection;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NetUtilsTest {
+    private static final Logger LOG = System.getLogger(NetUtilsTest.class.getName());
+    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^[a-zA-Z][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})*$");
 
     @Test
     void getFreePort() throws Exception {
@@ -42,16 +54,61 @@ public class NetUtilsTest {
 
     @Test
     void isPortFree() throws Exception {
-        assertTrue(NetUtils.isPortFree(NetUtils.getFreePort()));
+        long start = System.currentTimeMillis();
+        boolean portFree = NetUtils.isPortFree(NetUtils.getFreePort());
+        long time = System.currentTimeMillis() - start;
+        assertAll(
+            () -> assertThat("Required time", time, lessThan(1000L)),
+            () -> assertTrue(portFree, "Open and released port should be free then.")
+        );
+    }
+
+    @Test
+    @Disabled("Extremely slow DNS on GitHub Actions and we don't use it anywhere yet.")
+    void getResolvableHostNames() throws Exception {
+        long start = System.currentTimeMillis();
+        List<String> hostNames = NetUtils.getResolvableHostNames();
+        long time = System.currentTimeMillis() - start;
+        LOG.log(INFO, "Detected host names: " + hostNames + ", it took " + time + " ms.");
+        assertAll(
+            // FIXME: DNS on GHA Win+MacOs is terribly slow.
+//            () -> assertThat("Required time", time, lessThan(1000L)),
+            () -> assertThat("Detected hostnames: " + hostNames, hostNames, not(IsEmptyCollection.empty())),
+            () -> assertThat("Detected hostnames: " + hostNames, hostNames,
+                everyItem(matchesPattern(PATTERN_HOSTNAME)))
+        );
     }
 
     @Test
     void getHostName() throws Exception {
-        assertDoesNotThrow(() -> NetUtils.getHostName());
+        String hostName = assertDoesNotThrow(() -> NetUtils.getHostName());
+        LOG.log(INFO, "Detected host name: " + hostName);
+        assertNotNull(hostName, "Host name should not be null");
     }
 
     @Test
-    void isLocalHost() throws Exception {
+    void getLoopbackHostName() throws Exception {
+        String hostName = assertDoesNotThrow(() -> NetUtils.getLoopbackHostName());
+        LOG.log(INFO, "Detected loopback host name: " + hostName);
+        assertNotNull(hostName, "Loopback host name should not be null");
+    }
+
+    @Test
+    void getCanonicalHostName() throws Exception {
+        long start = System.currentTimeMillis();
+        String hostName = assertDoesNotThrow(() -> NetUtils.getCanonicalHostName());
+        long time = System.currentTimeMillis() - start;
+        LOG.log(INFO, "Detected canonical host name: " + hostName);
+        // First letter is not a number, should not return an ip address
+        assertAll(
+            () -> assertThat("Required time", time, lessThan(1000L)),
+            () -> assertThat("Canonical host name should not be an ip address", hostName,
+                matchesPattern(PATTERN_HOSTNAME))
+        );
+    }
+
+    @Test
+    void isLocal() throws Exception {
         final InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
         final InetAddress localHost = InetAddress.getLocalHost();
         assertAll(
@@ -67,28 +124,34 @@ public class NetUtilsTest {
         );
     }
 
+    // The text behind % marks interface name.
     @Test
     @EnabledOnOs(OS.WINDOWS)
-    void isLocalHost_windows() {
-        assertTrue(NetUtils.isLocal("::1%1"), "IPv6 address ::1%1, short format");
+    void isLocal_windows() {
+        assertTrue(NetUtils.isLocal("::1%1"), "IPv6 address ::1%1, short windows format");
     }
 
     @Test
-    @DisabledOnOs(OS.WINDOWS)
-    void isLocalHost_linux() {
-        assertTrue(NetUtils.isLocal("::1%lo"), "IPv6 address ::1%lo, short format");
+    @EnabledOnOs(OS.LINUX)
+    void isLocal_linux() {
+        assertTrue(NetUtils.isLocal("::1%lo"), "IPv6 address ::1%lo, short linux format");
+    }
+
+    @Test
+    @EnabledOnOs(OS.MAC)
+    void isLocal_mac() {
+        assertTrue(NetUtils.isLocal("::1%lo0"), "IPv6 address ::1%lo0, short mac format");
     }
 
     @Test
     void getHostAddresses() throws Exception {
-        InetAddress[] addresses = NetUtils.getHostAddresses();
-        assertThat(addresses, arrayWithSize(greaterThan(0)));
+        long start = System.currentTimeMillis();
+        List<InetAddress> addresses = NetUtils.getHostAddresses();
+        long time = System.currentTimeMillis() - start;
+        LOG.log(INFO, "Detected host addresses: " + addresses + ", it took " + time + " ms.");
+        assertAll(
+            () -> assertThat("Required time", time, lessThan(1000L)),
+            () -> assertThat("List of addresses", addresses, hasSize(greaterThan(0)))
+        );
     }
-
-    @Test
-    void getHostIPs() throws Exception {
-        String[] addresses = NetUtils.getHostIPs();
-        assertThat(addresses, arrayWithSize(greaterThan(0)));
-    }
-
 }

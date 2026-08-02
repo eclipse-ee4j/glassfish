@@ -114,7 +114,7 @@ public class ListIiopListenersTest {
      */
     @Test
     public void testExecuteSuccessListListener() {
-        parameters.set("listeneraddress", NetUtils.getHostName());
+        parameters.set("listeneraddress", NetUtils.getCanonicalHostName());
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "listener");
         CreateIiopListener createCommand = services.getService(CreateIiopListener.class);

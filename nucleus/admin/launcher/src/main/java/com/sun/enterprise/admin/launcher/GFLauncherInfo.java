@@ -83,7 +83,8 @@ public final class GFLauncherInfo {
 
     private boolean valid;
 
-    private boolean dropInterruptedCommands; // "org.glassfish.job-manager.drop-interrupted-commands" system property
+    // "org.glassfish.job-manager.drop-interrupted-commands" system property
+    private boolean dropInterruptedCommands;
     /** admin host and port, e.g. localhost:4848 */
     private List<HostAndPort> xmlAdminAddresses;
     private HostAndPort asadminAdminAddress;

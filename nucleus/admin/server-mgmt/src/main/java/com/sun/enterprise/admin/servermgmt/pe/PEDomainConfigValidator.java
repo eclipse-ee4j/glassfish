@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,6 +22,7 @@ import com.sun.enterprise.admin.servermgmt.DomainConfigValidator;
 import com.sun.enterprise.admin.servermgmt.FileValidator;
 import com.sun.enterprise.admin.servermgmt.InvalidConfigException;
 import com.sun.enterprise.admin.servermgmt.PortValidator;
+import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.servermgmt.StringValidator;
 import com.sun.enterprise.util.i18n.StringManager;
 
@@ -42,7 +44,6 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
 
     private static final String lInstallRoot = strMgr.getString("installRoot");
     private static final String lDomainsRoot = strMgr.getString("domainsRoot");
-    private static final String lJavaHome = strMgr.getString("javaHome");
     private static final String lAdminPort = strMgr.getString("adminPort");
     private static final String lInstancePort = strMgr.getString("instancePort");
     private static final String lHostName = strMgr.getString("hostName");
@@ -50,7 +51,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
     private static final String lOrbPort = strMgr.getString("orbPort");
 
     static DomainConfigEntryInfo[] entries = new DomainConfigEntryInfo[] {
-            new DomainConfigEntryInfo(DomainConfig.K_INSTALL_ROOT, "java.lang.String", new FileValidator(lInstallRoot, "dr")),
+            new DomainConfigEntryInfo(RepositoryConfig.K_INSTALL_ROOT, "java.lang.String", new FileValidator(lInstallRoot, "dr")),
             new DomainConfigEntryInfo(DomainConfig.K_DOMAINS_ROOT, "java.lang.String", new FileValidator(lDomainsRoot, "drw")),
             new DomainConfigEntryInfo(DomainConfig.K_ADMIN_PORT, "java.lang.Integer", new PortValidator(lAdminPort)),
             new DomainConfigEntryInfo(DomainConfig.K_INSTANCE_PORT, "java.lang.Integer", new PortValidator(lInstancePort)),
@@ -63,11 +64,13 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
         super(entries);
     }
 
+    @Override
     public void validate(Object domainConfig) throws InvalidConfigException {
         super.validate(domainConfig);
         uniquePorts((DomainConfig) domainConfig);
     }
 
+    @Override
     protected boolean isValidate(String name, Object domainConfig) {
         boolean isPortEntry = DomainConfig.K_ADMIN_PORT.equals(name) || DomainConfig.K_INSTANCE_PORT.equals(name)
                 || DomainConfig.K_ORB_LISTENER_PORT.equals(name) || DomainConfig.K_JMS_PORT.equals(name);
@@ -157,7 +160,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
     }
 
     private final void printEntry(final StringBuffer sb, final Map.Entry entry) {
-        printEntry(sb, (Object) entry.getKey(), (Set) entry.getValue());
+        printEntry(sb, entry.getKey(), (Set) entry.getValue());
     }
 
     /**

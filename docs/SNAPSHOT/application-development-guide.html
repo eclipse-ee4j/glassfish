@@ -317,6 +317,11 @@
 <li><a href="#bayeux-protocol">Bayeux Protocol</a></li>
 </ul>
 </li>
+<li><a href="#using-jakarta-rest">Using Jakarta REST</a>
+<ul class="sectlevel3">
+<li><a href="#injecting-jakarta-rest-artifacts-with-cdi">Injecting Jakarta REST Artifacts with CDI</a></li>
+</ul>
+</li>
 <li><a href="#advanced-web-application-features">Advanced Web Application Features</a>
 <ul class="sectlevel3">
 <li><a href="#internationalization-issues">Internationalization Issues</a></li>
@@ -11191,6 +11196,69 @@ Guide</a>.</p>
 <div class="paragraph">
 <p>For more information about the Dojo toolkit, see
 <code><a href="http://dojotoolkit.org/" class="bare">http://dojotoolkit.org/</a></code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="using-jakarta-rest"><a class="anchor" href="#using-jakarta-rest"></a>Using Jakarta REST</h3>
+<div class="paragraph">
+<p>Eclipse GlassFish implements <a href="https://jakarta.ee/specifications/restful-ws/">Jakarta REST</a>
+with <a href="https://eclipse-ee4j.github.io/jersey/">Eclipse Jersey</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="injecting-jakarta-rest-artifacts-with-cdi"><a class="anchor" href="#injecting-jakarta-rest-artifacts-with-cdi"></a>Injecting Jakarta REST Artifacts with CDI</h4>
+<div class="paragraph">
+<p>The Jakarta REST specification requires injection of REST artifacts such as
+<code>UriInfo</code>, <code>Sse</code>, <code>SecurityContext</code>, <code>HttpHeaders</code>, <code>Request</code> or <code>Providers</code>
+via the <code>@Context</code> annotation. The <code>@Context</code> annotation is deprecated since
+Jakarta REST 3.1 in favor of a future alignment with CDI.</p>
+</div>
+<div class="paragraph">
+<p>As an extension to the specification, Eclipse GlassFish bundles the Jersey module
+<code>jersey-cdi-rs-inject</code>, which already allows injecting these artifacts with the
+standard CDI <code>@Inject</code> annotation:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">jakarta.inject.Inject</span>;
+<span class="keyword">import</span> <span class="include">jakarta.ws.rs.Path</span>;
+<span class="keyword">import</span> <span class="include">jakarta.ws.rs.core.UriInfo</span>;
+<span class="keyword">import</span> <span class="include">jakarta.ws.rs.sse.Sse</span>;
+
+<span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">example</span><span class="delimiter">&quot;</span></span>)
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ExampleResource</span> {
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> UriInfo uriInfo;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">private</span> Sse sse;
+
+    <span class="comment">// ...</span>
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Unlike <code>@Context</code>, which for resources managed by CDI or Enterprise Beans is
+only supported on fields and bean properties, <code>@Inject</code> also works for
+constructor injection, following the usual CDI rules:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Path</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">example</span><span class="delimiter">&quot;</span></span>)
+<span class="annotation">@ApplicationScoped</span>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ExampleResource</span> {
+
+    <span class="directive">private</span> <span class="directive">final</span> Sse sse;
+
+    <span class="annotation">@Inject</span>
+    <span class="directive">public</span> ExampleResource(Sse sse) {
+        <span class="local-variable">this</span>.sse = sse;
+    }
+
+    <span class="comment">// ...</span>
+}</code></pre>
 </div>
 </div>
 </div>
@@ -22871,7 +22939,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-08-02 11:02:25 UTC
+Last updated 2026-08-02 13:53:17 UTC
 </div>
 </div>
 </body>

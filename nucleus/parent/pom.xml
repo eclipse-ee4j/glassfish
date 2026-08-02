@@ -2423,6 +2423,7 @@
                         <_include>-osgi.bundle</_include>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-21</_runee>
+                        <_fixupmessages>"Version for package * is set to different values in the source *";restrict:=warning;is:=error</_fixupmessages>
                     </instructions>
                 </configuration>
             </plugin>

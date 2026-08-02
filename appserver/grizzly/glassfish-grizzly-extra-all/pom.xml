@@ -112,12 +112,12 @@
                 <configuration>
                     <instructions>
                         <Export-Package>
-                            org.glassfish.grizzly.comet.*;version=${grizzly.version},
-                            org.glassfish.grizzly.websockets.*;version=${grizzly.version},
-                            org.glassfish.grizzly.http.ajp.*;version=${grizzly.version},
-                            org.glassfish.grizzly.servlet.*;version=${grizzly.version},
-                            org.glassfish.grizzly.extras.*;version=${project.version},
-                            org.glassfish.extras.grizzly.*;version=${project.version}
+                            org.glassfish.grizzly.comet.*,
+                            org.glassfish.grizzly.websockets.*,
+                            org.glassfish.grizzly.http.ajp.*,
+                            org.glassfish.grizzly.servlet.*,
+                            org.glassfish.grizzly.extras.*,
+                            org.glassfish.extras.grizzly.*
                         </Export-Package>
                         <Import-Package>*</Import-Package>
                         <Include-Resource>META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/</Include-Resource>

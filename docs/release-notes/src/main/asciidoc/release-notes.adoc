@@ -67,6 +67,7 @@ Key new features in {productName} {product-majorVersion} include:
 * xref:embedded-server-guide.adoc#running-from-command-line[Runnable Embedded GlassFish JAR] (since {productName} 7.0.18)
 * xref:administration-guide.adoc#log-executed-admin-commands[Admin Command Logger] (since {productName} 7.0.16)
 * https://github.com/eclipse-ee4j/glassfish/discussions/25343[SSH nodes on Windows] via the native Windows SSH service (since {productName} 7.0.23)
+* xref:application-development-guide.adoc#injecting-jakarta-rest-artifacts-with-cdi[CDI injection of Jakarta REST artifacts] using `@Inject` via the bundled Jersey `jersey-cdi-rs-inject` extension (since {productName} 8.0.4)
 
 For a complete list of the Jakarta EE technologies included in {productName} {product-currentVersion},
 see xref:#jakarta-ee-support[Jakarta EE Standards Support].

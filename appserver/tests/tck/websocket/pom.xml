@@ -105,9 +105,8 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
         </dependency>
 
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.7</version>
         </dependency>
 
         <dependency>

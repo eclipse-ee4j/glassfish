@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
-            <version>3.13.1</version>
+            <version>3.13.2</version>
             <!-- Requirement of the wiremock plugin -->
             <scope>compile</scope>
         </dependency>
@@ -156,7 +156,7 @@
                     <dependenciesToScan>
                         <dependency>org.eclipse.microprofile.rest.client:microprofile-rest-client-tck</dependency>
                     </dependenciesToScan>
-                
+
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
                         <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>

@@ -75,14 +75,14 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1.1</microprofile.config-api.version>
-        <helidon-config.version>4.4.1</helidon-config.version>
+        <helidon-config.version>4.5.1</helidon-config.version>
 
 
         <!-- MicroProfile Health -->
         <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
-        <microprofile-jwt-auth-api.version>2.1</microprofile-jwt-auth-api.version>
+        <microprofile-jwt-auth-api.version>2.2</microprofile-jwt-auth-api.version>
         <omnifaces-jwt-auth.version>3.0.1</omnifaces-jwt-auth.version>
 
         <!-- MicroProfile REST Client -->
@@ -428,7 +428,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.22.0</version>
+                <version>1.22.1</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

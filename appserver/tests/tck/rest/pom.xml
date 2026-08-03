@@ -67,7 +67,7 @@ mvn clean install -Dgroups=security
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <tck.version>4.0.0</tck.version>
+        <tck.version>4.0.1</tck.version>
 
         <glassfish.version>${project.version}</glassfish.version>
         <glassfish.root>${project.build.directory}</glassfish.root>
@@ -94,9 +94,8 @@ mvn clean install -Dgroups=security
             <artifactId>arquillian-junit5-container</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.netbeans.tools</groupId>
+            <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>1.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>

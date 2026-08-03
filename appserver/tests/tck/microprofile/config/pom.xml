@@ -28,12 +28,12 @@
 
     <artifactId>glassfish-external-tck-microprofile-config</artifactId>
     <name>TCK: MicroProfile Config</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.eclipse.microprofile.config</groupId>
             <artifactId>microprofile-config-tck</artifactId>
-            <version>3.0.1</version>
+            <version>3.1.1</version>
             <scope>test</scope>
         </dependency>
 

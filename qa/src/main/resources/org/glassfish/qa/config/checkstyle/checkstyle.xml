@@ -63,10 +63,6 @@
             <property name="severity" value="warning" />
             <property name="accessModifiers" value="public, protected" />
         </module>
-        <module name="JavadocStyle">
-            <property name="checkFirstSentence" value="false" />
-            <property name="severity" value="warning" />
-        </module>
         <module name="JavadocType">
             <property name="severity" value="warning" />
         </module>

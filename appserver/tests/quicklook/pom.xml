@@ -26,7 +26,7 @@
     <parent>
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
-        <version>2.0.4</version>
+        <version>2.0.5</version>
         <relativePath />
     </parent>
 
@@ -206,7 +206,7 @@
                     <dependency>
                         <groupId>com.beust</groupId>
                         <artifactId>jcommander</artifactId>
-                        <version>1.72</version>
+                        <version>1.82</version>
                     </dependency>
                 </dependencies>
             </plugin>

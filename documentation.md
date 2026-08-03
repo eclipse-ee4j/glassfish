@@ -104,7 +104,7 @@ GlassFish, Jakarta EE Web Profile, and GlassFish Embedded, Jakarta EE Web Profil
 All variants of GlassFish 8.0.3 provide the following [MicroProfile 6.1](https://microprofile.io/compatible/6-1/) APIs (since GlassFish 7.1.0):
 
 * [MicroProfile Config 3.1.1](https://github.com/eclipse/microprofile-config/releases/tag/3.1.1)
-* [MicroProfile JWT RBAC 2.1](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.1)
+* [MicroProfile JWT RBAC 2.2](https://github.com/eclipse/microprofile-jwt-auth/releases/tag/2.2)
 * [MicroProfile Rest Client 4.0](https://github.com/eclipse/microprofile-rest-client/releases/tag/4.0)
 
 The above MicroProfile APIs are supported by all the following GlassFish variants:

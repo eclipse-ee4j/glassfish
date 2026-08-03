@@ -69,6 +69,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
 import org.jvnet.hk2.config.types.Property;
 
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -239,9 +240,14 @@ public class ConnectorConnectionPoolAdminServiceImpl extends ConnectorService {
             con = (ManagedConnection) getUnpooledConnection(poolInfo, null, false);
             return true;
         } catch (Exception re) {
-            _logger.log(SEVERE, "Exception while creating an unpooled [test] connection for pool " + poolInfo, re);
-            throw new ResourceException(re.getLocalizedMessage() + " Please check the server.log for more details.",
-                re);
+            _logger.log(FINE, "Exception while creating an unpooled [test] connection for pool " + poolInfo, re);
+            throw new ResourceException(re.getLocalizedMessage(),
+                    re) {
+                @Override
+                public String getMessage() {
+                    return super.getMessage() + ": Exception while creating an unpooled [test] connection for pool " + poolInfo;
+                }
+            };
         } finally {
             try {
                 if (con != null) {

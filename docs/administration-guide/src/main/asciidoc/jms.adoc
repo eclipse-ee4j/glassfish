@@ -971,7 +971,7 @@ Changing the Admin User Password for an Embedded or Local Broker::
   ways:
 
   * Read the `admin-password` attribute of the JMS host in
-    domain-dir``/config/domain.xml``.
+    `domain-dir/config/domain.xml`.
   * When the server is running, use the
     xref:reference-manual.adoc#get[`get`] subcommand to read the JMS host
     password:

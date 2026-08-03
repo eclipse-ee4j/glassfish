@@ -82,6 +82,9 @@ public class OpenMqAdminServiceDefaultCredentialsTest {
             .start();
 
         boolean finished = process.waitFor(Duration.ofSeconds(30).toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
+        if (!finished) {
+            process.destroyForcibly();
+        }
         assertTrue(finished, "imqcmd command timed out");
 
         String output;

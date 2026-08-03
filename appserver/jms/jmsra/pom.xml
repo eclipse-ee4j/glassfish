@@ -127,6 +127,7 @@
                                     file="${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra/META-INF/ra.xml"
                                     token="com.sun.messaging.jms.ra.ResourceAdapter"
                                     value="org.glassfish.main.jms.ra.GlassFishResourceAdapter"
+                                    failOnNoReplacements="true"
                                 />
                             </target>
                         </configuration>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -325,13 +325,6 @@ public class EjbInvocation extends ComponentInvocation
         } else {
             return (isHome) ? MethodDescriptor.EJB_HOME : MethodDescriptor.EJB_REMOTE;
         }
-    }
-
-    /**
-     * Returns CachedPermission associated with this invocation, or null if not available.
-     */
-    public Object getCachedPermission() {
-        return (invocationInfo != null) ? invocationInfo.cachedPermission : null;
     }
 
     /**

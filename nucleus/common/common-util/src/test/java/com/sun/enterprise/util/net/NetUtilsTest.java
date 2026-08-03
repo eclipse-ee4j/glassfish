@@ -45,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class NetUtilsTest {
     private static final Logger LOG = System.getLogger(NetUtilsTest.class.getName());
-    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^[a-zA-Z][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})*$");
+    private static final Pattern PATTERN_HOSTNAME = Pattern.compile("^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})*$");
 
     @Test
     void getFreePort() throws Exception {

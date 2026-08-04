@@ -49,7 +49,7 @@ layout: documentation
 
 ### Guides for other GlassFish versions {#older}
 
-* [Development version (8.0.4-SNAPSHOT)](docs#development)
+* [Development version (8.0.5-SNAPSHOT)](docs#development)
 * [7.1.1 release](docs#7.1.1)
 * [7.0.26 release](docs#7.0.26)
 * [All other versions](docs)

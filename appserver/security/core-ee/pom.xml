@@ -82,6 +82,15 @@
             <groupId>org.glassfish.epicyro</groupId>
             <artifactId>epicyro</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet</artifactId>
+            <version>5.0.99-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -188,14 +197,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.1</include>
-                    <include>**/admin-keyfile</include>
-                    <include>**/keyfile</include>
-                    <include>**/*.jks</include>
-                    <include>**/secure.seed</include>
-                    <include>**/server.policy</include>
-                    <include>**/login.conf</include>
+                    <include>**/*</include>
                 </includes>
             </resource>
         </resources>

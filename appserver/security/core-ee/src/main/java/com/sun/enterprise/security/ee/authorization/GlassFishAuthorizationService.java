@@ -46,13 +46,13 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 
 import org.glassfish.exousia.AuthorizationService;
+import org.glassfish.exousia.permissions.JakartaPermissions;
 
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.DENIED;
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED;
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED_WITH_SSL;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.SoteriaToExousiaConverter.getStagedPermissionsFromContext;
 import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toSet;
@@ -101,6 +101,7 @@ public class GlassFishAuthorizationService {
     private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
     private final AuthorizationService exousiaAuthorizationService;
     private final Set<String> restServletPathBases;
+    private final boolean hasRestConstraints;
 
     public enum Access {
         PERMITTED,
@@ -108,7 +109,7 @@ public class GlassFishAuthorizationService {
         DENIED
     }
 
-    public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register) throws PolicyContextException {
+    public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, JakartaPermissions jakartaPermissions, boolean register) throws PolicyContextException {
         this.register = register;
         this.contextId = AuthorizationUtil.getContextID(webBundleDescriptor);
 
@@ -152,8 +153,8 @@ public class GlassFishAuthorizationService {
             () -> currentRequest.get());
 
         exousiaAuthorizationService.addConstraintsToPolicy(
-            // Permissions collected and staged by Soteria from REST endpoints
-            getStagedPermissionsFromContext(servletContext),
+            // Permissions collected from REST endpoints
+            jakartaPermissions,
 
             // Constraints collected by GlassFish / Catalina from Servlets and web.xml
             getConstraintsFromBundle(webBundleDescriptor),
@@ -171,7 +172,8 @@ public class GlassFishAuthorizationService {
             // Role-reffing; ancient feature where Servlets can define role aliases.
             getSecurityRoleRefsFromBundle(webBundleDescriptor));
 
-        restServletPathBases = SoteriaToExousiaConverter.getRESTServletPathBases(servletContext);
+        restServletPathBases = RestIntrospector.getRestServletPathBases(servletContext);
+        hasRestConstraints = jakartaPermissions != null && !jakartaPermissions.isEmpty();
     }
 
     /**
@@ -181,6 +183,10 @@ public class GlassFishAuthorizationService {
      * request.
      */
     public boolean hasNoConstrainedResources() {
+        if (hasRestConstraints) {
+            return false;
+        }
+
         boolean result = false;
 
         if (allResourcesCachedPermission != null && allConnectionsCachedPermission != null) {
@@ -524,9 +530,15 @@ public class GlassFishAuthorizationService {
     }
 
     private boolean isPotentialRestRequest(HttpServletRequest request) {
-        return
-            restServletPathBases.contains("") ||
-            restServletPathBases.contains(request.getServletPath());
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+
+        for (String base : restServletPathBases) {
+            if (base.isEmpty() || path.equals(base) || path.startsWith(base + "/")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

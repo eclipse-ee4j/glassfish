@@ -137,6 +137,12 @@
                     <include>**/*.properties</include>
                 </includes>
             </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>
@@ -144,7 +150,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                <probe-provider-class-names>com.sun.web.security.LoginProbeProvider</probe-provider-class-names>
+                            <probe-provider-class-names>com.sun.web.security.LoginProbeProvider</probe-provider-class-names>
                         </manifestEntries>
                     </archive>
                 </configuration>

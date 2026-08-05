@@ -47,7 +47,9 @@ public class ProgrammaticAuthenticationIT extends ArquillianBase {
     @Test
     public void testSubjectPrincipals() throws IOException, SAXException {
         String response = getFromServerPath("public/authenticate");
-        assertTrue("Should contain web user test and architect in subject principals", response.contains("Principals: test, architect"));
+        assertTrue(
+            "Should contain web user test and architect in subject principals",
+            response.contains("Principals: architect, test"));
     }
 
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,6 +30,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.ServerDirs;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,6 @@ import org.glassfish.api.admin.CommandException;
 import org.glassfish.main.jdke.security.KeyTool;
 
 import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_ADMIN_PORT;
-import static com.sun.enterprise.admin.cli.CLIConstants.DEFAULT_HOSTNAME;
 import static com.sun.enterprise.admin.cli.ProgramOptions.PasswordLocation.LOCAL_PASSWORD;
 import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
 import static com.sun.enterprise.universal.process.ProcessUtils.loadPid;
@@ -136,7 +136,7 @@ public abstract class LocalServerCommand extends CLICommand {
         }
         final List<HostAndPort> adminEndpointCandidates = adminEndpointCandidatesSupplier.get();
         if (adminEndpointCandidates.isEmpty()) {
-            String host = userHost == null ? DEFAULT_HOSTNAME : userHost;
+            String host = userHost == null ? NetUtils.getLoopbackHostName() : userHost;
             Integer port = userPort == null ? DEFAULT_ADMIN_PORT : userPort;
             boolean secure = userSecure == null ? false : userSecure;
             HostAndPort endpoint = new HostAndPort(host, port, secure);
@@ -510,15 +510,15 @@ public abstract class LocalServerCommand extends CLICommand {
         }
     }
 
-    private File getJKS() {
+    protected File getJKS() {
         if (serverDirs == null) {
             return null;
         }
-        File mp = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
-        if (mp.canRead()) {
-            return mp;
+        File trustStore = new File(new File(serverDirs.getServerDir(), "config"), TRUSTSTORE_FILENAME_DEFAULT);
+        if (trustStore.canRead()) {
+            return trustStore;
         }
-        LOG.log(DEBUG, "File does not exist or is not readable: {0}", mp);
+        LOG.log(DEBUG, "File does not exist or is not readable: {0}", trustStore);
         return null;
     }
 

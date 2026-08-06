@@ -281,16 +281,15 @@ public class ValidateNodeCommand implements AdminCommand {
 
     private void validateHostname(String propname, String value, String configValue) throws CommandValidationException {
         try {
-            // First do a simple case insensitve string comparison. If that
+            // First do a simple case insensitive string comparison. If that
             // matches then it's good enough for us.
             validateString(propname, value, configValue, true);
             return;
         } catch (CommandValidationException e) {
             // Strings don't match, but we could have a case of
-            // "sidewinder" and "sidewinder.us.oracle.com". NetUtils
-            // isEqual() handles this check.
+            // "sidewinder" and "sidewinder.us.oracle.com".
             if (!NetUtils.isSameHost(value, configValue)) {
-                // If they both refer to the localhost then consider them them same.
+                // If they both refer to the local host then consider them them same.
                 if (!NetUtils.isLocal(value) || !NetUtils.isLocal(configValue)) {
                     throw new CommandValidationException(
                         Strings.get("attribute.mismatch", name, propname, value, configValue));

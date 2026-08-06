@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -44,7 +44,7 @@ public class TestServerAuthContext implements ServerAuthContext {
 
     public TestServerAuthContext(CallbackHandler handler, ServerAuthModule serverAuthModule) throws AuthException {
         this.serverAuthModule = serverAuthModule;
-        serverAuthModule.initialize(null, null, handler, Collections.<String, String> emptyMap());
+        serverAuthModule.initialize(null, null, handler, Collections.<String, Object> emptyMap());
     }
 
     @Override

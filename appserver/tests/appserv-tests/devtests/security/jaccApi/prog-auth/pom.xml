@@ -41,7 +41,7 @@
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
                 <artifactId>arquillian-bom</artifactId>
-                <version>1.6.0.Final</version>
+                <version>1.10.2.Final</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
@@ -61,31 +61,16 @@
             <artifactId>arquillian-junit-container</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
-            <artifactId>htmlunit</artifactId>
-            <version>2.58.0</version>
+            <groupId>ee.omnifish.arquillian</groupId>
+            <artifactId>arquillian-glassfish-server-remote</artifactId>
+            <version>2.2.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>jakarta.platform</groupId>
-            <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>9.1.0</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.container</groupId>
-            <artifactId>arquillian-glassfish-remote-3.1</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.ejte.ccl.reporter</groupId>
-            <artifactId>SimpleReporterAdapter</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${APS_HOME}/lib/target/reporter.jar</systemPath>
+            <groupId>org.glassfish.main.tests</groupId>
+            <artifactId>reporter</artifactId>
+            <version>${glassfish.version}</version>
         </dependency>
     </dependencies>
 

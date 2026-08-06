@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -462,6 +462,15 @@ public class ManagedConnectionImpl
      */
     private void resetConnectionProperties(ManagedConnectionFactoryImpl managedConnectionFactoryImpl) throws ResourceException {
         if (isClean) {
+
+            // cleanup() can be invoked on a ManagedConnection whose physical connection has
+            // already been torn down - for instance one marked for removal whose transaction
+            // has completed. In that case there is no connection to reset; resetIsolation()
+            // already tolerates a null connection, so guard resetAutoCommit() the same way to
+            // avoid a NullPointerException (see issue #24232).
+            if (getActualConnection() == null) {
+                return;
+            }
 
             // If the ManagedConnection is clean, reset the transaction isolation level to
             // what it was when it was when this ManagedConnection was cleaned up depending on

@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
@@ -156,6 +157,6 @@ public class FileUtilsTest {
         File file = FileUtils.toFile(url);
         assertTrue(file.isAbsolute(), "isAbsolute");
         assertThrows(IllegalArgumentException.class,
-            () -> FileUtils.toFile(new URL("http://localhost:8080/test.txt")));
+            () -> FileUtils.toFile(URI.create("http://localhost:8080/test.txt").toURL()));
     }
 }

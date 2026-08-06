@@ -259,7 +259,7 @@
         <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
         <ant.version>1.10.17</ant.version>
         <ant-osgi.version>1.10.17</ant-osgi.version>
-        <jackson.version>2.22.0</jackson.version>
+        <jackson.version>2.22.1</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
@@ -840,6 +840,12 @@
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
                 <version>3.0</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.htmlunit</groupId>
+                <artifactId>htmlunit</artifactId>
+                <version>5.3.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import jakarta.annotation.Resource;
@@ -63,7 +65,7 @@ public class Client {
 
             System.out.println("invoking webclient servlet at " + url);
 
-            URL u = new URL(url);
+            URL u = URI.create(url).toURL();
 
             HttpURLConnection c1 = (HttpURLConnection) u.openConnection();
             int code = c1.getResponseCode();

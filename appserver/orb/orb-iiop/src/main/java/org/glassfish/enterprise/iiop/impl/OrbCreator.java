@@ -24,7 +24,6 @@ import com.sun.corba.ee.spi.folb.GroupInfoService;
 import com.sun.corba.ee.spi.misc.ORBConstants;
 import com.sun.corba.ee.spi.orb.ORB;
 import com.sun.enterprise.module.HK2Module;
-import com.sun.enterprise.util.net.NetUtils;
 
 import java.lang.System.Logger;
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import java.util.stream.Collectors;
 
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.external.amx.AMXGlassfish;
+import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.Orb;
 import org.jvnet.hk2.config.types.Property;
@@ -81,8 +81,6 @@ final class OrbCreator {
 
     private static final String SUN_GIOP_DEFAULT_FRAGMENT_SIZE = "8192";
     private static final String SUN_GIOP_DEFAULT_BUFFER_SIZE = "8192";
-
-    private static final String DEFAULT_ORB_INIT_HOST = NetUtils.getHostName();
 
     // This will only apply for stand-alone java clients, since
     // in the server the orb port comes from domain.xml, and in an appclient
@@ -362,16 +360,7 @@ final class OrbCreator {
                 initialHost = listener.getAddress();
             }
         }
-        return initialHost == null ? DEFAULT_ORB_INIT_HOST : replaceAnyWithLocalHost(initialHost);
-    }
-
-    private static String replaceAnyWithLocalHost(String orbInitialHost) {
-        if (orbInitialHost.equals("0.0.0.0")
-            || orbInitialHost.equals("::")
-            || orbInitialHost.equals("::ffff:0.0.0.0")) {
-            return DEFAULT_ORB_INIT_HOST;
-        }
-        return orbInitialHost;
+        return ORBLocator.toConcreteHost(initialHost);
     }
 
 

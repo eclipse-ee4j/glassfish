@@ -57,7 +57,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.4.2</version>
         <configuration>
           <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
@@ -117,9 +116,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>net.sourceforge.htmlunit</groupId>
+            <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>2.70.0</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.embedded</groupId>

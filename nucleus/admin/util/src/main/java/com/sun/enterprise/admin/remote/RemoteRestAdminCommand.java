@@ -131,8 +131,8 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     protected char[] password;
     protected Logger logger;
     protected String scope;
-    protected String authToken = null;
-    protected boolean prohibitDirectoryUploads = false;
+    protected String authToken;
+    protected boolean prohibitDirectoryUploads;
 
     // executeCommand parameters
     protected ParameterMap options;
@@ -159,10 +159,10 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         if (rt == null) {
             rt = System.getenv(READ_TIMEOUT);
         }
-        if (rt != null) {
-            defaultReadTimeout = Integer.parseInt(rt);
-        } else {
+        if (rt == null) {
             defaultReadTimeout = 10 * 60 * 1000; // 10 minutes
+        } else {
+            defaultReadTimeout = Integer.parseInt(rt);
         }
     }
 
@@ -245,10 +245,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
      */
     public void setReadTimeout(int readTimeout) {
         this.readTimeout = readTimeout;
-    }
-
-    public static int getReadTimeout() {
-        return defaultReadTimeout;
     }
 
     public String findPropertyInReport(String key) {
@@ -1162,5 +1158,9 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         });
         thread.setDaemon(true);
         thread.start();
+    }
+
+    public static int getDefaultReadTimeout() {
+        return defaultReadTimeout;
     }
 }

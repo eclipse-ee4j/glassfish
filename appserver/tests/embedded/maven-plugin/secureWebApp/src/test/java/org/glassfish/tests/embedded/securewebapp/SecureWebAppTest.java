@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -66,6 +66,7 @@ public class SecureWebAppTest {
     @BeforeAll
     public static void createKeyStore() throws Exception {
         // The file is set also in system.properties file
+        // FIXME: This should be done BEFORE the server started
         File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "testkeystore.p12")).toFile();
         KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
         keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);

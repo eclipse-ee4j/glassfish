@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -71,8 +72,7 @@ public final class CommonWorkManager implements WorkManager {
             comment = "Failed to find thread pool",
             level = "SEVERE",
             cause = "Could not find a thread pool according to the pool ID.",
-            action = "Check the thread-pool-id property in Resource Adapter Config.",
-            publish = true)
+            action = "Check the thread-pool-id property in Resource Adapter Config.")
     private static final String RAR_THREAD_POOL_NOT_FOUND = "AS-RAR-05001";
 
     @LogMessageInfo(
@@ -80,8 +80,7 @@ public final class CommonWorkManager implements WorkManager {
             comment = "Failed to find the default thread pool.",
             level = "SEVERE",
             cause = "Could not find the default thread pool for resource adatper.",
-            action = "Check the thread-pool-id property in Resource Adapter Config.",
-            publish = true)
+            action = "Check the thread-pool-id property in Resource Adapter Config.")
     private static final String RAR_DEFAULT_THREAD_POOL_NOT_FOUND = "AS-RAR-05002";
 
     /**

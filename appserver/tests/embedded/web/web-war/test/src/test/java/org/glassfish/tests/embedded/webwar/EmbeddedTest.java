@@ -29,6 +29,7 @@ import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.internal.embedded.EmbeddedDeployer;
 import org.glassfish.internal.embedded.ContainerBuilder;
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.BufferedReader;
@@ -107,7 +108,7 @@ public class EmbeddedTest {
             System.out.println("Deployed " + appName);
             Assert.assertTrue(appName != null);
             try {
-                URL servlet = new URL("http://localhost:8080/test-war/");
+                URL servlet = URI.create("http://localhost:8080/test-war/").toURL();
                 URLConnection yc = servlet.openConnection();
                 BufferedReader in = new BufferedReader(
                                         new InputStreamReader(

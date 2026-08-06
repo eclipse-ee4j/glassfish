@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -10,12 +11,13 @@
 
 package com.sun.grizzly.samples.websockets;
 
-import org.glassfish.grizzly.websockets.WebSocketEngine;
-
 import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
+
 import java.util.logging.Logger;
+
+import org.glassfish.grizzly.websockets.WebSocketEngine;
 
 public class WebSocketsServlet extends HttpServlet {
     static final Logger logger = Logger.getLogger(WebSocketsServlet.class.getName());

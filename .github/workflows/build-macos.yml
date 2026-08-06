@@ -19,12 +19,27 @@ jobs:
       with:
         java-version: '21'
         distribution: 'temurin'
+    - name: Print OS Info
+      run: |
+        set -x
+        hostname
+        env | sort
+        ifconfig
+        scutil --dns
+        scutil --nwi
+        netstat -rn
+        sysctl -n machdep.cpu.brand_string
+        sysctl -n hw.physicalcpu
+        sysctl -n hw.logicalcpu
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
+      # We explicitly run tests sensitive to the OS
       run: mvn -B -e -ntp install -Pqa,snapshots '-Dcheckstyle.skip=true' -Pfastest
-    - name: Test GF Starts
-      run: mvn -B -e -ntp install -Psnapshots '-Dcheckstyle.skip=true' -pl :glassfish-itest-tools
+    - name: Run Selected Tests
+      run: |
+        mvn -B -e -ntp clean install -Psnapshots '-Dcheckstyle.skip=true' -pl :common-util
+        mvn -B -e -ntp clean install -Psnapshots '-Dcheckstyle.skip=true' -pl :glassfish-itest-tools
     - name: Upload server logs
       uses: actions/upload-artifact@v4
       if: failure()

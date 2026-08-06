@@ -533,7 +533,7 @@ public class RemoteCLICommand extends CLICommand {
     @Override
     public int execute(String... argv) throws CommandException {
         try {
-            logger.log(Level.FINE, () -> "Executing: " + Arrays.toString(argv));
+            logger.log(Level.FINER, () -> "Executing: " + Arrays.toString(argv));
             return super.execute(argv);
         } catch (ReExecuted reex) {
             return reex.getExecutionResult();

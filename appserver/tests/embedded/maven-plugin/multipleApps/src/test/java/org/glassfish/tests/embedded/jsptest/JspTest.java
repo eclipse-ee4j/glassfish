@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,13 +21,16 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
@@ -41,13 +44,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class JspTest {
 
-    private static final int EXPECTED_COUNT = 3;
+    // FIXME: read certificate from truststore.
+    private static final TrustManager[] naiveTrustManager = new TrustManager[]{new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
 
-    private String contextPath = "test";
+        @Override
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+            return;
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+            return;
+        }
+    }};
 
     @BeforeAll
     public static void createKeyStore() throws Exception {
         // Path matches javax.net.ssl.keyStore in src/test/resources/system.properties.
+        // FIXME: This should be done BEFORE the server started
         File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "testkeystore.p12")).toFile();
         KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
         keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
@@ -69,9 +87,9 @@ public class JspTest {
     }
 
     private static void goGet(String url, String result) throws Exception {
-        disableCertValidation();
-        URL servlet = new URL(url);
-        HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
+        boolean secure = url.startsWith("https");
+        URL servlet = URI.create(url).toURL();
+        HttpURLConnection uc = secure ? openHttpsConnection(servlet) : openHttpConnection(servlet);
         try {
             System.out.println("\nURLConnection = " + uc + " : ");
             if (uc.getResponseCode() != 200) {
@@ -96,33 +114,21 @@ public class JspTest {
         }
     }
 
-    public static void disableCertValidation() {
-        // Create a trust manager that does not validate certificate chains
-        TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-            @Override
-            public X509Certificate[] getAcceptedIssuers() {
-                return null;
-            }
-
-            @Override
-            public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                return;
-            }
-
-            @Override
-            public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                return;
-            }
-        }};
-
-        try {
-            SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-        } catch (Exception e) {
-            return;
-        }
+    private static HttpURLConnection openHttpConnection(URL endpoint) throws Exception {
+        return (HttpURLConnection) endpoint.openConnection();
     }
 
+    private static HttpsURLConnection openHttpsConnection(URL endpoint) throws Exception {
+        HttpsURLConnection uc = (HttpsURLConnection) endpoint.openConnection();
+        uc.setHostnameVerifier((hostname, session) -> true);
+        uc.setSSLSocketFactory(createSocketFactory());
 
+        return uc;
+    }
+
+    private static SSLSocketFactory createSocketFactory() throws GeneralSecurityException {
+        SSLContext sc = SSLContext.getInstance("TLS");
+        sc.init(null, naiveTrustManager, new SecureRandom());
+        return sc.getSocketFactory();
+    }
 }

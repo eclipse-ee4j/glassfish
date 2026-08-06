@@ -27,6 +27,7 @@ import javax.net.ssl.X509TrustManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -50,7 +51,7 @@ public class JSFTest {
     private static void goGet(String url, String... match) throws Exception {
         try {
 
-            URL servlet = new URL(url);
+            URL servlet = URI.create(url).toURL();
             HttpURLConnection uc = (HttpURLConnection) servlet.openConnection();
             System.out.println("\nURLConnection = " + uc + " : ");
             if (uc.getResponseCode() != 200) {

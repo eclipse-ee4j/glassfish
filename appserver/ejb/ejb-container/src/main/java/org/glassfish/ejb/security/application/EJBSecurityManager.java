@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -25,11 +25,8 @@ import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 import com.sun.enterprise.security.ee.authorization.AuthorizationUtil;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.logging.LogDomains;
 
-import jakarta.security.jacc.EJBMethodPermission;
 import jakarta.security.jacc.PolicyContext;
 
 import java.lang.reflect.Method;
@@ -72,16 +69,6 @@ public final class EJBSecurityManager implements SecurityManager {
 
     private static final Logger _logger = LogDomains.getLogger(EJBSecurityManager.class, LogDomains.EJB_LOGGER);
 
-    // We use two protection domain caches until we decide how to
-    // set the applicationCodeSource in the protection domain of system apps.
-    //
-    // Protection domains in managerProtectionDomainCache have the (privileged) managerCodeSource
-    // of the EJBSecurityManager class. The protection domain used in pre-dispatch
-    // authorization decisions MUST not be constructed using a privileged
-    // applicationCodeSource (or else all pre-distpatch access decisions will be granted).
-
-    private PermissionCache uncheckedMethodPermissionCache;
-
     private final EjbSecurityProbeProvider probeProvider = new EjbSecurityProbeProvider();
 
     private final EjbDescriptor deploymentDescriptor;
@@ -121,12 +108,6 @@ public final class EJBSecurityManager implements SecurityManager {
 
         _logger.log(Level.FINE, () -> "Jakarta Authorization: Context id (id under which all EJB's in application will be created) = " + contextId);
         _logger.log(Level.FINE, () -> "Codebase (module id for ejb " + ejbName + ") = " + codebase);
-
-        // Create and initialize the unchecked permission cache.
-        uncheckedMethodPermissionCache = PermissionCacheFactory.createPermissionCache(
-            contextId,
-            EJBMethodPermission.class,
-            ejbName);
 
         auditManager = ejbSecurityManagerFactory.getAuditManager();
 
@@ -304,16 +285,7 @@ public final class EJBSecurityManager implements SecurityManager {
     public void destroy() {
         try {
             authorizationService.destroy();
-
-            /*
-             * All enterprise beans of module share same policy context, but each has its
-             * own permission cache, which must be unregistered from factory to
-             * avoid leaks.
-             */
-            PermissionCacheFactory.removePermissionCache(uncheckedMethodPermissionCache);
-            uncheckedMethodPermissionCache = null;
             roleMapperFactory.removeAppNameForContext(contextId);
-
         } catch (IllegalStateException e) {
             _logger.log(WARNING, "ejbsm.could_not_delete", e);
         }

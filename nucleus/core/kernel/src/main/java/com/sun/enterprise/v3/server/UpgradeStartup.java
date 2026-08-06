@@ -126,6 +126,10 @@ public class UpgradeStartup implements ModuleStartup {
 
     private final static String SIGNATURE_TYPES_PARAM = "-signatureTypes";
 
+    private final static String UPGRADE_STATUS_PROPERTY = "glassfish.upgrade.status";
+    private final static String UPGRADE_STATUS_FAILED = "failed";
+    private final static String UPGRADE_STATUS_SUCCEEDED = "succeeded";
+
     private List<String> sigTypeList = new ArrayList<>();
 
     @Override
@@ -137,6 +141,7 @@ public class UpgradeStartup implements ModuleStartup {
     // run correctly.
     @Override
     public void start() {
+        System.setProperty(UPGRADE_STATUS_PROPERTY, UPGRADE_STATUS_FAILED);
 
         // we need to disable all the applications before starting server
         // so the applications will not get loaded before redeployment
@@ -225,13 +230,20 @@ public class UpgradeStartup implements ModuleStartup {
         KernelLoggerInfo.getLogger().info(KernelLoggerInfo.exitUpgrade);
         try {
             Thread.sleep(3000);
-            if (runner!=null) {
+            System.setProperty(UPGRADE_STATUS_PROPERTY, UPGRADE_STATUS_SUCCEEDED);
+            if (runner != null) {
                 runner.getCommandInvocation("stop-domain", new DoNothingActionReporter(), kernelIdentity.getSubject())
                     .execute();
             }
 
         } catch (InterruptedException e) {
             KernelLoggerInfo.getLogger().log(Level.SEVERE, KernelLoggerInfo.exceptionUpgrade, e);
+            System.setProperty(UPGRADE_STATUS_PROPERTY, UPGRADE_STATUS_FAILED);
+            Thread.currentThread().interrupt();
+        } catch (RuntimeException e) {
+            System.setProperty(UPGRADE_STATUS_PROPERTY, UPGRADE_STATUS_FAILED);
+            KernelLoggerInfo.getLogger().log(Level.SEVERE, KernelLoggerInfo.exceptionUpgrade, e);
+            throw e;
         }
 
     }
@@ -252,7 +264,7 @@ public class UpgradeStartup implements ModuleStartup {
 
         // 2. remove generated/xml/j2ee-apps(modules) directory
         File oldJ2eeAppsGeneratedXMLDir = new File(
-           env.getApplicationGeneratedXMLPath(), J2EE_APPS);
+              env.getApplicationGeneratedXMLPath(), J2EE_APPS);
         FileUtils.whack(oldJ2eeAppsGeneratedXMLDir);
         File oldJ2eeModulesGeneratedXMLDir = new File(
            env.getApplicationGeneratedXMLPath(), J2EE_MODULES);
@@ -260,7 +272,7 @@ public class UpgradeStartup implements ModuleStartup {
 
         // 3. remove generated/ejb/j2ee-apps(modules) directory
         File oldJ2eeAppsEJBStubDir = new File(
-           env.getApplicationEJBStubPath(), J2EE_APPS);
+              env.getApplicationEJBStubPath(), J2EE_APPS);
         FileUtils.whack(oldJ2eeAppsEJBStubDir);
         File oldJ2eeModulesEJBStubDir = new File(
            env.getApplicationEJBStubPath(), J2EE_MODULES);

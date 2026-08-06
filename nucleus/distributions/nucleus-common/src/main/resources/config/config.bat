@@ -1,6 +1,6 @@
 @echo off
 REM
-REM Copyright (c) 2025 Contributors to the Eclipse Foundation
+REM Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
 REM
 REM This program and the accompanying materials are made available under the
 REM terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,7 +30,7 @@ exit /b 0
 if exist "%AS_INSTALL%\config\asenv.bat" (
     call "%AS_INSTALL%\config\asenv.bat"
 ) else (
-    echo Error: asenv.bat not found in %AS_INSTALL%\config
+    echo Error: asenv.bat not found in "%AS_INSTALL%\config"
     exit /b 1
 )
 exit /b 0
@@ -45,7 +45,7 @@ if defined AS_JAVA (
     set "javaSearchType=JAVA_HOME"
     set "javaSearchTarget=%JAVA_HOME%"
 ) else (
-    for %%i in (java.exe) do set "JAVA=%%~$PATH;i"
+    for %%i in (java.exe) do set "JAVA=%%~$PATH:i"
     set "javaSearchType=PATH"
     set "javaSearchTarget=%PATH%"
 )

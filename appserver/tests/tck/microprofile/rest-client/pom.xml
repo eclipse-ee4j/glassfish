@@ -73,7 +73,7 @@
         <dependency>
             <groupId>org.wiremock</groupId>
             <artifactId>wiremock</artifactId>
-            <version>3.13.1</version>
+            <version>3.13.2</version>
             <!-- Requirement of the wiremock plugin -->
             <scope>compile</scope>
         </dependency>

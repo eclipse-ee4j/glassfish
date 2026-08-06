@@ -53,13 +53,13 @@ import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DummyApplication;
 import org.glassfish.deployment.common.SimpleDeployer;
+import org.glassfish.exousia.permissions.JakartaPermissions;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ModuleInfo;
 import org.glassfish.security.common.CNonceCache;
 import org.glassfish.security.common.HAUtil;
-import org.glassfish.soteria.rest.RestConstraintsStore;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLET_CONTEXT_INITIALIZED_EVENT;
@@ -67,6 +67,7 @@ import static com.sun.enterprise.deployment.WebBundleRuntimeContext.AFTER_SERVLE
 import static com.sun.enterprise.deployment.web.LoginConfiguration.DIGEST_AUTHENTICATION;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.getContextID;
 import static com.sun.enterprise.security.ee.authorization.AuthorizationUtil.removeRoleMapper;
+import static com.sun.enterprise.security.ee.authorization.RestIntrospector.createPermissionsForRestApplications;
 import static com.sun.enterprise.util.Utility.isEmpty;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.internal.deployment.Deployment.APPLICATION_LOADED;
@@ -135,7 +136,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
             //   -> if ServletContextListeners modified security, retranslate + commit
             //
             //  AFTER_SERVLET_LOAD_INITIALIZED_EVENT
-            //   -> if Jersey/Soteria staged REST permissions, retranslate + final commit
+            //   -> if REST permissions discovered, retranslate + final commit
 
             if (MODULE_LOADED.equals(event.type())) {
                 ModuleInfo moduleInfo = (ModuleInfo) event.hook();
@@ -146,6 +147,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                 loadWebPolicy(
                     null,
                     (WebBundleDescriptor) moduleInfo.getMetaData(WEBBUNDLE_KEY),
+                    null,
                     false);
 
             } else if (APPLICATION_LOADED.equals(event.type())) {
@@ -202,7 +204,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
 
             for (WebBundleDescriptor webBundleDescriptor : webBundleDescriptors) {
                 webBundleDescriptor.setApplicationClassLoader(deploymentContext.getFinalClassLoader());
-                loadWebPolicy(null, webBundleDescriptor, false);
+                loadWebPolicy(null, webBundleDescriptor, null, false);
             }
 
         } catch (Exception se) {
@@ -255,7 +257,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
      * @param remove boolean indicated whether any existing policy statements are removed form context before translation
      * @throws DeploymentException
      */
-    private void loadWebPolicy(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean remove) throws DeploymentException {
+    private void loadWebPolicy(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, JakartaPermissions jakartaPermissions, boolean remove) throws DeploymentException {
         try {
             if (webBundleDescriptor != null) {
                 if (remove) {
@@ -265,7 +267,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
                         webSecurityManager.release();
                     }
                 }
-                webSecurityManagerFactory.createManager(servletContext, webBundleDescriptor, true, serverContext);
+                webSecurityManagerFactory.createManager(serverContext, servletContext, webBundleDescriptor, jakartaPermissions, true);
             }
 
         } catch (Exception se) {
@@ -284,7 +286,7 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
      *
      * <p>
      * Later, load-on-startup servlet initialization may discover additional security
-     * metadata, notably Jakarta REST endpoint security staged by Soteria. If so, the
+     * metadata, notably Jakarta REST endpoint security. If so, the
      * policy is reopened, rebuilt from the full effective web model, and committed
      * again before the module is made available for requests.
      *
@@ -293,27 +295,29 @@ public class SecurityDeployer extends SimpleDeployer<SecurityContainer, DummyApp
      */
     private void commitWebPolicy(WebBundleRuntimeContext webBundleRuntimeContext) throws DeploymentException {
         WebBundleDescriptor webBundleDescriptor = webBundleRuntimeContext.webBundleDescriptor();
+        if (webBundleDescriptor == null) {
+            return;
+        }
+
         ServletContext servletContext = webBundleRuntimeContext.servletContext();
+        JakartaPermissions permissions = createPermissionsForRestApplications(servletContext);
 
         try {
-            if (webBundleDescriptor != null) {
-                if (webBundleDescriptor.isPolicyModified() || RestConstraintsStore.hasConstraints(servletContext)) {
-                    // Redo policy translation for web module
-                    loadWebPolicy(servletContext, webBundleDescriptor, true);
+            if (webBundleDescriptor.isPolicyModified() || !permissions.isEmpty()) {
+                // Redo policy translation for web module
+                loadWebPolicy(servletContext, webBundleDescriptor, permissions, true);
 
-                    webBundleDescriptor.setPolicyModified(false);
-                    RestConstraintsStore.clear(servletContext);
-                }
-
-                String contextId = getContextID(webBundleDescriptor);
-                websecurityProbeProvider.policyCreationStartedEvent(contextId);
-
-                commitViaManager(contextId);
-
-                websecurityProbeProvider.policyCreationEndedEvent(contextId);
-                websecurityProbeProvider.policyCreationEvent(contextId);
-
+                webBundleDescriptor.setPolicyModified(false);
             }
+
+            String contextId = getContextID(webBundleDescriptor);
+            websecurityProbeProvider.policyCreationStartedEvent(contextId);
+
+            commitViaManager(contextId);
+
+            websecurityProbeProvider.policyCreationEndedEvent(contextId);
+            websecurityProbeProvider.policyCreationEvent(contextId);
+
         } catch (Exception se) {
             throw new DeploymentException(
                 "Error in generating security policy for " + webBundleDescriptor.getModuleDescriptor().getModuleName(), se);

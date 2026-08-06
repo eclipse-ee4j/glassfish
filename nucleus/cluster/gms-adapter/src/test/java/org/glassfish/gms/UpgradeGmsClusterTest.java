@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,26 +14,11 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.security.ee.authorization.cache;
+package org.glassfish.gms;
 
-import java.security.Permission;
+import org.glassfish.tests.utils.junit.DomainXml;
 
-/**
- * This class is
- *
- * @author Ron Monzillo
- */
-
-public interface CachedPermission {
-
-    // every implementation class should implement a constructor that
-    // takes 2 arguments as follows
-    // public CachedPermissionImpl(PermissionCache c, Permission p);
-
-    Permission getPermission();
-
-    PermissionCache getPermissionCache();
-
-    boolean checkPermission();
+@DomainXml(value = "UpgradeGmsClusterTest.xml")
+public class UpgradeGmsClusterTest extends GmsUpgradeTestBase {
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -301,7 +301,7 @@ class ClusterCommandHelper {
     private long computeDeadline(Duration timeoutParameter) {
         // Make sure we don't wait longer than the admin read timeout.
         // Set our limit to be 2 seconds less.
-        long adminTimeout = RemoteRestAdminCommand.getReadTimeout() - 2000;
+        long adminTimeout = RemoteRestAdminCommand.getDefaultReadTimeout() - 2000;
         final long timeout;
         if (adminTimeout <= 0) {
             timeout = timeoutParameter.toMillis();

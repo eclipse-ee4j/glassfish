@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation. All rights reserved.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,10 +36,7 @@
         <maven.executable>${maven.home}/bin/mvn</maven.executable>
         <maven.settings.xml>${user.home}/.m2/settings.xml</maven.settings.xml>
 
-        <!-- FIXME:
-        https://github.com/jakartaee/authentication/pull/242
-        -->
-        <tck.version>3.1.0-SNAPSHOT</tck.version>
+        <tck.version>3.1.2</tck.version>
         <tck.artifactId>tck-authentication-download</tck.artifactId>
         <tck.home>${project.build.directory}/authentication-tck-${tck.version}</tck.home>
         <tck.parentPomFile>${tck.home}/tck/pom.xml</tck.parentPomFile>
@@ -134,7 +131,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -146,13 +142,12 @@
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-legacy</artifactId>
-            <version>2.10.3</version>
+            <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.htmlunit</groupId>
             <artifactId>htmlunit</artifactId>
-            <version>4.14.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.config.serverbeans;
 import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
-import com.sun.enterprise.config.util.ServerHelper;
 
 import jakarta.validation.Payload;
 import jakarta.validation.constraints.NotNull;
@@ -344,7 +343,23 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
     }
 
     default NetworkListener getAdminListener() {
-        return ServerHelper.getAdminListener(this);
+        NetworkConfig networkConfig = getNetworkConfig();
+        if (networkConfig == null) {
+            throw new IllegalStateException("Can't operate without <http-service>");
+        }
+
+        List<NetworkListener> listeners = networkConfig.getNetworkListeners().getNetworkListener();
+        if (listeners == null || listeners.isEmpty()) {
+            throw new IllegalStateException("Can't operate without at least one <network-listener>");
+        }
+
+        for (NetworkListener listener : listeners) {
+            if (ServerTags.ADMIN_LISTENER_ID.equals(listener.getName())) {
+                return listener;
+            }
+        }
+        // if we can't find the admin-listener, then use the first one
+        return listeners.get(0);
     }
 
     /**

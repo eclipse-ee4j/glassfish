@@ -24,7 +24,7 @@ following is a summary of the TCK results for releases of Jakarta EE Core Profil
 - [X] Any Additional Specification Certification Requirements:
 
      - [Jakarta Annotations 3.0 TCK](https://download.eclipse.org/jakartaee/annotations/3.0/jakarta-annotations-tck-3.0.0.zip)
-     - [Jakarta Contexts and Dependency Injection 4.1 TCK](https://download.eclipse.org/ee4j/cdi/4.1/cdi-tck-4.1.0-dist.zip)
+     - [Jakarta Contexts and Dependency Injection 4.1 TCK](https://download.eclipse.org/jakartaee/cdi/4.1/cdi-tck-4.1.0-dist.zip)
      - [Jakarta Dependency Injection 2.0 TCK](https://download.eclipse.org/jakartaee/dependency-injection/2.0/jakarta.inject-tck-2.0.2-bin.zip)
      - [Jakarta JSON Binding 3.0 TCK](https://download.eclipse.org/jakartaee/jsonb/3.0/jakarta-jsonb-tck-3.0.0.zip)
      - [Jakarta JSON Processing 2.1 TCK](https://download.eclipse.org/jakartaee/jsonp/2.1/jakarta-jsonp-tck-2.1.1.zip)
@@ -71,7 +71,7 @@ Total tests run: 1, Passes: 1, Failures: 0, Errors: 0, Skips: 0
 
 ## Jakarta Contexts and Dependency Injection 4.1
 
- - [Jakarta Contexts and Dependency Injection 4.1.0 TCK](https://download.eclipse.org/ee4j/cdi/4.1/cdi-tck-4.1.0-dist.zip), 
+ - [Jakarta Contexts and Dependency Injection 4.1.0 TCK](https://download.eclipse.org/jakartaee/cdi/4.1/cdi-tck-4.1.0-dist.zip), 
   SHA-256: `446029ee1ce694d2a9ae8893d16be7afd7e1c0ed8705064b7095af174cf97ea0` <br/> 
 
 Job name: jakarta-cdi/jakarta-cdi-model-tck-glassfish

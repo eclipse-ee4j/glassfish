@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +17,8 @@
 
 package org.glassfish.cdi.transaction;
 
+import jakarta.interceptor.InvocationContext;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -23,12 +26,12 @@ import java.util.Map;
 /**
  * User: paulparkinson Date: 12/12/12 Time: 1:12 PM
  */
-public class InvocationContext implements jakarta.interceptor.InvocationContext {
+public class TestInvocationContext implements InvocationContext {
     Method method;
     Exception exceptionFromProceed;
     TestInvocationContextTarget testInvocationContextTarget = new TestInvocationContextTarget();
 
-    public InvocationContext(Method method, Exception exceptionFromProceed) {
+    public TestInvocationContext(Method method, Exception exceptionFromProceed) {
         this.method = method;
         this.exceptionFromProceed = exceptionFromProceed;
     }

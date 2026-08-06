@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -57,7 +58,7 @@ public class WebTest {
     private void invoke() throws Exception {
         String url = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("opening connection to " + url);
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

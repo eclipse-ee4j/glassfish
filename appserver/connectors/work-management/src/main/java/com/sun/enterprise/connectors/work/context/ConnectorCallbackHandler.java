@@ -68,8 +68,7 @@ public class ConnectorCallbackHandler implements CallbackHandler {
         comment = "Unsupported callback class.",
         level = "WARNING",
         cause = "Resource adapter has used a callback that is not supported by application server.",
-        action = "Check whether the callback in question is supported by application server.",
-        publish = true)
+        action = "Check whether the callback in question is supported by application server.")
     private static final String RAR_UNSUPPORT_CALLBACK = "AS-RAR-05012";
 
     private final CallbackHandler handler;

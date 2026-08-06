@@ -83,7 +83,7 @@ public class UserClassLoader extends URLClassLoader implements ApplicationClient
         final Stream<Path> cpPaths = convertClassPathToPaths(System.getProperty("java.class.path"));
         final Stream<Path> envPaths = convertClassPathToPaths(System.getenv("APPCPATH"));
         final Predicate<Path> filterOutGfClient = f -> !f.endsWith(Path.of("gf-client.jar"));
-        return Stream.of(hardCodedPaths, cpPaths, envPaths).reduce(Stream::concat).orElseGet(Stream::empty)
+        return Stream.of(hardCodedPaths, cpPaths, envPaths).flatMap(s -> s)
             .map(Path::toAbsolutePath).map(Path::normalize).distinct().filter(filterOutGfClient).map(PATH_TO_URL)
             .toArray(URL[]::new);
     }

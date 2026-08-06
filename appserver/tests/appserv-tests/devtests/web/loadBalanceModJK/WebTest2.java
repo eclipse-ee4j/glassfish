@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +44,7 @@ public class WebTest2 {
     public static void run(String port) {
         try{
             System.out.println("Running test");
-            url = new URL("http://" + host  + ":" + port  + "/" + contextRoot + "/hello");
+            url = URI.create("http://" + host  + ":" + port  + "/" + contextRoot + "/hello").toURL();
             String originalLoc = url.toString();
             System.out.println("\n Invoking url: " + url.toString());
             conn = url.openConnection();

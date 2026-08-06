@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,8 +25,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URL;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URL;
 import java.util.Enumeration;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -53,7 +55,7 @@ public class ServletTest2 extends HttpServlet {
       throws IOException, ServletException {
         boolean passed = true;
         int port = req.getLocalPort();
-        URL url = new URL("http://localhost:" + port + "/web-readLineIOException/ServletTest");
+        URL url = URI.create("http://localhost:" + port + "/web-readLineIOException/ServletTest").toURL();
 
         resp.setContentType("text/html");
         PrintWriter writer = resp.getWriter();

@@ -1643,7 +1643,9 @@ public class Request implements HttpRequest, HttpServletRequest {
         if (listeners.isEmpty()) {
             return;
         }
-        ServletRequestAttributeEvent event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
+        // Build the event lazily: allocating it up front is wasteful when no
+        // ServletRequestAttributeListener is registered (the common case).
+        ServletRequestAttributeEvent event = null;
         Iterator<EventListener> iter = listeners.iterator();
         while (iter.hasNext()) {
             EventListener eventListener = iter.next();
@@ -1652,6 +1654,9 @@ public class Request implements HttpRequest, HttpServletRequest {
             }
 
             ServletRequestAttributeListener listener = (ServletRequestAttributeListener) eventListener;
+            if (event == null) {
+                event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
+            }
             try {
                 listener.attributeRemoved(event);
             } catch (Throwable t) {
@@ -1707,13 +1712,9 @@ public class Request implements HttpRequest, HttpServletRequest {
             return;
         }
 
+        // Build the event lazily: allocating it up front is wasteful when no
+        // ServletRequestAttributeListener is registered (the common case).
         ServletRequestAttributeEvent event = null;
-        if (replaced) {
-            event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, oldValue);
-        } else {
-            event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
-        }
-
         Iterator<EventListener> iter = listeners.iterator();
         while (iter.hasNext()) {
             EventListener eventListener = iter.next();
@@ -1721,6 +1722,13 @@ public class Request implements HttpRequest, HttpServletRequest {
                 continue;
             }
             ServletRequestAttributeListener listener = (ServletRequestAttributeListener) eventListener;
+            if (event == null) {
+                if (replaced) {
+                    event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, oldValue);
+                } else {
+                    event = new ServletRequestAttributeEvent(servletContext, getRequest(), name, value);
+                }
+            }
             try {
                 if (replaced) {
                     listener.attributeReplaced(event);

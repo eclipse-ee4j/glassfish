@@ -207,7 +207,7 @@ public class ClusterOperationUtil {
         }
 
         boolean gotFirstResponse = false;
-        long maxWaitTime = RemoteRestAdminCommand.getReadTimeout();
+        long maxWaitTime = RemoteRestAdminCommand.getDefaultReadTimeout();
         long timeBeforeAsadminTimeout = maxWaitTime;
         long waitStart = System.currentTimeMillis();
         for (Map.Entry<String, Future<InstanceCommandResult>> fe : futures.entrySet()) {

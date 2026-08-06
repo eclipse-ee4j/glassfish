@@ -15,7 +15,7 @@
 * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 */
 
-def mvnVersion = '3.9.11'
+def mvnVersion = '3.9.16'
 def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
@@ -88,6 +88,7 @@ def dumpSysInfo() {
    uname -a || true
    env | sort || true
    df -h || true
+   hostname -I || true
    \${JAVA_HOME}/bin/jcmd || true
    mvn -version || true
    ant -version || true
@@ -140,7 +141,7 @@ def generateAntPodTemplate(job) {
             } finally {
                stopVmstatLogging()
                archiveArtifacts artifacts: "${job}-results.tar.gz"
-               junit testResults: 'results/junitreports/*.xml', allowEmptyResults: false
+               junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
             }
          }
       }
@@ -168,7 +169,7 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                               tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
                               '''
                               sh """
-                              mvn -B -e clean verify -Psnapshots -pl :${job} -amd
+                              mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
                               """
                            }
                         } finally {
@@ -178,8 +179,10 @@ def generateMvnTestPodTemplate(job, nodeCfg) {
                   }
                } finally {
                   archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                  junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                  junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                  junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+// Makes Jenkins UI extremely slow in current version
+//                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                }
             }
          }
@@ -257,11 +260,14 @@ pipeline {
    }
 
    options {
-      buildDiscarder(logRotator(numToKeepStr: '2'))
+      // numToKeepStr - we need to know if it is changing.
+      // artifactNumToKeepStr - they are quite large, so we keep just the last products.
+      buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
 
+      // Any failure will cause interruption of other running steps
       parallelsAlwaysFailFast()
 
-      // to allow re-running a test stage
+      // to allow re-running a test stage, preserves just stashes of the most recent build
       preserveStashes()
 
       // issue related to default 'implicit' checkout, disable it
@@ -390,8 +396,10 @@ pipeline {
                post {
                   always {
                      archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     junit testResults: '**/*-reports/*.xml', allowEmptyResults: false
-                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+// Makes Jenkins UI extremely slow in current version
+//                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }
                }
             }
@@ -447,6 +455,14 @@ pipeline {
                }
             }
          }
+      }
+   }
+
+   post {
+      success {
+         // Overwrite stashes with empty content
+         stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
+         stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
       }
    }
 }

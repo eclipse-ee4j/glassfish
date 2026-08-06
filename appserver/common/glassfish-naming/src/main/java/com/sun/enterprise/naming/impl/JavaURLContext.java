@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -180,6 +180,10 @@ public final class JavaURLContext implements Context, Cloneable {
                 return obj;
             }
         }
+        // All strategies failed. The collector carries the cause of each attempt as a suppressed
+        // exception; log them here so the reason is available even when callers only report the
+        // top-level "No object bound" message.
+        LOG.log(Level.DEBUG, () -> "No naming strategy could resolve '" + name + "'.", e);
         throw e;
     }
 

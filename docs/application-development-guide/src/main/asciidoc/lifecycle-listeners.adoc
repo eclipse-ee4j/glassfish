@@ -113,22 +113,22 @@ A `LifecycleEvent` instance is passed to the
 
 === The Server Lifecycle Event Context
 
-The com.sun.appserv.server.LifecycleEventContext interface exposes
+The `com.sun.appserv.server.LifecycleEventContext` interface exposes
 runtime information about the server. The lifecycle event context is
 created when the `LifecycleEvent` class is instantiated at server
-initialization. The LifecycleEventContext interface defines these
+initialization. The `LifecycleEventContext` interface defines these
 methods:
 
-* `public java.lang.String[].getCmdLineArgs()`
+* `public java.lang.String[] getCmdLineArgs()`
 +
 This method returns the server startup command-line arguments.
-* `public java.lang.String.getInstallRoot()`
+* `public java.lang.String getInstallRoot()`
 +
 This method returns the server installation root directory.
-* `public java.lang.String.getInstanceName()`
+* `public java.lang.String getInstanceName()`
 +
 This method returns the server instance name.
-* `public javax.naming.InitialContext.getInitialContext()`
+* `public javax.naming.InitialContext getInitialContext()`
 +
 This method returns the initial JNDI naming context. The naming
 environment for lifecycle modules is installed after the

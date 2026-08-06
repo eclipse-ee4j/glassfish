@@ -149,10 +149,12 @@ public class GMSConfigUpgrade implements ConfigurationUpgrade, PostConstruct {
                             cluster.getName()));
                 }
             }
-            Property gmsListenerPort = cluster.createChild(Property.class);
-            gmsListenerPort.setName("GMS_LISTENER_PORT");
-            gmsListenerPort.setValue(String.format("${GMS_LISTENER_PORT-%s}", cluster.getName()));
-            cluster.getProperty().add(gmsListenerPort);
+            if (cluster.getProperty("GMS_LISTENER_PORT") == null) {
+                Property gmsListenerPort = cluster.createChild(Property.class);
+                gmsListenerPort.setName("GMS_LISTENER_PORT");
+                gmsListenerPort.setValue(String.format("${GMS_LISTENER_PORT-%s}", cluster.getName()));
+                cluster.getProperty().add(gmsListenerPort);
+            }
             return cluster;
         }
     }

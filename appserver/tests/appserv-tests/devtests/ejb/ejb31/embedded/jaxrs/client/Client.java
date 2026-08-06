@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -111,8 +112,8 @@ public class Client {
             c = EJBContainer.createEJBContainer(p);
         // ok now let's look up the EJB...
             System.out.println("Testing EJB via REST...");
-            System.out.println("EJB said: " + testResourceAtUrl(new URL(LOCALHOST + appName + "-web/test/simple")));
-            System.out.println("JPA call returned: " + testResourceAtUrl(new URL(LOCALHOST + appName + "-web/test/jpa")));
+            System.out.println("EJB said: " + testResourceAtUrl(URI.create(LOCALHOST + appName + "-web/test/simple").toURL()));
+            System.out.println("JPA call returned: " + testResourceAtUrl(URI.create(LOCALHOST + appName + "-web/test/jpa").toURL()));
 
         } catch (Exception e) {
             pass = false;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,18 @@
 
 package org.glassfish.jaccApi.programmaticauthentication;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
 
 import org.glassfish.jaccApi.common.ArquillianBase;
-import static org.glassfish.jaccApi.common.ArquillianBase.mavenWar;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.xml.sax.SAXException;
+
+import static org.glassfish.jaccApi.common.ArquillianBase.mavenWar;
+import static org.junit.Assert.assertTrue;
 
 /**
  * This tests that a call from a Servlet to HttpServletRequest#authenticate can result
@@ -47,10 +48,7 @@ public class ProgrammaticAuthenticationIT extends ArquillianBase {
     @Test
     public void testSubjectPrincipals() throws IOException, SAXException {
         String response = getFromServerPath("public/authenticate");
-        assertTrue(
-            "Should contain web user test and architect in subject principals",
-            response.contains("Principals: architect, test"));
+        assertTrue("Should contain web user test and architect in subject principals",
+            response.contains("Principals in subject are: architect, test"));
     }
-
-
 }

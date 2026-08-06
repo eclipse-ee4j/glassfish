@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.System.Logger;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -95,7 +96,7 @@ public class CommonClassLoaderServiceImplTest {
     @Test
     @Order(10)
     void testAddingEmptyPath() throws Exception {
-        assertThrows(IllegalArgumentException.class, () -> commonCLService.addToClassPath(new URL("file://")));
+        assertThrows(IllegalArgumentException.class, () -> commonCLService.addToClassPath(URI.create("file://").toURL()));
         String classpath = commonCLService.getCommonClassPath();
         assertThat(classpath, emptyString());
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,10 @@ package org.glassfish.deployment.autodeploy;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
@@ -106,7 +109,7 @@ public class AutoDeployer {
     private static final boolean DEFAULT_INCLUDE_SUBDIR = false;
     private static final boolean DEFAULT_ENABLED = true;
 
-    static final String STATUS_SUBDIR_PATH = ".autodeploystatus";
+    static final Path STATUS_SUBDIR_PATH = Path.of(".autodeploystatus");
 
     /**
      * Creates a new autodeployer.
@@ -246,54 +249,55 @@ public class AutoDeployer {
          */
         if (baseURI.relativize(targetURI).equals(targetURI) || baseDir.exists()) {
             return targetDir.mkdirs();
-        } else {
-            /*
-             * The target would fall inside the base but the base does not exist.
-             */
-            return false;
         }
+        // The target would fall inside the base but the base does not exist.
+        return false;
     }
 
     private void validateAutodeployDirectory(String autodeployDirPath) throws AutoDeploymentException {
-        File autodeployDir = new File(autodeployDirPath);
+        Path autodeployDir = domainRoot().resolve(new File(autodeployDirPath).toPath());
         validateDirectory(autodeployDir);
-        File statusDir = new File(autodeployDir, STATUS_SUBDIR_PATH);
+        Path statusDir = autodeployDir.resolve(STATUS_SUBDIR_PATH);
         validateDirectory(statusDir);
+        Path bundlesDir = autodeployDir.resolve("bundles");
+        validateDirectory(bundlesDir);
     }
 
-    private synchronized File domainRoot() {
+    private synchronized Path domainRoot() {
         if (domainRoot == null) {
             ServerEnvironment serverEnv = habitat.getService(ServerEnvironment.class);
             domainRoot = serverEnv.getInstanceRoot();
         }
-        return domainRoot;
+        return domainRoot.toPath().toAbsolutePath();
     }
 
-    private void validateDirectory(File dirFile) throws AutoDeploymentException {
-        if ( ! dirFile.exists()) {
-            mkdirs(domainRoot(), dirFile);
+    private void validateDirectory(Path dirFile) throws AutoDeploymentException {
+        final Path realPath;
+        if (Files.exists(dirFile)) {
+            // Can be a softlink
+            try {
+                realPath = dirFile.toRealPath();
+            } catch (IOException e) {
+                throw new AutoDeploymentException(e);
+            }
+            if (!Files.isDirectory(realPath)) {
+                throw new AutoDeploymentException(localStrings.getLocalString(
+                    "enterprise.deployment.autodeploy.invalid_source_dir", "invalid source directory {0}", realPath));
+            }
         } else {
-            if ( ! dirFile.isDirectory()) {
-                throw new AutoDeploymentException(
-                        localStrings.getLocalString(
-                            "enterprise.deployment.autodeploy.invalid_source_dir",
-                            "invalid source directory {0}",
-                            dirFile));
+            try {
+                realPath = Files.createDirectories(dirFile);
+            } catch (IOException e) {
+                throw new AutoDeploymentException(e);
             }
         }
-        if ( ! dirFile.canRead()) {
-            throw new AutoDeploymentException(
-                    localStrings.getLocalString(
-                        "enterprise.deployment.autodeploy.dir_not_readable",
-                        "directory {0} not readable",
-                        dirFile));
+        if (!Files.isReadable(realPath)) {
+            throw new AutoDeploymentException(localStrings.getLocalString(
+                "enterprise.deployment.autodeploy.dir_not_readable", "directory {0} not readable", realPath));
         }
-        if ( ! dirFile.canWrite()) {
-            throw new AutoDeploymentException(
-                    localStrings.getLocalString(
-                        "enterprise.deployment.autodeploy.dir_not_writeable",
-                        "directory {0} not writable",
-                        dirFile));
+        if (!Files.isWritable(realPath)) {
+            throw new AutoDeploymentException(localStrings.getLocalString(
+                "enterprise.deployment.autodeploy.dir_not_writeable", "directory {0} not writable", realPath));
         }
     }
 

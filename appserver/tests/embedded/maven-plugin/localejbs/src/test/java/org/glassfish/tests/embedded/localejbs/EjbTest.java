@@ -18,6 +18,7 @@
 package org.glassfish.tests.embedded.localejbs;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class EjbTest {
 
     @Test
     public void test() throws Exception {
-        URL url = new URL("http://localhost:8080/test/TesterServlet");
+        URL url = URI.create("http://localhost:8080/test/TesterServlet").toURL();
         HttpURLConnection uc = (HttpURLConnection) url.openConnection();
         try {
             System.out.println("Test status : " + uc.getResponseMessage());

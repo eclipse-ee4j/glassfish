@@ -17,9 +17,8 @@
 
 package org.glassfish.tests.embedded.web.servlet;
 
-import com.gargoylesoftware.htmlunit.Page;
-import com.gargoylesoftware.htmlunit.WebClient;
-
+import org.htmlunit.Page;
+import org.htmlunit.WebClient;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.startsWith;

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -65,9 +66,9 @@ public class WebTest2 {
 
     private void invoke() throws Exception {
 
-        URL url = new URL("http://" + host  + ":" + port + contextRoot
+        URL url = URI.create("http://" + host  + ":" + port + contextRoot
                           + "/CheckAccessLog?location="
-                          + URLEncoder.encode(location));
+                          + URLEncoder.encode(location)).toURL();
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();

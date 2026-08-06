@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -37,6 +37,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.archivist.WebArchivist;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 
@@ -98,12 +99,15 @@ public class ScatteredWebArchivist extends WebArchivist {
             this.classLoader = classLoader;
             this.elements.clear();
             // in embedded mode, we don't scan archive, we just process all classes.
+            // For the web module itself the classes live under WEB-INF/classes/, while for a web
+            // fragment the entries come from its nested JAR and are relative to that JAR's root.
+            final String classPrefix = (descriptor instanceof WebFragmentDescriptor) ? "" : "WEB-INF/classes/";
             Enumeration<String> fileEntries = descriptor.getArchiveFileEntries(archiveFile);
             while (fileEntries.hasMoreElements()) {
                 String entry = fileEntries.nextElement();
-                if (entry.startsWith("WEB-INF/classes/") && entry.endsWith(".class")) {
+                if (entry.startsWith(classPrefix) && entry.endsWith(".class") && !entry.endsWith("module-info.class")) {
                     try {
-                        elements.add(classLoader.loadClass(toClassName(entry)));
+                        elements.add(classLoader.loadClass(toClassName(entry, classPrefix)));
                     } catch (ClassNotFoundException e) {
                         LOG.log(Level.WARNING, "Cannot load class " + entry, e);
                     }
@@ -117,8 +121,8 @@ public class ScatteredWebArchivist extends WebArchivist {
         }
 
 
-        private String toClassName(String entryName) {
-            String name = entryName.substring("WEB-INF/classes/".length(), entryName.length() - ".class".length());
+        private String toClassName(String entryName, String classPrefix) {
+            String name = entryName.substring(classPrefix.length(), entryName.length() - ".class".length());
             return name.replaceAll("/", ".");
         }
 

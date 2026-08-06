@@ -40,8 +40,7 @@ public class TransactionScopedContextExtensionTest {
         EasyMockSupport mockSupport = new EasyMockSupport();
         AfterBeanDiscovery event = mockSupport.createMock(AfterBeanDiscovery.class);
         BeanManager beanManager = mockSupport.createMock(BeanManager.class);
-        AnnotatedType<TransactionScopedCDIEventHelperImpl> annotatedType
-            = (AnnotatedType<TransactionScopedCDIEventHelperImpl>) mockSupport.createMock(AnnotatedType.class);
+        AnnotatedType<TransactionScopedCDIEventHelperImpl> annotatedType = mockSupport.createMock(AnnotatedType.class);
         InjectionTargetFactory injectionTargetFactory = mockSupport.createMock(InjectionTargetFactory.class);
         InjectionTarget injectionTarget = mockSupport.createMock(InjectionTarget.class);
 

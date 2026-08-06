@@ -37,15 +37,19 @@ public class TransactionScopedBeanTest {
     public void testAllMethods() {
         LocalBean localBean = new LocalBean();
         EasyMockSupport mockSupport = new EasyMockSupport();
-        Contextual<LocalBean> contextual = (Contextual<LocalBean>) mockSupport.createMock(Contextual.class);
-        CreationalContext<LocalBean> creationalContext = (CreationalContext<LocalBean>) mockSupport.createMock(CreationalContext.class);
+        Contextual<LocalBean> contextual = mockSupport.createMock(Contextual.class);
+        CreationalContext<LocalBean> creationalContext = mockSupport.createMock(CreationalContext.class);
         TransactionScopedContextImpl transactionScopedContext = mockSupport.createMock(TransactionScopedContextImpl.class);
         transactionScopedContext.beansPerTransaction = new ConcurrentHashMap<>();
 
-        // test getContextualInstance
-        TransactionScopedBean<LocalBean> transactionScopedBean = getTransactionScopedBean(mockSupport, localBean, contextual,
+        // Test getContextualInstance
+        TransactionScopedBean<LocalBean> transactionScopedBean =
+            getTransactionScopedBean(
+                mockSupport, localBean, contextual,
                 creationalContext, transactionScopedContext);
+
         assertSame(localBean, transactionScopedBean.getContextualInstance());
+
         // test afterCompletion
         contextual.destroy(localBean, creationalContext);
         mockSupport.replayAll();
@@ -60,13 +64,14 @@ public class TransactionScopedBeanTest {
 
     }
 
-    public static <T> TransactionScopedBean<T> getTransactionScopedBean(EasyMockSupport mockSupport, T localBean, Contextual<T> contextual,
-            CreationalContext<T> creationalContext, TransactionScopedContextImpl transactionScopedContext) {
+    public static <T> TransactionScopedBean<T> getTransactionScopedBean(EasyMockSupport mockSupport, T localBean, Contextual<T> contextual, CreationalContext<T> creationalContext, TransactionScopedContextImpl transactionScopedContext) {
         expect(contextual.create(creationalContext)).andReturn(localBean);
         mockSupport.replayAll();
 
-        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<>(contextual, creationalContext,
-                transactionScopedContext);
+        TransactionScopedBean<T> transactionScopedBean =
+            new TransactionScopedBean<>(
+                contextual, creationalContext, transactionScopedContext);
+
         assertSame(localBean, transactionScopedBean.getContextualInstance());
 
         mockSupport.verifyAll();

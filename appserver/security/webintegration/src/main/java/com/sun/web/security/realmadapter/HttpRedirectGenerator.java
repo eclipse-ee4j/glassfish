@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.catalina.Globals;
@@ -121,7 +122,8 @@ public class HttpRedirectGenerator {
 
         // If the port in the Header is empty (it refers to the default port), which is
         // not one of the GlassFish listener ports -> GF is front-ended by a proxy (LB plugin)
-        boolean isHostPortNullOrEmpty = ((hostPort.length <= 1) || (hostPort[1] == null || hostPort[1].isBlank()));
+        boolean isHostPortNullOrEmpty = hostPort.length <= 1 || hostPort[1] == null || hostPort[1].isBlank();
+
         if (!isHeaderPresent) {
             isWebServerRequest = false;
         } else if (isHostPortNullOrEmpty) {
@@ -129,53 +131,54 @@ public class HttpRedirectGenerator {
         } else {
             boolean breakFromLoop = false;
 
-            for (NetworkListener nwListener : networkListeners.getNetworkListener()) {
+            for (NetworkListener networkListener : networkListeners.getNetworkListener()) {
                 // Loop through the network listeners
-                String nwAddress = nwListener.getAddress();
-                InetAddress[] localHostAdresses;
-                if (nwAddress == null || nwAddress.equals("0.0.0.0")) {
-                    nwAddress = NetUtils.getCanonicalHostName();
-                    if (!nwAddress.equals(hostPort[0])) {
-                        // compare the InetAddress objects
-                        // only if the hostname in the header
-                        // does not match with the hostname in the
-                        // listener-To avoid performance overhead
+                String networkAddress = networkListener.getAddress();
+                List<InetAddress> localHostAdresses;
+                if (networkAddress == null || networkAddress.equals("0.0.0.0")) {
+                    networkAddress = NetUtils.getCanonicalHostName();
+                    if (!networkAddress.equals(hostPort[0])) {
+                        // Compare the InetAddress objects only if the hostname in the header
+                        // does not match with the hostname in the listener-To avoid performance overhead
                         localHostAdresses = NetUtils.getHostAddresses();
-                        if (localHostAdresses.length == 0) {
+                        if (localHostAdresses.size() == 0) {
                             break;
                         }
+
                         InetAddress hostAddress = InetAddress.getByName(hostPort[0]);
                         for (InetAddress inetAdress : localHostAdresses) {
                             if (inetAdress.equals(hostAddress)) {
                                 // Hostname of the request in the listener and the hostname in the Host header match.
                                 // Check the port
-                                String nwPort = nwListener.getPort();
+                                String networkPort = networkListener.getPort();
+
                                 // If the listener port is different from the port
                                 // in the Host header, then request is received by WS frontend
-                                if (nwPort.equals(hostPort[1])) {
+                                if (networkPort.equals(hostPort[1])) {
                                     isWebServerRequest = false;
                                     breakFromLoop = true;
                                     break;
                                 }
+
                                 isWebServerRequest = true;
                             }
                         }
                     } else {
                         // Host names are the same, compare the ports
-                        String nwPort = nwListener.getPort();
+                        String networkPort = networkListener.getPort();
+
                         // If the listener port is different from the port
                         // in the Host header, then request is received by WS frontend
-                        if (!nwPort.equals(hostPort[1])) {
+                        if (!networkPort.equals(hostPort[1])) {
                             isWebServerRequest = true;
-
                         } else {
                             isWebServerRequest = false;
                             breakFromLoop = true;
 
                         }
-
                     }
                 }
+
                 if (breakFromLoop && !isWebServerRequest) {
                     break;
                 }

@@ -23,6 +23,7 @@ import jakarta.servlet.ServletContainerInitializer;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.glassfish.jersey.servlet.init.JerseyServletContainerInitializer;
 import org.glassfish.soteria.servlet.SamRegistrationInstaller;
 import org.glassfish.sse.impl.ServerSentEventServletContainerInitializer;
 import org.glassfish.wasp.runtime.TldScanner;
@@ -46,6 +47,7 @@ public class WSServletContainerInitializerITest {
             instanceOf(WSServletContainerInitializer.class),
             instanceOf(ServerSentEventServletContainerInitializer.class),
             instanceOf(TldScanner.class),
+            instanceOf(JerseyServletContainerInitializer.class),
             instanceOf(SamRegistrationInstaller.class)
         ));
     }

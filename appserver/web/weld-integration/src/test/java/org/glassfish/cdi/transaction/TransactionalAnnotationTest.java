@@ -52,6 +52,7 @@ public class TransactionalAnnotationTest {
         jakarta.transaction.TransactionManager transactionManager = new TransactionManager();
         TransactionalInterceptorBase.setTestTransactionManager(transactionManager);
         InvocationContext ctx = new TestInvocationContext(BeanMandatory.class.getMethod("foo", String.class), null);
+
         try {
             transactionalInterceptorMANDATORY.transactional(ctx);
             fail("should have thrown TransactionRequiredException due to " + "transactionalInterceptorMANDATORY and no tx in place");
@@ -59,9 +60,11 @@ public class TransactionalAnnotationTest {
             assertThat("transactionalException.getCause()", transactionalException.getCause(),
                 instanceOf(TransactionRequiredException.class));
         }
+
         transactionManager.begin();
         transactionalInterceptorMANDATORY.transactional(ctx);
         transactionManager.commit();
+
         try {
             transactionalInterceptorMANDATORY.transactional(ctx);
             fail("should have thrown TransactionRequiredException due to " + "transactionalInterceptorMANDATORY and no tx in place");
@@ -77,6 +80,7 @@ public class TransactionalAnnotationTest {
         TransactionalInterceptorBase.setTestTransactionManager(transactionManager);
         InvocationContext ctx = new TestInvocationContext(BeanNever.class.getMethod("foo", String.class), null);
         transactionalInterceptorNEVER.transactional(ctx);
+
         transactionManager.begin();
         try {
             transactionalInterceptorNEVER.transactional(ctx);

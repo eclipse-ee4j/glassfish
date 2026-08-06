@@ -21,10 +21,6 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorization.cache.CachedPermission;
-import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.enterprise.security.ee.web.integration.LogUtils;
 import com.sun.enterprise.security.ee.web.integration.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
@@ -53,7 +49,6 @@ import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizatio
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED_WITH_SSL;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toSet;
 
@@ -84,16 +79,6 @@ public class GlassFishAuthorizationService {
     private static final WebUserDataPermission allConnections = new WebUserDataPermission("/*", null);
     private static Permission[] protoPerms = { allResources, allConnections };
 
-    // permissions tied to unchecked permission cache, and used
-    // to determine if the effective policy is grant all
-    // WebUserData and WebResource permisions.
-    private CachedPermission allResourcesCachedPermission;
-
-    private CachedPermission allConnectionsCachedPermission;
-
-    // Unchecked permission cache
-    private PermissionCache uncheckedPermissionCache;
-
     private static Set<Principal> defaultPrincipalSet = SecurityContext.getDefaultSecurityContext().getPrincipalSet();
 
     private final boolean register;
@@ -115,8 +100,6 @@ public class GlassFishAuthorizationService {
 
         String appName = webBundleDescriptor.getApplication().getRegistrationName();
         SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().setAppNameForContext(appName, contextId);
-
-        initPermissionCache();
 
         // Check if the user has specified alternative implementations for the
         // PolicyConfigurationFactory and PolicyFactory via a web.xml parameter
@@ -188,19 +171,6 @@ public class GlassFishAuthorizationService {
         }
 
         boolean result = false;
-
-        if (allResourcesCachedPermission != null && allConnectionsCachedPermission != null) {
-            boolean x = allResourcesCachedPermission.checkPermission();
-            boolean y = allConnectionsCachedPermission.checkPermission();
-            result = x && y;
-            if (result) {
-                try {
-                    AuthorizationService.setThreadContextId(contextId);
-                } catch (Throwable t) {
-                    throw new RuntimeException(t);
-                }
-            }
-        }
 
         return result;
     }
@@ -412,17 +382,12 @@ public class GlassFishAuthorizationService {
 
         // Remove the handlers for policy contexts
         exousiaAuthorizationService.destroy();
-
-        PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
-        uncheckedPermissionCache = null;
     }
 
     public void destroy() throws PolicyContextException {
         exousiaAuthorizationService.refresh();
         exousiaAuthorizationService.destroy();
 
-        PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
-        uncheckedPermissionCache = null;
         SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().removeAppNameForContext(contextId);
     }
 
@@ -457,18 +422,6 @@ public class GlassFishAuthorizationService {
             AuthorizationService.installPolicyFactory(factoryClass);
         } finally {
             Thread.currentThread().setContextClassLoader(existing);
-        }
-    }
-
-    private void initPermissionCache() {
-        if (uncheckedPermissionCache == null) {
-            if (register) {
-                uncheckedPermissionCache = createPermissionCache(contextId, protoPerms, null);
-                allResourcesCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allResources);
-                allConnectionsCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allConnections);
-            }
-        } else {
-            uncheckedPermissionCache.reset();
         }
     }
 

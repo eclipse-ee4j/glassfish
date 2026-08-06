@@ -94,7 +94,7 @@ public class LogFilterForInstance {
 
             // creating local file name on DAS
             long instanceLogFileSize = 0;
-            File instanceLogFile = SFTPPath.of(logFileDirectoryOnServer.toPath()).resolve(loggingFile.getFileName()).toFile();
+            File instanceLogFile = logFileDirectoryOnServer.toPath().resolve(loggingFile.getFileName()).toFile();
 
             // getting size of the file on DAS
             if (instanceLogFile.exists()) {

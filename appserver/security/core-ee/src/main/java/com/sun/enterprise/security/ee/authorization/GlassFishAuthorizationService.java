@@ -46,13 +46,13 @@ import java.util.logging.Logger;
 import javax.security.auth.Subject;
 
 import org.glassfish.exousia.AuthorizationService;
+import org.glassfish.exousia.permissions.JakartaPermissions;
 
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.DENIED;
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED;
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED_WITH_SSL;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.SoteriaToExousiaConverter.getStagedPermissionsFromContext;
 import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toSet;
@@ -100,6 +100,8 @@ public class GlassFishAuthorizationService {
 
     private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
     private final AuthorizationService exousiaAuthorizationService;
+    private final Set<String> restServletPathBases;
+    private final boolean hasRestConstraints;
 
     public enum Access {
         PERMITTED,
@@ -107,7 +109,7 @@ public class GlassFishAuthorizationService {
         DENIED
     }
 
-    public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register) throws PolicyContextException {
+    public GlassFishAuthorizationService(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, JakartaPermissions jakartaPermissions, boolean register) throws PolicyContextException {
         this.register = register;
         this.contextId = AuthorizationUtil.getContextID(webBundleDescriptor);
 
@@ -151,8 +153,8 @@ public class GlassFishAuthorizationService {
             () -> currentRequest.get());
 
         exousiaAuthorizationService.addConstraintsToPolicy(
-            // Permissions collected and staged by Soteria from REST endpoints
-            getStagedPermissionsFromContext(servletContext),
+            // Permissions collected from REST endpoints
+            jakartaPermissions,
 
             // Constraints collected by GlassFish / Catalina from Servlets and web.xml
             getConstraintsFromBundle(webBundleDescriptor),
@@ -169,6 +171,9 @@ public class GlassFishAuthorizationService {
 
             // Role-reffing; ancient feature where Servlets can define role aliases.
             getSecurityRoleRefsFromBundle(webBundleDescriptor));
+
+        restServletPathBases = RestIntrospector.getRestServletPathBases(servletContext);
+        hasRestConstraints = jakartaPermissions != null && !jakartaPermissions.isEmpty();
     }
 
     /**
@@ -178,6 +183,10 @@ public class GlassFishAuthorizationService {
      * request.
      */
     public boolean hasNoConstrainedResources() {
+        if (hasRestConstraints) {
+            return false;
+        }
+
         boolean result = false;
 
         if (allResourcesCachedPermission != null && allConnectionsCachedPermission != null) {
@@ -196,9 +205,35 @@ public class GlassFishAuthorizationService {
         return result;
     }
 
-    public boolean permitAll(HttpServletRequest httpServletRequest) {
-        setSecurityInfo(httpServletRequest);
-        return exousiaAuthorizationService.checkWebResourcePermission(httpServletRequest, (Subject) null);
+    public boolean permitAll(HttpServletRequest request) {
+        setSecurityInfo(request);
+
+        // We do a layered check for web resource permissions (all regular URLs, including those from REST)
+        // and for REST resource permissions (resources defined by REST templates)
+        //
+        // The following rules apply:
+        //
+        // 1. Servlet deny wins.
+        // 2. Servlet permit does not automatically win.
+        // 3. REST template constraint may still deny or require authentication.
+        // 4. In case of no matching REST template fall back to Servlet result.
+
+        boolean webPermitAll =
+            exousiaAuthorizationService.checkWebResourcePermission(request, (Subject) null);
+
+        if (!webPermitAll) {
+            return false;
+        }
+
+        if (!isPotentialRestRequest(request)) {
+            return true;
+        }
+
+        return switch (exousiaAuthorizationService.checkRestResourcePermissionIfApplicable(request, (Subject) null)) {
+            case NOT_APPLICABLE -> true; // webPermitAll must be true at this point
+            case GRANTED -> true;
+            case DENIED -> false;
+        };
     }
 
     /**
@@ -263,21 +298,49 @@ public class GlassFishAuthorizationService {
      *
      * @return true is the resource is granted, false if denied
      */
-    public boolean hasResourcePermission(HttpServletRequest httpServletRequest) {
-        setSecurityInfo(httpServletRequest);
-        SecurityContext.setCurrent(getSecurityContext(httpServletRequest.getUserPrincipal()));
+    public boolean hasResourcePermission(HttpServletRequest request) {
+        setSecurityInfo(request);
+        SecurityContext.setCurrent(getSecurityContext(request.getUserPrincipal()));
 
-        boolean isGranted = exousiaAuthorizationService.checkWebResourcePermission(httpServletRequest);
+        // Decision table:
+        //
+        //          Web denied:
+        //            false
+        //
+        //          Web granted, not potential REST:
+        //            true
+        //
+        //          Web granted, potential REST, no matching RestResourcePermission:
+        //            true
+        //
+        //          Web granted, potential REST, matching RestResourcePermission granted:
+        //            true
+        //
+        //          Web granted, potential REST, matching RestResourcePermission denied:
+        //            false
+
+        boolean isGranted =
+            exousiaAuthorizationService.checkWebResourcePermission(request);
+
+        if (isGranted && isPotentialRestRequest(request)) {
+            isGranted = switch (exousiaAuthorizationService.checkRestResourcePermissionIfApplicable(request)) {
+                case NOT_APPLICABLE -> true;
+                case GRANTED -> true;
+                case DENIED -> false;
+            };
+        }
 
         if (logger.isLoggable(FINE)) {
             logger.log(FINE, "[Web-Security] hasResource isGranted: {0}", isGranted);
-            logger.log(FINE, "[Web-Security] hasResource perm: {0}", getUriMinusContextPath(httpServletRequest));
+            logger.log(FINE, "[Web-Security] hasResource perm: {0}", getUriMinusContextPath(request));
         }
 
-        recordWebInvocation(httpServletRequest, RESOURCE, isGranted);
+        recordWebInvocation(request, RESOURCE, isGranted);
 
         return isGranted;
     }
+
+
 
     /**
      * Return <code>true</code> if the specified servletName has the specified security role, within the context of the
@@ -464,6 +527,18 @@ public class GlassFishAuthorizationService {
 
         // Encode all colons
         return uri.replaceAll(":", "%3A");
+    }
+
+    private boolean isPotentialRestRequest(HttpServletRequest request) {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+
+        for (String base : restServletPathBases) {
+            if (base.isEmpty() || path.equals(base) || path.startsWith(base + "/")) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }

@@ -39,26 +39,32 @@ public class AuthenticateServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.getWriter().write("This is a public servlet \n");
-        request.setAttribute("doLogin",true);
+        request.setAttribute("doLogin", true);
+
         boolean authenticateOutcome = request.authenticate(response);
+
         String webName;
         if (request.getUserPrincipal() != null) {
             webName = request.getUserPrincipal().getName();
         }
-        //get Subject via jacc api
+
+        // get Subject via jacc api
         try {
             Subject subject = (Subject) PolicyContext.getContext("javax.security.auth.Subject.container");
             if (subject != null) {
                 response.getWriter().write(subject.toString());
-                Set<Principal> principalsSet = subject.getPrincipals();
-//                String princiaplsInSubject = "";
-                String princiaplsInSubject = principalsSet.stream()
-                                                          .map(e -> e.getName())
-                                                          .collect(Collectors.joining(", "));
-                response.getWriter().write("Principals: " + princiaplsInSubject);
-//            response.getWriter().write("Principals in subject are :" + subject.getPrincipals().stream().map(Principal::getName()).collect(Collectors.join(",")));
+                Set<Principal> principals = subject.getPrincipals();
+
+                String principalNames =
+                    principals.stream()
+                              .map(Principal::getName)
+                              .distinct()
+                              .sorted()
+                              .collect(Collectors.joining(", "));
+
+                response.getWriter().write("Principals: " + principalNames);
             }
-        }catch (PolicyContextException e){
+        } catch (PolicyContextException e) {
             response.getWriter().write("ERROR while getting Subject");
             e.printStackTrace(response.getWriter());
         }

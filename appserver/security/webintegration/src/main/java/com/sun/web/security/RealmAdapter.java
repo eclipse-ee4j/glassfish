@@ -24,7 +24,6 @@ import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.security.AppCNonceCacheMap;
 import com.sun.enterprise.security.CNonceCacheFactory;
 import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
 import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.ee.authentication.jakarta.AuthMessagePolicy;
@@ -151,7 +150,6 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
     private static final String SERVER_AUTH_CONTEXT = "__jakarta.security.auth.message.ServerAuthContext";
     private static final String MESSAGE_INFO = "__jakarta.security.auth.message.MessageInfo";
-    private static final WebSecurityDeployerProbeProvider websecurityProbeProvider = new WebSecurityDeployerProbeProvider();
 
     private WebBundleDescriptor webBundleDescriptor;
     private HashMap<String, String> runAsPrincipals;
@@ -273,7 +271,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
                 ex.printStackTrace();
             }
 
-            webSecurityManager = webSecurityManagerFactory.createManager(null, webBundleDescriptor, true, serverContext);
+            webSecurityManager = webSecurityManagerFactory.createManager(serverContext, null, webBundleDescriptor, null, true);
             LOG.log(FINE, "WebSecurityManager for {0} has been updated", contextId);
         }
     }

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import org.glassfish.exousia.permissions.JakartaPermissions;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserPrincipal;
@@ -57,7 +58,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
     private final Map<String, ArrayList<String>> CONTEXT_IDS = new HashMap<>();
     private final Map<String, Map<String, WebSecurityManager>> SECURITY_MANAGERS = new HashMap<>();
 
-    public WebSecurityManager createManager(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, boolean register, ServerContext context) {
+    public WebSecurityManager createManager(ServerContext serverContext, ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, JakartaPermissions jakartaPermissions, boolean register) {
         String contextId = AuthorizationUtil.getContextID(webBundleDescriptor);
 
         WebSecurityManager manager = null;
@@ -68,7 +69,7 @@ public class WebSecurityManagerFactory extends SecurityManagerFactory {
         if (manager == null || !register) {
             try {
                 probeProvider.securityManagerCreationStartedEvent(webBundleDescriptor.getModuleID());
-                manager = new WebSecurityManager(servletContext, webBundleDescriptor, context, this, register);
+                manager = new WebSecurityManager(serverContext, servletContext, webBundleDescriptor, jakartaPermissions, this, register);
                 probeProvider.securityManagerCreationEndedEvent(webBundleDescriptor.getModuleID());
 
                 if (register) {

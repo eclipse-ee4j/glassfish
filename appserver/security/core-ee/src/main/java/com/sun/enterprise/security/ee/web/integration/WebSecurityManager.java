@@ -35,6 +35,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.glassfish.exousia.permissions.JakartaPermissions;
 import org.glassfish.internal.api.ServerContext;
 import org.glassfish.security.common.Group;
 import org.glassfish.security.common.UserNameAndPassword;
@@ -60,9 +61,9 @@ public class WebSecurityManager {
     private final WebSecurityManagerFactory webSecurityManagerFactory;
     private final String contextId;
 
-    WebSecurityManager(ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, ServerContext serverContext, WebSecurityManagerFactory webSecurityManagerFactory, boolean register) throws PolicyContextException {
+    WebSecurityManager(ServerContext serverContext, ServletContext servletContext, WebBundleDescriptor webBundleDescriptor, JakartaPermissions jakartaPermissions, WebSecurityManagerFactory webSecurityManagerFactory, boolean register) throws PolicyContextException {
         // Sets-up Jakarta Authorization
-        this.authorizationService = new GlassFishAuthorizationService(servletContext, webBundleDescriptor, register);
+        this.authorizationService = new GlassFishAuthorizationService(servletContext, webBundleDescriptor, jakartaPermissions, register);
 
         this.webSecurityManagerFactory = webSecurityManagerFactory;
         this.contextId = AuthorizationUtil.getContextID(webBundleDescriptor);

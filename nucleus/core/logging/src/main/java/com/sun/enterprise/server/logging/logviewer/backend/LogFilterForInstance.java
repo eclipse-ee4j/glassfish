@@ -27,6 +27,7 @@ import com.sun.enterprise.util.cluster.RemoteType;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,6 +108,8 @@ public class LogFilterForInstance {
 
             // if differ both size then downloading
             if (instanceLogFileSize != fileSizeOnNode) {
+                // Delete the local file if exists before sftp downloading
+                Files.deleteIfExists(instanceLogFile.toPath());
                 sftpClient.download(loggingFile, instanceLogFile.toPath());
             }
             return instanceLogFile;
@@ -160,7 +163,10 @@ public class LogFilterForInstance {
                 }
 
                 for (String fileName : allInstanceLogFileNames) {
-                    sftpClient.download(sourceDir.resolve(fileName), tempDirectoryOnServer.resolve(fileName));
+                    Path instanceLogFile = tempDirectoryOnServer.resolve(fileName);
+                    // Delete the local file if exists before sftp downloading
+                    Files.deleteIfExists(instanceLogFile);
+                    sftpClient.download(sourceDir.resolve(fileName), instanceLogFile);
                 }
             }
         } catch (Exception e) {

@@ -143,7 +143,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
@@ -192,7 +192,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
@@ -220,7 +220,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
@@ -246,7 +246,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                     arrayContainingInAnyOrder(
                         equalTo(getContainerHostAddressInfo(HOSTNAME)),
@@ -271,7 +271,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo(HOSTNAME)),
@@ -318,7 +318,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),
@@ -343,7 +343,7 @@ public class NetUtilsIT {
         final String[] logs = getLogs(container);
         assertAll(container.getLogs(),
             () -> assertThat(getResultForGetHostName(logs), equalTo(HOSTNAME)),
-            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(HOSTNAME)),
+            () -> assertThat(getResultForGetCanonicalHostName(logs), equalTo(LOCALHOST)),
             () -> assertThat(getResultForGetHostAddresses(logs),
                 arrayContainingInAnyOrder(
                     equalTo(getContainerHostAddressInfo()),

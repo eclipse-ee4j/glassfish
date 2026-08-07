@@ -23,6 +23,7 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
@@ -322,7 +323,20 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
      * When enabled, the server trusts X-Real-IP and X-Forwarded-For headers.
      */
     private boolean isBehindProxyEnabled() {
-        Config config = domain.getServerNamed("server").getConfig();
+        // When this method is executed on a remote node instance,
+        // for example, execute the start-instance command on das, and the target is an instance on an ssh node,
+        // a <server> element named "server" cannot be found in the instance's domain.xml.
+        // would result in NPE when call "getConfig()" method.
+
+        // Config config = domain.getServerNamed("server").getConfig();
+
+        // it would be better to find the <server> element of the current instance.
+        Server server = domain.getServerNamed(serverEnv.getInstanceName());
+        Config config;
+        if (server == null || (config = server.getConfig()) == null) {
+            // seems not possible.
+            throw new IllegalStateException("Can't find the config of the server.");
+        }
         Protocol protocol = config.getAdminListener().findHttpProtocol();
         Http http = protocol != null ? protocol.getHttp() : null;
         return http != null && http.isBehindProxy();

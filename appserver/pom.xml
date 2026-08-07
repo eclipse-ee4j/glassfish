@@ -385,7 +385,7 @@
                 <version>${parsson-media.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse</groupId>
+                <groupId>org.eclipse.yasson</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
             </dependency>
@@ -748,7 +748,7 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>org.eclipse</groupId>
+                                <groupId>org.eclipse.yasson</groupId>
                                 <artifactId>yasson</artifactId>
                                 <version>${yasson.version}</version>
                             </artifact>

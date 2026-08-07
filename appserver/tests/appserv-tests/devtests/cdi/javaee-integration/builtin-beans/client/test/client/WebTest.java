@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
@@ -67,7 +67,7 @@ public class WebTest {
 
         String url = "http://" + host + ":" + port + contextRoot + "/myurl";
         System.out.println("opening connection to " + url);
-        HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
+        HttpURLConnection conn = (HttpURLConnection) URI.create(url).toURL().openConnection();
 
         int code = conn.getResponseCode();
         if (code != 200) {

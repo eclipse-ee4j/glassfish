@@ -228,7 +228,7 @@
         <dependency>
             <groupId>org.jcommander</groupId>
             <artifactId>jcommander</artifactId>
-            <version>1.83</version>
+            <version>1.85</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>

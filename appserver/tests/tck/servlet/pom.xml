@@ -86,7 +86,6 @@
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
-            <version>2.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

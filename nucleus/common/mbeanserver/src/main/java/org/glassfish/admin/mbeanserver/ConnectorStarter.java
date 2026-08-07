@@ -67,7 +67,7 @@ abstract class ConnectorStarter {
 
     public String hostname() {
         if (mHostName.isEmpty() || mHostName.equals("0.0.0.0")) {
-            return NetUtils.getHostName();
+            return NetUtils.getCanonicalHostName();
         } else if (mHostName.contains(":") && !mHostName.startsWith("[")) {
             return "["+mHostName+"]";
         }

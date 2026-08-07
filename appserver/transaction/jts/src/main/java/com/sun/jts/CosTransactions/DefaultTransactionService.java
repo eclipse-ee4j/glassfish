@@ -219,9 +219,9 @@ public class DefaultTransactionService implements ProxyChecker {
             if (serverId != null) {
                 LOG.log(INFO,"Recoverable JTS instance, serverId = [{0}]",serverId);
             }
-            String serverName = "UnknownHost"/*#Frozen*/;
+            final String serverName;
             if (properties.getProperty(JTS_XA_SERVER_NAME) == null) {
-                serverName = NetUtils.getHostName();
+                serverName = NetUtils.getCanonicalHostName();
             } else {
                 serverName = properties.getProperty(JTS_XA_SERVER_NAME);
                 LOG.log(DEBUG, "DTR: Got serverName from JTS_XA_SERVER_NAME");

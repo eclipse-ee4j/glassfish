@@ -20,6 +20,7 @@ package org.glassfish.tests.embedded.web;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.logging.Level;
@@ -69,7 +70,7 @@ public class EmbeddedSetConfigurationTest {
         Context context = embedded.createContext(root);
         embedded.addContext(context, "/");
 
-        URL servlet = new URL("http://localhost:8080");
+        URL servlet = URI.create("http://localhost:8080").toURL();
         URLConnection yc = servlet.openConnection();
         try (BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()))) {
             StringBuilder sb = new StringBuilder();

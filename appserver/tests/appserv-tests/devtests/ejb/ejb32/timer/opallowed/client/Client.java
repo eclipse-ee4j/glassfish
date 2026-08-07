@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -26,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 
 public class Client {
@@ -73,7 +75,7 @@ public class Client {
         String result = null;
 
         try {
-            URL url = new URL(connection);
+            URL url = URI.create(connection).toURL();
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

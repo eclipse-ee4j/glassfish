@@ -94,4 +94,8 @@ The project maintains the following source code repositories
 * [https://github.com/eclipse-ee4j/glassfish-tutorial-examples](https://github.com/eclipse-ee4j/glassfish-tutorial-examples)
 * [https://github.com/eclipse-ee4j/glassfish-firstcup](https://github.com/eclipse-ee4j/glassfish-firstcup)
 * [https://github.com/eclipse-ee4j/glassfish-tutorial](https://github.com/eclipse-ee4j/glassfish-tutorial)
+* [https://github.com/eclipse-ee4j/orb](https://github.com/eclipse-ee4j/orb)
+* [https://github.com/eclipse-ee4j/orb-gmbal](https://github.com/eclipse-ee4j/orb-gmbal)
+* [https://github.com/eclipse-ee4j/orb-gmbal-commons](https://github.com/eclipse-ee4j/orb-gmbal-commons)
+* [https://github.com/eclipse-ee4j/orb-gmbal-pfl](https://github.com/eclipse-ee4j/orb-gmbal-pfl)
 

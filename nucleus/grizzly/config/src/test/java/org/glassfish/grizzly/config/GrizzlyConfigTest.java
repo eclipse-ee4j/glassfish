@@ -19,8 +19,8 @@ package org.glassfish.grizzly.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.List;
 
 import org.glassfish.grizzly.Transport;
@@ -79,9 +79,9 @@ public class GrizzlyConfigTest {
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
                 helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String content = helper.getContent(new URL("http://localhost:38082"));
-            final String content2 = helper.getContent(new URL("http://localhost:38083"));
-            final String content3 = helper.getContent(new URL("http://localhost:38084"));
+            final String content = helper.getContent(URI.create("http://localhost:38082").toURL());
+            final String content2 = helper.getContent(URI.create("http://localhost:38083").toURL());
+            final String content3 = helper.getContent(URI.create("http://localhost:38084").toURL());
             assertEquals("<html><body>You've found the server on port 38082</body></html>", content);
             assertEquals("<html><body>You've found the server on port 38083</body></html>", content2);
             assertEquals("<html><body>You've found the server on port 38084</body></html>", content3);
@@ -247,13 +247,13 @@ public class GrizzlyConfigTest {
             }
 
             assertEquals("<html><body>You've found the server on port 38082</body></html>",
-                helper.getContent(new URL("https://localhost:38082")));
+                helper.getContent(URI.create("https://localhost:38082").toURL()));
             assertEquals("<html><body>You've found the server on port 38083</body></html>",
-                helper.getContent(new URL("https://localhost:38083")));
+                helper.getContent(URI.create("https://localhost:38083").toURL()));
             assertEquals("<html><body>You've found the server on port 38084</body></html>",
-                helper.getContent(new URL("https://localhost:38084")));
+                helper.getContent(URI.create("https://localhost:38084").toURL()));
             assertEquals("<html><body>You've found the server on port 38085</body></html>",
-                helper.getContent(new URL("https://localhost:38085")));
+                helper.getContent(URI.create("https://localhost:38085").toURL()));
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -358,8 +358,8 @@ public class GrizzlyConfigTest {
                 });
             }
 
-            final String content = helper.getContent(new URL("http://localhost:38082"));
-            final String content2 = helper.getContent(new URL("http://localhost:38083"));
+            final String content = helper.getContent(URI.create("http://localhost:38082").toURL());
+            final String content2 = helper.getContent(URI.create("http://localhost:38083").toURL());
 
             assertEquals("http", content);
             assertEquals("https", content2);

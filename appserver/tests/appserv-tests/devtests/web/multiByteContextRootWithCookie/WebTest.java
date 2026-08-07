@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,8 +75,8 @@ public class WebTest {
 
         String sessionId = null;
 
-        URL url = new URL("http://" + host  + ":" + port + "/"
-            + "good-%E5%A5%BD-good/set.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + "/"
+            + "good-%E5%A5%BD-good/set.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -102,8 +103,8 @@ public class WebTest {
     private boolean doGetJsp(String sessionId) throws Exception {
         boolean expected = false;
 
-        URL url = new URL("http://" + host  + ":" + port + "/"
-            + "good-%E5%A5%BD-good/get.jsp");
+        URL url = URI.create("http://" + host  + ":" + port + "/"
+            + "good-%E5%A5%BD-good/get.jsp").toURL();
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -574,9 +574,8 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
         if (parent instanceof FileArchive) {
             return ((FileArchive) parent).staleFileManager();
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**
@@ -586,7 +585,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * @return
      */
     private boolean isEntryValid(final String entryName, final Logger logger) {
-        return isEntryValid(getEntryFile(entryName), true, logger);
+        return entryName != null && isEntryValid(getEntryFile(entryName), true, logger);
     }
 
     /**
@@ -663,9 +662,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                 }
 
                 @Override
-                public FileVisitResult visitFile(Path aList, BasicFileAttributes attrs) {
-                    String fileName = getFileOrDirectoryName(aList);
-                    if (!fileName.equals(JarFile.MANIFEST_NAME) && isEntryValid(fileName, logger)) {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    String fileName = getFileOrDirectoryName(file);
+                    if (isEntryValid(fileName, logger) && !fileName.equals(JarFile.MANIFEST_NAME)) {
                         files.add(fileName);
                     }
                     return FileVisitResult.CONTINUE;
@@ -677,9 +676,20 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         return files;
     }
 
-    private String getFileOrDirectoryName(Path path) {
-        String fileName = path.toAbsolutePath().toString().substring(archive.getAbsolutePath().length() + 1);
-        return fileName.replace(File.separatorChar, '/');
+    private String getFileOrDirectoryName(Path path) throws IOException {
+        Path resolvedArchive = archive.toPath().toRealPath();
+        Path resolvedPath    = path.toRealPath();
+
+        // Guard: skip entries that escape the archive root via symlink
+        if (!resolvedPath.startsWith(resolvedArchive)) {
+            deplLogger.log(Level.WARNING,
+                "File {0} is not a valid entry in FileArchive {1} because it escapes the archive root directory",
+                new Object[] {resolvedPath, resolvedArchive});
+            return null;
+        }
+
+        Path relative = resolvedArchive.relativize(resolvedPath);
+        return relative.toString().replace(File.separatorChar, '/');
     }
 
     private boolean deleteEntry(String name, final boolean isLogging) {

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -147,14 +148,13 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
         for (File dirFile : dirFiles) {
             String name = dirFile.getName();
             String fileType = name.substring(name.lastIndexOf(".") + 1);
-            if ( ! dirFile.isDirectory()) {
-                if (fileType != null && !fileType.equals("") &&
-                        ! typeIsMarkerType(fileType)) {
+            if (!dirFile.isDirectory()) {
+                if (fileType != null && !fileType.isEmpty() && !typeIsMarkerType(fileType)) {
                     result.add(dirFile);
                     continue;
                 }
             } else {
-                if (! dirFile.getName().equals(AutoDeployer.STATUS_SUBDIR_PATH)) {
+                if (!dirFile.getName().equals(AutoDeployer.STATUS_SUBDIR_PATH.getFileName().toString())) {
                     if (includeSubDir) {
                         result.addAll(getListOfFilesAsSet(dirFile, true));
                     } else {

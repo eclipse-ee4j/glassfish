@@ -96,8 +96,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             comment = "ExecutionContext conflict.",
             level = "WARNING",
             cause = "Submitted Work has Transaction Context as well it is a Work Context Provider which is specification violation.",
-            action = "Make sure that either Execution Context or Work Context Provider with Transaction Context is passed, but not both.",
-            publish = true)
+            action = "Make sure that either Execution Context or Work Context Provider with Transaction Context is passed, but not both.")
     private static final String RAR_EXECUTION_CONTEXT_CONFLICT = "AS-RAR-05007";
 
     @LogMessageInfo(
@@ -105,8 +104,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             comment = "Duplicate Work Context.",
             level = "WARNING",
             cause = "Multiple Work Contexts of same type submitted.",
-            action = "Make sure that same context type is not submitted multiple times in the Work Context.",
-            publish = true)
+            action = "Make sure that same context type is not submitted multiple times in the Work Context.")
     private static final String RAR_EXECUTION_CONTEXT_DUPLICATE = "AS-RAR-05008";
 
     @LogMessageInfo(
@@ -114,8 +112,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             comment = "Unsupported Work Context.",
             level = "WARNING",
             cause = "Work Context in question is not supported by application server.",
-            action = "Check the application server documentation for supported Work Contexts.",
-            publish = true)
+            action = "Check the application server documentation for supported Work Contexts.")
     private static final String RAR_EXECUTION_CONTEXT_NOT_SUPPORT = "AS-RAR-05009";
 
     @LogMessageInfo(
@@ -123,8 +120,7 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             comment = "Handle custom Work Context.",
             level = "INFO",
             cause = "Requested Work Context is not supported, but a super type of the context is supported.",
-            action = "",
-            publish = true)
+            action = "")
     private static final String RAR_USE_SUPER_WORK_CONTEXT = "AS-RAR-05010";
 
     @LogMessageInfo(
@@ -132,16 +128,14 @@ public class WorkContextHandlerImpl implements WorkContextHandler {
             comment = "Can not find Work Context class.",
             level = "WARNING",
             cause = "Work Context class is not available to application server.",
-            action = "Make sure that the Work Context class is available to server.",
-            publish = true)
+            action = "Make sure that the Work Context class is available to server.")
     private static final String RAR_LOAD_WORK_CONTEXT_ERROR = "AS-RAR-05006";
 
     @LogMessageInfo(
             message = "Unable to set Security Context.",
             comment = "Unable to set Security Context.",
             level = "WARNING", cause = "Unable to set Security Context.",
-            action = "Check the server.log for exceptions",
-            publish = true)
+            action = "Check the server.log for exceptions")
     private static final String RAR_SETUP_SECURITY_CONTEXT_ERROR = "AS-RAR-05011";
 
     @Inject

@@ -28,6 +28,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.apache.catalina.Globals;
@@ -132,7 +133,6 @@ public class HttpRedirectGenerator {
             for (NetworkListener nwListener : networkListeners.getNetworkListener()) {
                 // Loop through the network listeners
                 String nwAddress = nwListener.getAddress();
-                InetAddress[] localHostAdresses;
                 if (nwAddress == null || nwAddress.equals("0.0.0.0")) {
                     nwAddress = NetUtils.getCanonicalHostName();
                     if (!nwAddress.equals(hostPort[0])) {
@@ -140,8 +140,8 @@ public class HttpRedirectGenerator {
                         // only if the hostname in the header
                         // does not match with the hostname in the
                         // listener-To avoid performance overhead
-                        localHostAdresses = NetUtils.getHostAddresses();
-                        if (localHostAdresses.length == 0) {
+                        List<InetAddress> localHostAdresses = NetUtils.getHostAddresses();
+                        if (localHostAdresses.isEmpty()) {
                             break;
                         }
                         InetAddress hostAddress = InetAddress.getByName(hostPort[0]);

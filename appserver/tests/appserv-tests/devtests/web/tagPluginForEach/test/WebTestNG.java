@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +56,7 @@ public class WebTestNG {
      */
     private static boolean doTest(String urlString, String expected) {
         try {
-            URL url = new URL(urlString);
+            URL url = URI.create(urlString).toURL();
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();

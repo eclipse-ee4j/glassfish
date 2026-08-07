@@ -104,7 +104,7 @@ public final class GFDependenciesClassLoader extends URLClassLoader {
         Stream<File> modules = findFiles(gfModules, moduleFilter);
         Stream<File> libs = findFiles(appInstall, libFilter);
         Stream<File> derbyLibs = findFiles(derbyLibDir, derbyFilter);
-        return Stream.of(modules, libs, derbyLibs).reduce(Stream::concat).orElseGet(Stream::empty).map(TO_URL)
+        return Stream.of(modules, libs, derbyLibs).flatMap(s -> s).map(TO_URL)
             .toArray(URL[]::new);
     }
 

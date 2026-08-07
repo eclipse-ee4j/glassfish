@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,6 +23,7 @@ import com.sun.enterprise.universal.xml.MiniXmlParser;
 import com.sun.enterprise.universal.xml.MiniXmlParserException;
 import com.sun.enterprise.util.HostAndPort;
 import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.util.net.NetUtils;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -127,7 +128,7 @@ class GFEmbeddedLauncher extends GFLauncher {
         launchParams.setConfigDir(configDir);
         launchParams.setDomainRootDir(new File(System.getenv(INSTALL_HOME)));
         final MiniXmlParser parser = new MiniXmlParser(domainXmlFile, instanceName);
-        launchParams.setAsadminAdminAddress(new HostAndPort("localhost", 4848, false));
+        launchParams.setAsadminAdminAddress(new HostAndPort(NetUtils.getLoopbackHostName(), 4848, false));
         launchParams.setXmlAdminAddresses(parser.getAdminAddresses());
 
         File logsDir = new File(domainDir, "logs");

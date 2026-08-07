@@ -20,19 +20,17 @@ DESCRIPTION
        multiple paths separated by spaces.
 
            Note
-           +----------------------------------------+
-           |           The library archive file is  |
-           |           added to the DAS. For common |
-           |           and extension libraries, you |
-           |           must restart the DAS so the  |
-           |           libraries are picked up by   |
-           |           the server runtime. To add   |
-           |           the libraries to other       |
-           |           server instances,            |
-           |           synchronize the instances    |
-           |           with the DAS by restarting   |
-           |           them.                        |
-           +----------------------------------------+
+           +-----------------------------------------+
+           |           The library archive file is   |
+           |           added to the DAS. Since       |
+           |           GlassFish 7.0.18, common      |
+           |           libraries are picked up by    |
+           |           the runtime without           |
+           |           restarting the DAS or server  |
+           |           instances. Extension          |
+           |           libraries (lib/ext) still     |
+           |           require a restart.            |
+           +-----------------------------------------+
 
        This subcommand is supported in remote mode only.
 

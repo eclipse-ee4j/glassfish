@@ -522,7 +522,7 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
                 }
             }
         } else {
-            host = NetUtils.getHostName();
+            host = NetUtils.getCanonicalHostName();
         }
 
         String realm = as.getSystemJmxConnector().getAuthRealmName(); //yes, for backward compatibility;

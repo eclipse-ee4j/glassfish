@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,10 +21,6 @@ import com.sun.enterprise.security.SecurityContext;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.audit.AuditManager;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
-import com.sun.enterprise.security.ee.authorization.cache.CachedPermission;
-import com.sun.enterprise.security.ee.authorization.cache.CachedPermissionImpl;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCache;
-import com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory;
 import com.sun.enterprise.security.ee.web.integration.LogUtils;
 import com.sun.enterprise.security.ee.web.integration.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.ee.web.integration.WebPrincipal;
@@ -33,12 +29,9 @@ import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContext;
 import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.PolicyFactory;
-import jakarta.security.jacc.WebResourcePermission;
-import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.security.Permission;
 import java.security.Principal;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -53,7 +46,6 @@ import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizatio
 import static com.sun.enterprise.security.ee.authorization.GlassFishAuthorizationService.Access.PERMITTED_WITH_SSL;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.ee.authorization.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
-import static com.sun.enterprise.security.ee.authorization.cache.PermissionCacheFactory.createPermissionCache;
 import static java.util.logging.Level.FINE;
 import static java.util.stream.Collectors.toSet;
 
@@ -80,20 +72,6 @@ public class GlassFishAuthorizationService {
     // The context ID associated with this instance. This is the name of the application
     private final String contextId;
 
-    private static final WebResourcePermission allResources = new WebResourcePermission("/*", (String) null);
-    private static final WebUserDataPermission allConnections = new WebUserDataPermission("/*", null);
-    private static Permission[] protoPerms = { allResources, allConnections };
-
-    // permissions tied to unchecked permission cache, and used
-    // to determine if the effective policy is grant all
-    // WebUserData and WebResource permisions.
-    private CachedPermission allResourcesCachedPermission;
-
-    private CachedPermission allConnectionsCachedPermission;
-
-    // Unchecked permission cache
-    private PermissionCache uncheckedPermissionCache;
-
     private static Set<Principal> defaultPrincipalSet = SecurityContext.getDefaultSecurityContext().getPrincipalSet();
 
     private final boolean register;
@@ -115,11 +93,6 @@ public class GlassFishAuthorizationService {
 
         String appName = webBundleDescriptor.getApplication().getRegistrationName();
         SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().setAppNameForContext(appName, contextId);
-
-        initPermissionCache();
-
-        // Check if the user has specified alternative implementations for the
-        // PolicyConfigurationFactory and PolicyFactory via a web.xml parameter
 
         webBundleDescriptor.getContextParameters()
                            .stream()
@@ -183,26 +156,7 @@ public class GlassFishAuthorizationService {
      * request.
      */
     public boolean hasNoConstrainedResources() {
-        if (hasRestConstraints) {
-            return false;
-        }
-
-        boolean result = false;
-
-        if (allResourcesCachedPermission != null && allConnectionsCachedPermission != null) {
-            boolean x = allResourcesCachedPermission.checkPermission();
-            boolean y = allConnectionsCachedPermission.checkPermission();
-            result = x && y;
-            if (result) {
-                try {
-                    AuthorizationService.setThreadContextId(contextId);
-                } catch (Throwable t) {
-                    throw new RuntimeException(t);
-                }
-            }
-        }
-
-        return result;
+        return false;
     }
 
     public boolean permitAll(HttpServletRequest request) {
@@ -412,17 +366,12 @@ public class GlassFishAuthorizationService {
 
         // Remove the handlers for policy contexts
         exousiaAuthorizationService.destroy();
-
-        PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
-        uncheckedPermissionCache = null;
     }
 
     public void destroy() throws PolicyContextException {
         exousiaAuthorizationService.refresh();
         exousiaAuthorizationService.destroy();
 
-        PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
-        uncheckedPermissionCache = null;
         SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().removeAppNameForContext(contextId);
     }
 
@@ -457,18 +406,6 @@ public class GlassFishAuthorizationService {
             AuthorizationService.installPolicyFactory(factoryClass);
         } finally {
             Thread.currentThread().setContextClassLoader(existing);
-        }
-    }
-
-    private void initPermissionCache() {
-        if (uncheckedPermissionCache == null) {
-            if (register) {
-                uncheckedPermissionCache = createPermissionCache(contextId, protoPerms, null);
-                allResourcesCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allResources);
-                allConnectionsCachedPermission = new CachedPermissionImpl(uncheckedPermissionCache, allConnections);
-            }
-        } else {
-            uncheckedPermissionCache.reset();
         }
     }
 

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package com.sun.ejb;
 
 import com.sun.ejb.containers.interceptors.InterceptorManager;
-import com.sun.enterprise.security.ee.authorization.cache.CachedPermission;
 
 import java.lang.reflect.Method;
 
@@ -43,7 +43,6 @@ public class InvocationInfo {
 
 
     public int        txAttr;
-    public CachedPermission cachedPermission;
 
     public boolean    isBusinessMethod;
     public boolean    isHomeFinder;
@@ -106,7 +105,6 @@ public class InvocationInfo {
         } else {
             sb.append("tx attr = -1\t");
         }
-        sb.append("Cached permission = " + cachedPermission + "\t");
         sb.append("target method 1 = " + targetMethod1 + "\t");
         sb.append("target method 2 = " + targetMethod2 + "\t");
         sb.append("ejbIntfOverride = " + ejbIntfOverride + "\t");

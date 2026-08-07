@@ -184,13 +184,13 @@ public class ScatteredArchiveTest {
     }
 
     private void get(String urlStr, String containingString) throws Exception {
-        List<String> inLines = getLinesFromUrl(new URL(urlStr));
+        List<String> inLines = getLinesFromUrl(URI.create(urlStr).toURL());
         assertThat("Output from servlet", inLines, hasItem(containsString(containingString)));
         logger.log(INFO, "***** SUCCESS **** Found [" + containingString + "] in the response.*****");
     }
 
     private void get(String urlStr, String key, String value) throws Exception {
-        List<String> inLines = getLinesFromUrl(new URL(urlStr));
+        List<String> inLines = getLinesFromUrl(URI.create(urlStr).toURL());
         String result = key + ":" + value;
         assertThat("Output from servlet", inLines, hasItem(is(result)));
         logger.log(INFO, "***** SUCCESS **** Found [" + result + "] in the response.*****");

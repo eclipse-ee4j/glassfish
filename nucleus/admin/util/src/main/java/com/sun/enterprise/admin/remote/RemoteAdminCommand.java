@@ -77,6 +77,7 @@ import org.glassfish.common.util.HttpParser;
 import org.glassfish.common.util.admin.AuthTokenManager;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -1172,9 +1173,18 @@ public class RemoteAdminCommand {
                 if (ok(cause)) {
                     errors.append(cause);
                 } else {
-                    Node mp = report.getFirstChild(); // message-part
-                    if (mp != null) {
-                        cause = getAttr(mp.getAttributes(), "message");
+                    // Because of the OutputKeys.INDENT has been set to "yes" in the XMLContentActionReporter,
+                    // message-part cannot be fetched by simply call "getFirstChild()" method,
+                    // that would be a text node with blank content as node value now.
+                    // and its attributes would be null, then result in the NPE in "getAttr" method.
+                    // so we need to find the first message-part element.
+                    NodeList children = report.getChildNodes();
+                    for (int i = 0; i < children.getLength(); i++) {
+                        Node mp = children.item(i);
+                        if (mp instanceof Element el && "message-part".equals(el.getTagName())) {
+                            cause = getAttr(mp.getAttributes(), "message");
+                            break;
+                        }
                     }
                     if (ok(cause)) {
                         errors.append(cause);

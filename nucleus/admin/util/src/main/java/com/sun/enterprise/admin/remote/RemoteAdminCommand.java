@@ -1173,9 +1173,7 @@ public class RemoteAdminCommand {
                 if (ok(cause)) {
                     errors.append(cause);
                 } else {
-                    // Node mp = report.getFirstChild(); // message-part
                     // Because of the OutputKeys.INDENT has been set to "yes" in the XMLContentActionReporter,
-                    // (commit:c65c777ea244516e1ed5e3163332457820a3a938)
                     // message-part cannot be fetched by simply call "getFirstChild()" method,
                     // that would be a text node with blank content as node value now.
                     // and its attributes would be null, then result in the NPE in "getAttr" method.

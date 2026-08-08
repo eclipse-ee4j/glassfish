@@ -73,4 +73,30 @@ public class LocalTransactionImplTest {
     public void nullSqlStateIsNotConnectionError() {
         assertFalse(LocalTransactionImpl.isConnectionError(new SQLException("no state")));
     }
+
+    @Test
+    public void cyclicNextExceptionChainTerminates() {
+        SQLException first = new SQLException("first", "HY000");
+        SQLException second = new SQLException("second", "HY000");
+        first.setNextException(second);
+        second.setNextException(first);
+        assertFalse(LocalTransactionImpl.isConnectionError(first));
+    }
+
+    @Test
+    public void cyclicCauseChainTerminates() {
+        SQLException head = new SQLException("head", "HY000");
+        SQLException cause = new SQLException("cause", "HY000");
+        head.initCause(cause);
+        cause.initCause(head);
+        assertFalse(LocalTransactionImpl.isConnectionError(head));
+    }
+
+    @Test
+    public void connectionErrorDetectedDeeperInNextExceptionChain() {
+        SQLException head = new SQLException("first", "HY000");
+        head.setNextException(new SQLException("second", "HY000"));
+        head.setNextException(new SQLException("Closed connection", "08003"));
+        assertTrue(LocalTransactionImpl.isConnectionError(head));
+    }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,6 +25,9 @@ import jakarta.resource.spi.LocalTransactionException;
 import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 import java.sql.SQLRecoverableException;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.FINEST;
@@ -127,10 +131,14 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
      * when "validate-atmost-once-period-in-seconds" is greater than zero, it is also never
      * re-validated on checkout, so it stays broken forever. Raising the event flags the resource
      * with hasConnectionErrorOccurred(), which makes the pool discard the connection on the next
-     * checkout regardless of the validate-atmost-once period. The actual pool removal is handled by
-     * the connection event listener, which defers it until the transaction completes when the
-     * resource is still enlisted (see
-     * com.sun.enterprise.resource.listener.LocalTxConnectionEventListener).
+     * checkout regardless of the validate-atmost-once period.
+     * <p>
+     * The actual pool removal is handled by
+     * com.sun.enterprise.resource.listener.LocalTxConnectionEventListener. During begin() the
+     * resource is not enlisted yet, because the transaction manager enlists it only after
+     * XAResource.start() returned, so the connection is removed from the pool right away. During
+     * commit() and rollback() the resource is still enlisted and the removal is deferred until the
+     * transaction completes.
      *
      * @param sqle the exception thrown by the physical connection
      */
@@ -154,8 +162,11 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
      * @return true if the exception indicates the physical connection is no longer usable
      */
     static boolean isConnectionError(SQLException sqle) {
-        for (SQLException current = sqle; current != null; current = current.getNextException()) {
-            for (Throwable t = current; t != null; t = t.getCause()) {
+        // Both chains are built by the driver and are not guaranteed to be acyclic, so the already
+        // inspected exceptions are tracked to keep the iteration finite.
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (SQLException current = sqle; current != null && !visited.contains(current); current = current.getNextException()) {
+            for (Throwable t = current; t != null && visited.add(t); t = t.getCause()) {
                 if (t instanceof SQLRecoverableException || t instanceof SQLNonTransientConnectionException) {
                     return true;
                 }

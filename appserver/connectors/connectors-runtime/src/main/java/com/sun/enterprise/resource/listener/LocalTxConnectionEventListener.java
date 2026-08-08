@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -88,18 +88,17 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     public synchronized void connectionErrorOccurred(ConnectionEvent evt) {
         resource.setConnectionErrorOccurred();
 
-        if (resource.getResourceState().isEnlisted()) {
-            // The connection error was detected while the resource is still enlisted in a
-            // transaction, for example during local-transaction begin/commit/rollback (see issue
-            // #25930). Removing the resource from the pool now would make the transaction
-            // completion path (ConnectionPool.transactionCompleted) re-process an already removed
-            // handle, because the resource is still tracked in the transaction's resource set (see
-            // PoolTxHelper). The setConnectionErrorOccurred() flag set above already guarantees the
-            // connection is discarded on the next checkout - ConnectionPool checks
-            // hasConnectionErrorOccurred() before any validation, so "validate-atmost-once" cannot
-            // keep it alive. Keep this listener attached so the normal connection-close /
-            // transaction-completion path returns the resource to the pool, where it is then
-            // removed. Defer pool removal.
+        if (resource.isEnlisted()) {
+            // The resource is still enlisted in a transaction, so it is still in use and still
+            // tracked in that transaction's resource set (see PoolTxHelper). Removing it from the
+            // pool now would make ConnectionPool.transactionCompleted re-process an already removed
+            // handle. Defer the removal: the flag set above makes ConnectionPool discard the
+            // connection on the next checkout, where hasConnectionErrorOccurred() is checked before
+            // any validation, so "validate-atmost-once" cannot keep it alive (issue #25930).
+            // Keeping this listener attached lets the normal connection-close /
+            // transaction-completion path return the resource to the pool exactly once.
+            // Note: ConnectionPool.resourceErrorOccurred is not reached in this case, so a pool
+            // configured with "fail-all-connections" is not flushed until the transaction completed.
             LOG.log(DEBUG, () -> "connectionErrorOccurred while enlisted, deferring pool removal for resource="
                 + resource + ", this=" + this);
             return;

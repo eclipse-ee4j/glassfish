@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -87,6 +87,22 @@ public class LocalTxConnectionEventListener extends ConnectionEventListener {
     @Override
     public synchronized void connectionErrorOccurred(ConnectionEvent evt) {
         resource.setConnectionErrorOccurred();
+
+        if (resource.isEnlisted()) {
+            // The resource is still enlisted in a transaction, so it is still in use and still
+            // tracked in that transaction's resource set (see PoolTxHelper). Removing it from the
+            // pool now would make ConnectionPool.transactionCompleted re-process an already removed
+            // handle. Defer the removal: the flag set above makes ConnectionPool discard the
+            // connection on the next checkout, where hasConnectionErrorOccurred() is checked before
+            // any validation, so "validate-atmost-once" cannot keep it alive (issue #25930).
+            // Keeping this listener attached lets the normal connection-close /
+            // transaction-completion path return the resource to the pool exactly once.
+            // Note: ConnectionPool.resourceErrorOccurred is not reached in this case, so a pool
+            // configured with "fail-all-connections" is not flushed until the transaction completed.
+            LOG.log(DEBUG, () -> "connectionErrorOccurred while enlisted, deferring pool removal for resource="
+                + resource + ", this=" + this);
+            return;
+        }
 
         // ManagedConnection instance is now invalid and unusable. Remove this event listener.
         ManagedConnection mc = (ManagedConnection) evt.getSource();

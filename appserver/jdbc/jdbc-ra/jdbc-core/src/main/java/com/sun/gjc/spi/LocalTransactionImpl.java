@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,6 +23,11 @@ import jakarta.resource.ResourceException;
 import jakarta.resource.spi.LocalTransactionException;
 
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
+import java.sql.SQLRecoverableException;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.FINEST;
@@ -65,6 +71,7 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during begin() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         }
     }
@@ -84,6 +91,7 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during commit() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         } finally {
             managedConnectionImpl.transactionCompleted();
@@ -105,10 +113,72 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
                 _logger.finest("Exception during rollback() : " + sqle);
             }
 
+            notifyConnectionErrorIfFatal(sqle);
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         } finally {
             managedConnectionImpl.transactionCompleted();
         }
+    }
+
+    /**
+     * Signals a connection error to the <code>ManagedConnection</code> when the given
+     * <code>SQLException</code> indicates that the underlying physical connection is broken.
+     * <p>
+     * Local transaction operations (begin/commit/rollback) are the place where a connection
+     * that died while in the pool is first detected (for example after a request timeout
+     * interrupts a statement and leaves the connection closed). Without raising a
+     * CONNECTION_ERROR_OCCURRED event the broken connection is never removed from the pool and,
+     * when "validate-atmost-once-period-in-seconds" is greater than zero, it is also never
+     * re-validated on checkout, so it stays broken forever. Raising the event flags the resource
+     * with hasConnectionErrorOccurred(), which makes the pool discard the connection on the next
+     * checkout regardless of the validate-atmost-once period.
+     * <p>
+     * The actual pool removal is handled by
+     * com.sun.enterprise.resource.listener.LocalTxConnectionEventListener. During begin() the
+     * resource is not enlisted yet, because the transaction manager enlists it only after
+     * XAResource.start() returned, so the connection is removed from the pool right away. During
+     * commit() and rollback() the resource is still enlisted and the removal is deferred until the
+     * transaction completes.
+     *
+     * @param sqle the exception thrown by the physical connection
+     */
+    private void notifyConnectionErrorIfFatal(SQLException sqle) {
+        if (isConnectionError(sqle)) {
+            managedConnectionImpl.connectionErrorOccurred(sqle, null);
+        }
+    }
+
+    /**
+     * Determines whether the given <code>SQLException</code> (or any exception in its
+     * {@link SQLException#getNextException() next} or {@link Throwable#getCause() cause} chain)
+     * represents a fatal connection error, as opposed to a transient or data related failure that
+     * leaves the connection usable. Detection is driver agnostic: it relies on the standard
+     * connection-exception subclasses and on SQLState class "08" (connection exception) defined by
+     * the SQL standard. For example Oracle reports ORA-17008 ("Closed connection") with SQLState
+     * "08003" and a socket read interrupted by a request timeout as a
+     * <code>SQLRecoverableException</code>.
+     *
+     * @param sqle the exception to inspect
+     * @return true if the exception indicates the physical connection is no longer usable
+     */
+    static boolean isConnectionError(SQLException sqle) {
+        // Both chains are built by the driver and are not guaranteed to be acyclic, so the already
+        // inspected exceptions are tracked to keep the iteration finite.
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        for (SQLException current = sqle; current != null && !visited.contains(current); current = current.getNextException()) {
+            for (Throwable t = current; t != null && visited.add(t); t = t.getCause()) {
+                if (t instanceof SQLRecoverableException || t instanceof SQLNonTransientConnectionException) {
+                    return true;
+                }
+                if (t instanceof SQLException) {
+                    String sqlState = ((SQLException) t).getSQLState();
+                    if (sqlState != null && sqlState.startsWith("08")) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

@@ -100,6 +100,11 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 
 Download links are available from the [GlassFish Download page](download.md).
 
+## August 3, 2026 -- Eclipse GlassFish 8.0.4 Available
+
+GlassFish 8.0.3 focused on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.
+See version [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.4) for more details.
+
 ## July 4, 2026 -- Eclipse GlassFish 7.1.1 and 7.0.26 Available
 
 Eclipse GlassFish 7.1.1 and 7.0.26 are maintenance releases focused on security fixes and long-term stability of the 7.x line.

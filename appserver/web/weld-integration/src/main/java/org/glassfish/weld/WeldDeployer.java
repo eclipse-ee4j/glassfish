@@ -512,8 +512,14 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
 
         EjbSupport originalEjbSupport = rootServices.get(EjbSupport.class);
         if (originalEjbSupport != null) {
-            // We need to create a proxy instead of a simple wrapper, since EjbSupport references
-            // the type "EnhancedAnnotatedType", which the Weld OSGi bundle doesn't export.
+            // Use a JDK proxy rather than a GlassFish-side EjbSupport wrapper.
+            //
+            // EjbSupport exposes Weld implementation types in its method signatures
+            // (notably EnhancedAnnotatedType) whose packages are not exported by the
+            // Weld OSGi bundle.
+            //
+            // Defining the proxy with EjbSupport's class loader keeps
+            // those types on the Weld side of the OSGi/class-loader boundary.
             WeldInvocationHandler handler = new WeldInvocationHandler(deploymentImpl, originalEjbSupport, bootstrap);
             EjbSupport proxyEjbSupport = (EjbSupport) Proxy.newProxyInstance(EjbSupport.class.getClassLoader(),
                     new Class[] { EjbSupport.class }, handler);

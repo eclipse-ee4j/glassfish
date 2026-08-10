@@ -233,6 +233,29 @@
                 <configuration>
                     <instructions>
                         <Bundle-Activator>org.glassfish.weld.WeldActivator</Bundle-Activator>
+                        <!--
+                            WeldDeployer creates a JDK dynamic proxy for Weld's EjbSupport, defining
+                            it with EjbSupport's own class loader so that the Weld implementation
+                            types in that interface's signatures stay on the Weld side of the OSGi
+                            boundary. This bundle therefore never needs those packages wired to it,
+                            and none of its class files names them.
+
+                            bnd 7.2 added analysis of Proxy.newProxyInstance (bndtools/bnd#6920).
+                            On seeing the inline new Class[] { SomeInterface.class } form it treats
+                            this bundle as though it implemented the interface and imports every
+                            package appearing in that interface's erased method descriptors. For
+                            EjbSupport that means org.jboss.weld.annotated.enhanced, .bean,
+                            .injection.producer and .util.collections - and weld-osgi-bundle keeps
+                            the first and third private, so the bundle stops resolving.
+
+                            Turning the analysis off for this bundle restores the manifest that
+                            maven-bundle-plugin 6.0.2 (bnd 7.0.0) produced. Remove it once bnd can
+                            tell that a proxy defined with the interface's own class loader imposes
+                            no requirement on the bundle that creates it, and check that the
+                            manifest is back to 22 (at the moment of writing) org.jboss.weld imports
+                            rather than 26 (6.1.0/bnd 7.2+ currently adds 4 phantom imports).
+                        -->
+                        <_noproxyinterfaces>true</_noproxyinterfaces>
                         <Import-Package>
                             org.glassfish.javaee.full.deployment; resolution:=optional,
                             *

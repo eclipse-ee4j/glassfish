@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -140,9 +140,27 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         try {
             request.addAfterServiceListener(afterServiceListener);
             lookupHandler(request, response).call();
+        } catch (UndecodableRequestURIException ex) {
+            logAndSendBadRequest(request, response, ex.getCause());
         } catch (Exception ex) {
             logAndSendError(request, response, ex);
         }
+    }
+
+    /**
+     * The client sent a request URI we are not able to decode. That is a malformed request, not a
+     * server failure, so it is answered with 400 and logged at {@link java.util.logging.Level#FINE}
+     * without a stack trace - any client can produce it by sending arbitrary bytes to the listener,
+     * so reporting it as a server error would let anybody flood the server log.
+     */
+    private void logAndSendBadRequest(final Request request, final Response response, final Throwable cause) {
+        if (LOGGER.isLoggable(FINE)) {
+            // Deliberately without the URI itself - it is the undecodable garbage we are rejecting.
+            LOGGER.log(FINE, "Cannot decode the request URI received from {0}, responding 400. Cause: {1}",
+                new Object[] { request.getRemoteAddr(), cause });
+        }
+
+        sendError(response, 400);
     }
 
     private void logAndSendError(final Request request, final Response response, Exception ex) {
@@ -150,13 +168,17 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             LogHelper.log(LOGGER, WARNING, exceptionMapper, ex, toUrlForLogging(request));
         }
 
+        sendError(response, 500);
+    }
+
+    private void sendError(final Response response, final int status) {
         if (response.getResponse() == null) {
             LOGGER.log(WARNING, "Response is not set in {0}, there's nothing we can do now.", response);
             return;
         }
 
         try {
-            response.sendError(500);
+            response.sendError(status);
         } catch (Exception ex2) {
             LOGGER.log(WARNING, exceptionMapper2, ex2);
         }
@@ -170,7 +192,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         }
     }
 
-    private Callable lookupHandler(final Request request, final Response response) throws CharConversionException, Exception {
+    private Callable lookupHandler(final Request request, final Response response) throws Exception {
 
         MappingData mappingData;
         mapperLock.readLock().lock();
@@ -187,10 +209,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                 }
             }
 
-            final DataChunk decodedURI =
-                request.getRequest()
-                       .getRequestURIRef()
-                       .getDecodedRequestURIBC(isAllowEncodedSlash());
+            final DataChunk decodedURI = decodeRequestURI(request);
 
             mappingData = request.getNote(MAPPING_DATA);
             if (mappingData == null) {
@@ -238,6 +257,24 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
         } finally {
             mapperLock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Decodes the request URI sent by the client.
+     *
+     * @param request
+     * @return the decoded request URI, never null
+     * @throws UndecodableRequestURIException if the URI sent by the client cannot be decoded
+     */
+    private DataChunk decodeRequestURI(final Request request) throws UndecodableRequestURIException {
+        try {
+            return request.getRequest().getRequestURIRef().getDecodedRequestURIBC(isAllowEncodedSlash());
+        } catch (CharConversionException | IllegalArgumentException | IndexOutOfBoundsException e) {
+            // Bytes which are not valid in the URI encoding are reported as CharConversionException,
+            // a truncated percent escape as IndexOutOfBoundsException and a non-hexadecimal one as
+            // NumberFormatException. All of them mean the same thing: the client sent us garbage.
+            throw new UndecodableRequestURIException(e);
         }
     }
 
@@ -409,6 +446,20 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     protected static MappingData getNote(Request request) {
         return request.getNote(MAPPING_DATA);
+    }
+
+    /**
+     * Signals that the request URI sent by the client cannot be decoded, so the request is
+     * malformed and has to be answered with 400. Used just to tell this client error apart from
+     * server failures; it is never propagated out of {@link #service(Request, Response)}.
+     */
+    private static final class UndecodableRequestURIException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        UndecodableRequestURIException(final Throwable cause) {
+            super(cause);
+        }
     }
 
     private final static class HttpHandlerCallable implements Callable<Object> {

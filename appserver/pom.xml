@@ -75,7 +75,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1.1</microprofile.config-api.version>
-        <helidon-config.version>4.5.1</helidon-config.version>
+        <helidon-config.version>4.5.2</helidon-config.version>
 
 
         <!-- MicroProfile Health -->
@@ -384,7 +384,7 @@
                 <version>${parsson-media.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse</groupId>
+                <groupId>org.eclipse.yasson</groupId>
                 <artifactId>yasson</artifactId>
                 <version>${yasson.version}</version>
             </dependency>
@@ -731,7 +731,7 @@
                         </spec>
                         <spec>
                             <artifact>
-                                <groupId>org.eclipse</groupId>
+                                <groupId>org.eclipse.yasson</groupId>
                                 <artifactId>yasson</artifactId>
                                 <version>${yasson.version}</version>
                             </artifact>

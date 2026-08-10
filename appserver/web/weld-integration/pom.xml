@@ -252,7 +252,7 @@
                             maven-bundle-plugin 6.0.2 (bnd 7.0.0) produced. Remove it once bnd can
                             tell that a proxy defined with the interface's own class loader imposes
                             no requirement on the bundle that creates it, and check that the
-                            manifest is back to 22 (at the moment of writing) org.jboss.weld imports 
+                            manifest is back to 22 (at the moment of writing) org.jboss.weld imports
                             rather than 26 (6.1.0/bnd 7.2+ currently adds 4 phantom imports).
                         -->
                         <_noproxyinterfaces>true</_noproxyinterfaces>

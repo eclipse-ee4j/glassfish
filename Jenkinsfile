@@ -341,7 +341,7 @@ pipeline {
                          sh '''
                          # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
                          # the trustAnchors parameter must be non-empty
-                         mvn -B dependency:go-offline
+                         mvn -B dependency:go-offline -T4C
                          '''
 
                          sh '''

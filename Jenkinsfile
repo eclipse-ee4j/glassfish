@@ -337,15 +337,24 @@ pipeline {
                          # Validate the structure in all submodules (especially version ids)
                          mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
                          '''
+
+                         sh '''
+                         # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
+                         # the trustAnchors parameter must be non-empty
+                         mvn -B dependency:go-offline
+                         '''
+
                          sh '''
                          mvn -B -e install -Pfastest,ci,snapshots -T4C
                          '''
+
                          sh '''
                          mvn -B -e clean
                          mkdir -p ${BUNDLES_DIR}
                          tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
                          tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
                          '''
+
                          sh '''
                          # For easy access to built artifacts and using them elsewhere
                          gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"

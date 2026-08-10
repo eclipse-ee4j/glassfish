@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -101,6 +101,9 @@ public final class EmbeddedGlassFishContainer {
         Thread stderrProcessor = new Thread(
             () -> getErrorReader().lines().forEach(line -> LOG.log(DEBUG, line)), "GF-StdErr");
         stderrProcessor.setDaemon(true);
+        // The process can be dying, then the stream is closed, but process.isAlive still returns true.
+        stderrProcessor.setUncaughtExceptionHandler(
+            (thread, e) -> LOG.log(DEBUG, "Uncaught exception in the thread reading the server STDERR output.", e));
         stderrProcessor.start();
     }
 

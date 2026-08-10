@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -86,16 +86,18 @@ public class JdbcITest extends RestTestBase {
         Response response = managementClient.post(URL_JDBC_RESOURCE, params);
         assertEquals(500, response.getStatus());
 
+        // The encoded backslash makes the request URI undecodable, so every request carrying it is
+        // rejected as a malformed request before it reaches the resource itself.
         Response responseGet = managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
-        assertEquals(500, response.getStatus());
+        assertEquals(400, responseGet.getStatus());
         Map<String, String> entity = getEntityValues(responseGet);
         assertNull(entity);
 
         response = managementClient.delete("/" + encodedPoolName, Map.of());
-        assertEquals(500, response.getStatus());
+        assertEquals(400, response.getStatus());
 
         response = managementClient.get(URL_JDBC_CONNECTION_POOL + "/" + encodedPoolName);
-        assertEquals(500, response.getStatus());
+        assertEquals(400, response.getStatus());
     }
 
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -109,10 +110,15 @@ public class TargetUtil {
         try{
             config.addAll(RestUtil.getChildMap(GuiUtil.getSessionValue("REST_URL") + "/configs/config").keySet());
         }catch (Exception ex){
-            GuiUtil.getLogger().info(GuiUtil.getCommonMessage("log.error.getClusters") + ex.getLocalizedMessage());
+            GuiUtil.getLogger().info(GuiUtil.getCommonMessage("log.error.getConfigs") + ex.getLocalizedMessage());
             if (GuiUtil.getLogger().isLoggable(Level.FINE)){
                 ex.printStackTrace();
             }
+        }
+        if (config.isEmpty()) {
+            // A domain always has at least the server-config; an empty list
+            // means the configurations could not be read.
+            GuiUtil.getLogger().warning(GuiUtil.getCommonMessage("log.warning.noConfigs"));
         }
         return config;
     }

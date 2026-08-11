@@ -1,6 +1,6 @@
 # Eclipse GlassFish Downloads
 
-## Eclipse GlassFish 8.0.3
+## Eclipse GlassFish 8.0.4
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/release/11) specification, which is a major new feature release. Eclipse GlassFish 8 requires JDK 21 or higher.
 
@@ -17,19 +17,19 @@ Eclipse GlassFish is an application server, implementing Jakarta EE. This releas
 
 ### Download
 
-* [Eclipse GlassFish 8.0.3, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.3.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.3)
-* [Eclipse GlassFish 8.0.3, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.3.zip) (zip)
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.3)
-* [Eclipse GlassFish Embedded 8.0.3, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.3/glassfish-embedded-all-8.0.3.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.3.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.3)
-* [Eclipse GlassFish Embedded 8.0.3, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.3/glassfish-embedded-web-8.0.3.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.3.jar`, no installation required
-  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.3)
+* [Eclipse GlassFish 8.0.4, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.4.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.4)
+* [Eclipse GlassFish 8.0.4, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.4.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.4)
+* [Eclipse GlassFish Embedded 8.0.4, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.4/glassfish-embedded-all-8.0.4.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.4.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.4)
+* [Eclipse GlassFish Embedded 8.0.4, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.4/glassfish-embedded-web-8.0.4.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.4.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.4)
 
 More details:
 
 * [Eclipse GlassFish Release Notes](https://github.com/eclipse-ee4j/glassfish/releases)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### All Eclipse GlassFish 8.x Downloads
 
@@ -61,7 +61,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.1.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.1)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### All Eclipse GlassFish 7.x Downloads
 
@@ -79,7 +79,7 @@ You can download the latest Eclipse GlassFish development milestone or nightly v
 
 GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previous versions (most after the GF 5 to 6 transition), once again improves JDK 17 compatibility (cases found by the new tests), fixes several bugs, and contains new versions of Hibernate Validator, Jackson and others.
 
-For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
+For more details on Jakarta EE 9.1, please see the [Jakarta EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
 
 * [Eclipse GlassFish 6.2.5, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-6.2.5.zip)
 * [Eclipse GlassFish 6.2.5, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-6.2.5.zip)

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -310,9 +311,14 @@ public class GuiUtil {
      *     '_'.  This method will also ensure an alpha character (or '_') is
      *     the first character in the id.</p>
      *
-     * @param        uid        A non-null String.
+     * @param        uid        A non-null, non-empty String.
+     * @throws IllegalArgumentException if the given String is null or empty;
+     *     there is no id which can be generated from it.
      */
     public static String genId(String uid) {
+        if (isEmpty(uid)) {
+            throw new IllegalArgumentException("Cannot generate a component id from an empty value.");
+        }
         char[] chArr = uid.toCharArray();
         int len = chArr.length;
         int newIdx = 0;

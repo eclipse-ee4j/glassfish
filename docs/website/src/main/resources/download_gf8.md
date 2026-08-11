@@ -5,7 +5,7 @@ This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/releas
 
 ## Eclipse GlassFish 8.0.4
 
-This release focuses on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.  It also bring huge Jakarta Faces rendering performance improvements with an upgraded Mojarra, which now renders pages 3 times faster than before.
+This release focuses on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.  It also bring huge Jakarta Faces rendering performance improvements with an upgraded Mojarra, which now renders pages [3 times faster than before](https://github.com/eclipse-ee4j/mojarra/issues/5753#issuecomment-4929605047).
 
 ### Main Changes
 

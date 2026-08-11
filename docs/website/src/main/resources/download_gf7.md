@@ -22,7 +22,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.1.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.1)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.1.0
 
@@ -55,7 +55,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.1.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.0)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.26
 
@@ -81,7 +81,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.26 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.26)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.25
 
@@ -108,7 +108,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.25 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.25)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.24
 
@@ -136,7 +136,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.24 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.24)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.23
 
@@ -156,7 +156,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.23 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.23)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.22
 
@@ -176,7 +176,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.22 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.22)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 7.0.21
 
@@ -196,7 +196,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.21 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.21)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ## Eclipse GlassFish 7.0.20
@@ -217,7 +217,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.20 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.20)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ## GlassFish 7.0.19
@@ -238,7 +238,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.19 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.19)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## GlassFish 7.0.18
 
@@ -258,7 +258,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.18 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.18)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### GlassFish 7.0.17
 
@@ -276,7 +276,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.17 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.17)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.16
@@ -297,7 +297,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.16 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.16)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.15
@@ -322,7 +322,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.15 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.15)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.14
@@ -349,7 +349,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.14 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.14)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.13
@@ -374,7 +374,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.13 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.13)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.12
@@ -399,7 +399,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.12 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.12)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### GlassFish 7.0.11
 
@@ -423,7 +423,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.11 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.11)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.10
@@ -448,7 +448,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.10 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.10)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### GlassFish 7.0.9
 
@@ -468,7 +468,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.9 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.9)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### GlassFish 7.0.8
 
@@ -488,7 +488,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.8 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.8)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 
@@ -511,7 +511,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.7 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.7)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.6
@@ -532,7 +532,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.6 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.6)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.5
@@ -553,7 +553,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.5 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.5)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.4
@@ -574,7 +574,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.4 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.4)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.3
@@ -591,7 +591,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.3 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.3)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.2
@@ -608,7 +608,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.2 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.2)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.1
@@ -625,7 +625,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.1)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 
 ### GlassFish 7.0.0
@@ -642,4 +642,4 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.0.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.0.0)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE

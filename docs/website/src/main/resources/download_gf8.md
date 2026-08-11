@@ -3,6 +3,39 @@
 Eclipse GlassFish is an application server, implementing Jakarta EE.
 This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/release/11) specification, which is a major new feature release. Eclipse GlassFish 8 requires JDK 21 or higher.
 
+## Eclipse GlassFish 8.0.4
+
+This release focuses on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.  It also bring huge Jakarta Faces rendering performance improvements with an upgraded Mojarra, which now renders pages [3 times faster than before](https://github.com/eclipse-ee4j/mojarra/issues/5753#issuecomment-4929605047).
+
+### Main Changes
+
+* Domains created by GlassFish 7.0.x now have their legacy JKS/JCEKS security stores migrated to PKCS12
+* Embedded GlassFish propagates deployment failures
+* Jakarta REST artifacts can be injected with @Inject out of the box
+* @Transactional rollbackOn/dontRollbackOn carried by CDI stereotypes are resolved
+* Thread-context-classloader hack in Weld bean deployment archive replaced by per-BDA ResourceLoader SPI
+
+### TCK results
+
+ * [Full](./certifications/jakarta-platform/11/TCK-Results-8.0.4.md)
+
+### Download
+
+* [Eclipse GlassFish 8.0.4, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.4.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.4)
+* [Eclipse GlassFish 8.0.4, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.4.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.4)
+* [Eclipse GlassFish Embedded 8.0.4, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.4/glassfish-embedded-all-8.0.4.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.4.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.4)
+* [Eclipse GlassFish Embedded 8.0.4, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.4/glassfish-embedded-web-8.0.4.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.4.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.4)
+
+More details:
+
+* [Eclipse GlassFish 8.0.4 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.4)
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+
+
 ## Eclipse GlassFish 8.0.3
 
 This release focused on security improvements including components of GlassFish. - see [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3) for details.
@@ -31,7 +64,7 @@ This release focused on security improvements including components of GlassFish.
 More details:
 
 * [Eclipse GlassFish 8.0.3 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.3)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 8.0.2
 
@@ -57,7 +90,7 @@ This release focused on dependencies - see [release notes](https://github.com/ec
 More details:
 
 * [Eclipse GlassFish 8.0.2 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.2)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 8.0.1
 
@@ -80,7 +113,7 @@ More details:
 More details:
 
 * [Eclipse GlassFish 8.0.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.1)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ## Eclipse GlassFish 8.0.0
 
@@ -109,4 +142,4 @@ More details:
 More details:
 
 * [Eclipse GlassFish 8.0.0 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.0)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE

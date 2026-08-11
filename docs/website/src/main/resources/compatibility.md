@@ -4,9 +4,9 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
 
 # Jakarta EE 11.0 Certifications
 
-## Jakarta EE Platform, 11.0, Eclipse GlassFish 8.0.3
+## Jakarta EE Platform, 11.0, Eclipse GlassFish 8.0.4
 
-* [Jakarta EE Platform 11.0](certifications/jakarta-platform/11/TCK-Results-8.0.3.md)
+* [Jakarta EE Platform 11.0](certifications/jakarta-platform/11/TCK-Results-8.0.4.md)
 * Includes results for
   * Jakarta Annotations 3.0
   * Jakarta Activation 2.1
@@ -28,6 +28,9 @@ Eclipse GlassFish is a Compatible Implementation of a number of Jakarta EE Speci
   * Jakarta Servlet 6.1
   * Jakarta Validation 3.1
   * Jakarta WebSocket 2.2
+  
+### Previous results
+ * [Jakarta EE Platform 11.0, Eclipse GlassFish 8.0.3](certifications/jakarta-platform/11/TCK-Results-8.0.3.md)
 
 ## Jakarta EE Platform Web Profile, 11.0, Eclipse GlassFish Web Profile 8.0.0-M10
 

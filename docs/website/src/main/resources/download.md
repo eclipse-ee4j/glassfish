@@ -29,7 +29,7 @@ Eclipse GlassFish is an application server, implementing Jakarta EE. This releas
 More details:
 
 * [Eclipse GlassFish Release Notes](https://github.com/eclipse-ee4j/glassfish/releases)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### All Eclipse GlassFish 8.x Downloads
 
@@ -61,7 +61,7 @@ Download:
 More details:
 
 * [Eclipse GlassFish 7.1.1 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/7.1.1)
-* [Jakarte EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
 
 ### All Eclipse GlassFish 7.x Downloads
 
@@ -79,7 +79,7 @@ You can download the latest Eclipse GlassFish development milestone or nightly v
 
 GlassFish 6.2.5 updates and reenables a lot of tests that were disabled in previous versions (most after the GF 5 to 6 transition), once again improves JDK 17 compatibility (cases found by the new tests), fixes several bugs, and contains new versions of Hibernate Validator, Jackson and others.
 
-For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
+For more details on Jakarta EE 9.1, please see the [Jakarta EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
 
 * [Eclipse GlassFish ${glassfish.version.6x}, Jakarta EE Platform, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-${glassfish.version.6x}.zip)
 * [Eclipse GlassFish ${glassfish.version.6x}, Jakarta EE Web Profile, 9.1](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-${glassfish.version.6x}.zip)

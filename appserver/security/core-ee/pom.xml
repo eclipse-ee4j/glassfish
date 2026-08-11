@@ -89,7 +89,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-servlet</artifactId>
-            <version>5.0.99-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -22,6 +22,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -315,6 +318,8 @@ class ZipPayloadImpl extends PayloadImpl {
      */
     private static class Extra {
         private static final String CONTENT_TYPE_NAME = "Content-Type";
+        private static final short EXTID = (short) 0xFFFF;       // Extra field Header ID
+        private static final short EXT_HEADER_SZIE = 4;   // Extra field header size (2 bytes for Header ID, 2 bytes for Data Size)
 
         private String contentType;
         private Properties props;
@@ -322,7 +327,9 @@ class ZipPayloadImpl extends PayloadImpl {
         private Extra(final byte[] extra) {
             try {
                 props = new Properties();
-                ByteArrayInputStream bais = new ByteArrayInputStream(extra);
+                // skip the header (first 4 bytes).
+                byte[] extraData = Arrays.copyOfRange(extra, EXT_HEADER_SZIE, extra.length);
+                ByteArrayInputStream bais = new ByteArrayInputStream(extraData);
                 props.load(bais);
                 contentType = props.getProperty(CONTENT_TYPE_NAME);
                 props.remove(CONTENT_TYPE_NAME);
@@ -345,7 +352,15 @@ class ZipPayloadImpl extends PayloadImpl {
             fullProps.setProperty(CONTENT_TYPE_NAME, contentType);
             try {
                 fullProps.store(baos, null);
-                return baos.toByteArray();
+                byte[] bytes = baos.toByteArray();
+                int length = bytes.length;
+                ByteBuffer bb = ByteBuffer.allocate(EXT_HEADER_SZIE + length).order(ByteOrder.LITTLE_ENDIAN);
+                // add Header ID
+                bb.putShort(EXTID);
+                // add Data Size
+                bb.putShort((short) length);
+                bb.put(bytes);
+                return bb.array();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }

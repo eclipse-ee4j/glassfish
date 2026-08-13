@@ -25,12 +25,14 @@ import com.github.dockerjava.api.model.Ulimit;
 
 import jakarta.ws.rs.client.WebTarget;
 
+import java.io.IOException;
 import java.lang.System.Logger;
 import java.time.Duration;
 
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.testcontainers.DockerClientFactory;
+import org.testcontainers.containers.Container.ExecResult;
 import org.testcontainers.containers.Network;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
@@ -170,11 +172,37 @@ public abstract class Environment {
     }
 
     /**
+     * Terminates every backend connection on the database server while keeping the server running.
+     * Unlike a short network outage this reliably breaks all connections established before the call,
+     * so the pool must detect and replace them; unlike a container restart it keeps the published port
+     * stable, so the host-side connections (e.g. database-rider) keep working afterwards.
+     */
+    public void killDatabaseConnections() {
+        LOG.log(INFO, "Terminating all database backend connections ...");
+        final String sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity"
+            + " WHERE pid <> pg_backend_pid() AND datname = current_database()";
+        try {
+            final ExecResult result = database.execInContainer(
+                "psql", "-U", database.getUsername(), "-d", database.getDatabaseName(), "-c", sql);
+            if (result.getExitCode() != 0) {
+                throw new IllegalStateException("Failed to terminate database connections: " + result.getStderr());
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to terminate database connections", e);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while terminating database connections", e);
+        }
+    }
+
+    /**
      * Drop all data and recreate just those existing before the test.
      */
     public final void reinitializeDatabase() {
         final String script = "initSchema.sql";
         LOG.log(INFO, "Running script to reinitialize the database schema: " + script);
+        // A database outage (see disconnectDatabase) may have closed rider's cached connection; drop it so it reconnects.
+        ((DataSetExecutorImpl) dsExecutor).clearRiderDataSource();
         dsExecutor.executeScript(script);
         // The db is case sensitive
         dsExecutor.executeStatements(new String[] {"SELECT * FROM \"GlassFishUser\""});

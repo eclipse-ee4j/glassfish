@@ -138,8 +138,8 @@ public class JmsITest extends RestTestBase {
     }
 
     @Test
-    @Disabled("Enable and fix OpenMQ - require more detailed message and probably to fix the cause:"
-        + " MQJMSRA_RA4001: getJMXServiceURLList:Exception:Message=Caught exception when contacing portmapper.]]")
+//    @Disabled("Enable and fix OpenMQ - require more detailed message and probably to fix the cause:"
+//        + " MQJMSRA_RA4001: getJMXServiceURLList:Exception:Message=Caught exception when contacing portmapper.]]")
     public void testJmsPhysicalDestionationsWithClusters() {
         final String destName = "jmsDest" + RandomGenerator.generateRandomString();
         final String clusterName = createCluster();

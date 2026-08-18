@@ -14,12 +14,10 @@
 *
 * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 */
-
 def mvnVersion = '3.9.16'
 def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
-
 def mvnContainerCfg = """
 apiVersion: v1
 kind: Pod
@@ -116,73 +114,121 @@ def stopVmstatLogging() {
    """
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
+// Use deterministic per-build jitter instead of java.util.Random so this stays
+// simple and reproducible in Jenkins Pipeline execution.
+def podJitterSeconds(String key, int maxInclusive) {
+   if (maxInclusive <= 0) {
+      return 0
+   }
+   String buildSeed = env.BUILD_TAG ?: env.BUILD_NUMBER ?: '0'
+   String seed = "${buildSeed}:${key}"
+   int positiveHash = seed.hashCode() & 0x7fffffff
+   return positiveHash % (maxInclusive + 1)
+}
 
-def generateAntPodTemplate(job) {
+// Dynamic pod slot 0 starts immediately. Every following slot is spaced by
+// 2 seconds and receives another 0-2 seconds of jitter.
+def staggerPodStart(int slot, String job) {
+   if (slot == 0) {
+      echo "${job}: requesting pod immediately (slot 0)"
+      return
+   }
+   int baseDelay = slot * 2
+   int jitter = podJitterSeconds("start:${job}", 2)
+   int delay = baseDelay + jitter
+   echo "${job}: delaying pod request by ${delay}s (slot ${slot}, base ${baseDelay}s + jitter ${jitter}s)"
+   sleep time: delay, unit: 'SECONDS'
+}
+
+// Attempts 2 and 3 wait 5-15 seconds before asking Kubernetes for a fresh pod.
+def waitBeforePodRetry(int attempt, String job) {
+   if (attempt <= 1) {
+      return
+   }
+   int jitter = podJitterSeconds("retry:${job}:${attempt}", 10)
+   int delay = 5 + jitter
+   echo "${job}: Kubernetes agent retry ${attempt}/3; waiting ${delay}s before requesting a fresh pod"
+   sleep time: delay, unit: 'SECONDS'
+}
+
+def generateAntPodTemplate(job, int startSlot) {
    return {
-      node {
-         stage("${job}") {
-            try {
-               startVmstatLogging("ant-${job}")
-               unstash 'maven-repo'
-               unstash 'appserv-tests'
-               timeout(time: 4, unit: 'HOURS') {
-                  withAnt(installation: 'apache-ant-latest') {
-                     dumpSysInfo()
-                     sh '''
-                     mkdir -p ${WORKSPACE}/appserver/tests
-                     tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                     tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                     '''
-                     sh """
-                     ./runtests.sh ${job}
-                     """
+      stage("${job}") {
+         staggerPodStart(startSlot, job)
+         int attempt = 0
+         retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
+            attempt++
+            waitBeforePodRetry(attempt, job)
+            node {
+               try {
+                  startVmstatLogging("ant-${job}")
+                  unstash 'maven-repo'
+                  unstash 'appserv-tests'
+                  timeout(time: 4, unit: 'HOURS') {
+                     withAnt(installation: 'apache-ant-latest') {
+                        dumpSysInfo()
+                        sh '''
+                        mkdir -p ${WORKSPACE}/appserver/tests
+                        tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                        tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                        '''
+                        sh """
+                        ./runtests.sh ${job}
+                        """
+                     }
                   }
+               } finally {
+                  stopVmstatLogging()
+                  archiveArtifacts artifacts: "${job}-results.tar.gz"
+                  junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                }
-            } finally {
-               stopVmstatLogging()
-               archiveArtifacts artifacts: "${job}-results.tar.gz"
-               junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
             }
          }
       }
    }
 }
 
-def generateMvnTestPodTemplate(job, nodeCfg) {
+def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
    return {
-      podTemplate(
-         inheritFrom: 'basic',
-         yaml: nodeCfg
-      ) {
-         node(POD_LABEL) {
-            stage("${job}") {
-               try {
-                  checkout scm
-                  container('maven') {
-                     script {
-                        try {
-                           startVmstatLogging("mvn-${job}")
-                           dumpSysInfo()
-                           unstash 'maven-repo'
-                           timeout(time: 4, unit: 'HOURS') {
-                              sh '''
-                              tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              '''
-                              sh """
-                              mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
-                              """
+      stage("${job}") {
+         staggerPodStart(startSlot, job)
+         podTemplate(
+            inheritFrom: 'basic',
+            yaml: nodeCfg
+         ) {
+            int attempt = 0
+            retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
+               attempt++
+               waitBeforePodRetry(attempt, job)
+               node(POD_LABEL) {
+                  try {
+                     checkout scm
+                     container('maven') {
+                        script {
+                           try {
+                              startVmstatLogging("mvn-${job}")
+                              dumpSysInfo()
+                              unstash 'maven-repo'
+                              timeout(time: 4, unit: 'HOURS') {
+                                 sh '''
+                                 tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                                 '''
+                                 sh """
+                                 mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
+                                 """
+                              }
+                           } finally {
+                              stopVmstatLogging()
                            }
-                        } finally {
-                           stopVmstatLogging()
                         }
                      }
-                  }
-               } finally {
-                  archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                  junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                  junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                  } finally {
+                     archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
+                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
 // Makes Jenkins UI extremely slow in current version
-//                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+//                     recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                  }
                }
             }
          }
@@ -226,63 +272,60 @@ def mvn_jobs = [
     "application-tests",
     "embedded-tests"
 ]
+def mvnSlotOffset = 0
+def connectorSlotOffset = mvnSlotOffset + mvn_jobs.size()
+def dbSlotOffset = connectorSlotOffset + ant_connector_jobs.size()
+def diSlotOffset = dbSlotOffset + ant_db_jobs.size()
+def otherSlotOffset = diSlotOffset + ant_di_jobs.size()
 
-def parallelStagesMapAntConnectors = ant_connector_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it)]
+def parallelStagesMapMvn = mvn_jobs.collectEntries {
+   ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
 }
-def parallelStagesMapAntDi = ant_di_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it)]
+def parallelStagesMapAntConnectors = ant_connector_jobs.collectEntries {
+   ["${it}": generateAntPodTemplate(it, connectorSlotOffset + ant_connector_jobs.indexOf(it))]
 }
 def parallelStagesMapAntDb = ant_db_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it)]
+   ["${it}": generateAntPodTemplate(it, dbSlotOffset + ant_db_jobs.indexOf(it))]
+}
+def parallelStagesMapAntDi = ant_di_jobs.collectEntries {
+   ["${it}": generateAntPodTemplate(it, diSlotOffset + ant_di_jobs.indexOf(it))]
 }
 def parallelStagesMapAnt = ant_other_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it)]
+   ["${it}": generateAntPodTemplate(it, otherSlotOffset + ant_other_jobs.indexOf(it))]
 }
-def parallelStagesMapMvn = mvn_jobs.collectEntries {
-   ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg)]
-}
-
 pipeline {
-
    agent {
       kubernetes {
          inheritFrom "basic"
          yaml mvnContainerCfg
+         // Retry initial allocation/loss of the main Kubernetes build agent.
+         retries 3
       }
    }
-
    environment {
       BUNDLES_DIR = "${WORKSPACE}/bundles"
       PORT_ADMIN=4848
       PORT_HTTP=8080
       PORT_HTTPS=8181
    }
-
    options {
       // numToKeepStr - we need to know if it is changing.
       // artifactNumToKeepStr - they are quite large, so we keep just the last products.
       buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
-
-      // Any failure will cause interruption of other running steps
+      // Any failure will cause interruption of other running steps.
+      // Dynamic Kubernetes-agent infrastructure failures are retried inside each branch first.
       parallelsAlwaysFailFast()
-
       // to allow re-running a test stage, preserves just stashes of the most recent build
       preserveStashes()
-
       // issue related to default 'implicit' checkout, disable it
       skipDefaultCheckout()
-
       // abort pipeline if previous stage is unstable
       skipStagesAfterUnstable()
-
       // show timestamps in logs
       timestamps()
-
       // global timeout, abort after 6 hours
       timeout(time: 8, unit: 'HOURS')
    }
-
    stages {
       stage('StopOld') {
          steps {

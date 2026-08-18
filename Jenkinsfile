@@ -18,13 +18,24 @@ def mvnVersion = '3.9.16'
 def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
+def jnlpIfNotPresentCfg = """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: jnlp
+    imagePullPolicy: IfNotPresent
+"""
 def mvnContainerCfg = """
 apiVersion: v1
 kind: Pod
 spec:
   containers:
+  - name: jnlp
+    imagePullPolicy: IfNotPresent
   - name: maven
     image: maven:${mvnVersion}-eclipse-temurin-${javaVersion}
+    imagePullPolicy: IfNotPresent
     command:
     - cat
     tty: true
@@ -79,7 +90,6 @@ spec:
     emptyDir:
       sizeLimit: "2Gi"
 """
-
 def dumpSysInfo() {
    sh """
    id || true
@@ -96,14 +106,12 @@ def dumpSysInfo() {
    ulimit -a || true
    """
 }
-
 def startVmstatLogging(String stageName) {
    sh """
    mkdir -p "${WORKSPACE}/logs"
    vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
    """
 }
-
 def stopVmstatLogging() {
    sh """
    if [ -f "${WORKSPACE}/vmstat.pid" ]; then
@@ -127,13 +135,13 @@ def podJitterSeconds(String key, int maxInclusive) {
 }
 
 // Dynamic pod slot 0 starts immediately. Every following slot is spaced by
-// 2 seconds and receives another 0-2 seconds of jitter.
+// 3 seconds and receives another 0-2 seconds of jitter.
 def staggerPodStart(int slot, String job) {
    if (slot == 0) {
       echo "${job}: requesting pod immediately (slot 0)"
       return
    }
-   int baseDelay = slot * 2
+   int baseDelay = slot * 3
    int jitter = podJitterSeconds("start:${job}", 2)
    int delay = baseDelay + jitter
    echo "${job}: delaying pod request by ${delay}s (slot ${slot}, base ${baseDelay}s + jitter ${jitter}s)"
@@ -155,32 +163,37 @@ def generateAntPodTemplate(job, int startSlot) {
    return {
       stage("${job}") {
          staggerPodStart(startSlot, job)
-         int attempt = 0
-         retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
-            attempt++
-            waitBeforePodRetry(attempt, job)
-            node {
-               try {
-                  startVmstatLogging("ant-${job}")
-                  unstash 'maven-repo'
-                  unstash 'appserv-tests'
-                  timeout(time: 4, unit: 'HOURS') {
-                     withAnt(installation: 'apache-ant-latest') {
-                        dumpSysInfo()
-                        sh '''
-                        mkdir -p ${WORKSPACE}/appserver/tests
-                        tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                        tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                        '''
-                        sh """
-                        ./runtests.sh ${job}
-                        """
+         podTemplate(
+            inheritFrom: 'basic',
+            yaml: jnlpIfNotPresentCfg
+         ) {
+            int attempt = 0
+            retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
+               attempt++
+               waitBeforePodRetry(attempt, job)
+               node(POD_LABEL) {
+                  try {
+                     startVmstatLogging("ant-${job}")
+                     unstash 'maven-repo'
+                     unstash 'appserv-tests'
+                     timeout(time: 4, unit: 'HOURS') {
+                        withAnt(installation: 'apache-ant-latest') {
+                           dumpSysInfo()
+                           sh '''
+                           mkdir -p ${WORKSPACE}/appserver/tests
+                           tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                           tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                           '''
+                           sh """
+                           ./runtests.sh ${job}
+                           """
+                        }
                      }
+                  } finally {
+                     stopVmstatLogging()
+                     archiveArtifacts artifacts: "${job}-results.tar.gz"
+                     junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                   }
-               } finally {
-                  stopVmstatLogging()
-                  archiveArtifacts artifacts: "${job}-results.tar.gz"
-                  junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                }
             }
          }
@@ -298,8 +311,6 @@ pipeline {
       kubernetes {
          inheritFrom "basic"
          yaml mvnContainerCfg
-         // Retry initial allocation/loss of the main Kubernetes build agent.
-         retries 3
       }
    }
    environment {
@@ -341,18 +352,15 @@ pipeline {
                script {
                   // Default: run tests
                   env.SKIP_TESTS = "false"
-
                   // Only check for docs-only changes in PR builds
                   if (env.CHANGE_TARGET) {
                      echo "PR build detected, checking if only docs changed..."
-
                      def relevantChanges = sh(
                         script: '''
                            (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
                         ''',
                         returnStdout: true
                      ).trim()
-
 
                      if (relevantChanges == "") {
                         env.SKIP_TESTS = "true"
@@ -380,24 +388,20 @@ pipeline {
                          # Validate the structure in all submodules (especially version ids)
                          mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
                          '''
-
                          sh '''
                          # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
                          # the trustAnchors parameter must be non-empty
                          mvn -B dependency:go-offline -T4C
                          '''
-
                          sh '''
                          mvn -B -e install -Pfastest,ci,snapshots -T4C
                          '''
-
                          sh '''
                          mvn -B -e clean
                          mkdir -p ${BUNDLES_DIR}
                          tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
                          tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
                          '''
-
                          sh '''
                          # For easy access to built artifacts and using them elsewhere
                          gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
@@ -420,7 +424,6 @@ pipeline {
             stash includes: 'bundles/maven-repo.tar.gz', name: 'maven-repo'
          }
       }
-
       stage('Test') {
          when {
             environment name: 'SKIP_TESTS', value: 'false'
@@ -509,7 +512,6 @@ pipeline {
          }
       }
    }
-
    post {
       success {
          // Overwrite stashes with empty content

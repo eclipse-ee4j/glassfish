@@ -51,6 +51,9 @@ import static java.util.logging.Level.INFO;
 import static org.glassfish.embeddable.GlassFishVariable.OSGI_PLATFORM;
 import static org.glassfish.main.boot.log.LogFacade.CREATE_BUNDLE_PROVISIONER;
 import static org.glassfish.main.boot.log.LogFacade.UPDATING_SYSTEM_BUNDLE;
+import static org.glassfish.main.boot.osgi.BundleResolutionAnalyzer.explain;
+import static org.glassfish.main.boot.osgi.BundleResolutionAnalyzer.explainUnresolvedBundles;
+import static org.glassfish.main.boot.osgi.BundleResolutionAnalyzer.findRootCauses;
 import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.prettyPrintFelixMessage;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN;
 import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
@@ -164,7 +167,13 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
                                        prettyPrintFelixMessage(
                                                framework.getBundleContext(),
                                                error.getThrowable().getMessage()))
-                                   .append("\n\n");
+                                   .append("\n\n")
+                                   .append(explainUnresolvedBundles(framework.getBundleContext()))
+                                   .append("\n\n")
+                                   .append(explain(framework.getBundleContext(), error.getBundle()))
+                                   .append("\n\n")
+                                   .append(findRootCauses(framework.getBundleContext(), error.getBundle()))
+                                   ;
                 }
 
                 throw new GlassFishException(errorMsgBuilder.toString());

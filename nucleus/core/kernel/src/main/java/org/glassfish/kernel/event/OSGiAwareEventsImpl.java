@@ -31,10 +31,10 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.FrameworkEvent;
 import org.osgi.framework.FrameworkListener;
 
-import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.addBundleInformation;
-import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.addExportInfo;
-import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.findBundleIds;
-import static org.glassfish.main.boot.osgi.FelixPrettyPrinter.findExporters;
+import static org.glassfish.main.boot.osgi.FelixPrettyUtils.addBundleInformation;
+import static org.glassfish.main.boot.osgi.FelixPrettyUtils.addExportInfo;
+import static org.glassfish.main.boot.osgi.FelixPrettyUtils.findBundleIds;
+import static org.glassfish.main.boot.osgi.FelixPrettyUtils.findExporters;
 import static org.osgi.framework.FrameworkEvent.PACKAGES_REFRESHED;
 import static org.osgi.framework.FrameworkUtil.getBundle;
 

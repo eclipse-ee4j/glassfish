@@ -18,21 +18,129 @@ def mvnVersion = '3.9.16'
 def javaVersion = '21'
 def jdkTool = "temurin-jdk${javaVersion}-latest"
 def mvnTool = "apache-maven-${mvnVersion}"
-def jnlpIfNotPresentCfg = """
+// The inherited JIRO "basic" template has alwaysPullImage=true for jnlp.
+// Kubernetes-plugin inheritance treats false as a default value, so a child
+// containerTemplate cannot turn an inherited true back to false. Therefore the
+// test pods below reproduce the relevant basic pod mounts directly and define
+// jnlp as a non-inherited containerTemplate with alwaysPullImage=false.
+def antPodCfg = """
 apiVersion: v1
 kind: Pod
 spec:
+  nodeSelector:
+    kubernetes.io/os: "linux"
   containers:
   - name: jnlp
-    imagePullPolicy: IfNotPresent
+    env:
+    - name: "JENKINS_REMOTING_JAVA_OPTS"
+      value: "-showversion -XshowSettings:vm -Xmx256m -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true -Dorg.jenkinsci.plugins.gitclient.CliGitAPIImpl.useSETSID=true"
+    - name: "JAVA_TOOL_OPTIONS"
+      value: ""
+    - name: "_JAVA_OPTIONS"
+      value: ""
+    - name: "OPENJ9_JAVA_OPTIONS"
+      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    volumeMounts:
+    - name: "m2-mvnd"
+      mountPath: "/home/jenkins/.m2/mvnd"
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.m2/toolchains.xml"
+      subPath: "toolchains.xml"
+      readOnly: true
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.mavenrc"
+      subPath: ".mavenrc"
+      readOnly: true
+    - name: "tools"
+      mountPath: "/opt/tools"
+      readOnly: true
+    - name: "m2-repository"
+      mountPath: "/home/jenkins/.m2/repository"
+    - name: "jenkins-home-basic"
+      mountPath: "/home/jenkins"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings-security.xml"
+      subPath: "settings-security.xml"
+      readOnly: true
+    - name: "m2-wrapper"
+      mountPath: "/home/jenkins/.m2/wrapper"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings.xml"
+      subPath: "settings.xml"
+      readOnly: true
+    - name: "known-hosts"
+      mountPath: "/home/jenkins/.ssh"
+  volumes:
+  - name: "m2-mvnd"
+    emptyDir: {}
+  - name: "m2-dir"
+    configMap:
+      name: "m2-dir"
+  - name: "tools"
+    persistentVolumeClaim:
+      claimName: "tools-claim-jiro-glassfish"
+      readOnly: true
+  - name: "m2-repository"
+    emptyDir: {}
+  - name: "jenkins-home-basic"
+    emptyDir: {}
+  - name: "m2-wrapper"
+    emptyDir: {}
+  - name: "m2-secret-dir"
+    secret:
+      secretName: "m2-secret-dir"
+  - name: "known-hosts"
+    configMap:
+      name: "known-hosts"
 """
+
 def mvnContainerCfg = """
 apiVersion: v1
 kind: Pod
 spec:
+  nodeSelector:
+    kubernetes.io/os: "linux"
   containers:
   - name: jnlp
-    imagePullPolicy: IfNotPresent
+    env:
+    - name: "JENKINS_REMOTING_JAVA_OPTS"
+      value: "-showversion -XshowSettings:vm -Xmx256m -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true -Dorg.jenkinsci.plugins.gitclient.CliGitAPIImpl.useSETSID=true"
+    - name: "JAVA_TOOL_OPTIONS"
+      value: ""
+    - name: "_JAVA_OPTIONS"
+      value: ""
+    - name: "OPENJ9_JAVA_OPTIONS"
+      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    volumeMounts:
+    - name: "m2-mvnd"
+      mountPath: "/home/jenkins/.m2/mvnd"
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.m2/toolchains.xml"
+      subPath: "toolchains.xml"
+      readOnly: true
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.mavenrc"
+      subPath: ".mavenrc"
+      readOnly: true
+    - name: "tools"
+      mountPath: "/opt/tools"
+      readOnly: true
+    - name: "m2-repository"
+      mountPath: "/home/jenkins/.m2/repository"
+    - name: "jenkins-home-basic"
+      mountPath: "/home/jenkins"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings-security.xml"
+      subPath: "settings-security.xml"
+      readOnly: true
+    - name: "m2-wrapper"
+      mountPath: "/home/jenkins/.m2/wrapper"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings.xml"
+      subPath: "settings.xml"
+      readOnly: true
+    - name: "known-hosts"
+      mountPath: "/home/jenkins/.ssh"
   - name: maven
     image: maven:${mvnVersion}-eclipse-temurin-${javaVersion}
     imagePullPolicy: IfNotPresent
@@ -48,18 +156,21 @@ spec:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"
       readOnly: false
-    - name: maven-repo-shared-storage
-      mountPath: /home/jenkins/.m2/repository
-    - name: settings-xml
-      mountPath: /home/jenkins/.m2/settings.xml
-      subPath: settings.xml
+    - name: "maven-repo-shared-storage"
+      mountPath: "/home/jenkins/.m2/repository"
+    - name: "settings-xml"
+      mountPath: "/home/jenkins/.m2/settings.xml"
+      subPath: "settings.xml"
       readOnly: true
-    - name: settings-security-xml
-      mountPath: /home/jenkins/.m2/settings-security.xml
-      subPath: settings-security.xml
+    - name: "settings-security-xml"
+      mountPath: "/home/jenkins/.m2/settings-security.xml"
+      subPath: "settings-security.xml"
       readOnly: true
-    - name: maven-repo-local-storage
+    - name: "maven-repo-local-storage"
       mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
+    - name: "workspace-volume"
+      mountPath: "/home/jenkins/agent"
+      readOnly: false
     resources:
       limits:
         memory: "8Gi"
@@ -68,25 +179,46 @@ spec:
         memory: "8Gi"
         cpu: "5500m"
   volumes:
+  - name: "m2-mvnd"
+    emptyDir: {}
+  - name: "m2-dir"
+    configMap:
+      name: "m2-dir"
+  - name: "tools"
+    persistentVolumeClaim:
+      claimName: "tools-claim-jiro-glassfish"
+      readOnly: true
+  - name: "m2-repository"
+    emptyDir: {}
+  - name: "jenkins-home-basic"
+    emptyDir: {}
+  - name: "m2-wrapper"
+    emptyDir: {}
+  - name: "m2-secret-dir"
+    secret:
+      secretName: "m2-secret-dir"
+  - name: "known-hosts"
+    configMap:
+      name: "known-hosts"
   - name: "jenkins-home"
     emptyDir:
       sizeLimit: "4Gi"
-  - name: maven-repo-shared-storage
+  - name: "maven-repo-shared-storage"
     persistentVolumeClaim:
-      claimName: glassfish-maven-repo-storage
-  - name: settings-xml
+      claimName: "glassfish-maven-repo-storage"
+  - name: "settings-xml"
     secret:
-      secretName: m2-secret-dir
+      secretName: "m2-secret-dir"
       items:
-      - key: settings.xml
-        path: settings.xml
-  - name: settings-security-xml
+      - key: "settings.xml"
+        path: "settings.xml"
+  - name: "settings-security-xml"
     secret:
-      secretName: m2-secret-dir
+      secretName: "m2-secret-dir"
       items:
-      - key: settings-security.xml
-        path: settings-security.xml
-  - name: maven-repo-local-storage
+      - key: "settings-security.xml"
+        path: "settings-security.xml"
+  - name: "maven-repo-local-storage"
     emptyDir:
       sizeLimit: "2Gi"
 """
@@ -148,27 +280,45 @@ def staggerPodStart(int slot, String job) {
    sleep time: delay, unit: 'SECONDS'
 }
 
-// Attempts 2 and 3 wait 5-15 seconds before asking Kubernetes for a fresh pod.
+// Five total attempts. Each retry waits substantially longer than the previous
+// one before asking Kubernetes for another fresh pod:
+//   attempt 2:  20-30s
+//   attempt 3:  40-60s
+//   attempt 4:  80-120s
+//   attempt 5: 160-240s
 def waitBeforePodRetry(int attempt, String job) {
    if (attempt <= 1) {
       return
    }
-   int jitter = podJitterSeconds("retry:${job}:${attempt}", 10)
-   int delay = 5 + jitter
-   echo "${job}: Kubernetes agent retry ${attempt}/3; waiting ${delay}s before requesting a fresh pod"
+   int baseDelay = 20 * (1 << (attempt - 2))
+   int jitter = podJitterSeconds("retry:${job}:${attempt}", baseDelay.intdiv(2))
+   int delay = baseDelay + jitter
+   echo "${job}: Kubernetes agent attempt ${attempt}/5; waiting ${delay}s before requesting a fresh pod"
    sleep time: delay, unit: 'SECONDS'
 }
 
-def generateAntPodTemplate(job, int startSlot) {
+def generateAntPodTemplate(job, int startSlot, String nodeCfg) {
    return {
       stage("${job}") {
          staggerPodStart(startSlot, job)
          podTemplate(
-            inheritFrom: 'basic',
-            yaml: jnlpIfNotPresentCfg
+            containers: [
+               containerTemplate(
+                  name: 'jnlp',
+                  image: 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987',
+                  alwaysPullImage: false,
+                  ttyEnabled: true,
+                  workingDir: '/home/jenkins/agent',
+                  resourceRequestMemory: '4096Mi',
+                  resourceRequestCpu: '1000m',
+                  resourceLimitMemory: '4096Mi',
+                  resourceLimitCpu: '2000m'
+               )
+            ],
+            yaml: nodeCfg
          ) {
             int attempt = 0
-            retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
+            retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
                attempt++
                waitBeforePodRetry(attempt, job)
                node(POD_LABEL) {
@@ -191,7 +341,7 @@ def generateAntPodTemplate(job, int startSlot) {
                      }
                   } finally {
                      stopVmstatLogging()
-                     archiveArtifacts artifacts: "${job}-results.tar.gz"
+                     archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
                      junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                   }
                }
@@ -206,11 +356,23 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
       stage("${job}") {
          staggerPodStart(startSlot, job)
          podTemplate(
-            inheritFrom: 'basic',
+            containers: [
+               containerTemplate(
+                  name: 'jnlp',
+                  image: 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987',
+                  alwaysPullImage: false,
+                  ttyEnabled: true,
+                  workingDir: '/home/jenkins/agent',
+                  resourceRequestMemory: '4096Mi',
+                  resourceRequestCpu: '1000m',
+                  resourceLimitMemory: '4096Mi',
+                  resourceLimitCpu: '2000m'
+               )
+            ],
             yaml: nodeCfg
          ) {
             int attempt = 0
-            retry(count: 3, conditions: [kubernetesAgent(), nonresumable()]) {
+            retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
                attempt++
                waitBeforePodRetry(attempt, job)
                node(POD_LABEL) {
@@ -295,22 +457,35 @@ def parallelStagesMapMvn = mvn_jobs.collectEntries {
    ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
 }
 def parallelStagesMapAntConnectors = ant_connector_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, connectorSlotOffset + ant_connector_jobs.indexOf(it))]
+   ["${it}": generateAntPodTemplate(it, connectorSlotOffset + ant_connector_jobs.indexOf(it), antPodCfg)]
 }
 def parallelStagesMapAntDb = ant_db_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, dbSlotOffset + ant_db_jobs.indexOf(it))]
+   ["${it}": generateAntPodTemplate(it, dbSlotOffset + ant_db_jobs.indexOf(it), antPodCfg)]
 }
 def parallelStagesMapAntDi = ant_di_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, diSlotOffset + ant_di_jobs.indexOf(it))]
+   ["${it}": generateAntPodTemplate(it, diSlotOffset + ant_di_jobs.indexOf(it), antPodCfg)]
 }
 def parallelStagesMapAnt = ant_other_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, otherSlotOffset + ant_other_jobs.indexOf(it))]
+   ["${it}": generateAntPodTemplate(it, otherSlotOffset + ant_other_jobs.indexOf(it), antPodCfg)]
 }
 pipeline {
    agent {
       kubernetes {
-         inheritFrom "basic"
+         // Do not inherit "basic" here: its jnlp ContainerTemplate has
+         // alwaysPullImage=true, and the plugin cannot override inherited true
+         // with false. The relevant basic mounts are reproduced in mvnContainerCfg.
          yaml mvnContainerCfg
+         containerTemplate {
+            name 'jnlp'
+            image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
+            alwaysPullImage false
+            ttyEnabled true
+            workingDir '/home/jenkins/agent'
+            resourceRequestMemory '4096Mi'
+            resourceRequestCpu '1000m'
+            resourceLimitMemory '4096Mi'
+            resourceLimitCpu '2000m'
+         }
       }
    }
    environment {

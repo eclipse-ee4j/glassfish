@@ -130,15 +130,15 @@ public class EmbeddedOSGiGlassFishRuntime extends GlassFishRuntime {
             }
 
             try {
-                final String prettyMessage = FelixPrettyPrinter.prettyPrintExceptionMessage(bundleMessage);
-                List<Integer> bundleIDs = FelixPrettyPrinter.findBundleIds(prettyMessage);
+                final String prettyMessage = FelixPrettyPrinter.prettyPrintFelixMessage(context, bundleMessage);
+                List<Long> bundleIDs = FelixPrettyPrinter.findBundleIds(prettyMessage);
                 if (bundleIDs.isEmpty()) {
                     throw new GlassFishException(prettyMessage, t);
                 }
 
                 final StringBuilder bundleBuilder = new StringBuilder(1024);
                 bundleBuilder.append(prettyMessage);
-                for (Integer bundleId : bundleIDs) {
+                for (Long bundleId : bundleIDs) {
                     Bundle bundle = context.getBundle(bundleId);
                     if (bundle != null) {
                         bundleBuilder.append('[').append(bundleId).append("] \n");

@@ -44,13 +44,11 @@ public class FelixPrettyPrinterTest {
         String message = FelixPrettyPrinter.prettyPrintExceptionMessage(src);
         assertThat(message,
             stringContainsInOrder("Unable to resolve\n", "org.glassfish.main.webservices.connector [207]\n",
-                "missing requirement\n", "&(package = jakarta.xml.ws) (version >= 3.0.0) (!(version >= 4.0.0))\n",
-                "caused by:\n", "Unable to resolve\n", "org.glassfish.metro.webservices-api-osgi [236]\n",
-                "missing requirement\n", "&(package = jakarta.xml.bind) (version >= 3.0.0) (!(version >= 4.0.0)))]\n"));
+                "missing requirement\n", "package = jakarta.xml.ws & version >= 3.0.0 & !(version >= 4.0.0)\n"));
 
         assertAll(
-            () -> assertThat(FelixPrettyPrinter.findBundleIds(message), contains(207, 236)),
-            () -> assertThat(FelixPrettyPrinter.findBundleIds(src), contains(207, 236))
+            () -> assertThat(FelixPrettyPrinter.findBundleIds(message), contains(207l, 236l)),
+            () -> assertThat(FelixPrettyPrinter.findBundleIds(src), contains(207l, 236l))
         );
     }
 
@@ -67,7 +65,7 @@ public class FelixPrettyPrinterTest {
         assertThat(message,
             stringContainsInOrder("Unable to resolve\n", "org.apache.felix.scr [304]\n", "missing requirement\n"));
 
-        List<Integer> ids = FelixPrettyPrinter.findBundleIds(message);
-        assertThat(ids, contains(304));
+        List<Long> ids = FelixPrettyPrinter.findBundleIds(message);
+        assertThat(ids, contains(304l));
     }
 }

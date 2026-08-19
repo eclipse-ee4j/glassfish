@@ -129,8 +129,8 @@ spec:
         memory: "4096Mi"
         cpu: "2000m"
       requests:
-        # jnlp already reserves the pod's historical 4 GiB footprint.
-        # Reserve only a small additional amount for the execution sidecar.
+        # jnlp reserves 1 GiB; reserve only a small additional amount for
+        # the execution sidecar while keeping its 4 GiB runtime limit.
         memory: "256Mi"
         cpu: "500m"
   volumes:
@@ -388,9 +388,9 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                   alwaysPullImage: false,
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
-                  resourceRequestMemory: '4096Mi',
+                  resourceRequestMemory: '1024Mi',
                   resourceRequestCpu: '250m',
-                  resourceLimitMemory: '4096Mi',
+                  resourceLimitMemory: '1024Mi',
                   resourceLimitCpu: '500m'
                )
             ],
@@ -539,9 +539,9 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
                   alwaysPullImage: false,
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
-                  resourceRequestMemory: '4096Mi',
+                  resourceRequestMemory: '1024Mi',
                   resourceRequestCpu: '250m',
-                  resourceLimitMemory: '4096Mi',
+                  resourceLimitMemory: '1024Mi',
                   resourceLimitCpu: '500m'
                )
             ],
@@ -661,9 +661,9 @@ pipeline {
             alwaysPullImage false
             ttyEnabled true
             workingDir '/home/jenkins/agent'
-            resourceRequestMemory '4096Mi'
+            resourceRequestMemory '1024Mi'
             resourceRequestCpu '250m'
-            resourceLimitMemory '4096Mi'
+            resourceLimitMemory '1024Mi'
             resourceLimitCpu '500m'
          }
       }

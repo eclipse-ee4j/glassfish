@@ -240,7 +240,7 @@ spec:
         cpu: "5500m"
       requests:
         memory: "8Gi"
-        cpu: "5500m"
+        cpu: "4000m"
   volumes:
   - name: "m2-mvnd"
     emptyDir: {}
@@ -513,7 +513,7 @@ def runAntJob(job, int startSlot, String nodeCfg) {
    }
 }
 
-// Each Ant worker runs one job at a time. With 15 workers, at most 15 Ant
+// Each Ant worker runs one job at a time. With 10 workers, at most 10 Ant
 // pod allocations can be active concurrently. When a worker finishes a job, it
 // immediately starts its next assigned job (without another initial stagger).
 def generateAntWorker(int workerNumber, List jobs, String nodeCfg, int initialStartSlot) {
@@ -632,7 +632,7 @@ def parallelStagesMapMvn = mvn_jobs.collectEntries {
 // Global Ant concurrency limit. This is deliberately implemented with a fixed
 // number of Pipeline worker branches instead of depending on Lockable Resources
 // or Throttle Concurrent Builds plugins.
-def maxConcurrentAntPods = 15
+def maxConcurrentAntPods = 10
 def ant_jobs = ant_connector_jobs + ant_db_jobs + ant_di_jobs + ant_other_jobs
 def parallelStagesMapAntWorkers = [:]
 for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
@@ -642,7 +642,7 @@ for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
    }
    if (!jobsForWorker.isEmpty()) {
       // Maven dynamic pods use slots 0..2. Stagger the first Ant job in each
-      // worker across slots 3..17; later jobs start when their worker is free.
+      // worker across slots 3..12; later jobs start when their worker is free.
       int initialStartSlot = mvn_jobs.size() + workerIndex
       parallelStagesMapAntWorkers["ant-worker-${workerIndex + 1}"] =
          generateAntWorker(workerIndex + 1, jobsForWorker, antPodCfg, initialStartSlot)

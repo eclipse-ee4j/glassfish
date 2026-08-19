@@ -297,10 +297,13 @@ def waitBeforePodRetry(int attempt, String job) {
    sleep time: delay, unit: 'SECONDS'
 }
 
-def generateAntPodTemplate(job, int startSlot, String nodeCfg) {
-   return {
-      stage("${job}") {
-         staggerPodStart(startSlot, job)
+def runAntJob(job, int startSlot, String nodeCfg) {
+   stage("${job}") {
+         if (startSlot >= 0) {
+            staggerPodStart(startSlot, job)
+         } else {
+            echo "${job}: Ant worker slot is free; requesting pod now"
+         }
          podTemplate(
             containers: [
                containerTemplate(
@@ -310,7 +313,7 @@ def generateAntPodTemplate(job, int startSlot, String nodeCfg) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '1000m',
+                  resourceRequestCpu: '500m',
                   resourceLimitMemory: '4096Mi',
                   resourceLimitCpu: '2000m'
                )
@@ -348,6 +351,19 @@ def generateAntPodTemplate(job, int startSlot, String nodeCfg) {
             }
          }
       }
+}
+
+// Each Ant worker runs one job at a time. With 15 workers, at most 15 Ant
+// pod allocations can be active concurrently. When a worker finishes a job, it
+// immediately starts its next assigned job (without another initial stagger).
+def generateAntWorker(int workerNumber, List jobs, String nodeCfg, int initialStartSlot) {
+   return {
+      echo "Ant worker ${workerNumber}: ${jobs.size()} assigned job(s)"
+      for (int jobIndex = 0; jobIndex < jobs.size(); jobIndex++) {
+         String job = jobs[jobIndex]
+         int startSlot = jobIndex == 0 ? initialStartSlot : -1
+         runAntJob(job, startSlot, nodeCfg)
+      }
    }
 }
 
@@ -364,7 +380,7 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '1000m',
+                  resourceRequestCpu: '500m',
                   resourceLimitMemory: '4096Mi',
                   resourceLimitCpu: '2000m'
                )
@@ -448,25 +464,29 @@ def mvn_jobs = [
     "embedded-tests"
 ]
 def mvnSlotOffset = 0
-def connectorSlotOffset = mvnSlotOffset + mvn_jobs.size()
-def dbSlotOffset = connectorSlotOffset + ant_connector_jobs.size()
-def diSlotOffset = dbSlotOffset + ant_db_jobs.size()
-def otherSlotOffset = diSlotOffset + ant_di_jobs.size()
 
 def parallelStagesMapMvn = mvn_jobs.collectEntries {
    ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
 }
-def parallelStagesMapAntConnectors = ant_connector_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, connectorSlotOffset + ant_connector_jobs.indexOf(it), antPodCfg)]
-}
-def parallelStagesMapAntDb = ant_db_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, dbSlotOffset + ant_db_jobs.indexOf(it), antPodCfg)]
-}
-def parallelStagesMapAntDi = ant_di_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, diSlotOffset + ant_di_jobs.indexOf(it), antPodCfg)]
-}
-def parallelStagesMapAnt = ant_other_jobs.collectEntries {
-   ["${it}": generateAntPodTemplate(it, otherSlotOffset + ant_other_jobs.indexOf(it), antPodCfg)]
+
+// Global Ant concurrency limit. This is deliberately implemented with a fixed
+// number of Pipeline worker branches instead of depending on Lockable Resources
+// or Throttle Concurrent Builds plugins.
+def maxConcurrentAntPods = 15
+def ant_jobs = ant_connector_jobs + ant_db_jobs + ant_di_jobs + ant_other_jobs
+def parallelStagesMapAntWorkers = [:]
+for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
+   def jobsForWorker = []
+   for (int jobIndex = workerIndex; jobIndex < ant_jobs.size(); jobIndex += maxConcurrentAntPods) {
+      jobsForWorker.add(ant_jobs[jobIndex])
+   }
+   if (!jobsForWorker.isEmpty()) {
+      // Maven dynamic pods use slots 0..2. Stagger the first Ant job in each
+      // worker across slots 3..17; later jobs start when their worker is free.
+      int initialStartSlot = mvn_jobs.size() + workerIndex
+      parallelStagesMapAntWorkers["ant-worker-${workerIndex + 1}"] =
+         generateAntWorker(workerIndex + 1, jobsForWorker, antPodCfg, initialStartSlot)
+   }
 }
 pipeline {
    agent {
@@ -482,7 +502,7 @@ pipeline {
             ttyEnabled true
             workingDir '/home/jenkins/agent'
             resourceRequestMemory '4096Mi'
-            resourceRequestCpu '1000m'
+            resourceRequestCpu '500m'
             resourceLimitMemory '4096Mi'
             resourceLimitCpu '2000m'
          }
@@ -640,47 +660,14 @@ pipeline {
                   }
                }
             }
-            stage('ant-connector') {
+            stage('ant-tests') {
                tools {
                   jdk "${jdkTool}"
                   maven "${mvnTool}"
                }
                steps {
                   script {
-                     parallel parallelStagesMapAntConnectors
-                  }
-               }
-            }
-            stage('ant-db') {
-               tools {
-                  jdk "${jdkTool}"
-                  maven "${mvnTool}"
-               }
-               steps {
-                  script {
-                     parallel parallelStagesMapAntDb
-                  }
-               }
-            }
-            stage('ant-di') {
-               tools {
-                  jdk "${jdkTool}"
-                  maven "${mvnTool}"
-               }
-               steps {
-                  script {
-                     parallel parallelStagesMapAntDi
-                  }
-               }
-            }
-            stage('ant-other') {
-               tools {
-                  jdk "${jdkTool}"
-                  maven "${mvnTool}"
-               }
-               steps {
-                  script {
-                     parallel parallelStagesMapAnt
+                     parallel parallelStagesMapAntWorkers
                   }
                }
             }

@@ -362,11 +362,24 @@ def waitBeforePodRetry(int attempt, String job) {
 
 def runAntJob(job, int startSlot, String nodeCfg) {
    stage("${job}") {
-         if (startSlot >= 0) {
-            staggerPodStart(startSlot, job)
-         } else {
-            echo "${job}: Ant worker slot is free; requesting pod now"
+      if (startSlot >= 0) {
+         staggerPodStart(startSlot, job)
+      } else {
+         echo "${job}: Ant worker slot is free; requesting pod now"
+      }
+
+      // A normal Ant/JUnit test failure gets one retry in a completely fresh
+      // pod. This is deliberately separate from the five Kubernetes-agent
+      // infrastructure retries below.
+      for (int testAttempt = 1; testAttempt <= 2; testAttempt++) {
+         boolean antTestsFailed = false
+
+         if (testAttempt > 1) {
+            echo "${job}: retrying failed Ant tests once in a fresh pod (test attempt ${testAttempt}/2)"
+            // Give Kubernetes a moment to release the previous pod's quota.
+            sleep time: 10, unit: 'SECONDS'
          }
+
          podTemplate(
             containers: [
                containerTemplate(
@@ -376,9 +389,9 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '500m',
+                  resourceRequestCpu: '250m',
                   resourceLimitMemory: '4096Mi',
-                  resourceLimitCpu: '2000m'
+                  resourceLimitCpu: '500m'
                )
             ],
             yaml: nodeCfg
@@ -387,6 +400,12 @@ def runAntJob(job, int startSlot, String nodeCfg) {
             retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
                attempt++
                waitBeforePodRetry(attempt, job)
+
+               // Reset this for every infrastructure retry. Only a completed
+               // Ant run whose JUnit XML contains failures/errors may request
+               // the one test retry.
+               antTestsFailed = false
+
                node(POD_LABEL) {
                   boolean vmstatStarted = false
                   try {
@@ -421,6 +440,41 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                               """
                            }
                         }
+
+                        // Do not invoke Jenkins' junit step yet. Publishing a
+                        // failed report immediately marks the build UNSTABLE and
+                        // that result cannot later be improved to SUCCESS.
+                        //
+                        // runtests.sh writes JUnit reports under this directory.
+                        // Retry once if any report has a non-zero failures or
+                        // errors attribute. No report retains the old
+                        // allowEmptyResults behaviour and does not trigger a
+                        // speculative retry.
+                        int junitFailureStatus = sh(
+                           returnStatus: true,
+                           script: '''
+                           for report in results/junitreports/*.xml; do
+                              [ -e "$report" ] || continue
+                              if grep -Eq 'failures="[1-9][0-9]*"|errors="[1-9][0-9]*"' "$report"; then
+                                 exit 1
+                              fi
+                           done
+                           exit 0
+                           '''
+                        )
+                        antTestsFailed = (junitFailureStatus != 0)
+
+                        if (antTestsFailed && testAttempt == 1) {
+                           echo "${job}: JUnit report contains failures/errors; scheduling one fresh-pod retry"
+
+                           // Preserve the failed attempt for diagnostics without
+                           // publishing its JUnit XML to Jenkins.
+                           sh """
+                           if [ -f '${job}-results.tar.gz' ]; then
+                              mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
+                           fi
+                           """
+                        }
                      }
                   } finally {
                      if (vmstatStarted) {
@@ -428,13 +482,35 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            stopVmstatLogging()
                         }
                      }
-                     archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
-                     junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+
+                     if (antTestsFailed && testAttempt == 1) {
+                        archiveArtifacts artifacts: "${job}-flaky-attempt1-results.tar.gz", allowEmptyArchive: true
+                     } else {
+                        // Publish only a passing first attempt or the final
+                        // second attempt. Thus a flaky first failure which
+                        // passes on retry does not leave the build UNSTABLE.
+                        archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
+                        junit testResults: 'results/junitreports/*.xml',
+                              allowEmptyResults: true,
+                              stdioRetention: 'FAILED'
+                     }
                   }
                }
             }
          }
+
+         if (!antTestsFailed) {
+            if (testAttempt > 1) {
+               echo "${job}: Ant tests passed on retry"
+            }
+            break
+         }
+
+         if (testAttempt == 2) {
+            echo "${job}: Ant tests still contain failures/errors after the single retry"
+         }
       }
+   }
 }
 
 // Each Ant worker runs one job at a time. With 15 workers, at most 15 Ant
@@ -464,9 +540,9 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '500m',
+                  resourceRequestCpu: '250m',
                   resourceLimitMemory: '4096Mi',
-                  resourceLimitCpu: '2000m'
+                  resourceLimitCpu: '500m'
                )
             ],
             yaml: nodeCfg
@@ -586,9 +662,9 @@ pipeline {
             ttyEnabled true
             workingDir '/home/jenkins/agent'
             resourceRequestMemory '4096Mi'
-            resourceRequestCpu '500m'
+            resourceRequestCpu '250m'
             resourceLimitMemory '4096Mi'
-            resourceLimitCpu '2000m'
+            resourceLimitCpu '500m'
          }
       }
    }

@@ -376,9 +376,9 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '500m',
+                  resourceRequestCpu: '250m',
                   resourceLimitMemory: '4096Mi',
-                  resourceLimitCpu: '2000m'
+                  resourceLimitCpu: '500m'
                )
             ],
             yaml: nodeCfg
@@ -464,9 +464,9 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
                   ttyEnabled: true,
                   workingDir: '/home/jenkins/agent',
                   resourceRequestMemory: '4096Mi',
-                  resourceRequestCpu: '500m',
+                  resourceRequestCpu: '250m',
                   resourceLimitMemory: '4096Mi',
-                  resourceLimitCpu: '2000m'
+                  resourceLimitCpu: '500m'
                )
             ],
             yaml: nodeCfg
@@ -586,9 +586,9 @@ pipeline {
             ttyEnabled true
             workingDir '/home/jenkins/agent'
             resourceRequestMemory '4096Mi'
-            resourceRequestCpu '500m'
+            resourceRequestCpu '250m'
             resourceLimitMemory '4096Mi'
-            resourceLimitCpu '2000m'
+            resourceLimitCpu '500m'
          }
       }
    }

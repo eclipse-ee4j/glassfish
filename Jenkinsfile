@@ -23,6 +23,8 @@ def mvnTool = "apache-maven-${mvnVersion}"
 // containerTemplate cannot turn an inherited true back to false. Therefore the
 // test pods below reproduce the relevant basic pod mounts directly and define
 // jnlp as a non-inherited containerTemplate with alwaysPullImage=false.
+// Ant shell/test execution itself runs in a dedicated sidecar container; jnlp
+// is used only for Jenkins Remoting.
 def antPodCfg = """
 apiVersion: v1
 kind: Pod
@@ -70,6 +72,67 @@ spec:
       readOnly: true
     - name: "known-hosts"
       mountPath: "/home/jenkins/.ssh"
+  # Keep Jenkins Remoting in jnlp, but execute all Ant-side shell commands in
+  # this sidecar via container('ant'). This mirrors the Maven execution model
+  # and avoids Durable Task launching shells directly in the custom jnlp agent.
+  - name: ant
+    image: docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987
+    imagePullPolicy: IfNotPresent
+    command:
+    - cat
+    tty: true
+    workingDir: /home/jenkins/agent
+    env:
+    - name: "HOME"
+      value: "/home/jenkins"
+    - name: "JAVA_TOOL_OPTIONS"
+      value: ""
+    - name: "_JAVA_OPTIONS"
+      value: ""
+    - name: "OPENJ9_JAVA_OPTIONS"
+      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    volumeMounts:
+    - name: "m2-mvnd"
+      mountPath: "/home/jenkins/.m2/mvnd"
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.m2/toolchains.xml"
+      subPath: "toolchains.xml"
+      readOnly: true
+    - name: "m2-dir"
+      mountPath: "/home/jenkins/.mavenrc"
+      subPath: ".mavenrc"
+      readOnly: true
+    - name: "tools"
+      mountPath: "/opt/tools"
+      readOnly: true
+    - name: "m2-repository"
+      mountPath: "/home/jenkins/.m2/repository"
+    - name: "jenkins-home-basic"
+      mountPath: "/home/jenkins"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings-security.xml"
+      subPath: "settings-security.xml"
+      readOnly: true
+    - name: "m2-wrapper"
+      mountPath: "/home/jenkins/.m2/wrapper"
+    - name: "m2-secret-dir"
+      mountPath: "/home/jenkins/.m2/settings.xml"
+      subPath: "settings.xml"
+      readOnly: true
+    - name: "known-hosts"
+      mountPath: "/home/jenkins/.ssh"
+    - name: "workspace-volume"
+      mountPath: "/home/jenkins/agent"
+      readOnly: false
+    resources:
+      limits:
+        memory: "4096Mi"
+        cpu: "2000m"
+      requests:
+        # jnlp already reserves the pod's historical 4 GiB footprint.
+        # Reserve only a small additional amount for the execution sidecar.
+        memory: "256Mi"
+        cpu: "500m"
   volumes:
   - name: "m2-mvnd"
     emptyDir: {}
@@ -325,25 +388,46 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                attempt++
                waitBeforePodRetry(attempt, job)
                node(POD_LABEL) {
+                  boolean vmstatStarted = false
                   try {
-                     startVmstatLogging("ant-${job}")
-                     unstash 'maven-repo'
-                     unstash 'appserv-tests'
-                     timeout(time: 4, unit: 'HOURS') {
-                        withAnt(installation: 'apache-ant-latest') {
-                           dumpSysInfo()
+                     container('ant') {
+                        // Fail quickly if Jenkins cannot execute commands in the
+                        // sidecar. In build #7 a broken first sh otherwise took
+                        // about two hours to be detected by Durable Task.
+                        timeout(time: 2, unit: 'MINUTES') {
                            sh '''
-                           mkdir -p ${WORKSPACE}/appserver/tests
-                           tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                           tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                           echo "Ant execution container: ${POD_CONTAINER:-unknown}"
+                           id
+                           test -w "${WORKSPACE}"
+                           test -x /bin/sh
                            '''
-                           sh """
-                           ./runtests.sh ${job}
-                           """
+                        }
+
+                        startVmstatLogging("ant-${job}")
+                        vmstatStarted = true
+
+                        unstash 'maven-repo'
+                        unstash 'appserv-tests'
+                        timeout(time: 4, unit: 'HOURS') {
+                           withAnt(installation: 'apache-ant-latest') {
+                              dumpSysInfo()
+                              sh '''
+                              mkdir -p ${WORKSPACE}/appserver/tests
+                              tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                              tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                              '''
+                              sh """
+                              ./runtests.sh ${job}
+                              """
+                           }
                         }
                      }
                   } finally {
-                     stopVmstatLogging()
+                     if (vmstatStarted) {
+                        container('ant') {
+                           stopVmstatLogging()
+                        }
+                     }
                      archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
                      junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                   }

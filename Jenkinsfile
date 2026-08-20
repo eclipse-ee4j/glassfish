@@ -240,7 +240,7 @@ spec:
         cpu: "5500m"
       requests:
         memory: "8Gi"
-        cpu: "4000m"
+        cpu: "3000m"
   volumes:
   - name: "m2-mvnd"
     emptyDir: {}
@@ -367,19 +367,16 @@ def runAntJob(job, int startSlot, String nodeCfg) {
       } else {
          echo "${job}: Ant worker slot is free; requesting pod now"
       }
-
       // A normal Ant/JUnit test failure gets one retry in a completely fresh
       // pod. This is deliberately separate from the five Kubernetes-agent
       // infrastructure retries below.
       for (int testAttempt = 1; testAttempt <= 2; testAttempt++) {
          boolean antTestsFailed = false
-
          if (testAttempt > 1) {
             echo "${job}: retrying failed Ant tests once in a fresh pod (test attempt ${testAttempt}/2)"
             // Give Kubernetes a moment to release the previous pod's quota.
             sleep time: 10, unit: 'SECONDS'
          }
-
          podTemplate(
             containers: [
                containerTemplate(
@@ -400,12 +397,10 @@ def runAntJob(job, int startSlot, String nodeCfg) {
             retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
                attempt++
                waitBeforePodRetry(attempt, job)
-
                // Reset this for every infrastructure retry. Only a completed
                // Ant run whose JUnit XML contains failures/errors may request
                // the one test retry.
                antTestsFailed = false
-
                node(POD_LABEL) {
                   boolean vmstatStarted = false
                   try {
@@ -421,10 +416,8 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            test -x /bin/sh
                            '''
                         }
-
                         startVmstatLogging("ant-${job}")
                         vmstatStarted = true
-
                         unstash 'maven-repo'
                         unstash 'appserv-tests'
                         timeout(time: 4, unit: 'HOURS') {
@@ -440,7 +433,6 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                               """
                            }
                         }
-
                         // Do not invoke Jenkins' junit step yet. Publishing a
                         // failed report immediately marks the build UNSTABLE and
                         // that result cannot later be improved to SUCCESS.
@@ -463,10 +455,8 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            '''
                         )
                         antTestsFailed = (junitFailureStatus != 0)
-
                         if (antTestsFailed && testAttempt == 1) {
                            echo "${job}: JUnit report contains failures/errors; scheduling one fresh-pod retry"
-
                            // Preserve the failed attempt for diagnostics without
                            // publishing its JUnit XML to Jenkins.
                            sh """
@@ -482,7 +472,6 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            stopVmstatLogging()
                         }
                      }
-
                      if (antTestsFailed && testAttempt == 1) {
                         archiveArtifacts artifacts: "${job}-flaky-attempt1-results.tar.gz", allowEmptyArchive: true
                      } else {
@@ -498,14 +487,12 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                }
             }
          }
-
          if (!antTestsFailed) {
             if (testAttempt > 1) {
                echo "${job}: Ant tests passed on retry"
             }
             break
          }
-
          if (testAttempt == 2) {
             echo "${job}: Ant tests still contain failures/errors after the single retry"
          }

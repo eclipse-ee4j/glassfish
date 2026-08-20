@@ -85,6 +85,14 @@ spec:
     env:
     - name: "HOME"
       value: "/home/jenkins"
+    - name: "JAVA_HOME"
+      value: "/opt/tools/java/temurin/jdk-${javaVersion}/latest"
+    - name: "M2_HOME"
+      value: "/opt/tools/apache-maven/${mvnVersion}"
+    - name: "MAVEN_HOME"
+      value: "/opt/tools/apache-maven/${mvnVersion}"
+    - name: "PATH"
+      value: "/opt/tools/java/temurin/jdk-${javaVersion}/latest/bin:/opt/tools/apache-maven/${mvnVersion}/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     - name: "JAVA_TOOL_OPTIONS"
       value: ""
     - name: "_JAVA_OPTIONS"
@@ -240,7 +248,7 @@ spec:
         cpu: "5500m"
       requests:
         memory: "6Gi"
-        cpu: "3000m"
+        cpu: "2000m"
   volumes:
   - name: "m2-mvnd"
     emptyDir: {}
@@ -306,15 +314,28 @@ def startVmstatLogging(String stageName) {
    mkdir -p "${WORKSPACE}/logs"
    vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
 
-   # On cgroup v2, record this container's current and peak memory usage every
-   # 10 seconds. Values are bytes. If these files are unavailable, skip the
-   # diagnostic without affecting the build.
+   # Record this container's current and peak memory usage every 10 seconds.
+   # Prefer cgroup v2 and fall back to the cgroup v1 memory controller used by
+   # the current Eclipse CI workers. Values are bytes. If neither is available,
+   # skip the diagnostic without affecting the build.
    if [ -r /sys/fs/cgroup/memory.current ]; then
+      memory_current=/sys/fs/cgroup/memory.current
+      memory_peak=/sys/fs/cgroup/memory.peak
+   elif [ -r /sys/fs/cgroup/memory/memory.usage_in_bytes ]; then
+      memory_current=/sys/fs/cgroup/memory/memory.usage_in_bytes
+      memory_peak=/sys/fs/cgroup/memory/memory.max_usage_in_bytes
+   else
+      memory_current=
+      memory_peak=
+   fi
+
+   if [ -n "\$memory_current" ]; then
       (
+         printf '# current=%s peak=%s\n' "\$memory_current" "\$memory_peak"
          while true; do
-            current=\$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo unavailable)
-            if [ -r /sys/fs/cgroup/memory.peak ]; then
-               peak=\$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo unavailable)
+            current=\$(cat "\$memory_current" 2>/dev/null || echo unavailable)
+            if [ -n "\$memory_peak" ] && [ -r "\$memory_peak" ]; then
+               peak=\$(cat "\$memory_peak" 2>/dev/null || echo unavailable)
             else
                peak=unavailable
             fi
@@ -631,7 +652,7 @@ def mvn_jobs = [
     "application-tests",
     "embedded-tests"
 ]
-def mvnSlotOffset = 0
+def mvnSlotOffset = 1
 
 def parallelStagesMapMvn = mvn_jobs.collectEntries {
    ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
@@ -649,35 +670,24 @@ for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
       jobsForWorker.add(ant_jobs[jobIndex])
    }
    if (!jobsForWorker.isEmpty()) {
-      // Maven dynamic pods use slots 0..2. Stagger the first Ant job in each
-      // worker across slots 3..12; later jobs start when their worker is free.
-      int initialStartSlot = mvn_jobs.size() + workerIndex
+      // main-tests uses the immediate Maven slot 0; the three dynamic Maven
+      // pods use slots 1..3. Stagger the first Ant job in each worker across
+      // slots 4..13; later jobs start when their worker is free.
+      int initialStartSlot = mvnSlotOffset + mvn_jobs.size() + workerIndex
       parallelStagesMapAntWorkers["ant-worker-${workerIndex + 1}"] =
          generateAntWorker(workerIndex + 1, jobsForWorker, antPodCfg, initialStartSlot)
    }
 }
 pipeline {
-   agent {
-      kubernetes {
-         // Do not inherit "basic" here: its jnlp ContainerTemplate has
-         // alwaysPullImage=true, and the plugin cannot override inherited true
-         // with false. The relevant basic mounts are reproduced in mvnContainerCfg.
-         yaml mvnContainerCfg
-         containerTemplate {
-            name 'jnlp'
-            image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
-            alwaysPullImage false
-            ttyEnabled true
-            workingDir '/home/jenkins/agent'
-            resourceRequestMemory '1024Mi'
-            resourceRequestCpu '250m'
-            resourceLimitMemory '1024Mi'
-            resourceLimitCpu '500m'
-         }
-      }
-   }
+   // Do not hold one large Maven pod for the lifetime of the Pipeline.
+   // Prepare/Build and main-tests each get their own stage-scoped Maven pod,
+   // so Kubernetes can reclaim its 2.25 CPU / 7 GiB request as soon as that
+   // work is complete.
+   agent none
    environment {
-      BUNDLES_DIR = "${WORKSPACE}/bundles"
+      // Keep this relative because there is no pipeline-wide WORKSPACE when
+      // using agent none. Each pod gets the same bundles/ layout after unstash.
+      BUNDLES_DIR = "bundles"
       PORT_ADMIN=4848
       PORT_HTTP=8080
       PORT_HTTPS=8181
@@ -708,83 +718,109 @@ pipeline {
             }
          }
       }
-      stage('Check Changes') {
-         steps {
-            checkout scm
-            container('maven') {
-               script {
-                  // Default: run tests
-                  env.SKIP_TESTS = "false"
-                  // Only check for docs-only changes in PR builds
-                  if (env.CHANGE_TARGET) {
-                     echo "PR build detected, checking if only docs changed..."
-                     def relevantChanges = sh(
-                        script: '''
-                           (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
-                        ''',
-                        returnStdout: true
-                     ).trim()
-
-                     if (relevantChanges == "") {
-                        env.SKIP_TESTS = "true"
-                        echo "✓ Only docs/ changes detected - tests will be skipped"
-                     } else {
-                        echo "✗ Relevant changes detected - tests will run"
-                     }
-                  } else {
-                     echo "Non-PR build - tests will always run"
-                  }
+      // Check Changes and Build deliberately share one Maven pod. The pod is
+      // released immediately after Build instead of remaining reserved during
+      // the whole Test fan-out.
+      stage('Prepare') {
+         agent {
+            kubernetes {
+               // Do not inherit "basic" here: its jnlp ContainerTemplate has
+               // alwaysPullImage=true, and the plugin cannot override inherited true
+               // with false. The relevant basic mounts are reproduced in mvnContainerCfg.
+               yaml mvnContainerCfg
+               containerTemplate {
+                  name 'jnlp'
+                  image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
+                  alwaysPullImage false
+                  ttyEnabled true
+                  workingDir '/home/jenkins/agent'
+                  resourceRequestMemory '1024Mi'
+                  resourceRequestCpu '250m'
+                  resourceLimitMemory '1024Mi'
+                  resourceLimitCpu '500m'
                }
             }
          }
-      }
-      stage('Build') {
-         steps {
-            checkout scm
-            container('maven') {
-               script {
-                   try {
-                      startVmstatLogging('mvn-build')
-                      dumpSysInfo()
-                      timeout(time: 1, unit: 'HOURS') {
-                         sh '''
-                         # Validate the structure in all submodules (especially version ids)
-                         mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
-                         '''
-                         sh '''
-                         # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
-                         # the trustAnchors parameter must be non-empty
-                         mvn -B dependency:go-offline -T4C
-                         '''
-                         sh '''
-                         mvn -B -e install -Pfastest,ci,snapshots -T4C
-                         '''
-                         sh '''
-                         mvn -B -e clean
-                         mkdir -p ${BUNDLES_DIR}
-                         tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
-                         tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
-                         '''
-                         sh '''
-                         # For easy access to built artifacts and using them elsewhere
-                         gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-                         mvn_copy="mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.9.0:copy -DoutputDirectory=${BUNDLES_DIR}"
-                         ${mvn_copy} -Dartifact="org.glassfish.main.distributions:glassfish:${gfVersion}:zip"
-                         ${mvn_copy} -Dartifact="org.glassfish.main.distributions:web:${gfVersion}:zip"
-                         ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
-                         ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-web:${gfVersion}:jar"
-                         ls -la ${BUNDLES_DIR}
-                         '''
-                      }
-                   } finally {
-                      stopVmstatLogging()
-                   }
+         stages {
+            stage('Check Changes') {
+               steps {
+                  checkout scm
+                  container('maven') {
+                     script {
+                        // Default: run tests
+                        env.SKIP_TESTS = "false"
+                        // Only check for docs-only changes in PR builds
+                        if (env.CHANGE_TARGET) {
+                           echo "PR build detected, checking if only docs changed..."
+                           def relevantChanges = sh(
+                              script: '''
+                                 (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
+                              ''',
+                              returnStdout: true
+                           ).trim()
+
+                           if (relevantChanges == "") {
+                              env.SKIP_TESTS = "true"
+                              echo "✓ Only docs/ changes detected - tests will be skipped"
+                           } else {
+                              echo "✗ Relevant changes detected - tests will run"
+                           }
+                        } else {
+                           echo "Non-PR build - tests will always run"
+                        }
+                     }
+                  }
                }
             }
-            archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
-            archiveArtifacts artifacts: 'bundles/*.jar', onlyIfSuccessful: true
-            stash includes: 'bundles/appserv-tests.tar.gz', name: 'appserv-tests'
-            stash includes: 'bundles/maven-repo.tar.gz', name: 'maven-repo'
+            stage('Build') {
+               steps {
+                  checkout scm
+                  container('maven') {
+                     script {
+                         try {
+                            startVmstatLogging('mvn-build')
+                            dumpSysInfo()
+                            timeout(time: 1, unit: 'HOURS') {
+                               sh '''
+                               # Validate the structure in all submodules (especially version ids)
+                               mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
+                               '''
+                               sh '''
+                               # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
+                               # the trustAnchors parameter must be non-empty
+                               mvn -B dependency:go-offline -T4C
+                               '''
+                               sh '''
+                               mvn -B -e install -Pfastest,ci,snapshots -T4C
+                               '''
+                               sh '''
+                               mvn -B -e clean
+                               mkdir -p ${BUNDLES_DIR}
+                               tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
+                               tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
+                               '''
+                               sh '''
+                               # For easy access to built artifacts and using them elsewhere
+                               gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
+                               mvn_copy="mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.9.0:copy -DoutputDirectory=${BUNDLES_DIR}"
+                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:glassfish:${gfVersion}:zip"
+                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:web:${gfVersion}:zip"
+                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
+                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-web:${gfVersion}:jar"
+                               ls -la ${BUNDLES_DIR}
+                               '''
+                            }
+                         } finally {
+                            stopVmstatLogging()
+                         }
+                     }
+                  }
+                  archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
+                  archiveArtifacts artifacts: 'bundles/*.jar', onlyIfSuccessful: true
+                  stash includes: 'bundles/appserv-tests.tar.gz', name: 'appserv-tests'
+                  stash includes: 'bundles/maven-repo.tar.gz', name: 'maven-repo'
+               }
+            }
          }
       }
       stage('Test') {
@@ -793,6 +829,25 @@ pipeline {
          }
          parallel {
             stage('main-tests') {
+               // main-tests used to reuse the pipeline-wide Maven pod. Give it
+               // its own pod so that pod disappears as soon as main-tests and
+               // its post actions are complete.
+               agent {
+                  kubernetes {
+                     yaml mvnContainerCfg
+                     containerTemplate {
+                        name 'jnlp'
+                        image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
+                        alwaysPullImage false
+                        ttyEnabled true
+                        workingDir '/home/jenkins/agent'
+                        resourceRequestMemory '1024Mi'
+                        resourceRequestCpu '250m'
+                        resourceLimitMemory '1024Mi'
+                        resourceLimitCpu '500m'
+                     }
+                  }
+               }
                steps {
                   checkout scm
                   container('maven') {
@@ -800,7 +855,14 @@ pipeline {
                         try {
                            startVmstatLogging('main-tests')
                            dumpSysInfo()
+                           unstash 'maven-repo'
                            timeout(time: 4, unit: 'HOURS') {
+                              // A fresh main-tests pod has an empty
+                              // org/glassfish/main repository, unlike the old
+                              // pipeline-wide pod which had performed Build.
+                              sh '''
+                              tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                              '''
                               sh '''
                               mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
                               '''
@@ -829,10 +891,6 @@ pipeline {
                }
             }
             stage('ant-tests') {
-               tools {
-                  jdk "${jdkTool}"
-                  maven "${mvnTool}"
-               }
                steps {
                   script {
                      parallel parallelStagesMapAntWorkers
@@ -841,12 +899,36 @@ pipeline {
             }
          }
       }
-   }
-   post {
-      success {
-         // Overwrite stashes with empty content
-         stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
-         stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
+      // The old pipeline-wide agent provided a workspace for the successful
+      // post block that overwrote the preserved test stashes. Preserve that
+      // behaviour with a tiny JNLP-only pod rather than retaining a Maven pod.
+      stage('Clear successful stashes') {
+         agent {
+            kubernetes {
+               yaml '''
+apiVersion: v1
+kind: Pod
+spec:
+  nodeSelector:
+    kubernetes.io/os: "linux"
+'''
+               containerTemplate {
+                  name 'jnlp'
+                  image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
+                  alwaysPullImage false
+                  ttyEnabled true
+                  workingDir '/home/jenkins/agent'
+                  resourceRequestMemory '1024Mi'
+                  resourceRequestCpu '250m'
+                  resourceLimitMemory '1024Mi'
+                  resourceLimitCpu '500m'
+               }
+            }
+         }
+         steps {
+            stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
+            stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
+         }
       }
    }
 }

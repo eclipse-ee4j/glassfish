@@ -409,13 +409,14 @@ def runAntJob(job, int startSlot, String nodeCfg) {
       } else {
          echo "${job}: Ant worker slot is free; requesting pod now"
       }
-      // A normal Ant/JUnit test failure gets one retry in a completely fresh
-      // pod. This is deliberately separate from the five Kubernetes-agent
-      // infrastructure retries below.
+      // A normal Ant/JUnit test failure or a 30-minute Ant-suite timeout gets
+      // one retry in a completely fresh pod. This is deliberately separate
+      // from the five Kubernetes-agent infrastructure retries below.
       for (int testAttempt = 1; testAttempt <= 2; testAttempt++) {
          boolean antTestsFailed = false
+         boolean antTestsTimedOut = false
          if (testAttempt > 1) {
-            echo "${job}: retrying failed Ant tests once in a fresh pod (test attempt ${testAttempt}/2)"
+            echo "${job}: retrying Ant tests once in a fresh pod (test attempt ${testAttempt}/2)"
             // Give Kubernetes a moment to release the previous pod's quota.
             sleep time: 10, unit: 'SECONDS'
          }
@@ -439,9 +440,9 @@ def runAntJob(job, int startSlot, String nodeCfg) {
             retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
                attempt++
                waitBeforePodRetry(attempt, job)
-               // Reset this for every infrastructure retry. Only a completed
-               // Ant run whose JUnit XML contains failures/errors may request
-               // the one test retry.
+               // Reset this for every infrastructure retry. A completed Ant
+               // run with JUnit failures/errors or a 30-minute suite timeout
+               // may request the one test retry.
                antTestsFailed = false
                node(POD_LABEL) {
                   boolean vmstatStarted = false
@@ -462,54 +463,74 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                         vmstatStarted = true
                         unstash 'maven-repo'
                         unstash 'appserv-tests'
-                        timeout(time: 4, unit: 'HOURS') {
-                           withAnt(installation: 'apache-ant-latest') {
-                              // withAnt replaces PATH with one containing the installed Ant,
-                              // so restore the Maven bin directory inside that scope.
-                              withEnv(["PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin"]) {
-                                 dumpSysInfo()
-                                 sh '''
-                                 mkdir -p ${WORKSPACE}/appserver/tests
-                                 tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                                 tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                                 '''
-                                 sh """
-                                 ./runtests.sh ${job}
-                                 """
+                        try {
+                           timeout(time: 30, unit: 'MINUTES') {
+                              withAnt(installation: 'apache-ant-latest') {
+                                 // withAnt replaces PATH with one containing the installed Ant,
+                                 // so restore the Maven bin directory inside that scope.
+                                 withEnv(["PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin"]) {
+                                    dumpSysInfo()
+                                    sh '''
+                                    mkdir -p ${WORKSPACE}/appserver/tests
+                                    tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                                    tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                                    '''
+                                    sh """
+                                    ./runtests.sh ${job}
+                                    """
+                                 }
                               }
                            }
+                        } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
+                           boolean exceededAntTimeout = e.getCauses().any { cause ->
+                              cause instanceof org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution.ExceededTimeout
+                           }
+                           if (!exceededAntTimeout) {
+                              throw e
+                           }
+
+                           antTestsTimedOut = true
+                           antTestsFailed = true
+                           if (testAttempt == 1) {
+                              echo "${job}: Ant tests timed out after 30 minutes; scheduling one fresh-pod retry"
+                           } else {
+                              echo "${job}: Ant tests timed out again after 30 minutes on the fresh-pod retry"
+                              throw e
+                           }
                         }
-                        // Do not invoke Jenkins' junit step yet. Publishing a
-                        // failed report immediately marks the build UNSTABLE and
-                        // that result cannot later be improved to SUCCESS.
-                        //
-                        // runtests.sh writes JUnit reports under this directory.
-                        // Retry once if any report has a non-zero failures or
-                        // errors attribute. No report retains the old
-                        // allowEmptyResults behaviour and does not trigger a
-                        // speculative retry.
-                        int junitFailureStatus = sh(
-                           returnStatus: true,
-                           script: '''
-                           for report in results/junitreports/*.xml; do
-                              [ -e "$report" ] || continue
-                              if grep -Eq 'failures="[1-9][0-9]*"|errors="[1-9][0-9]*"' "$report"; then
-                                 exit 1
+                        if (!antTestsTimedOut) {
+                           // Do not invoke Jenkins' junit step yet. Publishing a
+                           // failed report immediately marks the build UNSTABLE and
+                           // that result cannot later be improved to SUCCESS.
+                           //
+                           // runtests.sh writes JUnit reports under this directory.
+                           // Retry once if any report has a non-zero failures or
+                           // errors attribute. No report retains the old
+                           // allowEmptyResults behaviour and does not trigger a
+                           // speculative retry.
+                           int junitFailureStatus = sh(
+                              returnStatus: true,
+                              script: '''
+                              for report in results/junitreports/*.xml; do
+                                 [ -e "$report" ] || continue
+                                 if grep -Eq 'failures="[1-9][0-9]*"|errors="[1-9][0-9]*"' "$report"; then
+                                    exit 1
+                                 fi
+                              done
+                              exit 0
+                              '''
+                           )
+                           antTestsFailed = (junitFailureStatus != 0)
+                           if (antTestsFailed && testAttempt == 1) {
+                              echo "${job}: JUnit report contains failures/errors; scheduling one fresh-pod retry"
+                              // Preserve the failed attempt for diagnostics without
+                              // publishing its JUnit XML to Jenkins.
+                              sh """
+                              if [ -f '${job}-results.tar.gz' ]; then
+                                 mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
                               fi
-                           done
-                           exit 0
-                           '''
-                        )
-                        antTestsFailed = (junitFailureStatus != 0)
-                        if (antTestsFailed && testAttempt == 1) {
-                           echo "${job}: JUnit report contains failures/errors; scheduling one fresh-pod retry"
-                           // Preserve the failed attempt for diagnostics without
-                           // publishing its JUnit XML to Jenkins.
-                           sh """
-                           if [ -f '${job}-results.tar.gz' ]; then
-                              mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
-                           fi
-                           """
+                              """
+                           }
                         }
                      }
                   } finally {
@@ -540,7 +561,7 @@ def runAntJob(job, int startSlot, String nodeCfg) {
             break
          }
          if (testAttempt == 2) {
-            echo "${job}: Ant tests still contain failures/errors after the single retry"
+            echo "${job}: Ant tests still contain failures/errors after the single fresh-pod retry"
          }
       }
    }
@@ -626,8 +647,12 @@ def ant_connector_jobs = [
     "connector_group_3",
     "connector_group_4"
 ]
-def ant_di_jobs = [
+def ant_priority_jobs = [
     "cdi_all",
+    "security_all",
+    "deployment_all"
+]
+def ant_di_jobs = [
     "ejb_group_1",
     "ejb_group_2",
     "ejb_group_3",
@@ -647,8 +672,6 @@ def ant_other_jobs = [
     "web_jsp",
     "batch_all",
     "naming_all",
-    "deployment_all",
-    "security_all",
     "webservice_all"
 ]
 def mvn_jobs = [
@@ -666,7 +689,7 @@ def parallelStagesMapMvn = mvn_jobs.collectEntries {
 // number of Pipeline worker branches instead of depending on Lockable Resources
 // or Throttle Concurrent Builds plugins.
 def maxConcurrentAntPods = 10
-def ant_jobs = ant_connector_jobs + ant_db_jobs + ant_di_jobs + ant_other_jobs
+def ant_jobs = ant_priority_jobs + ant_connector_jobs + ant_db_jobs + ant_di_jobs + ant_other_jobs
 def parallelStagesMapAntWorkers = [:]
 for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
    def jobsForWorker = []

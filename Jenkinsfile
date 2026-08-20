@@ -466,7 +466,7 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            withAnt(installation: 'apache-ant-latest') {
                               // withAnt replaces PATH with one containing the installed Ant,
                               // so restore the Maven bin directory inside that scope.
-                              withEnv(["PATH+MAVEN=/opt/tools/apache-maven/${mvnVersion}/bin"]) {
+                              withEnv(["PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin"]) {
                                  dumpSysInfo()
                                  sh '''
                                  mkdir -p ${WORKSPACE}/appserver/tests

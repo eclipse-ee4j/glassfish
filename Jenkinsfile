@@ -239,7 +239,7 @@ spec:
         memory: "8Gi"
         cpu: "5500m"
       requests:
-        memory: "8Gi"
+        memory: "6Gi"
         cpu: "3000m"
   volumes:
   - name: "m2-mvnd"
@@ -305,14 +305,35 @@ def startVmstatLogging(String stageName) {
    sh """
    mkdir -p "${WORKSPACE}/logs"
    vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
+
+   # On cgroup v2, record this container's current and peak memory usage every
+   # 10 seconds. Values are bytes. If these files are unavailable, skip the
+   # diagnostic without affecting the build.
+   if [ -r /sys/fs/cgroup/memory.current ]; then
+      (
+         while true; do
+            current=\$(cat /sys/fs/cgroup/memory.current 2>/dev/null || echo unavailable)
+            if [ -r /sys/fs/cgroup/memory.peak ]; then
+               peak=\$(cat /sys/fs/cgroup/memory.peak 2>/dev/null || echo unavailable)
+            else
+               peak=unavailable
+            fi
+            printf '%s memory.current=%s memory.peak=%s\n' "\$(date '+%Y-%m-%dT%H:%M:%S%z')" "\$current" "\$peak"
+            sleep 10
+         done
+      ) > "${WORKSPACE}/logs/cgroup-memory-${stageName}.log" 2>&1 &
+      echo \$! > "${WORKSPACE}/cgroup-memory.pid"
+   fi
    """
 }
 def stopVmstatLogging() {
    sh """
-   if [ -f "${WORKSPACE}/vmstat.pid" ]; then
-      pkill -F "${WORKSPACE}/vmstat.pid" || true
-      rm -f "${WORKSPACE}/vmstat.pid"
-   fi
+   for pidfile in vmstat.pid cgroup-memory.pid; do
+      if [ -f "${WORKSPACE}/\$pidfile" ]; then
+         pkill -F "${WORKSPACE}/\$pidfile" || true
+         rm -f "${WORKSPACE}/\$pidfile"
+      fi
+   done
    df -h || true
    """
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true

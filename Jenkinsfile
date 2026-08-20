@@ -464,15 +464,19 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                         unstash 'appserv-tests'
                         timeout(time: 4, unit: 'HOURS') {
                            withAnt(installation: 'apache-ant-latest') {
-                              dumpSysInfo()
-                              sh '''
-                              mkdir -p ${WORKSPACE}/appserver/tests
-                              tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                              '''
-                              sh """
-                              ./runtests.sh ${job}
-                              """
+                              // withAnt replaces PATH with one containing the installed Ant,
+                              // so restore the Maven bin directory inside that scope.
+                              withEnv(["PATH+MAVEN=/opt/tools/apache-maven/${mvnVersion}/bin"]) {
+                                 dumpSysInfo()
+                                 sh '''
+                                 mkdir -p ${WORKSPACE}/appserver/tests
+                                 tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                                 tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                                 '''
+                                 sh """
+                                 ./runtests.sh ${job}
+                                 """
+                              }
                            }
                         }
                         // Do not invoke Jenkins' junit step yet. Publishing a

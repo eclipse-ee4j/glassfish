@@ -101,7 +101,7 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
             hostConfig.withUlimits(new Ulimit[] {new Ulimit("nofile", 4096L, 8192L)});
         })
         .withLogConsumer(o -> LOG_GF.log(Level.INFO, o.getUtf8StringWithoutLineEnding()))
-        .withExposedPorts(8080)
+        .withExposedPorts(8080, 9009)
         .waitingFor(
             Wait.forLogMessage(".*Total startup time including CLI.*", 1).withStartupTimeout(Duration.ofMinutes(5L)));
     }
@@ -238,7 +238,13 @@ public class GlassFishContainer extends GenericContainer<GlassFishContainer> {
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" delete-jvm-options ").append("-Xmx512m");
         command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" create-jvm-options ").append("-Xmx")
             .append(MEM_MAX_APP_HEAP).append('g');
-        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain ").append("domain1");
+
+        command.append(" && ").append(PATH_DOCKER_ASADMIN).append(" restart-domain ");
+        if (Boolean.getBoolean("glassfish.debug")) {
+            command.append("--debug true ");
+        }
+        command.append("domain1");
+
         command.append(" && tail -n 10000 -F ").append(PATH_DOCKER_GF_DOMAIN1_SERVER_LOG);
         return command.toString();
     }

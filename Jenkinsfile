@@ -292,7 +292,47 @@ spec:
   - name: "maven-repo-local-storage"
     emptyDir:
       sizeLimit: "2Gi"
+
 """
+
+def mvnBuildContainerCfg = mvnContainerCfg.replace(
+"""    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "5500m"
+      requests:
+        memory: "6Gi"
+        cpu: "2000m"
+""",
+"""    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "5500m"
+      requests:
+        memory: "5Gi"
+        cpu: "2000m"
+"""
+)
+
+def mvnLightContainerCfg = mvnContainerCfg.replace(
+"""    resources:
+      limits:
+        memory: "8Gi"
+        cpu: "5500m"
+      requests:
+        memory: "6Gi"
+        cpu: "2000m"
+""",
+"""    resources:
+      limits:
+        memory: "6Gi"
+        cpu: "5500m"
+      requests:
+        memory: "3.5Gi"
+        cpu: "2000m"
+"""
+)
+
 def dumpSysInfo() {
    sh """
    id || true
@@ -463,39 +503,38 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                         vmstatStarted = true
                         unstash 'maven-repo'
                         unstash 'appserv-tests'
-                        try {
-                           timeout(time: 30, unit: 'MINUTES') {
-                              withAnt(installation: 'apache-ant-latest') {
-                                 // withAnt replaces PATH with one containing the installed Ant,
-                                 // so restore the Maven bin directory inside that scope.
-                                 withEnv(["PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin"]) {
-                                    dumpSysInfo()
-                                    sh '''
-                                    mkdir -p ${WORKSPACE}/appserver/tests
-                                    tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                                    tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                                    '''
-                                    sh """
-                                    ./runtests.sh ${job}
-                                    """
+                        withAnt(installation: 'apache-ant-latest') {
+                           // withAnt replaces PATH with one containing the installed Ant,
+                           // so restore the Maven bin directory inside that scope.
+                           // BUNDLES_DIR must be absolute: CDI stores the JaCoCo
+                           // -javaagent path in domain.xml and then restarts GlassFish.
+                           withEnv([
+                              "PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin",
+                              "BUNDLES_DIR=${env.WORKSPACE}/bundles"
+                           ]) {
+                              dumpSysInfo()
+                              sh '''
+                              mkdir -p ${WORKSPACE}/appserver/tests
+                              tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                              tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+                              '''
+                              int antRunStatus = sh(
+                                 returnStatus: true,
+                                 script: """
+                                 timeout --signal=TERM --kill-after=2m 30m ./runtests.sh ${job}
+                                 """
+                              )
+                              if (antRunStatus == 124) {
+                                 antTestsTimedOut = true
+                                 antTestsFailed = true
+                                 if (testAttempt == 1) {
+                                    echo "${job}: Ant tests timed out after 30 minutes; scheduling one fresh-pod retry"
+                                 } else {
+                                    error "${job}: Ant tests timed out again after 30 minutes on the fresh-pod retry"
                                  }
+                              } else if (antRunStatus != 0) {
+                                 error "${job}: runtests.sh exited with status ${antRunStatus}"
                               }
-                           }
-                        } catch (org.jenkinsci.plugins.workflow.steps.FlowInterruptedException e) {
-                           boolean exceededAntTimeout = e.getCauses().any { cause ->
-                              cause instanceof org.jenkinsci.plugins.workflow.steps.TimeoutStepExecution.ExceededTimeout
-                           }
-                           if (!exceededAntTimeout) {
-                              throw e
-                           }
-
-                           antTestsTimedOut = true
-                           antTestsFailed = true
-                           if (testAttempt == 1) {
-                              echo "${job}: Ant tests timed out after 30 minutes; scheduling one fresh-pod retry"
-                           } else {
-                              echo "${job}: Ant tests timed out again after 30 minutes on the fresh-pod retry"
-                              throw e
                            }
                         }
                         if (!antTestsTimedOut) {
@@ -682,7 +721,7 @@ def mvn_jobs = [
 def mvnSlotOffset = 1
 
 def parallelStagesMapMvn = mvn_jobs.collectEntries {
-   ["${it}": generateMvnTestPodTemplate(it, mvnContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
+   ["${it}": generateMvnTestPodTemplate(it, mvnLightContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
 }
 
 // Global Ant concurrency limit. This is deliberately implemented with a fixed
@@ -708,8 +747,8 @@ for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
 pipeline {
    // Do not hold one large Maven pod for the lifetime of the Pipeline.
    // Prepare/Build and main-tests each get their own stage-scoped Maven pod,
-   // so Kubernetes can reclaim its 2.25 CPU / 7 GiB request as soon as that
-   // work is complete.
+   // so Kubernetes can reclaim each pod's reservation as soon as that work
+   // is complete.
    agent none
    environment {
       // Keep this relative because there is no pipeline-wide WORKSPACE when
@@ -754,7 +793,7 @@ pipeline {
                // Do not inherit "basic" here: its jnlp ContainerTemplate has
                // alwaysPullImage=true, and the plugin cannot override inherited true
                // with false. The relevant basic mounts are reproduced in mvnContainerCfg.
-               yaml mvnContainerCfg
+               yaml mvnBuildContainerCfg
                containerTemplate {
                   name 'jnlp'
                   image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'

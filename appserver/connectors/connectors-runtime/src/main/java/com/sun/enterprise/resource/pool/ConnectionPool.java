@@ -872,9 +872,9 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
 
             // Resource from the pool must be marked busy when it is returned from the pool
             if (resourceHandle != null) {
-                makeSureResourceIsBusy(resourceHandle);
+                makeSureResourceIsBusy(resourceFromPool);
                 // Not expecting an enlisted resource to be returned from the pool
-                makeSureResourceIsNotEnlisted(resourceHandle);
+                makeSureResourceIsNotEnlisted(resourceFromPool);
             }
         } finally {
             getResourceFromPoolAndFreeResourceMethodsLock.unlock();

@@ -680,39 +680,6 @@ def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
    }
 }
 
-def ant_connector_jobs = [
-    "connector_group_1",
-    "connector_group_2",
-    "connector_group_3",
-    "connector_group_4"
-]
-def ant_priority_jobs = [
-    "cdi_all",
-    "security_all",
-    "deployment_all"
-]
-def ant_di_jobs = [
-    "ejb_group_1",
-    "ejb_group_2",
-    "ejb_group_3",
-    "ejb_group_embedded"
-]
-def ant_db_jobs = [
-    "jdbc_group1",
-    "jdbc_group2",
-    "jdbc_group3",
-    "jdbc_group4",
-    "jdbc_group5",
-    "persistence_all"
-]
-def ant_other_jobs = [
-    "ql_gf_full_profile_all",
-    "ql_gf_web_profile_all",
-    "web_jsp",
-    "batch_all",
-    "naming_all",
-    "webservice_all"
-]
 def mvn_jobs = [
     "admin-tests-parent",
     "application-tests",
@@ -728,13 +695,28 @@ def parallelStagesMapMvn = mvn_jobs.collectEntries {
 // number of Pipeline worker branches instead of depending on Lockable Resources
 // or Throttle Concurrent Builds plugins.
 def maxConcurrentAntPods = 10
-def ant_jobs = ant_priority_jobs + ant_connector_jobs + ant_db_jobs + ant_di_jobs + ant_other_jobs
+
+// Keep the three priority suites at the front, but balance the complete worker
+// queues using observed runtimes from successful runs #7 and #13. The planning
+// cost uses the slower observed runtime for each suite plus roughly 1.5 minutes
+// of fresh-pod/setup overhead per job.
+def antWorkerJobs = [
+   ["cdi_all", "ejb_group_embedded", "ql_gf_web_profile_all"],
+   ["security_all", "ejb_group_2"],
+   ["deployment_all", "jdbc_group2", "connector_group_3"],
+   ["connector_group_4", "ql_gf_full_profile_all"],
+   ["web_jsp", "jdbc_group1", "batch_all"],
+   ["webservice_all", "connector_group_2"],
+   ["ejb_group_1", "jdbc_group4"],
+   ["ejb_group_3", "persistence_all"],
+   ["jdbc_group3", "jdbc_group5"],
+   ["connector_group_1", "naming_all"]
+]
+assert antWorkerJobs.size() == maxConcurrentAntPods
+
 def parallelStagesMapAntWorkers = [:]
 for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
-   def jobsForWorker = []
-   for (int jobIndex = workerIndex; jobIndex < ant_jobs.size(); jobIndex += maxConcurrentAntPods) {
-      jobsForWorker.add(ant_jobs[jobIndex])
-   }
+   def jobsForWorker = antWorkerJobs[workerIndex]
    if (!jobsForWorker.isEmpty()) {
       // main-tests uses the immediate Maven slot 0; the three dynamic Maven
       // pods use slots 1..3. Stagger the first Ant job in each worker across

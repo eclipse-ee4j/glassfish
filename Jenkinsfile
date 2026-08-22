@@ -510,7 +510,9 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            // -javaagent path in domain.xml and then restarts GlassFish.
                            withEnv([
                               "PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin",
-                              "BUNDLES_DIR=${env.WORKSPACE}/bundles"
+                              "BUNDLES_DIR=${env.WORKSPACE}/bundles",
+                              "ANT_JOB=${job}",
+                              "ANT_TEST_ATTEMPT=${testAttempt}"
                            ]) {
                               dumpSysInfo()
                               sh '''
@@ -520,14 +522,93 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                               '''
                               int antRunStatus = sh(
                                  returnStatus: true,
-                                 script: """
-                                 timeout --signal=TERM --kill-after=2m 30m ./runtests.sh ${job}
-                                 """
+                                 script: '''
+                                 set +e
+
+                                 # GNU timeout remains responsible for terminating
+                                 # the suite at 30 minutes. Shortly beforehand,
+                                 # capture Java thread dumps while the hung JVMs
+                                 # are still alive.
+                                 (
+                                    sleep 1770
+                                    if pgrep -f "runtests.sh ${ANT_JOB}" >/dev/null 2>&1; then
+                                       dump_dir="${WORKSPACE}/results/timeout-thread-dumps/attempt-${ANT_TEST_ATTEMPT}"
+                                       mkdir -p "${dump_dir}"
+
+                                       {
+                                          echo "Ant job: ${ANT_JOB}"
+                                          echo "Attempt: ${ANT_TEST_ATTEMPT}"
+                                          echo "Captured at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                                          echo
+                                          echo "===== PROCESS TREE ====="
+                                          ps -e -o pid,ppid,stat,etime,%cpu,%mem,args --forest
+                                          echo
+                                          echo "===== JCMD -L ====="
+                                          if command -v jcmd >/dev/null 2>&1; then
+                                             jcmd -l || true
+                                          else
+                                             echo "jcmd is not available"
+                                          fi
+                                       } > "${dump_dir}/processes.txt" 2>&1
+
+                                       for pid in $(pgrep -x java 2>/dev/null); do
+                                          dump_file="${dump_dir}/java-${pid}-threads.txt"
+                                          {
+                                             echo "Ant job: ${ANT_JOB}"
+                                             echo "Attempt: ${ANT_TEST_ATTEMPT}"
+                                             echo "PID: ${pid}"
+                                             echo "Captured at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+                                             echo
+                                             ps -p "${pid}" -o pid,ppid,stat,etime,%cpu,%mem,args
+                                             echo
+                                          } > "${dump_file}" 2>&1
+
+                                          dumped=false
+                                          if command -v jcmd >/dev/null 2>&1; then
+                                             echo "===== jcmd ${pid} Thread.print -l =====" >> "${dump_file}"
+                                             if timeout 8s jcmd "${pid}" Thread.print -l >> "${dump_file}" 2>&1; then
+                                                dumped=true
+                                             else
+                                                echo "jcmd Thread.print failed or timed out" >> "${dump_file}"
+                                             fi
+                                          fi
+
+                                          if [ "${dumped}" != "true" ] && command -v jstack >/dev/null 2>&1; then
+                                             echo >> "${dump_file}"
+                                             echo "===== jstack -l ${pid} =====" >> "${dump_file}"
+                                             timeout 8s jstack -l "${pid}" >> "${dump_file}" 2>&1 || \
+                                                echo "jstack failed or timed out" >> "${dump_file}"
+                                          fi
+                                       done
+                                    fi
+                                 ) &
+                                 thread_dump_watchdog_pid=$!
+
+                                 timeout --signal=TERM --kill-after=2m 30m ./runtests.sh "${ANT_JOB}"
+                                 ant_status=$?
+
+                                 # If the test finished before 29m30s, stop the
+                                 # sleeping diagnostics watchdog. If it already
+                                 # ran, this is harmless.
+                                 kill "${thread_dump_watchdog_pid}" >/dev/null 2>&1 || true
+                                 wait "${thread_dump_watchdog_pid}" >/dev/null 2>&1 || true
+
+                                 exit "${ant_status}"
+                                 '''
                               )
                               if (antRunStatus == 124) {
                                  antTestsTimedOut = true
                                  antTestsFailed = true
                                  if (testAttempt == 1) {
+                                    // runtests.sh normally creates this archive
+                                    // from results/ while handling TERM. Preserve
+                                    // the timed-out first attempt, including the
+                                    // pre-timeout thread dumps, before retrying.
+                                    sh """
+                                    if [ -f '${job}-results.tar.gz' ]; then
+                                       mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
+                                    fi
+                                    """
                                     echo "${job}: Ant tests timed out after 30 minutes; scheduling one fresh-pod retry"
                                  } else {
                                     error "${job}: Ant tests timed out again after 30 minutes on the fresh-pod retry"
@@ -578,6 +659,7 @@ def runAntJob(job, int startSlot, String nodeCfg) {
                            stopVmstatLogging()
                         }
                      }
+                     archiveArtifacts artifacts: "results/timeout-thread-dumps/**", allowEmptyArchive: true
                      if (antTestsFailed && testAttempt == 1) {
                         archiveArtifacts artifacts: "${job}-flaky-attempt1-results.tar.gz", allowEmptyArchive: true
                      } else {
@@ -696,13 +778,14 @@ def parallelStagesMapMvn = mvn_jobs.collectEntries {
 // or Throttle Concurrent Builds plugins.
 def maxConcurrentAntPods = 10
 
-// Keep the three priority suites at the front, but balance the complete worker
-// queues using observed runtimes from successful runs #7 and #13. The planning
-// cost uses the slower observed runtime for each suite plus roughly 1.5 minutes
-// of fresh-pod/setup overhead per job.
+// Balance the complete worker queues using observed runtimes from successful
+// runs #7 and #13. Start ejb_group_2 in the first wave so that a repeat of its
+// timer-test hang reaches the 30-minute timeout/retry as early as possible.
+// The planning cost uses the slower observed runtime for each suite plus roughly
+// 1.5 minutes of fresh-pod/setup overhead per job.
 def antWorkerJobs = [
    ["cdi_all", "ejb_group_embedded", "ql_gf_web_profile_all"],
-   ["security_all", "ejb_group_2"],
+   ["ejb_group_2", "security_all"],
    ["deployment_all", "jdbc_group2", "connector_group_3"],
    ["connector_group_4", "ql_gf_full_profile_all"],
    ["web_jsp", "jdbc_group1", "batch_all"],

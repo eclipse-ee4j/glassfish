@@ -255,10 +255,12 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             ResourceSpec resourceSpec = new ResourceSpec(jndiNameToUse, ResourceSpec.JNDI_NAME, poolMetaData);
             resourceSpec.setPoolInfo(this.poolInfo);
             ManagedConnectionFactory freshManagedConnectionFactory = poolMetaData.getMCF();
+            boolean managedConnectionFactoryChanged = !freshManagedConnectionFactory.equals(mcf);
 
-            if (!freshManagedConnectionFactory.equals(mcf)) {
+            if (managedConnectionFactoryChanged) {
                 LOG.info("conmgr.mcf_not_equal");
             }
+            ManagedConnectionFactory effectiveManagedConnectionFactory = freshManagedConnectionFactory;
             ConnectorDescriptor rarConnectorDescriptor = registry.getDescriptor(rarName);
 
             Subject subject = null;
@@ -277,15 +279,17 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 //
                 // create non-null Subject associated with no credentials
 
-                subject = createSubject(mcf, null);
+                subject = createSubject(effectiveManagedConnectionFactory, null);
             } else if (prin == null) {
                 info = new ClientSecurityInfo(cxRequestInfo);
             } else {
                 info = new ClientSecurityInfo(prin);
                 if (prin.equals(defaultResourcePrincipalDescriptor)) {
-                    subject = poolMetaData.getSubject();
+                    subject = managedConnectionFactoryChanged
+                        ? createSubject(effectiveManagedConnectionFactory, prin)
+                        : poolMetaData.getSubject();
                 } else {
-                    subject = ConnectionPoolObjectsUtils.createSubject(mcf, prin);
+                    subject = ConnectionPoolObjectsUtils.createSubject(effectiveManagedConnectionFactory, prin);
                 }
             }
 
@@ -295,7 +299,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 resourceSpec.setConnectionToAssociate(connection);
             }
 
-            return getResource(txLevel, poolManager, mcf, resourceSpec, subject, cxRequestInfo, info, rarConnectorDescriptor, shareable);
+            return getResource(txLevel, poolManager, effectiveManagedConnectionFactory, resourceSpec, subject,
+                cxRequestInfo, info, rarConnectorDescriptor, shareable);
 
         } catch (PoolingException e) {
             // We can't simply look for ResourceException and throw back since

@@ -626,7 +626,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                         parser.parse(new ReadableArchiveScannerAdapter(parser, externalLibrary), null);
                     }
 
-                    parser.awaitTermination();
+                    final Exception[] parserExceptions = parser.awaitTermination();
+                    if (parserExceptions.length > 0) {
+                        throw new MultiException(List.of(parserExceptions));
+                    }
 
                     for (ReadableArchive externalLibrary : externalLibraries) {
                         externalLibrary.close();
@@ -637,7 +640,10 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 context.addTransientAppMetaData(Parser.class.getName(), parser);
 
                 return parser.getContext().getTypes();
-            } catch (InterruptedException | URISyntaxException e) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IOException(e);
+            } catch (URISyntaxException e) {
                 throw new IOException(e);
             }
         }

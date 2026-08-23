@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package com.sun.enterprise.admin.servermgmt.logging;
 
 import com.sun.common.util.logging.LoggingConfigImpl;
+import com.sun.common.util.logging.LoggingXMLNames;
 import com.sun.enterprise.admin.servermgmt.RepositoryConfig;
 import com.sun.enterprise.admin.servermgmt.pe.PEFileLayout;
 import com.sun.enterprise.config.serverbeans.Config;
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.lang.System.Logger;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Stream;
 
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
@@ -68,14 +71,29 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
         // v3 uses logging.properties to configure the logging facility.
         // move all log-service elements to logging.properties
         final LogService logService = config.getLogService();
-
-        // check if null and exit
-        if (logService == null)
-         {
+        if (logService == null) {
             return;
-        // get a copy of the logging.properties file
         }
 
+        createLoggingPropertiesFileIfMissing();
+        final Map<String, String> properties = collectMigratableProperties(logService);
+
+        try {
+            ConfigSupport.apply(c -> {
+                try {
+                    logConfig.updateLoggingProperties(properties);
+                } catch (IOException e) {
+                    LOG.log(ERROR, "Failure while upgrading log-service. Could not update logging.properties file.", e);
+                }
+                c.setLogService(null);
+                return null;
+            }, config);
+        } catch (TransactionFailure e) {
+            throw new RuntimeException("Failure while upgrading log-service", e);
+        }
+    }
+
+    private void createLoggingPropertiesFileIfMissing() {
         try {
             RepositoryConfig rc = new RepositoryConfig();
             String configDir = rc.getRepositoryRoot() + File.separator + rc.getRepositoryName() + File.separator + rc.getInstanceName()
@@ -86,44 +104,74 @@ public class UpgradeLogging implements ConfigurationUpgrade, PostConstruct {
             if (!dest.exists()) {
                 FileUtils.copy(src, dest);
             }
-
         } catch (IOException e) {
             LOG.log(ERROR, "Failure while upgrading log-service. Could not create logging.properties file.", e);
         }
+    }
 
-        try {
-            //Get the logLevels
-            ModuleLogLevels mll = logService.getModuleLogLevels();
-
-            Map<String, String> logLevels = mll.getAllLogLevels();
-            String file = logService.getFile();
-            String instanceRoot = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
-            if (file.contains(instanceRoot)) {
-                file = file.replace(instanceRoot, "${" + INSTANCE_ROOT.getSystemPropertyName() + "}");
-            }
-            logLevels.put("file", file);
-            logLevels.put("use-system-logging", logService.getUseSystemLogging());
-            //this can have multiple values so need to add
-            logLevels.put("log-handler", logService.getLogHandler());
-            logLevels.put("log-filter", logService.getLogFilter());
-            logLevels.put("log-to-console", logService.getLogToConsole());
-            logLevels.put("log-rotation-limit-in-bytes", logService.getLogRotationLimitInBytes());
-            logLevels.put("log-rotation-timelimit-in-minutes", logService.getLogRotationTimelimitInMinutes());
-            logLevels.put("alarms", logService.getAlarms());
-            logLevels.put("retain-error-statistics-for-hours", logService.getRetainErrorStatisticsForHours());
-            final Map<String, String> m = new HashMap<>(logLevels);
-
-            ConfigSupport.apply(c -> {
-                try {
-                    logConfig.updateLoggingProperties(m);
-                    c.setLogService(null);
-                } catch (IOException e) {
-                    LOG.log(ERROR, "Failure while upgrading log-service. Could not update logging.properties file.", e);
-                }
-                return null;
-            }, config);
-        } catch (TransactionFailure e) {
-            throw new RuntimeException("Failure while upgrading log-service", e);
+    /**
+     * Collects the log-service settings that still have a counterpart in logging.properties,
+     * keyed by their legacy domain.xml name so that {@link LoggingConfigImpl} translates them.
+     *
+     * <p>Everything else is dropped. Attributes such as {@code alarms}, {@code use-system-logging},
+     * {@code log-filter}, {@code log-to-console} and {@code retain-error-statistics-for-hours},
+     * and the module log levels removed after v2, have no counterpart, and used to be written
+     * into logging.properties verbatim as keys nothing ever reads.
+     */
+    private Map<String, String> collectMigratableProperties(LogService logService) {
+        final Map<String, String> legacy = new HashMap<>();
+        final ModuleLogLevels moduleLogLevels = logService.getModuleLogLevels();
+        if (moduleLogLevels != null) {
+            legacy.putAll(moduleLogLevels.getAllLogLevels());
         }
+        legacy.put(LoggingXMLNames.file, toInstanceRootRelative(logService.getFile()));
+        legacy.put(LoggingXMLNames.logRotationLimitInBytes, logService.getLogRotationLimitInBytes());
+        legacy.put(LoggingXMLNames.logRotationTimelimitInMinutes, logService.getLogRotationTimelimitInMinutes());
+
+        final Map<String, String> properties = new HashMap<>();
+        for (Entry<String, String> entry : legacy.entrySet()) {
+            if (entry.getValue() != null && LoggingXMLNames.xmltoPropsMap.containsKey(entry.getKey())) {
+                properties.put(entry.getKey(), entry.getValue());
+            }
+        }
+        addCustomLogHandler(properties, logService.getLogHandler());
+        return properties;
+    }
+
+    /**
+     * The log-service log-handler named a handler <em>added</em> to the chain, while the key it
+     * translates to is the complete list of root handlers. Appending keeps the handlers
+     * configured by the logging.properties template, above all the GlassFishLogHandler writing
+     * the server log.
+     */
+    private void addCustomLogHandler(Map<String, String> properties, String logHandler) {
+        if (logHandler == null || logHandler.isBlank()) {
+            return;
+        }
+        final String rootHandlersKey = LoggingXMLNames.xmltoPropsMap.get(LoggingXMLNames.logHandler);
+        final String current;
+        try {
+            current = logConfig.getLoggingProperties().get(rootHandlersKey);
+        } catch (IOException e) {
+            LOG.log(ERROR, "Failure while upgrading log-service. Could not read logging.properties file,"
+                + " the " + logHandler + " handler has to be added manually.", e);
+            return;
+        }
+        if (current == null || current.isBlank()) {
+            properties.put(rootHandlersKey, logHandler);
+        } else if (Stream.of(current.split(",")).map(String::trim).noneMatch(logHandler::equals)) {
+            properties.put(rootHandlersKey, current + "," + logHandler);
+        }
+    }
+
+    private static String toInstanceRootRelative(String file) {
+        if (file == null) {
+            return null;
+        }
+        final String instanceRoot = System.getProperty(INSTANCE_ROOT.getSystemPropertyName());
+        if (instanceRoot == null || !file.contains(instanceRoot)) {
+            return file;
+        }
+        return file.replace(instanceRoot, "${" + INSTANCE_ROOT.getSystemPropertyName() + "}");
     }
 }

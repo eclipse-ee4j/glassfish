@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -258,12 +258,12 @@ public interface VirtualServer extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the {@code logFile} property.
      *
-     * <p>Specifies a log file for virtual-server-specific log messages. Default value is
-     * {@code ${com.sun.aas.instanceRoot}/logs/server.log}.
+     * <p>Specifies a log file for virtual-server-specific log messages. When it is not set,
+     * the virtual server logs into the server log.
      *
      * @return possible object is {@link String}
      */
-    @Attribute(defaultValue = "${com.sun.aas.instanceRoot}/logs/server.log")
+    @Attribute
     String getLogFile();
 
     /**

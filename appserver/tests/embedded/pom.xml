@@ -46,6 +46,7 @@
         <module>cdi_ejb_jpa</module>
         <module>ejb</module>
         <module>glassfish_resources_xml</module>
+        <module>jms</module>
         <module>maven-plugin</module>
         <module>microprofile</module>
         <module>runnable</module>

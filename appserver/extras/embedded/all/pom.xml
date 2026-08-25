@@ -115,7 +115,11 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${artifact-collection.directory}</outputDirectory>
-                            <excludeTransitive>true</excludeTransitive>
+                            <!-- mq-distribution is declared in the embedded-all featureset pom, so it is
+                                 a transitive dependency here; transitive unpacking must stay enabled or
+                                 the broker props never reach the RAR and the embedded broker fails
+                                 (Unable to load default property file .../props/broker/default.properties). -->
+                            <excludeTransitive>false</excludeTransitive>
                             <includeTypes>zip</includeTypes>
                             <includeArtifactIds>mq-distribution</includeArtifactIds>
                             <includes>**/props/broker/**</includes>

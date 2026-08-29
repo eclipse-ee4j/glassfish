@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 #
-# Copyright (c) 2023 Contributors to the Eclipse Foundation. All rights reserved.
+# Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
 # Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -56,16 +56,18 @@ test_init(){
   printf "\n\n"
 }
 
-zip_test_results(){
+zip_test_results() {
   printf "\n%s \n\n" "===== ZIP THE TESTS RESULTS ====="
-  zip -r ${WORKSPACE}/results.zip ${WORKSPACE}/results > /dev/nul
+  jar -cf ${WORKSPACE}/results.zip -C ${WORKSPACE}/results .
 }
 
-unzip_test_resources(){
+unzip_test_resources() {
   printf "\n%s \n\n" "===== UNZIP TEST RESOURCES ====="
   for i in "${@}"; do
     if [[ ${i} == *.zip* ]]; then
-      unzip -qq -o ${i} -d ${WORKSPACE}
+      (cd ${WORKSPACE} && ${JAVA_HOME}/bin/jar -xf ${i} && chmod u+x $(find "${WORKSPACE}" -type f \
+      -name "asadmin" -o -name "nadmin" -o -name "startserv" -o -name "appclient" \
+      -o -name "wsimport" -o -name "wsgen" -o -name "*.sh"))
     else
       tar --overwrite -xf ${i}
     fi
@@ -77,15 +79,15 @@ copy_test_artifacts() {
   sleep 1; # imq sometimes stops after the domain
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
   mkdir -p ${WORKSPACE}/results/junitreports
-  
+
   tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
-  
+
   cp ${S1AS_HOME}/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
   cp ${TEST_RUN_LOG} ${WORKSPACE}/results/ || true
   cp ${APS_HOME}/test_results*.* ${WORKSPACE}/results/ || true
   cp `pwd`/*/*logs.zip ${WORKSPACE}/results/ || true
   cp `pwd`/*/*/*logs.zip ${WORKSPACE}/results/ || true
-  
+
   tar -caf ${WORKSPACE}/${1}-results.tar.gz ${WORKSPACE}/results || true
 }
 
@@ -160,7 +162,7 @@ change_junit_report_class_names(){
   if sed --version >/dev/null 2>&1; then
       ${SED} -i 's/\([a-zA-Z-]\w*\)\./\1-/g' ${WORKSPACE}/results/junitreports/*.xml
       ${SED} -i "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${WORKSPACE}/results/junitreports/*.xml
-  else 
+  else
       ${SED} -i '' 's/\([a-zA-Z-]\w*\)\./\1-/g' ${WORKSPACE}/results/junitreports/*.xml
       ${SED} -i '' "s/\bclassname=\"/classname=\"${TEST_ID}./g" ${WORKSPACE}/results/junitreports/*.xml
   fi

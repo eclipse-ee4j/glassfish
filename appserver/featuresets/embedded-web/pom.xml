@@ -650,6 +650,19 @@
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
+
+        <!-- Jakarta Data / NoSQL -->
+        <dependency>
+            <groupId>org.glassfish.main.persistence</groupId>
+            <artifactId>jnosql-integration</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jnosql.mapping</groupId>
+            <artifactId>jnosql-jakarta-persistence</artifactId>
+            <version>${jnosql.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>

@@ -44,6 +44,7 @@
         <module>basic</module>
         <module>cdi_basic</module>
         <module>cdi_ejb_jpa</module>
+        <module>data</module>
         <module>ejb</module>
         <module>glassfish_resources_xml</module>
         <module>jms</module>

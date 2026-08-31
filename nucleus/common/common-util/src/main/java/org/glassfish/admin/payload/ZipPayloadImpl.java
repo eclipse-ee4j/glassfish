@@ -319,7 +319,7 @@ class ZipPayloadImpl extends PayloadImpl {
     private static class Extra {
         private static final String CONTENT_TYPE_NAME = "Content-Type";
         private static final short EXTID = (short) 0xFFFF;       // Extra field Header ID
-        private static final short EXT_HEADER_SZIE = 4;   // Extra field header size (2 bytes for Header ID, 2 bytes for Data Size)
+        private static final short EXT_HEADER_SIZE = 4;   // Extra field header size (2 bytes for Header ID, 2 bytes for Data Size)
 
         private String contentType;
         private Properties props;
@@ -328,7 +328,7 @@ class ZipPayloadImpl extends PayloadImpl {
             try {
                 props = new Properties();
                 // skip the header (first 4 bytes).
-                byte[] extraData = Arrays.copyOfRange(extra, EXT_HEADER_SZIE, extra.length);
+                byte[] extraData = Arrays.copyOfRange(extra, EXT_HEADER_SIZE, extra.length);
                 ByteArrayInputStream bais = new ByteArrayInputStream(extraData);
                 props.load(bais);
                 contentType = props.getProperty(CONTENT_TYPE_NAME);
@@ -354,7 +354,7 @@ class ZipPayloadImpl extends PayloadImpl {
                 fullProps.store(baos, null);
                 byte[] bytes = baos.toByteArray();
                 int length = bytes.length;
-                ByteBuffer bb = ByteBuffer.allocate(EXT_HEADER_SZIE + length).order(ByteOrder.LITTLE_ENDIAN);
+                ByteBuffer bb = ByteBuffer.allocate(EXT_HEADER_SIZE + length).order(ByteOrder.LITTLE_ENDIAN);
                 // add Header ID
                 bb.putShort(EXTID);
                 // add Data Size

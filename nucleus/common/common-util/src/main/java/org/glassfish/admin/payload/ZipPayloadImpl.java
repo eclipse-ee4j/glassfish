@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
@@ -328,8 +327,7 @@ class ZipPayloadImpl extends PayloadImpl {
             try {
                 props = new Properties();
                 // skip the header (first 4 bytes).
-                byte[] extraData = Arrays.copyOfRange(extra, EXT_HEADER_SIZE, extra.length);
-                ByteArrayInputStream bais = new ByteArrayInputStream(extraData);
+                ByteArrayInputStream bais = new ByteArrayInputStream(extra, EXT_HEADER_SIZE, extra.length);
                 props.load(bais);
                 contentType = props.getProperty(CONTENT_TYPE_NAME);
                 props.remove(CONTENT_TYPE_NAME);

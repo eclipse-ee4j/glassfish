@@ -36,7 +36,7 @@
                     if(#{pageSession.configName}=server-config){
                         listAdd(list="#{pageSession.instanceList}" value="server" index="0");
                     }
-                    gf.ensureDefaultWebModule(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}",vsName="#{pageSession.valueMap['id']}",instanceList="#{pageSession.instanceList}");
+                    gf.ensureDefaultWebModule(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}",vsName="#{pageSession.valueMap['id']}",configName="#{pageSession.configName}");
                     getUIComponent(clientId="$pageSession{propertyTableRowGroupId}", component=>$attribute{tableRowGroup});
                     getAllSingleMapRows(TableRowGroup="$attribute{tableRowGroup}",  Rows=>$attribute{newList});
                     removeEmptyProps(props="#{pageSession.tableList}" modifiedProps="#{pageSession.tableList}");
@@ -71,7 +71,7 @@
                     if(#{pageSession.configName}=server-config){
                         listAdd(list="#{pageSession.instanceList}" value="server" index="0");
                     }
-                    gf.ensureDefaultWebModule(endpoint="#{pageSession.selfUrl}",vsName="#{pageSession.valueMap['id']}",instanceList="#{pageSession.instanceList}");
+                    gf.ensureDefaultWebModule(endpoint="#{pageSession.selfUrl}",vsName="#{pageSession.valueMap['id']}",configName="#{pageSession.configName}");
                     getUIComponent(clientId="$pageSession{propertyTableRowGroupId}", component=>$attribute{tableRowGroup});
                     getAllSingleMapRows(TableRowGroup="$attribute{tableRowGroup}",  Rows=>$attribute{newList});
                     removeEmptyProps(props="#{pageSession.tableList}" modifiedProps="#{pageSession.tableList}");

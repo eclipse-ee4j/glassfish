@@ -35,6 +35,7 @@ import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
 import java.net.URLEncoder;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ import org.glassfish.admingui.common.util.DeployUtil;
 import org.glassfish.admingui.common.util.GuiUtil;
 import org.glassfish.admingui.common.util.RestResponse;
 import org.glassfish.admingui.common.util.RestUtil;
-
+import org.glassfish.admingui.common.util.TargetUtil;
 
 
 public class WebAppHandlers {
@@ -59,13 +60,13 @@ public class WebAppHandlers {
         input = {
             @HandlerInput(name = "endpoint", type = String.class, required = true),
             @HandlerInput(name = "vsName", type = String.class, required = true),
-            @HandlerInput(name = "instanceList", type=List.class, required=true)
+            @HandlerInput(name = "configName", type = String.class, required = true),
         })
     public static void ensureDefaultWebModule(HandlerContext handlerCtx) throws Exception {
         String endpoint = (String) handlerCtx.getInputValue("endpoint");
         String vsName = (String) handlerCtx.getInputValue("vsName");
         String encodedName = URLEncoder.encode(vsName, "UTF-8");
-        List<String> instanceList = (List) handlerCtx.getInputValue("instanceList");
+        String configName = (String) handlerCtx.getInputValue("configName");
 
         Map vsAttrs = RestUtil.getAttributesMap(endpoint + "/" + encodedName);
         String webModule= (String) vsAttrs.get("defaultWebModule");
@@ -76,11 +77,27 @@ public class WebAppHandlers {
         if (index != -1){
             appName=webModule.substring(0, index);
         }
+        String encodedAppName = URLEncoder.encode(appName, "UTF-8");
+        List clusters = TargetUtil.getClusters();
+        String clusterEndpoint = GuiUtil.getSessionValue("REST_URL") + "/clusters/cluster/";
         String serverEndPoint = GuiUtil.getSessionValue("REST_URL") + "/servers/server/";
-        for (String serverName : instanceList) {
-            String encodedAppName = URLEncoder.encode(appName, "UTF-8");
-            String encodedServerName = URLEncoder.encode(serverName, "UTF-8");
-            String apprefEndpoint = serverEndPoint + encodedServerName + "/application-ref/" + encodedAppName;
+        List<String> appTargets = DeployUtil.getApplicationTarget(appName, "application-ref");
+        List<String> reloadTargets = new ArrayList<>();
+        for (String targetName : appTargets) {
+            String encodedTargetName = URLEncoder.encode(targetName, "UTF-8");
+            String endpointUrl;
+            if (clusters.contains(targetName)) {
+                endpointUrl = clusterEndpoint + encodedTargetName;
+            } else {
+                endpointUrl = serverEndPoint + encodedTargetName;
+            }
+            String targetConfigName = (String) RestUtil.getAttributesMap(endpointUrl).get("configRef");
+            if (!configName.equals(targetConfigName)) {
+                // should skip the targets those not using the target config
+                continue;
+            }
+
+            String apprefEndpoint = endpointUrl + "/application-ref/" + encodedAppName;
             Map apprefAttrs = RestUtil.getAttributesMap(apprefEndpoint);
             String vsStr = (String) apprefAttrs.get("virtualServers");
             //Add to the vs list of this application-ref, then restart the app.
@@ -101,10 +118,10 @@ public class WebAppHandlers {
                 GuiUtil.handleError(handlerCtx, GuiUtil.getMessage("msg.error.checkLog"));
                 return;
             }
-            List targets = new ArrayList();
-            targets.add("domain");
-            DeployUtil.reloadApplication(appName, targets , handlerCtx);
+            // add the current server to the reload target
+            reloadTargets.add(encodedTargetName);
         }
+        DeployUtil.reloadApplication(appName, reloadTargets , handlerCtx);
    }
 
 

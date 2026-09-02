@@ -35,7 +35,6 @@ import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 
 import java.net.URLEncoder;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +77,7 @@ public class WebAppHandlers {
             appName=webModule.substring(0, index);
         }
         String encodedAppName = URLEncoder.encode(appName, "UTF-8");
+        // both clusters and standalone instances should be handled.
         List clusters = TargetUtil.getClusters();
         String clusterEndpoint = GuiUtil.getSessionValue("REST_URL") + "/clusters/cluster/";
         String serverEndPoint = GuiUtil.getSessionValue("REST_URL") + "/servers/server/";
@@ -129,37 +129,44 @@ public class WebAppHandlers {
    //This handler is called after user deleted one more more VS from the VS table.
    //We need to go through all the application-ref to see if the VS specified still exist.  If it doesn't, we need to
    //remove that from the vs list.
-   @Handler(id = "checkVsOfAppRef")
+   @Handler(id = "checkVsOfAppRef",
+        input = {
+            @HandlerInput(name = "configName", type = String.class, required = true),
+        })
    public static void checkVsOfAppRef(HandlerContext handlerCtx) throws Exception{
+       String configName = (String) handlerCtx.getInputValue("configName");
        String configUrl = GuiUtil.getSessionValue("REST_URL") + "/configs/config/";
-       List configs = new ArrayList(RestUtil.getChildMap(configUrl).keySet());
-       ArrayList vsList = new ArrayList();
-       for (Object cfgName : configs) {
-           String vsUrl = configUrl + cfgName + "/http-service/virtual-server";
-           List vsNames = new ArrayList(RestUtil.getChildMap(vsUrl).keySet());
-           for (Object str : vsNames) {
-               if (!vsList.contains(str))
-                   vsList.add(str);
+       // only get vs of the current config
+       List<String> vsList = new ArrayList<>(RestUtil.getChildMap(configUrl + configName + "/http-service/virtual-server").keySet());
+
+       // both clusters and server instances should be handled.
+       String clusterEndpoint = GuiUtil.getSessionValue("REST_URL") + "/clusters/cluster/";
+       String serverEndpoint = GuiUtil.getSessionValue("REST_URL") + "/servers/server/";
+       List clusters = TargetUtil.getClusters();
+       List targets = TargetUtil.getInstances();
+       targets.addAll(clusters);
+       for (Object targetName : targets) {
+           String endpoint;
+           if (clusters.contains(targetName)) {
+               endpoint = clusterEndpoint + targetName;
+           } else {
+               endpoint = serverEndpoint + targetName;
            }
-       }
-       List servers = new ArrayList(RestUtil.getChildMap(GuiUtil.getSessionValue("REST_URL") + "/servers/server").keySet());
-       for (Object svrName : servers) {
-           String serverEndpoint = GuiUtil.getSessionValue("REST_URL") + "/servers/server/" + svrName;
-           List appRefs = new ArrayList(RestUtil.getChildMap(serverEndpoint + "/application-ref").keySet());
+           String targetConfigName = (String) RestUtil.getAttributesMap(endpoint).get("configRef");
+           if (!configName.equals(targetConfigName)) {
+               // should skip the targets those not using the target config
+               continue;
+           }
+           List appRefs = new ArrayList(RestUtil.getChildMap(endpoint + "/application-ref").keySet());
            for (Object appRef : appRefs) {
-               String apprefEndpoint = serverEndpoint + "/application-ref/" + appRef;
+               String apprefEndpoint = endpoint + "/application-ref/" + appRef;
                Map apprefAttrs = RestUtil.getAttributesMap(apprefEndpoint);
-               String vsStr = (String) apprefAttrs.get("VirtualServers");
+               String vsStr = (String) apprefAttrs.get("virtualServers");
                List<String> lvsList = GuiUtil.parseStringList(vsStr, ",");
-               boolean changed = false;
-               for(String oneVs: lvsList ){
-                   if (! vsList.contains(oneVs)){
-                       changed = true;
-                       continue;
-                   }
-               }
-               if (changed){
-                   apprefAttrs.put("VirtualServers", vsStr);
+               if (lvsList.removeIf(oneVs -> !vsList.contains(oneVs))){
+                   // remove the non-exist vs
+                   vsStr = String.join(",", lvsList);
+                   apprefAttrs.put("virtualServers", vsStr);
                    RestResponse response = RestUtil.sendUpdateRequest(apprefEndpoint, apprefAttrs, null, null, null);
                    if (!response.isSuccess()) {
                        GuiUtil.getLogger().severe("Update virtual server failed.  parent=" + apprefEndpoint + "; attrsMap =" + apprefAttrs);

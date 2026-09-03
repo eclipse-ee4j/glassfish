@@ -24,7 +24,6 @@ import com.sun.appserv.connectors.internal.api.PoolingException;
 import com.sun.appserv.connectors.internal.spi.ConnectionManager;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.connectors.authentication.AuthenticationService;
-import com.sun.enterprise.connectors.util.ConnectionPoolObjectsUtils;
 import com.sun.enterprise.connectors.util.ResourcesUtil;
 import com.sun.enterprise.deployment.ConnectorDescriptor;
 import com.sun.enterprise.deployment.ResourcePrincipalDescriptor;
@@ -123,7 +122,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
      * functionality might be achieved.
      */
     @Override
-    public Object allocateNonTxConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo connectionRequestInfo)
+    public Object allocateNonTxConnection(ManagedConnectionFactory managedConnectionfactory, ConnectionRequestInfo connectionRequestInfo)
         throws ResourceException {
         LOG.finest("Allocating NonTxConnection");
 
@@ -142,26 +141,28 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             LOG.finest("Adding __nontx to jndiname");
         }
 
-        return allocateConnection(mcf, connectionRequestInfo, localJndiName);
+        return allocateConnection(managedConnectionfactory, connectionRequestInfo, localJndiName);
     }
 
 
     @Override
-    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
-        return allocateConnection(mcf, cxRequestInfo, jndiName);
+    public Object allocateConnection(ManagedConnectionFactory managedConnectionfactory, ConnectionRequestInfo cxRequestInfo) throws ResourceException {
+        return allocateConnection(managedConnectionfactory, cxRequestInfo, jndiName);
     }
 
 
-    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo,
+    public Object allocateConnection(ManagedConnectionFactory managedConnectionfactory, ConnectionRequestInfo cxRequestInfo,
         SimpleJndiName jndiNameToUse) throws ResourceException {
-        return this.allocateConnection(mcf, cxRequestInfo, jndiNameToUse, null);
+        return this.allocateConnection(managedConnectionfactory, cxRequestInfo, jndiNameToUse, null);
     }
 
 
-    public Object allocateConnection(ManagedConnectionFactory mcf, ConnectionRequestInfo cxRequestInfo,
+    public Object allocateConnection(ManagedConnectionFactory managedConnectionfactory, ConnectionRequestInfo cxRequestInfo,
         SimpleJndiName jndiNameToUse, Object connection) throws ResourceException {
-        LOG.log(Level.FINEST, "allocateConnection(mcf={0}, cxRequestInfo={1}, jndiNameToUse={2}, connection={3})",
-            new Object[] {mcf, cxRequestInfo, jndiNameToUse, connection});
+        LOG.log(Level.FINEST, () -> "allocateConnection(mcf=" + managedConnectionfactory
+                + ", cxRequestInfo=" + cxRequestInfo
+                + ", jndiNameToUse=" + jndiNameToUse
+                + ", connection=" + connection + ")");
         validateResourceAndPool();
         PoolManager poolmgr = ConnectorRuntime.getRuntime().getPoolManager();
         boolean resourceShareable = true;
@@ -181,7 +182,6 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             LOG.log(Level.FINE, "poolmgr.no_resource_reference", jndiNameToUse);
 
             return internalGetConnection(
-                    mcf,
                     defaultResourcePrincipalDescriptor,
                     cxRequestInfo,
                     resourceShareable,
@@ -198,7 +198,6 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             ConnectorRuntime.getRuntime().switchOnMatching(rarName, poolInfo);
 
             return internalGetConnection(
-                    mcf,
                     null,
                     cxRequestInfo,
                     resourceShareable,
@@ -235,7 +234,6 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
         }
 
         return internalGetConnection(
-                mcf,
                 resourcePrincipalDescriptor,
                 cxRequestInfo,
                 resourceShareable,
@@ -243,8 +241,12 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 connection, false);
     }
 
-    protected Object internalGetConnection(ManagedConnectionFactory mcf,
-                                           final ResourcePrincipalDescriptor prin, ConnectionRequestInfo cxRequestInfo,
+    /* We don't pass the original ManagedConnectionFactory as an argument.
+     * Instead, we get the current factory from poolMetaData, which is refreshed
+     * if the factory used by the pool changes. We need to use the current factory,
+     * otherwise subject doesn't match the factory, leading to an exception
+     */
+    private Object internalGetConnection(final ResourcePrincipalDescriptor prin, ConnectionRequestInfo cxRequestInfo,
                                            boolean shareable, SimpleJndiName jndiNameToUse, Object connection, boolean isUnknownAuth)
             throws ResourceException {
         try {
@@ -254,13 +256,8 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
 
             ResourceSpec resourceSpec = new ResourceSpec(jndiNameToUse, ResourceSpec.JNDI_NAME, poolMetaData);
             resourceSpec.setPoolInfo(this.poolInfo);
-            ManagedConnectionFactory freshManagedConnectionFactory = poolMetaData.getMCF();
-            boolean managedConnectionFactoryChanged = !freshManagedConnectionFactory.equals(mcf);
+            ManagedConnectionFactory effectiveManagedConnectionFactory = poolMetaData.getMCF();
 
-            if (managedConnectionFactoryChanged) {
-                LOG.info("conmgr.mcf_not_equal");
-            }
-            ManagedConnectionFactory effectiveManagedConnectionFactory = freshManagedConnectionFactory;
             ConnectorDescriptor rarConnectorDescriptor = registry.getDescriptor(rarName);
 
             Subject subject = null;
@@ -285,11 +282,9 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
             } else {
                 info = new ClientSecurityInfo(prin);
                 if (prin.equals(defaultResourcePrincipalDescriptor)) {
-                    subject = managedConnectionFactoryChanged
-                        ? createSubject(effectiveManagedConnectionFactory, prin)
-                        : poolMetaData.getSubject();
+                    subject = poolMetaData.getSubject();
                 } else {
-                    subject = ConnectionPoolObjectsUtils.createSubject(effectiveManagedConnectionFactory, prin);
+                    subject = createSubject(effectiveManagedConnectionFactory, prin);
                 }
             }
 

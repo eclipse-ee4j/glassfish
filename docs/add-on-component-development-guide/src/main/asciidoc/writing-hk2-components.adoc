@@ -85,9 +85,10 @@ public @interface Service {
 }
 ----
 
-For more information, see
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[`Service`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html`).
+These annotations live in the `hk2-api` module. For more information, see
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Service.java[`Service`]
+and
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Contract.java[`Contract`].
 
 [[hk2-runtime]]
 
@@ -95,67 +96,58 @@ http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[
 
 Once Services are defined, the HK2 runtime can be used to instantiate or
 retrieve instances of services. Each service instance has a scope,
-specified as singleton, per thread, per application, or a custom scope.
+specified as singleton, per lookup, or a custom scope.
 
 [[scopes-of-services]]
 
 ==== Scopes of Services
 
-You can specify the scope of a service by adding an
-`org.jvnet.hk2.annotations.Scoped` annotation to the class-level of your
-`@Service` implementation class. Scopes are also services, so they can
-be custom defined and added to the HK2 runtime before being used by
-other services. Each scope is responsible for storing the service
-instances to which it is tied; therefore, the HK2 runtime does not rely
-on predefined scopes (although it comes with a few predefined ones).
+A class marked with `@Service` has the default scope
+`jakarta.inject.Singleton`. Place another scope annotation on the class
+to override that default. HK2 provides
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PerLookup.java[`org.glassfish.hk2.api.PerLookup`]
+for a new instance on every lookup. You can also define a custom scope
+annotation and register a corresponding
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/Context.java[`org.glassfish.hk2.api.Context`]
+implementation with the locator.
+
+The following code fragment shows a singleton service (the `@Service`
+default) and a per-lookup service:
 
 [source,java]
 ----
-@Contract
-public abstract class Scope {
-    public abstract ScopeInstance current();
-}
-----
-
-The following code fragment shows how to set the scope for a service to
-the predefined `Singleton` scope:
-
-[source,java]
-----
-@Service
-public Singleton implements Scope {
-    ...
-}
-
-@Scope(Singleton.class)
 @Service
 public class SingletonService implements RandomContract {
     ...
 }
-----
 
-You can define a new `Scope` implementation and use that scope on your
-`@Service` implementations. You will see that the HK2 runtime uses the
-`Scope` instance to store and retrieve service instances tied to that
-scope.
+@PerLookup
+@Service
+public class PerLookupService implements RandomContract {
+    ...
+}
+----
 
 [[instantiation-of-components-in-hk2]]
 
 ==== Instantiation of Components in HK2
 
 Do not call the `new` method to instantiate components. Instead,
-retrieve components by using the `Habitat` instance. The simplest way to
-use the `Habitat` instance is through a `getComponent(Class`T
-`contract)` call:
+retrieve components by using a
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/ServiceLocator.java[`ServiceLocator`]
+instance (`org.glassfish.hk2.api.ServiceLocator`). `ServiceLocator`
+replaced the old `org.jvnet.hk2.component.Habitat` type. The simplest
+way to use the locator is through a `getService(Class<T> contract)`
+call:
 
 [source,java]
 ----
-public <T> T getComponent(Class<T> clazz) throws ComponentException;
+public <T> T getService(Class<T> contractOrImpl, Annotation... qualifiers) throws MultiException;
 ----
 
-More APIs are available at
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html[`Habitat`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html`).
+Use `getAllServices` when more than one implementation of the contract
+may be present. More APIs are available on
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/ServiceLocator.java[`ServiceLocator`].
 
 [[hk2-lifecycle-interfaces]]
 
@@ -163,13 +155,13 @@ http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html[`H
 
 Components can attach behaviors to their construction and destruction
 events by implementing the
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html[`org.jvnet.hk2.component.PostConstruct`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html`)
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PostConstruct.java[`org.glassfish.hk2.api.PostConstruct`]
 interface, the
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html[`org.jvnet.hk2.component.PreDestroy`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html`)
-interface, or both. These are interfaces rather than annotations for
-performance reasons.
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PreDestroy.java[`org.glassfish.hk2.api.PreDestroy`]
+interface, or both. These interfaces are in `hk2-api`. They replaced
+`org.jvnet.hk2.component.PostConstruct` and
+`org.jvnet.hk2.component.PreDestroy`. They are interfaces rather than
+annotations for performance reasons.
 
 The `PostConstruct` interface defines a single method, `postConstruct`,
 which is called after a component has been initialized and all its
@@ -179,7 +171,7 @@ The `PreDestroy` interface defines a single method, `preDestroy`, which
 is called just before a component is removed from the system.
 
 [[ghoqv]]
-Example 2-1 Example Implementation of `PostContruct` and `PreDestroy`
+Example 2-1 Example Implementation of `PostConstruct` and `PreDestroy`
 
 [source,java]
 ----
@@ -220,8 +212,7 @@ system, components use injection to gain access to other components.
 Services usually rely on other services to perform their tasks. The HK2
 runtime identifies the `@Contract` implementations required by a service
 by using the
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html[`org.jvnet.hk2.annotations.Inject`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html`)
+https://jakarta.ee/specifications/dependency-injection/2.0/apidocs/jakarta/inject/inject[`jakarta.inject.Inject`]
 annotation. `Inject` can be placed on fields or setter methods of any
 service instantiated by the HK2 runtime. The target service is retrieved
 and injected during the calling service's instantiation by the component
@@ -244,12 +235,12 @@ public void set(ConfigService svc) {...}
 ----
 
 Injection can further qualify the intended injected service
-implementation by using a name and scope from which the service should
-be available:
+implementation by using `jakarta.inject.Named`:
 
 [source,java]
 ----
-@Inject(Scope=Singleton.class, name="deploy")
+@Inject
+@Named("deploy")
 AdminCommand deployCommand;
 ----
 
@@ -277,8 +268,8 @@ the `ConfigService`.
 @Contract
 public interface Startup {...}
 
-Iterable<Startup> startups;
-startups = habitat.getComponents(Startup.class);
+List<Startup> startups;
+startups = locator.getAllServices(Startup.class);
 
 @Service
 public class DeploymentService implements Startup {
@@ -287,7 +278,7 @@ public class DeploymentService implements Startup {
 }
 
 @Service
-public Class ConfigService implements ... {...}
+public class ConfigService implements ... {...}
 ----
 
 [[identifying-a-class-as-an-add-on-component]]
@@ -296,7 +287,7 @@ public Class ConfigService implements ... {...}
 
 {productName} discovers add-on components by identifying Java
 programming language classes that are annotated with the
-`org.jvnet.hk2.annotation.Service` annotation.
+`org.jvnet.hk2.annotations.Service` annotation.
 
 To identify a class as an implementation of an {productName} service,
 add the `org.jvnet.hk2.annotations.Service` annotation at the
@@ -315,28 +306,27 @@ optional.
 
 `name`::
   The name of the service. The default value is an empty string.
-`scope`::
-  The scope to which this service implementation is tied. The default
-  value is `org.glassfish.hk2.scopes.PerLookup.class`.
-`factory`::
-  The factory class for the service implementation, if the service is
-  created by a factory class rather than by calling the default
-  constructor. If this element is specified, the factory component is
-  activated, and `Factory.getObject` is used instead of the default
-  constructor. The default value of the `factory` element is
-  `org.jvnet.hk2.component.Factory.class`.
+`metadata`::
+  Additional key/value metadata written into the inhabitants file.
+`analyzer`::
+  The name of the `ClassAnalyzer` service used to analyze this class.
+
+Scope is not an `@Service` element. Put a scope annotation such as
+`@PerLookup` on the class, or omit it to keep the default singleton
+scope. To create a service with a factory, implement
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/Factory.java[`org.glassfish.hk2.api.Factory`]
+instead of pointing `@Service` at a factory class.
 
 [[ghoip]]
 Example 2-3 Example of the Optional Elements of the `@Service` Annotation
 
-The following example shows how to use the optional elements of the
-`@Service` annotation:
+The following example shows how to use the optional `name` element of
+the `@Service` annotation with a per-lookup scope:
 
 [source,java]
 ----
-@Service (name="MyService",
-    scope=com.example.PerRequest.class,
-    factory=com.example.MyCustomFactory)
+@PerLookup
+@Service(name="MyService")
 public class SamplePlugin implements ConsoleProvider {
 ...
 }
@@ -346,9 +336,9 @@ public class SamplePlugin implements ConsoleProvider {
 
 === Using the Apache Maven Build System to Develop HK2 Components
 
-If you are using Maven 2 to build HK2 components, invoke the
-`auto-depends` plug-in for Maven so that the `META-INF/services` files
-are generated automatically during build time.
+If you are using Maven to build HK2 components, invoke the
+`hk2-maven-plugin` so that the inhabitant metadata is generated
+automatically during build time.
 
 [[ghqsa]]
 Example 2-4 Example of the Maven Plug-In Configuration
@@ -367,15 +357,13 @@ Example 2-4 Example of the Maven Plug-In Configuration
 ----
 
 [[ghoik]]
-Example 2-5 Example of `META-INF/services` File Generation
+Example 2-5 Example of Inhabitant Metadata Generation
 
 This example shows how to use
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html[`@Contract`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html`)
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Contract.java[`@Contract`]
 and
-http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html[`@Service`]
-(`http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html`)
-and the resulting `META-INF/services` files.
+https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Service.java[`@Service`]
+and the resulting inhabitant metadata.
 
 The interfaces and classes in this example are as follows:
 
@@ -396,8 +384,8 @@ public class MyService implements Startup, RandomContract, PropertyChangeListene
 }
 ----
 
-These interfaces and classes generate this `META-INF/services` file with
-the `MyService` content:
+These interfaces and classes generate inhabitant metadata for
+`MyService` that lists the following contracts:
 
 [source]
 ----

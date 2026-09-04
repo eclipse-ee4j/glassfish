@@ -782,12 +782,12 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
         // This logic of rule 1 and 2 is not implemented in this method.
         ResourceHandle resourceFromPool = null;
 
-        ResourceHandle resourceHandle;
         List<ResourceHandle> freeResources = new ArrayList<>();
 
         try {
             getResourceFromPoolAndFreeResourceMethodsLock.lock();
             try {
+                ResourceHandle resourceHandle;
                 while ((resourceHandle = dataStructure.getResource()) != null) {
                     // Resource from the pool should never be busy before it is returned
                     makeSureResourceIsNotBusy(resourceHandle);
@@ -871,7 +871,7 @@ public class ConnectionPool implements ResourcePool, ConnectionLeakListener, Res
             }
 
             // Resource from the pool must be marked busy when it is returned from the pool
-            if (resourceHandle != null) {
+            if (resourceFromPool != null) {
                 makeSureResourceIsBusy(resourceFromPool);
                 // Not expecting an enlisted resource to be returned from the pool
                 makeSureResourceIsNotEnlisted(resourceFromPool);

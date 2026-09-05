@@ -36,15 +36,16 @@ import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.DefinitionException;
 import jakarta.enterprise.inject.spi.InjectionTarget;
+import jakarta.interceptor.Interceptor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.api.naming.SimpleJndiName;
@@ -60,6 +61,8 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT_ENV;
 
 public class InjectionServicesImpl implements InjectionServices {
+
+    private static final Set<String> INTERCEPTOR_ANNOTATION = Set.of(Interceptor.class.getName());
 
     private final InjectionManager injectionManager;
 
@@ -87,11 +90,9 @@ public class InjectionServicesImpl implements InjectionServices {
     }
 
     private static boolean computeIsInterceptor(Class beanClass) {
-        HashSet<String> annos = new HashSet<>();
-        annos.add(jakarta.interceptor.Interceptor.class.getName());
         boolean res = false;
         while (!res && beanClass != Object.class) {
-            res = WeldUtils.hasValidAnnotation(beanClass, annos, null);
+            res = WeldUtils.hasValidAnnotation(beanClass, INTERCEPTOR_ANNOTATION, null);
             beanClass = beanClass.getSuperclass();
         }
         return res;

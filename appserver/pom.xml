@@ -560,7 +560,8 @@
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
                 <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-                <version>${woodstock.version}</version>
+                <!-- suntheme is built locally; moved here from the glassfish-woodstock repo (issue #24495) -->
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>

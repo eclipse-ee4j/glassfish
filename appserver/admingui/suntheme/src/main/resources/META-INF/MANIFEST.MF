@@ -1,0 +1,20 @@
+Implementation-Title: Woodstock Components "DEV_4.0" Theme: suntheme
+Implementation-Version: "DEV_4.0"
+Implementation-Vendor: Sun Microsystems, Inc.
+Implementation-Vendor-Id: com.sun
+Specification-Title: Woodstock Components Theme: suntheme
+Specification-Version: "DEV_4.0"
+Specification-Vendor: Sun Microsystems, Inc.
+
+Name: com/sun/webui/jsf/theme/
+X-SJWUIC-SWAED-Version: 4.0
+X-SJWUIC-Theme-Version: 4.0
+X-SJWUIC-Theme-Timestamp: ${timestamp}
+X-SJWUIC-Theme-Name: suntheme
+X-SJWUIC-Theme-Prefix: /theme
+X-SJWUIC-Theme-Messages: com.sun.webui.jsf.suntheme.messages.messages
+X-SJWUIC-Theme-Images: com.sun.webui.jsf.suntheme.properties.images
+X-SJWUIC-Theme-JavaScript: com.sun.webui.jsf.suntheme.properties.javascript
+X-SJWUIC-Theme-ClassMapper: com.sun.webui.jsf.suntheme.properties.styles
+X-SJWUIC-Theme-Stylesheets: com.sun.webui.jsf.suntheme.properties.stylesheets
+X-SJWUIC-Theme-Templates: com.sun.webui.jsf.suntheme.properties.templates

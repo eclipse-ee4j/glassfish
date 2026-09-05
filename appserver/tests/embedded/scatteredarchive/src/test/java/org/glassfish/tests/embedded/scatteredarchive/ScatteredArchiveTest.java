@@ -20,16 +20,21 @@ import com.sun.enterprise.util.io.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.zip.ZipEntry;
 
 import org.glassfish.embeddable.Deployer;
 import org.glassfish.embeddable.GlassFish;
@@ -41,6 +46,7 @@ import org.glassfish.embeddable.archive.ScatteredEnterpriseArchive;
 import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet;
+import org.glassfish.tests.embedded.scatteredarchive.fragment.FragmentServlet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -173,6 +179,64 @@ public class ScatteredArchiveTest {
         get("http://localhost:8080/satest/" + ContextInitializedTestServlet.class.getSimpleName(),
                 LABEL_CONTEXT_INITIALIZED_COUNTER, "1");
     }
+
+    /**
+     * Reproducer for issue #24592: an annotated component bundled in a nested JAR (a web fragment)
+     * in {@code WEB-INF/lib} of a {@code ScatteredArchive} must be scanned for annotations and
+     * deployed.
+     */
+    @Test
+    public void testWebFragmentInNestedJar() throws Exception {
+        ScatteredArchive sa = createDefaultArchive("scatteredarchive");
+
+        // Bundle an annotated servlet inside a nested JAR (web fragment) placed in WEB-INF/lib.
+        // The servlet class is NOT on the archive's WEB-INF/classes, so it can only be discovered
+        // by scanning the nested JAR.
+        File fragmentJar = createFragmentJar("fragment-with-servlet.jar", FragmentServlet.class);
+        sa.addClassPath(fragmentJar);
+
+        URI warURI = sa.toURI();
+        printContents(warURI);
+
+        Deployer deployer = glassfish.getDeployer();
+        String appname = deployer.deploy(warURI);
+        logger.log(INFO, "Deployed [" + appname + "]");
+        assertEquals("scatteredarchive", appname);
+
+        get("http://localhost:8080/satest/" + FragmentServlet.class.getSimpleName(),
+                FragmentServlet.MESSAGE);
+    }
+
+    /**
+     * Builds a web-fragment JAR (containing a {@code META-INF/web-fragment.xml} and the given
+     * compiled classes read from {@code target/test-classes}) under the {@code target} directory.
+     */
+    private File createFragmentJar(String jarName, Class<?>... classes) throws IOException {
+        File jar = new File(PROJECT_DIR, "target/" + jarName);
+        try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(jar))) {
+            jos.putNextEntry(new ZipEntry("META-INF/web-fragment.xml"));
+            jos.write(WEB_FRAGMENT_XML.getBytes(StandardCharsets.UTF_8));
+            jos.closeEntry();
+            for (Class<?> clazz : classes) {
+                String entryName = clazz.getName().replace('.', '/') + ".class";
+                File classFile = new File(PROJECT_DIR, "target/test-classes/" + entryName);
+                jos.putNextEntry(new ZipEntry(entryName));
+                jos.write(Files.readAllBytes(classFile.toPath()));
+                jos.closeEntry();
+            }
+        }
+        return jar;
+    }
+
+    private static final String WEB_FRAGMENT_XML =
+            "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<web-fragment xmlns=\"https://jakarta.ee/xml/ns/jakartaee\"\n"
+            + "              xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            + "              xsi:schemaLocation=\"https://jakarta.ee/xml/ns/jakartaee"
+            + " https://jakarta.ee/xml/ns/jakartaee/web-fragment_6_0.xsd\"\n"
+            + "              version=\"6.0\">\n"
+            + "    <name>fragmentWithServlet</name>\n"
+            + "</web-fragment>\n";
 
     private ScatteredArchive createDefaultArchive(String ARCHIVE_NAME) throws IOException {
         // Test Scattered Web Archive

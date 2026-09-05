@@ -220,14 +220,19 @@ public class WeldUtils {
     private static Set<URI> findImplicitBeanArchivePaths(DeploymentContext context) {
         Set<URI> pathsWithImplicitCDIBeans = new HashSet<>();
         Types types = getTypes(context);
+        Set<String> visitedNonCDIAnnotations = new HashSet<>();
+        Set<AnnotationType> visitedCDIAnnotations = new HashSet<>();
         if (types != null) {
             for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
                     if (!allDefiningUrisKnown(type, pathsWithImplicitCDIBeans)) {
                         for (AnnotationModel annotationModel : type.getAnnotations()) {
                             AnnotationType annotationType = annotationModel.getType();
-                            if (isCDIEnablingAnnotation(annotationType)) {
+                            if (visitedCDIAnnotations.contains(annotationType)) {
                                 pathsWithImplicitCDIBeans.addAll(type.getDefiningURIs());
+                            } else if (isCDIEnablingAnnotation(annotationType, visitedNonCDIAnnotations)) {
+                                pathsWithImplicitCDIBeans.addAll(type.getDefiningURIs());
+                                visitedCDIAnnotations.add(annotationType);
                             }
                         }
                     }
@@ -247,34 +252,6 @@ public class WeldUtils {
     }
 
     /**
-     * Get the names of any annotation types that are applied to beans, which should enable CDI processing even in the
-     * absence of a beans.xml descriptor.
-     *
-     * @param context The DeploymentContext
-     *
-     * @return An array of annotation type names; The array could be empty if none are found.
-     */
-    public static String[] getCDIEnablingAnnotations(DeploymentContext context) {
-        Set<String> result = new HashSet<>();
-
-        Types types = getTypes(context);
-        if (types != null) {
-            for (Type type : types.getAllTypes()) {
-                if (!(type instanceof AnnotationType)) {
-                    for (AnnotationModel annotationModel : type.getAnnotations()) {
-                        AnnotationType annotationType = annotationModel.getType();
-                        if (isCDIEnablingAnnotation(annotationType)) {
-                            result.add(annotationType.getName());
-                        }
-                    }
-                }
-            }
-        }
-
-        return result.toArray(new String[0]);
-    }
-
-    /**
      * Get the names of any classes that are annotated with bean-defining annotations, which should enable CDI processing
      * even in the absence of a beans.xml descriptor.
      *
@@ -284,14 +261,21 @@ public class WeldUtils {
      */
     public static Collection<String> getCDIAnnotatedClassNames(DeploymentContext context) {
         Set<String> result = new HashSet<>();
+        Set<String> visitedNonCDIAnnotations = new HashSet<>();
+        Set<AnnotationType> visitedCDIAnnotations = new HashSet<>();
 
         Types types = getTypes(context);
         if (types != null) {
             for (Type type : types.getAllTypes()) {
                 if (!(type instanceof AnnotationType)) {
                     for (AnnotationModel annotationModel : type.getAnnotations()) {
-                        if (isCDIEnablingAnnotation(annotationModel.getType())) {
+                        final AnnotationType annotationType = annotationModel.getType();
+                        if (visitedCDIAnnotations.contains(annotationType)) {
                             result.add(type.getName());
+                            break;
+                        } else if (isCDIEnablingAnnotation(annotationType, visitedNonCDIAnnotations)) {
+                            result.add(type.getName());
+                            visitedCDIAnnotations.add(annotationType);
                             break;
                         }
                     }

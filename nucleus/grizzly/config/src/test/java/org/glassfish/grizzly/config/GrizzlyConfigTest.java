@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,6 +27,7 @@ import org.glassfish.grizzly.Transport;
 import org.glassfish.grizzly.config.dom.NetworkAddressValidator;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.test.ConfiguredSSLImplementation;
 import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
 import org.glassfish.grizzly.config.test.example.DummySelectionKeyHandler;
 import org.glassfish.grizzly.http.server.HttpHandler;
@@ -254,6 +255,36 @@ public class GrizzlyConfigTest {
                 helper.getContent(URI.create("https://localhost:38084").toURL()));
             assertEquals("<html><body>You've found the server on port 38085</body></html>",
                 helper.getContent(URI.create("https://localhost:38085").toURL()));
+        } finally {
+            if (grizzlyConfig != null) {
+                grizzlyConfig.shutdown();
+            }
+        }
+    }
+
+    /**
+     * The {@code classname} attribute of the {@code ssl} element must be honored even if another
+     * {@link org.glassfish.grizzly.config.ssl.SSLImplementation} is registered in the locator.
+     *
+     * @see <a href="https://github.com/eclipse-ee4j/glassfish/issues/18175">Issue 18175</a>
+     */
+    @Test
+    public void sslWithConfiguredImplementation() throws URISyntaxException, IOException {
+        GrizzlyConfig grizzlyConfig = null;
+        ConfiguredSSLImplementation.resetUsageCount();
+        try {
+            configure();
+            grizzlyConfig = new GrizzlyConfig("grizzly-config-ssl-classname.xml");
+            grizzlyConfig.setupNetwork();
+            int count = 0;
+            for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
+                helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
+            }
+
+            assertEquals("<html><body>You've found the server on port 38086</body></html>",
+                helper.getContent(URI.create("https://localhost:38086").toURL()));
+            assertEquals(1, ConfiguredSSLImplementation.getUsageCount(),
+                "Usages of the SSLImplementation configured by the classname attribute");
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();

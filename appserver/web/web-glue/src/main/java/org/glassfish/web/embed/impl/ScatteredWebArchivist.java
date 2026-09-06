@@ -40,7 +40,6 @@ import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
-
 /**
  * @author Jerome Dochez
  * @author David Matejcek

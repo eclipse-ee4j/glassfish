@@ -45,7 +45,7 @@
         setPageSessionAttribute(key="editLink" value="#{request.contextPath}/web/configuration/virtualServerEdit.jsf?configName=#{configName}");
         setPageSessionAttribute(key="tableTitle" value="$resource{i18n_web.vs.TableTitle}");
         setPageSessionAttribute(key="additionalDeleteHandler" value="checkVsOfAppRef");
-        setPageSessionAttribute(key="additionalDeleteHandlerArgs" value="");
+        setPageSessionAttribute(key="additionalDeleteHandlerArgs" value="configName:%23{configName}");
     />
     </event>
 "    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":configurations:#{pageSession.encodedConfigName}:virtualServers");</script>

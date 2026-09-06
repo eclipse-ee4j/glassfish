@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,8 +40,11 @@ import com.sun.enterprise.deployment.web.MimeMapping;
 import com.sun.enterprise.deployment.web.SecurityConstraint;
 import com.sun.enterprise.deployment.web.ServletFilter;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Set;
 
 import org.glassfish.api.deployment.archive.ReadableArchive;
@@ -442,9 +445,34 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl {
         }
     }
 
+    /**
+     * Returns the entries of the nested JAR file (in {@code WEB-INF/lib}) that this web fragment
+     * was loaded from, so that the classes it contains can be scanned for annotations.
+     * <p>
+     * Unlike a regular {@link WebBundleDescriptorImpl}, whose classes live under
+     * {@code WEB-INF/classes/}, a web fragment's classes live inside a nested JAR. The returned
+     * entry names are relative to the root of that nested JAR (e.g. {@code com/example/Foo.class}).
+     * The entry names are materialized eagerly so the sub-archive can be closed before this method
+     * returns.
+     */
     @Override
     public Enumeration<String> getArchiveFileEntries(ReadableArchive archiveFile) {
-        return Collections.emptyEnumeration();
+        if (jarName == null || archiveFile == null) {
+            return Collections.emptyEnumeration();
+        }
+        try (ReadableArchive jarArchive = archiveFile.getSubArchive("WEB-INF/lib/" + jarName)) {
+            if (jarArchive == null) {
+                return Collections.emptyEnumeration();
+            }
+            List<String> entries = new ArrayList<>();
+            Enumeration<String> jarEntries = jarArchive.entries();
+            while (jarEntries.hasMoreElements()) {
+                entries.add(jarEntries.nextElement());
+            }
+            return Collections.enumeration(entries);
+        } catch (IOException e) {
+            return Collections.emptyEnumeration();
+        }
     }
 
 }

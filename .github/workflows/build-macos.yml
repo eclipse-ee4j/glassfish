@@ -10,7 +10,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     name: Build GlassFish on MacOS
     steps:
     - uses: actions/checkout@v5

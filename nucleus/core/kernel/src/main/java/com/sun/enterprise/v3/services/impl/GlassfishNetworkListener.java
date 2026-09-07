@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,6 +60,7 @@ import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.grizzly.V3Mapper;
+import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.config.types.Property;
 
 public class GlassfishNetworkListener extends GenericGrizzlyListener {
@@ -401,10 +402,19 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 final Buffer buffer,
                 final FilterChainContext ctx) {
 
-            final boolean result = super.onHttpHeaderParsed(httpHeader,
+            boolean result = super.onHttpHeaderParsed(httpHeader,
                     buffer, ctx);
 
             final HttpRequestPacket request = (HttpRequestPacket) httpHeader;
+
+            // Here we can add extra validation to prevent Http Server invalid use of headers
+            if (request.containsHeader(Header.ContentLength) && request.containsHeader(Header.TransferEncoding)) {
+                KernelLoggerInfo.getLogger().log(Level.SEVERE,
+                        "Can't use both headers Content-Length and Transfer-Encoding from the same request");
+                request.getProcessingState().setError(true);
+                result = true;
+            }
+
             final HttpResponsePacket response = request.getResponse();
 
             // Set response "Server" header

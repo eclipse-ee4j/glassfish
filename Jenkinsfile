@@ -16,61 +16,110 @@
 */
 
 // See:
-// https://hub.docker.com/r/eclipsecbi/jiro-agent-basic-ubuntu/tags
+// https://www.jenkins.io/doc/book/pipeline/syntax/
+// https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps
+// https://plugins.jenkins.io/kubernetes/
 // https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md
 // https://kubernetes.io/docs/concepts/workloads/pods/#working-with-pods
 // https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
+// https://github.com/jenkinsci/docker-agents/releases
+// https://hub.docker.com/r/eclipsecbi/jiro-agent-basic-ubuntu
+// https://hub.docker.com/r/jenkins/inbound-agent/
 
 // These limits are collected from logs:
 // maximum cpu usage per Pod is 8300m
 // maximum cpu usage per Container is 8
 // maximum cpu usage is 44800m
 
+def antVersion = '1.10.18'
+def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
 def mvnVersion = '3.9.16'
 def javaVersion = '21'
 
-def podYamlTemplate = """
+// Job groups are defined here, because sometimes we move them and it is easier
+// when these lists are close together.
+def ant_heavy_jobs = [
+    "connector_group_4",
+    "naming_all",
+    "ql_gf_full_profile_all"
+]
+
+def ant_light_jobs = [
+    "webservice_all",
+    "ejb_group_3",
+    "ejb_group_1",
+    "connector_group_1",
+    "deployment_all",
+    "security_all",
+    "jdbc_group4",
+    "jdbc_group3",
+    "web_jsp",
+    "cdi_all",
+    "ejb_group_2",
+    "ejb_group_embedded",
+    "jdbc_group1",
+    "jdbc_group5",
+    "connector_group_2",
+    "connector_group_3",
+    "jdbc_group2",
+    "persistence_all",
+    "ql_gf_web_profile_all",
+    "batch_all"
+]
+
+def mvn_jobs = [
+    "admin-tests-parent",
+    "application-tests",
+    "embedded-tests"
+]
+
+def podYamlConfigurationTemplate = """
 apiVersion: v1
 kind: Pod
 spec:
+  shareProcessNamespace: true
   nodeSelector:
     kubernetes.io/os: "linux"
   containers:
   - name: jnlp
     imagePullPolicy: IfNotPresent
-    tty: true
+    alwaysPullImage: false
+    tty: false
     workingDir: "/home/jenkins/agent"
     env:
-    - name: "JENKINS_REMOTING_JAVA_OPTS"
-      value: "-showversion -XshowSettings:vm -Xmx256m -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true -Dorg.jenkinsci.plugins.gitclient.CliGitAPIImpl.useSETSID=true"
-    - name: "JAVA_TOOL_OPTIONS"
-      value: ""
-    - name: "_JAVA_OPTIONS"
-      value: ""
-    - name: "OPENJ9_JAVA_OPTIONS"
-      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    - name: "JENKINS_JAVA_OPTS"
+      value: "-Xms64m -Xmx768m -Xss512k -XX:MaxGCPauseMillis=1000 -XX:+UseShenandoahGC"
     volumeMounts:
     - name: "known-hosts"
       mountPath: "/home/jenkins/.ssh"
     resources:
       limits:
-        memory: "768Mi"
+        memory: "0.75Gi"
         cpu: "500m"
       requests:
-        memory: "768Mi"
+        memory: "0.75Gi"
         cpu: "500m"
   - name: action
     image: maven:${mvnVersion}-eclipse-temurin-${javaVersion}
     imagePullPolicy: IfNotPresent
+    alwaysPullImage: false
     command:
-    - cat
-    tty: true
+    - sleep
+    args:
+    - 99d
+    tty: false
     workingDir: /home/jenkins/agent
     env:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xms1g -Xmx2g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
+      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
+    - name: "ANT_HOME"
+      value: "${antHome}"
+    - name: "ANT_VERSION"
+      value: "${antVersion}"
+    - name: "ANT_OPTS"
+      value: "-Duser.home=/home/jenkins -Xms64m -Xmx256m -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
     volumeMounts:
     - name: "jenkins-home"
       mountPath: "/home/jenkins"
@@ -111,10 +160,6 @@ spec:
   - name: "known-hosts"
     configMap:
       name: "known-hosts"
-  - name: "tools"
-    persistentVolumeClaim:
-      claimName: "tools-claim-jiro-glassfish"
-      readOnly: true
   - name: "m2-mvnd"
     emptyDir: {}
   - name: "m2-dir"
@@ -145,38 +190,38 @@ spec:
         path: "settings-security.xml"
 """
 
-def antHeavyContainerCfg = podYamlTemplate.replace(
-"""    resources: VAR_RESOURCES
-""",
-"""    resources:
-      limits:
-        memory: "5.2Gi"
-        cpu: "3000m"
-      requests:
-        memory: "4.2Gi"
-        cpu: "3000m"
-"""
-)
-
-def antLightContainerCfg = podYamlTemplate.replace(
+def antHeavyContainerCfg = podYamlConfigurationTemplate.replace(
 """    resources: VAR_RESOURCES
 """,
 """    resources:
       limits:
         memory: "4Gi"
-        cpu: "2500m"
+        cpu: "3000m"
       requests:
-        memory: "3Gi"
-        cpu: "2500m"
+        memory: "4Gi"
+        cpu: "3000m"
 """
 )
 
-def mvnHeavyContainerCfg = podYamlTemplate.replace(
+def antLightContainerCfg = podYamlConfigurationTemplate.replace(
 """    resources: VAR_RESOURCES
 """,
 """    resources:
       limits:
-        memory: "8Gi"
+        memory: "3.2Gi"
+        cpu: "2500m"
+      requests:
+        memory: "3.2Gi"
+        cpu: "2500m"
+"""
+)
+
+def mvnHeavyContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
+""",
+"""    resources:
+      limits:
+        memory: "7Gi"
         cpu: "7800m"
       requests:
         memory: "7Gi"
@@ -184,7 +229,7 @@ def mvnHeavyContainerCfg = podYamlTemplate.replace(
 """
 )
 
-def mvnLightContainerCfg = podYamlTemplate.replace(
+def mvnLightContainerCfg = podYamlConfigurationTemplate.replace(
 """    resources: VAR_RESOURCES
 """,
 """    resources:
@@ -192,12 +237,12 @@ def mvnLightContainerCfg = podYamlTemplate.replace(
         memory: "5Gi"
         cpu: "4000m"
       requests:
-        memory: "4Gi"
+        memory: "5Gi"
         cpu: "4000m"
 """
 )
 
-def tinyContainerCfg = podYamlTemplate.replace(
+def tinyContainerCfg = podYamlConfigurationTemplate.replace(
 """    resources: VAR_RESOURCES
 """,
 """    resources:
@@ -210,32 +255,46 @@ def tinyContainerCfg = podYamlTemplate.replace(
 """
 )
 
+def installAntToSharedCache() {
+   sh (label: 'Ant Installation', script: '''
+   if [ ! -x "${ANT_HOME}/bin/ant" ]; then
+      echo "Installing Ant ${ANT_VERSION} into shared cache..."
+      tmp_extract=\$(mktemp -d -p /home/jenkins/.m2/repository/.ci-tools 2>/dev/null || mktemp -d)
+      mkdir -p /home/jenkins/.m2/repository/.ci-tools
+      curl -fsSL "https://downloads.apache.org/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz" -o "\${tmp_extract}/ant.tar.gz"
+      tar -xzf "\${tmp_extract}/ant.tar.gz" -C "\${tmp_extract}"
+      chmod +x "\${tmp_extract}/apache-ant-${ANT_VERSION}/bin/ant"
+      mv "\${tmp_extract}/apache-ant-${ANT_VERSION}" "${ANT_HOME}" 2>/dev/null || true
+      rm -rf "\${tmp_extract}"
+   else
+      echo "Ant ${ANT_VERSION} already present in shared cache, skipping install."
+   fi
+   "${ANT_HOME}/bin/ant" -version
+   ''')
+}
+
 def dumpSysInfo() {
-   sh """
+   sh (label: 'Dump System Info', script: """
    id || true
    uname -a || true
    env | sort || true
    df -h || true
-   hostname -I || true
    \${JAVA_HOME}/bin/jcmd || true
    mvn -version || true
-   ant -version || true
+   \${ANT_HOME}/bin/ant -version || true
    ps -e -o start,etime,pid,rss,drs,command || true
    lscpu || true
    cat /proc/meminfo || true
    ulimit -a || true
-   """
+   """)
 }
 
 def startVmstatLogging(String stageName) {
-   sh """
+   sh (label: 'Start Performance Logging', script: """
    mkdir -p "${WORKSPACE}/logs"
-   vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
+   setsid vmstat -t -w -a -y 10 < /dev/null > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 &
+   echo \$! > "${WORKSPACE}/vmstat.pid"
 
-   # Record this container's current and peak memory usage every 10 seconds.
-   # Prefer cgroup v2 and fall back to the cgroup v1 memory controller used by
-   # the current Eclipse CI workers. Values are bytes. If neither is available,
-   # skip the diagnostic without affecting the build.
    if [ -r /sys/fs/cgroup/memory.current ]; then
       memory_current=/sys/fs/cgroup/memory.current
       memory_peak=/sys/fs/cgroup/memory.peak
@@ -248,26 +307,26 @@ def startVmstatLogging(String stageName) {
    fi
 
    if [ -n "\$memory_current" ]; then
-      (
-         printf '# current=%s peak=%s\n' "\$memory_current" "\$memory_peak"
+      setsid sh -c '
+         printf "# current=%s peak=%s\\n" "'"\$memory_current"'" "'"\$memory_peak"'"
          while true; do
-            current=\$(cat "\$memory_current" 2>/dev/null || echo unavailable)
-            if [ -n "\$memory_peak" ] && [ -r "\$memory_peak" ]; then
-               peak=\$(cat "\$memory_peak" 2>/dev/null || echo unavailable)
+            current=\$(cat "'"\$memory_current"'" 2>/dev/null || echo unavailable)
+            if [ -n "'"\$memory_peak"'" ] && [ -r "'"\$memory_peak"'" ]; then
+               peak=\$(cat "'"\$memory_peak"'" 2>/dev/null || echo unavailable)
             else
                peak=unavailable
             fi
-            printf '%s memory.current=%s memory.peak=%s\n' "\$(date '+%Y-%m-%dT%H:%M:%S%z')" "\$current" "\$peak"
+            printf "%s memory.current=%s memory.peak=%s\\n" "\$(date "+%Y-%m-%dT%H:%M:%S%z")" "\$current" "\$peak"
             sleep 10
          done
-      ) > "${WORKSPACE}/logs/cgroup-memory-${stageName}.log" 2>&1 &
+      ' < /dev/null > "${WORKSPACE}/logs/cgroup-memory-${stageName}.log" 2>&1 &
       echo \$! > "${WORKSPACE}/cgroup-memory.pid"
    fi
-   """
+   """)
 }
 
 def stopVmstatLogging() {
-   sh """
+   sh (label: "Stop Performance Logging", script: """
    for pidfile in vmstat.pid cgroup-memory.pid; do
       if [ -f "${WORKSPACE}/\$pidfile" ]; then
          pkill -F "${WORKSPACE}/\$pidfile" || true
@@ -275,139 +334,110 @@ def stopVmstatLogging() {
       fi
    done
    df -h || true
-   """
+   """)
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
 
-def generateAntPod(job, label) {
+// Allocation of a node to execute action and the execution. If the allocation fails,
+// it can be repeated several times (maxInfraRetries).
+// job - job and stage name
+// label - used to limit the number of running parallel stages of the same label
+// action - action to execute
+def runOnNode(String job, String label, boolean archiveServerLogs, Closure action) {
    return {
-      retry(count: 30, conditions: [kubernetesAgent(), nonresumable()]) {
+      def infraRetries = 0
+      def maxInfraRetries = 10
+      while (infraRetries < maxInfraRetries) {
+         def infraError = false
          node("${label}") {
             stage("${job}") {
                try {
                   container('action') {
                      script {
+                        def vmstatStarted = false
                         try {
-                           startVmstatLogging("ant-${job}")
+                           startVmstatLogging("${job}")
+                           vmstatStarted = true
+                           dumpSysInfo()
                            unstash 'maven-repo'
-                           unstash 'appserv-tests'
-                           timeout(time: 1, unit: 'HOURS') {
-                              withAnt(installation: 'apache-ant-latest') {
-                                 dumpSysInfo()
-                                 sh '''
-                                 # Mandatory requirement -> fail fast if not available.
-                                 export BUNDLES_DIR="${WORKSPACE}/bundles"
-                                 ant -version
-                                 mvn -version
-                                 mkdir -p ${WORKSPACE}/appserver/tests
-                                 tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                                 tar -xzf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                                 '''
-                                 sh """
-                                 export BUNDLES_DIR="\${WORKSPACE}/bundles"
-                                 ./runtests.sh ${job}
-                                 """
-                              }
-                           }
+                           action()
                         } finally {
-                           stopVmstatLogging()
+                           if (vmstatStarted) {
+                              stopVmstatLogging()
+                           }
                         }
                      }
                   }
+               } catch (e) {
+                  echo "Something broke: ${e}";
+                  def errorMsg = e.getMessage() ?: ""
+                  if (errorMsg.contains("Failed to start websocket connection")) {
+                     infraError = true
+                     infraRetries++
+                     if (infraRetries >= maxInfraRetries) {
+                        throw e
+                     }
+                     echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
+                  } else {
+                     throw e
+                  }
                } finally {
-                  archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
-                  junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                  if (!infraError) {
+                     archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
+                     junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     if (archiveServerLogs) {
+                        archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
+                     }
+                  }
                }
             }
          }
+         if (!infraError) {
+            break
+         }
       }
    }
+}
+
+def generateAntPod(job, label) {
+   return runOnNode(job, label, false, {
+      unstash 'appserv-tests'
+      timeout(time: 1, unit: 'HOURS') {
+         sh (label: 'Unpack Requirements', script: '''
+         # Mandatory requirement -> fail fast if not available.
+         export BUNDLES_DIR="${WORKSPACE}/bundles"
+         export PATH="${ANT_HOME}/bin:${PATH}"
+         ant -version
+         mvn -version
+         ls -la ${WORKSPACE}
+         mkdir -p ${WORKSPACE}/appserver/tests
+         tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+         tar -xzf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+         ''')
+         sh (label: "./runtests.sh ${job}", script: """
+         export BUNDLES_DIR="\${WORKSPACE}/bundles"
+         export PATH="\${ANT_HOME}/bin:\${PATH}"
+         ./runtests.sh ${job}
+         """)
+      }
+   })
 }
 
 def generateMvnTestPod(job, label) {
-   return {
-      retry(count: 30, conditions: [kubernetesAgent(), nonresumable()]) {
-         node("${label}") {
-            stage("${job}") {
-               try {
-                  container('action') {
-                     script {
-                        try {
-                           startVmstatLogging("mvn-${job}")
-                           unstash 'git'
-                           unstash 'maven-repo'
-                           timeout(time: 1, unit: 'HOURS') {
-                              dumpSysInfo()
-                              sh '''
-                              git reset --hard
-                              tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              '''
-                              sh """
-                              mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
-                              """
-                           }
-                        } finally {
-                           stopVmstatLogging()
-                        }
-                     }
-                  }
-               } finally {
-                  archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                  junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                  junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-// Makes Jenkins UI extremely slow in current version
-//                  recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
-               }
-            }
-         }
+   return runOnNode(job, label, true, {
+      unstash 'git'
+      timeout(time: 1, unit: 'HOURS') {
+         sh (label: 'Unpack Requirements', script: '''
+         git reset --hard
+         tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+         ''')
+         sh (label: "mvn clean verify -pl :${job}", script: """
+         mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
+         """)
       }
-   }
-}
-
-def ant_heavy_jobs = [
-    "connector_group_4",
-    "naming_all",
-    "ql_gf_full_profile_all"
-]
-
-// Slow jobs first
-def ant_light_jobs = [
-    "webservice_all",
-    "ejb_group_3",
-    "connector_group_1",
-    "deployment_all",
-    "security_all",
-    "web_jsp",
-    "cdi_all",
-    "ejb_group_1",
-    "ejb_group_2",
-    "ejb_group_embedded",
-    "connector_group_2",
-    "connector_group_3",
-    "jdbc_group1",
-    "jdbc_group5",
-    "jdbc_group4",
-    "jdbc_group3",
-    "jdbc_group2",
-    "persistence_all",
-    "ql_gf_web_profile_all",
-    "batch_all"
-]
-
-def mvn_jobs = [
-    "admin-tests-parent",
-    "application-tests",
-    "embedded-tests"
-]
-
-def parallelStagesMapAntHeavy = ant_heavy_jobs.collectEntries {
-   ["${it}": generateAntPod(it, "ant-shared-pod-heavy")]
-}
-def parallelStagesMapAntLight = ant_light_jobs.collectEntries {
-   ["${it}": generateAntPod(it, "ant-shared-pod-light")]
-}
-def parallelStagesMapMvn = mvn_jobs.collectEntries {
-   ["${it}": generateMvnTestPod(it, "maven-shared-pod-light")]
+   })
 }
 
 pipeline {
@@ -457,7 +487,6 @@ pipeline {
       stage('Prepare') {
          agent {
             kubernetes {
-               label 'maven-shared-pod-heavy'
                instanceCap 3
                yaml mvnHeavyContainerCfg
             }
@@ -468,17 +497,16 @@ pipeline {
                   checkout scm
                   container('action') {
                      script {
+                        // Workaround - after regular purging of the repository mvn fails with AccessDeniedException.
+                        sh "mkdir -p /home/jenkins/.m2/repository/org"
                         // Default: run tests
                         env.SKIP_TESTS = "false"
                         // Only check for docs-only changes in PR builds
                         if (env.CHANGE_TARGET) {
                            echo "PR build detected, checking if only docs changed..."
-                           def relevantChanges = sh(
-                              script: '''
+                           def relevantChanges = sh(label: 'Git Diff Check', returnStdout: true, script: '''
                               (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
-                              ''',
-                              returnStdout: true
-                           ).trim()
+                              ''').trim()
                            if (relevantChanges == "") {
                               env.SKIP_TESTS = "true"
                               echo "✓ Only docs/ changes detected - tests will be skipped"
@@ -502,24 +530,23 @@ pipeline {
                            startVmstatLogging('mvn-build')
                            timeout(time: 1, unit: 'HOURS') {
                               dumpSysInfo()
-                              sh '''
-                              # Validate the structure in all submodules (especially version ids)
+                              sh (label: 'mvn clean validate', script:  '''
                               mvn -B -e -fae clean validate -Ptck,set-version-id,snapshots
-                              '''
+                              ''')
 // Makes build 6 minutes slower.
-//                              sh '''
+//                              sh (label: 'Download Maven Plugins', script: '''
 //                              mvn -B -e dependency:resolve-plugins -T8C
-//                              '''
-                              sh '''
+//                              ''')
+                              sh (label: 'mvn install', script: '''
                               mvn -B -e install -Pfastest,ci,snapshots -T4C
-                              '''
-                              sh '''
+                              ''')
+                              sh (label: 'Pack for Test Stages', script: '''
                               mvn -B -e clean
                               mkdir -p ${BUNDLES_DIR}
                               tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
-                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
-                              '''
-                              sh '''
+                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main/distributions org/glassfish/main/extras org/glassfish/main/tests org/glassfish/main/nucleus-parent org/glassfish/main/glassfish-nucleus-parent org/glassfish/main/glassfish-parent org/glassfish/main/glassfish-qa-config | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
+                              ''')
+                              sh (label: "Copy to ${BUNDLES_DIR}", script: '''
                               # For easy access to built artifacts and using them elsewhere
                               gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
                               mvn_copy="mvn -N dependency:copy -DoutputDirectory=${BUNDLES_DIR}"
@@ -528,7 +555,8 @@ pipeline {
                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-web:${gfVersion}:jar"
                               ls -la ${BUNDLES_DIR}
-                              '''
+                              ''')
+                              installAntToSharedCache()
                            }
                         } finally {
                            stopVmstatLogging()
@@ -552,8 +580,6 @@ pipeline {
             stage('MainTests') {
                agent {
                   kubernetes {
-                     retries 60
-                     label 'maven-shared-pod-heavy'
                      instanceCap 3
                      yaml mvnHeavyContainerCfg
                   }
@@ -566,14 +592,14 @@ pipeline {
                            unstash 'git'
                            unstash 'maven-repo'
                            timeout(time: 4, unit: 'HOURS') {
-                              dumpSysInfo()
-                              sh '''
-                              git reset --hard
-                              tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              '''
-                              sh '''
-                              mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
-                              '''
+                             dumpSysInfo()
+                             sh (label: 'Unpack Requirements', script: '''
+                             git reset --hard
+                             tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+                             ''')
+                             sh (label: 'mvn clean verify', script: '''
+                             mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
+                             ''')
                            }
                         } finally {
                            stopVmstatLogging()
@@ -587,21 +613,26 @@ pipeline {
                      junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                      junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
 // Makes Jenkins UI extremely slow in current version
-//                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+//                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }
                }
             }
             stage('ITests') {
                steps {
                   script {
+                     def nodeGroupLabel = 'maven-shared-pod-light'
                      podTemplate(
-                        name: 'maven-shared-pod-light',
-                        label: 'maven-shared-pod-light',
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
                         instanceCap: 3,
-                        slaveConnectTimeout: 60,
+                        slaveConnectTimeout: 120,
                         yaml: mvnLightContainerCfg
                      ) {
-                        parallel parallelStagesMapMvn
+                        echo "Starting parallel ITests stages."
+                        parallel mvn_jobs.collectEntries {
+                           ["${it}": generateMvnTestPod(it, nodeGroupLabel)]
+                        }
+                        echo "Finished parallel ITests stages."
                      }
                   }
                }
@@ -609,14 +640,19 @@ pipeline {
             stage('Ant-Heavy') {
                steps {
                   script {
+                     def nodeGroupLabel = 'ant-shared-pod-heavy'
                      podTemplate(
-                        name: 'ant-shared-pod-heavy',
-                        label: 'ant-shared-pod-heavy',
-                        instanceCap: 8,
-                        slaveConnectTimeout: 60,
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        instanceCap: 3,
+                        slaveConnectTimeout: 120,
                         yaml: antHeavyContainerCfg
                      ) {
-                        parallel parallelStagesMapAntHeavy
+                        echo "Starting parallel Ant-Heavy stages."
+                        parallel ant_heavy_jobs.collectEntries {
+                           ["${it}": generateAntPod(it, nodeGroupLabel)]
+                        }
+                        echo "Finished parallel Ant-Heavy stages."
                      }
                   }
                }
@@ -624,14 +660,19 @@ pipeline {
             stage('Ant-Light') {
                steps {
                   script {
+                     def nodeGroupLabel = 'ant-shared-pod-light'
                      podTemplate(
-                        name: 'ant-shared-pod-light',
-                        label: 'ant-shared-pod-light',
-                        instanceCap: 12,
-                        slaveConnectTimeout: 60,
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        instanceCap: 6,
+                        slaveConnectTimeout: 120,
                         yaml: antLightContainerCfg
                      ) {
-                        parallel parallelStagesMapAntLight
+                        echo "Starting parallel Ant-Light stages."
+                        parallel ant_light_jobs.collectEntries {
+                           ["${it}": generateAntPod(it, nodeGroupLabel)]
+                        }
+                        echo "Finished parallel Ant-Light stages."
                      }
                   }
                }

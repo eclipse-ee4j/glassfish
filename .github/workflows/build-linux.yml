@@ -29,12 +29,15 @@ jobs:
       # qa skips documentation - we check it on Jenkins CI
       # We skip checkstyle too - we check it on Jenkins CI
       run: mvn -B -e -ntp install -Pqa,snapshots '-Dcheckstyle.skip=true'
-    - name: Upload server logs
+    - name: Upload logs
       uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: server-logs
-        path: '**/server.log*'
+        name: logs
+        path: |
+          **/server.log*
+          **/*.dumpstream
+          **/hs_err_pid*.log
         retention-days: 3
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v5

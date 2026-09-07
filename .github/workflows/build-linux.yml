@@ -24,12 +24,6 @@ jobs:
         set -x
         hostname
         env | sort
-        cat /etc/hosts
-        ifconfig
-        netstat -rn
-        cat /etc/resolv.conf
-        resolvectl status
-        ss -tulpn
         cat /proc/cpuinfo
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI

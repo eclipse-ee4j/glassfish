@@ -23,15 +23,6 @@ jobs:
       shell: pwsh
       run: |
         ls env: | sort Name
-        cat C:\Windows\System32\drivers\etc\hosts
-        try {
-            Get-NetIPConfiguration -Detailed
-        } catch {
-            Write-Warning "Get-NetIPConfiguration -Detailed failed (known NetTCPIP bug): $_"
-            Get-NetIPConfiguration
-        }
-        Get-DnsClientServerAddress
-        ipconfig /all
         Get-CimInstance Win32_Processor | Format-List *
     - name: Build with Maven
       # qa skips documentation - we check it on Jenkins CI

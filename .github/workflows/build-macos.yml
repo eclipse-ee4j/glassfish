@@ -24,10 +24,6 @@ jobs:
         set -x
         hostname
         env | sort
-        ifconfig
-        scutil --dns
-        scutil --nwi
-        netstat -rn
         sysctl -n machdep.cpu.brand_string
         sysctl -n hw.physicalcpu
         sysctl -n hw.logicalcpu

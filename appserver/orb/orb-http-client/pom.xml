@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,24 +21,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main</groupId>
-        <artifactId>glassfish-parent</artifactId>
+        <groupId>org.glassfish.main.orb</groupId>
+        <artifactId>orb</artifactId>
         <version>8.0.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>org.glassfish.main.orb</groupId>
-    <artifactId>orb</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>orb-http-client</artifactId>
+    <packaging>jar</packaging>
 
-    <name>GlassFish ORB related modules</name>
+    <name>GlassFish ORB over HTTP - thin client</name>
 
-    <modules>
-        <module>orb-enabler</module>
-        <module>orb-connector</module>
-        <module>orb-iiop</module>
-        <module>orb-http-protocol</module>
-        <module>orb-http-client</module>
-        <module>orb-http-server</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.ejb</groupId>
+            <artifactId>jakarta.ejb-api</artifactId>
+        </dependency>
+    </dependencies>
 </project>

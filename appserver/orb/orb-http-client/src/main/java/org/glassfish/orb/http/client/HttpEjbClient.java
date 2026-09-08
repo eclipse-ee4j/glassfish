@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
+import org.glassfish.orb.http.protocol.CommonRoutes;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
@@ -100,12 +101,40 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     /**
+     * Asks the server for its routing cookie, before there is anything to be
+     * sticky about.
+     *
+     * <p>Worth doing once per client in a cluster, and pointless against a
+     * single instance. The ordering is the whole value: if the cookie only
+     * appears on the response to {@code open}, then the open itself was routed
+     * without one, and nothing guaranteed it reached the node the rest of the
+     * conversation will reach.
+     */
+    public void establishAffinity() throws IOException {
+        HttpTransport.Request request = new HttpTransport.Request(
+                "GET", resolve(CommonRoutes.affinityPath(contextPath)), null, null, Map.of(), null);
+        try (HttpTransport.Response response = transport.exchange(request)) {
+            if (response.status() != Protocol.SC_NO_CONTENT) {
+                throw new IOException("affinity request failed with HTTP " + response.status());
+            }
+            drain(response.body());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("interrupted while establishing affinity", e);
+        }
+    }
+
+    /**
      * Opens a stateful session, returning the session id the server minted.
      * <p>
-     * The affinity cookie the server sets on this response is retained by the
-     * transport's cookie handler, so every subsequent invocation on the
-     * returned locator lands on the same instance through an ordinary load
-     * balancer.
+     * The server sets its affinity cookie on this response, and the
+     * transport's cookie handler returns it on every later request, so
+     * invocations on the resulting locator carry the routing hint that keeps
+     * them on the instance holding the session. Prefer calling
+     * {@link #establishAffinity()} once beforehand: it makes the cookie exist
+     * before the open itself is routed, which in a cluster is the difference
+     * between the session being created on the node the rest of the
+     * conversation reaches and on some other one.
      */
     public byte[] openSession(EjbLocator locator) throws IOException {
         URI uri = resolve(EjbRoutes.openPath(contextPath, locator.appName(), locator.moduleName(),

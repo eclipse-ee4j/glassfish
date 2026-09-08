@@ -40,11 +40,17 @@ import java.util.concurrent.atomic.AtomicReference;
  * simplification for a jar meant to sit on a client's classpath.
  *
  * <h2>Session affinity</h2>
- * A {@link CookieManager} is installed so that the {@code JSESSIONID} minted by
- * the server is echoed back automatically. That single cookie is what pins a
- * stateful conversation to one backend through an ordinary HTTP load balancer,
- * and it is what replaces the IIOP failover machinery
- * ({@code RoundRobinPolicy}, {@code IiopFolbGmsClient}, {@code NamingClusterInfoImpl}).
+ * A {@link CookieManager} is installed so that the {@code JSESSIONID} the
+ * server sets - at the affinity endpoint, and again when a stateful session is
+ * opened - is returned automatically on every later request. That single
+ * cookie is what pins a stateful conversation to one backend through an
+ * ordinary HTTP load balancer, and it is what stands in for the IIOP failover
+ * machinery ({@code RoundRobinPolicy}, {@code IiopFolbGmsClient},
+ * {@code NamingClusterInfoImpl}).
+ * <p>
+ * Whether that actually routes anywhere is a deployment question this client
+ * cannot answer: it needs a load balancer configured for sticky sessions on
+ * that cookie. Against a single instance it is simply inert.
  */
 public final class JdkHttpTransport implements HttpTransport {
 

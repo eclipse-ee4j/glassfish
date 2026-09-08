@@ -51,19 +51,30 @@ public final class EjbDispatcher {
     private final SecurityBridge security;
     private final Marshaller marshaller;
     private final InvocationRegistry registry;
+    private final SessionAffinity affinity;
 
     public EjbDispatcher(ContainerBridge container) {
-        this(container, SecurityBridge.NONE, new JavaSerializationMarshaller(), new InvocationRegistry());
+        this(container, SecurityBridge.NONE, new JavaSerializationMarshaller(),
+                new InvocationRegistry(), SessionAffinity.forThisNode());
     }
 
     public EjbDispatcher(ContainerBridge container,
                          SecurityBridge security,
                          Marshaller marshaller,
                          InvocationRegistry registry) {
+        this(container, security, marshaller, registry, SessionAffinity.forThisNode());
+    }
+
+    public EjbDispatcher(ContainerBridge container,
+                         SecurityBridge security,
+                         Marshaller marshaller,
+                         InvocationRegistry registry,
+                         SessionAffinity affinity) {
         this.container = container;
         this.security = security;
         this.marshaller = marshaller;
         this.registry = registry;
+        this.affinity = affinity;
     }
 
     public InvocationRegistry registry() {
@@ -260,6 +271,12 @@ public final class EjbDispatcher {
                     path.optionalSegment(EjbRoutes.IDX_DISTINCT),
                     path.segment(EjbRoutes.IDX_BEAN));
             exchange.setResponseHeader(Protocol.H_SESSION_ID, EjbRoutes.encodeSessionId(sessionId));
+            // Pin the conversation here as well as at the affinity endpoint.
+            // The session lives in this instance's memory, so every later
+            // invocation quoting this id has to come back to this node; a
+            // client that never called the affinity endpoint would otherwise
+            // have nothing telling the load balancer that.
+            affinity.applyTo(exchange, AffinityDispatcher.contextPathOf(path));
             exchange.setStatus(Protocol.SC_NO_CONTENT);
         } catch (ContainerBridge.NoSuchTargetException e) {
             fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());

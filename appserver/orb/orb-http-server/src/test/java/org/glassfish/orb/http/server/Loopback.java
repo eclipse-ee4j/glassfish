@@ -42,10 +42,16 @@ final class Loopback implements HttpTransport {
 
     private final EjbDispatcher ejb;
     private final NamingDispatcher naming;
+    private final AffinityDispatcher affinity;
 
     Loopback(EjbDispatcher ejb, NamingDispatcher naming) {
+        this(ejb, naming, new AffinityDispatcher(SessionAffinity.forThisNode()));
+    }
+
+    Loopback(EjbDispatcher ejb, NamingDispatcher naming, AffinityDispatcher affinity) {
         this.ejb = ejb;
         this.naming = naming;
+        this.affinity = affinity;
     }
 
     @Override
@@ -64,6 +70,8 @@ final class Loopback implements HttpTransport {
 
         if (rawPath.contains("/naming/")) {
             naming.dispatch(exchange);
+        } else if (rawPath.contains("/common/")) {
+            affinity.dispatch(exchange);
         } else {
             ejb.dispatch(exchange);
         }

@@ -153,7 +153,8 @@ public final class HttpEjbClient implements AutoCloseable {
                 new HttpTransport.Request("DELETE", uri, null, null, Map.of(), null);
         try (HttpTransport.Response response = transport.exchange(request)) {
             if (response.status() != Protocol.SC_NO_CONTENT) {
-                throw new IOException("remove failed with HTTP " + response.status());
+                throw new IOException(ResponseDecoder.reason(response,
+                        "remove failed with HTTP " + response.status()));
             }
             drain(response.body());
         } catch (InterruptedException e) {
@@ -177,7 +178,8 @@ public final class HttpEjbClient implements AutoCloseable {
                 "GET", resolve(CommonRoutes.affinityPath(contextPath)), null, null, Map.of(), null);
         try (HttpTransport.Response response = transport.exchange(request)) {
             if (response.status() != Protocol.SC_NO_CONTENT) {
-                throw new IOException("affinity request failed with HTTP " + response.status());
+                throw new IOException(ResponseDecoder.reason(response,
+                        "affinity request failed with HTTP " + response.status()));
             }
             drain(response.body());
         } catch (InterruptedException e) {
@@ -206,7 +208,8 @@ public final class HttpEjbClient implements AutoCloseable {
                 Map.of(), null);
         try (HttpTransport.Response response = transport.exchange(request)) {
             if (response.status() != Protocol.SC_NO_CONTENT) {
-                throw new IOException("session open failed with HTTP " + response.status());
+                throw new IOException(ResponseDecoder.reason(response,
+                        "session open failed with HTTP " + response.status()));
             }
             String id = response.firstHeader(Protocol.H_SESSION_ID);
             if (id == null) {
@@ -237,7 +240,8 @@ public final class HttpEjbClient implements AutoCloseable {
         try (HttpTransport.Response response = transport.exchange(request)) {
             // A cancel that arrives after completion is not an error.
             if (response.status() >= 500) {
-                throw new IOException("cancel failed with HTTP " + response.status());
+                throw new IOException(ResponseDecoder.reason(response,
+                        "cancel failed with HTTP " + response.status()));
             }
             drain(response.body());
         } catch (InterruptedException e) {

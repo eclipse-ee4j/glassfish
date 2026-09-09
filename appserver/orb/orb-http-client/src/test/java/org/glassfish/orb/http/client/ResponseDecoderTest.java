@@ -134,6 +134,44 @@ class ResponseDecoderTest {
     }
 
     @Test
+    @DisplayName("the reason the server gave survives into the client exception")
+    void theServersReasonIsReported() {
+        HttpTransport.Response refused = new HttpTransport.Response(Protocol.SC_NOT_FOUND, null,
+                Map.of("X-GF-Reason", List.of("stateful session creation is not wired to this container")),
+                new ByteArrayInputStream(new byte[0]));
+
+        Throwable thrown = assertThrows(NoSuchEJBException.class,
+                () -> decoder.decodeInvocationResult(refused, getClass().getClassLoader()));
+        // Without this the caller was told only "no such bean or session",
+        // which describes the status code and not the failure.
+        assertTrue(thrown.getMessage().contains("stateful session creation"), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("a server that explains itself is heard even when its body is unreadable")
+    void aReasonIsReportedAlongsideAnUndecodableBody() {
+        HttpTransport.Response corrupt = new HttpTransport.Response(Protocol.SC_EXCEPTION,
+                ContentType.of(marshaller.codec(), ContentType.KIND_EXCEPTION).toHeaderValue(),
+                Map.of("X-GF-Reason", List.of("bean threw during passivation")),
+                new ByteArrayInputStream(new byte[] { 1, 2, 3 }));
+
+        Throwable thrown = assertThrows(EJBException.class,
+                () -> decoder.decodeInvocationResult(corrupt, getClass().getClassLoader()));
+        assertTrue(thrown.getMessage().contains("passivation"), thrown.getMessage());
+    }
+
+    @Test
+    @DisplayName("a silent server still yields the generic message")
+    void anAbsentReasonFallsBackToTheGenericMessage() {
+        HttpTransport.Response refused = new HttpTransport.Response(Protocol.SC_NOT_FOUND, null,
+                Map.of(), new ByteArrayInputStream(new byte[0]));
+
+        Throwable thrown = assertThrows(NoSuchEJBException.class,
+                () -> decoder.decodeInvocationResult(refused, getClass().getClassLoader()));
+        assertTrue(thrown.getMessage().contains("no such bean or session"), thrown.getMessage());
+    }
+
+    @Test
     @DisplayName("a reply from a newer protocol version is refused rather than misread")
     void anUnsupportedVersionIsRefused() {
         HttpTransport.Response future = new HttpTransport.Response(Protocol.SC_OK,

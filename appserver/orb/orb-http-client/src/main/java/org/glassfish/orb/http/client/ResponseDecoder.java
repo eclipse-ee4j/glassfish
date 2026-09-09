@@ -76,18 +76,17 @@ final class ResponseDecoder {
                     return null;
                 }
                 case Protocol.SC_EXCEPTION -> throw readThrowable(response, loader);
-                case Protocol.SC_NOT_FOUND ->
-                        throw new NoSuchEJBException("no such bean or session at " + response.firstHeader("X-Request-Path"));
+                case Protocol.SC_NOT_FOUND -> throw new NoSuchEJBException(reason(response, "no such bean or session"));
                 case Protocol.SC_FORBIDDEN ->
-                        throw new EJBAccessException("not authorised to invoke this method");
+                        throw new EJBAccessException(reason(response, "not authorised to invoke this method"));
                 case Protocol.SC_CANCELLED ->
-                        throw new CancellationException("invocation was cancelled");
+                        throw new CancellationException(reason(response, "invocation was cancelled"));
                 case Protocol.SC_NOT_ACCEPTABLE ->
-                        throw new ProtocolException("server rejected protocol version "
-                                + Protocol.VERSION + " or the requested encoding");
+                        throw new ProtocolException(reason(response, "server rejected protocol version "
+                                + Protocol.VERSION + " or the requested encoding"));
                 case Protocol.SC_BAD_REQUEST ->
-                        throw new ProtocolException("server rejected the request as malformed");
-                default -> throw new EJBException("unexpected HTTP status " + response.status());
+                        throw new ProtocolException(reason(response, "server rejected the request as malformed"));
+                default -> throw new EJBException(reason(response, "unexpected HTTP status " + response.status()));
             }
         }
     }
@@ -107,6 +106,24 @@ final class ResponseDecoder {
         }
     }
 
+    /**
+     * Prefers what the server said to what we would have guessed.
+     *
+     * <p>A protocol-level refusal carries its reason in a header rather than a
+     * marshalled body, because an intermediary has to be able to read it too.
+     * Discarding it and reporting the generic case turned a server that had
+     * explained itself into one that had not - which cost a round trip through
+     * CI to diagnose something the response had already answered.
+     *
+     * @param response the failing exchange
+     * @param fallback what to say if the server said nothing
+     * @return the message to report
+     */
+    static String reason(HttpTransport.Response response, String fallback) {
+        String reason = response.firstHeader("X-GF-Reason");
+        return reason == null || reason.isBlank() ? fallback : fallback + ": " + reason;
+    }
+
     private Throwable readThrowable(HttpTransport.Response response, ClassLoader loader) {
         try {
             Object o = readValue(response, loader, ContentType.KIND_EXCEPTION);
@@ -116,8 +133,11 @@ final class ResponseDecoder {
             return new EJBException("server signalled a failure but sent a "
                     + (o == null ? "null" : o.getClass().getName()) + " instead of a Throwable");
         } catch (IOException | ClassNotFoundException e) {
-            // The server failed and we cannot even read why - do not lose that.
-            return new EJBException("server signalled a failure whose detail could not be decoded", e);
+            // The server failed and the body is not a Throwable we can read.
+            // It may still have said why in a header, and saying "could not be
+            // decoded" while discarding an explanation is the worst of both.
+            return new EJBException(reason(response,
+                    "server signalled a failure whose detail could not be decoded"), e);
         }
     }
 }

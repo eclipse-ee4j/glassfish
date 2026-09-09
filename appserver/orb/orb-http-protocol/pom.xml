@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>orb-http-protocol</artifactId>
-    <packaging>jar</packaging>
+    <packaging>glassfish-jar</packaging>
 
     <name>GlassFish ORB over HTTP - wire protocol</name>
 

@@ -66,6 +66,15 @@ public final class Protocol {
     /** {@code DELETE .../ejb/v1/cancel/{app}/{module}/{distinct}/{bean}/{invocationId}/{interrupt}} */
     public static final String OP_CANCEL = "cancel";
 
+    /**
+     * {@code DELETE .../ejb/v1/remove/{app}/{module}/{distinct}/{bean}/{session}}
+     * <p>
+     * {@code EJBObject.remove()} from the EJB 2.x component view. It is not an
+     * ordinary invocation because it is not a business method: it ends the
+     * conversation, and the container - not the bean - decides what that means.
+     */
+    public static final String OP_REMOVE = "remove";
+
     // ---- naming operations ----------------------------------------------
     // These map one-to-one onto com.sun.enterprise.naming.impl.SerialContextProvider.
 

@@ -18,6 +18,7 @@ package org.glassfish.orb.http.client;
 
 
 
+
 import jakarta.ejb.EJBException;
 
 import java.io.IOException;
@@ -102,6 +103,62 @@ public final class HttpEjbClient implements AutoCloseable {
                 new Class<?>[] { viewClass },
                 new HttpEjbInvocationHandler(this, viewClass, locator));
         return viewClass.cast(proxy);
+    }
+
+    /**
+     * @param homeClass the EJB 2.x home interface
+     * @param componentClass the component interface its create methods return
+     * @param locator the bean the home belongs to
+     * @return a proxy implementing {@code homeClass}
+     */
+    public <T> T createHomeProxy(Class<T> homeClass, Class<?> componentClass, EjbLocator locator) {
+        if (!homeClass.isInterface()) {
+            throw new IllegalArgumentException("a home view must be an interface: " + homeClass);
+        }
+        Object proxy = Proxy.newProxyInstance(
+                homeClass.getClassLoader(),
+                new Class<?>[] { homeClass },
+                new HttpEjbHomeInvocationHandler(this, homeClass, componentClass, locator));
+        return homeClass.cast(proxy);
+    }
+
+    /**
+     * @param componentClass the EJB 2.x component interface
+     * @param locator the reference, carrying its session if it has one
+     * @param home the home it came from, so getEJBHome can answer locally
+     * @return a proxy implementing {@code componentClass}
+     */
+    public <T> T createComponentProxy(Class<T> componentClass, EjbLocator locator, Object home) {
+        Object proxy = Proxy.newProxyInstance(
+                componentClass.getClassLoader(),
+                new Class<?>[] { componentClass },
+                new HttpEjbInvocationHandler(this, componentClass, locator, home));
+        return componentClass.cast(proxy);
+    }
+
+    /**
+     * Ends a stateful session, as {@code EJBObject.remove()} does.
+     *
+     * @param locator the session to end; must carry a session id
+     */
+    public void removeSession(EjbLocator locator) throws IOException {
+        if (!locator.isStateful()) {
+            throw new IOException("remove() needs a session; this reference has none");
+        }
+        URI uri = resolve(EjbRoutes.removePath(contextPath, locator.appName(), locator.moduleName(),
+                locator.distinctName(), locator.beanName(),
+                EjbRoutes.encodeSessionId(locator.sessionId())));
+        HttpTransport.Request request =
+                new HttpTransport.Request("DELETE", uri, null, null, Map.of(), null);
+        try (HttpTransport.Response response = transport.exchange(request)) {
+            if (response.status() != Protocol.SC_NO_CONTENT) {
+                throw new IOException("remove failed with HTTP " + response.status());
+            }
+            drain(response.body());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IOException("interrupted while removing a session", e);
+        }
     }
 
     /**

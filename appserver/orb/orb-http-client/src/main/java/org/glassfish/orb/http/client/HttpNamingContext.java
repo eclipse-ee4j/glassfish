@@ -18,6 +18,7 @@ package org.glassfish.orb.http.client;
 
 
 
+
 import java.io.IOException;
 import java.io.ObjectInputFilter;
 import java.net.URI;
@@ -159,6 +160,12 @@ public class HttpNamingContext implements Context {
                 Class<?> view = Class.forName(ref.viewClassName(), false, contextClassLoader());
                 EjbLocator locator = new EjbLocator(ref.appName(), ref.moduleName(),
                         ref.distinctName(), ref.beanName(), ref.sessionId());
+                if (ref.isHome()) {
+                    // EJB 2.x: what the client narrows and calls create() on.
+                    Class<?> component =
+                            Class.forName(ref.componentClassName(), false, contextClassLoader());
+                    return client.createHomeProxy(view, component, locator);
+                }
                 return client.createProxy(view, locator);
             } catch (ClassNotFoundException e) {
                 // The view interface is not on this client's classpath. Hand

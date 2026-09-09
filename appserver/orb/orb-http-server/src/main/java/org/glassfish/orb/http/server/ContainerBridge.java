@@ -18,6 +18,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import org.glassfish.orb.http.protocol.EjbKey;
 
 /**
@@ -96,4 +97,16 @@ public interface ContainerBridge {
                          String moduleName,
                          String distinctName,
                          String beanName) throws NoSuchTargetException;
+
+    /**
+     * Ends a stateful session.
+     *
+     * <p>This is {@code EJBObject.remove()} from the EJB 2.x component view.
+     * It is not a business method and cannot be dispatched as one: the bean
+     * does not decide what removal means, the container does, and after it the
+     * reference is dead rather than merely idle.
+     *
+     * @param key the session to end
+     */
+    void removeSession(EjbKey key) throws NoSuchTargetException;
 }

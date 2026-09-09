@@ -18,6 +18,7 @@ package org.glassfish.orb.http.protocol;
 
 
 
+
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -124,6 +125,27 @@ public final class EjbRoutes {
                 + '/' + encode(moduleName)
                 + '/' + encode(distinctName)
                 + '/' + encode(beanName);
+    }
+
+    /**
+     * @param sessionId the session to end, encoded
+     * @return {@code {ctx}/ejb/v1/remove/{app}/{module}/{distinct}/{bean}/{session}}
+     */
+    public static String removePath(String contextPath,
+                                    String appName,
+                                    String moduleName,
+                                    String distinctName,
+                                    String beanName,
+                                    String sessionId) {
+        return contextPath
+                + '/' + Protocol.SVC_EJB
+                + '/' + Protocol.VERSION_SEGMENT
+                + '/' + Protocol.OP_REMOVE
+                + '/' + encode(appName)
+                + '/' + encode(moduleName)
+                + '/' + encode(distinctName)
+                + '/' + encode(beanName)
+                + '/' + encode(sessionId);
     }
 
     public static String cancelPath(String contextPath,

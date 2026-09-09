@@ -18,6 +18,7 @@ package org.glassfish.orb.http.protocol;
 
 
 
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Objects;
@@ -38,9 +39,45 @@ public record RemoteEjbReference(String appName,
                                  String distinctName,
                                  String beanName,
                                  String viewClassName,
-                                 byte[] sessionId) implements Serializable {
+                                 byte[] sessionId,
+                                 String componentClassName) implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
+
+    /**
+     * A reference to a business view, which is what a client of EJB 3 and
+     * later looks up.
+     *
+     * @param viewClassName the remote business interface
+     */
+    public RemoteEjbReference(String appName, String moduleName, String distinctName,
+                              String beanName, String viewClassName, byte[] sessionId) {
+        this(appName, moduleName, distinctName, beanName, viewClassName, sessionId, null);
+    }
+
+    /**
+     * A reference to an EJB 2.x home.
+     *
+     * <p>The home and the component interface are two different types, and a
+     * client needs both: it narrows the looked-up object to the home, calls
+     * {@code create()}, and gets back the component interface. So the
+     * reference has to carry both names, where a business view needs only one.
+     *
+     * @param homeClassName the home interface, e.g. {@code CartHome}
+     * @param componentClassName the component interface, e.g. {@code Cart}
+     * @return a reference a client can turn into a home proxy
+     */
+    public static RemoteEjbReference home(String appName, String moduleName, String distinctName,
+                                          String beanName, String homeClassName,
+                                          String componentClassName) {
+        return new RemoteEjbReference(appName, moduleName, distinctName, beanName,
+                homeClassName, null, componentClassName);
+    }
+
+    /** @return whether this names an EJB 2.x home rather than a business view */
+    public boolean isHome() {
+        return componentClassName != null;
+    }
 
     public RemoteEjbReference {
         Objects.requireNonNull(appName, "appName");

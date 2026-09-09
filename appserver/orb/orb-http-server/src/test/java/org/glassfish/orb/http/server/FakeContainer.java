@@ -18,6 +18,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -107,6 +108,13 @@ final class FakeContainer implements ContainerBridge {
         java.nio.ByteBuffer.wrap(sessionId).putLong(nextId.getAndIncrement());
         sessions.put(sessionKey(new EjbKey(id, sessionId)), factory.get());
         return sessionId;
+    }
+
+    @Override
+    public void removeSession(EjbKey key) throws NoSuchTargetException {
+        if (sessions.remove(sessionKey(key)) == null) {
+            throw new NoSuchTargetException("no such session");
+        }
     }
 
     private static long sessionKey(EjbKey key) {

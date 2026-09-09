@@ -18,6 +18,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
@@ -111,6 +112,8 @@ public final class EjbDispatcher {
                 invoke(exchange, path);
             } else if (path.segmentEquals(EjbRoutes.IDX_OPERATION, Protocol.OP_OPEN)) {
                 open(exchange, path);
+            } else if (path.segmentEquals(EjbRoutes.IDX_OPERATION, Protocol.OP_REMOVE)) {
+                remove(exchange, path);
             } else if (path.segmentEquals(EjbRoutes.IDX_OPERATION, Protocol.OP_CANCEL)) {
                 cancel(exchange, path);
             } else {
@@ -318,6 +321,39 @@ public final class EjbDispatcher {
             exchange.setStatus(Protocol.SC_NO_CONTENT);
         } catch (ContainerBridge.NoSuchTargetException e) {
             fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
+        }
+    }
+
+    // ---- remove ----------------------------------------------------------
+
+    private void remove(ServerExchange exchange, PathScanner path) throws IOException {
+        if (!"DELETE".equals(exchange.method())) {
+            fail(exchange, Protocol.SC_BAD_REQUEST, "remove must be a DELETE");
+            return;
+        }
+        if (path.count() != EjbRoutes.IDX_SESSION + 1) {
+            fail(exchange, Protocol.SC_BAD_REQUEST, "malformed remove path");
+            return;
+        }
+        try {
+            byte[] sessionId = EjbRoutes.decodeSessionId(path.segment(EjbRoutes.IDX_SESSION));
+            if (sessionId == null) {
+                fail(exchange, Protocol.SC_BAD_REQUEST, "remove requires a session id");
+                return;
+            }
+            EjbKey key = container.resolve(
+                    path.segment(EjbRoutes.IDX_APP),
+                    path.segment(EjbRoutes.IDX_MODULE),
+                    path.optionalSegment(EjbRoutes.IDX_DISTINCT),
+                    path.segment(EjbRoutes.IDX_BEAN),
+                    sessionId);
+            container.removeSession(key);
+            exchange.setStatus(Protocol.SC_NO_CONTENT);
+        } catch (ContainerBridge.NoSuchTargetException e) {
+            // Removing something already gone is the outcome the caller wanted.
+            exchange.setStatus(Protocol.SC_NO_CONTENT);
+        } catch (ProtocolException e) {
+            fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
         }
     }
 

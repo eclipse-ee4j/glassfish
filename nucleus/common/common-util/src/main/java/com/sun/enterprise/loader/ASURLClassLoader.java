@@ -535,6 +535,13 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
             while (st.hasMoreTokens()) {
                 final String entry = st.nextToken();
                 final File newFile = new File(file.getParentFile(), entry);
+                // Manifests routinely name jars that do not exist on the filesystem.
+                // We need to ignore them, otherwise the classloader will try to load all new classes
+                // from a directory of that name, which also doesn't exist
+                if (!newFile.exists()) {
+                    _logger.log(Level.FINE, "[ASURLClassLoader] Ignoring missing Class-Path entry: {0}", newFile);
+                    continue;
+                }
                 // add to class path of this class loader
                 try {
                     appendURL(newFile);

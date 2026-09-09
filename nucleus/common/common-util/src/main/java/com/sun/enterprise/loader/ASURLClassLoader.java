@@ -251,13 +251,33 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
      * @param url url to be added
      */
     public synchronized void appendURL(URL url) {
+        appendURL(url, false);
+    }
+
+
+    /**
+     * Adds a directory url whose content does not change while this class loader is in use.
+     * <p>
+     * The tree is listed once and lookups are answered from that listing, so a class or
+     * resource that is not there costs no file system access at all.
+     * <p>
+     * Callers that do add files to the directory afterwards must call {@link #refresh()}.
+     *
+     * @param url url to be added
+     */
+    public synchronized void appendIndexedURL(URL url) {
+        appendURL(url, true);
+    }
+
+
+    private void appendURL(URL url, boolean indexContent) {
         try {
             if (url == null) {
                 _logger.log(INFO, CULoggerInfo.missingURLEntry);
                 return;
             }
 
-            URLEntry entry = new URLEntry(url);
+            URLEntry entry = new URLEntry(url, indexContent);
 
             if (!urlSet.contains(entry)) {
                 // adds the url entry to the list
@@ -345,6 +365,9 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
      * @throws IOException in case of errors refreshing the cache
      */
     public synchronized void refresh() throws IOException {
+        for (URLEntry entry : urlSet) {
+            entry.reindex();
+        }
         clearNotFoundCaches();
     }
 
@@ -882,17 +905,23 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
         volatile HashMap<String, String> table = null;
 
         /**
+         * true if {@link #table} is a complete listing of a directory url, so a lookup
+         * miss is final and needs no file system check.
+         */
+        volatile boolean indexed;
+
+        /**
          * ProtectionDomain with signers if jar is signed,
          * ensure thread visibility by making it 'volatile'
          */
         volatile ProtectionDomain pd = null;
 
-        public URLEntry(URL url) throws IOException {
+        URLEntry(URL url, boolean indexContent) throws IOException {
             source = url;
-            init();
+            init(indexContent);
         }
 
-        private void init() throws IOException {
+        private void init(boolean indexContent) throws IOException {
             try {
                 file = new File(source.toURI());
             } catch (URISyntaxException use) {
@@ -906,11 +935,26 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
             }
 
             table = new HashMap<>();
+            indexed = indexContent && !isJar && file.isDirectory();
+            if (indexed) {
+                fillTable(file, table, "");
+            }
+        }
+
+        private void reindex() throws IOException {
+            if (indexed) {
+                HashMap<String, String> refreshed = new HashMap<>();
+                fillTable(file, refreshed, "");
+                table = refreshed;
+            }
         }
 
         private void fillTable(File f, HashMap<String, String> t, String parent) throws IOException {
             String localName = parent.isEmpty() ? "" : parent + "/";
             File[] children = f.listFiles();
+            if (children == null) {
+                return;
+            }
             for (File child : children) {
                 processFile(child,  t, localName);
             }
@@ -939,6 +983,16 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
 
 
         private boolean hasItem(String item) {
+            String target = item;
+            // special handling
+            if (item.startsWith("./")) {
+                target = item.substring(2);
+            }
+
+            if (indexed) {
+                return table.containsKey(target);
+            }
+
             // in the case of ejbc stub compilation, ASURLClassLoader is created before stubs
             // gets generated, thus we need to return true for this case.
             if (table.isEmpty()) {
@@ -953,14 +1007,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
              * the file.  If the file is now present but was not when the loader
              * was created, add an entry for the file in the table.
              */
-            boolean result;
-            String target = item;
-            // special handling
-            if (item.startsWith("./")) {
-                target = item.substring(2);
-            }
-
-            result = table.containsKey(target);
+            boolean result = table.containsKey(target);
             if ( ! result && ! isJar) {
                 /*
                  * If the file exists now then it has been added to the directory since the

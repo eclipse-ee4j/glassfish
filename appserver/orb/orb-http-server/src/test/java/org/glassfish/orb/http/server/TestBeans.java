@@ -17,6 +17,7 @@
 package org.glassfish.orb.http.server;
 
 
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,9 @@ final class TestBeans {
         Map<String, List<Integer>> cyclicFriendlyPayload(int size);
 
         String echoLarge(String payload);
+
+        /** An EJB asynchronous method: declared to return a Future. */
+        java.util.concurrent.Future<String> greetLater(String name);
 
         void refuse();
     }
@@ -89,6 +93,13 @@ final class TestBeans {
         @Override
         public String echoLarge(String payload) {
             return payload;
+        }
+
+        @Override
+        public java.util.concurrent.Future<String> greetLater(String name) {
+            // The container is what makes this asynchronous; the bean returns
+            // its result the ordinary way.
+            return java.util.concurrent.CompletableFuture.completedFuture("later " + name);
         }
 
         @Override

@@ -17,6 +17,7 @@
 package org.glassfish.orb.http.server;
 
 
+
 import jakarta.ejb.NoSuchEJBException;
 
 import java.net.URI;
@@ -108,6 +109,20 @@ class HttpRoundTripTest {
         assertInstanceOf(IllegalStateException.class, thrown.getCause());
         assertEquals("underlying cause", thrown.getCause().getMessage());
         assertTrue(thrown.getStackTrace().length > 0, "the server stack trace should survive");
+    }
+
+    @Test
+    @DisplayName("a Future-returning method is dispatched without blocking the caller")
+    void asynchronousMethodsReturnAFuture() throws Exception {
+        // HttpEjbInvocationHandler routes these through invokeAsync rather than
+        // waiting, which is the whole point of declaring them Future<V>. The
+        // server unwraps the bean's Future, because a Future is not a value and
+        // is not serializable.
+        java.util.concurrent.Future<String> pending = greeter().greetLater("Ada");
+
+        assertNotNull(pending);
+        assertEquals("later Ada", pending.get(10, java.util.concurrent.TimeUnit.SECONDS));
+        assertTrue(pending.isDone());
     }
 
     @Test

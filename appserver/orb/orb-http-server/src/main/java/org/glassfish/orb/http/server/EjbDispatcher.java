@@ -17,6 +17,7 @@
 package org.glassfish.orb.http.server;
 
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
@@ -25,6 +26,8 @@ import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
@@ -164,7 +167,7 @@ public final class EjbDispatcher {
                 Object[] args = readArguments(exchange.requestBody(), loader, method.getParameterCount());
 
                 target = container.getTargetObject(key, invocation.viewClass());
-                Object result = callTarget(target, method, args);
+                Object result = unwrapAsyncResult(callTarget(target, method, args));
 
                 if (registration.isCancelled()) {
                     // The result is discarded on purpose: the caller has said
@@ -231,6 +234,39 @@ public final class EjbDispatcher {
         }
         callable.setAccessible(true);
         return callable.invoke(target, args);
+    }
+
+    /**
+     * Unwraps the result of an asynchronous business method.
+     *
+     * <p>An {@code @Asynchronous} method is declared to return {@code Future<V>},
+     * but the Future is the container's promise to its <em>caller</em> - it is
+     * not the value, and it is not serializable. What crosses the wire is V,
+     * and the client re-wraps it, so the caller still gets a Future it never
+     * had to block on.
+     *
+     * <p>This does block the dispatching thread on the bean's own future. That
+     * is the honest cost of having no way to hand the caller a result later:
+     * the alternative, answering 202 and dropping the value, would silently
+     * turn every asynchronous method into a fire-and-forget one.
+     *
+     * @param result whatever the business method returned
+     * @return the value to marshal back
+     */
+    private Object unwrapAsyncResult(Object result) throws InvocationTargetException {
+        if (!(result instanceof Future<?> future)) {
+            return result;
+        }
+        try {
+            return future.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new InvocationTargetException(e);
+        } catch (ExecutionException e) {
+            // The bean's failure, not ours: rethrow it as though the method had
+            // thrown directly, so the caller sees its own exception.
+            throw new InvocationTargetException(e.getCause() != null ? e.getCause() : e);
+        }
     }
 
     private Object[] readArguments(InputStream body, ClassLoader loader, int count)

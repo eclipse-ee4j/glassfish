@@ -19,6 +19,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +45,9 @@ final class TestBeans {
         java.util.concurrent.Future<String> greetLater(String name);
 
         void refuse();
+
+        /** Throws something unchecked and unannotated: a system failure. */
+        void explode();
     }
 
     /** A stateful one. */
@@ -57,7 +61,14 @@ final class TestBeans {
     /**
      * An application exception carrying business state. Its faithful arrival is
      * the property a JSON-based transport cannot offer.
+     *
+     * <p>The annotation is load-bearing: without it this is unchecked and
+     * undeclared, which the specification makes a system exception - the
+     * container would wrap it in EJBException and the caller would never see
+     * this type. An IIOP baseline running against a real server is what made
+     * that concrete.
      */
+    @jakarta.ejb.ApplicationException(rollback = true)
     static final class GreetingRefused extends RuntimeException {
 
         private static final long serialVersionUID = 1L;
@@ -101,6 +112,11 @@ final class TestBeans {
             // The container is what makes this asynchronous; the bean returns
             // its result the ordinary way.
             return java.util.concurrent.CompletableFuture.completedFuture("later " + name);
+        }
+
+        @Override
+        public void explode() {
+            throw new IllegalStateException("an unchecked exception the bean never declared");
         }
 
         @Override

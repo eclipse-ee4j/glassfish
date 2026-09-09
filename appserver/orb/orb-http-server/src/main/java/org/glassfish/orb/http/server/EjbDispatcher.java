@@ -19,6 +19,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
@@ -165,8 +166,10 @@ public final class EjbDispatcher {
 
         try (InvocationRegistry.Registration registration = registry.register(invocationId)) {
             Object target = null;
+            Method invokedMethod = null;
             try {
                 Method method = resolveMethod(loader, invocation);
+                invokedMethod = method;
                 Object[] args = readArguments(exchange.requestBody(), loader, method.getParameterCount());
 
                 target = container.getTargetObject(key, invocation.viewClass());
@@ -183,9 +186,12 @@ public final class EjbDispatcher {
             } catch (ContainerBridge.NoSuchTargetException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
             } catch (InvocationTargetException e) {
-                // The application threw. Send the exception itself, with its
-                // type, cause chain and server stack trace intact.
-                writeException(exchange, e.getCause() != null ? e.getCause() : e);
+                // The bean threw. Whether the caller sees that exception or an
+                // EJBException is not ours to choose: the specification decides,
+                // and getting it wrong would change the exception contract of an
+                // application that was only meant to change transport.
+                Throwable thrown = e.getCause() != null ? e.getCause() : e;
+                writeException(exchange, EjbExceptions.toClientException(thrown, invokedMethod));
             } catch (ClassNotFoundException | NoSuchMethodException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {

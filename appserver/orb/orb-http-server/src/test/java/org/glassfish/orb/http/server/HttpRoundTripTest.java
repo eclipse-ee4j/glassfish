@@ -19,6 +19,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import jakarta.ejb.NoSuchEJBException;
 
 import java.net.URI;
@@ -124,6 +125,20 @@ class HttpRoundTripTest {
         assertNotNull(pending);
         assertEquals("later Ada", pending.get(10, java.util.concurrent.TimeUnit.SECONDS));
         assertTrue(pending.isDone());
+    }
+
+    @Test
+    @DisplayName("an unannotated unchecked exception becomes EJBException, as the container would make it")
+    void systemExceptionsAreWrapped() {
+        // Not cosmetic. Over IIOP the container wraps this and discards the
+        // instance, so a caller's catch blocks have never been able to see the
+        // original type. Letting it through would change the exception
+        // contract of an application that only changed transport.
+        jakarta.ejb.EJBException wrapped =
+                assertThrows(jakarta.ejb.EJBException.class, () -> greeter().explode());
+
+        assertTrue(wrapped.getMessage().contains("IllegalStateException"));
+        assertNotNull(wrapped.getCausedByException(), "the original must still be reachable");
     }
 
     @Test

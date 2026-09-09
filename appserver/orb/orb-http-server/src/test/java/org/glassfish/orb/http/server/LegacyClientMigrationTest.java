@@ -19,6 +19,7 @@ package org.glassfish.orb.http.server;
 
 
 
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
@@ -158,6 +159,11 @@ class LegacyClientMigrationTest {
             assertEquals("E_CLOSED", refused.reasonCode());
             assertInstanceOf(IllegalStateException.class, refused.getCause());
             assertTrue(refused.getStackTrace().length > 0);
+
+            // And the other half of the contract, over the same connection.
+            jakarta.ejb.EJBException wrapped =
+                    assertThrows(jakarta.ejb.EJBException.class, greeter::explode);
+            assertTrue(wrapped.getMessage().contains("IllegalStateException"));
         } finally {
             context.close();
         }

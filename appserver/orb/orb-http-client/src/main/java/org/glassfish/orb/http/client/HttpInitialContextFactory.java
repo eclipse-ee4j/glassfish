@@ -16,12 +16,14 @@
 
 package org.glassfish.orb.http.client;
 
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.Hashtable;
-import javax.naming.Context;
+
 import javax.naming.ConfigurationException;
+import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 

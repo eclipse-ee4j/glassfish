@@ -16,6 +16,7 @@
 
 package org.glassfish.orb.http.client;
 
+
 import java.io.IOException;
 import java.io.ObjectInputFilter;
 import java.net.URI;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.Name;
@@ -32,6 +34,7 @@ import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.OperationNotSupportedException;
+
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;

@@ -16,6 +16,7 @@
 
 package org.glassfish.orb.http.protocol;
 
+
 import java.io.IOException;
 
 /** A request or response that does not conform to the protocol. */

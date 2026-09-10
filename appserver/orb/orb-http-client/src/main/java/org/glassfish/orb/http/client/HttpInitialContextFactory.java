@@ -67,6 +67,14 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_HTTP2 = "org.glassfish.orb.http.http2";
 
+    /**
+     * Requires a specific codec, e.g. {@code fory}, instead of letting the
+     * client pick the best one it finds and fall back if the server cannot
+     * read it. Set this when the codec was a deliberate choice and a silent
+     * fallback would defeat the point of making it.
+     */
+    public static final String PROP_CODEC = "org.glassfish.orb.http.codec";
+
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Object url = environment == null ? null : environment.get(Context.PROVIDER_URL);
@@ -120,6 +128,10 @@ public class HttpInitialContextFactory implements InitialContextFactory {
         Object http2 = environment.get(PROP_HTTP2);
         if (http2 != null) {
             builder.preferHttp2(Boolean.parseBoolean(http2.toString()));
+        }
+        Object codec = environment.get(PROP_CODEC);
+        if (codec != null) {
+            builder.codec(codec.toString());
         }
 
         return new HttpNamingContext(builder.build(), environment);

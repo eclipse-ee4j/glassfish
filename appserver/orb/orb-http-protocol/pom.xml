@@ -38,4 +38,26 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <!--
+                            Marshallers calls ServiceLoader. In OSGi that only reaches
+                            another bundle if SPI-Fly weaves the call site, and SPI-Fly
+                            only weaves bundles that ask for it here.
+                        -->
+                        <Require-Capability>
+                            osgi.extender;filter:="(osgi.extender=osgi.serviceloader.processor)",
+                            osgi.serviceloader;filter:="(osgi.serviceloader=org.glassfish.orb.http.protocol.Marshaller)";cardinality:=multiple;resolution:=optional
+                        </Require-Capability>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

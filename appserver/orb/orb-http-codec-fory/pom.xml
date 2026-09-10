@@ -57,4 +57,86 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.orb.http.codec.fory
+                        </Export-Package>
+
+                        <!--
+                            Apache Fory does not publish OSGi bundles, so its jars are
+                            embedded here rather than dropped loose into modules/, where
+                            the framework would not resolve them.
+                        -->
+                        <Embed-Dependency>
+                            groupId=org.apache.fory;artifactId=fory-core,
+                            <!--
+                                Janino is not optional to Fory: it compiles the generated
+                                serializers, which is where Fory's speed comes from.
+                                Leaving it out would build a bundle that works until the
+                                first object is encoded. Guava and slf4j-api are declared
+                                optional by Fory and are deliberately not embedded.
+                            -->
+                            groupId=org.codehaus.janino;artifactId=janino,
+                            groupId=org.codehaus.janino;artifactId=commons-compiler,
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+
+                        <!-- fory-core ships a multi-release jar; the flag has to survive embedding. -->
+                        <Multi-Release>true</Multi-Release>
+
+                        <!--
+                            Everything the embedded code might reach for that is not
+                            actually needed at runtime: optional integrations, and the
+                            JDK internals Fory probes for its fast paths.
+                        -->
+                        <Import-Package>
+                            !org.apache.fory.*,
+                            !com.google.*,
+                            !org.codehaus.*,
+                            !sun.*,
+                            !jdk.*,
+                            org.glassfish.orb.http.protocol,
+                            *;resolution:=optional
+                        </Import-Package>
+
+                        <!--
+                            SPI-Fly, which GlassFish already ships, is what makes a
+                            provider in this bundle visible to a ServiceLoader call in
+                            another one. Without these two headers the codec would be
+                            installed and never found - the failure mode being silence,
+                            not an error.
+                        -->
+                        <Provide-Capability>
+                            osgi.serviceloader;osgi.serviceloader="org.glassfish.orb.http.protocol.Marshaller"
+                        </Provide-Capability>
+                        <Require-Capability>
+                            osgi.extender;filter:="(osgi.extender=osgi.serviceloader.registrar)"
+                        </Require-Capability>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!--
+                            The glassfish-jar lifecycle only writes the manifest. Without
+                            this the bundle would declare Bundle-ClassPath entries for
+                            jars that are not inside it - a bundle that builds cleanly and
+                            cannot resolve at runtime.
+                        -->
+                        <id>osgi-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

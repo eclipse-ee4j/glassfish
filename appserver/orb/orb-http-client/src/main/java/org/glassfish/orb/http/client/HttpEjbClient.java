@@ -83,8 +83,25 @@ public final class HttpEjbClient implements AutoCloseable {
     private final String contextPath;
 
     public HttpEjbClient(ClientConfiguration config) {
-        this(config, new JdkHttpTransport(config), Marshallers.preferred(),
+        this(config, new JdkHttpTransport(config), codecFor(config),
                 JavaSerializationMarshaller.defaultFilter());
+    }
+
+    /**
+     * @param config the client settings
+     * @return the codec to start from
+     * @throws IllegalStateException if a codec was required and is not on the
+     *         class path - failing here, at construction, says exactly what is
+     *         missing, where discovering it on the first invocation would not
+     */
+    static Marshaller codecFor(ClientConfiguration config) {
+        String required = config.codec();
+        if (required == null) {
+            return Marshallers.preferred();
+        }
+        return Marshallers.find(required).orElseThrow(() -> new IllegalStateException(
+                "codec " + required + " was required but is not on the class path; available: "
+                        + String.join(", ", Marshallers.codecs())));
     }
 
     public HttpEjbClient(ClientConfiguration config,
@@ -286,7 +303,11 @@ public final class HttpEjbClient implements AutoCloseable {
      */
     private boolean isUnsupportedCodec(HttpTransport.Response response) {
         if (response.status() != Protocol.SC_NOT_ACCEPTABLE
-                || marshaller.codec().equals(ContentType.CODEC_JSER)) {
+                || marshaller.codec().equals(ContentType.CODEC_JSER)
+                || config.codec() != null) {
+            // A codec that was asked for by name is not something to quietly
+            // walk back: the caller wanted this encoding, and the refusal -
+            // which names what the server does speak - is the useful answer.
             return false;
         }
         String reason = response.firstHeader("X-GF-Reason");

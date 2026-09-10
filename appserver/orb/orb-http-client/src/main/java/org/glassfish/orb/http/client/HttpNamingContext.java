@@ -42,6 +42,7 @@ import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
+import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.RemoteEjbReference;
@@ -74,7 +75,7 @@ public class HttpNamingContext implements Context {
     public HttpNamingContext(ClientConfiguration config, HttpTransport transport, Hashtable<?, ?> environment) {
         this.config = config;
         this.transport = transport;
-        this.marshaller = new JavaSerializationMarshaller();
+        this.marshaller = Marshallers.preferred();
         this.filter = JavaSerializationMarshaller.defaultFilter();
         this.client = new HttpEjbClient(config, transport, marshaller, filter);
         this.environment = environment == null ? new Hashtable<>() : new Hashtable<>(environment);

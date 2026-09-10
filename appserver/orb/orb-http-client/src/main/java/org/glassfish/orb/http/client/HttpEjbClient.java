@@ -41,6 +41,7 @@ import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
+import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.TxContext;
 
@@ -69,13 +70,20 @@ public final class HttpEjbClient implements AutoCloseable {
 
     private final HttpTransport transport;
     private final ClientConfiguration config;
-    private final Marshaller marshaller;
+    /**
+     * Not final: a peer may not speak the codec this client would prefer, and
+     * discovering that is only possible by asking. See {@link #downgrade}.
+     */
+    private volatile Marshaller marshaller;
+
     private final ObjectInputFilter filter;
-    private final ResponseDecoder decoder;
+
+    private volatile ResponseDecoder decoder;
+
     private final String contextPath;
 
     public HttpEjbClient(ClientConfiguration config) {
-        this(config, new JdkHttpTransport(config), new JavaSerializationMarshaller(),
+        this(config, new JdkHttpTransport(config), Marshallers.preferred(),
                 JavaSerializationMarshaller.defaultFilter());
     }
 
@@ -255,11 +263,50 @@ public final class HttpEjbClient implements AutoCloseable {
         HttpTransport.Response response;
         try {
             response = transport.exchange(request);
+            if (isUnsupportedCodec(response)) {
+                // Adding a codec to this side must never break a call to a
+                // server that does not have it. The server has just told us
+                // what it cannot read, so drop to the codec every peer has and
+                // try once more, rather than surfacing a failure the caller
+                // can do nothing about.
+                drain(response.body());
+                downgrade();
+                request = buildInvocation(locator, viewClass, method, args, newInvocationId());
+                response = transport.exchange(request);
+            }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new EJBException("interrupted while invoking " + method.getName(), e);
         }
         return decoder.decodeInvocationResult(response, viewClass.getClassLoader());
+    }
+
+    /**
+     * @return whether the server refused the codec rather than the request
+     */
+    private boolean isUnsupportedCodec(HttpTransport.Response response) {
+        if (response.status() != Protocol.SC_NOT_ACCEPTABLE
+                || marshaller.codec().equals(ContentType.CODEC_JSER)) {
+            return false;
+        }
+        String reason = response.firstHeader("X-GF-Reason");
+        // A version refusal also arrives as 406 and is not something a
+        // different codec would fix, so the reason has to be read.
+        return reason != null && reason.contains("unsupported codec");
+    }
+
+    /**
+     * Falls back to the codec that is always present.
+     *
+     * <p>Permanent for this client rather than per call: a server that cannot
+     * read a codec now will not learn it between two invocations, and paying a
+     * failed round trip every time would be worse than not having the codec at
+     * all.
+     */
+    private void downgrade() {
+        Marshaller builtIn = new JavaSerializationMarshaller();
+        this.marshaller = builtIn;
+        this.decoder = new ResponseDecoder(builtIn, filter);
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {

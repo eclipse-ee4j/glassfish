@@ -43,6 +43,7 @@ public final class ClientConfiguration {
     private final String bearerToken;
     private final SSLContext sslContext;
     private final boolean preferHttp2;
+    private final String codec;
 
     private ClientConfiguration(Builder b) {
         this.baseUri = Objects.requireNonNull(b.baseUri, "baseUri");
@@ -53,6 +54,7 @@ public final class ClientConfiguration {
         this.bearerToken = b.bearerToken;
         this.sslContext = b.sslContext;
         this.preferHttp2 = b.preferHttp2;
+        this.codec = b.codec;
     }
 
     public URI baseUri() {
@@ -96,6 +98,24 @@ public final class ClientConfiguration {
         return preferHttp2;
     }
 
+    /**
+     * The codec this client insists on, or {@code null} to let it choose.
+     * <p>
+     * Left unset, the client uses the best codec it can find and quietly
+     * drops to Java serialization if the server cannot read it - which is the
+     * right behaviour for an application that just wants its call to work.
+     * <p>
+     * It is the wrong behaviour for someone who chose a codec on purpose: a
+     * deployment that added a codec for its encoding cost wants to know that
+     * it is actually in force, not to silently get the codec it was trying to
+     * move away from. Setting this turns a downgrade into a visible failure.
+     *
+     * @return the required codec token, or {@code null}
+     */
+    public String codec() {
+        return codec;
+    }
+
     public boolean hasCredentials() {
         return username != null || bearerToken != null;
     }
@@ -105,6 +125,8 @@ public final class ClientConfiguration {
     }
 
     public static final class Builder {
+
+        private String codec;
 
         private final URI baseUri;
         private Duration connectTimeout = Duration.ofSeconds(10);
@@ -161,6 +183,16 @@ public final class ClientConfiguration {
          * what lets concurrent invocations share one connection, which is the
          * property GIOP has and HTTP/1.1 does not.
          */
+        /**
+         * @param codec the codec token to require, e.g. {@code fory}; passing
+         *              {@code null} restores the default of choosing freely
+         * @return this builder
+         */
+        public Builder codec(String codec) {
+            this.codec = codec == null || codec.isBlank() ? null : codec.trim();
+            return this;
+        }
+
         public Builder preferHttp2(boolean preferHttp2) {
             this.preferHttp2 = preferHttp2;
             return this;

@@ -35,10 +35,12 @@ import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.protocol.ProtocolException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -145,6 +147,41 @@ class CodecDowngradeTest {
             assertTrue(transport.offered.get(0).contains(EXOTIC));
             assertTrue(transport.offered.get(1).contains(ContentType.CODEC_JSER));
         }
+    }
+
+    @Test
+    @DisplayName("a codec asked for by name is not silently walked back")
+    void arequiredCodecIsNotDowngraded() throws Exception {
+        PickyTransport transport = new PickyTransport(EXOTIC);
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080"))
+                .codec(EXOTIC)
+                .build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new ExoticMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            EjbLocator locator = new EjbLocator("app", "module", "", "GreeterBean");
+            Method greet = Greeter.class.getMethod("greet", String.class);
+
+            // Someone who chose a codec deliberately would rather see the
+            // refusal than quietly get the encoding they were moving away from.
+            assertThrows(ProtocolException.class,
+                    () -> client.invoke(locator, Greeter.class, greet, new Object[] { "world" }));
+            assertEquals(1, transport.offered.size(), "must not retry a codec that was demanded");
+        }
+    }
+
+    @Test
+    @DisplayName("requiring a codec that is not installed fails at construction, naming what is")
+    void aMissingRequiredCodecFailsEarly() {
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080"))
+                .codec("not-installed")
+                .build();
+
+        IllegalStateException thrown = assertThrows(IllegalStateException.class,
+                () -> new HttpEjbClient(config));
+        assertTrue(thrown.getMessage().contains("not-installed"));
+        assertTrue(thrown.getMessage().contains(ContentType.CODEC_JSER),
+                "the failure should say what is available: " + thrown.getMessage());
     }
 
     @Test

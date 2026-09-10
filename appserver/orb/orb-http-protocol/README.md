@@ -139,6 +139,35 @@ resolved, so a class written on the way out would already be resolved by
 the time an attacker names it on the way in, and the inbound check would
 never run.
 
+### Third-party dependencies
+
+The Fory codec is the only part of this work that introduces third-party
+code, and it is optional: nothing else here depends on it, and a build
+that leaves the module out has no new dependency at all.
+
+| Artifact | Version | License | Why |
+| --- | --- | --- | --- |
+| `org.apache.fory:fory-core` | 1.7.1 | Apache-2.0 | the codec |
+| `org.codehaus.janino:janino` | 3.1.12 | BSD-3-Clause | compiles Fory's generated serializers |
+| `org.codehaus.janino:commons-compiler` | 3.1.12 | BSD-3-Clause | required by janino |
+
+Fory declares Guava and slf4j-api as optional; neither is used and
+neither is embedded.
+
+The janino entries are worth stating plainly rather than leaving to a
+scan: they arrive transitively, they are **not** Apache-2.0, and they end
+up inside the bundle. Fory needs janino to compile the serializers it
+generates, which is where its speed comes from - a build without it
+produces a bundle that works until the first object is encoded.
+
+Both Apache-2.0 and BSD-3-Clause are on the Eclipse Foundation's approved
+list, but this still needs a dependency review before the module can be
+released, since none of these have been vetted for this project before.
+
+None of the three publish OSGi bundles, so they are embedded in
+`orb-http-codec-fory` rather than dropped into `modules/`, where the
+framework would not resolve them.
+
 ## Module map
 
 | Module | Contains |

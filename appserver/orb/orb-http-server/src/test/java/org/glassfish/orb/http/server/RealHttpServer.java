@@ -35,6 +35,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.glassfish.orb.http.protocol.Protocol;
@@ -58,11 +59,17 @@ import org.glassfish.orb.http.protocol.Protocol;
 final class RealHttpServer implements AutoCloseable {
 
     private final HttpServer server;
+    private final ExecutorService executor;
     private final URI baseUri;
 
     RealHttpServer(EjbDispatcher ejb, NamingDispatcher naming, AffinityDispatcher affinity) throws IOException {
         this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
-        this.server.setExecutor(Executors.newFixedThreadPool(8));
+        // Held so it can be shut down. HttpServer.stop does not touch an
+        // executor it was given, so leaving this unreferenced leaked eight
+        // threads per instance for the life of the JVM - and one of these is
+        // built per test method.
+        this.executor = Executors.newFixedThreadPool(8);
+        this.server.setExecutor(executor);
         this.server.createContext(Protocol.CONTEXT_PATH, http -> {
             Adapter exchange = new Adapter(http);
             try {
@@ -91,7 +98,11 @@ final class RealHttpServer implements AutoCloseable {
 
     @Override
     public void close() {
-        server.stop(0);
+        // A second of grace so an exchange still being written finishes,
+        // rather than being cut off and surfacing as a failure in whichever
+        // test happens to run next.
+        server.stop(1);
+        executor.shutdownNow();
     }
 
     /** Adapts one {@link HttpExchange} to {@link ServerExchange}. */

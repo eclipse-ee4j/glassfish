@@ -31,6 +31,7 @@ import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.CompatibleMode;
 import org.apache.fory.config.Language;
+import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
 
 /**
@@ -52,6 +53,24 @@ public final class ForyMarshaller implements Marshaller {
 
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
+
+    /** A frame this codec encoded. */
+    private static final byte KIND_FORY = 0;
+
+    /**
+     * A frame handed to Java serialization instead.
+     * <p>
+     * Throwables go this way. Fory reconstructs a plain exception faithfully
+     * but loses the stack trace of an application subclass, and an exception
+     * that arrives claiming to come from nowhere is worst exactly when someone
+     * is trying to find out where it came from. Java serialization has a
+     * special path for throwables and gets this right, and the exceptional path
+     * is not where encoding speed matters.
+     */
+    private static final byte KIND_JAVA = 1;
+
+    /** The codec throwables are handed to; see {@link #KIND_JAVA}. */
+    private static final JavaSerializationMarshaller BUILT_IN = new JavaSerializationMarshaller();
 
     /**
      * Writing and reading get separate instances, and this is a security
@@ -98,12 +117,13 @@ public final class ForyMarshaller implements Marshaller {
 
             @Override
             public void writeObject(Object o) throws IOException {
-                // Each object is length prefixed rather than relying on the
-                // codec's own stream framing: the transport writes several
-                // objects in sequence, and the boundary between them has to
-                // be a property of this format, not an implementation detail
-                // of the library underneath.
-                byte[] encoded = fory.serialize(o);
+                boolean java = o instanceof Throwable;
+                byte[] encoded = java ? javaEncode(o) : fory.serialize(o);
+                // Each object is framed by this codec rather than by the
+                // library underneath: the transport writes several objects in
+                // sequence, and the boundary between them has to be a property
+                // of this format. The kind byte says which encoding follows.
+                data.writeByte(java ? KIND_JAVA : KIND_FORY);
                 data.writeInt(encoded.length);
                 data.write(encoded);
             }
@@ -132,6 +152,11 @@ public final class ForyMarshaller implements Marshaller {
 
             @Override
             public Object readObject() throws IOException, ClassNotFoundException {
+                byte kind = data.readByte();
+                if (kind != KIND_FORY && kind != KIND_JAVA) {
+                    throw new IOException("unknown frame kind " + kind
+                            + "; the stream is not this codec's, or is out of step");
+                }
                 int length = data.readInt();
                 if (length < 0) {
                     throw new IOException("negative frame length " + length);
@@ -142,7 +167,9 @@ public final class ForyMarshaller implements Marshaller {
                             + " bytes but read " + encoded.length);
                 }
 
-                return fory.deserialize(encoded);
+                return kind == KIND_JAVA
+                        ? javaDecode(encoded, loader, filter)
+                        : fory.deserialize(encoded);
             }
 
             @Override
@@ -150,6 +177,50 @@ public final class ForyMarshaller implements Marshaller {
                 data.close();
             }
         };
+    }
+
+    private static byte[] javaEncode(Object value) throws IOException {
+        java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+        try (Marshaller.ObjectWriter writer = BUILT_IN.newWriter(bytes)) {
+            // Materialised first: the trace lives in a native structure until
+            // getStackTrace is called, and writeObject only copies the field.
+            materialiseStackTraces(value);
+            writer.writeObject(value);
+            writer.flush();
+        }
+        return bytes.toByteArray();
+    }
+
+    private static Object javaDecode(byte[] encoded, ClassLoader loader, ObjectInputFilter filter)
+            throws IOException, ClassNotFoundException {
+        try (Marshaller.ObjectReader reader =
+                BUILT_IN.newReader(new java.io.ByteArrayInputStream(encoded), loader, filter)) {
+            return reader.readObject();
+        }
+    }
+
+    /**
+     * Makes a throwable's stack trace real before it is encoded.
+     *
+     * <p>{@code Throwable.stackTrace} stays a shared empty sentinel until
+     * {@code getStackTrace} is called; the trace lives in a native structure
+     * until then. Java serialization materialises it on the way out, inside
+     * {@code Throwable.writeObject}. A codec that reads the field directly sees
+     * the sentinel and sends an exception with no stack trace - which arrives
+     * looking like it was thrown from nowhere, exactly when someone is trying
+     * to find out where it came from.
+     *
+     * @param value the object about to be written; anything that is not a
+     *              throwable is left alone
+     */
+    private static void materialiseStackTraces(Object value) {
+        for (Throwable t = value instanceof Throwable thrown ? thrown : null;
+                t != null; t = t.getCause() == t ? null : t.getCause()) {
+            t.getStackTrace();
+            for (Throwable suppressed : t.getSuppressed()) {
+                materialiseStackTraces(suppressed);
+            }
+        }
     }
 
     private static ThreadSafeFory writerFor(ClassLoader loader) {

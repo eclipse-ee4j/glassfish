@@ -58,5 +58,17 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
+        <!--
+            Test scope only, and deliberately one directional: the server knows
+            nothing about this codec, but a round trip through a codec that
+            frames its own objects is the only way to catch a framing mistake,
+            which a codec delegating to Java serialization cannot expose.
+        -->
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-codec-fory</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>

@@ -112,7 +112,7 @@ public final class HttpEjbClient implements AutoCloseable {
         this.transport = transport;
         this.marshaller = marshaller;
         this.filter = filter;
-        this.decoder = new ResponseDecoder(marshaller, filter);
+        this.decoder = new ResponseDecoder(marshaller, filter, config.codec());
         this.contextPath = config.contextPath();
     }
 
@@ -327,7 +327,7 @@ public final class HttpEjbClient implements AutoCloseable {
     private void downgrade() {
         Marshaller builtIn = new JavaSerializationMarshaller();
         this.marshaller = builtIn;
-        this.decoder = new ResponseDecoder(builtIn, filter);
+        this.decoder = new ResponseDecoder(builtIn, filter, config.codec());
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {

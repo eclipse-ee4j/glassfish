@@ -49,9 +49,17 @@ import org.glassfish.orb.http.protocol.ProtocolException;
 final class ResponseDecoder {
 
     private final Marshaller marshaller;
+
+    /** Non-null when the caller named a codec and a different one is an error. */
+    private final String requiredCodec;
     private final ObjectInputFilter filter;
 
     ResponseDecoder(Marshaller marshaller, ObjectInputFilter filter) {
+        this(marshaller, filter, null);
+    }
+
+    ResponseDecoder(Marshaller marshaller, ObjectInputFilter filter, String requiredCodec) {
+        this.requiredCodec = requiredCodec;
         this.marshaller = marshaller;
         this.filter = filter;
     }
@@ -102,9 +110,41 @@ final class ResponseDecoder {
             throw new ProtocolException("expected a " + expectedKind + " body, got " + contentType.kind());
         }
         InputStream body = response.body();
-        try (Marshaller.ObjectReader reader = marshaller.newReader(body, loader, filter)) {
+        try (Marshaller.ObjectReader reader = codecFor(contentType).newReader(body, loader, filter)) {
             return reader.readObject();
         }
+    }
+
+    /**
+     * Decodes with the codec the reply declares, not the one we sent.
+     *
+     * <p>These are usually the same and need not be. A server answers in the
+     * codec a request arrived in, but a naming lookup states its preference in
+     * {@code Accept}, which a server is free not to honour - and then the reply
+     * comes back in something else.
+     *
+     * <p>Reading it with the wrong codec does not fail cleanly. Java
+     * serialization's stream header, read as a length prefix, is a large
+     * negative number, so the failure surfaces as a nonsense frame length far
+     * from the mismatch that caused it. Checking here turns that into a
+     * sentence naming both codecs.
+     *
+     * @param contentType the reply's declared type
+     * @return the codec to decode with
+     * @throws ProtocolException if the reply used a codec this client either
+     *         does not have or was told not to accept
+     */
+    private Marshaller codecFor(ContentType contentType) throws ProtocolException {
+        String replied = contentType.codec();
+        if (marshaller.codec().equals(replied)) {
+            return marshaller;
+        }
+        if (requiredCodec != null) {
+            throw new ProtocolException("this client requires the " + requiredCodec
+                    + " codec but the server replied in " + replied);
+        }
+        return Marshallers.find(replied).orElseThrow(() -> new ProtocolException(
+                "the server replied in the " + replied + " codec, which is not on this client's class path"));
     }
 
     /**

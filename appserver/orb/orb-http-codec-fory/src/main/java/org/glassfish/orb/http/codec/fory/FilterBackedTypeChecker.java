@@ -64,10 +64,17 @@ final class FilterBackedTypeChecker implements TypeChecker {
 
     /**
      * The filter contract is written for a stream being decoded incrementally;
-     * Fory asks a narrower question - "is this class acceptable at all". Only
-     * the class is known, so the size and depth limits report as unknown
-     * ({@code -1}), which is what the contract prescribes for a value that is
-     * not available rather than a value that is zero.
+     * Fory asks a narrower question - "is this class acceptable at all".
+     *
+     * <p>The counters report zero rather than "unknown". A filter built by
+     * {@code ObjectInputFilter.Config.createFilter} rejects outright when depth,
+     * references or stream bytes are negative, so reporting -1 as "not
+     * applicable" refuses every class, including the transport's own. Zero is
+     * both accepted and honest: nothing has been read yet, so nothing counts
+     * against a limit.
+     *
+     * <p>{@code arrayLength} keeps -1, which the contract does define: this is
+     * not an array.
      */
     private record NameOnlyFilterInfo(Class<?> serialClass) implements ObjectInputFilter.FilterInfo {
 
@@ -78,17 +85,17 @@ final class FilterBackedTypeChecker implements TypeChecker {
 
         @Override
         public long depth() {
-            return -1;
+            return 0;
         }
 
         @Override
         public long references() {
-            return -1;
+            return 0;
         }
 
         @Override
         public long streamBytes() {
-            return -1;
+            return 0;
         }
     }
 }

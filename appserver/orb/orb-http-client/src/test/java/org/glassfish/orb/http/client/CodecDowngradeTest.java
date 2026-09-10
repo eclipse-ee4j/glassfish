@@ -150,6 +150,45 @@ class CodecDowngradeTest {
     }
 
     @Test
+    @DisplayName("a reply in another codec is decoded with that codec, not misread")
+    void aReplyInAnotherCodecIsDecodedWithIt() throws Throwable {
+        // Answers in jser whatever it is offered.
+        PickyTransport transport = new PickyTransport("refuses-nothing");
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new ExoticMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            EjbLocator locator = new EjbLocator("app", "module", "", "GreeterBean");
+            Method greet = Greeter.class.getMethod("greet", String.class);
+
+            // Decoding this with the codec we sent rather than the one declared
+            // reads a Java serialization stream header as a length prefix and
+            // reports a nonsense negative frame length, far from the cause.
+            assertEquals("hello", client.invoke(locator, Greeter.class, greet, new Object[] { "world" }));
+        }
+    }
+
+    @Test
+    @DisplayName("a client that required a codec refuses a reply in another one, and says so")
+    void aRequiredCodecRefusesAMismatchedReply() throws Exception {
+        PickyTransport transport = new PickyTransport("refuses-nothing");
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080"))
+                .codec(EXOTIC)
+                .build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new ExoticMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            EjbLocator locator = new EjbLocator("app", "module", "", "GreeterBean");
+            Method greet = Greeter.class.getMethod("greet", String.class);
+
+            ProtocolException thrown = assertThrows(ProtocolException.class,
+                    () -> client.invoke(locator, Greeter.class, greet, new Object[] { "world" }));
+            assertTrue(thrown.getMessage().contains(EXOTIC), thrown.getMessage());
+            assertTrue(thrown.getMessage().contains(ContentType.CODEC_JSER), thrown.getMessage());
+        }
+    }
+
+    @Test
     @DisplayName("a codec asked for by name is not silently walked back")
     void arequiredCodecIsNotDowngraded() throws Exception {
         PickyTransport transport = new PickyTransport(EXOTIC);

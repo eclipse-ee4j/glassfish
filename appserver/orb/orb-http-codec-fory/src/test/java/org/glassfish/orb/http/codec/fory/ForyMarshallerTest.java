@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.junit.jupiter.api.DisplayName;
@@ -181,6 +182,63 @@ class ForyMarshallerTest {
                 new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
             assertThrows(Exception.class, reader::readObject);
         }
+    }
+
+    @Test
+    @DisplayName("the transport's own default filter admits ordinary classes")
+    void theDefaultFilterAdmitsOrdinaryClasses() throws Exception {
+        // Every other test here supplies a filter written for the test. This
+        // one uses the filter the transport actually ships with, which is the
+        // only way to catch a FilterInfo that the real filter refuses - as it
+        // did when the counters reported -1 for "not applicable".
+        Node node = new Node("ordinary");
+        Node decoded = (Node) roundTrip(node, JavaSerializationMarshaller.defaultFilter());
+        assertEquals("ordinary", decoded.name);
+    }
+
+    @Test
+    @DisplayName("an exception keeps its stack trace, cause and message")
+    void aThrowableRoundTripsIntact() throws Exception {
+        IllegalStateException cause = new IllegalStateException("underlying");
+        RuntimeException thrown = new RuntimeException("outer", cause);
+
+        RuntimeException decoded = (RuntimeException) roundTrip(thrown,
+                JavaSerializationMarshaller.defaultFilter());
+
+        assertEquals("outer", decoded.getMessage());
+        assertEquals("underlying", decoded.getCause().getMessage());
+        // An exception that arrives with no stack trace looks like it was
+        // thrown from nowhere, which is worst precisely when someone is
+        // trying to find out where it came from.
+        assertTrue(decoded.getStackTrace().length > 0, "stack trace was lost");
+        assertTrue(decoded.getCause().getStackTrace().length > 0, "the cause's trace was lost");
+    }
+
+    /** Mirrors an application exception: a subclass carrying business state. */
+    static final class Refused extends RuntimeException {
+        private static final long serialVersionUID = 1L;
+        private final String reasonCode;
+
+        Refused(String message, String reasonCode, Throwable cause) {
+            super(message, cause);
+            this.reasonCode = reasonCode;
+        }
+
+        String reasonCode() {
+            return reasonCode;
+        }
+    }
+
+    @Test
+    @DisplayName("an application exception subclass keeps its own state and its trace")
+    void anExceptionSubclassRoundTrips() throws Exception {
+        Refused thrown = new Refused("not today", "E_CLOSED", new IllegalStateException("closed"));
+
+        Refused decoded = (Refused) roundTrip(thrown, JavaSerializationMarshaller.defaultFilter());
+
+        assertEquals("not today", decoded.getMessage());
+        assertEquals("E_CLOSED", decoded.reasonCode());
+        assertTrue(decoded.getStackTrace().length > 0, "stack trace was lost");
     }
 
     @Test

@@ -41,6 +41,22 @@ public interface Marshaller {
     /** The codec token used in content types, e.g. {@code jser}. */
     String codec();
 
+    /**
+     * Ranks this codec against the others found on the class path.
+     * <p>
+     * {@link Marshallers} picks the highest ranked provider, so dropping a
+     * faster codec onto the class path changes what an application uses
+     * without the application naming it. The built-in Java serialization
+     * codec ranks {@code 0} and is the floor: it is always present, so
+     * there is always something to fall back to when a peer speaks nothing
+     * else.
+     *
+     * @return the rank; higher wins
+     */
+    default int priority() {
+        return 0;
+    }
+
     ObjectWriter newWriter(OutputStream out) throws IOException;
 
     /**

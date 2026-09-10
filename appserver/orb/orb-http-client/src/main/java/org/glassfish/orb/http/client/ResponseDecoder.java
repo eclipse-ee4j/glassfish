@@ -32,6 +32,7 @@ import java.util.concurrent.CancellationException;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
+import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.ProtocolException;
 
@@ -56,7 +57,7 @@ final class ResponseDecoder {
     }
 
     ResponseDecoder() {
-        this(new JavaSerializationMarshaller(), JavaSerializationMarshaller.defaultFilter());
+        this(Marshallers.preferred(), JavaSerializationMarshaller.defaultFilter());
     }
 
     /**

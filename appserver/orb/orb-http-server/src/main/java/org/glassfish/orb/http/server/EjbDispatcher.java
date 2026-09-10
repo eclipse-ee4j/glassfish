@@ -38,6 +38,7 @@ import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
+import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.PathScanner;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.ProtocolException;
@@ -61,7 +62,7 @@ public final class EjbDispatcher {
     private final SessionAffinity affinity;
 
     public EjbDispatcher(ContainerBridge container) {
-        this(container, SecurityBridge.NONE, new JavaSerializationMarshaller(),
+        this(container, SecurityBridge.NONE, Marshallers.preferred(),
                 new InvocationRegistry(), SessionAffinity.forThisNode());
     }
 
@@ -143,8 +144,18 @@ public final class EjbDispatcher {
             fail(exchange, Protocol.SC_NOT_ACCEPTABLE, "unsupported protocol version " + contentType.version());
             return;
         }
-        if (!marshaller.codec().equals(contentType.codec())) {
-            fail(exchange, Protocol.SC_NOT_ACCEPTABLE, "unsupported codec " + contentType.codec());
+        // A server speaks every codec it can find, not just the one it would
+        // have chosen itself. That is what lets a client pick a faster codec
+        // unilaterally: the two ends only have to overlap, not to agree in
+        // advance. The reply is written with the codec the request used, so a
+        // client never has to decode something it did not ask for.
+        Marshaller codec = marshaller.codec().equals(contentType.codec())
+                ? marshaller
+                : Marshallers.find(contentType.codec()).orElse(null);
+        if (codec == null) {
+            fail(exchange, Protocol.SC_NOT_ACCEPTABLE, "unsupported codec " + contentType.codec()
+                    + "; this server speaks " + marshaller.codec()
+                    + ", " + String.join(", ", Marshallers.codecs()));
             return;
         }
 
@@ -170,7 +181,7 @@ public final class EjbDispatcher {
             try {
                 Method method = resolveMethod(loader, invocation);
                 invokedMethod = method;
-                Object[] args = readArguments(exchange.requestBody(), loader, method.getParameterCount());
+                Object[] args = readArguments(codec, exchange.requestBody(), loader, method.getParameterCount());
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
@@ -181,7 +192,7 @@ public final class EjbDispatcher {
                     fail(exchange, Protocol.SC_CANCELLED, "invocation cancelled");
                     return;
                 }
-                writeResult(exchange, result);
+                writeResult(codec, exchange, result);
 
             } catch (ContainerBridge.NoSuchTargetException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
@@ -191,7 +202,7 @@ public final class EjbDispatcher {
                 // and getting it wrong would change the exception contract of an
                 // application that was only meant to change transport.
                 Throwable thrown = e.getCause() != null ? e.getCause() : e;
-                writeException(exchange, EjbExceptions.toClientException(thrown, invokedMethod));
+                writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
             } catch (ClassNotFoundException | NoSuchMethodException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {
@@ -278,7 +289,7 @@ public final class EjbDispatcher {
         }
     }
 
-    private Object[] readArguments(InputStream body, ClassLoader loader, int count)
+    private Object[] readArguments(Marshaller codec, InputStream body, ClassLoader loader, int count)
             throws IOException, ClassNotFoundException {
         TxContext tx = InvocationEnvelope.readTxContext(body);
         if (tx.isPresent()) {
@@ -288,7 +299,7 @@ public final class EjbDispatcher {
             throw new ProtocolException("transaction propagation is not implemented by this transport");
         }
         ObjectInputFilter filter = JavaSerializationMarshaller.defaultFilter();
-        try (Marshaller.ObjectReader reader = marshaller.newReader(body, loader, filter)) {
+        try (Marshaller.ObjectReader reader = codec.newReader(body, loader, filter)) {
             Object[] args = new Object[count];
             for (int i = 0; i < count; i++) {
                 args[i] = reader.readObject();
@@ -385,33 +396,33 @@ public final class EjbDispatcher {
 
     // ---- responses --------------------------------------------------------
 
-    private void writeResult(ServerExchange exchange, Object result) throws IOException {
-        ByteBuffer[] body = marshal(result);
+    private void writeResult(Marshaller codec, ServerExchange exchange, Object result) throws IOException {
+        ByteBuffer[] body = marshal(codec, result);
         exchange.setStatus(Protocol.SC_OK);
         exchange.setResponseHeader("Content-Type",
-                ContentType.of(marshaller.codec(), ContentType.KIND_RESPONSE).toHeaderValue());
+                ContentType.of(codec.codec(), ContentType.KIND_RESPONSE).toHeaderValue());
         exchange.writeBody(body);
     }
 
-    private void writeException(ServerExchange exchange, Throwable thrown) throws IOException {
+    private void writeException(Marshaller codec, ServerExchange exchange, Throwable thrown) throws IOException {
         ByteBuffer[] body;
         try {
-            body = marshal(thrown);
+            body = marshal(codec, thrown);
         } catch (IOException e) {
             // The application exception is not serializable. Do not lose the
             // failure: report something that is.
-            body = marshal(new java.rmi.RemoteException(
+            body = marshal(codec, new java.rmi.RemoteException(
                     "server threw " + thrown.getClass().getName() + " which is not serializable: " + thrown));
         }
         exchange.setStatus(Protocol.SC_EXCEPTION);
         exchange.setResponseHeader("Content-Type",
-                ContentType.of(marshaller.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
+                ContentType.of(codec.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
         exchange.writeBody(body);
     }
 
-    private ByteBuffer[] marshal(Object value) throws IOException {
+    private ByteBuffer[] marshal(Marshaller codec, Object value) throws IOException {
         ChunkedOutput out = new ChunkedOutput();
-        try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+        try (Marshaller.ObjectWriter writer = codec.newWriter(out)) {
             writer.writeObject(value);
             writer.writeObject(new HashMap<String, Object>());
             writer.flush();

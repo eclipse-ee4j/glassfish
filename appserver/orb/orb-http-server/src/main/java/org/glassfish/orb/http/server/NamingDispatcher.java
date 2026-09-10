@@ -33,6 +33,7 @@ import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
+import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
 import org.glassfish.orb.http.protocol.PathScanner;
 import org.glassfish.orb.http.protocol.Protocol;
@@ -82,15 +83,17 @@ public final class NamingDispatcher {
             return;
         }
 
+        Marshaller codec = codecFor(exchange);
+
         Object securityToken = security.establish(exchange.authenticatedUser());
         try {
-            perform(exchange, request);
+            perform(codec, exchange, request);
         } catch (NameNotFoundException e) {
             exchange.setStatus(Protocol.SC_NOT_FOUND);
         } catch (NoPermissionException e) {
             exchange.setStatus(Protocol.SC_FORBIDDEN);
         } catch (NamingException e) {
-            writeException(exchange, e);
+            writeException(codec, exchange, e);
         } catch (ClassNotFoundException e) {
             exchange.setStatus(Protocol.SC_BAD_REQUEST);
             exchange.setResponseHeader("X-GF-Reason", "cannot resolve a class in the request body");
@@ -99,22 +102,22 @@ public final class NamingDispatcher {
         }
     }
 
-    private void perform(ServerExchange exchange, NamingRoutes.Request request)
+    private void perform(Marshaller codec, ServerExchange exchange, NamingRoutes.Request request)
             throws IOException, ClassNotFoundException, NamingException {
         String name = request.jndiName();
         switch (request.operation()) {
-            case Protocol.OP_LOOKUP -> writeValue(exchange, naming.lookup(name));
-            case Protocol.OP_LOOKUP_LINK -> writeValue(exchange, naming.lookupLink(name));
+            case Protocol.OP_LOOKUP -> writeValue(codec, exchange, naming.lookup(name));
+            case Protocol.OP_LOOKUP_LINK -> writeValue(codec, exchange, naming.lookupLink(name));
             case Protocol.OP_LIST -> {
                 Map<String, Object> bindings = naming.list(name);
-                writeValue(exchange, new java.util.HashMap<>(bindings));
+                writeValue(codec, exchange, new java.util.HashMap<>(bindings));
             }
             case Protocol.OP_BIND -> {
-                naming.bind(name, readValue(exchange));
+                naming.bind(name, readValue(codec, exchange));
                 exchange.setStatus(Protocol.SC_NO_CONTENT);
             }
             case Protocol.OP_REBIND -> {
-                naming.rebind(name, readValue(exchange));
+                naming.rebind(name, readValue(codec, exchange));
                 exchange.setStatus(Protocol.SC_NO_CONTENT);
             }
             case Protocol.OP_UNBIND -> {
@@ -147,31 +150,66 @@ public final class NamingDispatcher {
         }
     }
 
-    private Object readValue(ServerExchange exchange) throws IOException, ClassNotFoundException {
+    /**
+     * Picks the codec for this exchange.
+     *
+     * <p>An invocation always carries a body, so its codec is stated in the
+     * content type. A naming read does not: a lookup is a GET, and the codec
+     * matters for what comes back. So the request states its preference in
+     * {@code Accept}, and a client that states nothing gets this server's
+     * default - which is how an older client, which knew only one codec and
+     * sent no preference, keeps working unchanged.
+     *
+     * @param exchange the request being served
+     * @return the codec to use in both directions, never {@code null}
+     */
+    private Marshaller codecFor(ServerExchange exchange) {
+        String header = exchange.requestHeader("Content-Type");
+        if (header == null || header.isBlank()) {
+            header = exchange.requestHeader("Accept");
+        }
+        if (header == null || header.isBlank()) {
+            return marshaller;
+        }
+        try {
+            ContentType requested = ContentType.parse(header);
+            if (marshaller.codec().equals(requested.codec())) {
+                return marshaller;
+            }
+            return Marshallers.find(requested.codec()).orElse(marshaller);
+        } catch (ProtocolException | IllegalArgumentException e) {
+            // An Accept header we cannot parse is a preference we cannot
+            // honour, not a reason to refuse the lookup.
+            return marshaller;
+        }
+    }
+
+    private Object readValue(Marshaller codec, ServerExchange exchange)
+            throws IOException, ClassNotFoundException {
         ObjectInputFilter filter = JavaSerializationMarshaller.defaultFilter();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try (Marshaller.ObjectReader reader = marshaller.newReader(exchange.requestBody(), loader, filter)) {
+        try (Marshaller.ObjectReader reader = codec.newReader(exchange.requestBody(), loader, filter)) {
             return reader.readObject();
         }
     }
 
-    private void writeValue(ServerExchange exchange, Object value) throws IOException {
+    private void writeValue(Marshaller codec, ServerExchange exchange, Object value) throws IOException {
         exchange.setStatus(Protocol.SC_OK);
         exchange.setResponseHeader("Content-Type",
-                ContentType.of(marshaller.codec(), ContentType.KIND_VALUE).toHeaderValue());
-        exchange.writeBody(marshal(value));
+                ContentType.of(codec.codec(), ContentType.KIND_VALUE).toHeaderValue());
+        exchange.writeBody(marshal(codec, value));
     }
 
-    private void writeException(ServerExchange exchange, Throwable thrown) throws IOException {
+    private void writeException(Marshaller codec, ServerExchange exchange, Throwable thrown) throws IOException {
         exchange.setStatus(Protocol.SC_EXCEPTION);
         exchange.setResponseHeader("Content-Type",
-                ContentType.of(marshaller.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
-        exchange.writeBody(marshal(thrown));
+                ContentType.of(codec.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
+        exchange.writeBody(marshal(codec, thrown));
     }
 
-    private ByteBuffer[] marshal(Object value) throws IOException {
+    private ByteBuffer[] marshal(Marshaller codec, Object value) throws IOException {
         ChunkedOutput out = new ChunkedOutput();
-        try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+        try (Marshaller.ObjectWriter writer = codec.newWriter(out)) {
             writer.writeObject(value);
             writer.flush();
         }

@@ -100,8 +100,19 @@
                             !org.apache.fory.*,
                             !com.google.*,
                             !org.codehaus.*,
+                            <!--
+                                Fory reaches sun.misc.Unsafe for its fast paths.
+                                Excluding it, as the blanket !sun.* below did,
+                                does not make Fory stop asking - it makes the
+                                answer "Unsafe is not supported in this
+                                platform", thrown from a static initialiser, so
+                                the codec fails on first use rather than at
+                                resolution. Optional, because a platform without
+                                it should degrade rather than fail to install.
+                            -->
+                            sun.misc;resolution:=optional,
                             !sun.*,
-                            !jdk.*,
+                            !jdk.internal.*,
                             org.glassfish.orb.http.protocol,
                             *;resolution:=optional
                         </Import-Package>

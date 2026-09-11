@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.WeakHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Finds the object codecs available at runtime.
@@ -64,7 +65,43 @@ public final class Marshallers {
     private static final Map<ClassLoader, Map<String, Marshaller>> CACHE =
             Collections.synchronizedMap(new WeakHashMap<>());
 
+    /**
+     * Codecs handed to us rather than found by us.
+     * <p>
+     * {@link ServiceLoader} walks a class path, and inside an OSGi framework
+     * there is no single class path to walk: a provider in one bundle is
+     * invisible to a call site in another unless something bridges them. A
+     * container that knows how to enumerate its own modules can bridge it here
+     * instead, which is a smaller thing to depend on than a weaving extender
+     * being present and active.
+     */
+    private static final List<Marshaller> REGISTERED = new CopyOnWriteArrayList<>();
+
     private Marshallers() {
+    }
+
+    /**
+     * Adds a codec that discovery would not find on its own.
+     *
+     * <p>Idempotent by codec token: registering the same codec twice leaves one,
+     * and registering a second provider for a token that is already registered
+     * keeps the first, so a container that scans twice does not end up with a
+     * different answer the second time.
+     *
+     * @param marshaller the codec to make available
+     */
+    public static void register(Marshaller marshaller) {
+        if (marshaller == null || marshaller.codec() == null || marshaller.codec().isEmpty()) {
+            return;
+        }
+        for (Marshaller existing : REGISTERED) {
+            if (existing.codec().equals(marshaller.codec())) {
+                return;
+            }
+        }
+        REGISTERED.add(marshaller);
+        // Anything already computed predates this codec.
+        CACHE.clear();
     }
 
     /**
@@ -127,6 +164,7 @@ public final class Marshallers {
     private static Map<String, Marshaller> load(ClassLoader loader) {
         List<Marshaller> found = new ArrayList<>();
         found.add(BUILT_IN);
+        found.addAll(REGISTERED);
         collect(loader, found);
         if (loader != Marshallers.class.getClassLoader()) {
             // The transport's own loader may see providers the context loader

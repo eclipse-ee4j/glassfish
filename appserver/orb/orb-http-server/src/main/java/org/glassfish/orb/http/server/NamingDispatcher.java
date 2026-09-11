@@ -85,7 +85,14 @@ public final class NamingDispatcher {
 
         Marshaller codec = codecFor(exchange);
 
-        Object securityToken = security.establish(exchange.authenticatedUser());
+        Object securityToken;
+        try {
+            securityToken = security.establish(exchange.authenticatedUser());
+        } catch (SecurityException e) {
+            exchange.setStatus(Protocol.SC_FORBIDDEN);
+            exchange.setResponseHeader("X-GF-Reason", e.getMessage());
+            return;
+        }
         try {
             perform(codec, exchange, request);
         } catch (NameNotFoundException e) {

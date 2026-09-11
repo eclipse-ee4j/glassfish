@@ -77,6 +77,13 @@ public final class ForyMarshaller implements Marshaller {
     private static final boolean CODEGEN =
             Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
 
+    /**
+     * @return whether generated serializers are in use
+     */
+    static boolean codeGenerationEnabled() {
+        return CODEGEN;
+    }
+
     /** A frame this codec encoded. */
     private static final byte KIND_FORY = 0;
 

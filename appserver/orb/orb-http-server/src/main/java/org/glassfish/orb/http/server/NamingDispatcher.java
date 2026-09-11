@@ -97,10 +97,15 @@ public final class NamingDispatcher {
         } catch (ClassNotFoundException e) {
             exchange.setStatus(Protocol.SC_BAD_REQUEST);
             exchange.setResponseHeader("X-GF-Reason", "cannot resolve a class in the request body");
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LinkageError e) {
             // Most often the codec refusing a value it cannot encode. Left to
             // propagate it becomes a bare 500 with no body, and the client is
             // told only that the connection ended.
+            //
+            // LinkageError as well as RuntimeException: an optional codec that
+            // cannot initialise throws ExceptionInInitializerError, which is
+            // not a RuntimeException, and letting that escape takes the
+            // connection down instead of answering.
             exchange.setStatus(Protocol.SC_EXCEPTION);
             exchange.setResponseHeader("X-GF-Reason",
                     (operationLabel(request) + " failed: " + e).replace('\n', ' '));

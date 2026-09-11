@@ -62,6 +62,39 @@ class MarshallersTest {
     }
 
     @Test
+    @DisplayName("a codec handed to us is available even though nothing could find it")
+    void aRegisteredCodecBecomesAvailable() {
+        // Stands in for a provider in another OSGi bundle: reachable by the
+        // container, invisible to a ServiceLoader walking a class path.
+        Marshaller handed = new Marshaller() {
+
+            @Override
+            public String codec() {
+                return "handed-in";
+            }
+
+            @Override
+            public ObjectWriter newWriter(java.io.OutputStream out) throws java.io.IOException {
+                return new JavaSerializationMarshaller().newWriter(out);
+            }
+
+            @Override
+            public ObjectReader newReader(java.io.InputStream in, ClassLoader loader,
+                    java.io.ObjectInputFilter filter) throws java.io.IOException {
+                return new JavaSerializationMarshaller().newReader(in, loader, filter);
+            }
+        };
+
+        assertTrue(Marshallers.find("handed-in").isEmpty());
+        Marshallers.register(handed);
+        assertTrue(Marshallers.find("handed-in").isPresent());
+
+        // Registering the same token again must not change the answer.
+        Marshallers.register(handed);
+        assertSame(handed, Marshallers.find("handed-in").orElseThrow());
+    }
+
+    @Test
     @DisplayName("discovery is cached rather than repeated per invocation")
     void discoveryIsCached() {
         assertSame(Marshallers.preferred(), Marshallers.preferred());

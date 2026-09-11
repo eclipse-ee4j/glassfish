@@ -54,6 +54,29 @@ public final class ForyMarshaller implements Marshaller {
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
 
+    /**
+     * Whether Fory may compile a serializer per type.
+     * <p>
+     * Off by default, and the default is about this server rather than about
+     * Fory. Generated serializers are defined through a class loader Fory
+     * chooses, which works on a class path and did not survive here: the type
+     * being encoded lives in one bundle and Fory in another, and generation
+     * fails with "Create sequential serializer failed", naming the type rather
+     * than the visibility behind it. Bridging the two loaders was tried and
+     * did not fix it, so the cause is not fully understood and the honest
+     * default is the path that works.
+     * <p>
+     * The reflective path is what runs instead. It is slower than generated
+     * code and still well ahead of Java serialization, which is the comparison
+     * that matters for a codec adopted to be faster than it.
+     * <p>
+     * Set {@code org.glassfish.orb.http.codec.fory.codegen=true} to turn it on
+     * where it does work - a plain client JVM, for one, where there is an
+     * ordinary class path and nothing to bridge.
+     */
+    private static final boolean CODEGEN =
+            Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
+
     /** A frame this codec encoded. */
     private static final byte KIND_FORY = 0;
 
@@ -264,14 +287,7 @@ public final class ForyMarshaller implements Marshaller {
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
-                // Code generation off. Fory compiles a serializer per type and
-                // defines it through a class loader of its own choosing, which
-                // works on a class path and does not survive this server: the
-                // type lives in one bundle and Fory in another, and generation
-                // fails with "Create sequential serializer failed", naming the
-                // type rather than the reason. The reflective path has no such
-                // dependency, and is still well ahead of Java serialization.
-                .withCodegen(false)
+                .withCodegen(CODEGEN)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
             builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));

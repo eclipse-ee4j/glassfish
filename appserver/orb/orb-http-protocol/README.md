@@ -74,14 +74,16 @@ h2 via ALPN.
 | Application exceptions, including `inherited` | supported, semantics match IIOP |
 | JNDI lookup, list, bind and the rest | supported |
 | Distributed transactions | supported on a separate branch |
-| Stateful session creation | **not yet wired to the container** |
+| Stateful session beans | supported |
 
-The last row is the honest one: the client, the protocol and the server
-dispatcher all handle stateful sessions, but the GlassFish adapter
-cannot yet create one, because the container exposes session creation
-through the 2.x home view and not through the EJB 3 business view. A
-call that needs one is refused with a clear reason rather than silently
-returning a shared instance.
+Looking up a stateful bean is what creates its session, so two lookups of
+the same name are two conversations - the same thing an IIOP client gets,
+and what an application written against the EJB semantics expects. The
+session travels inside the reference the lookup returns, so the proxy is
+already addressed to its own instance.
+
+All of the above is exercised against a running GlassFish on every change,
+over both codecs, rather than asserted here.
 
 ## Choosing a codec without changing the application
 
@@ -126,6 +128,19 @@ and each is pinned by a test rather than assumed.
 
 ### Security
 
+The caller's credential is checked against the server's realm - the same
+check the web container makes for the same `Authorization` header. A
+header names a user; it does not establish that the request came from
+them, and believing it unchecked would let any caller assert any identity.
+The subject the realm returns is the one installed, not an empty one: it
+carries the caller's groups, and every authorization decision afterwards
+reads them from there.
+
+An absent credential and a rejected one are different answers. Absent is
+anonymous, which is what an unsecured bean expects. Rejected is refused
+with a 403: continuing with fewer rights than were asked for is still an
+authorization decision, taken on a credential nobody accepted.
+
 Swapping the codec changes the encoding and nothing about what is
 allowed to be decoded. The same `ObjectInputFilter` that guards Java
 serialization guards Fory: one policy, both codecs. Class registration
@@ -138,6 +153,20 @@ property rather than tidiness: a shared instance caches what it has
 resolved, so a class written on the way out would already be resolved by
 the time an attacker names it on the way in, and the inbound check would
 never run.
+
+### What this changes outside the transport's own modules
+
+Most of this work is new modules, which touch nothing that exists. Two
+changes are not:
+
+| Module | Change | Why |
+| --- | --- | --- |
+| `orb-connector` | `EjbContainerFacade` gains `createSession` and `removeSession` | the interface is shaped by IIOP, where a session key never has to be named because it rides inside a reference. A transport that is not IIOP has nowhere to hide it. |
+| `ejb-container` | `BaseContainer` refuses both; `StatefulSessionContainer` implements them | only a stateful container has sessions. Every other one throws rather than returning a shared instance and letting a caller believe it holds a conversation. |
+
+This matters for review and for deployment. It is no longer a change that
+can be dropped into a released server as extra modules: those two have to
+be the rebuilt ones, and the CI job replaces them for exactly that reason.
 
 ### Third-party dependencies
 
@@ -163,10 +192,34 @@ produces a bundle that works until the first object is encoded.
 Both Apache-2.0 and BSD-3-Clause are on the Eclipse Foundation's approved
 list, but this still needs a dependency review before the module can be
 released, since none of these have been vetted for this project before.
+What a review needs is above: the exact coordinates, the versions, the
+licences, and the fact that all three are **embedded in the bundle** rather
+than referenced - none of the three publish OSGi bundles, so dropping them
+into `modules/` would leave them unresolvable.
 
-None of the three publish OSGi bundles, so they are embedded in
-`orb-http-codec-fory` rather than dropped into `modules/`, where the
-framework would not resolve them.
+Nothing else depends on any of this. A build that omits
+`orb-http-codec-fory` has no new third-party dependency at all, and the
+transport keeps working on the built-in codec.
+
+#### A limitation, stated plainly
+
+Fory compiles a serializer per type, and that is where most of its speed
+comes from. Inside this server it does not work: the generated class is
+defined through a loader Fory chooses, the type being encoded lives in one
+bundle and Fory in another, and generation fails with "Create sequential
+serializer failed" - naming the type rather than the visibility behind it.
+Bridging the two loaders was tried and did not help, so the cause is not
+fully understood.
+
+Code generation is therefore off by default and the reflective path runs
+instead: slower than generated code, still well ahead of Java
+serialization, which is the comparison that matters for a codec adopted to
+be faster than it. Where it does work - a plain client JVM, with an
+ordinary class path and nothing to bridge - set
+
+```
+-Dorg.glassfish.orb.http.codec.fory.codegen=true
+```
 
 ## Module map
 

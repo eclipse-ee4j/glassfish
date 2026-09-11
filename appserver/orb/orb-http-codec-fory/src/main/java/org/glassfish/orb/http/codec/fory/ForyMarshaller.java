@@ -258,18 +258,23 @@ public final class ForyMarshaller implements Marshaller {
      * @return a thread safe Fory for that loader
      */
     private static ThreadSafeFory newFory(ClassLoader loader, ObjectInputFilter filter) {
-        // Bridged, so the generated serializers can name both the type and
-        // Fory itself; see BridgingClassLoader.
-        ClassLoader visible = new BridgingClassLoader(loader, ForyMarshaller.class.getClassLoader());
         var builder = Fory.builder()
                 .withLanguage(Language.JAVA)
-                .withClassLoader(visible)
+                .withClassLoader(loader)
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
+                // Code generation off. Fory compiles a serializer per type and
+                // defines it through a class loader of its own choosing, which
+                // works on a class path and does not survive this server: the
+                // type lives in one bundle and Fory in another, and generation
+                // fails with "Create sequential serializer failed", naming the
+                // type rather than the reason. The reflective path has no such
+                // dependency, and is still well ahead of Java serialization.
+                .withCodegen(false)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
-            builder = builder.withTypeChecker(new FilterBackedTypeChecker(visible, filter));
+            builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));
         }
         return builder.buildThreadSafeFory();
     }

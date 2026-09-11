@@ -250,6 +250,15 @@ public class HttpNamingContext implements Context {
     }
 
     private Object readBody(HttpTransport.Response response, String expectedKind) throws IOException, ClassNotFoundException {
+        if (response.contentType() == null || response.contentType().isBlank()) {
+            // No body to decode. The server says why in a header when it could
+            // not encode one, and reporting "missing Content-Type" instead of
+            // that reason describes our disappointment rather than its failure.
+            String reason = response.firstHeader("X-GF-Reason");
+            throw new ProtocolException(reason == null || reason.isBlank()
+                    ? "the server sent no body and no reason"
+                    : reason);
+        }
         ContentType type = ContentType.parse(response.contentType());
         if (!type.isVersionSupported()) {
             throw new ProtocolException("server replied with protocol version " + type.version());

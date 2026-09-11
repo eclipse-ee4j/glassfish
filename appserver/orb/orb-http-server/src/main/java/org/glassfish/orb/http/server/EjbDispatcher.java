@@ -173,7 +173,16 @@ public final class EjbDispatcher {
 
         ClassLoader loader = container.classLoader(key);
         String invocationId = exchange.requestHeader(Protocol.H_INVOCATION_ID);
-        Object securityToken = security.establish(exchange.authenticatedUser());
+        Object securityToken;
+        try {
+            securityToken = security.establish(exchange.authenticatedUser());
+        } catch (SecurityException e) {
+            // The credential was offered and refused. Saying so is the point:
+            // running the call anonymously would answer a caller that asked to
+            // be someone with the rights of no one.
+            fail(exchange, Protocol.SC_FORBIDDEN, e.getMessage());
+            return;
+        }
 
         try (InvocationRegistry.Registration registration = registry.register(invocationId)) {
             Object target = null;

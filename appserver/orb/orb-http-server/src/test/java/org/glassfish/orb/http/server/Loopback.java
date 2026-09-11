@@ -120,6 +120,9 @@ final class Loopback implements HttpTransport {
     /** A {@link ServerExchange} backed by arrays. */
     static final class InMemoryExchange implements ServerExchange {
 
+        /** Pass as the user name to make authentication fail. */
+        static final String REJECT = "reject-me";
+
         private final String method;
         private final byte[] path;
         private final Map<String, String> query = new HashMap<>();
@@ -206,6 +209,10 @@ final class Loopback implements HttpTransport {
 
         @Override
         public String authenticatedUser() {
+            if (REJECT.equals(user)) {
+                // Stands in for a realm refusing a credential that was offered.
+                throw new SecurityException("authentication failed");
+            }
             return user;
         }
 

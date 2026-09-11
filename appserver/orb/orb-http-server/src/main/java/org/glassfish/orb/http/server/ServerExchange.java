@@ -74,9 +74,14 @@ public interface ServerExchange {
 
     /**
      * @return the authenticated caller's name, or {@code null} if the request
-     *         is unauthenticated. Supplied by the container's own HTTP
-     *         authentication - Basic, client certificate, or a bearer token -
-     *         rather than re-implemented here.
+     *         carries no credential at all. Established by the container's own
+     *         authentication - Basic against a realm, a client certificate, a
+     *         bearer token - rather than re-implemented here.
+     * @throws SecurityException if a credential is present and does not pass.
+     *         A rejected credential is not the same as an absent one: an
+     *         anonymous call is what an unsecured bean expects, while
+     *         continuing anonymously after a failed check would be an
+     *         authorization decision taken on a credential nobody accepted.
      */
     String authenticatedUser();
 }

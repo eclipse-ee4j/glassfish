@@ -97,6 +97,13 @@ public final class NamingDispatcher {
         } catch (ClassNotFoundException e) {
             exchange.setStatus(Protocol.SC_BAD_REQUEST);
             exchange.setResponseHeader("X-GF-Reason", "cannot resolve a class in the request body");
+        } catch (RuntimeException e) {
+            // Most often the codec refusing a value it cannot encode. Left to
+            // propagate it becomes a bare 500 with no body, and the client is
+            // told only that the connection ended.
+            exchange.setStatus(Protocol.SC_EXCEPTION);
+            exchange.setResponseHeader("X-GF-Reason",
+                    (operationLabel(request) + " failed: " + e).replace('\n', ' '));
         } finally {
             security.clear(securityToken);
         }
@@ -194,17 +201,48 @@ public final class NamingDispatcher {
     }
 
     private void writeValue(Marshaller codec, ServerExchange exchange, Object value) throws IOException {
+        // Marshalled before anything is committed, and this order is the whole
+        // point. Setting the status first and encoding afterwards means a
+        // failure to encode arrives at the client as a 200 that promised a body
+        // and then ended - which the JDK's HTTP client reports as "EOF reached
+        // while reading", a sentence about the connection that says nothing
+        // about the bean, the codec or the value that could not be written.
+        ByteBuffer[] body = marshal(codec, value);
         exchange.setStatus(Protocol.SC_OK);
         exchange.setResponseHeader("Content-Type",
                 ContentType.of(codec.codec(), ContentType.KIND_VALUE).toHeaderValue());
-        exchange.writeBody(marshal(codec, value));
+        exchange.writeBody(body);
     }
 
     private void writeException(Marshaller codec, ServerExchange exchange, Throwable thrown) throws IOException {
+        ByteBuffer[] body;
+        try {
+            body = marshal(codec, thrown);
+        } catch (IOException | RuntimeException e) {
+            // The failure could not be encoded. Say so in a header, which needs
+            // no codec to read, rather than committing a body that is not
+            // coming.
+            exchange.setStatus(Protocol.SC_EXCEPTION);
+            exchange.setResponseHeader("X-GF-Reason", reasonFor(thrown, e));
+            return;
+        }
         exchange.setStatus(Protocol.SC_EXCEPTION);
         exchange.setResponseHeader("Content-Type",
                 ContentType.of(codec.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
-        exchange.writeBody(marshal(codec, thrown));
+        exchange.writeBody(body);
+    }
+
+    private static String operationLabel(NamingRoutes.Request request) {
+        return request.operation() + ' ' + request.jndiName();
+    }
+
+    /**
+     * @param thrown what the operation failed with
+     * @param encoding why that failure could not be sent as a body
+     * @return a single line naming both, safe to put in a header
+     */
+    private static String reasonFor(Throwable thrown, Throwable encoding) {
+        return (thrown + " (and encoding it failed: " + encoding + ')').replace('\n', ' ');
     }
 
     private ByteBuffer[] marshal(Marshaller codec, Object value) throws IOException {

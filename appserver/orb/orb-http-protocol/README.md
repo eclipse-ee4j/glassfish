@@ -204,12 +204,33 @@ transport keeps working on the built-in codec.
 #### A limitation, stated plainly
 
 Fory compiles a serializer per type, and that is where most of its speed
-comes from. Inside this server it does not work: the generated class is
-defined through a loader Fory chooses, the type being encoded lives in one
-bundle and Fory in another, and generation fails with "Create sequential
-serializer failed" - naming the type rather than the visibility behind it.
-Bridging the two loaders was tried and did not help, so the cause is not
-fully understood.
+comes from. Inside this server it does not work, and the reason is now
+known rather than guessed at.
+
+Fory defines each generated serializer in the class loader of the type it
+serializes - the "neighbour" - and that generated class references Fory's
+own runtime. On a class path one loader sees both. In a container the type
+belongs to the application or to the protocol bundle while Fory is embedded
+in the codec bundle, so the loader that owns the type cannot link what was
+defined in it. Generation fails with "Create sequential serializer failed",
+naming the type rather than the visibility behind it.
+
+Three arrangements were measured directly:
+
+| The type's loader | Code generation |
+| --- | --- |
+| cannot see Fory | fails |
+| bridged - Fory handed a loader that sees both | fails |
+| can see Fory | works |
+
+The middle row is the useful one: bridging the loader *handed to* Fory
+changes nothing, because the loader that matters is the type's own and Fory
+selects it itself. Only the last row works, and it is reachable for this
+transport's own types and not for an application's - an application bundle
+cannot be made to import a codec it never asked for.
+
+That is a property of Fory's strategy meeting OSGi's rules, not something
+this module can work around.
 
 Code generation is therefore off by default and the reflective path runs
 instead: slower than generated code, still well ahead of Java

@@ -242,6 +242,20 @@ class ForyMarshallerTest {
     }
 
     @Test
+    @DisplayName("the reference a JNDI lookup returns survives the codec")
+    void aRemoteEjbReferenceRoundTrips() throws Exception {
+        // This is what a lookup actually puts on the wire, and it is a record:
+        // final fields, no no-argument constructor. Nothing else in these
+        // tests has that shape.
+        org.glassfish.orb.http.protocol.RemoteEjbReference reference =
+                new org.glassfish.orb.http.protocol.RemoteEjbReference(
+                        "app", "module", "", "GreeterBean", "org.example.Greeter", null);
+
+        Object decoded = roundTrip(reference, JavaSerializationMarshaller.defaultFilter());
+        assertEquals(reference, decoded);
+    }
+
+    @Test
     void theCodecTokenIsStable() {
         assertEquals("fory", marshaller.codec());
         assertNotNull(Marshallers.find("fory").orElse(null));

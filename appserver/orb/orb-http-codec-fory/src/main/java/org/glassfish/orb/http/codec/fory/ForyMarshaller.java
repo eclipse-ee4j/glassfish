@@ -258,15 +258,18 @@ public final class ForyMarshaller implements Marshaller {
      * @return a thread safe Fory for that loader
      */
     private static ThreadSafeFory newFory(ClassLoader loader, ObjectInputFilter filter) {
+        // Bridged, so the generated serializers can name both the type and
+        // Fory itself; see BridgingClassLoader.
+        ClassLoader visible = new BridgingClassLoader(loader, ForyMarshaller.class.getClassLoader());
         var builder = Fory.builder()
                 .withLanguage(Language.JAVA)
-                .withClassLoader(loader)
+                .withClassLoader(visible)
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
-            builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));
+            builder = builder.withTypeChecker(new FilterBackedTypeChecker(visible, filter));
         }
         return builder.buildThreadSafeFory();
     }

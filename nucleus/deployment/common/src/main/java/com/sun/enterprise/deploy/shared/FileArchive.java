@@ -47,6 +47,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -119,6 +121,16 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     private boolean isOpenedOrCreated;
 
+    /**
+     * Entry names per prefix, as returned by {@link #entries(String)}.
+     * Listing a directory tree is expensive and callers enumerate the same archive repeatedly,
+     * so the result is remembered until this archive (or one of its subarchives) is modified.
+     * <p>
+     * The archive of a deployed application is referenced until it is undeployed, so callers which
+     * know that no more enumerations are coming should call {@link #releaseCachedEntryNames()}.
+     */
+    private final Map<String, List<String>> entryNamesCache = new ConcurrentHashMap<>();
+
     public FileArchive() {
     }
 
@@ -144,6 +156,8 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
         isOpenedOrCreated = true;
         staleFileManager = StaleFileManager.Util.getInstance(archive);
+        // Opening does not change anything on disk, so only this archive's own entries are stale.
+        entryNamesCache.clear();
     }
 
     /**
@@ -186,6 +200,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
 
         isOpenedOrCreated = true;
+        releaseCachedEntryNames();
     }
 
     /**
@@ -210,6 +225,8 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             return result;
         } catch (IOException e) {
             return false;
+        } finally {
+            releaseCachedEntryNames();
         }
     }
 
@@ -255,11 +272,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public Enumeration<String> entries(String prefix) {
-        prefix = prefix.replace('/', File.separatorChar);
-        File file = new File(archive, prefix);
-
-        // Here we could cache "File -> found entries"
-        List<String> namesList = getListOfFiles(file, deplLogger);
+        String key = prefix.replace('/', File.separatorChar);
+        List<String> namesList = entryNamesCache.computeIfAbsent(key,
+            p -> List.copyOf(getListOfFiles(new File(archive, p), deplLogger)));
         return Collections.enumeration(namesList);
     }
 
@@ -333,6 +348,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         if (result instanceof AbstractReadableArchive) {
             ((AbstractReadableArchive) result).setParentArchive(this);
         }
+        releaseCachedEntryNames();
         return result;
     }
 
@@ -428,7 +444,9 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public boolean renameTo(String name) {
-        return FileUtils.renameFile(archive, new File(name));
+        boolean renamed = FileUtils.renameFile(archive, new File(name));
+        releaseCachedEntryNames();
+        return renamed;
     }
 
 
@@ -453,7 +471,11 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
         staleFileManager().recordValidEntry(newFile);
         FileOutputStream outputStream = new FileOutputStream(newFile);
-        return new WritableArchiveEntry(() -> outputStream, outputStream::close);
+        releaseCachedEntryNames();
+        return new WritableArchiveEntry(() -> outputStream, () -> {
+            outputStream.close();
+            releaseCachedEntryNames();
+        });
     }
 
     /**
@@ -638,32 +660,41 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         if (archive == null || directory == null || !directory.isDirectory()) {
             return Collections.emptyList();
         }
-        List<String> files = new ArrayList<String>();
+        final List<String> files = new ArrayList<>();
+        final Path root = archive.toPath();
+        final Path realRoot;
+        try {
+            // Resolved once here instead of per entry; resolving a path is a relatively costly syscall.
+            realRoot = root.toRealPath();
+        } catch (IOException e) {
+            deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
+            return files;
+        }
+        final Path start = directory.toPath();
 
         // walkFileTree: Symbolic links are not followed. All levels of the tree are visited.
         try {
-            Files.walkFileTree(directory.toPath(), new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
 
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    if (directory.toPath().equals(dir)) {
+                    if (start.equals(dir)) {
                         // Skip the main directory
-                    } else {
-                        // Add sub directory names
-                        String fileName = getFileOrDirectoryName(dir);
-                        if (isEntryValid(fileName, logger)) {
-                            files.add(fileName);
-                        } else {
-                            // Ignore folder
-                            return FileVisitResult.SKIP_SUBTREE;
-                        }
+                        return FileVisitResult.CONTINUE;
                     }
-                    return FileVisitResult.CONTINUE;
+                    // Add sub directory names
+                    String fileName = getEntryName(root, realRoot, dir, attrs);
+                    if (isEntryValid(fileName, logger)) {
+                        files.add(fileName);
+                        return FileVisitResult.CONTINUE;
+                    }
+                    // Ignore folder
+                    return FileVisitResult.SKIP_SUBTREE;
                 }
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    String fileName = getFileOrDirectoryName(file);
+                    String fileName = getEntryName(root, realRoot, file, attrs);
                     if (isEntryValid(fileName, logger) && !fileName.equals(JarFile.MANIFEST_NAME)) {
                         files.add(fileName);
                     }
@@ -676,20 +707,24 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         return files;
     }
 
-    private String getFileOrDirectoryName(Path path) throws IOException {
-        Path resolvedArchive = archive.toPath().toRealPath();
-        Path resolvedPath    = path.toRealPath();
-
-        // Guard: skip entries that escape the archive root via symlink
-        if (!resolvedPath.startsWith(resolvedArchive)) {
+    /**
+     * Returns the name of the entry relative to the archive root, or null if the entry escapes it.
+     * <p>
+     * Only a symbolic link can point outside the archive, so plain entries are relativized against
+     * the unresolved root instead of being resolved first.
+     */
+    private String getEntryName(Path root, Path realRoot, Path path, BasicFileAttributes attrs) throws IOException {
+        if (!attrs.isSymbolicLink() && path.startsWith(root)) {
+            return root.relativize(path).toString().replace(File.separatorChar, '/');
+        }
+        Path resolved = path.toRealPath();
+        if (!resolved.startsWith(realRoot)) {
             deplLogger.log(Level.WARNING,
                 "File {0} is not a valid entry in FileArchive {1} because it escapes the archive root directory",
-                new Object[] {resolvedPath, resolvedArchive});
+                new Object[] {resolved, realRoot});
             return null;
         }
-
-        Path relative = resolvedArchive.relativize(resolvedPath);
-        return relative.toString().replace(File.separatorChar, '/');
+        return realRoot.relativize(resolved).toString().replace(File.separatorChar, '/');
     }
 
     private boolean deleteEntry(String name, final boolean isLogging) {
@@ -700,10 +735,28 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
         }
         final boolean result = input.delete();
         myStaleFileManager().recordDeletedEntry(input);
+        releaseCachedEntryNames();
         return result;
     }
 
-
+    /**
+     * Frees the memory held by the entry names cached by {@link #entries(String)}.
+     * <p>
+     * Drops the cached entry names of this archive and of all enclosing archives, whose entry
+     * lists include this archive's content.
+     * <p>
+     * Callers may keep using this archive afterwards; the next enumeration simply lists the
+     * directory tree again.
+     */
+    public void releaseCachedEntryNames() {
+        entryNamesCache.clear();
+        ReadableArchive parent = getParentArchive();
+        while (parent instanceof FileArchive) {
+            FileArchive parentFileArchive = (FileArchive) parent;
+            parentFileArchive.entryNamesCache.clear();
+            parent = parentFileArchive.getParentArchive();
+        }
+    }
 
     /**
      * API which FileArchive methods should use for dealing with the StaleFileManager implementation.
@@ -955,12 +1008,21 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
         @Override
         public boolean isEntryValid(final File f, final boolean isLogging, final Logger logger) {
-            final boolean result = (!isEntryMarkerFile(f)) && (!staleEntryNames.contains(archivePath.relativize(f.toPath()).toString()));
-            if (!result && !isEntryMarkerFile(f) && isLogging) {
-                deplLogger.log(Level.WARNING, STALE_FILES_SKIPPED,
-                        new Object[] { archivePath.relativize(f.toPath()).toString(), archiveFile.getAbsolutePath() });
+            if (isEntryMarkerFile(f)) {
+                return false;
             }
-            return result;
+            if (staleEntryNames.isEmpty()) {
+                return true;
+            }
+            final String entryName = archivePath.relativize(f.toPath()).toString();
+            if (!staleEntryNames.contains(entryName)) {
+                return true;
+            }
+            if (isLogging) {
+                deplLogger.log(Level.WARNING, STALE_FILES_SKIPPED,
+                        new Object[] { entryName, archiveFile.getAbsolutePath() });
+            }
+            return false;
         }
 
         @Override

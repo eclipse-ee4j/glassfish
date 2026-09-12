@@ -29,9 +29,11 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,10 +99,26 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     private Collection<String> cdiAnnotatedClassNames;
 
     private final List<String> moduleClassNames; // Names of classes in the module
-    private final List<String> beanClassNames; // Names of bean classes in the module
+    /**
+     * Names of bean classes in the module.
+     * <p>
+     * A hash based set, because {@code DeploymentImpl.loadBeanDeploymentArchive} looks a class
+     * up by name in every bean deployment archive of the deployment, for every class Weld bootstraps.
+     * Insertion order is preserved by the {@link LinkedHashSet} implementation.
+     */
+    private final Set<String> beanClassNames;
     private final List<Class<?>> moduleClasses; // Classes in the module
     private final List<Class<?>> beanClasses; // Classes identified as Beans through Weld SPI
     private final List<URL> beansXmlURLs;
+
+    /**
+     * Parsed {@link #beansXmlURLs}, cached because Weld treats {@link #getBeansXml()} as a cheap
+     * accessor and calls it a dozen or more times per archive, while each call here re-reads,
+     * re-validates and re-parses the files. {@code beansXmlURLs} is only ever written by
+     * {@code populate}, which runs inside the constructor, so the parse result cannot go stale.
+     */
+    private volatile BeansXml beansXml;
+
     private final Collection<EjbDescriptor<?>> ejbDescImpls;
     private final List<BeanDeploymentArchive> beanDeploymentArchives;
 
@@ -125,7 +143,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
      */
     public BeanDeploymentArchiveImpl(ReadableArchive archive, Collection<com.sun.enterprise.deployment.EjbDescriptor> ejbs, DeploymentContext ctx, String bdaID) {
         this.beanClasses = new ArrayList<>();
-        this.beanClassNames = new ArrayList<>();
+        this.beanClassNames = new LinkedHashSet<>();
         this.moduleClasses = new ArrayList<>();
         this.moduleClassNames = new ArrayList<>();
         this.beansXmlURLs = new CopyOnWriteArrayList<>();
@@ -171,7 +189,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         this.beanClasses = new ArrayList<>(wClasses);
 
         this.moduleClassNames = new ArrayList<>();
-        this.beanClassNames = new ArrayList<>();
+        this.beanClassNames = new LinkedHashSet<>();
         for (Class<?> c : wClasses) {
             moduleClassNames.add(c.getName());
             beanClassNames.add(c.getName());
@@ -241,6 +259,23 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     @Override
     public BeansXml getBeansXml() {
+        BeansXml result = beansXml;
+        if (result != null) {
+            return result;
+        }
+
+        synchronized (this) {
+            result = beansXml;
+            if (result == null) {
+                result = parseBeansXmlURLs();
+                beansXml = result;
+            }
+        }
+
+        return result;
+    }
+
+    private BeansXml parseBeansXmlURLs() {
         WeldBootstrap weldBootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
         if (beansXmlURLs.size() == 1) {
             return weldBootstrap.parse(beansXmlURLs.get(0));

@@ -19,10 +19,10 @@ package org.glassfish.weld.connector;
 
 import jakarta.inject.Singleton;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.logging.Logger;
 
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveType;
@@ -30,7 +30,8 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
-import static java.util.logging.Level.FINE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_JAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_RAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
@@ -38,15 +39,12 @@ import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_BEANS_XML;
+import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getBeanDiscoveryMode;
-import static org.glassfish.weld.connector.WeldUtils.getBeansXmlInputStream;
-import static org.glassfish.weld.connector.WeldUtils.getCDIEnablingAnnotations;
 import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
-import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanDiscoveryEnabled;
-import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionAndBeansXml;
 
 /**
  * Implementation of the Sniffer for Weld.
@@ -56,7 +54,7 @@ import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionA
 public class WeldSniffer extends GenericSniffer {
 
     private static final String[] containers = { "org.glassfish.weld.WeldContainer" };
-    private static final Logger logger = Logger.getLogger(WeldSniffer.class.getName());
+    private static final System.Logger LOG = System.getLogger(WeldSniffer.class.getName());
 
     public WeldSniffer() {
         // We do not haGenericSniffer(String containerName, String appStigma, String urlPattern
@@ -95,32 +93,8 @@ public class WeldSniffer extends GenericSniffer {
 
         boolean isWeldArchive = false;
 
-        // Scan for beans.xml in expected locations. If at least one is found without bean-discovery-mode="none", this is
-        // a Weld archive
-        if (isEntryPresent(archive, WEB_INF)) {
-            isWeldArchive =
-                isArchiveCDIEnabled(context, archive, WEB_INF_BEANS_XML) ||
-                isArchiveCDIEnabled(context, archive, WEB_INF_CLASSES_META_INF_BEANS_XML);
+        isWeldArchive = hasBeansXmlWithoutDiscoveryNone(archive, context);
 
-            if (!isWeldArchive) {
-                // Check jars under WEB_INF/lib
-                if (isEntryPresent(archive, WEB_INF_LIB)) {
-                    isWeldArchive = scanLibDir(context, archive, WEB_INF_LIB);
-                }
-            }
-
-            // Test for extension present.
-            // The CDI 4.0 TCK introduced the requirement of war archive having an extension in
-            // WEB-INF/classes/META-INF/services with no beans.xml being no BDA, but do need to
-            // have the bean manager in JNDI.
-            if (!isWeldArchive) {
-                isWeldArchive = hasExtension(archive);
-            }
-        }
-
-        // TODO This doesn't seem to match the ReadableArchive for a stand-alone ejb-jar.
-        // It might only be true for an ejb-jar within an .ear. Revisit when officially
-        // adding support for .ears
         String archiveName = archive.getName();
         if (!isWeldArchive && archiveName != null && archiveName.endsWith(EXPANDED_JAR_SUFFIX)) {
             isWeldArchive = isArchiveCDIEnabled(context, archive, META_INF_BEANS_XML);
@@ -139,6 +113,56 @@ public class WeldSniffer extends GenericSniffer {
             }
         }
 
+        if (!isWeldArchive) {
+            try {
+                isWeldArchive = WeldUtils.isImplicitBeanArchive(context, archive)
+                    || hasCDIEnablingAnnotationsInWebInfClasses(context, archive);
+            } catch (IOException ex) {
+                LOG.log(ERROR, ex.getMessage(), ex);
+            }
+        }
+
+        return isWeldArchive;
+    }
+
+    /**
+     * Annotation scanning records a war's own classes under WEB-INF/classes, never under the war root, so
+     * we need to add this directory to the archive URI to match it.
+     */
+    private boolean hasCDIEnablingAnnotationsInWebInfClasses(DeploymentContext context, ReadableArchive archive) {
+        File sourceDir = context.getSourceDir();
+        if (sourceDir == null || !isEntryPresent(archive, WEB_INF_CLASSES)) {
+            return false;
+        }
+        // Built exactly as in BeanDeploymentArchiveImpl.populate so both agree on the URI.
+        return WeldUtils.isImplicitBeanArchive(context, new File(sourceDir.getAbsolutePath(), WEB_INF_CLASSES).toURI());
+    }
+
+    private boolean hasBeansXmlWithoutDiscoveryNone(ReadableArchive archive, DeploymentContext context) {
+        // Scan for beans.xml in expected locations. If at least one is found without bean-discovery-mode="none",
+        // this is a Weld archive
+        boolean isWeldArchive = false;
+
+        if (isEntryPresent(archive, WEB_INF)) {
+            isWeldArchive =
+                    isArchiveCDIEnabled(context, archive, WEB_INF_BEANS_XML) ||
+                    isArchiveCDIEnabled(context, archive, WEB_INF_CLASSES_META_INF_BEANS_XML);
+
+            if (!isWeldArchive) {
+                // Check jars under WEB_INF/lib
+                if (isEntryPresent(archive, WEB_INF_LIB)) {
+                    isWeldArchive = scanLibDir(context, archive, WEB_INF_LIB);
+                }
+            }
+
+            // Test for extension present.
+            // The CDI 4.0 TCK introduced the requirement of war archive having an extension in
+            // WEB-INF/classes/META-INF/services with no beans.xml being no BDA, but do need to
+            // have the bean manager in JNDI.
+            if (!isWeldArchive) {
+                isWeldArchive = hasExtension(archive);
+            }
+        }
         return isWeldArchive;
     }
 
@@ -146,34 +170,6 @@ public class WeldSniffer extends GenericSniffer {
     public String[] getContainersNames() {
         return containers;
     }
-
-    @Override
-    public String[] getAnnotationNames(DeploymentContext context) {
-        // First see if bean-discovery-mode is explicitly set to "none".
-        InputStream beansXmlInputStream = getBeansXmlInputStream(context);
-        if (beansXmlInputStream != null) {
-            try {
-                String beanDiscoveryMode = getBeanDiscoveryMode(beansXmlInputStream);
-                if (beanDiscoveryMode.equals("none")) {
-                    return null;
-                }
-            } finally {
-                try {
-                    beansXmlInputStream.close();
-                } catch (IOException notignore) {
-                    logger.log(FINE, "", notignore);
-                }
-            }
-        }
-
-        // Make sure it's not an extension
-        if (!isValidBdaBasedOnExtensionAndBeansXml(context.getSource())) {
-            return null;
-        }
-
-        return isImplicitBeanDiscoveryEnabled(context) ? getCDIEnablingAnnotations(context) : null;
-    }
-
 
     // ### Private and protected methods
 
@@ -189,7 +185,7 @@ public class WeldSniffer extends GenericSniffer {
                     try (ReadableArchive jarInLib = archive.getSubArchive(entryName)) {
                         entryPresent = isArchiveCDIEnabled(context, jarInLib, META_INF_BEANS_XML);
                     } catch (IOException e) {
-                        logger.log(FINE, "", e);
+                        LOG.log(DEBUG, e.getMessage(), e);
                     }
                 }
             }
@@ -204,7 +200,7 @@ public class WeldSniffer extends GenericSniffer {
             entryPresent = archive.exists(entry);
         } catch (IOException e) {
             // do not ignore
-            logger.log(FINE, "", e);
+            LOG.log(DEBUG, e.getMessage(), e);
         }
         return entryPresent;
     }
@@ -221,7 +217,7 @@ public class WeldSniffer extends GenericSniffer {
                     try {
                         beansXmlInputStream.close();
                     } catch (Exception notignore) {
-                        logger.log(FINE, "", notignore);
+                        LOG.log(DEBUG, notignore.getMessage(), notignore);
                     }
                 }
             }

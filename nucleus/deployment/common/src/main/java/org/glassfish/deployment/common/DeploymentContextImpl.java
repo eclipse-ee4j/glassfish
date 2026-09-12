@@ -17,6 +17,7 @@
 
 package org.glassfish.deployment.common;
 
+import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.Closeable;
@@ -299,7 +300,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void addModuleMetaData(Object metaData) {
-        deplLogger.log(Level.FINEST, "addModuleMetaData(metaData={0})", metaData);
+        deplLogger.log(Level.FINEST, () -> "addModuleMetaData(metaData=" + metaData + ")");
         if (metaData != null) {
             modulesMetaData.put(metaData.getClass().getName(), metaData);
         }
@@ -334,7 +335,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void addTransientAppMetaData(String metaDataKey, Object metaData) {
-        deplLogger.log(Level.FINEST, "addTransientAppMetaData(metaDataKey={0}, metaData)", metaDataKey);
+        deplLogger.log(Level.FINEST, () -> "addTransientAppMetaData(metaDataKey=" + metaDataKey + ", metaData)");
         if (metaData != null) {
             transientAppMetaData.put(metaDataKey, metaData);
         }
@@ -430,7 +431,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
             URL[] urls = ASClassLoaderUtil.getDeployParamLibrariesAsURLs(parameters.libraries(), env);
             for (URL url : urls) {
                 File file = new File(url.getFile());
-                deplLogger.log(FINE, "Specified library jar: " + file.getAbsolutePath());
+                deplLogger.log(FINE, () -> "Specified library jar: " + file.getAbsolutePath());
                 if (file.isFile()) {
                     libURIs.add(url.toURI());
                 } else {
@@ -630,7 +631,16 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
     @Override
     public void postDeployClean(boolean isFinalClean) {
-        deplLogger.log(Level.FINEST, "postDeployClean(isFinalClean={0})", isFinalClean);
+        deplLogger.log(Level.FINEST, () -> "postDeployClean(isFinalClean=" + isFinalClean + ")");
+        if (isFinalClean) {
+            // The source archive outlives the deployment, but nothing enumerates it any more.
+            if (source instanceof FileArchive) {
+                ((FileArchive) source).releaseCachedEntryNames();
+            }
+            if (originalSource instanceof FileArchive && originalSource != source) {
+                ((FileArchive) originalSource).releaseCachedEntryNames();
+            }
+        }
         if (transientAppMetaData != null) {
             if (isFinalClean) {
                 for (Object value : transientAppMetaData.values()) {
@@ -638,7 +648,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
                         try {
                             ((Closeable) value).close();
                         } catch (IOException e) {
-                            deplLogger.log(Level.WARNING, "Close failed for " + value, e);
+                            deplLogger.log(Level.WARNING, e, () -> "Close failed for " + value);
                         }
                     }
                 }
@@ -677,7 +687,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
         File tenantDirectory = new File(getRootTenantDirForApp(originalAppName), tenant);
         if (!tenantDirectory.exists() && !tenantDirectory.mkdirs()) {
-            deplLogger.log(FINEST, "Unable to create directory {0}", tenantDirectory.getAbsolutePath());
+            deplLogger.log(FINEST, () -> "Unable to create tenant directory " + tenantDirectory.getAbsolutePath() + " for tenant=" + tenant + " and app=" + originalAppName);
         }
 
         return tenantDirectory;

@@ -94,20 +94,15 @@ public class CDIServiceImpl implements CDIService {
 
     private static final Logger logger = Logger.getLogger(WELD_LOGGER_SUBSYSTEM_NAME, SHARED_LOGMESSAGE_RESOURCE);
 
-    private static final Set<String> validScopes = new HashSet<>();
-    static {
-        validScopes.add(Scope.class.getName());
-        validScopes.add(NormalScope.class.getName());
-        validScopes.add(RequestScoped.class.getName());
-        validScopes.add(SessionScoped.class.getName());
-        validScopes.add(ApplicationScoped.class.getName());
-        validScopes.add(ConversationScoped.class.getName());
-    }
+    private static final Set<String> validScopes = Set.of(
+        Scope.class.getName(),
+        NormalScope.class.getName(),
+        RequestScoped.class.getName(),
+        SessionScoped.class.getName(),
+        ApplicationScoped.class.getName(),
+        ConversationScoped.class.getName());
 
-    private static final HashSet<String> excludedScopes = new HashSet<>();
-    static {
-        excludedScopes.add(Dependent.class.getName());
-    }
+    private static final Set<String> excludedScopes = Set.of(Dependent.class.getName());
 
     @Inject
     private WeldDeployer weldDeployer;

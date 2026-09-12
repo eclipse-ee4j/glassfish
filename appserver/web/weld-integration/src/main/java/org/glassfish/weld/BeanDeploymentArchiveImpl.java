@@ -110,6 +110,15 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
     private final List<Class<?>> moduleClasses; // Classes in the module
     private final List<Class<?>> beanClasses; // Classes identified as Beans through Weld SPI
     private final List<URL> beansXmlURLs;
+
+    /**
+     * Parsed {@link #beansXmlURLs}, cached because Weld treats {@link #getBeansXml()} as a cheap
+     * accessor and calls it a dozen or more times per archive, while each call here re-reads,
+     * re-validates and re-parses the files. {@code beansXmlURLs} is only ever written by
+     * {@code populate}, which runs inside the constructor, so the parse result cannot go stale.
+     */
+    private volatile BeansXml beansXml;
+
     private final Collection<EjbDescriptor<?>> ejbDescImpls;
     private final List<BeanDeploymentArchive> beanDeploymentArchives;
 
@@ -250,6 +259,23 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
 
     @Override
     public BeansXml getBeansXml() {
+        BeansXml result = beansXml;
+        if (result != null) {
+            return result;
+        }
+
+        synchronized (this) {
+            result = beansXml;
+            if (result == null) {
+                result = parseBeansXmlURLs();
+                beansXml = result;
+            }
+        }
+
+        return result;
+    }
+
+    private BeansXml parseBeansXmlURLs() {
         WeldBootstrap weldBootstrap = context.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class);
         if (beansXmlURLs.size() == 1) {
             return weldBootstrap.parse(beansXmlURLs.get(0));

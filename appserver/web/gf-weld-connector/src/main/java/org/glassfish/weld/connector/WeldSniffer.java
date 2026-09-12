@@ -19,6 +19,7 @@ package org.glassfish.weld.connector;
 
 import jakarta.inject.Singleton;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
@@ -38,6 +39,7 @@ import static org.glassfish.weld.connector.WeldUtils.META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.SEPARATOR_CHAR;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_BEANS_XML;
+import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getBeanDiscoveryMode;
@@ -93,9 +95,6 @@ public class WeldSniffer extends GenericSniffer {
 
         isWeldArchive = hasBeansXmlWithoutDiscoveryNone(archive, context);
 
-        // TODO This doesn't seem to match the ReadableArchive for a stand-alone ejb-jar.
-        // It might only be true for an ejb-jar within an .ear. Revisit when officially
-        // adding support for .ears
         String archiveName = archive.getName();
         if (!isWeldArchive && archiveName != null && archiveName.endsWith(EXPANDED_JAR_SUFFIX)) {
             isWeldArchive = isArchiveCDIEnabled(context, archive, META_INF_BEANS_XML);
@@ -116,13 +115,27 @@ public class WeldSniffer extends GenericSniffer {
 
         if (!isWeldArchive) {
             try {
-                isWeldArchive = WeldUtils.isImplicitBeanArchive(context, archive);
+                isWeldArchive = WeldUtils.isImplicitBeanArchive(context, archive)
+                    || hasCDIEnablingAnnotationsInWebInfClasses(context, archive);
             } catch (IOException ex) {
                 LOG.log(ERROR, ex.getMessage(), ex);
             }
         }
 
         return isWeldArchive;
+    }
+
+    /**
+     * Annotation scanning records a war's own classes under WEB-INF/classes, never under the war root, so
+     * we need to add this directory to the archive URI to match it.
+     */
+    private boolean hasCDIEnablingAnnotationsInWebInfClasses(DeploymentContext context, ReadableArchive archive) {
+        File sourceDir = context.getSourceDir();
+        if (sourceDir == null || !isEntryPresent(archive, WEB_INF_CLASSES)) {
+            return false;
+        }
+        // Built exactly as in BeanDeploymentArchiveImpl.populate so both agree on the URI.
+        return WeldUtils.isImplicitBeanArchive(context, new File(sourceDir.getAbsolutePath(), WEB_INF_CLASSES).toURI());
     }
 
     private boolean hasBeansXmlWithoutDiscoveryNone(ReadableArchive archive, DeploymentContext context) {
@@ -156,11 +169,6 @@ public class WeldSniffer extends GenericSniffer {
     @Override
     public String[] getContainersNames() {
         return containers;
-    }
-
-    @Override
-    public String[] getAnnotationNames(DeploymentContext context) {
-        return null;
     }
 
     // ### Private and protected methods

@@ -388,10 +388,11 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                         archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
                      } else {
                         archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false, allowEmptyArchive: true
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
                      }
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     // Some ant jobs use maven too.
+                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
+                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
 // Makes Jenkins UI extremely slow in current version
 //                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }

@@ -648,7 +648,7 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 8,
+                        instanceCap: 5, // high number prevents heavy start earlier.
                         slaveConnectTimeout: 300,
                         yaml: antLightContainerCfg
                      ) {

@@ -585,7 +585,7 @@ pipeline {
             environment name: 'SKIP_TESTS', value: 'false'
          }
          parallel {
-            stage('MainTests') {
+            stage('Maven Checks') {
                steps {
                   script {
                      def nodeGroupLabel = 'maven-shared-pod-heavy'
@@ -596,12 +596,12 @@ pipeline {
                         slaveConnectTimeout: 300,
                         yaml: mvnHeavyContainerCfg
                      ) {
-                        generateMvnTestPod('MainTests', nodeGroupLabel, "mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots")()
+                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots")()
                      }
                   }
                }
             }
-            stage('ITests') {
+            stage('Maven IT') {
                steps {
                   script {
                      def nodeGroupLabel = 'maven-shared-pod-light'

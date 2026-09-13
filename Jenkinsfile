@@ -368,7 +368,7 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                         }
                      }
                   }
-               } catch (e) {
+               } catch (Throwable e) {
                   echo "Something broke: ${e}";
                   def errorMsg = e.getMessage() ?: ""
                   if (errorMsg.contains("Failed to start websocket connection")) {
@@ -379,6 +379,7 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                      }
                      echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
                   } else {
+                     echo "❌ Failure: ${errorMsg}"
                      throw e
                   }
                } finally {
@@ -387,6 +388,8 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                      junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                      junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                      junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+// Makes Jenkins UI extremely slow in current version
+//                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                      if (archiveServerLogs) {
                         archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
                      }
@@ -425,7 +428,7 @@ def generateAntPod(job, label) {
    })
 }
 
-def generateMvnTestPod(job, label) {
+def generateMvnTestPod(job, label, command) {
    return runOnNode(job, label, true, {
       unstash 'git'
       timeout(time: 1, unit: 'HOURS') {
@@ -433,11 +436,15 @@ def generateMvnTestPod(job, label) {
          git reset --hard
          tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
          ''')
-         sh (label: "mvn clean verify -pl :${job}", script: """
-         mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
+         sh (label: "${command}", script: """
+         ${command}
          """)
       }
    })
+}
+
+def generateMvnTestPod(job, label) {
+   return generateMvnTestPod(job, label, "mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd")
 }
 
 pipeline {
@@ -578,42 +585,18 @@ pipeline {
          }
          parallel {
             stage('MainTests') {
-               agent {
-                  kubernetes {
-                     instanceCap 3
-                     yaml mvnHeavyContainerCfg
-                  }
-               }
                steps {
-                  container('action') {
-                     script {
-                        try {
-                           startVmstatLogging('main-tests')
-                           unstash 'git'
-                           unstash 'maven-repo'
-                           timeout(time: 4, unit: 'HOURS') {
-                             dumpSysInfo()
-                             sh (label: 'Unpack Requirements', script: '''
-                             git reset --hard
-                             tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                             ''')
-                             sh (label: 'mvn clean verify', script: '''
-                             mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
-                             ''')
-                           }
-                        } finally {
-                           stopVmstatLogging()
-                        }
+                  script {
+                     def nodeGroupLabel = 'maven-shared-pod-heavy'
+                     podTemplate(
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        instanceCap: 1,
+                        slaveConnectTimeout: 300,
+                        yaml: mvnHeavyContainerCfg
+                     ) {
+                        generateMvnTestPod('MainTests', nodeGroupLabel, "mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots")()
                      }
-                  }
-               }
-               post {
-                  always {
-                     archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-// Makes Jenkins UI extremely slow in current version
-//                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
                   }
                }
             }
@@ -625,7 +608,7 @@ pipeline {
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
                         instanceCap: 3,
-                        slaveConnectTimeout: 120,
+                        slaveConnectTimeout: 300,
                         yaml: mvnLightContainerCfg
                      ) {
                         echo "Starting parallel ITests stages."
@@ -645,7 +628,7 @@ pipeline {
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
                         instanceCap: 3,
-                        slaveConnectTimeout: 120,
+                        slaveConnectTimeout: 300,
                         yaml: antHeavyContainerCfg
                      ) {
                         echo "Starting parallel Ant-Heavy stages."
@@ -665,7 +648,7 @@ pipeline {
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
                         instanceCap: 6,
-                        slaveConnectTimeout: 120,
+                        slaveConnectTimeout: 300,
                         yaml: antLightContainerCfg
                      ) {
                         echo "Starting parallel Ant-Light stages."

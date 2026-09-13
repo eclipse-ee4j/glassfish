@@ -384,15 +384,16 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                   }
                } finally {
                   if (!infraError) {
-                     archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
-                     junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     if (archiveServerLogs) {
+                        archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
+                     } else {
+                        archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false, allowEmptyArchive: true
+                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     }
                      junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
                      junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
 // Makes Jenkins UI extremely slow in current version
 //                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
-                     if (archiveServerLogs) {
-                        archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     }
                   }
                }
             }

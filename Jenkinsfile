@@ -647,7 +647,7 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 6,
+                        instanceCap: 8,
                         slaveConnectTimeout: 300,
                         yaml: antLightContainerCfg
                      ) {

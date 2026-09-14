@@ -73,7 +73,7 @@ h2 via ALPN.
 | Asynchronous methods returning `Future` | supported, including HTTP 202 |
 | Application exceptions, including `inherited` | supported, semantics match IIOP |
 | JNDI lookup, list, bind and the rest | supported |
-| Distributed transactions | supported on a separate branch |
+| Distributed transactions | supported: joined from a container transaction, or driven by the client through `UserTransaction` |
 | Stateful session beans | supported |
 
 Looking up a stateful bean is what creates its session, so two lookups of

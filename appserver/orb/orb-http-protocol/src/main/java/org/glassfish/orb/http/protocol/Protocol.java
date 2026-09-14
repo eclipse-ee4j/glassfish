@@ -101,8 +101,16 @@ public final class Protocol {
     /** Client-minted id, lets {@link #OP_CANCEL} name an in-flight invocation. */
     public static final String H_INVOCATION_ID = "x-gf-invocation-id";
 
-    /** Marshalled transaction id, for a future transaction module. */
+    /** Marshalled transaction id. */
     public static final String H_TXN_ID = "x-gf-txn-id";
+
+    /**
+     * The caller's remaining transaction timeout in seconds, sent with an
+     * invocation that carries a transaction. Without it the server would
+     * import the branch under its own default timeout, which can outlive the
+     * coordinator's and leave a branch held after the caller has given up.
+     */
+    public static final String H_TXN_TIMEOUT = "x-gf-txn-timeout";
 
     /**
      * Session affinity cookie. Deliberately {@code JSESSIONID}: it makes every

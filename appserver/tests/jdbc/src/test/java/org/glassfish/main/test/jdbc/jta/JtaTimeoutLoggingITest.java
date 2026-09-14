@@ -86,8 +86,11 @@ public class JtaTimeoutLoggingITest {
         }).collect(Collectors.toSet());
 
     private static final String LOG_END = "[\\|\\#\\]]*";
+    // The duration is measured by the timer thread executing the timeout task, so it is
+    // TIMEOUT_IN_SECONDS plus an unpredictable scheduling delay. Accept the whole second after
+    // the timeout instead of just its first few milliseconds.
     private static final Pattern P_TIMEOUT = Pattern.compile( //
-        "\\s+Transaction with id=[0-9]+ timed out after 200[0-9] ms." + LOG_END);
+        "\\s+Transaction with id=[0-9]+ timed out after " + TIMEOUT_IN_SECONDS + "[0-9]{3} ms." + LOG_END);
     private static final Pattern P_SYS_EXCEPTION_P = Pattern
         .compile("\\s+A system exception occurred during an invocation on EJB SlowJpaPartitioner," //
             + " method: public void " + SlowJpaPartitioner.class.getName()

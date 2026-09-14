@@ -1570,6 +1570,26 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
         externalPostInvoke();
     }
 
+    /**
+     * Refused here: only a stateful session container has sessions to create.
+     * <p>
+     * Answering with a shared instance would be worse than failing, because
+     * the caller would go on believing it holds a conversation.
+     */
+    @Override
+    public byte[] createSession(String generatedRemoteBusinessIntf)
+            throws CreateException, RemoteException {
+        throw new RemoteException(ejbDescriptor.getName()
+                + " is not a stateful session bean, so it has no sessions to create");
+    }
+
+    /** Refused here, for the same reason as {@link #createSession}. */
+    @Override
+    public void removeSession(byte[] instanceKey) throws RemoteException {
+        throw new RemoteException(ejbDescriptor.getName()
+                + " is not a stateful session bean, so it has no sessions to remove");
+    }
+
     @Override
     public void externalPreInvoke() {
         BeanContext beanContext = new BeanContext();

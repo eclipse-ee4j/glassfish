@@ -26,6 +26,13 @@ final class TestBeans {
     private TestBeans() {
     }
 
+    /**
+     * Run by {@link GreeterBean#notifyArrival} while the invocation is in
+     * progress, so a test can observe server side state at the moment the bean
+     * is executing rather than only before and after.
+     */
+    static volatile Runnable duringInvocation;
+
     /** A stateless remote business interface. */
     interface Greeter {
 
@@ -91,6 +98,10 @@ final class TestBeans {
         @Override
         public void notifyArrival(String name) {
             // void return, exercised on purpose
+            Runnable probe = duringInvocation;
+            if (probe != null) {
+                probe.run();
+            }
         }
 
         @Override

@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.transaction.xa.Xid;
+
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.EjbKey;
@@ -39,6 +41,7 @@ import org.glassfish.orb.http.protocol.PathScanner;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.ProtocolException;
 import org.glassfish.orb.http.protocol.TxContext;
+import org.glassfish.orb.http.protocol.Xids;
 
 /**
  * Serves the EJB operations.
@@ -53,12 +56,14 @@ public final class EjbDispatcher {
 
     private final ContainerBridge container;
     private final SecurityBridge security;
+    private final TransactionBridge transactions;
     private final Marshaller marshaller;
     private final InvocationRegistry registry;
     private final SessionAffinity affinity;
 
+    /** A dispatcher with no security, no transactions and a generated route id. */
     public EjbDispatcher(ContainerBridge container) {
-        this(container, SecurityBridge.NONE, Marshallers.preferred(),
+        this(container, SecurityBridge.NONE, TransactionBridge.NONE, Marshallers.preferred(),
                 new InvocationRegistry(), SessionAffinity.forThisNode());
     }
 
@@ -66,16 +71,27 @@ public final class EjbDispatcher {
                          SecurityBridge security,
                          Marshaller marshaller,
                          InvocationRegistry registry) {
-        this(container, security, marshaller, registry, SessionAffinity.forThisNode());
+        this(container, security, TransactionBridge.NONE, marshaller, registry,
+                SessionAffinity.forThisNode());
     }
 
+    /**
+     * @param container where invocations are dispatched
+     * @param security establishes the caller's identity, or {@link SecurityBridge#NONE}
+     * @param transactions imports the caller's transaction, or {@link TransactionBridge#NONE}
+     * @param marshaller the codec this endpoint serves
+     * @param registry tracks in-flight invocations so they can be cancelled
+     * @param affinity pins stateful conversations to this node
+     */
     public EjbDispatcher(ContainerBridge container,
                          SecurityBridge security,
+                         TransactionBridge transactions,
                          Marshaller marshaller,
                          InvocationRegistry registry,
                          SessionAffinity affinity) {
         this.container = container;
         this.security = security;
+        this.transactions = transactions;
         this.marshaller = marshaller;
         this.registry = registry;
         this.affinity = affinity;
@@ -183,10 +199,17 @@ public final class EjbDispatcher {
         try (InvocationRegistry.Registration registration = registry.register(invocationId)) {
             Object target = null;
             Method invokedMethod = null;
+            Xid imported = null;
             try {
                 Method method = resolveMethod(loader, invocation);
                 invokedMethod = method;
-                Object[] args = readArguments(codec, exchange.requestBody(), loader, method.getParameterCount());
+                InputStream body = exchange.requestBody();
+                TxContext txContext = InvocationEnvelope.readTxContext(body);
+                Object[] args = readArguments(codec, body, loader, method.getParameterCount());
+
+                // Import before resolving the target, so the container sees the
+                // transaction while it sets the invocation up rather than after.
+                imported = importTransaction(txContext, exchange);
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
@@ -212,10 +235,20 @@ public final class EjbDispatcher {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {
                 fail(exchange, Protocol.SC_FORBIDDEN, e.toString());
+            } catch (TransactionBridge.TransactionException e) {
+                exchange.setStatus(Protocol.SC_EXCEPTION);
+                exchange.setResponseHeader(TransactionDispatcher.H_ERROR_CODE,
+                        Integer.toString(e.errorCode()));
+                exchange.setResponseHeader("X-GF-Reason",
+                        String.valueOf(e.getMessage()).replace('\n', ' '));
             } finally {
                 if (target != null) {
                     container.releaseTargetObject(target);
                 }
+                // Release after the container is done with the target, and
+                // whatever happened above: a branch left associated with this
+                // thread would leak into whatever the pool runs next.
+                releaseTransaction(imported);
             }
         } finally {
             security.clear(securityToken);
@@ -294,15 +327,51 @@ public final class EjbDispatcher {
         }
     }
 
+    /**
+     * Imports the caller's transaction, if the invocation carries one.
+     *
+     * @return the branch that was imported, or null if there was none
+     */
+    private Xid importTransaction(TxContext txContext, ServerExchange exchange)
+            throws TransactionBridge.TransactionException {
+        if (!txContext.isPresent()) {
+            // Deliberately outside a transaction, so make that true: this
+            // thread has served other requests, and one of them may have left
+            // a branch on it.
+            transactions.detach();
+            return null;
+        }
+        Xid xid = Xids.fromContext(txContext);
+        long timeout = 0;
+        String header = exchange.requestHeader(Protocol.H_TXN_TIMEOUT);
+        if (header != null) {
+            try {
+                timeout = Long.parseLong(header.trim());
+            } catch (NumberFormatException e) {
+                timeout = 0;
+            }
+        }
+        transactions.recreate(xid, timeout);
+        return xid;
+    }
+
+    private void releaseTransaction(Xid xid) {
+        if (xid == null) {
+            return;
+        }
+        try {
+            transactions.release(xid);
+        } catch (TransactionBridge.TransactionException e) {
+            // The invocation's own outcome has already been written. Losing
+            // the release is bad, but overwriting a successful reply with this
+            // failure would be worse - recovery exists for exactly this.
+            System.getLogger(EjbDispatcher.class.getName()).log(System.Logger.Level.WARNING,
+                    "failed to release imported transaction " + Xids.key(xid), e);
+        }
+    }
+
     private Object[] readArguments(Marshaller codec, InputStream body, ClassLoader loader, int count)
             throws IOException, ClassNotFoundException {
-        TxContext tx = InvocationEnvelope.readTxContext(body);
-        if (tx.isPresent()) {
-            // Reserved on the wire, not yet honoured. Refusing loudly is
-            // better than silently running the call outside the caller's
-            // transaction and reporting success.
-            throw new ProtocolException("transaction propagation is not implemented by this transport");
-        }
         ObjectInputFilter filter = JavaSerializationMarshaller.defaultFilter();
         try (Marshaller.ObjectReader reader = codec.newReader(body, loader, filter)) {
             Object[] args = new Object[count];

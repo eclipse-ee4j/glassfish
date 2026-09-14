@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+import javax.transaction.xa.Xid;
+
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.CommonRoutes;
 import org.glassfish.orb.http.protocol.ContentType;
@@ -44,6 +46,7 @@ import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.TxContext;
+import org.glassfish.orb.http.protocol.Xids;
 
 /**
  * The client-side entry point: turns a remote business interface into a proxy
@@ -276,6 +279,9 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     Object invoke(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) throws Throwable {
+        // Before the request is built, because building it reads the thread's
+        // transaction and joining is what puts one there.
+        AmbientTransaction.join(config, transport);
         HttpTransport.Request request = buildInvocation(locator, viewClass, method, args, newInvocationId());
         HttpTransport.Response response;
         try {
@@ -331,6 +337,7 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {
+        AmbientTransaction.join(config, transport);
         final String invocationId = newInvocationId();
         final HttpTransport.Request request;
         try {
@@ -371,10 +378,20 @@ public final class HttpEjbClient implements AutoCloseable {
                 method.getName(),
                 parameterTypeNames);
 
-        ByteBuffer[] body = marshalArguments(args);
+        // Read the association once and use it for both the body and the
+        // headers, so an interceptor changing it mid-build cannot produce an
+        // invocation whose prefix and timeout describe different transactions.
+        Xid transaction = ClientTransactionContext.current();
+        ByteBuffer[] body = marshalArguments(args, transaction);
 
-        Map<String, String> headers = new HashMap<>(2);
+        Map<String, String> headers = new HashMap<>(4);
         headers.put(Protocol.H_INVOCATION_ID, invocationId);
+        if (transaction != null) {
+            long timeout = ClientTransactionContext.currentTimeoutSeconds();
+            if (timeout > 0) {
+                headers.put(Protocol.H_TXN_TIMEOUT, Long.toString(timeout));
+            }
+        }
 
         return new HttpTransport.Request(
                 "POST",
@@ -385,9 +402,14 @@ public final class HttpEjbClient implements AutoCloseable {
                 body);
     }
 
-    private ByteBuffer[] marshalArguments(Object[] args) throws IOException {
+    private ByteBuffer[] marshalArguments(Object[] args, Xid transaction) throws IOException {
         ChunkedOutput out = new ChunkedOutput();
-        InvocationEnvelope.writeTxContext(out, TxContext.NONE);
+        // TYPE_OUTFLOWED: the transaction started somewhere else and is being
+        // carried into this call, which is true whether the coordinator is the
+        // caller's own manager or the far end that minted it for us.
+        InvocationEnvelope.writeTxContext(out, transaction == null
+                ? TxContext.NONE
+                : Xids.toContext(transaction, TxContext.TYPE_OUTFLOWED));
         try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
             if (args != null) {
                 for (Object arg : args) {

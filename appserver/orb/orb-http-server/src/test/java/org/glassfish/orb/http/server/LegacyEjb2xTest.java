@@ -110,8 +110,8 @@ class LegacyEjb2xTest {
                 CartHome.class.getName(), Cart.class.getName()));
 
         EjbDispatcher ejb = new EjbDispatcher(container, SecurityBridge.NONE,
-                new JavaSerializationMarshaller(), new InvocationRegistry(),
-                new SessionAffinity("instance-1"));
+                TransactionBridge.NONE, new JavaSerializationMarshaller(),
+                new InvocationRegistry(), new SessionAffinity("instance-1"));
         server = new RealHttpServer(ejb, new NamingDispatcher(naming),
                 new AffinityDispatcher(new SessionAffinity("instance-1")));
     }

@@ -94,7 +94,7 @@ class LegacyClientMigrationTest {
                 "GreeterBean", TestBeans.Greeter.class.getName(), null));
 
         security = new RecordingSecurity();
-        EjbDispatcher ejb = new EjbDispatcher(container, security,
+        EjbDispatcher ejb = new EjbDispatcher(container, security, TransactionBridge.NONE,
                 new JavaSerializationMarshaller(), new InvocationRegistry(),
                 new SessionAffinity("instance-1"));
 

@@ -63,6 +63,13 @@ final class RealHttpServer implements AutoCloseable {
     private final URI baseUri;
 
     RealHttpServer(EjbDispatcher ejb, NamingDispatcher naming, AffinityDispatcher affinity) throws IOException {
+        this(ejb, naming, affinity, null);
+    }
+
+    RealHttpServer(EjbDispatcher ejb,
+                   NamingDispatcher naming,
+                   AffinityDispatcher affinity,
+                   TransactionDispatcher transactions) throws IOException {
         this.server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         // Held so it can be shut down. HttpServer.stop does not touch an
         // executor it was given, so leaving this unreferenced leaked eight
@@ -78,6 +85,8 @@ final class RealHttpServer implements AutoCloseable {
                     naming.dispatch(exchange);
                 } else if (path.contains("/common/")) {
                     affinity.dispatch(exchange);
+                } else if (path.contains("/txn/")) {
+                    transactions.dispatch(exchange);
                 } else {
                     ejb.dispatch(exchange);
                 }

@@ -48,15 +48,28 @@ final class Loopback implements HttpTransport {
     private final EjbDispatcher ejb;
     private final NamingDispatcher naming;
     private final AffinityDispatcher affinity;
+    private final TransactionDispatcher transactions;
 
     Loopback(EjbDispatcher ejb, NamingDispatcher naming) {
-        this(ejb, naming, new AffinityDispatcher(SessionAffinity.forThisNode()));
+        this(ejb, naming, new AffinityDispatcher(SessionAffinity.forThisNode()), null);
     }
 
     Loopback(EjbDispatcher ejb, NamingDispatcher naming, AffinityDispatcher affinity) {
+        this(ejb, naming, affinity, null);
+    }
+
+    Loopback(EjbDispatcher ejb, NamingDispatcher naming, TransactionDispatcher transactions) {
+        this(ejb, naming, new AffinityDispatcher(SessionAffinity.forThisNode()), transactions);
+    }
+
+    Loopback(EjbDispatcher ejb,
+             NamingDispatcher naming,
+             AffinityDispatcher affinity,
+             TransactionDispatcher transactions) {
         this.ejb = ejb;
         this.naming = naming;
         this.affinity = affinity;
+        this.transactions = transactions;
     }
 
     @Override
@@ -77,6 +90,8 @@ final class Loopback implements HttpTransport {
             naming.dispatch(exchange);
         } else if (rawPath.contains("/common/")) {
             affinity.dispatch(exchange);
+        } else if (rawPath.contains("/txn/")) {
+            transactions.dispatch(exchange);
         } else {
             ejb.dispatch(exchange);
         }

@@ -130,7 +130,7 @@ class SessionAffinityTest {
     void openAlsoSetsTheCookie() throws Exception {
         FakeContainer container = new FakeContainer();
         container.registerStateful("CounterBean", TestBeans.CounterBean::new);
-        EjbDispatcher ejb = new EjbDispatcher(container, SecurityBridge.NONE,
+        EjbDispatcher ejb = new EjbDispatcher(container, SecurityBridge.NONE, TransactionBridge.NONE,
                 new org.glassfish.orb.http.protocol.JavaSerializationMarshaller(),
                 new InvocationRegistry(), new SessionAffinity("instance-7"));
 
@@ -153,7 +153,7 @@ class SessionAffinityTest {
     void invocationsDoNotResendTheCookie() throws Exception {
         FakeContainer container = new FakeContainer();
         container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
-        EjbDispatcher ejb = new EjbDispatcher(container, SecurityBridge.NONE,
+        EjbDispatcher ejb = new EjbDispatcher(container, SecurityBridge.NONE, TransactionBridge.NONE,
                 new org.glassfish.orb.http.protocol.JavaSerializationMarshaller(),
                 new InvocationRegistry(), new SessionAffinity("instance-7"));
 

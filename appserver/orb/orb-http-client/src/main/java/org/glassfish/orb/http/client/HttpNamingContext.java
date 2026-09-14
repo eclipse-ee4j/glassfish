@@ -69,6 +69,13 @@ public class HttpNamingContext implements Context {
     private final Hashtable<Object, Object> environment;
     private final String contextPath;
 
+    /**
+     * Whether a proxy has been built from this context's transport. Once one
+     * has, closing the context must not close the transport underneath it.
+     */
+    private final java.util.concurrent.atomic.AtomicBoolean lentToProxies =
+            new java.util.concurrent.atomic.AtomicBoolean();
+
     public HttpNamingContext(ClientConfiguration config, Hashtable<?, ?> environment) {
         this(config, new JdkHttpTransport(config), environment);
     }
@@ -160,6 +167,9 @@ public class HttpNamingContext implements Context {
     private Object resolve(Object value) {
         if (value instanceof RemoteEjbReference ref) {
             try {
+                // From here the client outlives this context: the proxy about
+                // to be returned will use it long after close().
+                lentToProxies.set(true);
                 Class<?> view = Class.forName(ref.viewClassName(), false, contextClassLoader());
                 EjbLocator locator = new EjbLocator(ref.appName(), ref.moduleName(),
                         ref.distinctName(), ref.beanName(), ref.sessionId());
@@ -402,9 +412,27 @@ public class HttpNamingContext implements Context {
         return "";
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Does not close the transport once a proxy has been handed out.
+     *
+     * <p>Looking a bean up and then closing the context is the ordinary shape
+     * of JNDI code, and an IIOP stub survives it - the stub is its own object
+     * with its own lifetime. A proxy from here shares this context's
+     * connection pool, so closing that pool turned every such proxy into one
+     * that answers "IOException: closed" on first use, which is a trap laid
+     * for correctly written code.
+     *
+     * <p>A context that handed out nothing still closes what it opened, so the
+     * common case of a lookup that found no bean releases its resources
+     * immediately.
+     */
     @Override
     public void close() {
-        client.close();
+        if (!lentToProxies.get()) {
+            client.close();
+        }
     }
 
     /** A trivial {@link NamingEnumeration} over an already-materialised list. */

@@ -178,6 +178,26 @@
             <artifactId>orb-iiop</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-glassfish</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
 
         <!-- glassfish-jmx -->

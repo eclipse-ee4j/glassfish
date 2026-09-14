@@ -40,6 +40,7 @@
         <module>orb-http-protocol</module>
         <module>orb-http-client</module>
         <module>orb-http-server</module>
+        <module>orb-http-glassfish</module>
         <module>orb-http-codec-fory</module>
     </modules>
 </project>

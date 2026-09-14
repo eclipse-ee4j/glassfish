@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -70,6 +70,12 @@ public final class AdminConstants {
     public static final String kLoggerName = AdminLoggerInfo.ADMIN_LOGGER;
 
     public static final String DOMAIN_ADMIN_GROUP_NAME = "asadmin";
+
+    /**
+     * HTTP header with the real remote host of the Admin Console user, sent by the Admin Console
+     * on its requests to the co-located admin backend.
+     */
+    public static final String GLASSFISH_REMOTE_HOST_HEADER = "X-GlassFish-Remote-Host";
 
     public static final String AS_INSTALL_DIR_NAME = Path.of(System.getProperty(INSTALL_ROOT.getSystemPropertyName()))
         .getFileName().toString();

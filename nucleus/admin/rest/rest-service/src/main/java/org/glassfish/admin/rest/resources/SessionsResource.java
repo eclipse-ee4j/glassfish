@@ -17,8 +17,8 @@
 
 package org.glassfish.admin.rest.resources;
 
+import com.sun.enterprise.admin.util.GenericAdminAuthenticator;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.util.net.NetUtils;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -134,7 +134,7 @@ public class SessionsResource extends AbstractResource {
         // 30 minutes), regardless of the Admin Session Timeout setting. Other REST
         // clients (asadmin, scripts, ...) keep the rest-config default.
         // See issue #24982.
-        if (isFromAdminConsole(grizzlyRequest)) {
+        if (GenericAdminAuthenticator.isLocalAdminConsoleRequest(grizzlyRequest)) {
             Integer adminSessionTimeout = getAdminSessionTimeout();
             if (adminSessionTimeout != null) {
                 return adminSessionTimeout;
@@ -145,18 +145,6 @@ public class SessionsResource extends AbstractResource {
             inactiveSessionLifeTime = Integer.parseInt(restConfig.getSessionTokenTimeout());
         }
         return inactiveSessionLifeTime;
-    }
-
-    /**
-     * The admin console always runs co-located with the DAS and is the only
-     * client that sends the {@code X-GlassFish-Remote-Host} header. Restricting
-     * the admin-session timeout to such requests means a remote REST client
-     * cannot influence its own token lifetime. This mirrors the check in
-     * {@code GenericAdminAuthenticator}.
-     */
-    private boolean isFromAdminConsole(final Request grizzlyRequest) {
-        return NetUtils.isLocal(grizzlyRequest.getRemoteAddr())
-                && grizzlyRequest.getHeader("X-GlassFish-Remote-Host") != null;
     }
 
     /**

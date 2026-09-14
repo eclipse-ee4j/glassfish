@@ -97,6 +97,10 @@ on the class path, not by the application:
 - `fory` - [Apache Fory](https://fory.apache.org/), in the optional
   `orb-http-codec-fory` module.
 
+The set is open: a codec is one class and one service file, and the Fory
+module is a complete worked example of both. See
+[Writing a codec](#writing-a-codec).
+
 Adding the Fory module to the class path is the entire change. No
 import, no property, no configuration file: the codec is found through
 `META-INF/services`, ranked above the built-in one, and used. Inside the
@@ -241,6 +245,105 @@ ordinary class path and nothing to bridge - set
 ```
 -Dorg.glassfish.orb.http.codec.fory.codegen=true
 ```
+
+## Writing a codec
+
+A codec is a class implementing `org.glassfish.orb.http.protocol.Marshaller`
+and a service file naming it. `orb-http-codec-fory` is the reference
+implementation: everything below is something that module does, and the
+reason it does it.
+
+### The contract
+
+| Method | What it means |
+| --- | --- |
+| `codec()` | The token carried in the content type, `application/x-gf-<codec>-<kind>`. Non-empty, and unique: when two providers claim one token, the higher ranked keeps it. |
+| `priority()` | The rank among the codecs present. The built-in `jser` is `0` and is the floor; the highest wins, ties are broken by token so every JVM chooses the same. Fory ranks `100`. |
+| `newWriter(OutputStream)` | Returns a writer for one message. The transport writes several objects in sequence to the same stream. |
+| `newReader(InputStream, ClassLoader, ObjectInputFilter)` | Returns a reader for one message. On the server the loader is the application's, not the container's. The filter is never optional. |
+
+### What the interface cannot enforce
+
+These are the parts a codec gets wrong without any test failing, so they
+are spelled out.
+
+- **Apply the filter.** A codec that decodes any class the wire names
+  reopens the deserialization gadget vector that the filter closes for
+  Java serialization. `ForyMarshaller` refuses a null filter, and
+  `FilterBackedTypeChecker` puts every class name through the same
+  `ObjectInputFilter` before Fory may instantiate it. It resolves the name
+  with `initialize=false`, so no static initialiser runs before the filter
+  has decided. It reports the stream counters as `0` rather than `-1`,
+  because a filter built by `ObjectInputFilter.Config.createFilter` rejects
+  negative values and would otherwise refuse every class.
+- **Frame your own objects.** Where one object ends must be a property of
+  the codec's format, not of the library underneath. Fory's frame is a kind
+  byte, a length, and the payload, and the reader rejects an unknown kind, a
+  negative length and a truncated payload.
+- **Keep reading and writing apart.** A library that caches resolved classes
+  and shares one instance for both directions pre-admits, on the way in,
+  every class it has written on the way out. The filter is then present and
+  never consulted. Fory keeps separate writer and reader instances, with
+  readers also keyed by the filter in force.
+- **Do not pin a deployment.** Caches keyed by class loader must be weak, or
+  an undeployed application stays in memory.
+- **Preserve what callers already observe.** Remote calls rely on Java
+  serialization's object identity, cycles and `transient` fields. Fory is
+  configured to match all three. Exceptions go through Java serialization
+  inside their own frame, with stack traces materialised first, because
+  that is where a faster encoding silently lost them.
+
+### Announcing it
+
+```
+META-INF/services/org.glassfish.orb.http.protocol.Marshaller
+```
+
+containing the implementation's class name. On a plain class path, such as
+a client JVM, that is the whole of it: `Marshallers` finds the provider, and
+a provider that throws while loading is skipped rather than allowed to stop
+the transport.
+
+### Inside GlassFish
+
+Every module is an OSGi bundle, and a `ServiceLoader` call in one bundle
+does not see a provider in another. Two things close that gap, and a codec
+bundle should support both:
+
+- `OsgiCodecScanner`, in `orb-http-glassfish`, reads the service file out of
+  every installed bundle and registers each provider through
+  `Marshallers.register`, loaded with the class loader of the bundle that
+  declared it. At startup it logs `ORB over HTTP codecs available: ...` -
+  the line that says whether a codec was found.
+- Aries SPI-Fly, which GlassFish ships, bridges `ServiceLoader` for bundles
+  that carry these headers:
+
+  ```
+  Provide-Capability: osgi.serviceloader;osgi.serviceloader="org.glassfish.orb.http.protocol.Marshaller"
+  Require-Capability: osgi.extender;filter:="(osgi.extender=osgi.serviceloader.registrar)"
+  ```
+
+Building the bundle has three traps, each of which produces a bundle that
+builds cleanly and fails at runtime. The Fory module's `pom.xml` shows the
+working configuration:
+
+- A library that publishes no OSGi metadata has to be embedded with
+  `Embed-Dependency` and `Embed-Transitive`. Placed loose in `modules/`, it
+  does not resolve.
+- The `glassfish-jar` lifecycle only writes the manifest. Without an
+  explicit `bundle` goal, the manifest lists embedded jars that are not in
+  the bundle.
+- A library that uses `sun.misc.Unsafe` needs
+  `sun.misc;resolution:=optional` in `Import-Package`. Excluding `sun.*`
+  wholesale does not stop the library asking for it: the codec fails on
+  first use, from a static initialiser.
+
+### Compatibility
+
+Adding a codec cannot break a peer that lacks it. The codec is chosen per
+request from the content type, the reply is written in the codec the
+request used, and a client whose codec the server cannot read falls back to
+`jser` and retries once.
 
 ## Module map
 

@@ -1,0 +1,251 @@
+/*
+ * Copyright (c) 2007, 2019 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+/* CSS Document */
+/*BUTTON*/
+.Btn1Mni_sun4, .Btn1MniHov_sun4, .Btn1MniDis_sun4, .Btn2Mni_sun4, .Btn2MniHov_sun4, .Btn2MniDis_sun4, .Btn1_sun4, .Btn1Hov_sun4, .Btn1Dis_sun4, .Btn2_sun4, .Btn2Hov_sun4, .Btn2Dis_sun4,
+.MstDiv_sun4 .Btn1_sun4, .MstDiv_sun4 .Btn1Mni_sun4, .MstDiv_sun4 .Btn1Hov_sun4, .MstDiv_sun4 .Btn1MniHov_sun4, .MstDiv_sun4 .Btn2_sun4, .MstDiv_sun4 .Btn2Mni_sun4, .MstDiv_sun4 .Btn2Hov_sun4, .MstDiv_sun4 .Btn2MniHov_sun4 {
+    padding:1px 0 1px 0;
+}
+.mastheadButton_4_sun4 a:link, .mastheadButton_4_sun4 a:visited, .mastheadButton_4_sun4 a:hover {
+    padding:1px 5px 2px 7px;
+}
+.mastheadButton_4_sun4 {
+    display:inline;
+    margin:0;
+    padding:0 1px;
+}
+/**/
+/* progress bar */
+.progressBar_4_sun4 .barContainer_sun4 {
+    margin-bottom:-2px;
+}
+.progressBar_4_sun4 .failure_sun4{
+    margin-bottom:-1px;
+}
+.progressBar_4_sun4 .buttonsRight_sun4 {
+    margin: -2px 0 -4px 0;
+}
+.progressBar_4_sun4 .buttonsBottom_sun4 {
+    margin: 10px 0 0 -1px;
+}
+/**/
+
+/* CHECKBOXES AND RADIO BUTTONS */
+.CbLbl_sun4, CbLblDis_sun4 {
+    vertical-align: 1px;
+}
+.CbImg_sun4, .CbImgDis_sun4 {
+    vertical-align: -6px;
+}
+/**/
+
+/* PROPERTY SHEET */
+div.ConTblCl2Div_sun4 .CbSpn_sun4 input {
+    margin-top:-5px;
+}
+/**/
+
+/* LEFT PANE HELP */
+.LftHlpHlp_sun4 {
+    clear:none;
+    width:30%;
+}
+.LftHlpBdy_sun4 {
+    clear:right;
+    width:69.8%;
+}
+.LftHlpBtm_sun4 {
+    float:left;
+}
+.LftHlpHlp_sun4, .LftHlpBdy_sun4 {
+    float:left;
+    height:94.7%;
+}
+/*---*/
+
+/* SCHEDULER [originalName: DATE AND TIME]*/
+.DatSelDiv_sun4 {
+    padding:0 3px;
+}
+.DatCalTbl_sun4 {
+    border:2px solid #bec7cc;
+}
+.DatCalTbl_sun4 td, .DatCalTbl_sun4 th  {
+    border:none;
+    width:29px;
+}
+/*---*/
+/*CALENDAR */
+.CalPopShd2Div_sun4 {
+    position:relative;
+    width:17.75em;
+    padding:0 0 0 0;
+}
+
+.CalPopDiv_sun4 .DatCalDiv_sun4 {
+    float:left;
+    width:16.8em;
+    margin-left:0;
+    padding-left:1px;
+}
+.CalPopDiv_sun4 .DatCalDiv_sun4 select {
+    margin:1px 1px 1px 2px;
+    vertical-align:top;
+    clear:none;
+}
+.CalPopDiv_sun4 .DatCalDiv_sun4 img{
+    margin:0;
+    padding:0;
+    clear:none;
+}
+.DatCalRight_sun4 select, .DatCalRight_sun4 a {
+    text-align:right; 
+}
+/*---*/
+/* COMMON TASKS */
+.commonTask_4_sun4 .infoPanel_sun4 .info_sun4 {
+    margin-right:1px;
+}
+.commonTask_4_sun4 .TskPgeTskLftBtm_sun4 {
+    bottom: -.49em;
+}
+.commonTask_4_sun4 .TskPgeTskRghtBtm_sun4 {
+    bottom: -.49em;
+    right:-.1em;
+}     
+.commonTask_4_sun4 .TskPgeTskRghtTp_sun4 {
+    right:-.1em;
+}
+.commonTask_4_sun4 .TskPgeTskRghtBrdr_sun4 {
+    height:1.3em;
+    top: 20%;
+    right:-.1em;
+}
+.commonTask_4_sun4 .TskPgeTskLftBtm_sun4,.commonTask_4_sun4 .TskPgeTskLftTp_sun4,.commonTask_4_sun4 .TskPgeTskRghtBtm_sun4,.commonTask_4_sun4 .TskPgeTskRghtTp_sun4,.commonTask_4_sun4 .TskPgeTskRghtBrdr_sun4 {
+    cursor:hand;
+}
+.commonTask_4_sun4 .bullet_sun4 {
+    vertical-align:middle;
+}
+/*---*/
+
+/* EDITABLE LIST */
+.EdtLstTbl_sun4 .EdtLstAddTxtTd_sun4 .TxtFld_sun4,
+.EdtLstTbl_sun4 .EdtLstAddTxtTd_sun4 .TxtFldDis_sun4 {
+    height: 1.6em;
+}
+/* HELP WINDOW */
+.HlpStpTab_sun4 {
+    margin-right:-10px;
+}
+/*---*/
+/* LEFT PANE HELP */
+.LftHlpHlp_sun4 {
+    clear:none;
+    width:30%;
+}
+.LftHlpBdy_sun4 {
+    clear:right;
+    width:69.8%;
+}
+.LftHlpBtm_sun4 {
+    float:left;
+}
+.LftHlpHlp_sun4, .LftHlpBdy_sun4 {
+    float:left;
+    height:94.7%;
+}
+/*---*/
+
+/* TABLE [originalName: ACTION TABLE] */
+table.Tbl_sun4 {
+    width:100%;
+    padding:0;
+    margin:0;
+}
+.TblHdrTxt_sun4 {width:100%;}
+.TblMgn_sun4 {margin:0;}
+span.TblTtlTxtSpn_sun4 {float:left;}
+span.TblTtlMsgSpn_sun4 {float:right;margin-top:1px;}
+table.Tbl_sun4 td.TblActTd_sun4, table.Tbl_sun4 td.TblActTdLst_sun4 {padding:6px;vertical-align:middle;} 
+table.Tbl_sun4 td.TblActTd_sun4 img {margin-top:1px;} 
+table.Tbl_sun4 td.TblActTdLst_sun4 img {margin-top:2px;} 
+table.Tbl_sun4 td.TblPnlTd_sun4 .TblPnlHlpTxt_sun4 {width:97%;}
+table.Tbl_sun4 table.TblHdrTbl_sun4 img {margin-right:5px;margin-left:5px;padding-right:0;padding-left:0;}
+table.Tbl_sun4 a.TblHdrImgLnk_sun4 img {margin-right:2px; padding-right:0;}
+table.Tbl_sun4 span.TblColHdrSrtDis_sun4 img {margin-right:2px; padding-right:0;}
+table.Tbl_sun4 .TblHdrSrtNum_sun4 {width:auto;}
+table.Tbl_sun4 td.TblFtrRow_sun4 {padding:5px 10px;}
+table.Tbl_sun4 .TblTdLyt_sun4 img, table.Tbl_sun4 .TblTdSrt_sun4 img, table.Tbl_sun4 .TblTdAlm_sun4 img,  table.Tbl_sun4 .TblTdSrtAlm_sun4 img {margin-bottom:0;}
+/*Table Sub-Grouping */
+table.Tbl_sun4 .TblGrpRow_sun4 {background-repeat:repeat-x;background-position:left bottom;vertical-align:bottom;padding:3px 5px 4px 3px;}
+table.Tbl_sun4 .TblGrpLft_sun4 input {margin:-1px 0px;}
+.TblGrpTxt_sun4 {margin:0px 3px;}
+table.Tbl_sun4 .TblGrpCbImg_sun4 img {margin-left:-4px;margin-bottom:-3px;}
+/* For when appearing in titledbox*/
+.TtldBoxInrDiv_sun4 .Tbl_sun4 {margin:0px;width:96%;}
+/*---*/
+
+/* TABLE - LIGHTER WEIGHT DESIGN */
+table.TblLt_sun4 {width:98%;padding:0px;margin-left:10px;border:none}
+table.TblLt_sun4 caption.TblTtlTxt_sun4 {padding-left:3px;background:none}
+table.Tbl_sun4 td.TblFtrRow_sun4 {padding:5px 5px 5px 10px}
+/*---*/
+
+/* VERSION DIALOG */
+.VrsBdy_sun4 {
+    height:100%;
+}
+/*---*/
+/* WIZARD */
+.WizStp_sun4 {
+    width:29.7%;
+    border-right:1px solid #98A0A5;
+}
+.WizBdy_sun4 {
+    border-left:0;
+}
+.WizStp_sun4, .WizBdy_sun4 {
+    top:75px;
+    height:86.9%;
+}
+.WizHlpDiv_sun4 {
+    top:76px;
+    height:83.6%;
+    width:29.7%;
+    border-right:1px solid #98A0A5;
+}
+.WizNoTabs_sun4 .WizStp_sun4, .WizNoTabs_sun4 .WizBdy_sun4 {
+    height:91.8%;
+}
+.WizBtm_sun4 {
+    float:left;
+    padding:0 13px 0 0;
+    z-index:10;
+}
+.WizBtmSpacer_sun4 {
+    width:30.5%; 
+    float:left; 
+    clear:none; 
+}
+/*---*/
+
+/* FILE CHOOSER */
+.ChoSortByDiv_sun4 {
+    margin-bottom: 10px;
+}
+/*---*/

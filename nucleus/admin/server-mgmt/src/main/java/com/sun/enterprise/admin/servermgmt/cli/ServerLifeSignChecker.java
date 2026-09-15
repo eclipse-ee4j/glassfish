@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -109,6 +109,13 @@ public class ServerLifeSignChecker {
                     return true;
                 }
             }
+            // The pid file is written when the server is ready, so check it before the endpoints.
+            // Each endpoint check opens a new connection to the starting server.
+            if (checks.isPidFile()) {
+                if (ProcessUtils.loadPid(pidFile) == null) {
+                    return false;
+                }
+            }
             if (checks.isCustomEndpoints()) {
                 if (!isListeningOnAllEndpoints(checks.getCustomEndpoints())) {
                     return false;
@@ -116,11 +123,6 @@ public class ServerLifeSignChecker {
             }
             if (checks.isAdminEndpoint()) {
                 if (!isListeningOnAnyEndpoint(adminEndpointsSupplier.get())) {
-                    return false;
-                }
-            }
-            if (checks.isPidFile()) {
-                if (ProcessUtils.loadPid(pidFile) == null) {
                     return false;
                 }
             }

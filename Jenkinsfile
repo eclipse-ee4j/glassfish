@@ -551,13 +551,16 @@ pipeline {
                               sh (label: 'mvn install', script: '''
                               mvn -B -e -ntp install -Pfastest,ci -T4C
                               ''')
-                              sh (label: 'Pack for Test Stages', script: '''
+                              sh (label: 'Pack for Test Stages', script: '''#!/usr/bin/env bash
+                              set -euox pipefail
                               mvn -B -e -ntp clean
                               mkdir -p ${BUNDLES_DIR}
-                              tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
-                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main/distributions org/glassfish/main/extras org/glassfish/main/tests org/glassfish/main/nucleus-parent org/glassfish/main/glassfish-nucleus-parent org/glassfish/main/glassfish-parent org/glassfish/main/glassfish-qa-config | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
+                              tar -c -C ${WORKSPACE} runtests.sh appserver/tests/{common_test.sh,gftest.sh,appserv-tests,quicklook} \
+                               | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
+                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main \
+                               | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
                               ''')
-                              sh (label: "Copy to ${BUNDLES_DIR}", script: '''
+                              sh (label: "Copy to ${BUNDLES_DIR} for downloads", script: '''
                               # For easy access to built artifacts and using them elsewhere
                               gfVersion="$(mvn -B -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)"
                               mvn_copy="mvn -B -ntp -N dependency:copy -DoutputDirectory=${BUNDLES_DIR}"

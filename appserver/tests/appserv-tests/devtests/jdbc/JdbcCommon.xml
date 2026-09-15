@@ -360,8 +360,33 @@
    </condition>
 
    <target name="start-derby" depends="init-common">
+       <echo message="Checking if port 1527 is available before starting Derby..."/>
+       <condition property="port.occupied.before">
+           <socket server="localhost" port="1527"/>
+       </condition>
+       <echo message="Port 1527 occupied before start: ${port.occupied.before}"/>
+
        <antcall target="start-derby-aix"/>
        <antcall target="start-derby-nonaix"/>
+
+       <echo message="Verifying Derby is listening on port 1527..."/>
+       <waitfor maxwait="30" maxwaitunit="second" checkevery="2" checkeveryunit="second" timeoutproperty="derby.start.timeout">
+           <socket server="localhost" port="1527"/>
+       </waitfor>
+
+       <sequential if:set="derby.start.timeout">
+           <echo message="Derby failed to start on port 1527 within 30 seconds"/>
+           <echo message="=== Derby Log (last 50 lines) ==="/>
+           <loadfile property="derby.log.content" srcFile="${env.S1AS_HOME}/databases/derby.log" failonerror="false">
+               <filterchain>
+                   <tailfilter lines="50"/>
+               </filterchain>
+           </loadfile>
+           <echo message="${derby.log.content}"/>
+           <fail message="Derby failed to start on port 1527. See Derby logs above."/>
+       </sequential>
+
+       <echo message="Derby successfully started and listening on port 1527"/>
    </target>
 
    <target name="start-derby-aix" if="aix">

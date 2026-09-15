@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation. All rights reserved.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -125,6 +126,10 @@ public class RestSessionManager {
          * @return true if the session has not timed out. false otherwise
          */
         public boolean isSessionActive() {
+            // A non-positive timeout means the session never expires.
+            if (inactiveSessionLifeTime <= 0) {
+                return true;
+            }
             return lastAccessedTime + inactiveSessionLifeTime > System.currentTimeMillis();
         }
 

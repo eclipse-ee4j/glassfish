@@ -250,6 +250,34 @@ public class WeldUtils {
     }
 
     /**
+     * Get the names of any annotation types that are applied to beans, which should enable CDI processing even in the
+     * absence of a beans.xml descriptor.
+     *
+     * @param context The DeploymentContext
+     *
+     * @return An array of annotation type names; The array could be empty if none are found.
+     */
+    public static String[] getCDIEnablingAnnotations(DeploymentContext context) {
+        Set<String> result = new HashSet<>();
+
+        Types types = getTypes(context);
+        if (types != null) {
+            for (Type type : types.getAllTypes()) {
+                if (!(type instanceof AnnotationType)) {
+                    for (AnnotationModel annotationModel : type.getAnnotations()) {
+                        AnnotationType annotationType = annotationModel.getType();
+                        if (isCDIEnablingAnnotation(annotationType)) {
+                            result.add(annotationType.getName());
+                        }
+                    }
+                }
+            }
+        }
+
+        return result.toArray(new String[0]);
+    }
+
+    /**
      * Get the names of any classes that are annotated with bean-defining annotations, which should enable CDI processing
      * even in the absence of a beans.xml descriptor.
      *

@@ -43,8 +43,12 @@ import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_CLASSES_META_INF_BEANS_XML;
 import static org.glassfish.weld.connector.WeldUtils.WEB_INF_LIB;
 import static org.glassfish.weld.connector.WeldUtils.getBeanDiscoveryMode;
+import static org.glassfish.weld.connector.WeldUtils.getBeansXmlInputStream;
+import static org.glassfish.weld.connector.WeldUtils.getCDIEnablingAnnotations;
 import static org.glassfish.weld.connector.WeldUtils.hasExtension;
 import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanArchive;
+import static org.glassfish.weld.connector.WeldUtils.isImplicitBeanDiscoveryEnabled;
+import static org.glassfish.weld.connector.WeldUtils.isValidBdaBasedOnExtensionAndBeansXml;
 
 /**
  * Implementation of the Sniffer for Weld.
@@ -169,6 +173,33 @@ public class WeldSniffer extends GenericSniffer {
     @Override
     public String[] getContainersNames() {
         return containers;
+    }
+
+    @Override
+    public String[] getAnnotationNames(DeploymentContext context) {
+        // First see if bean-discovery-mode is explicitly set to "none".
+        InputStream beansXmlInputStream = getBeansXmlInputStream(context);
+        if (beansXmlInputStream != null) {
+            try {
+                String beanDiscoveryMode = getBeanDiscoveryMode(beansXmlInputStream);
+                if (beanDiscoveryMode.equals("none")) {
+                    return null;
+                }
+            } finally {
+                try {
+                    beansXmlInputStream.close();
+                } catch (IOException notignore) {
+                    LOG.log(DEBUG, "", notignore);
+                }
+            }
+        }
+
+        // Make sure it's not an extension
+        if (!isValidBdaBasedOnExtensionAndBeansXml(context.getSource())) {
+            return null;
+        }
+
+        return isImplicitBeanDiscoveryEnabled(context) ? getCDIEnablingAnnotations(context) : null;
     }
 
     // ### Private and protected methods

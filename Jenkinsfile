@@ -31,10 +31,12 @@
 // maximum cpu usage per Container is 8
 // maximum cpu usage is 44800m
 
+def javaVersion = '21'
+def mvnVersion = '3.9.16'
+// You can add -Psnapshots temporarily, if needed.
+def additionalMvnArgs = ''
 def antVersion = '1.10.18'
 def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
-def mvnVersion = '3.9.16'
-def javaVersion = '21'
 
 // Job groups are defined here, because sometimes we move them and it is easier
 // when these lists are close together.
@@ -113,7 +115,7 @@ spec:
     - name: "HOME"
       value: "/home/jenkins"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
+      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication ${additionalMvnArgs}"
     - name: "ANT_HOME"
       value: "${antHome}"
     - name: "ANT_VERSION"
@@ -446,7 +448,7 @@ def generateMvnTestPod(job, label, command) {
 }
 
 def generateMvnTestPod(job, label) {
-   return generateMvnTestPod(job, label, "mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd")
+   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -pl :${job} -amd")
 }
 
 pipeline {
@@ -540,25 +542,28 @@ pipeline {
                            timeout(time: 1, unit: 'HOURS') {
                               dumpSysInfo()
                               sh (label: 'mvn clean validate', script:  '''
-                              mvn -B -e -fae clean validate -Ptck,set-version-id,snapshots
+                              mvn -B -e -fae -ntp clean validate -Ptck,set-version-id
                               ''')
 // Makes build 6 minutes slower.
 //                              sh (label: 'Download Maven Plugins', script: '''
 //                              mvn -B -e dependency:resolve-plugins -T8C
 //                              ''')
                               sh (label: 'mvn install', script: '''
-                              mvn -B -e install -Pfastest,ci,snapshots -T4C
+                              mvn -B -e -ntp install -Pfastest,ci -T4C
                               ''')
-                              sh (label: 'Pack for Test Stages', script: '''
-                              mvn -B -e clean
+                              sh (label: 'Pack for Test Stages', script: '''#!/usr/bin/env bash
+                              set -euox pipefail
+                              mvn -B -e -ntp clean
                               mkdir -p ${BUNDLES_DIR}
-                              tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
-                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main/distributions org/glassfish/main/extras org/glassfish/main/tests org/glassfish/main/nucleus-parent org/glassfish/main/glassfish-nucleus-parent org/glassfish/main/glassfish-parent org/glassfish/main/glassfish-qa-config | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
+                              tar -c -C ${WORKSPACE} runtests.sh appserver/tests/{common_test.sh,gftest.sh,appserv-tests,quicklook} \
+                               | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
+                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main \
+                               | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
                               ''')
-                              sh (label: "Copy to ${BUNDLES_DIR}", script: '''
+                              sh (label: "Copy to ${BUNDLES_DIR} for downloads", script: '''
                               # For easy access to built artifacts and using them elsewhere
-                              gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-                              mvn_copy="mvn -N dependency:copy -DoutputDirectory=${BUNDLES_DIR}"
+                              gfVersion="$(mvn -B -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)"
+                              mvn_copy="mvn -B -ntp -N dependency:copy -DoutputDirectory=${BUNDLES_DIR}"
                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:glassfish:${gfVersion}:zip"
                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:web:${gfVersion}:zip"
                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
@@ -597,7 +602,7 @@ pipeline {
                         slaveConnectTimeout: 300,
                         yaml: mvnHeavyContainerCfg
                      ) {
-                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots")()
+                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e -ntp clean verify -Pqa,ci,ci-main-tests")()
                      }
                   }
                }

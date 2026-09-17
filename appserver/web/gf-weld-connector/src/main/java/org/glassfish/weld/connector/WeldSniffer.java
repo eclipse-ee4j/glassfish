@@ -31,7 +31,6 @@ import org.glassfish.internal.deployment.GenericSniffer;
 import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.ERROR;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_JAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.EXPANDED_RAR_SUFFIX;
 import static org.glassfish.weld.connector.WeldUtils.JAR_SUFFIX;
@@ -114,15 +113,6 @@ public class WeldSniffer extends GenericSniffer {
             if (!isWeldArchive) {
                 // Check jars in root dir of rar
                 isWeldArchive = scanLibDir(context, archive, "");
-            }
-        }
-
-        if (!isWeldArchive) {
-            try {
-                isWeldArchive = WeldUtils.isImplicitBeanArchive(context, archive)
-                    || hasCDIEnablingAnnotationsInWebInfClasses(context, archive);
-            } catch (IOException ex) {
-                LOG.log(ERROR, ex.getMessage(), ex);
             }
         }
 

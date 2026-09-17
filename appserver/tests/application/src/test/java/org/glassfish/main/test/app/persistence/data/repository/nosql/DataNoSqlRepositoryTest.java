@@ -15,6 +15,9 @@
  */
 package org.glassfish.main.test.app.persistence.data.repository.nosql;
 
+import java.io.File;
+import java.net.http.HttpResponse;
+
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -30,9 +33,6 @@ import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.DockerClientFactory;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
-
-import java.io.File;
-import java.net.http.HttpResponse;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.getAsadmin;

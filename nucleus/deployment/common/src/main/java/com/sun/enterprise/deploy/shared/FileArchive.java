@@ -49,6 +49,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
@@ -127,9 +129,12 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * so the result is remembered until this archive (or one of its subarchives) is modified.
      * <p>
      * The archive of a deployed application is referenced until it is undeployed, so callers which
-     * know that no more enumerations are coming should call {@link #releaseCachedEntryNames()}.
+     * know that no more enumerations are coming should call {@link #clearCaches()}.
+    * <p>
+    * The first dirty operation detaches the current cache; the last publishes a fresh empty cache.
+    * Readers retain their captured state, so an overlapping scan can only populate a detached cache.
      */
-    private final Map<String, List<String>> entryNamesCache = new ConcurrentHashMap<>();
+    private final AtomicReference<CacheState> entryNamesCacheState = new AtomicReference<>(new CacheState(0));
 
     public FileArchive() {
     }
@@ -149,15 +154,16 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             throw new IOException("Wrong scheme for FileArchive : " + uri.getScheme());
         }
 
-        this.uri = uri;
-        archive = new File(uri);
-        if (!archive.exists()) {
-            throw new FileNotFoundException(uri.getSchemeSpecificPart());
+        // Opening changes only this archive's view, not the contents of its enclosing archives.
+        try (DirtyOperation operation = new DirtyOperation(List.of(this))) {
+            this.uri = uri;
+            archive = new File(uri);
+            if (!archive.exists()) {
+                throw new FileNotFoundException(uri.getSchemeSpecificPart());
+            }
+            isOpenedOrCreated = true;
+            staleFileManager = StaleFileManager.Util.getInstance(archive);
         }
-        isOpenedOrCreated = true;
-        staleFileManager = StaleFileManager.Util.getInstance(archive);
-        // Opening does not change anything on disk, so only this archive's own entries are stale.
-        entryNamesCache.clear();
     }
 
     /**
@@ -189,25 +195,27 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public void create(URI uri) throws IOException {
-        this.uri = uri;
-        archive = new File(uri);
-        /*
-         * Get the stale file manager before creating the directories; it's slightly faster that way.
-         */
-        staleFileManager = StaleFileManager.Util.getInstance(archive);
-        if (!archive.exists() && !archive.mkdirs()) {
-            throw new IOException("Unable to create directory for " + archive.getAbsolutePath());
-        }
+        try (DirtyOperation operation = beginDirtyOperation()) {
+            this.uri = uri;
+            archive = new File(uri);
+            /*
+             * Get the stale file manager before creating the directories; it's slightly faster that way.
+             */
+            staleFileManager = StaleFileManager.Util.getInstance(archive);
+            if (!archive.exists() && !archive.mkdirs()) {
+                throw new IOException("Unable to create directory for " + archive.getAbsolutePath());
+            }
 
-        isOpenedOrCreated = true;
-        releaseCachedEntryNames();
+            isOpenedOrCreated = true;
+        }
     }
 
     /**
-     * close the abstract archive
+     * close the abstract archive and release caches
      */
     @Override
     public void close() throws IOException {
+        clearCaches();
     }
 
     /**
@@ -216,7 +224,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     @Override
     public boolean delete() {
         // delete the directory structure...
-        try {
+        try (DirtyOperation operation = beginDirtyOperation()) {
             final boolean result = deleteDir(archive);
             /*
              * Create the stale file marker file, if needed.
@@ -225,8 +233,6 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             return result;
         } catch (IOException e) {
             return false;
-        } finally {
-            releaseCachedEntryNames();
         }
     }
 
@@ -266,6 +272,10 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     /**
      * Returns an enumeration of the module file entries with the specified prefix. All elements in the enumeration are of
      * type String. Each String represents a file name relative to the root of the module.
+      * <p>
+      * Enumerations overlapping a mutation need not represent a consistent filesystem snapshot, but their scans
+      * are not retained in the current cache. Mutations through other archive instances or external tools require an
+      * explicit {@link #clearCaches()}.
      *
      * @param prefix the prefix of entries to be included
      * @return an enumeration of the archive file entries.
@@ -273,9 +283,22 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     @Override
     public Enumeration<String> entries(String prefix) {
         String key = prefix.replace('/', File.separatorChar);
-        List<String> namesList = entryNamesCache.computeIfAbsent(key,
-            p -> List.copyOf(getListOfFiles(new File(archive, p), deplLogger)));
-        return Collections.enumeration(namesList);
+        Map<String, List<String>> cache = entryNamesCacheState.get().entryNames;
+        if (cache != null) {
+            List<String> cachedNames = cache.get(key);
+            if (cachedNames != null) {
+                return Collections.enumeration(cachedNames);
+            }
+        }
+
+        // Scan outside ConcurrentHashMap operations so filesystem access does not hold its internal locks.
+        List<String> names = List.copyOf(getListOfFiles(new File(archive, key), deplLogger));
+        if (cache != null) {
+            // We mutate the previusly retrieved cache, never the current cache:
+            // a concurrent mutation or clear would replace the cache with a new cache which we shouldn't modify here with our stale info
+            cache.putIfAbsent(key, names);
+        }
+        return Collections.enumeration(names);
     }
 
     /**
@@ -328,28 +351,29 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public WritableArchive createSubArchive(String name) throws IOException {
-        String subEntryName = getFileSubArchivePath(name);
-        File subEntry = new File(subEntryName);
-        if (!subEntry.exists()) {
-            // time to create a new sub directory
-            if (!subEntry.exists() && !subEntry.mkdirs()) {
-                throw new IOException("Unable to create directory for " + subEntry.getAbsolutePath());
+        try (DirtyOperation operation = beginDirtyOperation()) {
+            String subEntryName = getFileSubArchivePath(name);
+            File subEntry = new File(subEntryName);
+            if (!subEntry.exists()) {
+                // time to create a new sub directory
+                if (!subEntry.exists() && !subEntry.mkdirs()) {
+                    throw new IOException("Unable to create directory for " + subEntry.getAbsolutePath());
+                }
+                deplLogger.log(DEBUG_LEVEL, "FileArchive.createSubArchive created dirs for {0}", subEntry.getAbsolutePath());
+            } else {
+                deplLogger.log(DEBUG_LEVEL, "FileArchive.createSubArchive found existing dir for {0}", subEntry.getAbsolutePath());
+                /*
+                 * This subdirectory already exists, so it might be marked as stale. Because this invocation is creating the subarchive
+                 * in the current archive, the subdirectory is no longer stale.
+                 */
+                staleFileManager().recordValidEntry(subEntry);
             }
-            deplLogger.log(DEBUG_LEVEL, "FileArchive.createSubArchive created dirs for {0}", subEntry.getAbsolutePath());
-        } else {
-            deplLogger.log(DEBUG_LEVEL, "FileArchive.createSubArchive found existing dir for {0}", subEntry.getAbsolutePath());
-            /*
-             * This subdirectory already exists, so it might be marked as stale. Because this invocation is creating the subarchive
-             * in the current archive, the subdirectory is no longer stale.
-             */
-            staleFileManager().recordValidEntry(subEntry);
+            final WritableArchive result = archiveFactory.createArchive(subEntry);
+            if (result instanceof AbstractReadableArchive) {
+                ((AbstractReadableArchive) result).setParentArchive(this);
+            }
+            return result;
         }
-        final WritableArchive result = archiveFactory.createArchive(subEntry);
-        if (result instanceof AbstractReadableArchive) {
-            ((AbstractReadableArchive) result).setParentArchive(this);
-        }
-        releaseCachedEntryNames();
-        return result;
     }
 
     /**
@@ -444,38 +468,51 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      */
     @Override
     public boolean renameTo(String name) {
-        boolean renamed = FileUtils.renameFile(archive, new File(name));
-        releaseCachedEntryNames();
-        return renamed;
+        try (DirtyOperation operation = beginDirtyOperation()) {
+            return FileUtils.renameFile(archive, new File(name));
+        }
     }
 
 
     @Override
     public WritableArchiveEntry putNextEntry(String name) throws java.io.IOException {
-        name = name.replace('/', File.separatorChar);
-        File newFile = new File(archive, name);
-        if (newFile.exists()) {
-            if (!deleteEntry(name, false /* isLogging */) && uri != null) {
-                deplLogger.log(Level.FINE, "Could not delete file {0} in FileArchive {1} during putNextEntry; continuing",
-                        new Object[] { name, uri.toASCIIString() });
+        DirtyOperation operation = beginDirtyOperation();
+        boolean entryCreated = false;
+        try {
+            name = name.replace('/', File.separatorChar);
+            File newFile = new File(archive, name);
+            if (newFile.exists()) {
+                if (!deleteEntry(name, false /* isLogging */) && uri != null) {
+                    deplLogger.log(Level.FINE, "Could not delete file {0} in FileArchive {1} during putNextEntry; continuing",
+                            new Object[] { name, uri.toASCIIString() });
+                }
+            }
+            // if the entry name contains directory structure, we need
+            // to create those directories first.
+            if (name.lastIndexOf(File.separatorChar) != -1) {
+                String dirs = name.substring(0, name.lastIndexOf(File.separatorChar));
+                File dirsFile = new File(archive, dirs);
+                if (!dirsFile.exists() && !dirsFile.mkdirs()) {
+                    throw new IOException("Unable to create directory for " + dirsFile.getAbsolutePath());
+                }
+            }
+            staleFileManager().recordValidEntry(newFile);
+            FileOutputStream outputStream = new FileOutputStream(newFile);
+            WritableArchiveEntry entry = new WritableArchiveEntry(() -> outputStream, () -> {
+                try {
+                    outputStream.close();
+                } finally {
+                    operation.close();
+                }
+            });
+            // Keep this archive and its ancestors dirty until the output entry has been closed.
+            entryCreated = true;
+            return entry;
+        } finally {
+            if (!entryCreated) {
+                operation.close();
             }
         }
-        // if the entry name contains directory structure, we need
-        // to create those directories first.
-        if (name.lastIndexOf(File.separatorChar) != -1) {
-            String dirs = name.substring(0, name.lastIndexOf(File.separatorChar));
-            File dirsFile = new File(archive, dirs);
-            if (!dirsFile.exists() && !dirsFile.mkdirs()) {
-                throw new IOException("Unable to create directory for " + dirsFile.getAbsolutePath());
-            }
-        }
-        staleFileManager().recordValidEntry(newFile);
-        FileOutputStream outputStream = new FileOutputStream(newFile);
-        releaseCachedEntryNames();
-        return new WritableArchiveEntry(() -> outputStream, () -> {
-            outputStream.close();
-            releaseCachedEntryNames();
-        });
     }
 
     /**
@@ -728,15 +765,67 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
     }
 
     private boolean deleteEntry(String name, final boolean isLogging) {
-        name = name.replace('/', File.separatorChar);
-        File input = new File(archive, name);
-        if (!input.exists() || !isEntryValid(input, isLogging)) {
-            return false;
+        try (DirtyOperation operation = beginDirtyOperation()) {
+            name = name.replace('/', File.separatorChar);
+            File input = new File(archive, name);
+            if (!input.exists() || !isEntryValid(input, isLogging)) {
+                return false;
+            }
+            final boolean deleted = input.delete();
+            myStaleFileManager().recordDeletedEntry(input);
+            return deleted;
         }
-        final boolean result = input.delete();
-        myStaleFileManager().recordDeletedEntry(input);
-        releaseCachedEntryNames();
-        return result;
+    }
+
+    private DirtyOperation beginDirtyOperation() {
+        List<FileArchive> affectedArchives = new ArrayList<>();
+        ReadableArchive current = this;
+        while (current instanceof FileArchive) {
+            affectedArchives.add((FileArchive) current);
+            current = ((FileArchive) current).getParentArchive();
+        }
+        return new DirtyOperation(affectedArchives);
+    }
+
+    /**
+     * Atomically couples the dirty-operation count with the cache. Dirty states do not retain a cache, and every
+     * clean state owns a new map which is never reused after invalidation.
+     */
+    private static final class CacheState {
+        private final int activeDirtyOperations;
+        private final Map<String, List<String>> entryNames;
+
+        private CacheState(int activeDirtyOperations) {
+            this.activeDirtyOperations = activeDirtyOperations;
+            entryNames = activeDirtyOperations == 0 ? new ConcurrentHashMap<>() : null;
+        }
+    }
+
+    /**
+     * Counts overlapping and nested mutations in every affected archive before any dirty work starts.
+     * Captures the ancestors so completion balances exactly the same counters, without explicit locks.
+     */
+    private static final class DirtyOperation implements AutoCloseable {
+        private final List<FileArchive> affectedArchives;
+        private final AtomicBoolean closed = new AtomicBoolean();
+
+        private DirtyOperation(List<FileArchive> affectedArchives) {
+            this.affectedArchives = affectedArchives;
+            for (FileArchive affected : affectedArchives) {
+                affected.entryNamesCacheState.updateAndGet(state -> new CacheState(state.activeDirtyOperations + 1));
+            }
+        }
+
+        @Override
+        public void close() {
+            // WritableArchiveEntry may be closed repeatedly.
+            if (!closed.compareAndSet(false, true)) {
+                return;
+            }
+            for (FileArchive affected : affectedArchives) {
+                affected.entryNamesCacheState.updateAndGet(state -> new CacheState(state.activeDirtyOperations - 1));
+            }
+        }
     }
 
     /**
@@ -748,13 +837,14 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
      * Callers may keep using this archive afterwards; the next enumeration simply lists the
      * directory tree again.
      */
-    public void releaseCachedEntryNames() {
-        entryNamesCache.clear();
-        ReadableArchive parent = getParentArchive();
-        while (parent instanceof FileArchive) {
-            FileArchive parentFileArchive = (FileArchive) parent;
-            parentFileArchive.entryNamesCache.clear();
-            parent = parentFileArchive.getParentArchive();
+    @Override
+    public void clearCaches() {
+        ReadableArchive current = this;
+        while (current instanceof FileArchive) {
+            FileArchive fileArchive = (FileArchive) current;
+            // A dirty state already has no cache; clearing must not change its operation count.
+            fileArchive.entryNamesCacheState.updateAndGet(state -> state.activeDirtyOperations == 0 ? new CacheState(0) : state);
+            current = fileArchive.getParentArchive();
         }
     }
 

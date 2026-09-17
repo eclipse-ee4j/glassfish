@@ -17,7 +17,6 @@
 
 package org.glassfish.deployment.common;
 
-import com.sun.enterprise.deploy.shared.FileArchive;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.io.Closeable;
@@ -633,12 +632,11 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     public void postDeployClean(boolean isFinalClean) {
         deplLogger.log(Level.FINEST, () -> "postDeployClean(isFinalClean=" + isFinalClean + ")");
         if (isFinalClean) {
-            // The source archive outlives the deployment, but nothing enumerates it any more.
-            if (source instanceof FileArchive) {
-                ((FileArchive) source).releaseCachedEntryNames();
-            }
-            if (originalSource instanceof FileArchive && originalSource != source) {
-                ((FileArchive) originalSource).releaseCachedEntryNames();
+            // The source archive outlives the deployment, but it's unlikely it will be enumerated after deployment.
+            // We clear the caches to free up memory.
+            source.clearCaches();
+            if (originalSource != source) {
+                originalSource.clearCaches();
             }
         }
         if (transientAppMetaData != null) {

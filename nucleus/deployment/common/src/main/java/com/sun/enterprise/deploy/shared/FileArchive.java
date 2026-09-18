@@ -60,6 +60,7 @@ import org.glassfish.api.deployment.archive.Archive;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.api.deployment.archive.WritableArchiveEntry;
+import org.glassfish.api.logging.LogHelper;
 import org.glassfish.deployment.common.DeploymentContextImpl;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.logging.annotation.LogMessageInfo;
@@ -97,7 +98,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
     private static final Logger deplLogger = DeploymentContextImpl.deplLogger;
 
-    @LogMessageInfo(message = "Attempt to list files in {0} failed, perhaps because that is not a valid directory or because file permissions do not allow GlassFish to access it", level = "WARNING")
+    @LogMessageInfo(message = "Attempt to list files in {0} in archive {1} failed, perhaps because that is not a valid directory or because file permissions do not allow GlassFish to access it", level = "WARNING")
     private static final String FILE_LIST_FAILURE = "NCLS-DEPLOYMENT-00022";
 
     @LogMessageInfo(message = "Ignoring {0} because the containing archive {1} recorded it as a pre-existing stale file", level = "WARNING")
@@ -698,29 +699,27 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             return Collections.emptyList();
         }
         final List<String> files = new ArrayList<>();
-        final Path root = archive.toPath();
-        final Path realRoot;
+        final Path archivePath = archive.toPath();
+        final Path realArchivePath;
         try {
             // Resolved once here instead of per entry; resolving a path is a relatively costly syscall.
-            realRoot = root.toRealPath();
+            realArchivePath = archivePath.toRealPath();
         } catch (IOException e) {
-            deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
+            LogHelper.log(deplLogger, Level.WARNING, FILE_LIST_FAILURE, e, directory, archive);
             return files;
         }
-        final Path start = directory.toPath();
-
         // walkFileTree: Symbolic links are not followed. All levels of the tree are visited.
         try {
-            Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(directory.toPath(), new SimpleFileVisitor<Path>() {
 
                 @Override
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    if (start.equals(dir)) {
+                    if (directory.toPath().equals(dir)) {
                         // Skip the main directory
                         return FileVisitResult.CONTINUE;
                     }
                     // Add sub directory names
-                    String fileName = getEntryName(root, realRoot, dir, attrs);
+                    String fileName = getEntryName(archivePath, realArchivePath, dir, attrs);
                     if (isEntryValid(fileName, logger)) {
                         files.add(fileName);
                         return FileVisitResult.CONTINUE;
@@ -731,7 +730,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                    String fileName = getEntryName(root, realRoot, file, attrs);
+                    String fileName = getEntryName(archivePath, realArchivePath, file, attrs);
                     if (isEntryValid(fileName, logger) && !fileName.equals(JarFile.MANIFEST_NAME)) {
                         files.add(fileName);
                     }
@@ -739,29 +738,29 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
                 }
             });
         } catch (IOException e) {
-            deplLogger.log(Level.WARNING, FILE_LIST_FAILURE, directory.getAbsolutePath());
+            LogHelper.log(deplLogger, Level.WARNING, FILE_LIST_FAILURE, e, directory, archive);
         }
         return files;
     }
 
     /**
-     * Returns the name of the entry relative to the archive root, or null if the entry escapes it.
+     * Returns the name of the entry relative to the archive path, or null if the entry escapes it.
      * <p>
      * Only a symbolic link can point outside the archive, so plain entries are relativized against
-     * the unresolved root instead of being resolved first.
+     * the unresolved archive path instead of being resolved first.
      */
-    private String getEntryName(Path root, Path realRoot, Path path, BasicFileAttributes attrs) throws IOException {
-        if (!attrs.isSymbolicLink() && path.startsWith(root)) {
-            return root.relativize(path).toString().replace(File.separatorChar, '/');
+    private String getEntryName(Path archivePath, Path realArchivePath, Path path, BasicFileAttributes attrs) throws IOException {
+        if (!attrs.isSymbolicLink() && path.startsWith(archivePath)) {
+            return archivePath.relativize(path).toString().replace(File.separatorChar, '/');
         }
-        Path resolved = path.toRealPath();
-        if (!resolved.startsWith(realRoot)) {
+        Path realPath = path.toRealPath();
+        if (!realPath.startsWith(realArchivePath)) {
             deplLogger.log(Level.WARNING,
                 "File {0} is not a valid entry in FileArchive {1} because it escapes the archive root directory",
-                new Object[] {resolved, realRoot});
+                new Object[] {realPath, realArchivePath});
             return null;
         }
-        return realRoot.relativize(resolved).toString().replace(File.separatorChar, '/');
+        return realArchivePath.relativize(realPath).toString().replace(File.separatorChar, '/');
     }
 
     private boolean deleteEntry(String name, final boolean isLogging) {

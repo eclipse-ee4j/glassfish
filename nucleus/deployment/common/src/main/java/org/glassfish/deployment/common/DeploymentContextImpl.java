@@ -685,7 +685,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
 
         File tenantDirectory = new File(getRootTenantDirForApp(originalAppName), tenant);
         if (!tenantDirectory.exists() && !tenantDirectory.mkdirs()) {
-            deplLogger.log(FINEST, () -> "Unable to create tenant directory " + tenantDirectory.getAbsolutePath() + " for tenant=" + tenant + " and app=" + originalAppName);
+            deplLogger.log(FINEST, () -> "Unable to create tenant directory " + tenantDirectory + " for tenant=" + tenant + " and app=" + originalAppName);
         }
 
         return tenantDirectory;

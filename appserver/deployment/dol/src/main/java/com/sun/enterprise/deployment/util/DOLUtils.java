@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
@@ -855,7 +855,7 @@ public class DOLUtils {
      * @return componentId
      */
     public static String getComponentEnvId(JndiNameEnvironment env) {
-        LOGGER.log(DEBUG, "getComponentEnvId(env.class={0})", env.getClass().getName());
+        LOGGER.log(DEBUG, "getComponentEnvId(env.class={0})", env == null ? null : env.getClass());
         if (env instanceof EjbDescriptor) {
             // EJB component
             EjbDescriptor ejbEnv = (EjbDescriptor) env;

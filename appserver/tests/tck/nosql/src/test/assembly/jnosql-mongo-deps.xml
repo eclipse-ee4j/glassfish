@@ -13,6 +13,7 @@
                 <include>org.slf4j:slf4j-jdk14</include>
             </includes>
             <excludes>
+                <exclude>org.eclipse.jnosql.mapping:*</exclude>
                 <exclude>jakarta.nosql:*</exclude>
             </excludes>
             <useTransitiveDependencies>true</useTransitiveDependencies>

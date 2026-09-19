@@ -347,6 +347,7 @@ def stopVmstatLogging() {
 // action - action to execute
 def runOnNode(String job, String label, boolean archiveServerLogs, Closure action) {
    return {
+   try {
       def infraRetries = 0
       def maxInfraRetries = 10
       while (infraRetries < maxInfraRetries) {
@@ -371,7 +372,6 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                      }
                   }
                } catch (Throwable e) {
-                  echo "Something broke: ${e}";
                   def errorMsg = e.getMessage() ?: ""
                   if (errorMsg.contains("Failed to start websocket connection")) {
                      infraError = true
@@ -381,7 +381,6 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                      }
                      echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
                   } else {
-                     echo "❌ Failure: ${errorMsg}"
                      throw e
                   }
                } finally {
@@ -405,6 +404,13 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
             break
          }
       }
+   } catch (Throwable e) {
+      echo "Job ${job} with label ${label}: ❌ ${e}"
+      if (e instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException) {
+         e.getCauses().each { cause -> echo "Job ${job} with label ${label}: ❌ Cause: ${cause}" }
+      }
+      throw e
+   }
    }
 }
 

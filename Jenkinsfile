@@ -377,11 +377,16 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                      infraError = true
                      infraRetries++
                      if (infraRetries >= maxInfraRetries) {
+                        echo "Stack trace:\n${hudson.Functions.printThrowable(e)}"
                         throw e
                      }
                      echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
+                  } else if (e instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException) {
+                     e.getCauses().each { cause -> echo "❌ Interruption cause: ${cause}" }
+                     throw e
                   } else {
                      echo "❌ Failure: ${errorMsg}"
+                     echo "Stack trace:\n${hudson.Functions.printThrowable(e)}"
                      throw e
                   }
                } finally {

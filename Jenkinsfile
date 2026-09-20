@@ -406,9 +406,6 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
       }
    } catch (Throwable e) {
       echo "Job ${job} with label ${label}: ❌ ${e}"
-      if (e instanceof org.jenkinsci.plugins.workflow.steps.FlowInterruptedException) {
-         e.getCauses().each { cause -> echo "Job ${job} with label ${label}: ❌ Cause: ${cause}" }
-      }
       throw e
    }
    }

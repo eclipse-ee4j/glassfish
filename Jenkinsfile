@@ -473,6 +473,8 @@ pipeline {
       // numToKeepStr - we need to know if it is changing.
       // artifactNumToKeepStr - they are quite large, so we keep just the last products.
       buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
+      // Abort older builds of the current branch
+      disableConcurrentBuilds(abortPrevious: true)
       // Any failure will cause interruption of other running steps.
       // Dynamic Kubernetes-agent infrastructure failures are retried inside each branch first.
       parallelsAlwaysFailFast()
@@ -489,13 +491,6 @@ pipeline {
    }
 
    stages {
-      stage('StopOld') {
-         steps {
-            script {
-               milestone ordinal: Integer.parseInt(env.BUILD_NUMBER), label: "Build ${env.BUILD_NUMBER}"
-            }
-         }
-      }
       // Check Changes and Build deliberately share one pod. The pod is
       // released immediately after Build.
       stage('Prepare') {

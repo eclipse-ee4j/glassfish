@@ -345,6 +345,7 @@ def archiveFiles(fileMask) {
        archiveArtifacts artifacts: "${fileMask}", onlyIfSuccessful: false, allowEmptyArchive: true
     } catch (Throwable e) {
         echo "⚠️ Archivation failed for file mask " + fileMask + ": " + e
+        unstable(message: "Failed archivation for file mask " + fileMask)
     }
 }
 
@@ -388,6 +389,7 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                         throw e
                      }
                      echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
+                     unstable(message: "Job ${job} had issues to initialize a pod!")
                   } else {
                      throw e
                   }

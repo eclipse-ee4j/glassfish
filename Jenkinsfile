@@ -340,6 +340,14 @@ def stopVmstatLogging() {
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
 
+def archiveFiles(fileMask) {
+    try {
+       archiveArtifacts artifacts: "${fileMask}", onlyIfSuccessful: false, allowEmptyArchive: true
+    } catch (Throwable e) {
+        echo "⚠️ Archivation failed for file mask " + fileMask + ": " + e
+    }
+}
+
 // Allocation of a node to execute action and the execution. If the allocation fails,
 // it can be repeated several times (maxInfraRetries).
 // job - job and stage name
@@ -386,9 +394,9 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
                } finally {
                   if (!infraError) {
                      if (archiveServerLogs) {
-                        archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
+                        archiveFiles("**/server.log*")
                      } else {
-                        archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false, allowEmptyArchive: true
+                        archiveFiles("${job}-results.tar.gz")
                         junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
                      }
                      // Some ant jobs use maven too.

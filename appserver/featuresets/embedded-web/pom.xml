@@ -784,13 +784,11 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.persistence</groupId>
-                    <artifactId>org.eclipse.persistence.json</artifactId>
-                </exclusion>
-            </exclusions>
+        </dependency>
+        <!-- Mandatory Import-Package of org.eclipse.persistence.oracle, see issue #24212 -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.json</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.persistence</groupId>

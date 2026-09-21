@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2025 Contributors to Eclipse Foundation.
+    Copyright (c) 2021, 2026 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2022 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -706,6 +706,12 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- Mandatory Import-Package of org.eclipse.persistence.oracle, see issue #24212 -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.json</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

@@ -606,7 +606,6 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 1,
                         slaveConnectTimeout: 300,
                         yaml: mvnHeavyContainerCfg
                      ) {
@@ -622,7 +621,6 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 3,
                         slaveConnectTimeout: 300,
                         yaml: mvnLightContainerCfg
                      ) {
@@ -642,7 +640,6 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 3,
                         slaveConnectTimeout: 300,
                         yaml: antHeavyContainerCfg
                      ) {
@@ -662,7 +659,6 @@ pipeline {
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 5, // high number prevents heavy start earlier.
                         slaveConnectTimeout: 300,
                         yaml: antLightContainerCfg
                      ) {

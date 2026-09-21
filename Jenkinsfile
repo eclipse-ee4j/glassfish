@@ -360,61 +360,80 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
       def maxInfraRetries = 10
       while (infraRetries < maxInfraRetries) {
          def infraError = false
-         node("${label}") {
-            stage("${job}") {
-               try {
-                  container('action') {
-                     script {
-                        def vmstatStarted = false
-                        try {
-                           startVmstatLogging("${job}")
-                           vmstatStarted = true
-                           dumpSysInfo()
-                           unstash 'maven-repo'
-                           action()
-                        } finally {
-                           if (vmstatStarted) {
-                              stopVmstatLogging()
+         try {
+            node("${label}") {
+               stage("${job}") {
+                  try {
+                     container('action') {
+                        script {
+                           def vmstatStarted = false
+                           try {
+                              startVmstatLogging("${job}")
+                              vmstatStarted = true
+                              dumpSysInfo()
+                              unstash 'maven-repo'
+                              action()
+                           } finally {
+                              if (vmstatStarted) {
+                                 stopVmstatLogging()
+                              }
                            }
                         }
                      }
-                  }
-               } catch (Throwable e) {
-                  def errorMsg = e.getMessage() ?: ""
-                  if (errorMsg.contains("Failed to start websocket connection")) {
-                     infraError = true
-                     infraRetries++
-                     if (infraRetries >= maxInfraRetries) {
+                  } catch (Throwable e) {
+                     def errorMsg = e.getMessage() ?: ""
+                     if (errorMsg.contains("Failed to start websocket connection")) {
+                        infraError = true
+                        echo "Job ${job} with label ${label}: ⚠️ K8s Infrastructure failure detected: ${errorMsg}."
+                     } else {
                         throw e
                      }
-                     echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
-                     unstable(message: "Job ${job} had issues to initialize a pod!")
-                  } else {
-                     throw e
-                  }
-               } finally {
-                  if (!infraError) {
-                     if (archiveServerLogs) {
-                        archiveFiles("**/server.log*")
-                     } else {
-                        archiveFiles("${job}-results.tar.gz")
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
-                     }
-                     // Some ant jobs use maven too.
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                  } finally {
+                     if (!infraError) {
+                        if (archiveServerLogs) {
+                           archiveFiles("**/server.log*")
+                        } else {
+                           archiveFiles("${job}-results.tar.gz")
+                           junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        }
+                        // Some ant jobs use maven too.
+                        junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
 // Makes Jenkins UI extremely slow in current version
-//                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+//              recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                     }
                   }
                }
             }
+         } catch (Throwable e) {
+            def errorStr = e.toString() ?: ""
+            boolean isQueueError = errorStr.contains("Queue task was cancelled") && errorStr.contains("FlowInterruptedException")
+            if (isQueueError) {
+               infraError = true
+               echo "Job ${job} with label ${label}: ⚠️ Node/Queue connection lost: ${errorStr}."
+            }
+            if (infraError) {
+               infraRetries++
+               unstable(message: "Job ${job} had issues initializing a pod (Attempt ${infraRetries}/${maxInfraRetries})! ${errorStr}")
+               if (infraRetries >= maxInfraRetries) {
+                  echo "Job ${job} with label ${label}: ❌ Exceeded maximum infrastructure retries (${maxInfraRetries})."
+                  throw e
+               }
+
+               // Brief pause before trying to queue a brand new node request
+               sleep(time: 15, unit: 'SECONDS')
+            } else {
+               // Build failed or unknown error.
+               throw e
+            }
          }
+         // No exceptions, no repeats = success!
          if (!infraError) {
             break
          }
       }
    } catch (Throwable e) {
-      echo "Job ${job} with label ${label}: ❌ ${e}"
+      echo "Job ${job} with label ${label}: ❌ " + e
       throw e
    }
    }

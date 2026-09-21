@@ -602,7 +602,7 @@ pipeline {
             stage('Maven Checks') {
                steps {
                   script {
-                     def nodeGroupLabel = 'maven-shared-pod-heavy-' + env.JOB_BASE_NAME
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-heavy'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
@@ -618,7 +618,7 @@ pipeline {
             stage('Maven IT') {
                steps {
                   script {
-                     def nodeGroupLabel = 'maven-shared-pod-light-' + env.JOB_BASE_NAME
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-light'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
@@ -638,7 +638,7 @@ pipeline {
             stage('Ant-Heavy') {
                steps {
                   script {
-                     def nodeGroupLabel = 'ant-shared-pod-heavy-' + env.JOB_BASE_NAME
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-heavy'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
@@ -658,7 +658,7 @@ pipeline {
             stage('Ant-Light') {
                steps {
                   script {
-                     def nodeGroupLabel = 'ant-shared-pod-light-' + env.JOB_BASE_NAME
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-light'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,

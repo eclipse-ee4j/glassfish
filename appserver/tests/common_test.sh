@@ -80,6 +80,7 @@ copy_test_artifacts() {
   printf "\n%s \n\n" "===== COPY TEST ARTIFACTS ====="
   mkdir -p ${WORKSPACE}/results/junitreports
 
+  rm -r "${S1AS_HOME}/domains/"*"/osgi-cache"
   tar -cf ${WORKSPACE}/results/domainArchive.tar.gz ${S1AS_HOME}/domains
 
   cp ${S1AS_HOME}/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true

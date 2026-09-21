@@ -79,7 +79,6 @@ def podYamlConfigurationTemplate = """
 apiVersion: v1
 kind: Pod
 spec:
-  shareProcessNamespace: true
   nodeSelector:
     kubernetes.io/os: "linux"
   containers:
@@ -340,6 +339,15 @@ def stopVmstatLogging() {
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
 
+def archiveFiles(fileMask) {
+    try {
+       archiveArtifacts artifacts: "${fileMask}", onlyIfSuccessful: false, allowEmptyArchive: true
+    } catch (Throwable e) {
+        echo "⚠️ Archivation failed for file mask " + fileMask + ": " + e
+        unstable(message: "Failed archivation for file mask " + fileMask)
+    }
+}
+
 // Allocation of a node to execute action and the execution. If the allocation fails,
 // it can be repeated several times (maxInfraRetries).
 // job - job and stage name
@@ -347,64 +355,87 @@ def stopVmstatLogging() {
 // action - action to execute
 def runOnNode(String job, String label, boolean archiveServerLogs, Closure action) {
    return {
+   try {
       def infraRetries = 0
       def maxInfraRetries = 10
       while (infraRetries < maxInfraRetries) {
          def infraError = false
-         node("${label}") {
-            stage("${job}") {
-               try {
-                  container('action') {
-                     script {
-                        def vmstatStarted = false
-                        try {
-                           startVmstatLogging("${job}")
-                           vmstatStarted = true
-                           dumpSysInfo()
-                           unstash 'maven-repo'
-                           action()
-                        } finally {
-                           if (vmstatStarted) {
-                              stopVmstatLogging()
+         try {
+            node("${label}") {
+               stage("${job}") {
+                  try {
+                     container('action') {
+                        script {
+                           def vmstatStarted = false
+                           try {
+                              startVmstatLogging("${job}")
+                              vmstatStarted = true
+                              dumpSysInfo()
+                              unstash 'maven-repo'
+                              action()
+                           } finally {
+                              if (vmstatStarted) {
+                                 stopVmstatLogging()
+                              }
                            }
                         }
                      }
-                  }
-               } catch (Throwable e) {
-                  echo "Something broke: ${e}";
-                  def errorMsg = e.getMessage() ?: ""
-                  if (errorMsg.contains("Failed to start websocket connection")) {
-                     infraError = true
-                     infraRetries++
-                     if (infraRetries >= maxInfraRetries) {
+                  } catch (Throwable e) {
+                     def errorMsg = e.getMessage() ?: ""
+                     if (errorMsg.contains("Failed to start websocket connection")) {
+                        infraError = true
+                        echo "Job ${job} with label ${label}: ⚠️ K8s Infrastructure failure detected: ${errorMsg}."
+                     } else {
                         throw e
                      }
-                     echo "⚠️ K8s Infrastructure failure detected (${errorMsg}). Spawning fresh pod (Attempt ${infraRetries}/${maxInfraRetries})..."
-                  } else {
-                     echo "❌ Failure: ${errorMsg}"
-                     throw e
-                  }
-               } finally {
-                  if (!infraError) {
-                     if (archiveServerLogs) {
-                        archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     } else {
-                        archiveArtifacts artifacts: "${job}-results.tar.gz", onlyIfSuccessful: false, allowEmptyArchive: true
-                        junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
-                     }
-                     // Some ant jobs use maven too.
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true
+                  } finally {
+                     if (!infraError) {
+                        if (archiveServerLogs) {
+                           archiveFiles("**/server.log*")
+                        } else {
+                           archiveFiles("${job}-results.tar.gz")
+                           junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        }
+                        // Some ant jobs use maven too.
+                        junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
 // Makes Jenkins UI extremely slow in current version
-//                    recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+//              recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                     }
                   }
                }
             }
+         } catch (Throwable e) {
+            def errorStr = e.toString() ?: ""
+            boolean isQueueError = errorStr.contains("Queue task was cancelled") && errorStr.contains("FlowInterruptedException")
+            if (isQueueError) {
+               infraError = true
+               echo "Job ${job} with label ${label}: ⚠️ Node/Queue connection lost: ${errorStr}."
+            }
+            if (infraError) {
+               infraRetries++
+               unstable(message: "Job ${job} had issues initializing a pod (Attempt ${infraRetries}/${maxInfraRetries})! ${errorStr}")
+               if (infraRetries >= maxInfraRetries) {
+                  echo "Job ${job} with label ${label}: ❌ Exceeded maximum infrastructure retries (${maxInfraRetries})."
+                  throw e
+               }
+
+               // Brief pause before trying to queue a brand new node request
+               sleep(time: 15, unit: 'SECONDS')
+            } else {
+               // Build failed or unknown error.
+               throw e
+            }
          }
+         // No exceptions, no repeats = success!
          if (!infraError) {
             break
          }
       }
+   } catch (Throwable e) {
+      echo "Job ${job} with label ${label}: ❌ " + e
+      throw e
+   }
    }
 }
 
@@ -470,6 +501,8 @@ pipeline {
       // numToKeepStr - we need to know if it is changing.
       // artifactNumToKeepStr - they are quite large, so we keep just the last products.
       buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
+      // Abort older builds of the current branch
+      disableConcurrentBuilds(abortPrevious: true)
       // Any failure will cause interruption of other running steps.
       // Dynamic Kubernetes-agent infrastructure failures are retried inside each branch first.
       parallelsAlwaysFailFast()
@@ -486,13 +519,6 @@ pipeline {
    }
 
    stages {
-      stage('StopOld') {
-         steps {
-            script {
-               milestone ordinal: Integer.parseInt(env.BUILD_NUMBER), label: "Build ${env.BUILD_NUMBER}"
-            }
-         }
-      }
       // Check Changes and Build deliberately share one pod. The pod is
       // released immediately after Build.
       stage('Prepare') {
@@ -594,11 +620,10 @@ pipeline {
             stage('Maven Checks') {
                steps {
                   script {
-                     def nodeGroupLabel = 'maven-shared-pod-heavy'
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-heavy'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 1,
                         slaveConnectTimeout: 300,
                         yaml: mvnHeavyContainerCfg
                      ) {
@@ -610,11 +635,10 @@ pipeline {
             stage('Maven IT') {
                steps {
                   script {
-                     def nodeGroupLabel = 'maven-shared-pod-light'
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-light'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 3,
                         slaveConnectTimeout: 300,
                         yaml: mvnLightContainerCfg
                      ) {
@@ -630,11 +654,10 @@ pipeline {
             stage('Ant-Heavy') {
                steps {
                   script {
-                     def nodeGroupLabel = 'ant-shared-pod-heavy'
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-heavy'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 3,
                         slaveConnectTimeout: 300,
                         yaml: antHeavyContainerCfg
                      ) {
@@ -650,11 +673,10 @@ pipeline {
             stage('Ant-Light') {
                steps {
                   script {
-                     def nodeGroupLabel = 'ant-shared-pod-light'
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-light'
                      podTemplate(
                         name: nodeGroupLabel,
                         label: nodeGroupLabel,
-                        instanceCap: 5, // high number prevents heavy start earlier.
                         slaveConnectTimeout: 300,
                         yaml: antLightContainerCfg
                      ) {

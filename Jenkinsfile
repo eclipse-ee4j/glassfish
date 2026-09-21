@@ -79,7 +79,6 @@ def podYamlConfigurationTemplate = """
 apiVersion: v1
 kind: Pod
 spec:
-  shareProcessNamespace: true
   nodeSelector:
     kubernetes.io/os: "linux"
   containers:

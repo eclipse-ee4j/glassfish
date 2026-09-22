@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.protocol;
 
-
-
-
-
 import java.util.Locale;
 
 /**

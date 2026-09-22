@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.server;
 
-
-
-
-
 import java.io.IOException;
 
 import org.glassfish.orb.http.protocol.PathScanner;

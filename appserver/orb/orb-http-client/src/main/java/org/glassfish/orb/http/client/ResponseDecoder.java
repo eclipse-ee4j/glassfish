@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.client;
 
-
-
-
-
 import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.EJBException;
 import jakarta.ejb.NoSuchEJBException;

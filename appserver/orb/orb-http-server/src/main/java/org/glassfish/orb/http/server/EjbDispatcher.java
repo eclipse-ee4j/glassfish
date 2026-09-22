@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.server;
 
-
-
-
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;

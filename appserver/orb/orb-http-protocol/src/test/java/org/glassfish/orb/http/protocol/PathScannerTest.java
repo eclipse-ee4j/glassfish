@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.protocol;
 
-
-
-
-
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 

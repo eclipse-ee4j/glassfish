@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.protocol;
 
-
-
-
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;

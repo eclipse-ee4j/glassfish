@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.protocol;
 
-
-
-
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;

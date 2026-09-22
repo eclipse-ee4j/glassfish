@@ -16,10 +16,6 @@
 
 package org.glassfish.orb.http.server;
 
-
-
-
-
 import jakarta.ejb.NoSuchEJBException;
 
 import java.net.URI;

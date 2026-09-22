@@ -77,6 +77,20 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
 
     protected Application application;
 
+    /**
+     * Owner the cached ejb indexes below were built from, so they are dropped when the visitor
+     * moves on to another application or bundle.
+     */
+    private Object ejbIndexOwner;
+
+    /**
+     * Cached {@link #getEjbDescriptors()} and its interface index. Both were recomputed for every
+     * reference of every bean, which is quadratic in the size of the application. Validation
+     * resolves references but never adds an ejb, so they stay valid for a whole pass.
+     */
+    private Collection<? extends EjbDescriptor> ejbDescriptorsCache;
+    private Map<String, EjbIntfInfo> ejbIntfMapCache;
+
 
     @Override
     public void accept(BundleDescriptor bundleDescriptor) {
@@ -214,8 +228,9 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
                 if (LOG.isLoggable(Level.FINE)) {
                     LOG.fine("Ref " + ejbRef.getName() + " is bound to Ejb with JNDI Name " + ejbRef.getJndiName());
                 }
-                if (getEjbDescriptors() != null) {
-                    for (EjbDescriptor ejb : getEjbDescriptors()) {
+                Collection<? extends EjbDescriptor> ejbs = getCachedEjbDescriptors();
+                if (ejbs != null) {
+                    for (EjbDescriptor ejb : ejbs) {
                         if (ejbRef.getJndiName().equals(ejb.getJndiName())) {
                             ejbRef.setEjbDescriptor(ejb);
                             return;
@@ -578,14 +593,48 @@ public class ComponentValidator extends DefaultDOLVisitor implements ComponentVi
     }
 
     /**
+     * Drops both cached indexes when the visitor moved on to another application or bundle.
+     */
+    private void invalidateEjbIndexesOnOwnerChange() {
+        Object owner = getApplication() == null ? getEjbBundleDescriptor() : getApplication();
+        if (ejbIndexOwner != owner) {
+            ejbIndexOwner = owner;
+            ejbDescriptorsCache = null;
+            ejbIntfMapCache = null;
+        }
+    }
+
+    /**
+     * @return {@link #getEjbDescriptors()}, resolved once per owner instead of once per reference.
+     */
+    private Collection<? extends EjbDescriptor> getCachedEjbDescriptors() {
+        invalidateEjbIndexesOnOwnerChange();
+        if (ejbDescriptorsCache == null) {
+            ejbDescriptorsCache = getEjbDescriptors();
+        }
+        return ejbDescriptorsCache;
+    }
+
+    /**
+     * @return the interface index of {@link #getCachedEjbDescriptors()}, built once per owner.
+     */
+    private Map<String, EjbIntfInfo> getEjbIntfMap() {
+        // Read the descriptors first, so that a stale map is dropped before it is looked at.
+        Collection<? extends EjbDescriptor> ejbDescriptors = getCachedEjbDescriptors();
+        if (ejbIntfMapCache == null) {
+            ejbIntfMapCache = buildEjbIntfMap(ejbDescriptors);
+        }
+        return ejbIntfMapCache;
+    }
+
+    /**
      * Returns a map of interface name -> EjbIntfInfo based on all the ejbs
      * within the application or stand-alone module.  Only RemoteHome,
      * RemoteBusiness, LocalHome, and LocalBusiness are eligible for map.
      */
-    private Map<String, EjbIntfInfo> getEjbIntfMap() {
+    private Map<String, EjbIntfInfo> buildEjbIntfMap(Collection<? extends EjbDescriptor> ejbDescriptors) {
         Map<String, EjbIntfInfo> intfInfoMap = new HashMap<>();
-        for (Object element : getEjbDescriptors()) {
-            EjbDescriptor next = (EjbDescriptor) element;
+        for (EjbDescriptor next : ejbDescriptors) {
             if (next.isRemoteInterfacesSupported()) {
                 addIntfInfo(intfInfoMap, next.getHomeClassName(), EjbIntfType.REMOTE_HOME, next);
             }

@@ -37,7 +37,16 @@ public interface Archive extends AutoCloseable {
      * closes this archive and releases all resources
      */
     @Override
-    void close() throws IOException;
+    default void close() throws IOException {
+        clearCaches();
+    }
+
+    /**
+     * If the archive maintains internal caches, this clears the caches to release memory without closing the archive.
+     */
+    default void clearCaches() {
+        // noop
+    }
 
     /**
      * Returns an enumeration of the module file entries. All elements in the enumeration are of type String. Each String

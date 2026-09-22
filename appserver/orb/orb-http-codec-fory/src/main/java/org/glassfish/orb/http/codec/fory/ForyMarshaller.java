@@ -54,11 +54,14 @@ import org.glassfish.orb.http.protocol.Marshaller;
  */
 public final class ForyMarshaller implements Marshaller {
 
-    private static final int DIRECT_STREAMING_THRESHOLD = 4 * 1024;
+    private static final int DEFAULT_STREAMING_THRESHOLD = 4 * 1024;
 
     /** Enables direct framed streaming after it has been validated for a deployment. */
     private static final String STREAMING_PROPERTY =
             "org.glassfish.orb.http.codec.fory.streaming";
+    /** Overrides the automatic large-payload threshold; bytes are estimated. */
+    public static final String STREAMING_THRESHOLD_PROPERTY =
+            "org.glassfish.orb.http.codec.fory.streaming.threshold";
 
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
@@ -202,24 +205,40 @@ public final class ForyMarshaller implements Marshaller {
      * unless the benchmark/deployment explicitly enables streaming.
      */
     private static boolean isLargePayload(Object value) {
+        int threshold = streamingThreshold();
+        if (threshold < 0) {
+            return false;
+        }
         if (value instanceof CharSequence) {
-            return ((CharSequence) value).length() * 2L >= DIRECT_STREAMING_THRESHOLD;
+            return ((CharSequence) value).length() * 2L >= threshold;
         }
         if (value instanceof byte[]) {
-            return ((byte[]) value).length >= DIRECT_STREAMING_THRESHOLD;
+            return ((byte[]) value).length >= threshold;
         }
         if (value != null && value.getClass().isArray()) {
             int length = Array.getLength(value);
             return (long) length * Math.max(1, elementSize(value.getClass().getComponentType()))
-                    >= DIRECT_STREAMING_THRESHOLD;
+                    >= threshold;
         }
         if (value instanceof Map) {
-            return ((Map<?, ?>) value).size() >= 256;
+            return (long) ((Map<?, ?>) value).size() * 16 >= threshold;
         }
         if (value instanceof Collection) {
-            return ((Collection<?>) value).size() >= 256;
+            return (long) ((Collection<?>) value).size() * 16 >= threshold;
         }
         return false;
+    }
+
+    private static int streamingThreshold() {
+        String configured = System.getProperty(STREAMING_THRESHOLD_PROPERTY);
+        if (configured == null || configured.isBlank()) {
+            return DEFAULT_STREAMING_THRESHOLD;
+        }
+        try {
+            return Integer.parseInt(configured.trim());
+        } catch (NumberFormatException ignored) {
+            return DEFAULT_STREAMING_THRESHOLD;
+        }
     }
 
     private static int elementSize(Class<?> type) {

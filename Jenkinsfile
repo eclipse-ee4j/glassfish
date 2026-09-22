@@ -344,7 +344,7 @@ def archiveFiles(fileMask) {
        archiveArtifacts artifacts: "${fileMask}", onlyIfSuccessful: false, allowEmptyArchive: true
     } catch (Throwable e) {
         echo "⚠️ Archivation failed for file mask " + fileMask + ": " + e
-        unstable(message: "Failed archivation for file mask " + fileMask)
+        currentBuild.description = (currentBuild.description ?: '') + "<br/>⚠️ Failed archivation for file mask " + fileMask
     }
 }
 
@@ -414,7 +414,7 @@ def runOnNode(String job, String label, boolean archiveServerLogs, Closure actio
             }
             if (infraError) {
                infraRetries++
-               unstable(message: "Job ${job} had issues initializing a pod (Attempt ${infraRetries}/${maxInfraRetries})! ${errorStr}")
+               currentBuild.description = (currentBuild.description ?: '') + "<br/>⚠️ Job ${job} had issues initializing a pod (Attempt ${infraRetries}/${maxInfraRetries})! ${errorStr}"
                if (infraRetries >= maxInfraRetries) {
                   echo "Job ${job} with label ${label}: ❌ Exceeded maximum infrastructure retries (${maxInfraRetries})."
                   throw e

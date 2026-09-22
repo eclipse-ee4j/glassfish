@@ -63,7 +63,7 @@ class ChunkedOutputTest {
     }
 
     @Test
-    @DisplayName("the buffers alias the chunks instead of copying them")
+    @DisplayName("the buffers alias the chunks and remain Grizzly-wrappable")
     void buffersAreViewsNotCopies() throws IOException {
         ChunkedOutput out = new ChunkedOutput(8);
         out.write(new byte[20]);
@@ -74,7 +74,7 @@ class ChunkedOutputTest {
         assertEquals(8, buffers[0].remaining());
         assertEquals(8, buffers[1].remaining());
         assertEquals(4, buffers[2].remaining());
-        assertTrue(buffers[0].isReadOnly(), "a caller must not be able to corrupt the chunk");
+        assertTrue(buffers[0].hasArray(), "the transport must be able to wrap the chunk without copying");
 
         long total = 0;
         for (ByteBuffer b : buffers) {

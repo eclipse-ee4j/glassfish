@@ -122,6 +122,62 @@ public final class ChunkedOutput extends OutputStream {
     }
 
     /**
+     * Reserves a codec frame header in the current chunk and patches its
+     * payload length when the returned frame is closed. The payload can then
+     * be written directly to this stream, avoiding an intermediate byte array.
+     *
+     * @param kind codec-specific frame kind
+     * @return a frame that must be closed after its payload is written
+     */
+    public Frame beginFrame(byte kind) {
+        if (chunkSize < 5) {
+            throw new IllegalStateException("chunkSize must be at least five bytes for framing");
+        }
+        if (currentPos > chunkSize - 5) {
+            rollOver();
+        }
+        int headerOffset = currentPos;
+        current[currentPos++] = kind;
+        current[currentPos++] = 0;
+        current[currentPos++] = 0;
+        current[currentPos++] = 0;
+        current[currentPos++] = 0;
+        total += 5;
+        return new Frame(current, headerOffset, total);
+    }
+
+    /** A reserved frame whose four-byte length is patched on close. */
+    public final class Frame implements AutoCloseable {
+        private final byte[] header;
+        private final int headerOffset;
+        private final long payloadStart;
+        private boolean closed;
+
+        private Frame(byte[] header, int headerOffset, long payloadStart) {
+            this.header = header;
+            this.headerOffset = headerOffset;
+            this.payloadStart = payloadStart;
+        }
+
+        @Override
+        public void close() {
+            if (closed) {
+                return;
+            }
+            long length = total - payloadStart;
+            if (length > Integer.MAX_VALUE) {
+                throw new IllegalStateException("frame larger than 2 GiB");
+            }
+            int value = (int) length;
+            header[headerOffset + 1] = (byte) (value >>> 24);
+            header[headerOffset + 2] = (byte) (value >>> 16);
+            header[headerOffset + 3] = (byte) (value >>> 8);
+            header[headerOffset + 4] = (byte) value;
+            closed = true;
+        }
+    }
+
+    /**
      * Exposes the accumulated bytes as buffers over the internal chunks. No
      * data is copied; the returned buffers are invalidated by any further
      * write to this stream. The buffers intentionally remain array-backed and

@@ -28,6 +28,8 @@ import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.glassfish.orb.http.protocol.ChunkedInput;
+import org.glassfish.orb.http.protocol.ChunkedOutput;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,6 +41,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class ForyMarshallerTest {
 
     private final Marshaller marshaller = new ForyMarshaller();
+
+    @Test
+    void streamsSmallObjectsIntoChunkedOutput() throws Exception {
+        System.setProperty("org.glassfish.orb.http.codec.fory.streaming", "true");
+        ChunkedOutput out = new ChunkedOutput(64);
+        try {
+            try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                writer.writeObject("small");
+                writer.flush();
+            }
+
+            try (Marshaller.ObjectReader reader = marshaller.newReader(
+                    new ChunkedInput(out.toByteBuffers()), getClass().getClassLoader(),
+                    ObjectInputFilter.Config.createFilter("java.base/*;!*"))) {
+                assertEquals("small", reader.readObject());
+            }
+        } finally {
+            System.clearProperty("org.glassfish.orb.http.codec.fory.streaming");
+        }
+    }
 
     private static final ObjectInputFilter ALLOW_ALL = info -> ObjectInputFilter.Status.ALLOWED;
 

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
 import java.io.OutputStream;
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -30,6 +32,8 @@ import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.CompatibleMode;
 import org.apache.fory.config.Language;
+import org.apache.fory.io.ForyInputStream;
+import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
 
@@ -49,6 +53,12 @@ import org.glassfish.orb.http.protocol.Marshaller;
  * application observes - see the settings in {@link #newFory}.
  */
 public final class ForyMarshaller implements Marshaller {
+
+    private static final int DIRECT_STREAMING_THRESHOLD = 4 * 1024;
+
+    /** Enables direct framed streaming after it has been validated for a deployment. */
+    private static final String STREAMING_PROPERTY =
+            "org.glassfish.orb.http.codec.fory.streaming";
 
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
@@ -142,11 +152,27 @@ public final class ForyMarshaller implements Marshaller {
     public ObjectWriter newWriter(OutputStream out) throws IOException {
         ThreadSafeFory fory = writerFor(Thread.currentThread().getContextClassLoader());
         DataOutputStream data = new DataOutputStream(out);
+        ChunkedOutput framed = out instanceof ChunkedOutput ? (ChunkedOutput) out : null;
         return new ObjectWriter() {
 
             @Override
             public void writeObject(Object o) throws IOException {
                 boolean java = o instanceof Throwable;
+                if (!java && framed != null
+                        && (Boolean.getBoolean(STREAMING_PROPERTY) || isLargePayload(o))) {
+                    // ChunkedOutput reserves the five-byte header in-place.
+                    // Fory writes the object directly into the same chunks,
+                    // then close() patches the length. This avoids the
+                    // serialize-to-byte[] allocation and the second copy into
+                    // the transport, including for small objects.
+                    ChunkedOutput.Frame frame = framed.beginFrame(KIND_FORY);
+                    try {
+                        fory.serialize(out, o);
+                    } finally {
+                        frame.close();
+                    }
+                    return;
+                }
                 byte[] encoded = java ? javaEncode(o) : fory.serialize(o);
                 // Each object is framed by this codec rather than by the
                 // library underneath: the transport writes several objects in
@@ -167,6 +193,41 @@ public final class ForyMarshaller implements Marshaller {
                 data.flush();
             }
         };
+    }
+
+    /**
+     * Avoid the stream writer's per-write overhead for the small messages that
+     * Fory's byte-array serializer handles best. These are conservative size
+     * estimates: unknown object graphs stay on the allocation-free legacy path
+     * unless the benchmark/deployment explicitly enables streaming.
+     */
+    private static boolean isLargePayload(Object value) {
+        if (value instanceof CharSequence) {
+            return ((CharSequence) value).length() * 2L >= DIRECT_STREAMING_THRESHOLD;
+        }
+        if (value instanceof byte[]) {
+            return ((byte[]) value).length >= DIRECT_STREAMING_THRESHOLD;
+        }
+        if (value != null && value.getClass().isArray()) {
+            int length = Array.getLength(value);
+            return (long) length * Math.max(1, elementSize(value.getClass().getComponentType()))
+                    >= DIRECT_STREAMING_THRESHOLD;
+        }
+        if (value instanceof Map) {
+            return ((Map<?, ?>) value).size() >= 256;
+        }
+        if (value instanceof Collection) {
+            return ((Collection<?>) value).size() >= 256;
+        }
+        return false;
+    }
+
+    private static int elementSize(Class<?> type) {
+        if (type == byte.class || type == boolean.class) return 1;
+        if (type == short.class || type == char.class) return 2;
+        if (type == int.class || type == float.class) return 4;
+        if (type == long.class || type == double.class) return 8;
+        return 8;
     }
 
     @Override
@@ -190,6 +251,12 @@ public final class ForyMarshaller implements Marshaller {
                 if (length < 0) {
                     throw new IOException("negative frame length " + length);
                 }
+                if (kind == KIND_FORY) {
+                    LimitedInputStream limited = new LimitedInputStream(data, length);
+                    Object value = fory.deserialize(new ForyInputStream(limited));
+                    limited.drain();
+                    return value;
+                }
                 byte[] encoded = data.readNBytes(length);
                 if (encoded.length != length) {
                     throw new IOException("truncated frame: expected " + length
@@ -206,6 +273,43 @@ public final class ForyMarshaller implements Marshaller {
                 data.close();
             }
         };
+    }
+
+    /** Prevent a streaming Fory decoder from consuming the next frame. */
+    private static final class LimitedInputStream extends InputStream {
+        private final InputStream delegate;
+        private int remaining;
+
+        private LimitedInputStream(InputStream delegate, int remaining) {
+            this.delegate = delegate;
+            this.remaining = remaining;
+        }
+
+        @Override
+        public int read() throws IOException {
+            if (remaining == 0) return -1;
+            int value = delegate.read();
+            if (value >= 0) remaining--;
+            return value;
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            if (remaining == 0) return -1;
+            int count = delegate.read(b, off, Math.min(len, remaining));
+            if (count > 0) remaining -= count;
+            return count;
+        }
+
+        private void drain() throws IOException {
+            byte[] discard = new byte[Math.min(8192, Math.max(1, remaining))];
+            while (remaining > 0 && read(discard, 0, discard.length) >= 0) {
+                // consume trailing bytes in the declared frame
+            }
+            if (remaining != 0) {
+                throw new IOException("truncated Fory frame");
+            }
+        }
     }
 
     private static byte[] javaEncode(Object value) throws IOException {

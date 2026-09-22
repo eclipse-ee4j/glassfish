@@ -91,6 +91,15 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
     @Inject
     private Provider<EjbService> ejbServiceProvider;
 
+    /**
+     * The EjbService, once there is one. It is a singleton, but asking the
+     * provider for it runs a full HK2 lookup - cache keys, an injectee,
+     * qualifier sets - and this is asked on every incoming EJB request.
+     * Only a found service is kept: without the EJB container there is none
+     * yet, and the provider must be asked again later.
+     */
+    private volatile EjbService ejbService;
+
     @Override
     public void initialize(org.omg.CORBA.ORB orb) {
         this.orb = (ORB) orb;
@@ -319,11 +328,19 @@ public final class POAProtocolMgr extends org.omg.CORBA.LocalObject implements P
             }
             long ejbId = Utility.bytesToLong(ejbKey, EJBID_OFFSET);
             LOG.log(DEBUG, "getEjbDescriptor: {0}: ejbId: {1}", ejbKey, ejbId);
-            EjbService ejbService = ejbServiceProvider.get();
-            result = ejbService.ejbIdToDescriptor(ejbId);
+            result = getEjbService().ejbIdToDescriptor(ejbId);
         } finally {
             LOG.log(DEBUG, "getEjbDescriptor<-: {0}: {1}", ejbKey, result);
         }
         return result;
    }
+
+    private EjbService getEjbService() {
+        EjbService service = ejbService;
+        if (service == null) {
+            service = ejbServiceProvider.get();
+            ejbService = service;
+        }
+        return service;
+    }
 }

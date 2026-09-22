@@ -122,18 +122,20 @@ public final class ChunkedOutput extends OutputStream {
     }
 
     /**
-     * Exposes the accumulated bytes as read-only buffers over the internal
-     * chunks. No data is copied; the returned buffers are invalidated by any
-     * further write to this stream.
+     * Exposes the accumulated bytes as buffers over the internal chunks. No
+     * data is copied; the returned buffers are invalidated by any further
+     * write to this stream. The buffers intentionally remain array-backed and
+     * writable so transports such as Grizzly can wrap them without creating a
+     * defensive copy. Callers must treat them as immutable transport views.
      */
     public ByteBuffer[] toByteBuffers() {
         int n = chunks.size() + (currentPos > 0 ? 1 : 0);
         ByteBuffer[] out = new ByteBuffer[n];
         for (int i = 0; i < chunks.size(); i++) {
-            out[i] = ByteBuffer.wrap(chunks.get(i), 0, chunkSize).asReadOnlyBuffer();
+            out[i] = ByteBuffer.wrap(chunks.get(i), 0, chunkSize).slice();
         }
         if (currentPos > 0) {
-            out[n - 1] = ByteBuffer.wrap(current, 0, currentPos).asReadOnlyBuffer();
+            out[n - 1] = ByteBuffer.wrap(current, 0, currentPos).slice();
         }
         return out;
     }

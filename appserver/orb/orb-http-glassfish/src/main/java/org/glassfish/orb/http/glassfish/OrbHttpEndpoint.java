@@ -74,6 +74,9 @@ public class OrbHttpEndpoint implements PostConstruct {
     @Inject
     private GlassFishTransactionBridge transactions;
 
+    @Inject
+    private EjbNameIndex index;
+
     @Override
     public void postConstruct() {
         // Everything, not just the mounting. This runs at a run level during
@@ -108,6 +111,7 @@ public class OrbHttpEndpoint implements PostConstruct {
 
         SessionAffinity affinity = SessionAffinity.forThisNode();
         ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
+        index.foryIdl().forEach(foryCatalog::register);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,

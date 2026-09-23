@@ -12,12 +12,13 @@ package org.glassfish.orb.http.fory.grpc;
 import java.util.Objects;
 
 import org.apache.fory.Fory;
+import org.apache.fory.ThreadSafeFory;
 import org.apache.fory.config.Language;
 
 /** Fory cross-language runtime bound to one deploy-time model set. */
 public final class ForyGeneratedRuntime {
 
-    private final Fory fory;
+    private final ThreadSafeFory fory;
 
     public ForyGeneratedRuntime(ForyRuntimeModelGenerator.GeneratedModels models,
                                 int requestTypeId, int responseTypeId) {
@@ -26,7 +27,7 @@ public final class ForyGeneratedRuntime {
                 .withLanguage(Language.XLANG)
                 .withRefTracking(true)
                 .requireClassRegistration(true)
-                .build();
+                .buildThreadSafeFory();
         fory.register(models.request(), requestTypeId);
         fory.register(models.response(), responseTypeId);
     }

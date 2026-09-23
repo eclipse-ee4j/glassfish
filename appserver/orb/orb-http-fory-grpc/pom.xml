@@ -37,6 +37,10 @@
         serialization remain owned by the official Fory/gRPC runtimes.
     </description>
 
+    <properties>
+        <fory.version>1.7.1</fory.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.orb</groupId>
@@ -44,8 +48,30 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.fory</groupId>
+            <artifactId>fory-core</artifactId>
+            <version>${fory.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Embed-Dependency>groupId=org.apache.fory;artifactId=fory-core</Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+                        <Multi-Release>true</Multi-Release>
+                        <Import-Package>!org.apache.fory.*,*;resolution:=optional</Import-Package>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

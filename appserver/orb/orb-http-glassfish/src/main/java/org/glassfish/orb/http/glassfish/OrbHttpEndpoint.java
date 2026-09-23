@@ -28,6 +28,7 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
 import org.glassfish.orb.http.server.AffinityDispatcher;
 import org.glassfish.orb.http.server.EjbDispatcher;
 import org.glassfish.orb.http.server.InvocationRegistry;
@@ -80,12 +81,13 @@ public class OrbHttpEndpoint implements PostConstruct {
         OsgiCodecScanner.scanAndRegister();
 
         SessionAffinity affinity = SessionAffinity.forThisNode();
+        ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,
                 new NamingDispatcher(naming, security, new JavaSerializationMarshaller()),
                 new TransactionDispatcher(transactions, security),
-                new AffinityDispatcher(affinity));
+                new AffinityDispatcher(affinity), foryCatalog);
         try {
             grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
             LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);

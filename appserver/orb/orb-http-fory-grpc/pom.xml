@@ -39,6 +39,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>

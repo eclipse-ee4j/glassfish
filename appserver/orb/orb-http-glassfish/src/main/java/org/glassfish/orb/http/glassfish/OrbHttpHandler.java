@@ -23,6 +23,7 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
 import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
 import org.glassfish.orb.http.server.AffinityDispatcher;
 import org.glassfish.orb.http.server.EjbDispatcher;
 import org.glassfish.orb.http.server.NamingDispatcher;
@@ -43,13 +44,16 @@ final class OrbHttpHandler extends HttpHandler {
     private final NamingDispatcher naming;
     private final TransactionDispatcher transactions;
     private final AffinityDispatcher affinity;
+    private final ForyGrpcCatalog foryCatalog;
 
     OrbHttpHandler(EjbDispatcher ejb, NamingDispatcher naming,
-                   TransactionDispatcher transactions, AffinityDispatcher affinity) {
+                   TransactionDispatcher transactions, AffinityDispatcher affinity,
+                   ForyGrpcCatalog foryCatalog) {
         this.ejb = ejb;
         this.naming = naming;
         this.transactions = transactions;
         this.affinity = affinity;
+        this.foryCatalog = foryCatalog;
     }
 
     @Override
@@ -57,7 +61,9 @@ final class OrbHttpHandler extends HttpHandler {
         GrizzlyServerExchange exchange = new GrizzlyServerExchange(request, response);
         String path = request.getRequestURI();
         try {
-            if (path.contains('/' + Protocol.SVC_NAMING + '/')) {
+            if (path.contains(ForyGrpcCatalog.PREFIX)) {
+                foryCatalog.dispatch(exchange);
+            } else if (path.contains('/' + Protocol.SVC_NAMING + '/')) {
                 naming.dispatch(exchange);
             } else if (path.contains('/' + Protocol.SVC_TXN + '/')) {
                 transactions.dispatch(exchange);

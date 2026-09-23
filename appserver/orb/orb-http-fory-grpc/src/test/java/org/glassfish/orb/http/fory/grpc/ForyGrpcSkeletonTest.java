@@ -46,6 +46,21 @@ class ForyGrpcSkeletonTest {
     }
 
     @Test
+    void dispatcherUsesTheDeployTimeSkeletonForAFramedCall() throws Throwable {
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("demo.Greeter", Greeter.class);
+        ForyGrpcPayloadCodec codec = new ForyGrpcPayloadCodec();
+        ForyGrpcDispatcher dispatcher = new ForyGrpcDispatcher(skeleton, codec, 1024 * 1024);
+
+        byte[] response = dispatcher.dispatch("/demo.Greeter/greet", new GreeterBean(),
+                codec.encodeFrame("Ada"), getClass().getClassLoader(),
+                java.io.ObjectInputFilter.Config.createFilter("java.lang.String;!*"));
+
+        assertEquals("Hello Ada", codec.decodeFrame(response, 1024 * 1024,
+                getClass().getClassLoader(),
+                java.io.ObjectInputFilter.Config.createFilter("java.lang.String;!*")));
+    }
+
+    @Test
     void generatesAnIdlContractFromTheRemoteView() {
         String idl = ForyIdlGenerator.generate("demo.greeter", "Greeter", Greeter.class);
 

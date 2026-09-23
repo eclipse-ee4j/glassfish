@@ -49,16 +49,26 @@ public final class ForyGrpcSkeleton {
     }
 
     public Object invoke(String path, Object target, Object request) throws Throwable {
+        return invoke(path, target, request, ForyGrpcSchemaAdapter.IDENTITY);
+    }
+
+    /** Invokes a decoded generated request through an application schema adapter. */
+    public Object invoke(String path, Object target, Object request,
+                         ForyGrpcSchemaAdapter adapter) throws Throwable {
         ForyGrpcMethod method = methods.get(path);
         if (method == null) {
             throw new NoSuchMethodException(path);
         }
         Method javaMethod = method.javaMethod();
-        if (javaMethod.getParameterCount() == 1 && request != null
-                && !javaMethod.getParameterTypes()[0].isInstance(request)) {
-            throw new IllegalArgumentException("request type does not match " + javaMethod);
+        Object argument = request;
+        if (javaMethod.getParameterCount() == 1) {
+            argument = adapter.request(path, request, javaMethod.getParameterTypes()[0]);
+            if (argument != null && !javaMethod.getParameterTypes()[0].isInstance(argument)) {
+                throw new IllegalArgumentException("adapted request type does not match " + javaMethod);
+            }
         }
-        return method.invoke(target, request);
+        Object result = method.invoke(target, argument);
+        return adapter.response(path, result, javaMethod.getReturnType());
     }
 
     public boolean contains(String path) {

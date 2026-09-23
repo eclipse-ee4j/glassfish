@@ -38,6 +38,43 @@ class ForyGrpcSkeletonTest {
     }
 
     @Test
+    void adaptsGeneratedRequestAndResponseModelsAtTheEjbBoundary() throws Throwable {
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("demo.Greeter", Greeter.class);
+        ForyGrpcSchemaAdapter adapter = new ForyGrpcSchemaAdapter() {
+            @Override
+            public Object request(String path, Object request, Class<?> type) {
+                return ((GeneratedRequest) request).value;
+            }
+
+            @Override
+            public Object response(String path, Object value, Class<?> type) {
+                return new GeneratedResponse((String) value);
+            }
+        };
+
+        Object response = skeleton.invoke("/demo.Greeter/greet", new GreeterBean(),
+                new GeneratedRequest("Ada"), adapter);
+
+        assertEquals("Hello Ada", ((GeneratedResponse) response).value);
+    }
+
+    static final class GeneratedRequest {
+        final String value;
+
+        GeneratedRequest(String value) {
+            this.value = value;
+        }
+    }
+
+    static final class GeneratedResponse {
+        final String value;
+
+        GeneratedResponse(String value) {
+            this.value = value;
+        }
+    }
+
+    @Test
     void rejectsUnknownMethodsWithoutReflectiveScanning() {
         ForyGrpcSkeleton skeleton = new ForyGrpcSkeleton(List.of());
 

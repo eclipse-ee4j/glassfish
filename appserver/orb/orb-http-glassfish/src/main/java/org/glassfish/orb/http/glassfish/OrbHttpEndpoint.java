@@ -93,12 +93,24 @@ public class OrbHttpEndpoint implements PostConstruct {
                 (path, exchange) -> {
                     EjbNameIndex.ForyRoute route = index.foryRoute(path);
                     if (route == null) throw new IllegalStateException("unknown Fory route: " + path);
-                    var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
-                    Object target = container.getTargetObject(key, route.view());
-                    return new ForyGrpcServerAdapter.Target() {
-                        @Override public Object value() { return target; }
-                        @Override public void close() { container.releaseTargetObject(target); }
-                    };
+                    Object securityToken = security.establish(exchange.authenticatedUser());
+                    try {
+                        var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
+                        Object target = container.getTargetObject(key, route.view());
+                        return new ForyGrpcServerAdapter.Target() {
+                            @Override public Object value() { return target; }
+                            @Override public void close() {
+                                try {
+                                    container.releaseTargetObject(target);
+                                } finally {
+                                    security.clear(securityToken);
+                                }
+                            }
+                        };
+                    } catch (RuntimeException | Error failure) {
+                        security.clear(securityToken);
+                        throw failure;
+                    }
                 },
                 16 * 1024 * 1024);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,

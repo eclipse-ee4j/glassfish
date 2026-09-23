@@ -19,6 +19,7 @@ package org.glassfish.orb.http.glassfish;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
+import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -26,10 +27,17 @@ import jakarta.inject.Singleton;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.util.Map;
+import java.util.LinkedHashMap;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
+import org.glassfish.orb.http.fory.grpc.ForyIdlGenerator;
+import org.glassfish.orb.http.protocol.Protocol;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -126,6 +134,58 @@ public class EjbNameIndex {
         byName.clear();
         byName.putAll(rebuilt);
         LOG.log(Level.INFO, "EJB name index rebuilt: {0}", rebuilt.keySet());
+    }
+
+    /** Builds the deploy-time Fory IDL catalog from remote business views. */
+    public Map<String, String> foryIdl() {
+        Map<String, String> result = new LinkedHashMap<>();
+        for (String name : applications.getAllApplicationNames()) {
+            ApplicationInfo info = applications.get(name);
+            if (info == null) {
+                continue;
+            }
+            Application application = info.getMetaData(Application.class);
+            if (application == null) {
+                continue;
+            }
+            for (EjbBundleDescriptor bundle : application.getBundleDescriptors(EjbBundleDescriptor.class)) {
+                String module = bundle.getModuleDescriptor().getModuleName();
+                for (EjbDescriptor ejb : bundle.getEjbs()) {
+                    Set<String> views = ejb.getRemoteBusinessClassNames();
+                    if (views == null) {
+                        continue;
+                    }
+                    ClassLoader loader = EjbContainerUtilImpl.getInstance().getClassLoader(ejb.getUniqueId());
+                    for (String viewName : views) {
+                        try {
+                            Class<?> view = Class.forName(viewName, false, loader);
+                            String path = Protocol.CONTEXT_PATH + ForyGrpcCatalog.PREFIX
+                                    + pathPart(application.getRegistrationName()) + '/'
+                                    + pathPart(module) + '/'
+                                    + pathPart(ejb.getName()) + '/'
+                                    + pathPart(viewName) + ".fdl";
+                            result.put(path, ForyIdlGenerator.generate(
+                                    "glassfish." + safeName(application.getRegistrationName()),
+                                    view.getSimpleName(), view));
+                        } catch (ReflectiveOperationException | IllegalArgumentException e) {
+                            LOG.log(Level.WARNING, "cannot generate Fory IDL for "
+                                    + application.getRegistrationName() + '/' + module + '/' + ejb.getName()
+                                    + '/' + viewName + ": " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private static String safeName(String value) {
+        return value == null ? "application" : value.replaceAll("[^A-Za-z0-9_]", "_");
+    }
+
+    private static String pathPart(String value) {
+        return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8)
+                .replace("+", "%20");
     }
 
     private void index(Application application, Map<String, Long> into) {

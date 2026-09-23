@@ -73,6 +73,9 @@ public class OrbHttpEndpoint implements PostConstruct {
     @Inject
     private GlassFishTransactionBridge transactions;
 
+    @Inject
+    private EjbNameIndex index;
+
     @Override
     public void postConstruct() {
         // Before the dispatchers are built, so their defaults are chosen from
@@ -82,6 +85,7 @@ public class OrbHttpEndpoint implements PostConstruct {
 
         SessionAffinity affinity = SessionAffinity.forThisNode();
         ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
+        index.foryIdl().forEach(foryCatalog::register);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,

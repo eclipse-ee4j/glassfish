@@ -58,6 +58,18 @@ class ForyGrpcSkeletonTest {
         assertEquals("Hello Ada", ((GeneratedResponse) response).value);
     }
 
+    @Test
+    void generatedAdapterDiscoversHandlesOnlyOnce() throws Throwable {
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("demo.Greeter", Greeter.class);
+        ForyGrpcSchemaAdapter adapter = ForyGeneratedSchemaAdapter.unary(
+                GeneratedRequestModel.class, GeneratedResponseModel.class);
+
+        Object response = skeleton.invoke("/demo.Greeter/greet", new GreeterBean(),
+                new GeneratedRequestModel("Ada"), adapter);
+
+        assertEquals("Hello Ada", ((GeneratedResponseModel) response).value());
+    }
+
     static final class GeneratedRequest {
         final String value;
 
@@ -71,6 +83,30 @@ class ForyGrpcSkeletonTest {
 
         GeneratedResponse(String value) {
             this.value = value;
+        }
+    }
+
+    public static final class GeneratedRequestModel {
+        private final String value;
+
+        public GeneratedRequestModel(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
+    }
+
+    public static final class GeneratedResponseModel {
+        private final String value;
+
+        public GeneratedResponseModel(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
         }
     }
 

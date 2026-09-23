@@ -79,6 +79,34 @@ class ForyGrpcSkeletonTest {
         assertEquals("generated.demo.GreetResponse", models.response().getName());
     }
 
+    @Test
+    void registersGeneratedModelsInTheCrossLanguageForyRuntime() {
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "generated.demo", "greet", String.class, String.class);
+        ForyGeneratedRuntime runtime = new ForyGeneratedRuntime(models, 1000, 1001);
+        Object request = construct(models.request(), "Ada");
+
+        Object copy = runtime.deserialize(runtime.serialize(request), models.request());
+
+        assertEquals("Ada", invokeValue(copy));
+    }
+
+    private static Object construct(Class<?> type, String value) {
+        try {
+            return type.getConstructor(String.class).newInstance(value);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    private static Object invokeValue(Object value) {
+        try {
+            return value.getClass().getMethod("value").invoke(value);
+        } catch (ReflectiveOperationException e) {
+            throw new AssertionError(e);
+        }
+    }
+
     static final class GeneratedRequest {
         final String value;
 

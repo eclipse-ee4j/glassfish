@@ -37,6 +37,10 @@ import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
 import org.glassfish.orb.http.fory.grpc.ForyIdlGenerator;
+import org.glassfish.orb.http.fory.grpc.ForyGrpcSkeleton;
+import org.glassfish.orb.http.fory.grpc.ForyGeneratedRuntime;
+import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
+import org.glassfish.orb.http.fory.grpc.ForyGeneratedSchemaAdapter;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.jvnet.hk2.annotations.Service;
 
@@ -68,6 +72,61 @@ public class EjbNameIndex {
     private ApplicationRegistry applications;
 
     private final Map<String, Long> byName = new ConcurrentHashMap<>();
+    private final Map<String, ForyRoute> foryRoutes = new ConcurrentHashMap<>();
+
+    public ForyGeneratedServiceRegistry foryRegistry() {
+        ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+        foryRoutes.clear();
+        for (String name : applications.getAllApplicationNames()) {
+            ApplicationInfo info = applications.get(name);
+            if (info == null) continue;
+            Application application = info.getMetaData(Application.class);
+            if (application == null) continue;
+            for (EjbBundleDescriptor bundle : application.getBundleDescriptors(EjbBundleDescriptor.class)) {
+                String module = bundle.getModuleDescriptor().getModuleName();
+                for (EjbDescriptor ejb : bundle.getEjbs()) {
+                    Set<String> views = ejb.getRemoteBusinessClassNames();
+                    if (views == null) continue;
+                    ClassLoader loader = EjbContainerUtilImpl.getInstance().getClassLoader(ejb.getUniqueId());
+                    for (String viewName : views) {
+                        try {
+                            Class<?> view = Class.forName(viewName, false, loader);
+                            String service = "glassfish." + safeName(application.getRegistrationName()) + '.'
+                                    + safeName(module) + '.' + safeName(ejb.getName()) + '.'
+                                    + safeName(view.getSimpleName());
+                            ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of(service, view);
+                            int id = 1000;
+                            for (java.lang.reflect.Method method : java.util.Arrays.stream(view.getMethods())
+                                    .filter(m -> m.getDeclaringClass() != Object.class)
+                                    .sorted(java.util.Comparator.comparing(java.lang.reflect.Method::getName))
+                                    .toList()) {
+                                if (method.getDeclaringClass() == Object.class || method.getParameterCount() > 1) continue;
+                                String wire = Protocol.CONTEXT_PATH + "/fory/" + service + '/'
+                                        + Character.toUpperCase(method.getName().charAt(0)) + method.getName().substring(1);
+                                var models = org.glassfish.orb.http.fory.grpc.ForyRuntimeModelGenerator.unary(
+                                        service, method.getName(), method.getParameterCount() == 0 ? void.class : method.getParameterTypes()[0], method.getReturnType());
+                                registry.register(wire, '/' + service + '/' + method.getName(), skeleton, models,
+                                        new ForyGeneratedRuntime(models, id++, id++),
+                                        ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+                                foryRoutes.put(wire, new ForyRoute(application.getRegistrationName(), module,
+                                        ejb.getName(), viewName));
+                            }
+                        } catch (ReflectiveOperationException | IllegalArgumentException e) {
+                            LOG.log(Level.WARNING, "cannot build Fory route for " + viewName + ": " + e.getMessage());
+                        }
+                    }
+                }
+            }
+        }
+        return registry;
+    }
+
+    public ForyRoute foryRoute(String path) {
+        return foryRoutes.get(path);
+    }
+
+    public record ForyRoute(String app, String module, String bean, String view) {
+    }
 
     /**
      * @param appName the application name

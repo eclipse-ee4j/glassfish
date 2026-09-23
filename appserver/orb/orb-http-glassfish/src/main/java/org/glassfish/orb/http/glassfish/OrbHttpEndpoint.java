@@ -88,9 +88,18 @@ public class OrbHttpEndpoint implements PostConstruct {
         SessionAffinity affinity = SessionAffinity.forThisNode();
         ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
         index.foryIdl().forEach(foryCatalog::register);
-        ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+        ForyGeneratedServiceRegistry registry = index.foryRegistry();
         ForyGrpcServerAdapter foryGrpc = new ForyGrpcServerAdapter(registry,
-                (path, exchange) -> { throw new IllegalStateException("unbound Fory route: " + path); },
+                (path, exchange) -> {
+                    EjbNameIndex.ForyRoute route = index.foryRoute(path);
+                    if (route == null) throw new IllegalStateException("unknown Fory route: " + path);
+                    var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
+                    Object target = container.getTargetObject(key, route.view());
+                    return new ForyGrpcServerAdapter.Target() {
+                        @Override public Object value() { return target; }
+                        @Override public void close() { container.releaseTargetObject(target); }
+                    };
+                },
                 16 * 1024 * 1024);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);

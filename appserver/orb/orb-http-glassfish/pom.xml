@@ -42,6 +42,11 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-fory-grpc</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
             <artifactId>orb-http-server</artifactId>
             <version>${project.version}</version>
         </dependency>

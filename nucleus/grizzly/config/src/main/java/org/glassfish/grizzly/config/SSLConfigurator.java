@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -22,7 +22,7 @@ import java.lang.System.Logger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +31,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLServerSocketFactory;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
@@ -71,6 +72,12 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     public SSLConfigurator(final ServiceLocator serviceLocator, final Ssl ssl) {
         this.ssl = ssl;
         this.serviceLocator = serviceLocator;
+
+        // The inherited no-arg constructor starts with a fresh SSLParameters, whose
+        // useCipherSuitesOrder is false, which would override the JSSE server default (true).
+        final SSLParameters parameters = new SSLParameters();
+        parameters.setUseCipherSuitesOrder(true);
+        setSSLParameters(parameters);
 
         if (isWantClientAuth(ssl)) {
             setWantClientAuth(true);
@@ -312,7 +319,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
      *         be mapped to corresponding JSSE cipher suite names
      */
     private static Set<String> getJSSECiphers(final List<String> configuredCiphers) {
-        final Set<String> enabledCiphers = new HashSet<>(configuredCiphers.size());
+        final Set<String> enabledCiphers = new LinkedHashSet<>(configuredCiphers.size());
         for (String cipher : configuredCiphers) {
             if (!cipher.isEmpty() && cipher.charAt(0) != '-') {
                 if (cipher.charAt(0) == '+') {

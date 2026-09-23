@@ -1,0 +1,13 @@
+package compatibility.greeter;
+
+message SayHelloRequest {
+    string value = 1;
+}
+
+message SayHelloResponse {
+    string value = 1;
+}
+
+service Greeter {
+    rpc SayHello(SayHelloRequest) returns (SayHelloResponse);
+}

@@ -94,6 +94,16 @@ public class EjbNameIndex {
                             String service = "glassfish." + safeName(application.getRegistrationName()) + '.'
                                     + safeName(module) + '.' + safeName(ejb.getName()) + '_'
                                     + safeName(view.getSimpleName());
+                            // Validate the complete contract before publishing any
+                            // route. The IDL generator is the source of truth for
+                            // method ordering, overload rejection and portable
+                            // types; keeping this check here prevents a partially
+                            // registered service whose wire type ids differ from
+                            // the advertised .fdl document.
+                            ForyIdlGenerator.generate(
+                                    "glassfish." + safeName(application.getRegistrationName()) + '.'
+                                            + safeName(module),
+                                    safeName(ejb.getName()) + '_' + safeName(view.getSimpleName()), view);
                             ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of(service, view);
                             int id = 1000;
                             for (java.lang.reflect.Method method : java.util.Arrays.stream(view.getMethods())

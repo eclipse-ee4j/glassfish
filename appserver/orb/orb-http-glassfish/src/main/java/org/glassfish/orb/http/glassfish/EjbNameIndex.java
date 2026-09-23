@@ -92,7 +92,7 @@ public class EjbNameIndex {
                         try {
                             Class<?> view = Class.forName(viewName, false, loader);
                             String service = "glassfish." + safeName(application.getRegistrationName()) + '.'
-                                    + safeName(module) + '.' + safeName(ejb.getName()) + '.'
+                                    + safeName(module) + '.' + safeName(ejb.getName()) + '_'
                                     + safeName(view.getSimpleName());
                             ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of(service, view);
                             int id = 1000;
@@ -224,8 +224,9 @@ public class EjbNameIndex {
                                     + pathPart(ejb.getName()) + '/'
                                     + pathPart(viewName) + ".fdl";
                             result.put(path, ForyIdlGenerator.generate(
-                                    "glassfish." + safeName(application.getRegistrationName()),
-                                    view.getSimpleName(), view));
+                                    "glassfish." + safeName(application.getRegistrationName()) + '.'
+                                            + safeName(module),
+                                    safeName(ejb.getName()) + '_' + safeName(view.getSimpleName()), view));
                         } catch (ReflectiveOperationException | IllegalArgumentException e) {
                             LOG.log(Level.WARNING, "cannot generate Fory IDL for "
                                     + application.getRegistrationName() + '/' + module + '/' + ejb.getName()

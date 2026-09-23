@@ -111,6 +111,20 @@ class ForyGrpcSkeletonTest {
         }
     }
 
+    @Test
+    void registryResolvesDeployTimeBindingWithoutRebuildingMetadata() {
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("demo.Greeter", Greeter.class);
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "generated.demo", "greet", String.class, String.class);
+        ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+        registry.register("/demo.Greeter/greet", "/demo.Greeter/greet", skeleton, models,
+                new ForyGeneratedRuntime(models, 1000, 1001),
+                ForyGrpcSchemaAdapter.IDENTITY);
+
+        assertEquals("/demo.Greeter/greet", registry.lookup("/demo.Greeter/greet").skeletonPath());
+        assertEquals(1, registry.size());
+    }
+
     private static Object construct(Class<?> type, String value) {
         try {
             return type.getConstructor(String.class).newInstance(value);

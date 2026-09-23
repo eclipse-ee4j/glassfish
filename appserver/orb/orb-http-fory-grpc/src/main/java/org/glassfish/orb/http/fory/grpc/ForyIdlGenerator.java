@@ -38,6 +38,7 @@ public final class ForyIdlGenerator {
                 .sorted(Comparator.comparing(Method::getName)
                         .thenComparing(method -> Arrays.toString(method.getParameterTypes())))
                 .toArray(Method[]::new);
+        int typeId = 1000;
         for (Method method : methods) {
             if (!names.add(method.getName())) {
                 throw new IllegalArgumentException(
@@ -46,7 +47,8 @@ public final class ForyIdlGenerator {
             String rpcName = upperFirst(method.getName());
             String request = rpcName + "Request";
             String response = rpcName + "Response";
-            out.append("message ").append(request).append(" {\n");
+            out.append("message ").append(request).append(" [id=").append(typeId++)
+                    .append("] {\n");
             if (method.getParameterCount() > 1) {
                 throw unsupported(method, "more than one parameter");
             }
@@ -54,7 +56,8 @@ public final class ForyIdlGenerator {
                 out.append("    ").append(foryType(method.getParameterTypes()[0]))
                         .append(" value = 1;\n");
             }
-            out.append("}\n\nmessage ").append(response).append(" {\n");
+            out.append("}\n\nmessage ").append(response).append(" [id=").append(typeId++)
+                    .append("] {\n");
             if (method.getReturnType() != void.class) {
                 out.append("    ").append(foryType(method.getReturnType()))
                         .append(" value = 1;\n");

@@ -70,6 +70,15 @@ class ForyGrpcSkeletonTest {
         assertEquals("Hello Ada", ((GeneratedResponseModel) response).value());
     }
 
+    @Test
+    void generatesDeployTimeModelsWithoutApplicationSourceChanges() {
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "generated.demo", "greet", String.class, String.class);
+
+        assertEquals("generated.demo.GreetRequest", models.request().getName());
+        assertEquals("generated.demo.GreetResponse", models.response().getName());
+    }
+
     static final class GeneratedRequest {
         final String value;
 
@@ -124,6 +133,8 @@ class ForyGrpcSkeletonTest {
         String idl = ForyIdlGenerator.generate("demo.greeter", "Greeter", Greeter.class);
 
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetRequest"));
+        org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetRequest [id=1000]"));
+        org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetResponse [id=1001]"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("string value = 1;"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains(
                 "rpc Greet(GreetRequest) returns (GreetResponse);"));

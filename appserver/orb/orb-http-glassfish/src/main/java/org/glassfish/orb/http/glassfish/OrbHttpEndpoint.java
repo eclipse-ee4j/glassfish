@@ -30,6 +30,8 @@ import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
+import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
+import org.glassfish.orb.http.fory.grpc.ForyGrpcServerAdapter;
 import org.glassfish.orb.http.server.AffinityDispatcher;
 import org.glassfish.orb.http.server.EjbDispatcher;
 import org.glassfish.orb.http.server.InvocationRegistry;
@@ -112,12 +114,16 @@ public class OrbHttpEndpoint implements PostConstruct {
         SessionAffinity affinity = SessionAffinity.forThisNode();
         ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
         index.foryIdl().forEach(foryCatalog::register);
+        ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+        ForyGrpcServerAdapter foryGrpc = new ForyGrpcServerAdapter(registry,
+                (path, exchange) -> { throw new IllegalStateException("unbound Fory route: " + path); },
+                16 * 1024 * 1024);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,
                 new NamingDispatcher(naming, security, new JavaSerializationMarshaller()),
                 new TransactionDispatcher(transactions, security),
-                new AffinityDispatcher(affinity), foryCatalog);
+                new AffinityDispatcher(affinity), foryCatalog, foryGrpc);
         grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
         LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);
     }

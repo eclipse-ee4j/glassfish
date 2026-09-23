@@ -12,10 +12,12 @@ package org.glassfish.orb.http.fory.grpc;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputFilter;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GrpcFrameCodecTest {
@@ -37,6 +39,17 @@ class GrpcFrameCodecTest {
 
         assertThrows(IOException.class, () -> GrpcFrameCodec.read(
                 new ByteArrayInputStream(compressed), 1024));
+    }
+
+    @Test
+    void payloadCodecRoundTripsValueInsideGrpcFrame() throws Exception {
+        ForyGrpcPayloadCodec codec = new ForyGrpcPayloadCodec();
+        byte[] frame = codec.encodeFrame("hello-fory");
+
+        Object value = codec.decodeFrame(frame, 1024 * 1024,
+                getClass().getClassLoader(), ObjectInputFilter.Config.createFilter("java.lang.String;!*"));
+
+        assertEquals("hello-fory", value);
     }
 
     @Test

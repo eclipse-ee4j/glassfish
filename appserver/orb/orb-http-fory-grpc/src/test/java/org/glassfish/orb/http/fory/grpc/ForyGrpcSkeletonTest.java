@@ -91,6 +91,26 @@ class ForyGrpcSkeletonTest {
         assertEquals("Ada", invokeValue(copy));
     }
 
+    @Test
+    void sharedRuntimeSupportsConcurrentCalls() throws Exception {
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "generated.demo", "greet", String.class, String.class);
+        ForyGeneratedRuntime runtime = new ForyGeneratedRuntime(models, 1000, 1001);
+        var pool = java.util.concurrent.Executors.newFixedThreadPool(4);
+        try {
+            var tasks = java.util.stream.IntStream.range(0, 32)
+                    .mapToObj(i -> pool.submit(() -> {
+                        Object request = construct(models.request(), "user-" + i);
+                        return invokeValue(runtime.deserialize(runtime.serialize(request), models.request()));
+                    })).toList();
+            for (int i = 0; i < tasks.size(); i++) {
+                assertEquals("user-" + i, tasks.get(i).get());
+            }
+        } finally {
+            pool.shutdownNow();
+        }
+    }
+
     private static Object construct(Class<?> type, String value) {
         try {
             return type.getConstructor(String.class).newInstance(value);

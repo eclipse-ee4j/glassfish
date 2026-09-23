@@ -73,8 +73,8 @@ public final class ForyGrpcServerAdapter {
         if (flags != 0) {
             throw new IOException("compressed gRPC frames are not supported");
         }
-        int length = (input.read() << 24) | (input.read() << 16)
-                | (input.read() << 8) | input.read();
+        int length = (readByte(input) << 24) | (readByte(input) << 16)
+                | (readByte(input) << 8) | readByte(input);
         if (length < 0 || length > maxMessageBytes) {
             throw new IOException("gRPC message exceeds configured limit: " + length);
         }
@@ -83,6 +83,14 @@ public final class ForyGrpcServerAdapter {
             throw new EOFException("truncated gRPC frame");
         }
         return payload;
+    }
+
+    private static int readByte(InputStream input) throws IOException {
+        int value = input.read();
+        if (value < 0) {
+            throw new EOFException("truncated gRPC frame header");
+        }
+        return value;
     }
 
     private static byte[] frame(byte[] payload) {

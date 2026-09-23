@@ -64,6 +64,7 @@ class ForyGrpcSkeletonTest {
     void generatesAnIdlContractFromTheRemoteView() {
         String idl = ForyIdlGenerator.generate("demo.greeter", "Greeter", Greeter.class);
 
+        org.junit.jupiter.api.Assertions.assertTrue(idl.startsWith("syntax = \"proto3\";"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetRequest"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("string value = 1;"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains(

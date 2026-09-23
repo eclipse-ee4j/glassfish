@@ -29,6 +29,7 @@ public final class ForyIdlGenerator {
      */
     public static String generate(String packageName, String serviceName, Class<?> view) {
         StringBuilder out = new StringBuilder(512)
+                .append("syntax = \"proto3\";\n\n")
                 .append("package ").append(packageName).append(";\n\n")
                 .append("message Empty {}\n\n");
         Set<String> names = new HashSet<>();

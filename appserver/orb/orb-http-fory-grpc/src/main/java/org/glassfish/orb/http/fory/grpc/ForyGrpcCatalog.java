@@ -49,6 +49,12 @@ public final class ForyGrpcCatalog {
         }
         String path = new String(exchange.pathBytes(), exchange.pathOffset(),
                 exchange.pathLength(), StandardCharsets.UTF_8);
+        if (path.endsWith(PREFIX)) {
+            // The index: one path per line, so a client can find out what this
+            // server publishes without being told the names of the deployment.
+            writeIndex(exchange, path.substring(0, path.length() - PREFIX.length()));
+            return;
+        }
         byte[] idl = idlByPath.get(path);
         if (idl == null) {
             exchange.setStatus(Protocol.SC_NOT_FOUND);
@@ -59,6 +65,18 @@ public final class ForyGrpcCatalog {
         exchange.setResponseHeader("Content-Length", Integer.toString(idl.length));
         if ("GET".equals(exchange.method())) {
             exchange.writeBody(new ByteBuffer[] {ByteBuffer.wrap(idl)});
+        }
+    }
+
+    private void writeIndex(ServerExchange exchange, String contextPath) throws IOException {
+        StringBuilder out = new StringBuilder(128);
+        idlByPath.keySet().stream().sorted().forEach(path -> out.append(contextPath).append(path).append('\n'));
+        byte[] body = out.toString().getBytes(StandardCharsets.UTF_8);
+        exchange.setStatus(Protocol.SC_OK);
+        exchange.setResponseHeader("Content-Type", "text/plain; charset=utf-8");
+        exchange.setResponseHeader("Content-Length", Integer.toString(body.length));
+        if ("GET".equals(exchange.method())) {
+            exchange.writeBody(new ByteBuffer[] {ByteBuffer.wrap(body)});
         }
     }
 

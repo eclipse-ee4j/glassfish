@@ -115,6 +115,20 @@ class ForyGrpcServerAdapterTest {
     }
 
     @Test
+    void reachesABeanRegisteredAfterTheEndpointStarted() throws Exception {
+        // The registry is built before applications are deployed, so an
+        // unknown path is a reason to look again, not to give up.
+        Fixture fixture = new Fixture(name -> "Hello " + name, 1 << 20, false);
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals(200, exchange.status);
+        assertEquals("0", exchange.trailers.get("grpc-status"));
+        assertEquals("Hello Ada", fixture.responseOf(exchange.body()));
+    }
+
+    @Test
     void refusesToAnswerOnATransportThatCannotSendTrailers() throws Exception {
         Fixture fixture = new Fixture(name -> {
             throw new AssertionError("the bean must not be reached");
@@ -146,12 +160,30 @@ class ForyGrpcServerAdapterTest {
         }
 
         Fixture(Greeter bean, int maxMessageBytes) {
+            this(bean, maxMessageBytes, true);
+        }
+
+        /**
+         * @param registeredUpFront false to leave the registry empty until it
+         *        is asked for the path, as it is for a bean deployed after the
+         *        endpoint started
+         */
+        Fixture(Greeter bean, int maxMessageBytes, boolean registeredUpFront) {
             this.bean = bean;
             models = ForyRuntimeModelGenerator.unary("generated.adapter", "greet", String.class, String.class);
             runtime = new ForyGeneratedRuntime(models, 2000, 2001);
             ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
-            registry.register(PATH, PATH, ForyGrpcSkeleton.of("demo.Greeter", Greeter.class), models, runtime,
+            Runnable register = () -> registry.register(PATH, PATH,
+                    ForyGrpcSkeleton.of("demo.Greeter", Greeter.class), models, runtime,
                     ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+            if (registeredUpFront) {
+                register.run();
+            } else {
+                registry.onMiss(() -> {
+                    registry.clear();
+                    register.run();
+                });
+            }
             adapter = new ForyGrpcServerAdapter(registry, (path, exchange) -> new ForyGrpcServerAdapter.Target() {
                 @Override
                 public Object value() {

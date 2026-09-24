@@ -18,6 +18,22 @@ public final class ForyGeneratedServiceRegistry {
 
     private final Map<String, Binding> bindings = new ConcurrentHashMap<>();
 
+    /**
+     * Rebuilds the bindings from the applications deployed now. The bindings
+     * are built when the endpoint starts, which is before anything is
+     * deployed, so a path that is not here yet may simply belong to an
+     * application that arrived later.
+     */
+    private volatile Runnable refresher = () -> { };
+
+    public void onMiss(Runnable refresher) {
+        this.refresher = Objects.requireNonNull(refresher, "refresher");
+    }
+
+    public void clear() {
+        bindings.clear();
+    }
+
     public void register(String wirePath, String skeletonPath, ForyGrpcSkeleton skeleton,
                          ForyRuntimeModelGenerator.GeneratedModels models,
                          ForyGeneratedRuntime runtime, ForyGrpcSchemaAdapter adapter) {
@@ -28,7 +44,12 @@ public final class ForyGeneratedServiceRegistry {
     }
 
     public Binding lookup(String wirePath) {
-        return bindings.get(wirePath);
+        Binding binding = bindings.get(wirePath);
+        if (binding == null) {
+            refresher.run();
+            binding = bindings.get(wirePath);
+        }
+        return binding;
     }
 
     public int size() {

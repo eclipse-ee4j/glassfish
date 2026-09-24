@@ -75,8 +75,22 @@ public class EjbNameIndex {
     private final Map<String, Long> byName = new ConcurrentHashMap<>();
     private final Map<String, ForyRoute> foryRoutes = new ConcurrentHashMap<>();
 
+    /** The registry the endpoint serves from; {@link #refreshForyRegistry} fills it. */
+    private final ForyGeneratedServiceRegistry foryRegistry = new ForyGeneratedServiceRegistry();
+
     public ForyGeneratedServiceRegistry foryRegistry() {
-        ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+        return foryRegistry;
+    }
+
+    /**
+     * Rebuilds the Fory routes from the applications deployed now, so that a
+     * bean deployed after the endpoint started can still be reached.
+     *
+     * @return the registry, filled in
+     */
+    public ForyGeneratedServiceRegistry refreshForyRegistry() {
+        ForyGeneratedServiceRegistry registry = foryRegistry;
+        registry.clear();
         foryRoutes.clear();
         for (String name : applications.getAllApplicationNames()) {
             ApplicationInfo info = applications.get(name);

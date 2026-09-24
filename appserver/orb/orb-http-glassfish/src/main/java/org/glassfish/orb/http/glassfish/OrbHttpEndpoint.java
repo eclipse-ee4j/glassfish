@@ -87,8 +87,20 @@ public class OrbHttpEndpoint implements PostConstruct {
 
         SessionAffinity affinity = SessionAffinity.forThisNode();
         ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
-        index.foryIdl().forEach(foryCatalog::register);
         ForyGeneratedServiceRegistry registry = index.foryRegistry();
+        // This runs while the server starts, before any application is
+        // deployed, so what is published here is usually empty. Both the
+        // catalog and the registry rebuild themselves when they are asked for
+        // something they do not have, which is how a bean deployed later
+        // becomes visible without restarting the server.
+        Runnable republish = () -> {
+            foryCatalog.clear();
+            index.foryIdl().forEach(foryCatalog::register);
+            index.refreshForyRegistry();
+        };
+        foryCatalog.onMiss(republish);
+        registry.onMiss(republish);
+        republish.run();
         ForyGrpcServerAdapter foryGrpc = new ForyGrpcServerAdapter(registry,
                 (path, exchange) -> {
                     EjbNameIndex.ForyRoute route = index.foryRoute(path);

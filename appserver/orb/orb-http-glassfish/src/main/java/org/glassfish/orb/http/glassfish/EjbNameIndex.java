@@ -41,6 +41,7 @@ import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcSkeleton;
 import org.glassfish.orb.http.fory.grpc.ForyIdlGenerator;
+import org.glassfish.orb.http.fory.grpc.ForyTypeIds;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.jvnet.hk2.annotations.Service;
 
@@ -100,12 +101,11 @@ public class EjbNameIndex {
                             // types; keeping this check here prevents a partially
                             // registered service whose wire type ids differ from
                             // the advertised .fdl document.
-                            ForyIdlGenerator.generate(
-                                    "glassfish." + safeName(application.getRegistrationName()) + '.'
-                                            + safeName(module),
+                            String idlPackage = "glassfish." + safeName(application.getRegistrationName())
+                                    + '.' + safeName(module);
+                            ForyIdlGenerator.generate(idlPackage,
                                     safeName(ejb.getName()) + '_' + safeName(view.getSimpleName()), view);
                             ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of(service, view);
-                            int id = 1000;
                             for (java.lang.reflect.Method method : java.util.Arrays.stream(view.getMethods())
                                     .filter(m -> m.getDeclaringClass() != Object.class)
                                     .sorted(java.util.Comparator.comparing(java.lang.reflect.Method::getName))
@@ -115,8 +115,14 @@ public class EjbNameIndex {
                                         + Character.toUpperCase(method.getName().charAt(0)) + method.getName().substring(1);
                                 var models = org.glassfish.orb.http.fory.grpc.ForyRuntimeModelGenerator.unary(
                                         service, method.getName(), method.getParameterCount() == 0 ? void.class : method.getParameterTypes()[0], method.getReturnType());
+                                // The ids come from the names in the published IDL, so the
+                                // document a client generated from and the runtime agree.
+                                String rpcName = Character.toUpperCase(method.getName().charAt(0))
+                                        + method.getName().substring(1);
                                 registry.register(wire, '/' + service + '/' + method.getName(), skeleton, models,
-                                        new ForyGeneratedRuntime(models, id++, id++),
+                                        new ForyGeneratedRuntime(models,
+                                                ForyTypeIds.of(idlPackage, rpcName + "Request"),
+                                                ForyTypeIds.of(idlPackage, rpcName + "Response")),
                                         ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
                                 foryRoutes.put(wire, new ForyRoute(application.getRegistrationName(), module,
                                         ejb.getName(), viewName));

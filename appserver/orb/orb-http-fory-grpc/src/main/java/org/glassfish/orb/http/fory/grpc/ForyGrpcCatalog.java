@@ -44,7 +44,10 @@ public final class ForyGrpcCatalog {
     }
 
     public void register(String path, String idl) {
-        if (path == null || !path.startsWith(PREFIX) || !path.endsWith(".fdl")) {
+        // The paths the server publishes carry its context path in front of
+        // the well-known prefix, and dispatch looks them up by the whole
+        // request path, so that is what is stored.
+        if (path == null || !path.contains(PREFIX) || !path.endsWith(".fdl")) {
             throw new IllegalArgumentException("invalid Fory IDL path: " + path);
         }
         if (idl == null || idl.isBlank()) {
@@ -64,7 +67,7 @@ public final class ForyGrpcCatalog {
             refresher.run();
             // The index: one path per line, so a client can find out what this
             // server publishes without being told the names of the deployment.
-            writeIndex(exchange, path.substring(0, path.length() - PREFIX.length()));
+            writeIndex(exchange);
             return;
         }
         byte[] idl = idlByPath.get(path);
@@ -84,9 +87,9 @@ public final class ForyGrpcCatalog {
         }
     }
 
-    private void writeIndex(ServerExchange exchange, String contextPath) throws IOException {
+    private void writeIndex(ServerExchange exchange) throws IOException {
         StringBuilder out = new StringBuilder(128);
-        idlByPath.keySet().stream().sorted().forEach(path -> out.append(contextPath).append(path).append('\n'));
+        idlByPath.keySet().stream().sorted().forEach(path -> out.append(path).append('\n'));
         byte[] body = out.toString().getBytes(StandardCharsets.UTF_8);
         exchange.setStatus(Protocol.SC_OK);
         exchange.setResponseHeader("Content-Type", "text/plain; charset=utf-8");

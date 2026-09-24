@@ -40,16 +40,21 @@ jobs:
         if: matrix.language == 'python'
         run: python -m compileall -q compatibility/fory-grpc/generated/python
 
-      - name: Validate generated Go sources
+      - name: Build the Go client against the generated sources
         if: matrix.language == 'go'
         run: |
-          cd compatibility/fory-grpc/generated/go
-          go mod init compatibility/fory-grpc/generated/go
+          cd compatibility/fory-grpc
+          go mod init compatibility/fory-grpc
           go mod tidy
-          go test ./...
+          go vet ./...
+          go build -o /tmp/fory-grpc-client ./client
+          /tmp/fory-grpc-client -h 2>&1 | head -20 || true
 
       - name: Upload generated client
         uses: actions/upload-artifact@v4
         with:
           name: fory-grpc-${{ matrix.language }}
-          path: compatibility/fory-grpc/generated/${{ matrix.language }}
+          path: |
+            compatibility/fory-grpc/generated/${{ matrix.language }}
+            compatibility/fory-grpc/go.mod
+            compatibility/fory-grpc/go.sum

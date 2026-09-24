@@ -60,8 +60,8 @@ class ForyTypeIdsTest {
 
         // "apologise" sorts before both existing methods, so a counter would
         // have pushed every id along and broken every client already generated.
-        for (String message : new String[] {"GreetRequest", "GreetResponse",
-                "FarewellRequest", "FarewellResponse"}) {
+        String[] messages = {"GreetRequest", "GreetResponse", "FarewellRequest", "FarewellResponse"};
+        for (String message : messages) {
             String declaration = "message " + message + " [id="
                     + ForyTypeIds.of("demo.greeter", message) + "]";
             assertTrue(before.contains(declaration), before);

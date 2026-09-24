@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
@@ -99,13 +101,41 @@ final class GrizzlyServerExchange implements ServerExchange {
         }
     }
 
+    /** Set on the first setResponseTrailer; null means the response has none. */
+    private Map<String, String> trailers;
+
+    @Override
+    public boolean supportsResponseTrailers() {
+        return true;
+    }
+
+    @Override
+    public void setResponseTrailer(String name, String value) {
+        if (response.isCommitted()) {
+            throw new IllegalStateException("the response is already committed: " + name);
+        }
+        if (trailers == null) {
+            trailers = new LinkedHashMap<>(4);
+        }
+        trailers.put(name, value);
+    }
+
     @Override
     public void writeBody(ByteBuffer[] body) throws IOException {
         long total = 0;
         for (ByteBuffer buffer : body) {
             total += buffer.remaining();
         }
-        response.setContentLengthLong(total);
+        if (trailers == null) {
+            response.setContentLengthLong(total);
+        } else {
+            // Trailers are only sent after a chunked body, so this response
+            // must not announce a length. Grizzly asks for them when it
+            // finishes the response, which is why they are handed over as a
+            // supplier before the first byte goes out.
+            Map<String, String> sent = trailers;
+            response.setTrailers(() -> sent);
+        }
 
         for (ByteBuffer buffer : body) {
             ByteBuffer writable = buffer;

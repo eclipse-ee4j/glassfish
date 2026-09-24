@@ -69,6 +69,32 @@ public interface ServerExchange {
     void writeBody(ByteBuffer[] body) throws IOException;
 
     /**
+     * Whether this transport can send trailers after the body. HTTP/2 always
+     * can; HTTP/1.1 can when the response is chunked, which means it cannot
+     * also carry a Content-Length.
+     *
+     * @return true when {@link #setResponseTrailer} is usable
+     */
+    default boolean supportsResponseTrailers() {
+        return false;
+    }
+
+    /**
+     * Adds a trailer to send after the body. gRPC carries its status this way,
+     * so a transport that cannot do it cannot serve gRPC.
+     *
+     * <p>Call before {@link #writeBody}: the trailers have to be known before
+     * the response is committed.
+     *
+     * @param name trailer name
+     * @param value trailer value
+     * @throws UnsupportedOperationException when this transport cannot send trailers
+     */
+    default void setResponseTrailer(String name, String value) {
+        throw new UnsupportedOperationException("this transport cannot send trailers");
+    }
+
+    /**
      * @return the authenticated caller's name, or {@code null} if the request
      *         carries no credential at all. Established by the container's own
      *         authentication - Basic against a realm, a client certificate, a

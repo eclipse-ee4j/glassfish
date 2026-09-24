@@ -216,9 +216,11 @@ class ForyGrpcServerAdapterTest {
             return body;
         }
 
+        private String method = "POST";
+
         @Override
         public String method() {
-            return "POST";
+            return method;
         }
 
         @Override

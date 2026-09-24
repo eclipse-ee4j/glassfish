@@ -195,8 +195,12 @@ class ForyGrpcSkeletonTest {
         String idl = ForyIdlGenerator.generate("demo.greeter", "Greeter", Greeter.class);
 
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetRequest"));
-        org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetRequest [id=1000]"));
-        org.junit.jupiter.api.Assertions.assertTrue(idl.contains("message GreetResponse [id=1001]"));
+        // The ids come from the message names, not from the order the methods
+        // happen to be discovered in; see ForyTypeIdsTest.
+        org.junit.jupiter.api.Assertions.assertTrue(idl.contains(
+                "message GreetRequest [id=" + ForyTypeIds.of("demo.greeter", "GreetRequest") + "]"));
+        org.junit.jupiter.api.Assertions.assertTrue(idl.contains(
+                "message GreetResponse [id=" + ForyTypeIds.of("demo.greeter", "GreetResponse") + "]"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("string value = 1;"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains(
                 "rpc Greet(GreetRequest) returns (GreetResponse);"));

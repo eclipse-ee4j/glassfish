@@ -57,6 +57,35 @@ class ForyGrpcCatalogTest {
     }
 
     @Test
+    void rebuildsWhenAskedForSomethingItDoesNotHaveYet() throws IOException {
+        // The catalog is built while the server starts, before anything is
+        // deployed: a document it has never seen may belong to an application
+        // that arrived afterwards.
+        ForyGrpcCatalog catalog = new ForyGrpcCatalog();
+        String path = ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl";
+        catalog.onMiss(() -> catalog.register(path, "package late;\n"));
+        Exchange exchange = new Exchange("GET", path);
+
+        catalog.dispatch(exchange);
+
+        assertEquals(200, exchange.status);
+        assertEquals("package late;\n", new String(exchange.body, StandardCharsets.UTF_8));
+    }
+
+    @Test
+    void rebuildsBeforeListing() throws IOException {
+        ForyGrpcCatalog catalog = new ForyGrpcCatalog();
+        catalog.onMiss(() -> catalog.register(ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl",
+                "package late;\n"));
+        Exchange exchange = new Exchange("GET", CONTEXT + ForyGrpcCatalog.PREFIX);
+
+        catalog.dispatch(exchange);
+
+        assertEquals(CONTEXT + ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl\n",
+                new String(exchange.body, StandardCharsets.UTF_8));
+    }
+
+    @Test
     void answersNotFoundForADocumentItDoesNotHave() throws IOException {
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
         Exchange exchange = new Exchange("GET", ForyGrpcCatalog.PREFIX + "app/module/Bean/absent.fdl");

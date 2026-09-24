@@ -31,8 +31,8 @@ class ForyGrpcCatalogTest {
     @Test
     void listsWhatThisServerPublishes() throws IOException {
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
-        catalog.register(ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Greeter.fdl", "package demo;\n");
-        catalog.register(ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Farewell.fdl", "package demo;\n");
+        catalog.register(CONTEXT + ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Greeter.fdl", "package demo;\n");
+        catalog.register(CONTEXT + ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Farewell.fdl", "package demo;\n");
         Exchange exchange = new Exchange("GET", CONTEXT + ForyGrpcCatalog.PREFIX);
 
         catalog.dispatch(exchange);
@@ -46,7 +46,7 @@ class ForyGrpcCatalogTest {
     @Test
     void stillServesASingleDocument() throws IOException {
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
-        String path = ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Greeter.fdl";
+        String path = CONTEXT + ForyGrpcCatalog.PREFIX + "app/module/Bean/demo.Greeter.fdl";
         catalog.register(path, "package demo;\n");
         Exchange exchange = new Exchange("GET", path);
 
@@ -62,7 +62,7 @@ class ForyGrpcCatalogTest {
         // deployed: a document it has never seen may belong to an application
         // that arrived afterwards.
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
-        String path = ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl";
+        String path = CONTEXT + ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl";
         catalog.onMiss(() -> catalog.register(path, "package late;\n"));
         Exchange exchange = new Exchange("GET", path);
 
@@ -75,7 +75,7 @@ class ForyGrpcCatalogTest {
     @Test
     void rebuildsBeforeListing() throws IOException {
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
-        catalog.onMiss(() -> catalog.register(ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl",
+        catalog.onMiss(() -> catalog.register(CONTEXT + ForyGrpcCatalog.PREFIX + "late/module/Bean/demo.Greeter.fdl",
                 "package late;\n"));
         Exchange exchange = new Exchange("GET", CONTEXT + ForyGrpcCatalog.PREFIX);
 
@@ -88,7 +88,7 @@ class ForyGrpcCatalogTest {
     @Test
     void answersNotFoundForADocumentItDoesNotHave() throws IOException {
         ForyGrpcCatalog catalog = new ForyGrpcCatalog();
-        Exchange exchange = new Exchange("GET", ForyGrpcCatalog.PREFIX + "app/module/Bean/absent.fdl");
+        Exchange exchange = new Exchange("GET", CONTEXT + ForyGrpcCatalog.PREFIX + "app/module/Bean/absent.fdl");
 
         catalog.dispatch(exchange);
 

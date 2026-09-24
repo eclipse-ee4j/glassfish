@@ -32,6 +32,17 @@ public final class ForyGrpcCatalog {
 
     private final Map<String, byte[]> idlByPath = new ConcurrentHashMap<>();
 
+    /** Rebuilds the catalog; see ForyGeneratedServiceRegistry.onMiss. */
+    private volatile Runnable refresher = () -> { };
+
+    public void onMiss(Runnable refresher) {
+        this.refresher = java.util.Objects.requireNonNull(refresher, "refresher");
+    }
+
+    public void clear() {
+        idlByPath.clear();
+    }
+
     public void register(String path, String idl) {
         if (path == null || !path.startsWith(PREFIX) || !path.endsWith(".fdl")) {
             throw new IllegalArgumentException("invalid Fory IDL path: " + path);
@@ -50,12 +61,17 @@ public final class ForyGrpcCatalog {
         String path = new String(exchange.pathBytes(), exchange.pathOffset(),
                 exchange.pathLength(), StandardCharsets.UTF_8);
         if (path.endsWith(PREFIX)) {
+            refresher.run();
             // The index: one path per line, so a client can find out what this
             // server publishes without being told the names of the deployment.
             writeIndex(exchange, path.substring(0, path.length() - PREFIX.length()));
             return;
         }
         byte[] idl = idlByPath.get(path);
+        if (idl == null) {
+            refresher.run();
+            idl = idlByPath.get(path);
+        }
         if (idl == null) {
             exchange.setStatus(Protocol.SC_NOT_FOUND);
             return;

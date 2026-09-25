@@ -124,7 +124,7 @@ public class OrbHttpEndpoint implements PostConstruct {
                         throw failure;
                     }
                 },
-                16 * 1024 * 1024);
+                16 * 1024 * 1024, transactions);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,

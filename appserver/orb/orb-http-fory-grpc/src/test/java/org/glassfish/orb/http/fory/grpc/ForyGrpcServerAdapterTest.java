@@ -12,12 +12,16 @@ package org.glassfish.orb.http.fory.grpc;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.glassfish.orb.http.server.ServerExchange;
+import org.glassfish.orb.http.server.TransactionBridge;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -129,6 +133,23 @@ class ForyGrpcServerAdapterTest {
     }
 
     @Test
+    void clearsTheRequestThreadBeforeTheCallReachesTheBean() throws Exception {
+        // Request threads are pooled. A branch left on this one by an earlier
+        // invocation would become this bean's transaction, so the adapter has
+        // to detach before the container sets the invocation up - not after.
+        List<String> events = new ArrayList<>();
+        Fixture fixture = new Fixture(name -> {
+            events.add("bean");
+            return "Hello " + name;
+        }, events);
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals(List.of("detach", "acquire", "bean"), events);
+    }
+
+    @Test
     void refusesToAnswerOnATransportThatCannotSendTrailers() throws Exception {
         Fixture fixture = new Fixture(name -> {
             throw new AssertionError("the bean must not be reached");
@@ -160,15 +181,24 @@ class ForyGrpcServerAdapterTest {
         }
 
         Fixture(Greeter bean, int maxMessageBytes) {
-            this(bean, maxMessageBytes, true);
+            this(bean, maxMessageBytes, true, new ArrayList<>());
+        }
+
+        Fixture(Greeter bean, List<String> events) {
+            this(bean, 1 << 20, true, events);
+        }
+
+        Fixture(Greeter bean, int maxMessageBytes, boolean registeredUpFront) {
+            this(bean, maxMessageBytes, registeredUpFront, new ArrayList<>());
         }
 
         /**
          * @param registeredUpFront false to leave the registry empty until it
          *        is asked for the path, as it is for a bean deployed after the
          *        endpoint started
+         * @param events records what the adapter did, in order
          */
-        Fixture(Greeter bean, int maxMessageBytes, boolean registeredUpFront) {
+        Fixture(Greeter bean, int maxMessageBytes, boolean registeredUpFront, List<String> events) {
             this.bean = bean;
             models = ForyRuntimeModelGenerator.unary("generated.adapter", "greet", String.class, String.class);
             runtime = new ForyGeneratedRuntime(models, 2000, 2001);
@@ -184,16 +214,27 @@ class ForyGrpcServerAdapterTest {
                     register.run();
                 });
             }
-            adapter = new ForyGrpcServerAdapter(registry, (path, exchange) -> new ForyGrpcServerAdapter.Target() {
-                @Override
-                public Object value() {
-                    return Fixture.this.bean;
-                }
+            // A bridge that only says what was asked of it: the adapter is
+            // expected to clear the thread, not to import anything.
+            TransactionBridge transactions = (TransactionBridge) Proxy.newProxyInstance(
+                    getClass().getClassLoader(), new Class<?>[] {TransactionBridge.class},
+                    (proxy, method, args) -> {
+                        events.add(method.getName());
+                        return null;
+                    });
+            adapter = new ForyGrpcServerAdapter(registry, (path, exchange) -> {
+                events.add("acquire");
+                return new ForyGrpcServerAdapter.Target() {
+                    @Override
+                    public Object value() {
+                        return Fixture.this.bean;
+                    }
 
-                @Override
-                public void close() {
-                }
-            }, maxMessageBytes);
+                    @Override
+                    public void close() {
+                    }
+                };
+            }, maxMessageBytes, transactions);
         }
 
         ForyGrpcServerAdapter adapter() {

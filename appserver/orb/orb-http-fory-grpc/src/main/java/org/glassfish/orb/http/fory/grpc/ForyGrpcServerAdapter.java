@@ -18,6 +18,7 @@ import java.util.Objects;
 
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.ServerExchange;
+import org.glassfish.orb.http.server.TransactionBridge;
 
 /** Bridges Grizzly's HTTP exchange to a registered Fory service binding. */
 public final class ForyGrpcServerAdapter {
@@ -39,15 +40,29 @@ public final class ForyGrpcServerAdapter {
     private final ForyGeneratedServiceRegistry registry;
     private final TargetProvider targets;
     private final int maxMessageBytes;
+    private final TransactionBridge transactions;
 
+    /** An adapter for a server with no transaction manager to clear. */
     public ForyGrpcServerAdapter(ForyGeneratedServiceRegistry registry,
                                  TargetProvider targets, int maxMessageBytes) {
+        this(registry, targets, maxMessageBytes, TransactionBridge.NONE);
+    }
+
+    /**
+     * @param transactions used only to leave the request thread with no
+     *        transaction on it; this endpoint does not yet import the
+     *        caller's, and a gRPC call carries none
+     */
+    public ForyGrpcServerAdapter(ForyGeneratedServiceRegistry registry,
+                                 TargetProvider targets, int maxMessageBytes,
+                                 TransactionBridge transactions) {
         if (maxMessageBytes < 0) {
             throw new IllegalArgumentException("maxMessageBytes must not be negative");
         }
         this.registry = Objects.requireNonNull(registry, "registry");
         this.targets = Objects.requireNonNull(targets, "targets");
         this.maxMessageBytes = maxMessageBytes;
+        this.transactions = Objects.requireNonNull(transactions, "transactions");
     }
 
     public void dispatch(ServerExchange exchange) throws IOException {
@@ -72,6 +87,17 @@ public final class ForyGrpcServerAdapter {
         }
 
         byte[] frame;
+        try {
+            // A gRPC call carries no transaction context, so it runs outside
+            // one - and that has to be made true rather than assumed. Request
+            // threads are pooled, and a branch that an earlier invocation left
+            // on this one would otherwise become this bean's transaction, to be
+            // committed or rolled back with someone else's work in it.
+            transactions.detach();
+        } catch (RuntimeException e) {
+            answerWithStatus(exchange, STATUS_UNKNOWN, e.toString());
+            return;
+        }
         try (Target target = targets.acquire(path, exchange)) {
             byte[] payload = readFrame(exchange.requestBody());
             Object request = binding.runtime().deserialize(payload, binding.models().request());

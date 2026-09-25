@@ -1,0 +1,103 @@
+name: EJB over HTTP live call
+
+# Proves the transport against a running server rather than against its parts.
+#
+# The unit tests round-trip this transport over a real HTTP server, but against
+# a fake container: they cannot see the module's OSGi manifest, the endpoint
+# being mounted on the listener, the container resolving a name to a deployed
+# bean, or the deployment's classloader on either side of the codec. Every
+# defect the Fory gRPC live job found was in exactly that half, which is the
+# argument for this job existing.
+#
+# The bean is the one fixture all the live jobs deploy, so the built-in codec,
+# Fory and the gRPC bridge cannot quietly be testing different beans.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ 'feat/fory-grpc-ejb-idl' ]
+    paths:
+      - 'appserver/orb/**'
+      - 'compatibility/**'
+      - '.github/workflows/ejb-http-live.yml'
+
+env:
+  GLASSFISH_VERSION: 8.0.4
+
+jobs:
+  live:
+    name: Call a deployed EJB over HTTP
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build the HTTP transport
+        run: |
+          mvn -B -ntp install -DskipTests -am \
+            -pl appserver/orb/orb-http-protocol,appserver/orb/orb-http-server,appserver/orb/orb-http-client,appserver/orb/orb-http-codec-fory,appserver/orb/orb-http-fory-grpc,appserver/orb/orb-http-glassfish
+
+      - name: Install GlassFish ${{ env.GLASSFISH_VERSION }}
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/glassfish.zip" \
+            "https://github.com/eclipse-ee4j/glassfish/releases/download/${GLASSFISH_VERSION}/glassfish-${GLASSFISH_VERSION}.zip"
+          unzip -q "$RUNNER_TEMP/glassfish.zip" -d "$RUNNER_TEMP/gf"
+
+      - name: Add the modules to the server
+        run: |
+          MODULES="$RUNNER_TEMP/gf/glassfish8/glassfish/modules"
+          for module in orb-http-protocol orb-http-server orb-http-client orb-http-codec-fory orb-http-fory-grpc orb-http-glassfish; do
+            jar=$(find "appserver/orb/$module/target" -maxdepth 1 -name '*.jar' ! -name '*sources*' ! -name 'original-*' | head -1)
+            [ -n "$jar" ] || { echo "no jar built for $module"; exit 1; }
+            cp -v "$jar" "$MODULES/$module.jar"
+          done
+          # Fory itself and its dependencies are not part of the distribution.
+          mvn -B -ntp -q dependency:copy-dependencies -DincludeScope=runtime \
+            -DoutputDirectory="$RUNNER_TEMP/fory-libs" -f appserver/orb/orb-http-codec-fory/pom.xml
+          find "$RUNNER_TEMP/fory-libs" -name 'fory*.jar' -exec cp -v {} "$MODULES/" \;
+
+      - name: Build and deploy the test bean
+        run: |
+          GF="$RUNNER_TEMP/gf/glassfish8"
+          # install, not package: the client depends on the same remote view,
+          # so the two cannot describe different interfaces.
+          mvn -B -ntp -q install -f compatibility/testapp/pom.xml
+          "$GF/bin/asadmin" start-domain
+          "$GF/bin/asadmin" deploy --force compatibility/testapp/target/greeter.jar
+          "$GF/bin/asadmin" list-applications
+
+      - name: Build the client
+        run: |
+          mvn -B -ntp -q package dependency:copy-dependencies \
+            -DoutputDirectory=target/deps -f compatibility/ejb-http/client/pom.xml
+
+      - name: Call the bean with the built-in codec
+        run: |
+          java -cp "compatibility/ejb-http/client/target/classes:compatibility/ejb-http/client/target/deps/*" \
+            demo.client.EjbHttpLiveClient \
+            -target http://localhost:8080/glassfish-services \
+            -codec jser -name Ada -expect 'Hello Ada'
+
+      - name: Call the bean with the Fory codec
+        run: |
+          # Named rather than negotiated: a client that names a codec is never
+          # walked back to another one, so this cannot quietly repeat the run
+          # above with the built-in codec.
+          java -cp "compatibility/ejb-http/client/target/classes:compatibility/ejb-http/client/target/deps/*" \
+            demo.client.EjbHttpLiveClient \
+            -target http://localhost:8080/glassfish-services \
+            -codec fory -name Ada -expect 'Hello Ada'
+
+      - name: Server log
+        if: always()
+        run: tail -200 "$RUNNER_TEMP/gf/glassfish8/glassfish/domains/domain1/logs/server.log" || true
+
+      - name: Stop the domain
+        if: always()
+        run: "$RUNNER_TEMP/gf/glassfish8/bin/asadmin stop-domain || true"

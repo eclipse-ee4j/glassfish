@@ -9,17 +9,26 @@
 
 package org.glassfish.orb.http.fory.grpc;
 
+import java.lang.reflect.Proxy;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ForyGrpcSkeletonTest {
 
     public interface Greeter {
         String greet(String name);
+    }
+
+    /** The shape of what the EJB container generates for a remote view. */
+    public interface GeneratedGreeterRemote extends Remote {
+        String greet(String name) throws RemoteException;
     }
 
     static final class GreeterBean implements Greeter {
@@ -35,6 +44,21 @@ class ForyGrpcSkeletonTest {
 
         assertEquals("Hello Python", skeleton.invoke(
                 "/demo.Greeter/greet", new GreeterBean(), "Python"));
+    }
+
+    @Test
+    void invokesATargetThatImplementsTheGeneratedRemoteInterface() throws Throwable {
+        // What the container actually hands back for a remote view: a proxy
+        // over the generated interface, which is not an instance of the
+        // business interface the skeleton was built from.
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("demo.Greeter", Greeter.class);
+        Greeter bean = new GreeterBean();
+        Object target = Proxy.newProxyInstance(getClass().getClassLoader(),
+                new Class<?>[] {GeneratedGreeterRemote.class},
+                (proxy, method, args) -> bean.greet((String) args[0]));
+
+        assertFalse(Greeter.class.isInstance(target), "the test target must not be a Greeter");
+        assertEquals("Hello Ada", skeleton.invoke("/demo.Greeter/greet", target, "Ada"));
     }
 
     @Test

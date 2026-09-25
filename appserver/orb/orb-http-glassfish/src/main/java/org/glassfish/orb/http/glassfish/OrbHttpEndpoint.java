@@ -86,15 +86,8 @@ public class OrbHttpEndpoint implements PostConstruct {
         // itself: the run level fails, GlassFish fires its error event, and
         // what that event closes includes the connector classloaders. The
         // server then comes up unable to create a JDBC pool, with a stack
-        // trace that names the connector and never mentions this class.
-        //
-        // That is not hypothetical. The scanner below asks the OSGi framework
-        // which modules are installed, and an embedded server has no OSGi
-        // framework, so it raises NoClassDefFoundError for
-        // org/osgi/framework/FrameworkUtil - which is a LinkageError, not an
-        // Exception, and is why both are caught here.
-        //
-        // An endpoint that cannot mount has to stay its own problem: IIOP is
+        // trace that names the connector and never mentions this class. An
+        // endpoint that cannot mount has to stay its own problem - IIOP is
         // unaffected, and a server that starts without this endpoint is better
         // than one that does not start.
         try {

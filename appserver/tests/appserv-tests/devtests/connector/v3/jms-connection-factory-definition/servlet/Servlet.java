@@ -50,8 +50,8 @@ import jakarta.transaction.UserTransaction;
                         name = "java:global/env/Servlet_ModByDD_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=NoTransaction"},
                         minPoolSize = 0
                 ),
@@ -61,8 +61,8 @@ import jakarta.transaction.UserTransaction;
                         name = "java:global/env/Servlet_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=XATransaction"},
                         minPoolSize = 0
                 ),
@@ -72,8 +72,8 @@ import jakarta.transaction.UserTransaction;
                         name = "java:app/env/Servlet_JMSConnectionFactory",
                         interfaceName = "jakarta.jms.ConnectionFactory",
 //                        resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=XATransaction"},
                         minPoolSize = 0
                 ),
@@ -83,8 +83,8 @@ import jakarta.transaction.UserTransaction;
                         name = "java:module/env/Servlet_JMSConnectionFactory",
 //                        interfaceName = "jakarta.jms.ConnectionFactory",
                         resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=XATransaction"},
                         minPoolSize = 0
                 ),
@@ -94,8 +94,8 @@ import jakarta.transaction.UserTransaction;
                         name = "java:comp/env/Servlet_JMSConnectionFactory",
 //                        interfaceName = "jakarta.jms.ConnectionFactory",
 //                        resourceAdapter = "jmsra",
-                        user = "admin",
-                        password = "admin",
+                        user = "user1",
+                        password = "password1",
                         properties = {"org.glassfish.connector-connection-pool.transaction-support=XATransaction"},
                         minPoolSize = 0
                 )

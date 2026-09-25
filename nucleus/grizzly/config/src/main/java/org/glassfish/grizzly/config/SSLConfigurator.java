@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -53,6 +53,8 @@ import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_TYPE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
+import static org.glassfish.grizzly.config.ssl.SSLContextFactory.ATTR_KEYSTORE_CONFIGURED;
+import static org.glassfish.grizzly.config.ssl.SSLContextFactory.ATTR_TRUSTSTORE_CONFIGURED;
 
 /**
  * @author oleksiys
@@ -60,6 +62,7 @@ import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_TYPE;
 public class SSLConfigurator extends SSLEngineConfigurator {
 
     private static final String PLAIN_PASSWORD_PROVIDER_NAME = "plain";
+    private static final String DEFAULT_SSL_IMPLEMENTATION = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
     private static final Logger LOG = System.getLogger(SSLConfigurator.class.getName());
 
     /**
@@ -85,21 +88,28 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     }
 
     /**
+     * The {@code classname} attribute of the {@code ssl} element is honored first, so a custom
+     * implementation configured in the domain.xml is not silently ignored. The implementation
+     * registered in the {@link ServiceLocator} is used when the attribute is not set or when it
+     * names exactly that implementation.
+     *
      * @return the {@link SSLImplementation}
      */
     private SSLImplementation getSslImplementation() {
+        final String classname = ssl == null || ssl.getClassname() == null || ssl.getClassname().isBlank()
+            ? null
+            : ssl.getClassname().trim();
         final SSLImplementation implementation = serviceLocator.getService(SSLImplementation.class);
-        if (implementation != null) {
+        if (implementation != null && (classname == null || classname.equals(implementation.getClass().getName()))) {
             LOG.log(DEBUG, () -> "Found SSL implementation: " + implementation);
             return implementation;
         }
-        final String classname = ssl.getClassname() == null ? "com.sun.enterprise.security.ssl.GlassfishSSLImpl"
-            : ssl.getClassname();
-        LOG.log(DEBUG, () -> "Creating SSL implementation: " + classname);
+        final String implementationClass = classname == null ? DEFAULT_SSL_IMPLEMENTATION : classname;
+        LOG.log(DEBUG, () -> "Creating SSL implementation: " + implementationClass);
         try {
-            return (SSLImplementation) Class.forName(classname).getDeclaredConstructor().newInstance();
+            return (SSLImplementation) Utils.loadClass(implementationClass).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException("Failed to create SSL implementation: " + classname, e);
+            throw new IllegalStateException("Failed to create SSL implementation: " + implementationClass, e);
         }
     }
 
@@ -157,6 +167,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             // Key store settings
             setAttribute(sslContextFactory, "keystore", ssl == null ? null : ssl.getKeyStore(),
                 KEYSTORE_FILE.getSystemPropertyName(), null);
+            markConfiguredStore(sslContextFactory, ATTR_KEYSTORE_CONFIGURED, ssl == null ? null : ssl.getKeyStore());
             setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(),
                 KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
             setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl),
@@ -165,6 +176,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             // Trust store settings
             setAttribute(sslContextFactory, "truststore", ssl == null ? null : ssl.getTrustStore(),
                 TRUSTSTORE_FILE.getSystemPropertyName(), null);
+            markConfiguredStore(sslContextFactory, ATTR_TRUSTSTORE_CONFIGURED, ssl == null ? null : ssl.getTrustStore());
             setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(),
                 TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
             setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl),
@@ -284,6 +296,21 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     private static void setAttribute(final SSLContextFactory sslContextFactory, final String name, final String value,
         final String property, final String defaultValue) {
         sslContextFactory.setAttribute(name, value == null ? System.getProperty(property, defaultValue) : value);
+    }
+
+    /**
+     * Records that the store is the one of the listener and not the one of the server, because the
+     * store attributes themselves are merged with the system properties of the server.
+     *
+     * @param sslContextFactory the factory which will create the {@link SSLContext}.
+     * @param name the name of the marking attribute.
+     * @param configuredStore the store configured in the ssl element, may be null.
+     */
+    private static void markConfiguredStore(final SSLContextFactory sslContextFactory, final String name,
+        final String configuredStore) {
+        if (configuredStore != null && !configuredStore.isBlank()) {
+            sslContextFactory.setAttribute(name, Boolean.TRUE.toString());
+        }
     }
 
     private static boolean isWantClientAuth(final Ssl ssl) {

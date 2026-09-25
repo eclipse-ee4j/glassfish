@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2007-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -72,6 +72,22 @@ import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_
  * @author Jan Luehe
  */
 public class SSLContextFactory implements Cloneable {
+
+    /**
+     * Name of the attribute set when the keystore is configured in the {@code ssl} element of the
+     * listener. The {@code keystore} attribute alone cannot tell that, because it is merged with
+     * the keystore of the server coming from the system properties.
+     */
+    public static final String ATTR_KEYSTORE_CONFIGURED = "keystoreConfigured";
+
+    /**
+     * Name of the attribute set when the truststore is configured in the {@code ssl} element of the
+     * listener.
+     *
+     * @see #ATTR_KEYSTORE_CONFIGURED
+     */
+    public static final String ATTR_TRUSTSTORE_CONFIGURED = "truststoreConfigured";
+
     private static final StringManager sm = StringManager.getManager(
             SSLContextFactory.class.getPackage().getName(),
             SSLContextFactory.class.getClassLoader());

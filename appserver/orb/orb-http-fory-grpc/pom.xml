@@ -71,6 +71,21 @@
                         <Import-Package>!org.apache.fory.*,*;resolution:=optional</Import-Package>
                     </instructions>
                 </configuration>
+                <executions>
+                    <execution>
+                        <!--
+                            The glassfish-jar lifecycle only writes the manifest. Without
+                            this the bundle would declare a Bundle-ClassPath entry for a
+                            jar that is not inside it - it builds cleanly, installs, and
+                            then cannot find org.apache.fory.Fory on the first call.
+                        -->
+                        <id>osgi-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

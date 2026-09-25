@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A standalone client that calls a deployed EJB over the HTTP transport,
+     used by the live job. Deliberately outside the reactor: it is a fixture,
+     not a module, and it depends on the transport the way an application
+     would - on the published thin client, not on test classes. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.glassfish.orb.http.demo</groupId>
+    <artifactId>ejb-http-live-client</artifactId>
+    <version>1.0</version>
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <transport.version>8.0.5-SNAPSHOT</transport.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-client</artifactId>
+            <version>${transport.version}</version>
+        </dependency>
+        <!-- The second codec. Its presence on the class path is what lets the
+             client be asked for it by name. -->
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-codec-fory</artifactId>
+            <version>${transport.version}</version>
+        </dependency>
+        <!-- The same remote view the server deploys, from the same fixture,
+             so the two cannot describe different interfaces. -->
+        <dependency>
+            <groupId>org.glassfish.orb.http.demo</groupId>
+            <artifactId>greeter</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>ejb-http-live-client</finalName>
+    </build>
+</project>

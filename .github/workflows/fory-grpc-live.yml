@@ -12,7 +12,7 @@ on:
     branches: [ 'feat/fory-grpc-ejb-idl' ]
     paths:
       - 'appserver/orb/**'
-      - 'compatibility/fory-grpc/**'
+      - 'compatibility/**'
       - '.github/workflows/fory-grpc-live.yml'
 
 env:
@@ -67,9 +67,9 @@ jobs:
       - name: Build and deploy the test bean
         run: |
           GF="$RUNNER_TEMP/gf/glassfish8"
-          mvn -B -ntp -q package -f compatibility/fory-grpc/testapp/pom.xml
+          mvn -B -ntp -q package -f compatibility/testapp/pom.xml
           "$GF/bin/asadmin" start-domain
-          "$GF/bin/asadmin" deploy --force compatibility/fory-grpc/testapp/target/fory-greeter.jar
+          "$GF/bin/asadmin" deploy --force compatibility/testapp/target/greeter.jar
           "$GF/bin/asadmin" list-applications
 
       - name: Read the IDL the server publishes

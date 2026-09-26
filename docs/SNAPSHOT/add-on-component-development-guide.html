@@ -1303,9 +1303,10 @@ can recognize them as <code>@Contract</code> implementations.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>For more information, see
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html"><code>Service</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html</a></code>).</p>
+<p>These annotations live in the <code>hk2-api</code> module. For more information, see
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Service.java"><code>Service</code></a>
+and
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Contract.java"><code>Contract</code></a>.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1313,69 +1314,59 @@ can recognize them as <code>@Contract</code> implementations.</p>
 <div class="paragraph">
 <p>Once Services are defined, the HK2 runtime can be used to instantiate or
 retrieve instances of services. Each service instance has a scope,
-specified as singleton, per thread, per application, or a custom scope.</p>
+specified as singleton, per lookup, or a custom scope.</p>
 </div>
 <div class="sect3">
 <h4 id="scopes-of-services"><a class="anchor" href="#scopes-of-services"></a>Scopes of Services</h4>
 <div class="paragraph">
-<p>You can specify the scope of a service by adding an
-<code>org.jvnet.hk2.annotations.Scoped</code> annotation to the class-level of your
-<code>@Service</code> implementation class. Scopes are also services, so they can
-be custom defined and added to the HK2 runtime before being used by
-other services. Each scope is responsible for storing the service
-instances to which it is tied; therefore, the HK2 runtime does not rely
-on predefined scopes (although it comes with a few predefined ones).</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Contract</span>
-<span class="directive">public</span> <span class="directive">abstract</span> <span class="type">class</span> <span class="class">Scope</span> {
-    <span class="directive">public</span> <span class="directive">abstract</span> ScopeInstance current();
-}</code></pre>
-</div>
+<p>A class marked with <code>@Service</code> has the default scope
+<code>jakarta.inject.Singleton</code>. Place another scope annotation on the class
+to override that default. HK2 provides
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PerLookup.java"><code>org.glassfish.hk2.api.PerLookup</code></a>
+for a new instance on every lookup. You can also define a custom scope
+annotation and register a corresponding
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/Context.java"><code>org.glassfish.hk2.api.Context</code></a>
+implementation with the locator.</p>
 </div>
 <div class="paragraph">
-<p>The following code fragment shows how to set the scope for a service to
-the predefined <code>Singleton</code> scope:</p>
+<p>The following code fragment shows a singleton service (the <code>@Service</code>
+default) and a per-lookup service:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Service</span>
-<span class="directive">public</span> Singleton <span class="directive">implements</span> Scope {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">SingletonService</span> <span class="directive">implements</span> RandomContract {
     ...
 }
 
-<span class="annotation">@Scope</span>(Singleton.class)
+<span class="annotation">@PerLookup</span>
 <span class="annotation">@Service</span>
-<span class="directive">public</span> <span class="type">class</span> <span class="class">SingletonService</span> <span class="directive">implements</span> RandomContract {
+<span class="directive">public</span> <span class="type">class</span> <span class="class">PerLookupService</span> <span class="directive">implements</span> RandomContract {
     ...
 }</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>You can define a new <code>Scope</code> implementation and use that scope on your
-<code>@Service</code> implementations. You will see that the HK2 runtime uses the
-<code>Scope</code> instance to store and retrieve service instances tied to that
-scope.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="instantiation-of-components-in-hk2"><a class="anchor" href="#instantiation-of-components-in-hk2"></a>Instantiation of Components in HK2</h4>
 <div class="paragraph">
 <p>Do not call the <code>new</code> method to instantiate components. Instead,
-retrieve components by using the <code>Habitat</code> instance. The simplest way to
-use the <code>Habitat</code> instance is through a <code>getComponent(Class`T
-`contract)</code> call:</p>
+retrieve components by using a
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/ServiceLocator.java"><code>ServiceLocator</code></a>
+instance (<code>org.glassfish.hk2.api.ServiceLocator</code>). <code>ServiceLocator</code>
+replaced the old <code>org.jvnet.hk2.component.Habitat</code> type. The simplest
+way to use the locator is through a <code>getService(Class&lt;T&gt; contract)</code>
+call:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> &lt;T&gt; T getComponent(<span class="predefined-type">Class</span>&lt;T&gt; clazz) <span class="directive">throws</span> ComponentException;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> &lt;T&gt; T getService(<span class="predefined-type">Class</span>&lt;T&gt; contractOrImpl, <span class="predefined-type">Annotation</span>... qualifiers) <span class="directive">throws</span> MultiException;</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>More APIs are available at
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html"><code>Habitat</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/Habitat.html</a></code>).</p>
+<p>Use <code>getAllServices</code> when more than one implementation of the contract
+may be present. More APIs are available on
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/ServiceLocator.java"><code>ServiceLocator</code></a>.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1383,13 +1374,13 @@ use the <code>Habitat</code> instance is through a <code>getComponent(Class`T
 <div class="paragraph">
 <p>Components can attach behaviors to their construction and destruction
 events by implementing the
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html"><code>org.jvnet.hk2.component.PostConstruct</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PostConstruct.html</a></code>)
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PostConstruct.java"><code>org.glassfish.hk2.api.PostConstruct</code></a>
 interface, the
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html"><code>org.jvnet.hk2.component.PreDestroy</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/component/PreDestroy.html</a></code>)
-interface, or both. These are interfaces rather than annotations for
-performance reasons.</p>
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/PreDestroy.java"><code>org.glassfish.hk2.api.PreDestroy</code></a>
+interface, or both. These interfaces are in <code>hk2-api</code>. They replaced
+<code>org.jvnet.hk2.component.PostConstruct</code> and
+<code>org.jvnet.hk2.component.PreDestroy</code>. They are interfaces rather than
+annotations for performance reasons.</p>
 </div>
 <div class="paragraph">
 <p>The <code>PostConstruct</code> interface defines a single method, <code>postConstruct</code>,
@@ -1401,7 +1392,7 @@ dependencies have been injected.</p>
 is called just before a component is removed from the system.</p>
 </div>
 <div id="ghoqv" class="paragraph">
-<p>Example 2-1 Example Implementation of <code>PostContruct</code> and <code>PreDestroy</code></p>
+<p>Example 2-1 Example Implementation of <code>PostConstruct</code> and <code>PreDestroy</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1441,8 +1432,7 @@ system, components use injection to gain access to other components.</p>
 <p>Services usually rely on other services to perform their tasks. The HK2
 runtime identifies the <code>@Contract</code> implementations required by a service
 by using the
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html"><code>org.jvnet.hk2.annotations.Inject</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Inject.html</a></code>)
+<a href="https://jakarta.ee/specifications/dependency-injection/2.0/apidocs/jakarta/inject/inject"><code>jakarta.inject.Inject</code></a>
 annotation. <code>Inject</code> can be placed on fields or setter methods of any
 service instantiated by the HK2 runtime. The target service is retrieved
 and injected during the calling service&#8217;s instantiation by the component
@@ -1468,12 +1458,12 @@ ConfigService config;</code></pre>
 </div>
 <div class="paragraph">
 <p>Injection can further qualify the intended injected service
-implementation by using a name and scope from which the service should
-be available:</p>
+implementation by using <code>jakarta.inject.Named</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>(Scope=Singleton.class, name=<span class="string"><span class="delimiter">&quot;</span><span class="content">deploy</span><span class="delimiter">&quot;</span></span>)
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Inject</span>
+<span class="annotation">@Named</span>(<span class="string"><span class="delimiter">&quot;</span><span class="content">deploy</span><span class="delimiter">&quot;</span></span>)
 AdminCommand deployCommand;</code></pre>
 </div>
 </div>
@@ -1502,8 +1492,8 @@ the <code>ConfigService</code>.</p>
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Contract</span>
 <span class="directive">public</span> <span class="type">interface</span> <span class="class">Startup</span> {...}
 
-<span class="predefined-type">Iterable</span>&lt;Startup&gt; startups;
-startups = habitat.getComponents(Startup.class);
+<span class="predefined-type">List</span>&lt;Startup&gt; startups;
+startups = locator.getAllServices(Startup.class);
 
 <span class="annotation">@Service</span>
 <span class="directive">public</span> <span class="type">class</span> <span class="class">DeploymentService</span> <span class="directive">implements</span> Startup {
@@ -1512,7 +1502,7 @@ startups = habitat.getComponents(Startup.class);
 }
 
 <span class="annotation">@Service</span>
-<span class="directive">public</span> <span class="predefined-type">Class</span> ConfigService <span class="directive">implements</span> ... {...}</code></pre>
+<span class="directive">public</span> <span class="type">class</span> <span class="class">ConfigService</span> <span class="directive">implements</span> ... {...}</code></pre>
 </div>
 </div>
 </div>
@@ -1522,7 +1512,7 @@ startups = habitat.getComponents(Startup.class);
 <div class="paragraph">
 <p>Eclipse GlassFish discovers add-on components by identifying Java
 programming language classes that are annotated with the
-<code>org.jvnet.hk2.annotation.Service</code> annotation.</p>
+<code>org.jvnet.hk2.annotations.Service</code> annotation.</p>
 </div>
 <div class="paragraph">
 <p>To identify a class as an implementation of an Eclipse GlassFish service,
@@ -1547,34 +1537,34 @@ optional.</p>
 <dd>
 <p>The name of the service. The default value is an empty string.</p>
 </dd>
-<dt class="hdlist1"><code>scope</code></dt>
+<dt class="hdlist1"><code>metadata</code></dt>
 <dd>
-<p>The scope to which this service implementation is tied. The default
-value is <code>org.glassfish.hk2.scopes.PerLookup.class</code>.</p>
+<p>Additional key/value metadata written into the inhabitants file.</p>
 </dd>
-<dt class="hdlist1"><code>factory</code></dt>
+<dt class="hdlist1"><code>analyzer</code></dt>
 <dd>
-<p>The factory class for the service implementation, if the service is
-created by a factory class rather than by calling the default
-constructor. If this element is specified, the factory component is
-activated, and <code>Factory.getObject</code> is used instead of the default
-constructor. The default value of the <code>factory</code> element is
-<code>org.jvnet.hk2.component.Factory.class</code>.</p>
+<p>The name of the <code>ClassAnalyzer</code> service used to analyze this class.</p>
 </dd>
 </dl>
+</div>
+<div class="paragraph">
+<p>Scope is not an <code>@Service</code> element. Put a scope annotation such as
+<code>@PerLookup</code> on the class, or omit it to keep the default singleton
+scope. To create a service with a factory, implement
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/glassfish/hk2/api/Factory.java"><code>org.glassfish.hk2.api.Factory</code></a>
+instead of pointing <code>@Service</code> at a factory class.</p>
 </div>
 <div id="ghoip" class="paragraph">
 <p>Example 2-3 Example of the Optional Elements of the <code>@Service</code> Annotation</p>
 </div>
 <div class="paragraph">
-<p>The following example shows how to use the optional elements of the
-<code>@Service</code> annotation:</p>
+<p>The following example shows how to use the optional <code>name</code> element of
+the <code>@Service</code> annotation with a per-lookup scope:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Service</span> (name=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyService</span><span class="delimiter">&quot;</span></span>,
-    scope=com.example.PerRequest.class,
-    factory=com.example.MyCustomFactory)
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@PerLookup</span>
+<span class="annotation">@Service</span>(name=<span class="string"><span class="delimiter">&quot;</span><span class="content">MyService</span><span class="delimiter">&quot;</span></span>)
 <span class="directive">public</span> <span class="type">class</span> <span class="class">SamplePlugin</span> <span class="directive">implements</span> ConsoleProvider {
 ...
 }</code></pre>
@@ -1584,9 +1574,9 @@ constructor. The default value of the <code>factory</code> element is
 <div class="sect2">
 <h3 id="using-the-apache-maven-build-system-to-develop-hk2-components"><a class="anchor" href="#using-the-apache-maven-build-system-to-develop-hk2-components"></a>Using the Apache Maven Build System to Develop HK2 Components</h3>
 <div class="paragraph">
-<p>If you are using Maven 2 to build HK2 components, invoke the
-<code>auto-depends</code> plug-in for Maven so that the <code>META-INF/services</code> files
-are generated automatically during build time.</p>
+<p>If you are using Maven to build HK2 components, invoke the
+<code>hk2-maven-plugin</code> so that the inhabitant metadata is generated
+automatically during build time.</p>
 </div>
 <div id="ghqsa" class="paragraph">
 <p>Example 2-4 Example of the Maven Plug-In Configuration</p>
@@ -1605,16 +1595,14 @@ are generated automatically during build time.</p>
 </div>
 </div>
 <div id="ghoik" class="paragraph">
-<p>Example 2-5 Example of <code>META-INF/services</code> File Generation</p>
+<p>Example 2-5 Example of Inhabitant Metadata Generation</p>
 </div>
 <div class="paragraph">
 <p>This example shows how to use
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html"><code>@Contract</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Contract.html</a></code>)
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Contract.java"><code>@Contract</code></a>
 and
-<a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html"><code>@Service</code></a>
-(<code><a href="http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html" class="bare">http://hk2.java.net/auto-depends/apidocs/org/jvnet/hk2/annotations/Service.html</a></code>)
-and the resulting <code>META-INF/services</code> files.</p>
+<a href="https://github.com/eclipse-ee4j/glassfish-hk2/blob/master/hk2-api/src/main/java/org/jvnet/hk2/annotations/Service.java"><code>@Service</code></a>
+and the resulting inhabitant metadata.</p>
 </div>
 <div class="paragraph">
 <p>The interfaces and classes in this example are as follows:</p>
@@ -1637,8 +1625,8 @@ and the resulting <code>META-INF/services</code> files.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>These interfaces and classes generate this <code>META-INF/services</code> file with
-the <code>MyService</code> content:</p>
+<p>These interfaces and classes generate inhabitant metadata for
+<code>MyService</code> that lists the following contracts:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -9678,7 +9666,7 @@ a Jakarta Server Faces page.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-23 07:39:17 UTC
+Last updated 2026-09-26 06:50:06 UTC
 </div>
 </div>
 </body>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.net.ssl.SSLSocket;
 
 import org.glassfish.grizzly.Transport;
 import org.glassfish.grizzly.config.dom.NetworkAddressValidator;
@@ -256,6 +259,38 @@ public class GrizzlyConfigTest {
                 helper.getContent(URI.create("https://localhost:38085").toURL()));
         } finally {
             if (grizzlyConfig != null) {
+                grizzlyConfig.shutdown();
+            }
+        }
+    }
+
+    /**
+     * The server must pick the first suite of its configured ssl3-tls-ciphers list that the client
+     * supports, regardless of the client's preference.
+     *
+     * @throws IOException if the listener cannot be started or the handshake fails
+     */
+    @Test
+    public void sslServerCipherSuiteOrder() throws IOException {
+        final String gcm = "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256";
+        final String cbc = "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256";
+        GrizzlyConfig grizzlyConfig = null;
+        try {
+            configure();
+            grizzlyConfig = new GrizzlyConfig("grizzly-config-ssl-cipher-order.xml");
+            grizzlyConfig.setupNetwork();
+            for (String[] clientSuites : List.of(new String[] {cbc, gcm}, new String[] {gcm, cbc})) {
+                try (SSLSocket socket = (SSLSocket) helper.getSSLSocketFactory().createSocket("localhost", 38088)) {
+                    socket.setEnabledProtocols(new String[] {"TLSv1.2"});
+                    socket.setEnabledCipherSuites(clientSuites);
+                    socket.startHandshake();
+                    assertEquals(gcm, socket.getSession().getCipherSuite(),
+                        () -> "Client offered " + Arrays.toString(clientSuites));
+                }
+            }
+        } finally {
+            if (grizzlyConfig != null) {
+                grizzlyConfig.shutdownNetwork();
                 grizzlyConfig.shutdown();
             }
         }

@@ -150,12 +150,6 @@ version. Most often, this would happen if you upgraded the server but
 had not upgraded all the application client installations. If you run
 the `package-appclient` utility, this issue will not arise.
 
-You can use the Java Web Start support to distribute and launch the
-application client. If the runtime on the server has changed since the
-end-user last used the application client, Java Web Start automatically
-retrieves the updated runtime. Java Web Start enables you to keep the
-clients and servers synchronized and using the same runtime.
-
 [[node-agent-support]]
 
 === Node Agent Support

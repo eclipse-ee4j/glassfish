@@ -857,11 +857,6 @@ glassfish-application-client
 .  message-destination
 .  .  message-destination-name
 .  .  jndi-name
-.  java-web-start-access
-.  .  context-root
-.  .  eligible
-.  .  vendor
-.  .  jnlp-doc
 .  version-identifier
 ----
 

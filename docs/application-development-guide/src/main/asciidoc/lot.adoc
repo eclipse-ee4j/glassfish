@@ -26,7 +26,4 @@ prev=loe.html
 * xref:container_managed-persistence.adoc#fvymo[10-3 The glassfish-ejb-jar.xml Generation Elements]
 * xref:container_managed-persistence.adoc#fvymn[10-4 The asadmin deploy and asadmin deploydir Generation Options for CMP]
 * xref:container_managed-persistence.adoc#fvymt[10-5 The asadmin undeploy Generation Options for CMP]
-* xref:java-clients.adoc#gkmbk[11-1 Owned JNLP File Content]
-* xref:java-clients.adoc#gkmci[11-2 Defaulted JNLP File Content]
-* xref:java-clients.adoc#gkmcc[11-3 Merged JNLP File Content]
 * xref:transaction-service.adoc#fvyoi[16-1 Transaction Isolation Levels]

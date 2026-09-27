@@ -1448,14 +1448,22 @@ xref:jndi.adoc#accessing-the-naming-context[Accessing the Naming Context].
 For more information on deployment, see "xref:application-deployment-guide.adoc#about-deployment-tools[About
 Deployment Tools]" in {productName} Application
 Deployment Guide.
-4. Copy the as-install``/lib/gf-client.jar`` file to the client machine
-and include it in the classpath on the client side.
+4. Include the {productName} libraries on the client side. Put the
+as-install``/lib/bootstrap`` directory on the module path, and the
+as-install``/lib/gf-client.jar`` file and the JAR files in the
+as-install``/modules`` directory on the class path, for example:
 +
-The `gf-client.jar` file references {productName} JAR files in its
-`MANIFEST.MF` file. If there is no {productName} installation on the
-client machine, you must also copy the as-install``/modules`` directory to
-the client machine and maintain its directory structure relative to the
-as-install``/lib/gf-client.jar`` file. Or you can use the
+[source]
+----
+java --module-path as-install/lib/bootstrap --add-modules ALL-MODULE-PATH \
+    -cp .:as-install/lib/gf-client.jar:as-install/modules/* MyClient
+----
+On Windows systems, use a semicolon (`;`) as the class path separator.
++
+If there is no {productName} installation on the client machine, you must
+copy the as-install``/lib/bootstrap`` directory, the
+as-install``/lib/gf-client.jar`` file, and the as-install``/modules``
+directory to the client machine. Or you can use the
 `package-appclient` script; see xref:#using-the-package-appclient-script[Using the
 `package-appclient` Script].
 5. To access EJB components that are residing in a remote system, set
@@ -1609,13 +1617,22 @@ in {productName} Administration Guide.
 in the classpath on the client side:
 * `gf-client.jar` - available at as-install``/lib``
 * `imqjmsra.jar` - available at
-as-install``/lib/install/aplications/jmsra``
+as-install``/lib/install/applications/jmsra``
 +
-The `gf-client.jar` file references {productName} JAR files in its
-`MANIFEST.MF` file. If there is no {productName} installation on the
-client machine, you must also copy the as-install``/modules`` directory to
-the client machine and maintain its directory structure relative to the
-as-install``/lib/gf-client.jar`` file. Or you can use the
+The client also needs the as-install``/lib/bootstrap`` directory on the
+module path and the JAR files in the as-install``/modules`` directory on
+the class path, for example:
++
+[source]
+----
+java --module-path as-install/lib/bootstrap --add-modules ALL-MODULE-PATH \
+    -cp .:as-install/lib/gf-client.jar:as-install/lib/install/applications/jmsra/imqjmsra.jar:as-install/modules/* MyClient
+----
+On Windows systems, use a semicolon (`;`) as the class path separator.
++
+If there is no {productName} installation on the client machine, you must
+also copy the as-install``/lib/bootstrap`` and as-install``/modules``
+directories to the client machine. Or you can use the
 `package-appclient` script; see xref:#using-the-package-appclient-script[Using the
 `package-appclient` Script].
 4. To access EJB components that are residing in a remote system, set

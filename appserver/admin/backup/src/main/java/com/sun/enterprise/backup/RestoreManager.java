@@ -22,7 +22,7 @@ import com.sun.enterprise.util.zip.ZipFile;
 import java.io.File;
 import java.io.IOException;
 
-import org.glassfish.main.enterprise.backup.util.BackupUtils;
+import org.glassfish.main.backup.util.BackupUtils;
 
 import static com.sun.enterprise.util.SystemPropertyConstants.MASTER_PASSWORD_FILENAME;
 

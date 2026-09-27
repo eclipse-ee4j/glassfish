@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
-import org.glassfish.main.enterprise.backup.util.BackupUtils;
+import org.glassfish.main.backup.util.BackupUtils;
 
 /**
  *

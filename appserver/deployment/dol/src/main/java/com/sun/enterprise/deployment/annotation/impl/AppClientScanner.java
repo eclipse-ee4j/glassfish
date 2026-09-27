@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -131,9 +131,7 @@ public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor>
             /*
              * During app client launches, scan the developer's archive
              * which is in slot #1, not the facade archive which is in
-             * slot #0. Also, use URIs instead of File objects because
-             * during Java Web Start launches we don't have access to
-             * File objects.
+             * slot #0.
              */
             addScanURI(scanURI(((MultiReadableArchive) archive).getURI(1)));
         }

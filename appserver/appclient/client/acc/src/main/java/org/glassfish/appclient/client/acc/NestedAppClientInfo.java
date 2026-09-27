@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,11 +51,10 @@ public class NestedAppClientInfo extends AppClientInfo {
     private String displayNameFromCommandLine;
 
     public NestedAppClientInfo(
-            boolean isJWS, Logger logger, File archive,
+            Logger logger, File archive,
             Archivist archivist, String mainClassFromCommandLine,
             String displayNameFromCommandLine) {
-//        super(isJWS, logger, archive, archivist, mainClassFromCommandLine);
-        super(isJWS, logger, mainClassFromCommandLine);
+        super(logger, mainClassFromCommandLine);
         this.displayNameFromCommandLine = displayNameFromCommandLine;
     }
 

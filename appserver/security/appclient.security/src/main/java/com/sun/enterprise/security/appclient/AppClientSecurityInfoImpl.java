@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,7 +61,6 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     private static final String DEFAULT_PARSER_CLASS = "com.sun.enterprise.security.appclient.ConfigXMLParser";
 
     private CallbackHandler callbackHandler;
-    boolean isJWS;
     boolean useGUIAuth;
     private List<TargetServer> targetServers;
     private List<MessageSecurityConfig> msgSecConfigs;
@@ -79,10 +78,9 @@ public class AppClientSecurityInfoImpl implements AppClientSecurityInfo {
     private IIOPSSLUtilImpl appClientSSLUtil;
 
     @Override
-    public void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> configs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth) {
+    public void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> configs, CallbackHandler handler, String username, char[] password, boolean useGUIAuth) {
 
         // Security init
-        this.isJWS = isJWS;
         this.useGUIAuth = useGUIAuth;
         if (handler == null) {
             this.callbackHandler = new LoginCallbackHandler(useGUIAuth);

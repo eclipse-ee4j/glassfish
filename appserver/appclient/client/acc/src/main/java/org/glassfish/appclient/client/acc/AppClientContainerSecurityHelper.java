@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,7 +42,6 @@ import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.enterprise.security.appclient.integration.AppClientSecurityInfo.CredentialType.USERNAME_PASSWORD;
 import static java.util.Arrays.asList;
-import static org.glassfish.appclient.client.acc.Util.writeTextToTempFile;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
 
@@ -81,24 +80,14 @@ public class AppClientContainerSecurityHelper {
             (clientCredential == null ? null : clientCredential.getUserName()),
             (clientCredential == null || clientCredential.getPassword() == null || clientCredential.getPassword().get() == null ? null
                         : clientCredential.getPassword().get()),
-            false /* isJWS */,
             !isTextAuth /* useGUIAuth */);
 
         initHttpAuthenticator(USERNAME_PASSWORD);
     }
 
     private void initLoginConfig() throws IOException {
-
-        // During Java Web Start launches, the appclientlogin.conf content is passed as a property.
-        // Store that content (if present) into a local temporary file and use that during this app client launch.
-        final String appclientloginConfContent = System.getProperty("appclient.login.conf.content");
-        final File configFile;
-        if (appclientloginConfContent == null) {
-            configFile = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toPath()
-                .resolve(Path.of("lib", "appclient", "appclientlogin.conf")).toFile();
-        } else {
-            configFile = writeTextToTempFile(appclientloginConfContent, "appclientlogin", ".conf", false);
-        }
+        final File configFile = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName())).toPath()
+            .resolve(Path.of("lib", "appclient", "appclientlogin.conf")).toFile();
 
         // The Java com.sun.security.auth.login.ConfigFile class expects the
         // java.security.auth.login.config property value to be a URL

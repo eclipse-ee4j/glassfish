@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -72,8 +72,6 @@ public class FacadeLaunchable implements Launchable {
 
     private static final ArchiveFactory archiveFactory = ACCModulesManager.getService(ArchiveFactory.class);
     private static final Logger logger = LogDomains.getLogger(FacadeLaunchable.class, LogDomains.ACC_LOGGER);
-
-    private static final boolean isJWSLaunch = Boolean.getBoolean("appclient.is.jws");
 
     private final String mainClassNameToLaunch;
     private final URI[] classPathURIs;
@@ -200,9 +198,6 @@ public class FacadeLaunchable implements Launchable {
         }
         final Attributes mainAttrs = mf.getMainAttributes();
         if (mainAttrs.containsKey(GLASSFISH_APPCLIENT)) {
-            if (facadeRA instanceof HTTPInputArchive) {
-                return new JWSFacadeLaunchable(habitat, mainAttrs, facadeRA);
-            }
             return new FacadeLaunchable(habitat, mainAttrs, facadeRA, dirContainingStandAloneFacade(facadeRA));
         }
         /*
@@ -257,14 +252,7 @@ public class FacadeLaunchable implements Launchable {
              * load the descriptor.
              */
             final AppClientArchivist archivist = getArchivist();
-            /*
-             * Anno processing is currently file-based.  But during Java Web
-             * Start launches, the JARs which Java Web Start has downloaded are
-             * not accessible as File objects.  Until the anno processing is
-             * generalized we suppress the anno processing during Java Web
-             * Start launches.
-             */
-            archivist.setAnnotationProcessingRequested( ! isJWSLaunch);
+            archivist.setAnnotationProcessingRequested(true);
 
             final TransformingClassLoader tempLoader = new TransformingClassLoader(loader.getURLs(), loader.getParent());
             archivist.setClassLoader(tempLoader);

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,7 @@
  * Created on August 13, 2004, 12:10 PM
  */
 
-package com.sun.enterprise.backup;
+package org.glassfish.main.backup;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

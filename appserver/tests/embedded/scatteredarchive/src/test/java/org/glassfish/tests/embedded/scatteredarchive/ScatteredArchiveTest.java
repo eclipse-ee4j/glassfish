@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -47,6 +47,9 @@ import org.glassfish.embeddable.web.HttpListener;
 import org.glassfish.embeddable.web.WebContainer;
 import org.glassfish.tests.embedded.scatteredarchive.contextInitialized.ContextInitializedTestServlet;
 import org.glassfish.tests.embedded.scatteredarchive.fragment.FragmentServlet;
+import org.glassfish.tests.embedded.scatteredarchive.webinflib.Greeter;
+import org.glassfish.tests.embedded.scatteredarchive.webinflib.GreeterBean;
+import org.glassfish.tests.embedded.scatteredarchive.webinflib.GreeterServlet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -208,15 +211,47 @@ public class ScatteredArchiveTest {
     }
 
     /**
+     * Reproducer for issue #25535: an {@code @EJB} injection point in a class bundled in a plain
+     * JAR (without {@code web-fragment.xml}) in {@code WEB-INF/lib} must be resolved to the EJB
+     * bundled in the same JAR. The business interface is declared as local only on the bean class.
+     */
+    @Test
+    public void testEjbInjectionInWebInfLibJar() throws Exception {
+        ScatteredArchive sa = createDefaultArchive("scatteredarchive");
+        sa.addClassPath(createLibraryJar("ejb-lib.jar", null, Greeter.class, GreeterBean.class, GreeterServlet.class));
+
+        URI warURI = sa.toURI();
+        printContents(warURI);
+
+        Deployer deployer = glassfish.getDeployer();
+        String appname = deployer.deploy(warURI);
+        logger.log(INFO, "Deployed [" + appname + "]");
+        assertEquals("scatteredarchive", appname);
+
+        get("http://localhost:8080/satest/" + GreeterServlet.class.getSimpleName(), GreeterBean.GREETING);
+    }
+
+    /**
      * Builds a web-fragment JAR (containing a {@code META-INF/web-fragment.xml} and the given
      * compiled classes read from {@code target/test-classes}) under the {@code target} directory.
      */
     private File createFragmentJar(String jarName, Class<?>... classes) throws IOException {
+        return createLibraryJar(jarName, WEB_FRAGMENT_XML, classes);
+    }
+
+    /**
+     * Builds a JAR with the given compiled classes read from {@code target/test-classes} under
+     * the {@code target} directory. If {@code webFragmentXml} is not null, it is stored as
+     * {@code META-INF/web-fragment.xml}.
+     */
+    private File createLibraryJar(String jarName, String webFragmentXml, Class<?>... classes) throws IOException {
         File jar = new File(PROJECT_DIR, "target/" + jarName);
         try (JarOutputStream jos = new JarOutputStream(new FileOutputStream(jar))) {
-            jos.putNextEntry(new ZipEntry("META-INF/web-fragment.xml"));
-            jos.write(WEB_FRAGMENT_XML.getBytes(StandardCharsets.UTF_8));
-            jos.closeEntry();
+            if (webFragmentXml != null) {
+                jos.putNextEntry(new ZipEntry("META-INF/web-fragment.xml"));
+                jos.write(webFragmentXml.getBytes(StandardCharsets.UTF_8));
+                jos.closeEntry();
+            }
             for (Class<?> clazz : classes) {
                 String entryName = clazz.getName().replace('.', '/') + ".class";
                 File classFile = new File(PROJECT_DIR, "target/test-classes/" + entryName);

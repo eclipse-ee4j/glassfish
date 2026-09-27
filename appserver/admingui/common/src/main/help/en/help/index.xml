@@ -35,7 +35,6 @@
     <indexitem text="deploying (reference)" target="ref-uploaddev"></indexitem>
     <indexitem text="deploying (task)" target="task-appdeployclient"></indexitem>
     <indexitem text="downloading stubs" target="task-appclientstubs"></indexitem>
-    <indexitem text="launching" target="task-appclientlaunch"></indexitem>
   </indexitem>
   <indexitem text="applications">
     <indexitem text="autodeploy settings (reference)" target="ref-serverinstappsconfig"></indexitem>
@@ -48,7 +47,6 @@
     <indexitem text="deploying web" target="task-appdeployweb"></indexitem>
     <indexitem text="editing (reference)" target="ref-appedit"></indexitem>
     <indexitem text="editing (task)" target="task-appedit"></indexitem>
-    <indexitem text="launching (reference)" target="ref-appclientlaunch"></indexitem>
     <indexitem text="launching (task)" target="task-applaunch"></indexitem>
     <indexitem text="managing targets (reference)" target="ref-appmanagetargets"></indexitem>
     <indexitem text="managing virtual servers (reference)" target="ref-managevirtualservers"></indexitem>
@@ -212,8 +210,6 @@
     <indexitem text="configuring (reference)" target="ref-serverinstjvmprofiler"></indexitem>
     <indexitem text="configuring (task)" target="task-jvmprofilersettings"></indexitem>
   </indexitem>
-  <indexitem text="launching application clients" target="task-appclientlaunch"></indexitem>
-  <indexitem text="launching applications (reference)" target="ref-appclientlaunch"></indexitem>
   <indexitem text="launching applications (task)" target="task-applaunch"></indexitem>
   <indexitem text="LDAP realm">
     <indexitem text="properties" target="ref-ldaprealmprop"></indexitem>

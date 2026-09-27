@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -21,7 +22,6 @@
 <!initPage
     setResourceBundle(key="i18njca" bundle="org.glassfish.jca.admingui.Strings");
     setPageSessionAttribute(key="showDeploymentOrder" value="#{true}")
-    setPageSessionAttribute(key="showJavaWebStart" value="#{false}")
     setPageSessionAttribute(key="showVS" value="#{false}")
     setPageSessionAttribute(key="showContextRoot" value="#{false}")
     setPageSessionAttribute(key="showAvailability" value="#{false}")

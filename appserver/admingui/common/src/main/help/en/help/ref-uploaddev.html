@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2005, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -179,10 +180,6 @@
 <p>If the Enabled checkbox is selected, high-availability is enabled for web sessions and for stateful session bean (SFSB) checkpointing and potentially passivation. If set to false (default) all web session saving and SFSB checkpointing is disabled for the specified application, web application, or EJB module. If set to true, the specified application or module is enabled for high-availability. Set this option to true only if high availability is configured and enabled at higher levels, such as the server and container levels.</p>
 <p>This option appears if clusters or standalone server instances aside from the default server instance (<code>server</code>) exist.</p>
 </dd>
-<dt>Java Web Start</dt>
-<dd>
-<p>If this option is selected, Java Web Start access is permitted for an application client module. This option is disabled by default.</p>
-</dd>
 <dt>Precompile JSPs</dt>
 <dd>
 <p>If this option is selected, JavaServer Pages (JSP) files are precompiled. If this option is disabled, JSP files are compiled at runtime when they are first accessed. This option is disabled by default.</p>
@@ -237,10 +234,6 @@
 <dd>
 <p>The name of the application.</p>
 <p>The name can include an optional version identifier, which follows the name and is separated from the name by a colon (<code>:</code>). The version identifier must begin with a letter or number. It can contain alphanumeric characters plus underscore (<code>_</code>), dash (<code>-</code>), and period (<code>.</code>) characters. For more information about module and application versions, see the <a href="http://www.oracle.com/pls/topic/lookup?ctx=E26576_01&id=GSDPG00324"><i>Module and Application Versions</i> in <i>Eclipse GlassFish Application Deployment Guide</i></a>.</p>
-</dd>
-<dt>Java Web Start</dt>
-<dd>
-<p>If this option is selected, Java Web Start access is permitted for an application client module. This option is disabled by default.</p>
 </dd>
 <dt>Run Verifier</dt>
 <dd>
@@ -453,9 +446,6 @@
 </li>
 <li>
 <p><a href="task-applaunch.html">To Launch an Application</a></p>
-</li>
-<li>
-<p><a href="task-appclientlaunch.html">To Launch an Application Client</a></p>
 </li>
 <li>
 <p><a href="task-appclientstubs.html">To Download Application Client Stubs</a></p>

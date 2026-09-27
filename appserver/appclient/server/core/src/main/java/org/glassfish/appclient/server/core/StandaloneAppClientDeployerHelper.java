@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -41,10 +40,6 @@ import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchiveEntry;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.Artifacts;
 import org.glassfish.deployment.common.Artifacts.FullAndPartURIs;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
@@ -65,8 +60,7 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
  */
 public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
 
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+    private static final Logger logger = Logger.getLogger(ACC_MAIN_LOGGER, LOG_MESSAGE_RESOURCE);
 
     private Set<FullAndPartURIs> clientLevelDownloads = null;
 
@@ -100,11 +94,6 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     @Override
-    public File rootForSignedFilesInApp() {
-        return new File(dc().getScratchDir("xml"), "signed/");
-    }
-
-    @Override
     protected void prepareJARs() throws IOException, URISyntaxException {
         super.prepareJARs();
         /*
@@ -120,26 +109,11 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     @Override
-    public void createAndAddLibraryJNLPs(AppClientDeployerHelper helper, TokenHelper tHelper, Map<String, DynamicContent> dynamicContent) {
-    }
-
-
-    @Override
     protected void copyFileToTopLevelJAR(final OutputJarArchive clientFacadeArchive, final File inputFile,
         final String pathInJar) throws IOException {
         try (WritableArchiveEntry os = clientFacadeArchive.putNextEntry(pathInJar)) {
             FileUtils.copy(inputFile, os);
         }
-    }
-
-
-    @Override
-    public FixedContent fixedContentWithinEAR(String uriString) {
-        /*
-         * There can be no fixed content within the EAR for a stand-alone
-         * app client.
-         */
-        return null;
     }
 
     /**

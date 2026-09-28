@@ -90,6 +90,7 @@
 <li><a href="#sample-applications">Sample Applications</a></li>
 </ul>
 </li>
+<li><a href="#security-stores">Security Stores</a></li>
 <li><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></li>
 <li><a href="#changing-log-levels-in-embedded-glassfish-server">Changing Log Levels in Embedded Eclipse GlassFish</a></li>
 <li><a href="#monitoring-embedded-glassfish-server-with-jmx">Monitoring Embedded Eclipse GlassFish with JMX</a>
@@ -713,6 +714,9 @@ ability to program in the Java language is assumed.</p>
 </li>
 <li>
 <p><a href="#including-the-glassfish-server-embedded-server-api-in-applications">Including the Eclipse GlassFish Embedded Server API in Applications</a></p>
+</li>
+<li>
+<p><a href="#security-stores">Security Stores</a></p>
 </li>
 <li>
 <p><a href="#default-java-persistence-data-source-for-embedded-glassfish-server">Default Java Persistence Data Source for Embedded Eclipse GlassFish</a></p>
@@ -3120,6 +3124,47 @@ preserving this file when the application is stopped.</p>
 </div>
 </div>
 <div class="sect1">
+<h2 id="security-stores"><a class="anchor" href="#security-stores"></a>Security Stores</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish does not create a keystore or a truststore. It
+uses the default stores of the JDK, or the stores set with the standard
+<code>javax.net.ssl</code> system properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>javax.net.ssl.keyStore</code> and <code>javax.net.ssl.keyStorePassword</code></p>
+</li>
+<li>
+<p><code>javax.net.ssl.trustStore</code> and <code>javax.net.ssl.trustStorePassword</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The HTTPS listener is disabled by default. If you enable it, you must
+provide a keystore with a private key and a certificate under the <code>s1as</code>
+alias, which is the certificate name that the HTTPS listener uses by
+default. Otherwise, the HTTPS listener starts but cannot complete a TLS
+handshake. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>keytool -genkeypair -alias s1as -keyalg RSA -dname CN=localhost \
+    -keystore keystore.p12 -storetype PKCS12 -storepass changeit
+
+java -Djavax.net.ssl.keyStore=keystore.p12 \
+    -Djavax.net.ssl.keyStorePassword=changeit \
+    -jar glassfish-embedded-all.jar --httpsPort=8181 app.war</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To use a certificate with a different alias, change the <code>cert-nickname</code>
+attribute of the <code>ssl</code> element of the HTTPS listener.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="default-java-persistence-data-source-for-embedded-glassfish-server"><a class="anchor" href="#default-java-persistence-data-source-for-embedded-glassfish-server"></a>Default Java Persistence Data Source for Embedded Eclipse GlassFish</h2>
 <div class="sectionbody">
 <div class="paragraph">
@@ -3921,7 +3966,7 @@ archive (JAR) file in which embedded Eclipse GlassFish is distributed:</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-26 07:12:26 UTC
+Last updated 2026-09-28 09:12:59 UTC
 </div>
 </div>
 </body>

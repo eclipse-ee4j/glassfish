@@ -46,6 +46,17 @@
 </li>
 <li><a href="#glassfish-server-upgrade-compatibility-issues">2 Eclipse GlassFish Upgrade Compatibility Issues</a>
 <ul class="sectlevel2">
+<li><a href="#breaking-changes-in-glassfish-7-1-and-8-0">Breaking Changes in Eclipse GlassFish 7.1 and 8.0</a>
+<ul class="sectlevel3">
+<li><a href="#required-jdk-version">Required JDK Version</a></li>
+<li><a href="#security-stores-use-the-pkcs12-format">Security Stores Use the PKCS12 Format</a></li>
+<li><a href="#changed-jvm-option-for-the-naming-service">Changed JVM Option for the Naming Service</a></li>
+<li><a href="#admin-cli-jar-is-no-longer-an-executable-jar"><code>admin-cli.jar</code> Is No Longer an Executable JAR</a></li>
+<li><a href="#stand-alone-clients-require-a-module-path">Stand-Alone Clients Require a Module Path</a></li>
+<li><a href="#embedded-glassfish-does-not-provide-default-security-stores">Embedded Eclipse GlassFish Does Not Provide Default Security Stores</a></li>
+<li><a href="#ide-support">IDE Support</a></li>
+</ul>
+</li>
 <li><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 8</a></li>
 <li><a href="#new-default-installation-directory">New Default Installation Directory</a></li>
 <li><a href="#changes-to-group-management-service-settings">Changes to Group Management Service Settings</a></li>
@@ -585,6 +596,9 @@ address these issues.</p>
 <div class="ulist">
 <ul>
 <li>
+<p><a href="#breaking-changes-in-glassfish-7-1-and-8-0">Breaking Changes in Eclipse GlassFish 7.1 and 8.0</a></p>
+</li>
+<li>
 <p><a href="#binary-compatible-releases-for-glassfish-server">Binary-Compatible Releases For Eclipse GlassFish 8</a></p>
 </li>
 <li>
@@ -618,6 +632,197 @@ address these issues.</p>
 <p><a href="#nss-cryptographic-token-support">NSS Cryptographic Token Support</a></p>
 </li>
 </ul>
+</div>
+<div class="sect2">
+<h3 id="breaking-changes-in-glassfish-7-1-and-8-0"><a class="anchor" href="#breaking-changes-in-glassfish-7-1-and-8-0"></a>Breaking Changes in Eclipse GlassFish 7.1 and 8.0</h3>
+<div class="paragraph">
+<p>The following changes in Eclipse GlassFish 7.1 and 8.0 are not backward
+compatible with Eclipse GlassFish 7.0 and earlier releases. Review them before
+you upgrade a domain, or a tool that manages Eclipse GlassFish.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#required-jdk-version">Required JDK Version</a></p>
+</li>
+<li>
+<p><a href="#security-stores-use-the-pkcs12-format">Security Stores Use the PKCS12 Format</a></p>
+</li>
+<li>
+<p><a href="#changed-jvm-option-for-the-naming-service">Changed JVM Option for the Naming Service</a></p>
+</li>
+<li>
+<p><a href="#admin-cli-jar-is-no-longer-an-executable-jar"><code>admin-cli.jar</code> Is No Longer an Executable JAR</a></p>
+</li>
+<li>
+<p><a href="#stand-alone-clients-require-a-module-path">Stand-Alone Clients Require a Module Path</a></p>
+</li>
+<li>
+<p><a href="#embedded-glassfish-does-not-provide-default-security-stores">Embedded Eclipse GlassFish Does Not Provide Default Security Stores</a></p>
+</li>
+<li>
+<p><a href="#ide-support">IDE Support</a></p>
+</li>
+</ul>
+</div>
+<div class="sect3">
+<h4 id="required-jdk-version"><a class="anchor" href="#required-jdk-version"></a>Required JDK Version</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7.1 requires JDK 17 or later. Eclipse GlassFish 8.0 requires
+JDK 21 or later.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="security-stores-use-the-pkcs12-format"><a class="anchor" href="#security-stores-use-the-pkcs12-format"></a>Security Stores Use the PKCS12 Format</h4>
+<div class="paragraph">
+<p>Eclipse GlassFish 7.1 and later read the domain security stores only in the
+PKCS12 format:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 7.0 and earlier</th>
+<th class="tableblock halign-left valign-top">Eclipse GlassFish 7.1 and later</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/keystore.jks</code> (JKS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/keystore.p12</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/cacerts.jks</code> (JKS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/cacerts.p12</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/domain-passwords</code> (JCEKS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>config/domain-passwords.p12</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>master-password</code> (JCEKS)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>master-password.p12</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>When you start a domain from an earlier release with the
+<code>asadmin start-domain --upgrade</code> subcommand, Eclipse GlassFish converts these
+stores to PKCS12, keeps the original files with the <code>.bak</code> extension, and
+updates the <code>javax.net.ssl.keyStore</code> and <code>javax.net.ssl.trustStore</code> JVM
+options that point to the old files.</p>
+</div>
+<div class="paragraph">
+<p>To convert the stores in the <code>config</code> directory manually, use the
+<code>keytool</code> command, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>keytool -importkeystore -srckeystore keystore.jks -srcstoretype JKS \
+    -destkeystore keystore.p12 -deststoretype PKCS12
+keytool -importkeystore -srckeystore cacerts.jks -srcstoretype JKS \
+    -destkeystore cacerts.p12 -deststoretype PKCS12
+keytool -importkeystore -srckeystore domain-passwords -srcstoretype JCEKS \
+    -destkeystore domain-passwords.p12 -deststoretype PKCS12</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Use the master password of the domain as the password of both the source
+and the destination store.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="changed-jvm-option-for-the-naming-service"><a class="anchor" href="#changed-jvm-option-for-the-naming-service"></a>Changed JVM Option for the Naming Service</h4>
+<div class="paragraph">
+<p>The JVM option that opens the <code>javax.naming.spi</code> package now targets the
+<code>org.glassfish.main.jdke</code> module instead of the unnamed module. The
+<code>start-domain --upgrade</code> subcommand does not change this option. Before
+you start an upgraded domain, replace the following option in every
+<code>java-config</code> element of the <code>domain.xml</code> file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;jvm-options&gt;</span>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED<span class="tag">&lt;/jvm-options&gt;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>with:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;jvm-options&gt;</span>--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke<span class="tag">&lt;/jvm-options&gt;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="admin-cli-jar-is-no-longer-an-executable-jar"><a class="anchor" href="#admin-cli-jar-is-no-longer-an-executable-jar"></a><code>admin-cli.jar</code> Is No Longer an Executable JAR</h4>
+<div class="paragraph">
+<p>The <code>admin-cli.jar</code> file moved from the as-install<code>/modules</code> directory to
+the as-install directory, and it can no longer be started with
+<code>java -jar</code>. This JAR file is an internal part of Eclipse GlassFish.</p>
+</div>
+<div class="paragraph">
+<p>Scripts and tools must run <code>asadmin</code> subcommands with one of the
+following scripts in the as-install<code>/bin</code> directory:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>asadmin</code> on UNIX and Linux systems</p>
+</li>
+<li>
+<p><code>asadmin.bat</code> on Windows systems</p>
+</li>
+<li>
+<p><code>asadmin.java</code> on any system, started as <code>java asadmin.java</code> followed by
+the subcommand and its options</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This change affects tools that start <code>admin-cli.jar</code> directly, for
+example older Arquillian containers and IDE plug-ins for Eclipse GlassFish.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="stand-alone-clients-require-a-module-path"><a class="anchor" href="#stand-alone-clients-require-a-module-path"></a>Stand-Alone Clients Require a Module Path</h4>
+<div class="paragraph">
+<p>The Eclipse GlassFish bootstrap libraries are now Java modules in the
+as-install<code>/lib/bootstrap</code> directory. A stand-alone client that has only
+<code>gf-client.jar</code> on its class path fails with a <code>ClassNotFoundException</code>
+or a <code>NoInitialContextException</code>. For the new command line, see
+"<a href="application-development-guide.html#developing-clients-without-the-acc">Developing Clients Without the ACC</a>"
+in Eclipse GlassFish Application Development Guide.</p>
+</div>
+<div class="paragraph">
+<p>Application clients started with the <code>appclient</code> script are not affected.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="embedded-glassfish-does-not-provide-default-security-stores"><a class="anchor" href="#embedded-glassfish-does-not-provide-default-security-stores"></a>Embedded Eclipse GlassFish Does Not Provide Default Security Stores</h4>
+<div class="paragraph">
+<p>Embedded Eclipse GlassFish no longer creates a keystore and a truststore. The
+stores that earlier releases created were copied from the JAR file, so
+their private keys were public. Embedded Eclipse GlassFish now uses the default
+stores of the JDK, or the stores set with the <code>javax.net.ssl.keyStore</code>
+and <code>javax.net.ssl.trustStore</code> system properties. To enable HTTPS, you
+must provide a keystore with a certificate. For more information, see
+<a href="embedded-server-guide.html#security-stores">Security Stores</a> in
+Eclipse GlassFish Embedded Server Guide.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="ide-support"><a class="anchor" href="#ide-support"></a>IDE Support</h4>
+<div class="paragraph">
+<p>IDE plug-ins for Eclipse GlassFish that were released before Eclipse GlassFish 7.1
+might fail to register or start Eclipse GlassFish 7.1 and later. Update the
+plug-in, or the IDE, to a version that supports Eclipse GlassFish 7.1 and later,
+for example IntelliJ IDEA 2026.1 or Apache NetBeans 30.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
 <h3 id="binary-compatible-releases-for-glassfish-server"><a class="anchor" href="#binary-compatible-releases-for-glassfish-server"></a>Binary-Compatible Releases For Eclipse GlassFish 8</h3>
@@ -858,7 +1063,7 @@ for more information.</p>
 <code>asadmin</code> command precede the subcommand. Utility options are options
 that control the behavior of the <code>asadmin</code> utility, as distinguished
 from subcommand options. Use of the following options after the
-subcommand is deprecated and will be removed in Eclipse GlassFish 7.1.0.</p>
+subcommand is deprecated and might be removed in a future release.</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3131,7 +3336,7 @@ Attributes</a></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-26 07:17:27 UTC
+Last updated 2026-09-28 09:18:23 UTC
 </div>
 </div>
 </body>

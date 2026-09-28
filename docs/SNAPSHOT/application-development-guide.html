@@ -18070,14 +18070,24 @@ Deployment Guide.</p>
 </div>
 </li>
 <li>
-<p>Copy the as-install<code>/lib/gf-client.jar</code> file to the client machine
-and include it in the classpath on the client side.</p>
+<p>Include the Eclipse GlassFish libraries on the client side. Put the
+as-install<code>/lib/bootstrap</code> directory on the module path, and the
+as-install<code>/lib/gf-client.jar</code> file and the JAR files in the
+as-install<code>/modules</code> directory on the class path, for example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java --module-path as-install/lib/bootstrap --add-modules ALL-MODULE-PATH \
+    -cp .:as-install/lib/gf-client.jar:as-install/modules/* MyClient</code></pre>
+</div>
+</div>
 <div class="paragraph">
-<p>The <code>gf-client.jar</code> file references Eclipse GlassFish JAR files in its
-<code>MANIFEST.MF</code> file. If there is no Eclipse GlassFish installation on the
-client machine, you must also copy the as-install<code>/modules</code> directory to
-the client machine and maintain its directory structure relative to the
-as-install<code>/lib/gf-client.jar</code> file. Or you can use the
+<p>On Windows systems, use a semicolon (<code>;</code>) as the class path separator.</p>
+</div>
+<div class="paragraph">
+<p>If there is no Eclipse GlassFish installation on the client machine, you must
+copy the as-install<code>/lib/bootstrap</code> directory, the
+as-install<code>/lib/gf-client.jar</code> file, and the as-install<code>/modules</code>
+directory to the client machine. Or you can use the
 <code>package-appclient</code> script; see <a href="#using-the-package-appclient-script">Using the
 <code>package-appclient</code> Script</a>.</p>
 </div>
@@ -18296,13 +18306,25 @@ in the classpath on the client side:</p>
 </li>
 <li>
 <p><code>imqjmsra.jar</code> - available at
-as-install<code>/lib/install/aplications/jmsra</code></p>
+as-install<code>/lib/install/applications/jmsra</code></p>
 <div class="paragraph">
-<p>The <code>gf-client.jar</code> file references Eclipse GlassFish JAR files in its
-<code>MANIFEST.MF</code> file. If there is no Eclipse GlassFish installation on the
-client machine, you must also copy the as-install<code>/modules</code> directory to
-the client machine and maintain its directory structure relative to the
-as-install<code>/lib/gf-client.jar</code> file. Or you can use the
+<p>The client also needs the as-install<code>/lib/bootstrap</code> directory on the
+module path and the JAR files in the as-install<code>/modules</code> directory on
+the class path, for example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>java --module-path as-install/lib/bootstrap --add-modules ALL-MODULE-PATH \
+    -cp .:as-install/lib/gf-client.jar:as-install/lib/install/applications/jmsra/imqjmsra.jar:as-install/modules/* MyClient</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>On Windows systems, use a semicolon (<code>;</code>) as the class path separator.</p>
+</div>
+<div class="paragraph">
+<p>If there is no Eclipse GlassFish installation on the client machine, you must
+also copy the as-install<code>/lib/bootstrap</code> and as-install<code>/modules</code>
+directories to the client machine. Or you can use the
 <code>package-appclient</code> script; see <a href="#using-the-package-appclient-script">Using the
 <code>package-appclient</code> Script</a>.</p>
 </div>
@@ -22939,7 +22961,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-09-26 07:11:13 UTC
+Last updated 2026-09-28 09:11:38 UTC
 </div>
 </div>
 </body>

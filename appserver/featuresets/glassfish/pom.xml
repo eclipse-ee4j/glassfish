@@ -223,6 +223,20 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- The Fory codec is discovered among the installed bundles, so it
+             has to be one: without it the transport offers only the built-in
+             codec, quietly. -->
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-codec-fory</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!-- Jakarta Enterprise Beans - Container Managed Persistence (for compatibiliy, don't use) -->
         <dependency>
             <groupId>org.glassfish.main.persistence.cmp</groupId>

@@ -23,6 +23,7 @@ import jakarta.inject.Inject;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 
+import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
@@ -74,6 +75,31 @@ public class OrbHttpEndpoint implements PostConstruct {
 
     @Override
     public void postConstruct() {
+        // Everything, not just the mounting. This runs at a run level during
+        // server startup, and a service that throws there does not merely fail
+        // itself: the run level fails, GlassFish fires its error event, and
+        // what that event closes includes the connector classloaders. The
+        // server then comes up unable to create a JDBC pool, with a stack
+        // trace that names the connector and never mentions this class.
+        //
+        // That is not hypothetical. The scanner below asks the OSGi framework
+        // which modules are installed, and an embedded server has no OSGi
+        // framework, so it raises NoClassDefFoundError for
+        // org/osgi/framework/FrameworkUtil - which is a LinkageError, not an
+        // Exception, and is why both are caught here.
+        //
+        // An endpoint that cannot mount has to stay its own problem: IIOP is
+        // unaffected, and a server that starts without this endpoint is better
+        // than one that does not start.
+        try {
+            mount();
+        } catch (Exception | LinkageError e) {
+            LOG.log(Level.WARNING, "could not mount " + Protocol.CONTEXT_PATH
+                    + "; remote EJB over HTTP is not available on this server", e);
+        }
+    }
+
+    private void mount() throws EndpointRegistrationException {
         // Before the dispatchers are built, so their defaults are chosen from
         // everything that is installed rather than from what a ServiceLoader
         // could see from inside this bundle.
@@ -86,14 +112,7 @@ public class OrbHttpEndpoint implements PostConstruct {
                 new NamingDispatcher(naming, security, new JavaSerializationMarshaller()),
                 new TransactionDispatcher(transactions, security),
                 new AffinityDispatcher(affinity));
-        try {
-            grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
-            LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);
-        } catch (Exception e) {
-            // Not fatal to the server: IIOP is unaffected, and a server that
-            // starts without this endpoint is better than one that does not
-            // start.
-            LOG.log(Level.WARNING, "could not mount " + Protocol.CONTEXT_PATH, e);
-        }
+        grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
+        LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);
     }
 }

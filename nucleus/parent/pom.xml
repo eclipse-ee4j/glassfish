@@ -95,7 +95,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
-        <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.1.4.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>
@@ -219,7 +219,7 @@
 
         <shoal.version>4.0.1</shoal.version>
         <ha-api.version>3.2.0</ha-api.version>
-        <logging-annotation-processor.version>1.10</logging-annotation-processor.version>
+        <logging-annotation-processor.version>1.11</logging-annotation-processor.version>
 
         <!-- Build plugins -->
         <command.security.maven.plugin.version>1.0.22</command.security.maven.plugin.version>
@@ -227,7 +227,7 @@
 
         <!-- 3rd party dependencies -->
         <commons-io.version>2.22.0</commons-io.version>
-        <commons-lang3.version>3.20.0</commons-lang3.version>
+        <commons-lang3.version>3.21.0</commons-lang3.version>
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.3.Final</jboss.logging.version>
         <javassist.version>3.33.0-GA</javassist.version>

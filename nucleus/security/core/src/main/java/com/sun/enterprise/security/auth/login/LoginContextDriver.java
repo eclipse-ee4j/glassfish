@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -50,6 +50,7 @@ import org.glassfish.security.common.UserNameAndPassword;
 
 import static com.sun.enterprise.security.SecurityLoggerInfo.auditAtnRefusedError;
 import static com.sun.enterprise.security.SecurityLoggerInfo.noSuchUserInRealmError;
+import static com.sun.enterprise.security.auth.realm.AbstractGlassFishRealmState.JAAS_CONTEXT_PARAM;
 import static com.sun.enterprise.security.common.SecurityConstants.CLIENT_JAAS_CERTIFICATE;
 import static com.sun.enterprise.security.common.SecurityConstants.CLIENT_JAAS_PASSWORD;
 import static com.sun.enterprise.util.Utility.isEmpty;
@@ -264,8 +265,9 @@ public class LoginContextDriver {
     }
 
     private static String getJaasCtx(String realm) {
+        String jaasCtx;
         try {
-            return Realm.getInstance(realm).getJAASContext();
+            jaasCtx = Realm.getInstance(realm).getJAASContext();
         } catch (Exception ex) {
             if (ex instanceof LoginException) {
                 throw (LoginException) ex;
@@ -273,6 +275,17 @@ public class LoginContextDriver {
 
             throw (LoginException) new LoginException(ex.toString()).initCause(ex);
         }
+
+        return requireJaasCtx(realm, jaasCtx);
+    }
+
+    private static String requireJaasCtx(String realm, String jaasCtx) {
+        if (jaasCtx == null) {
+            throw new LoginException(
+                "Realm " + realm + " has no JAAS context. Set the " + JAAS_CONTEXT_PARAM + " property of the realm.");
+        }
+
+        return jaasCtx;
     }
 
     public static void jmacLogin(Subject subject, Principal callerPrincipal, String realmName) throws LoginException {
@@ -683,6 +696,7 @@ public class LoginContextDriver {
             }
             throw new LoginException("Failed obtaining the JAAS context.", ex);
         }
+        requireJaasCtx(digestCred.getRealmName(), jaasCtx);
 
         try {
             // A dummyCallback is used to satisfy JAAS but it is never used.

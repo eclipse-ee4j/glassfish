@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -59,6 +59,9 @@ public abstract class AbstractGlassFishRealmState implements Comparable<Realm>  
     /**
      * Initialize a realm with some properties. This can be used when instantiating realms from their
      * descriptions. This method may only be called a single time.
+     * <p>
+     * Stores the {@value #JAAS_CONTEXT_PARAM} property, if present, so that {@link #getJAASContext()}
+     * returns it. Subclasses overriding this method must call {@code super.init(properties)}.
      *
      * @param properties initialization parameters used by this realm.
      * @exception BadRealmException if the configuration parameters identify a corrupt realm
@@ -66,6 +69,11 @@ public abstract class AbstractGlassFishRealmState implements Comparable<Realm>  
      * exist
      */
     protected void init(Properties properties) throws BadRealmException, NoSuchRealmException {
+        String jaasContext = properties.getProperty(JAAS_CONTEXT_PARAM);
+        if (jaasContext != null) {
+            setProperty(JAAS_CONTEXT_PARAM, jaasContext);
+        }
+
         String groupList = properties.getProperty(PARAM_GROUPS);
 
         if (groupList != null && groupList.length() > 0) {
@@ -213,9 +221,10 @@ public abstract class AbstractGlassFishRealmState implements Comparable<Realm>  
      * Returns name of JAAS context used by this realm.
      *
      * <P>
-     * The JAAS context is defined in server.xml auth-realm element associated with this realm.
+     * The JAAS context is defined by the {@value #JAAS_CONTEXT_PARAM} property of the auth-realm
+     * element associated with this realm in domain.xml.
      *
-     * @return String containing JAAS context name.
+     * @return String containing JAAS context name, or null if the property was not set.
      *
      */
     public synchronized String getJAASContext() {

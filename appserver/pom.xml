@@ -77,9 +77,8 @@
         <microprofile.config-api.version>3.1.2</microprofile.config-api.version>
         <helidon-config.version>4.5.5</helidon-config.version>
 
-
         <!-- MicroProfile Health -->
-        <microprofile.health-api.version>4.0.2</microprofile.health-api.version>
+        <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
 
         <!-- MicroProfile JWT / JWT Authentication Mechanism for Jakarta Security -->
         <microprofile-jwt-auth-api.version>2.2</microprofile-jwt-auth-api.version>

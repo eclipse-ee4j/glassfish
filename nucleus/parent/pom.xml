@@ -95,7 +95,7 @@
 
         <!-- Jakarta Validation -->
         <jakarta.validation-api.version>3.1.1</jakarta.validation-api.version>
-        <hibernate-validator.version>9.1.4.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.1.0.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>

@@ -3514,6 +3514,27 @@ the method returns without throwing an exception, the Eclipse GlassFish
 assumes that the realm is ready to service authentication requests. If
 an exception is thrown, the realm is disabled.</p>
 </div>
+<div class="paragraph">
+<p>The method must call <code>super.init(props)</code> first. The inherited
+implementation processes the properties that are common to all realms:
+<code>jaas-context</code>, <code>assign-groups</code>, and <code>group-mapping</code>. Any other property
+that the realm needs later must be read from <code>props</code> in this method,
+because the realm does not keep the <code>props</code> object. For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@Override</span>
+<span class="directive">public</span> <span class="type">void</span> init(<span class="predefined-type">Properties</span> props) <span class="directive">throws</span> BadRealmException, NoSuchRealmException {
+    <span class="local-variable">super</span>.init(props);
+
+    <span class="predefined-type">String</span> url = props.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">url</span><span class="delimiter">&quot;</span></span>);
+    <span class="keyword">if</span> (url == <span class="predefined-constant">null</span>) {
+        <span class="keyword">throw</span> <span class="keyword">new</span> BadRealmException(<span class="string"><span class="delimiter">&quot;</span><span class="content">Missing required property url.</span><span class="delimiter">&quot;</span></span>);
+    }
+    setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">url</span><span class="delimiter">&quot;</span></span>, url);
+}</code></pre>
+</div>
+</div>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">String</span> getAuthType()</code></pre>
@@ -3525,21 +3546,41 @@ authentication done by this realm.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Enumeration</span> getGroupNames(<span class="predefined-type">String</span> username) <span class="directive">throws</span>
-    InvalidOperationException, NoSuchUserException</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">Enumeration</span>&lt;<span class="predefined-type">String</span>&gt; getGroupNames(<span class="predefined-type">String</span> username) <span class="directive">throws</span> NoSuchUserException</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This method returns an <code>Enumeration</code> (of <code>String</code> objects) enumerating
-the groups (if any) to which the given <code>username</code> belongs in this realm.</p>
+<p>This method returns an <code>Enumeration</code> of the names of the groups (if any)
+to which the given <code>username</code> belongs in this realm.</p>
 </div>
 <div class="paragraph">
-<p>Custom realms that manage users must implement the following additional
-methods:</p>
+<p>Custom realms can override the following method:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">boolean</span> supportsUserManagement();</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">String</span> getJAASContext()</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This method returns the name of the JAAS context that the Eclipse GlassFish
+uses to authenticate users of this realm. The name must match an entry
+in the domain-dir<code>/config/login.conf</code> file, see
+<a href="#connecting-the-custom-realm-and-the-login-module">Connecting the
+Custom Realm and the Login Module</a>. The inherited implementation returns
+the value of the <code>jaas-context</code> property of the realm, provided that
+<code>init</code> called <code>super.init(props)</code>. Override this method only if the realm
+must always use a fixed JAAS context regardless of its configuration. If
+the method returns <code>null</code>, authentication against the realm fails.</p>
+</div>
+<div class="paragraph">
+<p>Custom realms that manage users can override the following additional
+methods. The inherited implementations throw an exception, except for
+<code>supportsUserManagement</code>, which returns <code>false</code>, and <code>persist</code>, which
+does nothing.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">boolean</span> supportsUserManagement();</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3547,7 +3588,7 @@ methods:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Enumeration</span> getGroupNames() <span class="directive">throws</span> BadRealmException;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">Enumeration</span>&lt;<span class="predefined-type">String</span>&gt; getGroupNames() <span class="directive">throws</span> BadRealmException;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3555,7 +3596,7 @@ methods:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="predefined-type">Enumeration</span> getUserNames() <span class="directive">throws</span> BadRealmException;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="predefined-type">Enumeration</span>&lt;<span class="predefined-type">String</span>&gt; getUserNames() <span class="directive">throws</span> BadRealmException;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3563,7 +3604,7 @@ methods:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> refresh() <span class="directive">throws</span> BadRealmException;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> refresh() <span class="directive">throws</span> BadRealmException;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3572,7 +3613,7 @@ visible.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> persist() <span class="directive">throws</span> BadRealmException;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> persist() <span class="directive">throws</span> BadRealmException;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3580,7 +3621,7 @@ visible.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> User getUser(<span class="predefined-type">String</span> name) <span class="directive">throws</span> NoSuchUserException,
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> User getUser(<span class="predefined-type">String</span> name) <span class="directive">throws</span> NoSuchUserException,
 BadRealmException;</code></pre>
 </div>
 </div>
@@ -3590,7 +3631,7 @@ user.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> addUser(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> password, <span class="predefined-type">String</span><span class="type">[]</span> groupList) <span class="directive">throws</span>
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> addUser(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> password, <span class="predefined-type">String</span><span class="type">[]</span> groupList) <span class="directive">throws</span>
 BadRealmException, IASSecurityException;</code></pre>
 </div>
 </div>
@@ -3599,7 +3640,7 @@ BadRealmException, IASSecurityException;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> removeUser(<span class="predefined-type">String</span> name) <span class="directive">throws</span> NoSuchUserException,
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> removeUser(<span class="predefined-type">String</span> name) <span class="directive">throws</span> NoSuchUserException,
 BadRealmException;</code></pre>
 </div>
 </div>
@@ -3608,7 +3649,7 @@ BadRealmException;</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="directive">abstract</span> <span class="type">void</span> updateUser(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> newName, <span class="predefined-type">String</span> password,
+<pre class="CodeRay highlight"><code data-lang="java"><span class="directive">public</span> <span class="type">void</span> updateUser(<span class="predefined-type">String</span> name, <span class="predefined-type">String</span> newName, <span class="predefined-type">String</span> password,
 <span class="predefined-type">String</span><span class="type">[]</span> groups) <span class="directive">throws</span> NoSuchUserException, BadRealmException, IASSecurityException;</code></pre>
 </div>
 </div>
@@ -3623,7 +3664,7 @@ BadRealmException;</code></pre>
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The array passed to the <code>commitUseAuthentication</code> method should be newly
+<p>The array passed to the <code>commitUserAuthentication</code> method should be newly
 created and otherwise unreferenced. This is because the group name array
 elements are set to null after authentication as part of cleanup. So the
 second time your custom realm executes it returns an array with null
@@ -3640,6 +3681,45 @@ variables.</p>
 </td>
 </tr>
 </table>
+</div>
+<div class="sect4">
+<h5 id="connecting-the-custom-realm-and-the-login-module"><a class="anchor" href="#connecting-the-custom-realm-and-the-login-module"></a>Connecting the Custom Realm and the Login Module</h5>
+<div class="paragraph">
+<p>The realm and the login module are connected through a JAAS context. To
+do this, perform the following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Declare a JAAS context for the login module in the
+domain-dir<code>/config/login.conf</code> file. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>customRealm {
+    com.example.security.CustomLoginModule required;
+};</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Restart the domain so that the <code>login.conf</code> file is read again.</p>
+</li>
+<li>
+<p>Create the realm and set its <code>jaas-context</code> property to the name of
+the JAAS context. For example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>asadmin&gt; create-auth-realm --classname com.example.security.CustomRealm
+--property jaas-context=customRealm custom-realm</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For more information, see the <a href="reference-manual.html#create-auth-realm"><code>create-auth-realm</code>(1)</a>
+help page.</p>
+</div>
 </div>
 </div>
 </div>
@@ -22961,7 +23041,7 @@ deployment descriptor file. For details, see
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-10-01 00:23:39 UTC
+Last updated 2026-10-01 00:50:45 UTC
 </div>
 </div>
 </body>

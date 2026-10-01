@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -14,13 +15,27 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.backup;
+/*
+ * ZipFilenameFilter.java
+ *
+ * Created on March 30, 2004, 9:40 PM
+ */
+
+package org.glassfish.main.backup;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Locale;
 
-class DirectoryFilter implements FilenameFilter {
+/**
+ *
+ * @author  bnevins
+ * Tiny class.  It is here because it is used in 2 places --
+ * RestoreManager and ListManager and it avoids code duplication.
+ */
+
+class ZipFilenameFilter implements FilenameFilter {
     public boolean accept(File dir, String name) {
-        return new File(dir, name).isDirectory();
+        return name.toLowerCase(Locale.ENGLISH).endsWith(".zip");
     }
 }

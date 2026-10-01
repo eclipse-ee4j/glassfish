@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +21,7 @@
  * Created on January 21, 2004, 11:31 PM
  */
 
-package com.sun.enterprise.backup;
+package org.glassfish.main.backup;
 
 /**
  *
@@ -28,8 +29,8 @@ package com.sun.enterprise.backup;
  */
 public interface Constants
 {
-    final static String    loggingResourceBundle = "com.sun.enterprise.backup.LocalStrings";
-    final static String    exceptionResourceBundle = "/com/sun/enterprise/backup/LocalStrings.properties";
+    final static String    loggingResourceBundle = "org.glassfish.main.backup.LocalStrings";
+    final static String    exceptionResourceBundle = "/org/glassfish/main/backup/LocalStrings.properties";
     final static String    BACKUP_DIR = "backups";
     final static String    OSGI_CACHE = "osgi-cache";
     final static String    PROPS_USER_NAME = "user.name";

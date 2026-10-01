@@ -51,7 +51,6 @@ import com.sun.enterprise.deployment.web.WebResourceCollection;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -59,7 +58,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.deployment.common.DescriptorVisitor;
 import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
@@ -725,10 +723,6 @@ public class WebBundleDescriptorImpl extends WebBundleDescriptor {
             toStringBuffer.append("\n ========== Runtime Descriptors =========");
             toStringBuffer.append('\n').append(sunWebApp);
         }
-    }
-
-    public Enumeration<String> getArchiveFileEntries(ReadableArchive archiveFile) {
-        return archiveFile.entries();
     }
 
     private static final class ServletFilterMappingInfo {

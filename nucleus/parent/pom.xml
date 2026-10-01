@@ -1537,7 +1537,6 @@
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>
-
                                         <rule>
                                             <groupId>jakarta.authorization</groupId>
                                             <artifactId>jakarta.authorization-api</artifactId>
@@ -1549,6 +1548,16 @@
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+                                        <rule>
+                                            <!-- Duplicates 2.0.1 -->
+                                            <groupId>jakarta.inject</groupId>
+                                            <artifactId>jakarta.inject-api</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <version>2.0.1.MR</version>
                                                 </ignoreVersion>
                                             </ignoreVersions>
                                         </rule>

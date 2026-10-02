@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Provides access to schemas and DTDs to Java Web Start-launched app clients
+ * Provides access to schemas and DTDs to app clients and to other environments
  * that do not have an app server product installation at hand.
  * <p/>
  * The DTDs and schemas are assumed to be in the classpath so that

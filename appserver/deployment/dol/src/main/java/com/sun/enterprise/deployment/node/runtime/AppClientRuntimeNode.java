@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,15 +20,20 @@ package com.sun.enterprise.deployment.node.runtime;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.appclient.AppClientNode;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 
+import java.lang.System.Logger;
 import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Node;
+import org.xml.sax.Attributes;
+
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This node is responsible for saving all J2EE RI runtime
@@ -38,6 +43,11 @@ import org.w3c.dom.Node;
  * @version
  */
 public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDescriptor> {
+
+    private static final Logger LOG = DOLUtils.getLogger();
+
+    /** true while parsing the content of the no longer supported java-web-start-access element */
+    private boolean inJavaWebStartAccess;
 
     public AppClientRuntimeNode(ApplicationClientDescriptor descriptor) {
         super(descriptor);
@@ -65,8 +75,6 @@ public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDes
         registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
         registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.JAVA_WEB_START_ACCESS), JavaWebStartAccessNode.class);
-
     }
 
 
@@ -138,8 +146,29 @@ public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDes
         Node appClient = super.writeDescriptor(parent, bundleDescriptor);
         RuntimeDescriptorNode.writeCommonComponentInfo(appClient, bundleDescriptor);
         RuntimeDescriptorNode.writeMessageDestinationInfo(appClient, bundleDescriptor);
-        JavaWebStartAccessNode.writeJavaWebStartInfo(appClient, bundleDescriptor.getJavaWebStartAccessDescriptor());
         return appClient;
+    }
+
+
+    @Override
+    public void startElement(XMLElement element, Attributes attributes) {
+        if (RuntimeTagNames.JAVA_WEB_START_ACCESS.equals(element.getQName())) {
+            LOG.log(WARNING, "Java Web Start is not supported, the {0} element is ignored.",
+                RuntimeTagNames.JAVA_WEB_START_ACCESS);
+            inJavaWebStartAccess = true;
+            return;
+        }
+        super.startElement(element, attributes);
+    }
+
+
+    @Override
+    public boolean endElement(XMLElement element) {
+        if (RuntimeTagNames.JAVA_WEB_START_ACCESS.equals(element.getQName())) {
+            inJavaWebStartAccess = false;
+            return false;
+        }
+        return super.endElement(element);
     }
 
 
@@ -151,6 +180,9 @@ public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDes
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
+        if (inJavaWebStartAccess) {
+            return;
+        }
         if (!element.getQName().equals(RuntimeTagNames.VERSION_IDENTIFIER)) {
             super.setElementValue(element, value);
         }

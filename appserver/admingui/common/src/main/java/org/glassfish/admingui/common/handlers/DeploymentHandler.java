@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -234,19 +234,9 @@ public class DeploymentHandler {
              }
 
              StringBuilder sb = new StringBuilder();
-             String sep = "";
-             if (deployMap.containsKey("java-web-start-enabled")){
-                 if ("false".equals(deployMap.get("java-web-start-enabled"))){
-                    sb.append("java-web-start-enabled").append("=").append("false");
-                    sep = ":";
-                 }else{
-                     sb.append("java-web-start-enabled").append("=").append("true");
-                     sep = ":";
-                 }
-             }
              if (deployMap.containsKey("preserveAppScopedResources")){
                  if ("true".equals(deployMap.get("preserveAppScopedResources"))){
-                    sb.append(sep).append("preserveAppScopedResources").append("=").append("true");
+                    sb.append("preserveAppScopedResources").append("=").append("true");
                  }
              }
              if (sb.length()> 0){

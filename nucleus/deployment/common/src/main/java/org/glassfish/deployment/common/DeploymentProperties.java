@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -266,15 +267,6 @@ public class DeploymentProperties extends Properties {
                     Boolean.valueOf(availabilityEnabled).toString());
     }
 
-    public boolean getJavaWebStartEnabled() {
-        return Boolean.valueOf(getProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY, DEFAULT_JAVA_WEB_START_ENABLED)).booleanValue();
-    }
-
-    public void setJavaWebStartEnabled(boolean javaWebStartEnabled) {
-        setProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY,
-                    Boolean.valueOf(javaWebStartEnabled).toString());
-    }
-
     public String getLibraries() {
         return getProperty(DEPLOY_OPTION_LIBRARIES_KEY, null );
     }
@@ -348,7 +340,6 @@ public class DeploymentProperties extends Properties {
         remove(REDEPLOY);
         remove(GENERATE_RMI_STUBS);
         remove(AVAILABILITY_ENABLED);
-        remove(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY);
         remove(DEPLOY_OPTION_LIBRARIES_KEY);
         remove(RESOURCE_ACTION);
         remove(RESOURCE_TARGET_LIST);
@@ -480,11 +471,8 @@ public class DeploymentProperties extends Properties {
 
     // here are the new keys after AMX time, no conversions needed
     // for these keys
-    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY =
-        KEY_PREFIX + "JavaWebStartEnabled";
     public static final String DEPLOY_OPTION_LIBRARIES_KEY =
         KEY_PREFIX + "Libraries";
-    public static final String DEFAULT_JAVA_WEB_START_ENABLED = "true";
 
     public static final String DEFAULT_UPLOAD = "true";
     public static final String DEFAULT_EXTERNALLY_MANAGED = "false";

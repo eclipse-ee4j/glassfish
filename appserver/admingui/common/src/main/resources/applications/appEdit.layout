@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -102,25 +103,6 @@
                     gf.createEntity(endpoint="#{pageSession.appRefUrl}"
                         attrs="#{pageSession.valueMap2}"
                         convertToFalse="#{pageSession.convertToFalseList2}");
-                }
-
-                if (#{pageSession.showJavaWebStart){
-                    if(!#{pageSession.javaWebStartEnabled}){
-                        //will be null if checkbox is unchecked.
-                        setPageSessionAttribute(key="javaWebStartEnabled" value="false");
-                    }
-                    foreach (var="oneProp" list="#{pageSession.tableList}") {
-                        if (#{requestScope.oneProp.name}=$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}){
-                            setAttribute(key="found" value="true");
-                            mapPut(map="#{requestScope.oneProp}" key="value" value="#{pageSession.javaWebStartEnabled}")
-                        }
-                    }
-                    if (!#{requestScope.found}){
-                        createMap(result="#{requestScope.jmap}");
-                        mapPut(map="#{requestScope.jmap}" key="name" value="$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}")
-                        mapPut(map="#{requestScope.jmap}" key="value" value="#{pageSession.javaWebStartEnabled}")
-                        listAdd(list="#{pageSession.tableList}" value="#{requestScope.jmap}");
-                    }
                 }
 
                 if(!#{pageSession.implicitCdiEnabled}){

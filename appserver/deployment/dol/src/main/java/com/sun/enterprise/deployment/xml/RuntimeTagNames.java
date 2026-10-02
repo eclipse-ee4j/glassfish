@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -306,12 +306,8 @@ public interface RuntimeTagNames extends TagNames {
 
     String VALVE = "valve";
 
-    // Java Web Start-support related
+    // Java Web Start is no longer supported, the element is ignored when parsing
     String JAVA_WEB_START_ACCESS = "java-web-start-access";
-    String ELIGIBLE = "eligible";
-    String VENDOR = "vendor";
-    String JNLP_DOC = "jnlp-doc";
-    // also uses CONTEXT_ROOT defined above in the application-related section
 
 
     // Weblogic specific

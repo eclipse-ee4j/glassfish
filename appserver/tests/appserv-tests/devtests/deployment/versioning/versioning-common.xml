@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -408,11 +409,11 @@
     <property name="arg.list" value="get-client-stubs --appname=${appName} ${stubsPath}"/>
     <property name="desc" value="${description}"/>
 </target>
-<target name="prepare.appclient.preparator">
+<target name="prepare.appclient.preparator" depends="_process.target">
     <property name="classname" value="${preparatorClassName}"/>
-    <property name="outputLog" value="${build}/getJwsClientStubs.log"/>
+    <property name="outputLog" value="${build}/getClientStubs.log"/>
     <property name="classpath" value="${build}"/>
-    <property name="arg.list" value="http://${http.host}:${depltest.port}/${untaggedName} ${build}"/>
+    <property name="arg.list" value="${ASADMIN} ${untaggedName} ${build} ${targetName}"/>
 </target>
 <target name="prepare.runclient">
     <!-- set jvm.args="" if notset previously -->
@@ -814,7 +815,7 @@
 <target name="prepare.client.appclient" if="isAppClient">
     <antcall target="_prepare.client.appclient"/>
 </target>
-<target name="_prepare.client.appclient" depends="setHttpPort,process.appname,prepare.appclient.preparator,java.with.result"/>
+<target name="_prepare.client.appclient" depends="process.appname,prepare.appclient.preparator,java.with.result"/>
 
 <!--
   This target is called with the following targets common.run, common.run.positive, common.run.negative

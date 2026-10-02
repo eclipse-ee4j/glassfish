@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -34,13 +35,9 @@ import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.hk2.api.PostConstruct;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.types.Property;
-import org.jvnet.hk2.config.types.PropertyBag;
 
 
 /**
@@ -62,12 +59,6 @@ public class UpgradeService implements ConfigurationUpgrade, PostConstruct {
     @Inject @Named("gmsupgrade") @Optional
     ConfigurationUpgrade precondition = null;
 
-    private final static Logger logger = Logger.getAnonymousLogger();
-
-    private static final String APPCLIENT_SNIFFER_NAME = "appclient";
-    private static final String V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME = "javaWebStartEnabled";
-    private static final String GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME = "java-web-start-enabled";
-
     @Override
     public void postConstruct() {
         upgradeApplicationElements();
@@ -75,7 +66,6 @@ public class UpgradeService implements ConfigurationUpgrade, PostConstruct {
 
     private void upgradeApplicationElements() {
         upgradeV3PreludeApplicationElements();
-        upgradeV3_0_1_AppClientElements();
     }
 
     private void upgradeV3PreludeApplicationElements() {
@@ -109,82 +99,6 @@ public class UpgradeService implements ConfigurationUpgrade, PostConstruct {
                     throw new RuntimeException(tf);
                 }
             }
-        }
-    }
-
-    /**
-     * Adds a property with the specified name and value to a writable config
-     * object.
-     * @param <T> the type of the config object
-     * @param propName name of the property to add
-     * @param propValue value of the property to add
-     * @param owner_w the owning config object
-     * @return the added Property object
-     * @throws TransactionFailure
-     * @throws PropertyVetoException
-     */
-    private <T extends PropertyBag & ConfigBeanProxy> Property addProperty(
-            final String propName,
-            final String propValue,
-            final T owner_w) throws TransactionFailure, PropertyVetoException {
-        final Property p = owner_w.createChild(Property.class);
-        p.setName(propName);
-        p.setValue(propValue);
-        owner_w.getProperty().add(p);
-        return p;
-    }
-
-    private void upgradeV3_0_1_AppClientElements() {
-        /*
-         * If an app client has a property setting for javaWebStartEnabled we
-         * convert it to java-web-start-enabled which is the documented name.
-         * App clients can be either applications or modules within an EAR.
-         */
-        final Transaction t = new Transaction();
-        try {
-            for (Application app : domain.getApplications().getApplications()) {
-                System.out.println("Checking app " + app.getName());
-                Application app_w = null;
-                Property oldSetting = app.getProperty(V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME);
-                if (oldSetting != null) {
-                    logger.log(Level.INFO, "For application {0} converting property {1} to {2}",
-                    new Object[] {
-                        app.getName(),
-                        V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME,
-                        GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME});
-                    app_w = t.enroll(app);
-                    addProperty(GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME,
-                            oldSetting.getValue(), app_w);
-                    app_w.getProperty().remove(oldSetting);
-                }
-                for (Module mod : app.getModule()) {
-                    if (mod.getEngine(APPCLIENT_SNIFFER_NAME) != null) {
-                        /*
-                         * This is an app client.  See if the client has
-                         * a property setting using the old name.
-                         */
-                        oldSetting = mod.getProperty(V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME);
-                        if (oldSetting != null) {
-                            logger.log(Level.INFO, "For application {0}/module {1} converting property {2} to {3}",
-                                new Object[] {
-                                    app.getName(),
-                                    mod.getName(),
-                                    V3_0_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME,
-                                    GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME});
-                            final Module mod_w = t.enroll(mod);
-                            addProperty(GF3_1_JAVA_WEB_START_ENABLED_PROPERTY_NAME,
-                                    oldSetting.getValue(),
-                                    mod_w);
-                            mod_w.getProperty().remove(oldSetting);
-                        }
-                    }
-                }
-
-            }
-            t.commit();
-        } catch (Exception ex) {
-            t.rollback();
-            throw new RuntimeException("Error upgrading application", ex);
         }
     }
 }

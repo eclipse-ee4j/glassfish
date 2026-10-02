@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -60,11 +60,11 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     private AppClientArchivist appClientArchivist = null;
 
     public StandAloneAppClientInfo(
-        boolean isJWS, Logger logger, ReadableArchive archive,
+        Logger logger, ReadableArchive archive,
         String mainClassFromCommandLine)
             throws IOException, ClassNotFoundException,
             URISyntaxException, SAXParseException {
-        super(isJWS, logger, mainClassFromCommandLine);
+        super(logger, mainClassFromCommandLine);
         appClientArchive = archive;
     }
 
@@ -128,11 +128,6 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         appClientArchivist.validate(getClassLoader());
 
         fixupWSDLEntries();
-
-        // XXX restore or move elsewhere
-        //        if (isJWS) {
-        //            grantRequestedPermissionsToUserCode();
-        //        }
     }
 
     /**
@@ -307,7 +302,6 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
         String lineSep = System.getProperty("line.separator");
         StringBuilder result = new StringBuilder();
         result.append(this.getClass().getName() + ": " + lineSep);
-        result.append("  isJWS: " + isJWS);
         result.append("  archive file: " + appClientArchive.getURI().toASCIIString() + lineSep);
         result.append("  archive type: " + appClientArchive.getClass().getName() + lineSep);
         result.append("  archivist type: " + appClientArchivist.getClass().getName() + lineSep);

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright 2021 Contributors to the Eclipse Foundation
+ * Copyright 2021, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -142,7 +142,6 @@ public class ApplicationHandlers {
                 oneRow.put("type", " ----------- ");
                 oneRow.put("hasEndpoint", false);
                 oneRow.put("hasLaunch", false);
-                oneRow.put("hasAppClientLaunch", false);
                 oneRow.put("hasAppClientStub", false);
                 oneRow.put("sniffers", snifferList.toString());
 
@@ -150,13 +149,7 @@ public class ApplicationHandlers {
                     getLaunchInfo(appName, null, oneRow);
                 }
 
-                //JWS is disabled only if the property is present and is set to false.   Otherwise, its enabled.
                 if (snifferList.contains("appclient")){
-                    String jwEnabled = RestUtil.getPropValue(GuiUtil.getSessionValue("REST_URL") + "/applications/application/"+encodedAppName, "java-web-start-enabled",  handlerCtx);
-                    if (GuiUtil.isEmpty(jwEnabled) || jwEnabled.equals("true") ){
-                        List<String> targetList = DeployUtil.getApplicationTarget(appName, "application-ref");
-                        oneRow.put("hasAppClientLaunch", (targetList.isEmpty())? false: true);
-                    }
                     oneRow.put("hasAppClientStub", true);
                 }
                 result.add(oneRow);
@@ -199,7 +192,6 @@ public class ApplicationHandlers {
                     oneRow.put("hasLaunch", false);
                     oneRow.put("sniffers", "");
                     oneRow.put("hasEndpoint", false);
-                    oneRow.put("hasAppClientLaunch", false);
                     oneRow.put("hasAppClientStub", false);
                     if (wsAppMap != null){
                         if (! (AppUtil.getEndpointDetails( wsAppMap, moduleName, e.getKey()) == null)){

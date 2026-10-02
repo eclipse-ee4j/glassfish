@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -89,13 +89,6 @@ public class PEFileLayout {
     public File getDocRoot() {
 
         return new File(getRepositoryDir(), DOC_ROOT_DIR);
-    }
-
-    public static final String JAVA_WEB_START_DIR = "java-web-start";
-
-    public File getJavaWebStartRoot() {
-
-        return new File(getRepositoryDir(), JAVA_WEB_START_DIR);
     }
 
     public static final String LIB_DIR = "lib";

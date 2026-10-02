@@ -68,9 +68,37 @@
     </target>
 
     <target name="setup" depends="init-common">
+        <antcall target="ensure-jms-instance"/>
+        <antcall target="create-jms-user">
+            <param name="userName" value="${jms.test.user}"/>
+            <param name="userPassword" value="${jms.test.password}"/>
+            <param name="FAILONERR" value="false"/>
+            <param name="jmsServer" value=""/>
+            <param name="vardir" value=""/>
+        </antcall>
+    </target>
+
+    <target name="ensure-jms-instance" depends="init-common">
+        <exec executable="${ASADMIN}" failonerror="true">
+            <arg line="jms-ping"/>
+            <arg line="${as.props}"/>
+        </exec>
     </target>
 
     <target name="unsetup" depends="init-common">
+    </target>
+
+    <target name="create-jms-user" depends="init-common">
+        <exec executable="${env.S1AS_HOME}/../mq/bin/imqusermgr" failonerror="${FAILONERR}">
+            <env key="IMQ_JAVAHOME" value="${java.home}"/>
+            <arg line="${jmsServer}"/>
+            <arg line="${vardir}"/>
+            <arg line=" add"/>
+            <arg line=" -u ${userName} "/>
+            <arg line=" -p ${userPassword} "/>
+            <arg line=" -g admin "/>
+            <arg line=" -f "/>
+        </exec>
     </target>
 
     <target name="deploy" depends="init-common">

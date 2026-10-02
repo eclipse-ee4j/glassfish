@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.orb</groupId>
+        <artifactId>orb</artifactId>
+        <version>8.0.5-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>orb-http-codec-fory</artifactId>
+    <packaging>glassfish-jar</packaging>
+
+    <name>GlassFish ORB over HTTP - Apache Fory codec</name>
+    <description>
+        An optional object codec built on Apache Fory. It is discovered at
+        runtime through META-INF/services: dropping this module in is what
+        makes an application use it, with no code or configuration change.
+    </description>
+
+    <properties>
+        <fory.version>1.7.1</fory.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-protocol</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.fory</groupId>
+            <artifactId>fory-core</artifactId>
+            <version>${fory.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <Export-Package>
+                            org.glassfish.orb.http.codec.fory
+                        </Export-Package>
+
+                        <!--
+                            Apache Fory does not publish OSGi bundles, so its jars are
+                            embedded here rather than dropped loose into modules/, where
+                            the framework would not resolve them.
+                        -->
+                        <Embed-Dependency>
+                            groupId=org.apache.fory;artifactId=fory-core,
+                            <!--
+                                Janino is not optional to Fory: it compiles the generated
+                                serializers, which is where Fory's speed comes from.
+                                Leaving it out would build a bundle that works until the
+                                first object is encoded. Guava and slf4j-api are declared
+                                optional by Fory and are deliberately not embedded.
+                            -->
+                            groupId=org.codehaus.janino;artifactId=janino,
+                            groupId=org.codehaus.janino;artifactId=commons-compiler,
+                        </Embed-Dependency>
+                        <Embed-Transitive>true</Embed-Transitive>
+
+                        <!-- fory-core ships a multi-release jar; the flag has to survive embedding. -->
+                        <Multi-Release>true</Multi-Release>
+
+                        <!--
+                            Everything the embedded code might reach for that is not
+                            actually needed at runtime: optional integrations, and the
+                            JDK internals Fory probes for its fast paths.
+                        -->
+                        <Import-Package>
+                            !org.apache.fory.*,
+                            !com.google.*,
+                            !org.codehaus.*,
+                            <!--
+                                Fory reaches sun.misc.Unsafe for its fast paths.
+                                Excluding it, as the blanket !sun.* below did,
+                                does not make Fory stop asking - it makes the
+                                answer "Unsafe is not supported in this
+                                platform", thrown from a static initialiser, so
+                                the codec fails on first use rather than at
+                                resolution. Optional, because a platform without
+                                it should degrade rather than fail to install.
+                            -->
+                            sun.misc;resolution:=optional,
+                            !sun.*,
+                            !jdk.internal.*,
+                            org.glassfish.orb.http.protocol,
+                            *;resolution:=optional
+                        </Import-Package>
+
+                        <!--
+                            SPI-Fly, which GlassFish already ships, is what makes a
+                            provider in this bundle visible to a ServiceLoader call in
+                            another one. Without these two headers the codec would be
+                            installed and never found - the failure mode being silence,
+                            not an error.
+                        -->
+                        <Provide-Capability>
+                            osgi.serviceloader;osgi.serviceloader="org.glassfish.orb.http.protocol.Marshaller"
+                        </Provide-Capability>
+                        <Require-Capability>
+                            osgi.extender;filter:="(osgi.extender=osgi.serviceloader.registrar)"
+                        </Require-Capability>
+                    </instructions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <!--
+                            The glassfish-jar lifecycle only writes the manifest. Without
+                            this the bundle would declare Bundle-ClassPath entries for
+                            jars that are not inside it - a bundle that builds cleanly and
+                            cannot resolve at runtime.
+                        -->
+                        <id>osgi-bundle</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

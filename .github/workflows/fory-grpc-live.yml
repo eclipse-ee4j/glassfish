@@ -1,0 +1,122 @@
+name: Fory gRPC live call
+
+# Proves the whole path rather than its parts: GlassFish serves a deployed
+# remote EJB over Fory gRPC, publishes the IDL for it, and a Go client
+# generated from that published document calls the bean and gets its answer.
+#
+# The code generation job next door proves only that a client compiles.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ 'feat/fory-grpc-ejb-idl' ]
+    paths:
+      - 'appserver/orb/**'
+      - 'compatibility/**'
+      - '.github/workflows/fory-grpc-live.yml'
+
+env:
+  GLASSFISH_VERSION: 8.0.4
+
+jobs:
+  live:
+    name: Call a deployed EJB from Go
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build the HTTP transport and the Fory bridge
+        run: |
+          mvn -B -ntp install -DskipTests -am \
+            -pl appserver/orb/orb-http-protocol,appserver/orb/orb-http-server,appserver/orb/orb-http-client,appserver/orb/orb-http-codec-fory,appserver/orb/orb-http-fory-grpc,appserver/orb/orb-http-glassfish
+
+      - name: Install GlassFish ${{ env.GLASSFISH_VERSION }}
+        run: |
+          curl -sSL -o "$RUNNER_TEMP/glassfish.zip" \
+            "https://github.com/eclipse-ee4j/glassfish/releases/download/${GLASSFISH_VERSION}/glassfish-${GLASSFISH_VERSION}.zip"
+          unzip -q "$RUNNER_TEMP/glassfish.zip" -d "$RUNNER_TEMP/gf"
+
+      - name: Add the modules to the server
+        run: |
+          MODULES="$RUNNER_TEMP/gf/glassfish8/glassfish/modules"
+          for module in orb-http-protocol orb-http-server orb-http-client orb-http-codec-fory orb-http-fory-grpc orb-http-glassfish; do
+            jar=$(find "appserver/orb/$module/target" -maxdepth 1 -name '*.jar' ! -name '*sources*' ! -name 'original-*' | head -1)
+            [ -n "$jar" ] || { echo "no jar built for $module"; exit 1; }
+            cp -v "$jar" "$MODULES/$module.jar"
+          done
+          # Fory itself and its dependencies are not part of the distribution.
+          mvn -B -ntp -q dependency:copy-dependencies -DincludeScope=runtime \
+            -DoutputDirectory="$RUNNER_TEMP/fory-libs" -f appserver/orb/orb-http-codec-fory/pom.xml
+          find "$RUNNER_TEMP/fory-libs" -name 'fory*.jar' -exec cp -v {} "$MODULES/" \;
+
+      - name: Build and deploy the test bean
+        run: |
+          GF="$RUNNER_TEMP/gf/glassfish8"
+          mvn -B -ntp -q package -f compatibility/testapp/pom.xml
+          "$GF/bin/asadmin" start-domain
+          "$GF/bin/asadmin" deploy --force compatibility/testapp/target/greeter.jar
+          "$GF/bin/asadmin" list-applications
+
+      - name: Read the IDL the server publishes
+        id: idl
+        run: |
+          # The index says what this server publishes; the client is generated
+          # from that document, not from one kept in this repository.
+          curl -sS --fail-with-body "http://localhost:8080/glassfish-services/.well-known/ejb/" \
+            -o "$RUNNER_TEMP/index.txt"
+          cat "$RUNNER_TEMP/index.txt"
+          path=$(grep -E 'demo.Greeter\.fdl$' "$RUNNER_TEMP/index.txt" | head -1)
+          [ -n "$path" ] || { echo "the deployed bean is not in the index"; exit 1; }
+          curl -sS --fail-with-body "http://localhost:8080$path" -o "$RUNNER_TEMP/published.fdl"
+          cat "$RUNNER_TEMP/published.fdl"
+          service=$(awk '/^package/ {gsub(/[;]/, "", $2); print $2}' "$RUNNER_TEMP/published.fdl")
+          name=$(awk '/^service/ {print $2}' "$RUNNER_TEMP/published.fdl")
+          echo "method=/glassfish-services/fory/$service.$name/SayHello" >> "$GITHUB_OUTPUT"
+          # The generated Go package comes from the IDL package, while the
+          # client imports a fixed one. Renaming the package leaves the
+          # message ids alone - they are explicit in the document - so the
+          # wire contract is still the server's.
+          sed "s/^package .*/package compatibility.greeter;/" "$RUNNER_TEMP/published.fdl" \
+            > compatibility/fory-grpc/published.fdl
+          cat compatibility/fory-grpc/published.fdl
+
+      - name: Generate the Go client from the published IDL
+        run: |
+          python -m pip install --upgrade fory-compiler
+          cd compatibility/fory-grpc
+          mkdir -p generated/go
+          foryc published.fdl --go_out=generated/go --grpc
+          go mod init compatibility/fory-grpc
+          go mod tidy
+          go build -o /tmp/fory-grpc-client ./client
+
+      - name: Call the bean
+        run: |
+          /tmp/fory-grpc-client \
+            -target localhost:8080 \
+            -path '${{ steps.idl.outputs.method }}' \
+            -name Ada \
+            -expect 'Hello Ada'
+
+      - name: Server log
+        if: always()
+        run: tail -200 "$RUNNER_TEMP/gf/glassfish8/glassfish/domains/domain1/logs/server.log" || true
+
+      - name: Stop the domain
+        if: always()
+        run: "$RUNNER_TEMP/gf/glassfish8/bin/asadmin stop-domain || true"

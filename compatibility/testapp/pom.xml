@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A remote EJB with one portable method, deployed by the live jobs and
+     answered over all three paths: the EJB-over-HTTP transport with the
+     built-in codec, the same transport with Fory, and the Fory gRPC bridge.
+     One bean rather than three, so the three cannot quietly test different
+     things. Deliberately outside the reactor: it is a fixture, not a module. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.glassfish.orb.http.demo</groupId>
+    <artifactId>greeter</artifactId>
+    <version>1.0</version>
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>jakarta.platform</groupId>
+            <artifactId>jakarta.jakartaee-api</artifactId>
+            <version>10.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <finalName>greeter</finalName>
+    </build>
+</project>

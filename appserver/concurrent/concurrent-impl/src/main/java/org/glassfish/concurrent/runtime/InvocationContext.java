@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,9 @@
 
 package org.glassfish.concurrent.runtime;
 
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
+import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.security.SecurityContext;
 
 import java.io.IOException;
@@ -38,6 +41,7 @@ public class InvocationContext implements ContextHandle {
     private transient ComponentInvocation invocation;
     private transient ClassLoader contextClassLoader;
     private transient SecurityContext securityContext;
+    private transient String registrationName;
 
     private ThreadMgmtData threadCtxData;
     private final boolean useTxOfExecutionThread;
@@ -49,6 +53,7 @@ public class InvocationContext implements ContextHandle {
                 + "\n  useTxOfExecutionThread={3}\n  threadCtxData={4}\n)",
             invocation, contextClassLoader, securityContext, threadManagement);
         this.invocation = invocation;
+        this.registrationName = toRegistrationName(invocation);
         this.contextClassLoader = contextClassLoader;
         this.securityContext = securityContext;
         this.useTxOfExecutionThread = useTxOfExecutionThread;
@@ -58,6 +63,18 @@ public class InvocationContext implements ContextHandle {
 
     public ComponentInvocation getInvocation() {
         return invocation;
+    }
+
+
+    /**
+     * Returns the name the application was deployed with. Unlike {@link ComponentInvocation#getAppName()},
+     * it includes the version identifier of a versioned application, ie. {@code myapp:1.0}
+     * instead of {@code myapp}.
+     *
+     * @return the registration name of the application, or null if the invocation has none.
+     */
+    public String getRegistrationName() {
+        return registrationName;
     }
 
 
@@ -94,6 +111,7 @@ public class InvocationContext implements ContextHandle {
         out.writeObject(componentId);
         out.writeObject(appName);
         out.writeObject(moduleName);
+        out.writeObject(registrationName);
         // write values for securityContext
         String principalName = null;
         boolean defaultSecurityContext = false;
@@ -122,6 +140,7 @@ public class InvocationContext implements ContextHandle {
         String componentId = (String) in.readObject();
         String appName = (String) in.readObject();
         String moduleName = (String) in.readObject();
+        registrationName = (String) in.readObject();
         invocation = createComponentInvocation(componentId, appName, moduleName);
         // reconstruct securityContext
         String principalName = (String) in.readObject();
@@ -137,13 +156,32 @@ public class InvocationContext implements ContextHandle {
         }
         // reconstruct contextClassLoader
         ApplicationRegistry applicationRegistry = ConcurrentRuntime.getRuntime().getApplicationRegistry();
-        if (appName != null) {
-            ApplicationInfo applicationInfo = applicationRegistry.get(appName);
+        if (registrationName != null) {
+            ApplicationInfo applicationInfo = applicationRegistry.get(registrationName);
             if (applicationInfo != null) {
                 contextClassLoader = applicationInfo.getAppClassLoader();
             }
         }
         threadCtxData = (ThreadMgmtData) in.readObject();
+    }
+
+    private static String toRegistrationName(ComponentInvocation invocation) {
+        if (invocation == null) {
+            return null;
+        }
+        // The EE application name of a versioned application doesn't contain the version identifier,
+        // the application is registered under the full name though.
+        if (invocation.getJNDIEnvironment() instanceof JndiNameEnvironment environment) {
+            try {
+                Application application = DOLUtils.getApplicationFromEnv(environment);
+                if (application != null) {
+                    return application.getRegistrationName();
+                }
+            } catch (IllegalArgumentException e) {
+                LOG.log(Level.TRACE, "Cannot resolve the application of " + environment, e);
+            }
+        }
+        return invocation.getAppName();
     }
 
     private ComponentInvocation createComponentInvocation(String componentId, String appName, String moduleName) {

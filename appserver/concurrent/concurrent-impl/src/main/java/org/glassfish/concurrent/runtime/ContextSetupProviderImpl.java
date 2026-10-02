@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -131,14 +131,9 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             return null;
         }
         InvocationContext invocationCtx = (InvocationContext) contextHandle;
-        String appName = null;
+        verifyApplicationEnabled(invocationCtx.getRegistrationName());
 
         ComponentInvocation invocation = invocationCtx.getInvocation();
-        if (invocation != null) {
-            appName = invocation.getAppName();
-        }
-
-        verifyApplicationEnabled(appName);
 
         final ClassLoader resetClassLoader;
         if (invocationCtx.getContextClassLoader() != null) {

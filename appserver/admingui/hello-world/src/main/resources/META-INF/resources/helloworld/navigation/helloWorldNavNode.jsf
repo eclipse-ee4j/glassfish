@@ -1,0 +1,49 @@
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<!--
+    JSF-Templating navigation node definition.
+    
+    This file uses the legacy JSF-Templating syntax (not standard JSF) to define
+    a navigation tree node that appears in the Admin Console sidebar.
+    
+    Key aspects of this approach:
+    
+    1. Uses <sun:treeNode> component from JSF-Templating framework
+    2. The 'url' attribute points to a modern JSF page (.xhtml file)
+    3. No 'target' attribute means open in the main content frame (default behavior)
+    4. The .xhtml file will be processed by standard Jakarta Faces, not JSF-Templating
+    
+    This creates a bridge between the legacy navigation system (JSF-Templating)
+    and modern page content (Jakarta Faces). The navigation infrastructure remains
+    unchanged while the actual page content uses modern JSF.
+    
+    Attributes explained:
+    - id: unique identifier for this tree node
+    - text: display text shown in the navigation tree
+    - url: path to the page to load when clicked (can be .jsf or .xhtml)
+    - imageURL: icon displayed next to the text in the tree
+    
+    The URL "/helloworld/hello.xhtml" maps to the file at:
+    META-INF/resources/helloworld/hello.xhtml in this plugin's JAR
+-->
+<sun:treeNode id="helloWorldNode"
+    text="Hello World"
+    url="/helloworld/hello.xhtml"
+    imageURL="/resource/images/instance.gif"
+/>

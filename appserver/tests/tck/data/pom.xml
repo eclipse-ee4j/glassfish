@@ -43,7 +43,7 @@
         <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
 
-        <jakarta.data.tck.version>1.0.1</jakarta.data.tck.version>
+        <jakarta.data.tck.version>1.0.2</jakarta.data.tck.version>
 
         <weld.version>6.0.4.Final</weld.version>
     </properties>

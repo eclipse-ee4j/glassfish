@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
+    Copyright (c) 2021, 2026 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -46,53 +46,37 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-                            <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-                            <Fragment-Host>org.jboss.weld.osgi-bundle;bundle-version=${weld.version}</Fragment-Host>
-                             <!-- The export of javassist.util.proxy is done to ensure that the weld-generated proxy has access to the ProxyFactory class
-                              in that package. This "partial" export of the javassist package would not cause the problem described in IT 12368, because
-                              javassist has fixed the issue in JASSIST-104, and as part of WELD-570, the new javassist version is integrated in Weld 1.1.Beta2
-                               j.j.snyder: added for 1.1.6.Final: org.jboss.weld.interceptor.proxy, org.jboss.weld.interceptor.util.proxy
-                              added for weld 2.0:
-                                        org.jboss.weld.util.bean,
-                                        org.jboss.weld.serialization
-                                        org.jboss.weld.injection.attributes,
-                                        org.jboss.weld.util.collections,
-                                        org.jboss.weld.annotated.slim
-                                        org.jboss.weld.annotated.slim.backed
-
-                               added for weld 2.2.9.Final:
-                                        org.jboss.weld.security
-
-                                        added org.jboss.weld.contexts for Weld 3.0  It may not be necessary.  After all testing take it out.
-                             -->
-                            <Export-Package>
-                                org.jboss.weld.proxy.util,
-                                org.jboss.weld.bean.proxy.util,
-                                org.jboss.weld.context.http,
-                                org.jboss.weld.contexts.bound,
-                                org.jboss.weld.contexts.cache,
-                                org.jboss.weld.bean.builtin.ee,
-                                javassist.util.proxy,
-                                org.jboss.weld.interceptor.proxy,
-                                org.jboss.weld.interceptor.util.proxy,
-                                org.jboss.weld.util.bean,
-                                org.jboss.weld.serialization,
-                                org.jboss.weld.injection.attributes,
-                                org.jboss.weld.util.collections,
-                                org.jboss.weld.annotated.slim,
-                                org.jboss.weld.annotated.slim.backed,
-                                org.jboss.weld.contexts,
-                                org.jboss.weld.security
-                            </Export-Package>
-                            <Import-Package>org.glassfish.weld</Import-Package>
-                            <Bundle-Description>${project.description}</Bundle-Description>
-                        </manifestEntries>
-                    </archive>
+                    <instructions>
+                        <Bundle-Description>${project.description}</Bundle-Description>
+                        <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+                        <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+                        <Fragment-Host>org.jboss.weld.osgi-bundle;bundle-version=${weld.version}</Fragment-Host>
+                        <Export-Package>
+                            javassist.util.proxy,
+                            org.jboss.weld.annotated.enhanced,
+                            org.jboss.weld.annotated.slim,
+                            org.jboss.weld.annotated.slim.backed,
+                            org.jboss.weld.bean.builtin.ee,
+                            org.jboss.weld.bean.proxy.util,
+                            org.jboss.weld.context.http,
+                            org.jboss.weld.contexts,
+                            org.jboss.weld.contexts.bound,
+                            org.jboss.weld.contexts.cache,
+                            org.jboss.weld.injection.attributes,
+                            org.jboss.weld.injection.producer,
+                            org.jboss.weld.interceptor.proxy,
+                            org.jboss.weld.interceptor.util.proxy,
+                            org.jboss.weld.proxy.util,
+                            org.jboss.weld.security,
+                            org.jboss.weld.serialization,
+                            org.jboss.weld.util.bean,
+                            org.jboss.weld.util.collections
+                        </Export-Package>
+                        <Import-Package>org.glassfish.weld</Import-Package>
+                    </instructions>
                 </configuration>
             </plugin>
         </plugins>

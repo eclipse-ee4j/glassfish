@@ -45,7 +45,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <parallel>method</parallel>
+                    <parallel>methods</parallel>
                     <threadCount>1</threadCount>
                     <skip>true</skip>
                 </configuration>
@@ -56,7 +56,7 @@
                             <goal>test</goal>
                         </goals>
                         <configuration>
-                            <parallel>method</parallel>
+                            <parallel>methods</parallel>
                             <threadCount>1</threadCount>
                             <skip>false</skip>
                         </configuration>

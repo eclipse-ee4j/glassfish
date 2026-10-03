@@ -41,7 +41,7 @@ public class InvocationContext implements ContextHandle {
     private transient ComponentInvocation invocation;
     private transient ClassLoader contextClassLoader;
     private transient SecurityContext securityContext;
-    private transient String registrationName;
+    private transient String appRegistrationName;
 
     private ThreadMgmtData threadCtxData;
     private final boolean useTxOfExecutionThread;
@@ -53,7 +53,7 @@ public class InvocationContext implements ContextHandle {
                 + "\n  useTxOfExecutionThread={3}\n  threadCtxData={4}\n)",
             invocation, contextClassLoader, securityContext, threadManagement);
         this.invocation = invocation;
-        this.registrationName = toRegistrationName(invocation);
+        this.appRegistrationName = toAppRegistrationName(invocation);
         this.contextClassLoader = contextClassLoader;
         this.securityContext = securityContext;
         this.useTxOfExecutionThread = useTxOfExecutionThread;
@@ -73,8 +73,8 @@ public class InvocationContext implements ContextHandle {
      *
      * @return the registration name of the application, or null if the invocation has none.
      */
-    public String getRegistrationName() {
-        return registrationName;
+    public String getAppRegistrationName() {
+        return appRegistrationName;
     }
 
 
@@ -111,7 +111,7 @@ public class InvocationContext implements ContextHandle {
         out.writeObject(componentId);
         out.writeObject(appName);
         out.writeObject(moduleName);
-        out.writeObject(registrationName);
+        out.writeObject(appRegistrationName);
         // write values for securityContext
         String principalName = null;
         boolean defaultSecurityContext = false;
@@ -140,7 +140,7 @@ public class InvocationContext implements ContextHandle {
         String componentId = (String) in.readObject();
         String appName = (String) in.readObject();
         String moduleName = (String) in.readObject();
-        registrationName = (String) in.readObject();
+        appRegistrationName = (String) in.readObject();
         invocation = createComponentInvocation(componentId, appName, moduleName);
         // reconstruct securityContext
         String principalName = (String) in.readObject();
@@ -156,8 +156,8 @@ public class InvocationContext implements ContextHandle {
         }
         // reconstruct contextClassLoader
         ApplicationRegistry applicationRegistry = ConcurrentRuntime.getRuntime().getApplicationRegistry();
-        if (registrationName != null) {
-            ApplicationInfo applicationInfo = applicationRegistry.get(registrationName);
+        if (appRegistrationName != null) {
+            ApplicationInfo applicationInfo = applicationRegistry.get(appRegistrationName);
             if (applicationInfo != null) {
                 contextClassLoader = applicationInfo.getAppClassLoader();
             }
@@ -165,7 +165,7 @@ public class InvocationContext implements ContextHandle {
         threadCtxData = (ThreadMgmtData) in.readObject();
     }
 
-    static String toRegistrationName(ComponentInvocation invocation) {
+    static String toAppRegistrationName(ComponentInvocation invocation) {
         if (invocation == null) {
             return null;
         }

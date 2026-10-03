@@ -131,7 +131,7 @@ public class ContextSetupProviderImpl implements ContextSetupProvider {
             return null;
         }
         InvocationContext invocationCtx = (InvocationContext) contextHandle;
-        verifyApplicationEnabled(invocationCtx.getRegistrationName());
+        verifyApplicationEnabled(invocationCtx.getAppRegistrationName());
 
         ComponentInvocation invocation = invocationCtx.getInvocation();
 

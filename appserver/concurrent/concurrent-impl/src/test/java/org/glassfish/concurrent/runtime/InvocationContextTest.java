@@ -28,7 +28,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.partialMockBuilder;
 import static org.easymock.EasyMock.replay;
-import static org.glassfish.concurrent.runtime.InvocationContext.toRegistrationName;
+import static org.glassfish.concurrent.runtime.InvocationContext.toAppRegistrationName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -39,7 +39,7 @@ public class InvocationContextTest {
      * see issue #24080.
      */
     @Test
-    public void registrationNameOfVersionedApplication() {
+    public void appRegistrationNameOfVersionedApplication() {
         Application application = createMock(Application.class);
         expect(application.getRegistrationName()).andStubReturn("myapp:1.0");
         replay(application);
@@ -49,31 +49,31 @@ public class InvocationContextTest {
         ComponentInvocation invocation = createInvocation("myapp");
         invocation.setJNDIEnvironment(webBundle);
 
-        assertEquals("myapp:1.0", toRegistrationName(invocation));
+        assertEquals("myapp:1.0", toAppRegistrationName(invocation));
     }
 
 
     @Test
-    public void registrationNameOfUnsupportedJndiEnvironment() {
+    public void appRegistrationNameOfUnsupportedJndiEnvironment() {
         JndiNameEnvironment environment = createMock(JndiNameEnvironment.class);
         replay(environment);
 
         ComponentInvocation invocation = createInvocation("myapp");
         invocation.setJNDIEnvironment(environment);
 
-        assertEquals("myapp", toRegistrationName(invocation));
+        assertEquals("myapp", toAppRegistrationName(invocation));
     }
 
 
     @Test
-    public void registrationNameWithoutJndiEnvironment() {
-        assertEquals("myapp", toRegistrationName(createInvocation("myapp")));
+    public void appRegistrationNameWithoutJndiEnvironment() {
+        assertEquals("myapp", toAppRegistrationName(createInvocation("myapp")));
     }
 
 
     @Test
-    public void registrationNameWithoutInvocation() {
-        assertNull(toRegistrationName(null));
+    public void appRegistrationNameWithoutInvocation() {
+        assertNull(toAppRegistrationName(null));
     }
 
 

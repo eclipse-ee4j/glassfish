@@ -17,6 +17,7 @@
 package org.glassfish.concurrent.runtime;
 
 import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.JndiNameEnvironment;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -27,6 +28,7 @@ import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.partialMockBuilder;
 import static org.easymock.EasyMock.replay;
+import static org.glassfish.concurrent.runtime.InvocationContext.toRegistrationName;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -47,23 +49,31 @@ public class InvocationContextTest {
         ComponentInvocation invocation = createInvocation("myapp");
         invocation.setJNDIEnvironment(webBundle);
 
-        InvocationContext context = new InvocationContext(invocation, null, null, false, null);
-        assertEquals("myapp:1.0", context.getRegistrationName());
-        assertEquals("myapp", context.getInvocation().getAppName());
+        assertEquals("myapp:1.0", toRegistrationName(invocation));
+    }
+
+
+    @Test
+    public void registrationNameOfUnsupportedJndiEnvironment() {
+        JndiNameEnvironment environment = createMock(JndiNameEnvironment.class);
+        replay(environment);
+
+        ComponentInvocation invocation = createInvocation("myapp");
+        invocation.setJNDIEnvironment(environment);
+
+        assertEquals("myapp", toRegistrationName(invocation));
     }
 
 
     @Test
     public void registrationNameWithoutJndiEnvironment() {
-        InvocationContext context = new InvocationContext(createInvocation("myapp"), null, null, false, null);
-        assertEquals("myapp", context.getRegistrationName());
+        assertEquals("myapp", toRegistrationName(createInvocation("myapp")));
     }
 
 
     @Test
     public void registrationNameWithoutInvocation() {
-        InvocationContext context = new InvocationContext(null, null, null, false, null);
-        assertNull(context.getRegistrationName());
+        assertNull(toRegistrationName(null));
     }
 
 

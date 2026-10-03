@@ -165,7 +165,7 @@ public class InvocationContext implements ContextHandle {
         threadCtxData = (ThreadMgmtData) in.readObject();
     }
 
-    private static String toRegistrationName(ComponentInvocation invocation) {
+    static String toRegistrationName(ComponentInvocation invocation) {
         if (invocation == null) {
             return null;
         }

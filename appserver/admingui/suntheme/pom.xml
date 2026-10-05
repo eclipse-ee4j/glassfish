@@ -29,12 +29,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <!-- Coordinates are kept under org.glassfish.woodstock so that the runtime
-         theme contract (jar layout under com/sun/webui/jsf/suntheme and the
-         X-SJWUIC-Theme-* manifest headers) and existing consumers stay unchanged.
-         The module was moved here from the glassfish-woodstock repository
-         (see https://github.com/eclipse-ee4j/glassfish/issues/24495). -->
-    <groupId>org.glassfish.woodstock</groupId>
     <artifactId>woodstock-webui-jsf-suntheme</artifactId>
     <packaging>jar</packaging>
 

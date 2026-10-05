@@ -541,9 +541,8 @@
                 </exclusions>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.woodstock</groupId>
+                <groupId>org.glassfish.main.admingui</groupId>
                 <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-                <!-- suntheme is built locally; moved here from the glassfish-woodstock repo (issue #24495) -->
                 <version>${project.version}</version>
             </dependency>
             <dependency>

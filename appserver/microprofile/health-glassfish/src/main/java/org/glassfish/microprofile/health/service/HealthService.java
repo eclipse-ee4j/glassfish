@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,13 +21,18 @@ import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
-import org.glassfish.internal.api.Globals;
+import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.microprofile.health.HealthReporter;
 import org.jvnet.hk2.annotations.Service;
 
+/**
+ * Registers the server-wide {@link HealthReporter} at startup, so that the health endpoint works
+ * also when no deployed application uses CDI, and removes health checks of undeployed applications.
+ */
 @Service(name = "healthcheck-service")
 @RunLevel(StartupRunLevel.VAL)
 public class HealthService implements EventListener, PostConstruct {
@@ -35,22 +40,25 @@ public class HealthService implements EventListener, PostConstruct {
     @Inject
     Events events;
 
+    @Inject
+    ServiceLocator serviceLocator;
+
+    private HealthReporter healthReporter;
+
     @Override
     public void postConstruct() {
+        healthReporter = serviceLocator.getService(HealthReporter.class);
+        if (healthReporter == null) {
+            ServiceLocatorUtilities.addClasses(serviceLocator, true, HealthReporter.class);
+            healthReporter = serviceLocator.getService(HealthReporter.class);
+        }
         events.register(this);
     }
 
     @Override
     public void event(Event<?> event) {
-
-        HealthReporter service = Globals.getDefaultHabitat().getService(HealthReporter.class);
-
-        if (service == null) {
-            return;
-        }
-
         if (event.is(Deployment.APPLICATION_UNLOADED) && event.hook() instanceof ApplicationInfo appInfo) {
-            service.removeAllHealthChecksFrom(appInfo.getName());
+            healthReporter.removeAllHealthChecksFrom(appInfo.getName());
         }
     }
 }

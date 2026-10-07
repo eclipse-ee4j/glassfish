@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,8 +39,11 @@ public class HealthServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HealthReport healthReport;
         try {
-            healthReport = Globals.getDefaultHabitat().getService(HealthReporter.class)
-                    .getReport(getReportKind(req.getRequestURI()));
+            HealthReporter healthReporter = Globals.get(HealthReporter.class);
+            if (healthReporter == null) {
+                throw new IllegalStateException("The " + HealthReporter.class.getName() + " service is not available");
+            }
+            healthReport = healthReporter.getReport(getReportKind(req.getRequestURI()));
 
             int httpStatus = switch (healthReport.status()) {
                 case UP -> HttpServletResponse.SC_OK;

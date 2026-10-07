@@ -6,12 +6,12 @@ As required by the
 [Eclipse Foundation Technology Compatibility Kit License](https://www.eclipse.org/legal/tck.php),
 following is a summary of the TCK results for releases of Jakarta EE Core Profile 11.0, certification summary.
 
-# Jakarta EE Core Profile 11.0, Eclipse GlassFish 8.0.4-SNAPSHOT-nightly, TCK Certification Summary
+# Jakarta EE Core Profile 11.0, Eclipse GlassFish 8.0.5, TCK Certification Summary
 
 - [X] Organization Name ("Organization") and, if applicable, URL:
   [Eclipse Foundation](https://eclipse.org) <br/><br/>
 - [X] Product Name, Version and download URL (if applicable):
-   - Eclipse GlassFish 8.0.4-SNAPSHOT-nightly - [glassfish-8.0.4-SNAPSHOT-nightly.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-8.0.4-SNAPSHOT-nightly.zip), SHA-256: `683fd1c3a7dcde28e4fd583a76b84dbced5731faf89b0103b44f32666663bcff` <br/><br/>
+   - Eclipse GlassFish 8.0.5 - [glassfish-8.0.5.zip](https://download.eclipse.org/ee4j/glassfish/glassfish-8.0.5.zip), SHA-256: `19a948687603935766fbfdc24b7a67d0e6a7516dcde63cfab0b18891c45e1584` <br/><br/>
 - [X] Specification Name, Version and download URL:
   [Jakarta EE Core Profile 11](https://jakarta.ee/specifications/coreprofile/11) <br/><br/>
 - [X] TCK Version, digital SHA-256 fingerprint and download URL:
@@ -19,7 +19,7 @@ following is a summary of the TCK results for releases of Jakarta EE Core Profil
   SHA-256: `0357bfab7025972edb2bf50277b6b4206b499a2961bc94e783f34782cc4a9bda` <br/><br/> 
 
 - [X] Public URL of TCK Results Summary:
-  [Eclipse GlassFish Core Profile 8.0.4-SNAPSHOT-nightly TCK Results](https://glassfish.org/certifications/jakarta-core-profile/11/TCK-Results-8.0.4-SNAPSHOT-nightly.html) <br/><br/>
+  [Eclipse GlassFish Core Profile 8.0.5 TCK Results](https://glassfish.org/certifications/jakarta-core-profile/11/TCK-Results-8.0.5.html) <br/><br/>
 
 - [X] Any Additional Specification Certification Requirements:
 

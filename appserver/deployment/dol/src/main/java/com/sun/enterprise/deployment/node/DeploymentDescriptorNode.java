@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -671,9 +671,7 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
         if (content == null) {
             return null;
         }
-        Node child = appendChild(parent, elementName);
-        child.appendChild(getOwnerDocument(child).createTextNode(content.toString()));
-        return child;
+        return appendTextChild(parent, elementName, content.toString());
     }
 
 

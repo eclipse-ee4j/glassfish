@@ -17,7 +17,7 @@
 type=page
 status=published
 title=Using Jakarta Data Repositories
-next=webapps.html
+next=microprofile-health.html
 prev=jpa.html
 ~~~~~~
 

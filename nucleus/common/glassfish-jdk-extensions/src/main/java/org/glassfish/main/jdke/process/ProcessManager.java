@@ -323,11 +323,11 @@ public final class ProcessManager {
                         LOG.log(TRACE, "ReaderThread " + getName() + " was interrupted.");
                         return;
                     }
-                    if (!reader.ready()) {
+                    final String line = reader.readLine();
+                    if (line == null) {
                         Thread.onSpinWait();
                         continue;
                     }
-                    final String line = reader.readLine();
                     final boolean textDetected = processLine(line);
                     if (textDetected) {
                         textFound = true;

@@ -20,10 +20,10 @@ import jakarta.json.JsonReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 
-import org.glassfish.common.util.HttpParser;
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
 import org.glassfish.main.test.app.mphealth.webapp.LivenessCheck;
@@ -32,7 +32,6 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -40,6 +39,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 
 import static java.lang.System.Logger.Level.INFO;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -49,9 +49,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 /**
- * Verifies that the MicroProfile Health endpoint works even if no deployed application uses CDI.
+ * Verifies that the MicroProfile Health endpoint works even if no application is deployed
+ * or no deployed application uses CDI.
  *
  * @see <a href="https://github.com/eclipse-ee4j/glassfish/issues/26255">issue 26255</a>
+ * @see <a href="https://github.com/eclipse-ee4j/glassfish/issues/26260">issue 26260</a>
  */
 @TestMethodOrder(OrderAnnotation.class)
 public class MpHealthTest {
@@ -60,27 +62,41 @@ public class MpHealthTest {
 
     private static final String PLAIN_APP_NAME = "mphealth-plain";
     private static final String CDI_APP_NAME = "mphealth-cdi";
+    private static final String CONTEXT_PATH_OPTION = "-Dorg.glassfish.microprofile.health.context-path=status";
+    private static final String EMPTY_UP = "{\"checks\":[],\"status\":\"UP\"}";
+    private static final String NO_APPLICATION_DOWN = "{\"checks\":[{\"name\":\"glassfish-applications-ready\","
+        + "\"status\":\"DOWN\",\"data\":{\"reason\":\"No application is deployed\"}}],\"status\":\"DOWN\"}";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
     @TempDir
     private static File tempDir;
 
-    @BeforeAll
-    public static void deployPlainApp() {
-        File war = createWar(PLAIN_APP_NAME, ShrinkWrap.create(WebArchive.class).addClass(PlainServlet.class));
-        assertThat(ASADMIN.exec("deploy", "--name", PLAIN_APP_NAME, war.getAbsolutePath()), asadminOK());
-    }
-
     @AfterAll
     public static void undeployApps() {
         ASADMIN.exec("undeploy", CDI_APP_NAME);
-        assertThat(ASADMIN.exec("undeploy", PLAIN_APP_NAME), asadminOK());
+        ASADMIN.exec("undeploy", PLAIN_APP_NAME);
     }
 
     @Test
     @Order(1)
+    public void healthWithoutApplication() throws IOException {
+        // Start the server without applications, so that the web container is not started
+        assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
+        assertAll(
+            () -> assertThat(get("/health", 503), equalTo(NO_APPLICATION_DOWN)),
+            () -> assertThat(get("/health/live", 200), equalTo(EMPTY_UP)),
+            () -> assertThat(get("/health/ready", 503), equalTo(NO_APPLICATION_DOWN)),
+            () -> assertThat(get("/health/started", 200), equalTo(EMPTY_UP)),
+            () -> assertThat(responseCode("/health/other"), equalTo(404)),
+            () -> assertThat(responseCode("/health/"), equalTo(404)));
+    }
+
+    @Test
+    @Order(2)
     public void healthWithoutCdiApplication() throws IOException {
+        File war = createWar(PLAIN_APP_NAME, ShrinkWrap.create(WebArchive.class).addClass(PlainServlet.class));
+        assertThat(ASADMIN.exec("deploy", "--name", PLAIN_APP_NAME, war.getAbsolutePath()), asadminOK());
         // Other tests may have deployed CDI applications into this server instance before,
         // so restart it to load just the application without CDI.
         assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
@@ -93,7 +109,7 @@ public class MpHealthTest {
     }
 
     @Test
-    @Order(2)
+    @Order(3)
     public void healthChecksOfCdiApplication() throws IOException {
         File war = createWar(CDI_APP_NAME, ShrinkWrap.create(WebArchive.class).addClass(LivenessCheck.class));
         assertThat(ASADMIN.exec("deploy", "--name", CDI_APP_NAME, war.getAbsolutePath()), asadminOK());
@@ -103,12 +119,46 @@ public class MpHealthTest {
         assertThat(get("/health/live"), not(containsString(LivenessCheck.NAME)));
     }
 
+    @Test
+    @Order(4)
+    public void customContextPath() throws IOException {
+        assertThat(ASADMIN.exec("undeploy", PLAIN_APP_NAME), asadminOK());
+        assertThat(ASADMIN.exec("create-jvm-options", CONTEXT_PATH_OPTION), asadminOK());
+        try {
+            assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
+            assertAll(
+                () -> assertThat(get("/status/live", 200), equalTo(EMPTY_UP)),
+                () -> assertThat(get("/status/ready", 503), equalTo(NO_APPLICATION_DOWN)),
+                () -> assertThat(responseCode("/health/live"), equalTo(404)));
+        } finally {
+            assertThat(ASADMIN.exec("delete-jvm-options", CONTEXT_PATH_OPTION), asadminOK());
+            assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
+        }
+    }
+
     private static String get(String path) throws IOException {
+        return get(path, 200);
+    }
+
+    private static String get(String path, int expectedResponseCode) throws IOException {
         HttpURLConnection connection = openConnection(8080, path);
         connection.setRequestMethod("GET");
         try {
-            assertThat("HTTP status of " + path, connection.getResponseCode(), equalTo(200));
-            return HttpParser.readResponseInputStream(connection).strip();
+            int responseCode = connection.getResponseCode();
+            assertThat("HTTP status of " + path, responseCode, equalTo(expectedResponseCode));
+            try (InputStream input = responseCode < 400 ? connection.getInputStream() : connection.getErrorStream()) {
+                return new String(input.readAllBytes(), UTF_8).strip();
+            }
+        } finally {
+            connection.disconnect();
+        }
+    }
+
+    private static int responseCode(String path) throws IOException {
+        HttpURLConnection connection = openConnection(8080, path);
+        connection.setRequestMethod("GET");
+        try {
+            return connection.getResponseCode();
         } finally {
             connection.disconnect();
         }

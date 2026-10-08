@@ -33,7 +33,7 @@
 
     <groupId>org.glassfish.main</groupId>
     <artifactId>nucleus-parent</artifactId>
-    <version>8.0.5-SNAPSHOT</version>
+    <version>8.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Nucleus Parent</name>
@@ -171,7 +171,7 @@
         <jakarta.data.spec.version>1.0</jakarta.data.spec.version>
         <jakarta.nosql-api.version>1.0.1</jakarta.nosql-api.version>
         <jakarta.nosql.spec.version>1.0.1</jakarta.nosql.spec.version>
-        <jnosql.version>1.1.19</jnosql.version>
+        <jnosql.version>1.1.20</jnosql.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -270,7 +270,7 @@
         <deploy.skip>false</deploy.skip>
 
         <!-- Overrides the value from parent and enables the one we generate. -->
-        <project.build.outputTimestamp>2026-08-03T20:43:27Z</project.build.outputTimestamp>
+        <project.build.outputTimestamp>2026-10-02T12:46:31Z</project.build.outputTimestamp>
 
         <!-- Show to developers by default -->
         <checkstyle.consoleOutput>true</checkstyle.consoleOutput>

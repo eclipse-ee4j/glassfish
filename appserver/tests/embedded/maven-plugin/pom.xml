@@ -155,7 +155,6 @@
                 <plugin>
                     <groupId>org.glassfish.embedded</groupId>
                     <artifactId>embedded-glassfish-maven-plugin</artifactId>
-                    <version>8.0</version>
                     <configuration>
                         <glassfish.version>${project.version}</glassfish.version>
                         <app>target/${project.artifactId}.war</app>

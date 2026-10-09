@@ -18,13 +18,11 @@
 package org.glassfish.tests.embedded.securewebapp;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.Path;
 import java.security.GeneralSecurityException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
@@ -35,18 +33,14 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import org.glassfish.main.jdke.security.KeyTool;
-import org.glassfish.tests.utils.junit.JUnitSystem;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SecureWebAppTest {
 
     // FIXME: read certificate from truststore.
-    private static final TrustManager[] naiveTrustManager = new TrustManager[]{new X509TrustManager() {
+    private static final TrustManager[] NAIVE_TRUST_MANAGER = new TrustManager[]{new X509TrustManager() {
         @Override
         public X509Certificate[] getAcceptedIssuers() {
             return null;
@@ -63,15 +57,6 @@ public class SecureWebAppTest {
         }
     }};
 
-    @BeforeAll
-    public static void createKeyStore() throws Exception {
-        // The file is set also in system.properties file
-        // FIXME: This should be done BEFORE the server started
-        File keystore = JUnitSystem.detectBasedir().resolve(Path.of("target", "testkeystore.p12")).toFile();
-        KeyTool keyTool = new KeyTool(keystore, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
-        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
-    }
-
     @Test
     public void http() throws Exception {
         goGet(false, "test", "Hi from SecureWebAppTestServlet");
@@ -82,7 +67,6 @@ public class SecureWebAppTest {
         goGet(true, "test", "Hi from SecureWebAppTestServlet");
     }
 
-
     private static void goGet(boolean secured, String contextPath, String expectedBody) throws Exception {
         final String protocol = secured ? "https" : "http";
         final int port = secured ? 8181 : 8080;
@@ -90,9 +74,7 @@ public class SecureWebAppTest {
         HttpURLConnection uc = openConnection(secured, servlet);
         try {
             System.out.println("URLConnection = " + uc);
-            if (uc.getResponseCode() != 200) {
-                throw new Exception("Servlet did not return 200 OK response code");
-            }
+            assertEquals(200, uc.getResponseCode(), uc.getResponseMessage());
             int count = 0;
             try (BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream()))) {
                 String line;
@@ -130,7 +112,7 @@ public class SecureWebAppTest {
 
     private static SSLSocketFactory createSocketFactory() throws GeneralSecurityException {
         SSLContext sc = SSLContext.getInstance("TLS");
-        sc.init(null, naiveTrustManager, new SecureRandom());
+        sc.init(null, NAIVE_TRUST_MANAGER, new SecureRandom());
         return sc.getSocketFactory();
     }
 }

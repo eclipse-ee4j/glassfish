@@ -99,9 +99,8 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.glassfish</groupId>
-                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>embedded-glassfish-maven-plugin</artifactId>
                         <configuration>
                             <app>${project.build.directory}/${build.finalName}.war</app>
                             <port>8080</port>

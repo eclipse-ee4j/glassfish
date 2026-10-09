@@ -52,8 +52,26 @@
                 </testResources>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>create-keystores</id>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>org.glassfish.tests.embedded.securewebapp.CertificateCreator</mainClass>
+                                    <classpathScope>test</classpathScope>
+                                    <arguments>${project.build.directory}/testkeystore.p12</arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.glassfish.embedded</groupId>
-                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
+                        <artifactId>embedded-glassfish-maven-plugin</artifactId>
                         <configuration>
                             <bootstrapProperties>
                                 <property>test_key=test_value</property>

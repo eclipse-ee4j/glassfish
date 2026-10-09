@@ -22,14 +22,15 @@ import jakarta.inject.Inject;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceHandle;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
-import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcServerAdapter;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.AffinityDispatcher;
@@ -77,7 +78,7 @@ public class OrbHttpEndpoint implements PostConstruct {
     private GlassFishTransactionBridge transactions;
 
     @Inject
-    private EjbNameIndex index;
+    private ServiceLocator locator;
 
     @Override
     public void postConstruct() {
@@ -86,8 +87,15 @@ public class OrbHttpEndpoint implements PostConstruct {
         // itself: the run level fails, GlassFish fires its error event, and
         // what that event closes includes the connector classloaders. The
         // server then comes up unable to create a JDBC pool, with a stack
-        // trace that names the connector and never mentions this class. An
-        // endpoint that cannot mount has to stay its own problem - IIOP is
+        // trace that names the connector and never mentions this class.
+        //
+        // That is not hypothetical. The scanner below asks the OSGi framework
+        // which modules are installed, and an embedded server has no OSGi
+        // framework, so it raises NoClassDefFoundError for
+        // org/osgi/framework/FrameworkUtil - which is a LinkageError, not an
+        // Exception, and is why both are caught here.
+        //
+        // An endpoint that cannot mount has to stay its own problem: IIOP is
         // unaffected, and a server that starts without this endpoint is better
         // than one that does not start.
         try {
@@ -105,52 +113,33 @@ public class OrbHttpEndpoint implements PostConstruct {
         OsgiCodecScanner.scanAndRegister();
 
         SessionAffinity affinity = SessionAffinity.forThisNode();
-        ForyGrpcCatalog foryCatalog = new ForyGrpcCatalog();
-        ForyGeneratedServiceRegistry registry = index.foryRegistry();
-        // This runs while the server starts, before any application is
-        // deployed, so what is published here is usually empty. Both the
-        // catalog and the registry rebuild themselves when they are asked for
-        // something they do not have, which is how a bean deployed later
-        // becomes visible without restarting the server.
-        Runnable republish = () -> {
-            foryCatalog.clear();
-            index.foryIdl().forEach(foryCatalog::register);
-            index.refreshForyRegistry();
-        };
-        foryCatalog.onMiss(republish);
-        registry.onMiss(republish);
-        republish.run();
-        ForyGrpcServerAdapter foryGrpc = new ForyGrpcServerAdapter(registry,
-                (path, exchange) -> {
-                    EjbNameIndex.ForyRoute route = index.foryRoute(path);
-                    if (route == null) throw new IllegalStateException("unknown Fory route: " + path);
-                    Object securityToken = security.establish(exchange.authenticatedUser());
-                    try {
-                        var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
-                        Object target = container.getTargetObject(key, route.view());
-                        return new ForyGrpcServerAdapter.Target() {
-                            @Override public Object value() { return target; }
-                            @Override public void close() {
-                                try {
-                                    container.releaseTargetObject(target);
-                                } finally {
-                                    security.clear(securityToken);
-                                }
-                            }
-                        };
-                    } catch (RuntimeException | Error failure) {
-                        security.clear(securityToken);
-                        throw failure;
-                    }
-                },
-                16 * 1024 * 1024, transactions);
         EjbDispatcher ejb = new EjbDispatcher(container, security, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), affinity);
         OrbHttpHandler handler = new OrbHttpHandler(ejb,
                 new NamingDispatcher(naming, security, new JavaSerializationMarshaller()),
                 new TransactionDispatcher(transactions, security),
-                new AffinityDispatcher(affinity), foryCatalog, foryGrpc);
+                new AffinityDispatcher(affinity), extensions());
         grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
         LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);
+    }
+
+    /**
+     * The extensions installed, each started on its own: one that cannot start
+     * is left out rather than taking the endpoint with it, for the reason the
+     * whole of {@link #postConstruct} is guarded.
+     */
+    private List<OrbHttpExtension> extensions() {
+        List<OrbHttpExtension> extensions = new ArrayList<>();
+        for (ServiceHandle<OrbHttpExtension> handle : locator.getAllServiceHandles(OrbHttpExtension.class)) {
+            try {
+                OrbHttpExtension extension = handle.getService();
+                extensions.add(extension);
+                LOG.log(Level.INFO, "{0} serves under {1}", extension.getClass().getName(), Protocol.CONTEXT_PATH);
+            } catch (Exception | LinkageError e) {
+                LOG.log(Level.WARNING, "could not start " + handle.getActiveDescriptor().getImplementation()
+                        + "; it is left out of " + Protocol.CONTEXT_PATH, e);
+            }
+        }
+        return extensions;
     }
 }

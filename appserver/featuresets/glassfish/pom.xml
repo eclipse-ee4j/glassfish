@@ -237,10 +237,9 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!-- orb-http-glassfish's manifest imports this bundle's package, so
-             the distribution not carrying it is what stops the server from
-             starting: the bundle never resolves, the run level fails, and the
-             admin port never opens. -->
+        <!-- Optional: it adds Fory gRPC under the remote EJB endpoint as an
+             extension of orb-http-glassfish, which does not depend on it.
+             Leaving it out leaves remote EJB and JNDI over HTTP unchanged. -->
         <dependency>
             <groupId>org.glassfish.main.orb</groupId>
             <artifactId>orb-http-fory-grpc</artifactId>

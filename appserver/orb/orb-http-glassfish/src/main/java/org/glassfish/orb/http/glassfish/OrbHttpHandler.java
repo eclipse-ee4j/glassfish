@@ -18,12 +18,11 @@ package org.glassfish.orb.http.glassfish;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.List;
 
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcServerAdapter;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.AffinityDispatcher;
 import org.glassfish.orb.http.server.EjbDispatcher;
@@ -31,7 +30,8 @@ import org.glassfish.orb.http.server.NamingDispatcher;
 import org.glassfish.orb.http.server.TransactionDispatcher;
 
 /**
- * The endpoint: one Grizzly handler in front of the three dispatchers.
+ * The endpoint: one Grizzly handler in front of the dispatchers and of any
+ * {@link OrbHttpExtension} installed.
  *
  * <p>Routing is by the service segment of the path, and it is deliberately the
  * only thing this class does. Everything a request means is decided by the
@@ -45,18 +45,16 @@ final class OrbHttpHandler extends HttpHandler {
     private final NamingDispatcher naming;
     private final TransactionDispatcher transactions;
     private final AffinityDispatcher affinity;
-    private final ForyGrpcCatalog foryCatalog;
-    private final ForyGrpcServerAdapter foryGrpc;
+    private final List<OrbHttpExtension> extensions;
 
     OrbHttpHandler(EjbDispatcher ejb, NamingDispatcher naming,
                    TransactionDispatcher transactions, AffinityDispatcher affinity,
-                   ForyGrpcCatalog foryCatalog, ForyGrpcServerAdapter foryGrpc) {
+                   List<OrbHttpExtension> extensions) {
         this.ejb = ejb;
         this.naming = naming;
         this.transactions = transactions;
         this.affinity = affinity;
-        this.foryCatalog = foryCatalog;
-        this.foryGrpc = foryGrpc;
+        this.extensions = List.copyOf(extensions);
     }
 
     @Override
@@ -64,11 +62,13 @@ final class OrbHttpHandler extends HttpHandler {
         GrizzlyServerExchange exchange = new GrizzlyServerExchange(request, response);
         String path = request.getRequestURI();
         try {
-            if (foryGrpc != null && path.contains("/fory/")) {
-                foryGrpc.dispatch(exchange);
-            } else if (path.contains(ForyGrpcCatalog.PREFIX)) {
-                foryCatalog.dispatch(exchange);
-            } else if (path.contains('/' + Protocol.SVC_NAMING + '/')) {
+            for (OrbHttpExtension extension : extensions) {
+                if (extension.serves(path)) {
+                    extension.dispatch(path, exchange);
+                    return;
+                }
+            }
+            if (path.contains('/' + Protocol.SVC_NAMING + '/')) {
                 naming.dispatch(exchange);
             } else if (path.contains('/' + Protocol.SVC_TXN + '/')) {
                 transactions.dispatch(exchange);

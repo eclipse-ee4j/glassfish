@@ -16,7 +16,6 @@
 
 package org.glassfish.orb.http.glassfish;
 
-import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
@@ -26,23 +25,11 @@ import jakarta.inject.Singleton;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
-import org.glassfish.orb.http.fory.grpc.ForyGeneratedRuntime;
-import org.glassfish.orb.http.fory.grpc.ForyGeneratedSchemaAdapter;
-import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
-import org.glassfish.orb.http.fory.grpc.ForyGrpcSkeleton;
-import org.glassfish.orb.http.fory.grpc.ForyIdlGenerator;
-import org.glassfish.orb.http.fory.grpc.ForyTypeIds;
-import org.glassfish.orb.http.protocol.Protocol;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -73,90 +60,6 @@ public class EjbNameIndex {
     private ApplicationRegistry applications;
 
     private final Map<String, Long> byName = new ConcurrentHashMap<>();
-    private final Map<String, ForyRoute> foryRoutes = new ConcurrentHashMap<>();
-
-    /** The registry the endpoint serves from; {@link #refreshForyRegistry} fills it. */
-    private final ForyGeneratedServiceRegistry foryRegistry = new ForyGeneratedServiceRegistry();
-
-    public ForyGeneratedServiceRegistry foryRegistry() {
-        return foryRegistry;
-    }
-
-    /**
-     * Rebuilds the Fory routes from the applications deployed now, so that a
-     * bean deployed after the endpoint started can still be reached.
-     *
-     * @return the registry, filled in
-     */
-    public ForyGeneratedServiceRegistry refreshForyRegistry() {
-        ForyGeneratedServiceRegistry registry = foryRegistry;
-        registry.clear();
-        foryRoutes.clear();
-        for (String name : applications.getAllApplicationNames()) {
-            ApplicationInfo info = applications.get(name);
-            if (info == null) continue;
-            Application application = info.getMetaData(Application.class);
-            if (application == null) continue;
-            for (EjbBundleDescriptor bundle : application.getBundleDescriptors(EjbBundleDescriptor.class)) {
-                String module = bundle.getModuleDescriptor().getModuleName();
-                for (EjbDescriptor ejb : bundle.getEjbs()) {
-                    Set<String> views = ejb.getRemoteBusinessClassNames();
-                    if (views == null) continue;
-                    ClassLoader loader = EjbContainerUtilImpl.getInstance().getClassLoader(ejb.getUniqueId());
-                    for (String viewName : views) {
-                        try {
-                            Class<?> view = Class.forName(viewName, false, loader);
-                            String service = "glassfish." + safeName(application.getRegistrationName()) + '.'
-                                    + safeName(module) + '.' + safeName(ejb.getName()) + '_'
-                                    + safeName(view.getSimpleName());
-                            // Validate the complete contract before publishing any
-                            // route. The IDL generator is the source of truth for
-                            // method ordering, overload rejection and portable
-                            // types; keeping this check here prevents a partially
-                            // registered service whose wire type ids differ from
-                            // the advertised .fdl document.
-                            String idlPackage = "glassfish." + safeName(application.getRegistrationName())
-                                    + '.' + safeName(module);
-                            ForyIdlGenerator.generate(idlPackage,
-                                    safeName(ejb.getName()) + '_' + safeName(view.getSimpleName()), view);
-                            ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of(service, view);
-                            for (java.lang.reflect.Method method : java.util.Arrays.stream(view.getMethods())
-                                    .filter(m -> m.getDeclaringClass() != Object.class)
-                                    .sorted(java.util.Comparator.comparing(java.lang.reflect.Method::getName))
-                                    .toList()) {
-                                if (method.getDeclaringClass() == Object.class || method.getParameterCount() > 1) continue;
-                                String wire = Protocol.CONTEXT_PATH + "/fory/" + service + '/'
-                                        + Character.toUpperCase(method.getName().charAt(0)) + method.getName().substring(1);
-                                var models = org.glassfish.orb.http.fory.grpc.ForyRuntimeModelGenerator.unary(
-                                        service, method.getName(), method.getParameterCount() == 0 ? void.class : method.getParameterTypes()[0], method.getReturnType());
-                                // The ids come from the names in the published IDL, so the
-                                // document a client generated from and the runtime agree.
-                                String rpcName = Character.toUpperCase(method.getName().charAt(0))
-                                        + method.getName().substring(1);
-                                registry.register(wire, '/' + service + '/' + method.getName(), skeleton, models,
-                                        new ForyGeneratedRuntime(models,
-                                                ForyTypeIds.of(idlPackage, rpcName + "Request"),
-                                                ForyTypeIds.of(idlPackage, rpcName + "Response")),
-                                        ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
-                                foryRoutes.put(wire, new ForyRoute(application.getRegistrationName(), module,
-                                        ejb.getName(), viewName));
-                            }
-                        } catch (ReflectiveOperationException | IllegalArgumentException e) {
-                            LOG.log(Level.WARNING, "cannot build Fory route for " + viewName + ": " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-        return registry;
-    }
-
-    public ForyRoute foryRoute(String path) {
-        return foryRoutes.get(path);
-    }
-
-    public record ForyRoute(String app, String module, String bean, String view) {
-    }
 
     /**
      * @param appName the application name
@@ -223,59 +126,6 @@ public class EjbNameIndex {
         byName.clear();
         byName.putAll(rebuilt);
         LOG.log(Level.INFO, "EJB name index rebuilt: {0}", rebuilt.keySet());
-    }
-
-    /** Builds the deploy-time Fory IDL catalog from remote business views. */
-    public Map<String, String> foryIdl() {
-        Map<String, String> result = new LinkedHashMap<>();
-        for (String name : applications.getAllApplicationNames()) {
-            ApplicationInfo info = applications.get(name);
-            if (info == null) {
-                continue;
-            }
-            Application application = info.getMetaData(Application.class);
-            if (application == null) {
-                continue;
-            }
-            for (EjbBundleDescriptor bundle : application.getBundleDescriptors(EjbBundleDescriptor.class)) {
-                String module = bundle.getModuleDescriptor().getModuleName();
-                for (EjbDescriptor ejb : bundle.getEjbs()) {
-                    Set<String> views = ejb.getRemoteBusinessClassNames();
-                    if (views == null) {
-                        continue;
-                    }
-                    ClassLoader loader = EjbContainerUtilImpl.getInstance().getClassLoader(ejb.getUniqueId());
-                    for (String viewName : views) {
-                        try {
-                            Class<?> view = Class.forName(viewName, false, loader);
-                            String path = Protocol.CONTEXT_PATH + ForyGrpcCatalog.PREFIX
-                                    + pathPart(application.getRegistrationName()) + '/'
-                                    + pathPart(module) + '/'
-                                    + pathPart(ejb.getName()) + '/'
-                                    + pathPart(viewName) + ".fdl";
-                            result.put(path, ForyIdlGenerator.generate(
-                                    "glassfish." + safeName(application.getRegistrationName()) + '.'
-                                            + safeName(module),
-                                    safeName(ejb.getName()) + '_' + safeName(view.getSimpleName()), view));
-                        } catch (ReflectiveOperationException | IllegalArgumentException e) {
-                            LOG.log(Level.WARNING, "cannot generate Fory IDL for "
-                                    + application.getRegistrationName() + '/' + module + '/' + ejb.getName()
-                                    + '/' + viewName + ": " + e.getMessage());
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    private static String safeName(String value) {
-        return value == null ? "application" : value.replaceAll("[^A-Za-z0-9_]", "_");
-    }
-
-    private static String pathPart(String value) {
-        return URLEncoder.encode(value == null ? "" : value, StandardCharsets.UTF_8)
-                .replace("+", "%20");
     }
 
     private void index(Application application, Map<String, Long> into) {

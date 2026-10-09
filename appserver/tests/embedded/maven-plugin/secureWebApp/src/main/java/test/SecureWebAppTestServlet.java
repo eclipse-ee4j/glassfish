@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,9 +29,10 @@ import java.io.PrintWriter;
 /**
  * @author bhavanishankar@java.net
  */
-
 @WebServlet(name="SecureWebAppTestServlet", urlPatterns = "/SecureWebAppTestServlet")
 public class SecureWebAppTestServlet extends HttpServlet {
+
+    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest httpServletRequest,
@@ -43,7 +45,7 @@ public class SecureWebAppTestServlet extends HttpServlet {
         String sysProp = System.getProperty("org.glassfish.embedded.greeting");
         print("[System property org.glassfish.embedded.greeting = " + sysProp + "]", out);
         if(!"Hi from BHAVANI".equals(sysProp)) {
-            httpServletResponse.sendError(500,
+            httpServletResponse.sendError(441,
                     "System property org.glassfish.embedded.greeting not found");
             return;
         }
@@ -52,14 +54,13 @@ public class SecureWebAppTestServlet extends HttpServlet {
         print("[System property ANTLR_USE_DIRECT_CLASS_LOADING = " +
                 System.getProperty("ANTLR_USE_DIRECT_CLASS_LOADING") + "]", out);
         if(!directClassLoading) {
-            httpServletResponse.sendError(500,
+            httpServletResponse.sendError(442,
                     "System property ANTLR_USE_DIRECT_CLASS_LOADING is not set");
             return;
         }
         print("[End of OUTPUT from SecureWebAppTestServlet]", out);
 
         out.flush();
-        out.close();
     }
 
     private void print(String msg, PrintWriter out) {

@@ -1,0 +1,17 @@
+package compatibility.greeter;
+
+// The ids are explicit, as they are in the document GlassFish publishes for a
+// remote view: they come from the message name, so they survive a redeployment
+// that adds methods. The Fory compiler honours them rather than deriving its
+// own from the name.
+message SayHelloRequest [id=268731] {
+    string value = 1;
+}
+
+message SayHelloResponse [id=26345] {
+    string value = 1;
+}
+
+service Greeter {
+    rpc SayHello(SayHelloRequest) returns (SayHelloResponse);
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,28 +17,29 @@ package org.glassfish.microprofile.health;
 
 import jakarta.inject.Singleton;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 
 @Singleton
 public class HealthReporter {
 
-    private static final String MP_DEFAULT_STARTUP_EMPTY_RESPONSE = "mp.health.default.startup.empty.response";
-    private static final String MP_DEFAULT_READINESS_EMPTY_RESPONSE = "mp.health.default.readiness.empty.response";
     private static final String CONTEXT_KEY = "context";
 
     private static final Logger LOGGER = Logger.getLogger(HealthReporter.class.getName());
 
     private final Map<String, List<HealthCheckInfo>> applicationHealthChecks = new ConcurrentHashMap<>();
+
+    private volatile Supplier<Collection<HealthCheckInfo>> serverHealthChecks = List::of;
 
     private static HealthCheckResponse callHealthCheck(HealthCheck healthCheck) {
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
@@ -89,19 +90,6 @@ public class HealthReporter {
          */
         ALL;
 
-        private HealthCheckResponse.Status getEmptyResponse() {
-            return switch (this) {
-                case LIVE ->
-                    getValue(MP_DEFAULT_STARTUP_EMPTY_RESPONSE)
-                    .orElse(HealthCheckResponse.Status.UP);
-                case READY ->
-                    getValue(MP_DEFAULT_READINESS_EMPTY_RESPONSE)
-                    .orElse(HealthCheckResponse.Status.UP);
-                case STARTED, ALL ->
-                    HealthCheckResponse.Status.UP;
-            };
-        }
-
         public boolean filter(HealthCheckInfo healthCheck) {
             return switch (this) {
                 case LIVE ->
@@ -116,10 +104,25 @@ public class HealthReporter {
         }
     }
 
+    /**
+     * Returns the report of the requested kind.
+     * <p>
+     * The overall status is {@code UP} if there are no health checks of the requested kind. While
+     * the server is starting or no application is deployed, the server health checks set by
+     * {@link #setServerHealthChecks(Supplier)} provide the status defined by the MicroProfile Health
+     * properties {@code mp.health.default.readiness.empty.response} and
+     * {@code mp.health.default.startup.empty.response}.
+     *
+     * @param reportKind kind of the health checks to include
+     * @return the report
+     */
     public HealthReport getReport(ReportKind reportKind) {
-        HealthCheckResponse.Status emptyResponse = reportKind.getEmptyResponse();
-
-        List<HealthCheckResponse> healthCheckResults = applicationHealthChecks.entrySet()
+        Stream<HealthCheckResponse> serverResults = serverHealthChecks.get()
+                .stream()
+                .filter(reportKind::filter)
+                .map(HealthCheckInfo::healthCheck)
+                .map(HealthReporter::callHealthCheck);
+        Stream<HealthCheckResponse> applicationResults = applicationHealthChecks.entrySet()
                 .stream()
                 .flatMap(entry -> {
                     String contextName = entry.getKey();
@@ -128,20 +131,27 @@ public class HealthReporter {
                             .filter(reportKind::filter)
                             .map(HealthCheckInfo::healthCheck)
                             .map(HealthReporter::callHealthCheck)
-                            .map(response -> addContextToResponse(response, entry.getKey()));
-                }).toList();
+                            .map(response -> addContextToResponse(response, contextName));
+                });
+        List<HealthCheckResponse> healthCheckResults = Stream.concat(serverResults, applicationResults).toList();
 
-        HealthCheckResponse.Status overallStatus;
-        if (healthCheckResults.isEmpty()) {
-            overallStatus = emptyResponse;
-        } else {
-            overallStatus = healthCheckResults.stream()
-                    .map(HealthCheckResponse::getStatus)
-                    .filter(HealthCheckResponse.Status.DOWN::equals)
-                    .findFirst()
-                    .orElse(HealthCheckResponse.Status.UP);
-        }
+        HealthCheckResponse.Status overallStatus = healthCheckResults.stream()
+                .map(HealthCheckResponse::getStatus)
+                .filter(HealthCheckResponse.Status.DOWN::equals)
+                .findFirst()
+                .orElse(HealthCheckResponse.Status.UP);
         return new HealthReport(overallStatus, healthCheckResults);
+    }
+
+    /**
+     * Sets the supplier of health checks provided by the server itself, not by applications.
+     * The supplier is called for each report, so it can return different health checks depending
+     * on the state of the server.
+     *
+     * @param serverHealthChecks supplier of the server health checks
+     */
+    public void setServerHealthChecks(Supplier<Collection<HealthCheckInfo>> serverHealthChecks) {
+        this.serverHealthChecks = serverHealthChecks;
     }
 
     public void addHealthCheck(String contextName, HealthCheckInfo healthCheck) {
@@ -151,17 +161,6 @@ public class HealthReporter {
 
     public void removeAllHealthChecksFrom(String contextName) {
         applicationHealthChecks.remove(contextName);
-    }
-
-    private static Optional<HealthCheckResponse.Status> getValue(String value) {
-        try {
-            return ConfigProvider.getConfig()
-                    .getOptionalValue(value, String.class)
-                    .map(HealthCheckResponse.Status::valueOf);
-        } catch (IllegalStateException e) {
-            // Microprofile Config is not enabled for this application
-            return Optional.empty();
-        }
     }
 
 }

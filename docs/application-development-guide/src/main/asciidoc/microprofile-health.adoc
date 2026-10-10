@@ -1,0 +1,68 @@
+type=page
+status=published
+title=Using MicroProfile Health
+next=webapps.html
+prev=jakarta-data.html
+~~~~~~
+
+= Using MicroProfile Health
+
+[[using-microprofile-health]]
+== Using MicroProfile Health
+
+{productName} provides the https://microprofile.io/specifications/health[MicroProfile Health]
+endpoints on all HTTP network listeners except the administration listener:
+
+[width="100%",cols="30%,70%",options="header",]
+|===
+|Path |Report
+|`/health` |All health checks
+|`/health/live` |Liveness checks, annotated with `@Liveness`
+|`/health/ready` |Readiness checks, annotated with `@Readiness`
+|`/health/started` |Startup checks, annotated with `@Startup`
+|===
+
+The endpoints respond with HTTP status 200 if the overall status is `UP`, and with 503 if it is
+`DOWN`. They are available as soon as the HTTP listeners are started, also when no application
+is deployed. Health checks are CDI beans of applications and are reported from the moment
+the application is deployed until it is undeployed.
+
+[[microprofile-health-empty-responses]]
+=== Startup and Readiness Without Health Checks
+
+Until the server is started, including the deployment of applications at startup, the startup
+and readiness endpoints report a `DOWN` health check named `glassfish-server-started` and
+`glassfish-applications-ready` respectively.
+
+After the server is started, the readiness endpoint reports a `DOWN` health check named
+`glassfish-applications-ready` while no application is deployed. This differs from the
+MicroProfile Health specification, which requires `UP` after startup if there are no readiness
+checks, because a server without applications usually cannot serve any requests yet.
+
+The status of these health checks is configured by the following properties. If a property is
+set to `UP`, the corresponding health check is not reported at all.
+
+* `mp.health.default.startup.empty.response`
+* `mp.health.default.readiness.empty.response`
+
+For example, set `mp.health.default.readiness.empty.response` to `UP` if the server is used
+without applications. The properties are read from MicroProfile Config. Until an application
+using MicroProfile Config is deployed, only system properties and environment variables are
+used, for example:
+
+[source]
+----
+asadmin create-jvm-options -Dmp.health.default.readiness.empty.response=UP
+----
+
+[[microprofile-health-configuration]]
+=== Configuring the Endpoints
+
+The following system properties configure the endpoints. Changes take effect after a server restart.
+
+`org.glassfish.microprofile.health.enabled`::
+  Set to `false` to disable the endpoints. The default value is `true`.
+`org.glassfish.microprofile.health.context-path`::
+  Context path of the endpoints. The default value is `/health`. Use it if an application
+  deployed to the root context path `/` or to `/health` defines resources under `/health`,
+  because the health endpoints take precedence over applications.

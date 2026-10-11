@@ -45,7 +45,7 @@ public class WebTest {
             urlConnection.setDoOutput(true);
             DataOutputStream out = new DataOutputStream(urlConnection.getOutputStream());
             out.writeByte(1);
-            assertThat(urlConnection.getResponseCode(), CoreMatchers.is(404));
+            assertThat(urlConnection.getResponseMessage(), urlConnection.getResponseCode(), CoreMatchers.is(404));
         } finally {
             urlConnection.disconnect();
         }

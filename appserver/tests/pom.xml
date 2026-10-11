@@ -38,7 +38,7 @@
         <omnifish.arquillian.version>2.2.1</omnifish.arquillian.version>
         <jboss.arquillian.version>1.10.2.Final</jboss.arquillian.version>
         <jakarta.arquillian.version>10.0.0.Final</jakarta.arquillian.version>
-        <embedded.glassfish.maven.plugin.version>8.0</embedded.glassfish.maven.plugin.version>
+        <embedded.glassfish.maven.plugin.version>8.1</embedded.glassfish.maven.plugin.version>
     </properties>
 
     <build>

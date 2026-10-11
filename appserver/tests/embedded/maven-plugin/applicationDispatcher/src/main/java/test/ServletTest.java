@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,31 +29,35 @@ import java.io.PrintWriter;
 
 public class ServletTest extends HttpServlet{
 
+    private static final long serialVersionUID = 1L;
     private static String status = "ApplicationDispatcher::PASS";
 
+    @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         System.out.println("[Servlet.init]");
 
-        try{
-            RequestDispatcher requestD =
-                            getServletContext().getRequestDispatcher("/test.jsp");
-
-            if ( requestD == null){
+        try {
+            RequestDispatcher requestD = getServletContext().getRequestDispatcher("/test.jsp");
+            if (requestD == null) {
                 status = "ApplicationDispatcher::FAIL";
             }
             System.out.println("[Servlet.RequestDispatcher: " + requestD + "]");
-        } catch (Throwable t){
-                status = "ApplicationDispatcher::FAIL";
+        } catch (Throwable t) {
+            status = "ApplicationDispatcher::FAIL";
+            System.err.println(t);
+
         }
         System.out.println("status: " + status);
     }
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doGet]");
         doPost(request, response);
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
 

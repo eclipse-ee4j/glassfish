@@ -150,13 +150,12 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>tck-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
                     <dependenciesToScan>
                         <dependency>org.eclipse.microprofile.rest.client:microprofile-rest-client-tck</dependency>
                     </dependenciesToScan>
-
+                    <includes>org/eclipse/microprofile/rest/client/tck/**/*</includes>
+                    <!-- See https://github.com/microprofile/microprofile-rest-client/issues/402 -->
+                    <excludes>org/eclipse/microprofile/rest/client/tck/cditests/ClientClosedTest.*</excludes>
                     <systemPropertyVariables>
                         <!-- A workaround for the ConfigKeyForMultipleInterfacesTest -->
                         <ee.omnifish.arquillian.prependDeploySequence>true</ee.omnifish.arquillian.prependDeploySequence>

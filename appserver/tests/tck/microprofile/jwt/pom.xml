@@ -69,50 +69,19 @@
 
     <build>
         <plugins>
-            <!--
-                Extract the TCK Suite Files, so that the surefire plugin
-                can refer to tck-base-suite.xml
-            -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-test-suite.xml</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <includeArtifactIds>microprofile-jwt-auth-tck</includeArtifactIds>
-                            <includeClassifiers>tests</includeClassifiers>
-                            <overWriteIfNewer>false</overWriteIfNewer>
-                            <outputDirectory>${project.build.directory}/tck-suite</outputDirectory>
-                            <includes>**/tck-base-suite.xml</includes>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-glassfish</id>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!--
-                Run the TCK tests aginst the tck-base-suite.xml file.
-                Single tests can be run using the regular -Dtest paramater, e.g.
-                -Dtest=ClaimValueInjectionTest#verifyInjectedAudience
-            -->
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <dependenciesToScan>org.eclipse.microprofile.jwt:microprofile-jwt-auth-tck</dependenciesToScan>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${project.build.directory}/tck-suite/suites/tck-base-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.jwt:microprofile-jwt-auth-tck:jar:tests:*</dependency>
+                    </dependenciesToScan>
+                    <includes>org/eclipse/microprofile/jwt/tck/**/*</includes>
+                    <excludes>org/eclipse/microprofile/jwt/tck/config/RsaAndEcSignatureAlgorithmTest.*</excludes>
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.home}</glassfish.home>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
                         <mp.jwt.tck.jwks.baseURL>${glassfish.baseUrl}</mp.jwt.tck.jwks.baseURL>
+                        <project.build.directory>${project.build.directory}</project.build.directory>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

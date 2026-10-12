@@ -31,5 +31,4 @@
             <property name="outputToConsole">true</property>
         </configuration>
     </container>
-
 </arquillian>

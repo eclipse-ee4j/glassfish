@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -61,7 +61,7 @@ import static java.util.logging.Level.SEVERE;
 @RunLevel(value = StartupRunLevel.VAL)
 public class JobCleanUpService implements ConfigListener {
 
-    private final static Logger logger = KernelLoggerInfo.getLogger();
+    private static final Logger LOG = KernelLoggerInfo.getLogger();
 
     @Inject
     private JobManagerService jobManagerService;
@@ -74,11 +74,10 @@ public class JobCleanUpService implements ConfigListener {
 
     @PostConstruct
     public void postConstruct() {
-        logger.log(FINE, KernelLoggerInfo.initializingJobCleanup);
-
+        LOG.log(FINE, KernelLoggerInfo.initializingJobCleanup);
         managedJobConfig = domain.getExtensionByType(ManagedJobConfig.class);
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(managedJobConfig);
-        logger.fine(KernelLoggerInfo.initializingManagedConfigBean);
+        LOG.fine(KernelLoggerInfo.initializingManagedConfigBean);
         bean.addListener(this);
 
         scheduleCleanUp();
@@ -87,7 +86,7 @@ public class JobCleanUpService implements ConfigListener {
 
     @PreDestroy
     public void preDestroy() {
-        logger.log(FINE, "Stopping job cleanup service.");
+        LOG.log(FINE, "Stopping job cleanup service.");
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(managedJobConfig);
         bean.removeListener(this);
         scheduler.shutdownNow();
@@ -105,7 +104,7 @@ public class JobCleanUpService implements ConfigListener {
                 Thread.currentThread().interrupt();
             }
         }
-        logger.fine(KernelLoggerInfo.schedulingCleanup);
+        LOG.fine(KernelLoggerInfo.schedulingCleanup);
         long delayBetweenRuns = parseJobRetentionPeriodToMillis(managedJobConfig.getPollInterval());
         long initialDelay = parseJobRetentionPeriodToMillis(managedJobConfig.getInitialDelay());
         if (delayBetweenRuns <= 0) {
@@ -113,7 +112,7 @@ public class JobCleanUpService implements ConfigListener {
                 // We will do that immediately, but then we will not schedule any further runs
                 new JobCleanUpTask().run();
             }
-            logger.log(INFO, "No job cleanup will be scheduled as poll-interval is set to {0} ms", delayBetweenRuns);
+            LOG.log(INFO, "No job cleanup will be scheduled as poll-interval is set to {0} ms", delayBetweenRuns);
             return;
         }
 
@@ -139,7 +138,7 @@ public class JobCleanUpService implements ConfigListener {
      */
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-        return ConfigSupport.sortAndDispatch(events, new PropertyChangeHandler(), logger);
+        return ConfigSupport.sortAndDispatch(events, new PropertyChangeHandler(), LOG);
     }
 
     private final class JobCleanUpTask implements Runnable {
@@ -149,7 +148,7 @@ public class JobCleanUpService implements ConfigListener {
                 jobManagerService.getCompletedJobsInfo().values().stream().map(CompletedJob::getJobsFile).distinct()
                     .forEach(this::cleanUpExpiredJobs);
             } catch (Exception e) {
-                logger.log(SEVERE, KernelLoggerInfo.exceptionCleaningJobs, e);
+                LOG.log(SEVERE, KernelLoggerInfo.exceptionCleaningJobs, e);
             }
         }
 
@@ -157,7 +156,7 @@ public class JobCleanUpService implements ConfigListener {
             for (JobInfo job : jobManagerService.getExpiredJobs(file)) {
                 jobManagerService.purgeJob(job.jobId);
                 jobManagerService.purgeCompletedJobForId(job);
-                logger.log(FINE, KernelLoggerInfo.cleaningJob, job);
+                LOG.log(FINE, KernelLoggerInfo.cleaningJob, job);
             }
         }
     }
@@ -169,8 +168,8 @@ public class JobCleanUpService implements ConfigListener {
             if (type != TYPE.CHANGE) {
                 return null;
             }
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, KernelLoggerInfo.changeManagedJobConfig,
+            if (LOG.isLoggable(FINE)) {
+                LOG.log(FINE, KernelLoggerInfo.changeManagedJobConfig,
                     new Object[] {changedType.getName(), changedInstance});
             }
             return handleChangeEvent(changedInstance);

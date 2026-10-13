@@ -69,6 +69,8 @@ def ant_light_jobs = [
     "batch_all"
 ]
 
+// jdbc-tests are not here, they need docker - they are executed just
+// on GitHub Actions (implicitly via .github/workflows/build-linux.yml)
 def mvn_jobs = [
     "admin-tests-parent",
     "application-tests",

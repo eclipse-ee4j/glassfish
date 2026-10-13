@@ -72,7 +72,11 @@ def ant_light_jobs = [
 def mvn_jobs = [
     "admin-tests-parent",
     "application-tests",
-    "embedded-tests"
+    "embedded-tests",
+    "glassfish-external-tck-microprofile-config",
+    "glassfish-external-tck-microprofile-health",
+    "glassfish-external-tck-microprofile-jwt",
+    "glassfish-external-tck-microprofile-rest-client"
 ]
 
 def podYamlConfigurationTemplate = """
@@ -479,7 +483,7 @@ def generateMvnTestPod(job, label, command) {
 }
 
 def generateMvnTestPod(job, label) {
-   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -pl :${job} -amd")
+   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -Ptck -pl :${job} -amd")
 }
 
 pipeline {

@@ -72,6 +72,7 @@ def ant_light_jobs = [
 def mvn_jobs = [
     "admin-tests-parent",
     "application-tests",
+    "application-tests-individual",
     "embedded-tests",
     "glassfish-external-tck-microprofile-config",
     "glassfish-external-tck-microprofile-health",

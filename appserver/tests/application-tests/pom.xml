@@ -28,10 +28,10 @@
     </parent>
 
     <groupId>org.glassfish.main.tests.application-tests</groupId>
-    <artifactId>application-tests</artifactId>
+    <artifactId>application-tests-individual</artifactId>
     <packaging>pom</packaging>
 
-    <name>Application Tests: Parent</name>
+    <name>Individual Application Tests: Parent</name>
 
     <modules>
         <module>security</module>

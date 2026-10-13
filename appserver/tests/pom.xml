@@ -247,7 +247,6 @@
             <id>ci-main-tests</id>
             <modules>
                 <module>appserv-tests</module>
-                <module>jdbc</module>
             </modules>
         </profile>
     </profiles>

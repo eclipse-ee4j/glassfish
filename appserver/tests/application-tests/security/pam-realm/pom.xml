@@ -63,7 +63,6 @@
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${glassfish.version}</version>
             <type>zip</type>
             <scope>test</scope>
         </dependency>

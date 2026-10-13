@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,12 +24,11 @@ import com.sun.enterprise.config.serverbeans.DomainExtension;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigExtension;
-import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.JustInTimeInjectionResolver;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 
@@ -42,8 +42,6 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 public class ConfigModularityJustInTimeInjectionResolver implements JustInTimeInjectionResolver {
 
     @Inject
-    private DynamicConfigurationService dcs;
-    @Inject
     private ServiceLocator locator;
     @Inject
     private Config config;
@@ -52,8 +50,9 @@ public class ConfigModularityJustInTimeInjectionResolver implements JustInTimeIn
 
     @Override
     public boolean justInTimeResolution(Injectee injectee) {
-        if (injectee == null || injectee.isOptional())
+        if (injectee == null || injectee.isOptional()) {
             return false;
+        }
         Class configBeanType;
         try {
             configBeanType = (Class) injectee.getRequiredType();
@@ -63,15 +62,16 @@ public class ConfigModularityJustInTimeInjectionResolver implements JustInTimeIn
         if (!ConfigExtension.class.isAssignableFrom(configBeanType) && !DomainExtension.class.isAssignableFrom(configBeanType)) {
             return false;
         }
-        if (!isInjectionSupported(configBeanType))
+        if (!isInjectionSupported(configBeanType)) {
             return false;
+        }
 
         if (domain == null) {
             return false;
         }
         if (ConfigExtension.class.isAssignableFrom(configBeanType)) {
             if (config == null) {
-                config = locator.getService(Config.class, ServerEnvironmentImpl.DEFAULT_INSTANCE_NAME);
+                config = locator.getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
             }
             ConfigBeanProxy pr = config.getExtensionByType(configBeanType);
             return pr != null;

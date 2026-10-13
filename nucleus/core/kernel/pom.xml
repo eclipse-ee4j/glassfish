@@ -242,10 +242,8 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.1</include>
-                    <include>**/*.xml</include>
-                    <include>**/*.properties</include>
-                    <include>**/services/*</include>
+                    <include>META-INF/services/*</include>
+                    <include>**/domain.xml</include>
                 </includes>
             </resource>
         </resources>

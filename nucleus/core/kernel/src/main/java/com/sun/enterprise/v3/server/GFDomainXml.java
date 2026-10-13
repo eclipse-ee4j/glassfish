@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -54,12 +54,12 @@ public class GFDomainXml extends DomainXml {
             }
 
         };
-        return new GlassFishDocument(habitat, DecoratingExecutors.newCachedThreadPool(threadFactory, this::initThreadBeforeTask));
+        return new GlassFishDocument(locator, DecoratingExecutors.newCachedThreadPool(threadFactory, this::initThreadBeforeTask));
     }
 
     private void initThreadBeforeTask(Thread thread, Runnable task) {
         // Because the common CL is lazily initialized,
         // we need to refresh the context CL before each task
-        thread.setContextClassLoader(habitat.getService(ServerContext.class).getCommonClassLoader());
+        thread.setContextClassLoader(locator.getService(ServerContext.class).getCommonClassLoader());
     }
 }

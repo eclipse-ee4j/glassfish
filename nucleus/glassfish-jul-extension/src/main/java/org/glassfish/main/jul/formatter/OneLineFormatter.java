@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,7 @@ public class OneLineFormatter extends GlassFishLogFormatter {
 
 
     /**
-     * Creates formatter with default {@value GlassFishLogFormatter#ISO_LOCAL_TIME} time format if
+     * Creates formatter with default {@link GlassFishLogFormatter#ISO_LOCAL_TIME} time format if
      * not set otherwise in the logging configuration.
      *
      * @param handlerId

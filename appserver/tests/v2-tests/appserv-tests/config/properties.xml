@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -143,19 +144,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
 </target>
 
 <target name="setToolWin" if="isWindows">
-  <!--
-    Some tests launch app clients by directly running the appclient script,
-    using the APPCLIENT property.  Others do so by invoking the
-    runclient-common target.
-
-    We use the test script (not appclient) if the user wants to launch
-    app clients using Java Web Start.
-  -->
-  <condition property="APPCLIENT"
-    value="${env.APS_HOME}/config/jws-appclient.bat"
-    else="${env.S1AS_HOME}/bin/appclient.bat">
-        <isset property="use.javaws"/>
-  </condition>
+  <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient.bat"/>
   <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin.bat"/>
   <!--<property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin"/>-->
   <property name="ASANT" value="${env.S1AS_HOME}/bin/asant.bat"/>
@@ -183,11 +172,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
 </target>
 
 <target name="setToolUnix" if="isUnix">
-  <condition property="APPCLIENT"
-    value="${env.APS_HOME}/config/jws-appclient"
-    else="${env.S1AS_HOME}/bin/appclient">
-        <isset property="use.javaws"/>
-  </condition>
+  <property name="APPCLIENT" value="${env.S1AS_HOME}/bin/appclient"/>
   <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin"/>
   <property name="ASANT" value="${env.S1AS_HOME}/bin/asant"/>
   <property name="CAPTURESCHEMA" value="${env.S1AS_HOME}/bin/capture-schema"/>

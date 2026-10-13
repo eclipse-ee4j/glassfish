@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,7 +32,6 @@ import java.net.URISyntaxException;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
@@ -48,17 +47,13 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.api.deployment.archive.WritableArchiveEntry;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
-import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.Artifacts;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ServerContext;
+import org.glassfish.logging.annotation.LogMessagesResourceBundle;
+import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Encapsulates the details of generating the required JAR file(s),
@@ -92,11 +87,13 @@ public abstract class AppClientDeployerHelper {
 
     private final ServiceLocator habitat;
 
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
-
-    public static final String ACC_MAIN_LOGGER = "jakarta.enterprise.system.container.appclient";
+    @LogMessagesResourceBundle
     public static final String LOG_MESSAGE_RESOURCE = "org.glassfish.appclient.server.LogMessages";
+
+    @LoggerInfo(subsystem = "SERVER", description = "Appclient Server-side Logger", publish = true)
+    public static final String ACC_MAIN_LOGGER = "jakarta.enterprise.system.container.appclient";
+
+    private static final Logger logger = Logger.getLogger(ACC_MAIN_LOGGER, LOG_MESSAGE_RESOURCE);
 
     /**
      * Returns the correct concrete implementation of Helper.
@@ -108,8 +105,7 @@ public abstract class AppClientDeployerHelper {
             final DeploymentContext dc,
             final AppClientArchivist archivist,
             final ClassLoader gfClientModuleLoader,
-            final ServiceLocator habitat,
-            final ASJarSigner jarSigner) throws IOException {
+            final ServiceLocator habitat) throws IOException {
         ApplicationClientDescriptor bundleDesc = dc.getModuleMetaData(ApplicationClientDescriptor.class);
         Application application = bundleDesc.getApplication();
         boolean insideEar = ! application.isVirtual();
@@ -120,8 +116,7 @@ public abstract class AppClientDeployerHelper {
                                     archivist,
                                     gfClientModuleLoader,
                                     application,
-                                    habitat,
-                                    jarSigner)
+                                    habitat)
                           : new StandaloneAppClientDeployerHelper(
                                     dc,
                                     bundleDesc,
@@ -281,18 +276,6 @@ public abstract class AppClientDeployerHelper {
 
     protected abstract String PUScanTargets();
 
-    public ApplicationSignedJARManager signedJARManager() {
-        return null;
-    }
-
-    public abstract void createAndAddLibraryJNLPs(final AppClientDeployerHelper helper,
-            final TokenHelper tHelper, final Map<String,DynamicContent> dynamicContent)
-            throws IOException;
-
-    public Map<String,Map<URI,StaticContent>> signingAliasToJar() {
-        return Collections.emptyMap();
-    }
-
     public final DeploymentContext dc() {
         return dc;
     }
@@ -313,21 +296,6 @@ public abstract class AppClientDeployerHelper {
     public String clientName() {
         return clientName;
     }
-
-    /**
-     * Returns a FixedContent object for the file, within the EAR, at the
-     * specified relative location.
-     *
-     * @param uriString relative path within the EAR
-     * @return FixedContent object for the file
-     */
-    public abstract FixedContent fixedContentWithinEAR(String uriString);
-
-    /**
-     * Returns the root directory for signed files in the applications.
-     * @return File object for the signed JAR root directory
-     */
-    public abstract File rootForSignedFilesInApp();
 
     /**
      * If the specified URI is for an expanded submodule, makes a copy of

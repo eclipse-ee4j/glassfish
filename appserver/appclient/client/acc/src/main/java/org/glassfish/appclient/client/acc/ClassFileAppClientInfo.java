@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +38,6 @@ public class ClassFileAppClientInfo extends AppClientInfo {
 
     /**
      *Creates a new instance of the class file app client info.
-     *@param isJWS whether Java Web Start was used to launch the app client
      *@param logger the Logger available for writing log messages
      *@param archive the archive containing the app client (and perhaps other files as well)
      *@param archivist the archivist appropriate to the type of archive being processed
@@ -45,9 +45,9 @@ public class ClassFileAppClientInfo extends AppClientInfo {
      *@param classFileFromCommandLine the class file name from the command line arguments
      */
     protected ClassFileAppClientInfo(
-            boolean isJWS, Logger logger, String mainClassFromCommandLine,
+            Logger logger, String mainClassFromCommandLine,
             String classFileFromCommandLine) {
-        super(isJWS, logger, mainClassFromCommandLine);
+        super(logger, mainClassFromCommandLine);
         this.classFileFromCommandLine = classFileFromCommandLine;
     }
 

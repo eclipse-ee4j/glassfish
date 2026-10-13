@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,7 +18,6 @@
 package org.glassfish.appclient.client.acc;
 
 import com.sun.enterprise.module.bootstrap.StartupContext;
-import com.sun.enterprise.util.io.FileUtils;
 
 import jakarta.inject.Singleton;
 
@@ -41,8 +40,7 @@ import static org.glassfish.embeddable.GlassFishVariable.JAVA_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.NODES_ROOT;
 
 /**
- * Start-up context for the ACC.  Note that this context is used also for
- * Java Web Start launches.
+ * Start-up context for the ACC.
  *
  * @author tjquinn
  */
@@ -78,20 +76,11 @@ public class ACCStartupContext extends StartupContext {
     }
 
     private static File getRootDirectory() {
-        /*
-         * During launches not using Java Web Start the root directory
-         * is important; it is used in setting some system properties.
-         */
         final URI jarURI;
         try {
             jarURI = ACCStartupContext.class.getProtectionDomain().getCodeSource().getLocation().toURI();
         } catch (URISyntaxException e) {
             throw new IllegalStateException("Could not resolve URI of the current JAR!", e);
-        }
-        if (jarURI.getScheme().startsWith("http")) {
-            // We do not really rely on the root directory during Java
-            // Web Start launches but we must return something.
-            return FileUtils.USER_HOME;
         }
         return new File(jarURI).getParentFile().getParentFile();
     }

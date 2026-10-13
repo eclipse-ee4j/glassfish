@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -33,7 +33,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
@@ -45,13 +44,6 @@ import java.util.regex.Pattern;
 
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
-import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
-import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
-import org.glassfish.appclient.server.core.jws.servedcontent.DynamicContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.FixedContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.StaticContent;
-import org.glassfish.appclient.server.core.jws.servedcontent.TokenHelper;
 import org.glassfish.deployment.common.Artifacts;
 import org.glassfish.deployment.common.Artifacts.FullAndPartURIs;
 import org.glassfish.deployment.common.ClientArtifactsManager;
@@ -60,33 +52,29 @@ import org.glassfish.deployment.common.ModuleDescriptor;
 import org.glassfish.deployment.versioning.VersioningSyntaxException;
 import org.glassfish.deployment.versioning.VersioningUtils;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import static org.glassfish.appclient.server.core.jws.JavaWebStartInfo.JAR_MANIFEST_ATTR;
-import static org.glassfish.appclient.server.core.jws.JavaWebStartInfo.JAR_MANIFEST_MISSING;
+import org.glassfish.logging.annotation.LogMessageInfo;
 
 
 public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
-    private final static String LIBRARY_SECURITY_PROPERTY_NAME = "library.security";
-    private final static String LIBRARY_JARS_PROPERTY_NAME = "library.jars";
-    private final static String LIBRARY_JNLP_PATH_PROPERTY_NAME = "library.jnlp.path";
+    private static final Logger LOG = Logger.getLogger(ACC_MAIN_LOGGER, LOG_MESSAGE_RESOURCE);
 
-    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-        JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+    @LogMessageInfo(
+        message = "Error preparing to server JARs referenced by app client; referenced JAR file {0} contains no manifest; continuing",
+        cause = "A JAR file which an app client directory or indirectly refers to contains no manifest, in violation of the JAR specification, so it cannot be checked for further dependencies.",
+        action = "Check that the referenced JAR file has been built correctly. It should contain a manifest but does not.")
+    public static final String JAR_MANIFEST_MISSING = "AS_ACDEPL_00113";
 
-    private static final String LIBRARY_DOCUMENT_TEMPLATE =
-            JavaWebStartInfo.DOC_TEMPLATE_PREFIX + "libraryJarsDocumentTemplate.jnlp";
+    @LogMessageInfo(
+        message = "The manifest in dependent JAR {0} contains no main attributes, such as Class-Path, and so is an invalid JAR. Continuing.",
+        cause = "The JAR specification requires JARs to have a main attributes section, which this JAR does not have.",
+        action = "Make sure the JAR was created correctly with a main attributes section and has not been corrupted.")
+    public static final String JAR_MANIFEST_ATTR = "AS_ACDEPL_00116";
 
     private StringBuilder classPathForFacade = new StringBuilder();
     private StringBuilder PUScanTargetsForFacade = new StringBuilder();
 
     private final URI earURI;
-
-    private final ASJarSigner jarSigner;
-
-    private ApplicationSignedJARManager signedJARManager;
-
-    private StringBuilder libExtensionElementsForMainDocument;
 
     /**
      * records the downloads needed to support this app client,
@@ -117,13 +105,11 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             final AppClientArchivist archivist,
             final ClassLoader gfClientModuleClassLoader,
             final Application application,
-            final ServiceLocator habitat,
-            final ASJarSigner jarSigner) throws IOException {
+            final ServiceLocator habitat) throws IOException {
         super(dc, bundleDesc, archivist, gfClientModuleClassLoader, application, habitat);
         this.habitat = habitat;
         clientArtifactsManager = ClientArtifactsManager.get(dc);
         groupFacadeGenerator = habitat.getService(AppClientGroupFacadeGenerator.class);
-        this.jarSigner = jarSigner;
         isDirectoryDeployed = Boolean.valueOf(dc.getAppProps().getProperty(ServerTags.DIRECTORY_DEPLOYED));
         earURI = dc.getSource().getParentArchive().getURI();
         processDependencies();
@@ -147,60 +133,6 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
     @Override
-    public FixedContent fixedContentWithinEAR(String uriString) {
-        return new FixedContent(new File(earDirUserURI(dc()).resolve(uriString)));
-    }
-
-    public String appLibraryExtensions() {
-        return libExtensionElementsForMainDocument == null ? "" : libExtensionElementsForMainDocument.toString();
-    }
-
-    @Override
-    public Map<String,Map<URI,StaticContent>> signingAliasToJar() {
-        return signedJARManager.aliasToContent();
-    }
-
-
-    @Override
-    public void createAndAddLibraryJNLPs(final AppClientDeployerHelper helper,
-            final TokenHelper tHelper, final Map<String,DynamicContent> dynamicContent) throws IOException {
-
-
-        /*
-         * For each group of like-signed library JARs create a separate JNLP for
-         * the group and add it to the dynamic content for the client.  Also
-         * build up a property to hold the full list of such generated JNLPs
-         * so it can be substituted into the generated client JNLP below.
-         */
-
-        libExtensionElementsForMainDocument = new StringBuilder();
-
-        for (Map.Entry<String,Map<URI,StaticContent>> aliasToContentEntry : signingAliasToJar().entrySet()) {
-            final String alias = aliasToContentEntry.getKey();
-            final Map<URI,StaticContent> libURIs = aliasToContentEntry.getValue();
-
-            tHelper.setProperty(LIBRARY_SECURITY_PROPERTY_NAME, librarySecurity(alias));
-            tHelper.setProperty(LIBRARY_JNLP_PATH_PROPERTY_NAME, libJNLPRelPath(alias));
-            final StringBuilder libJarElements = new StringBuilder();
-
-            for (Map.Entry<URI,StaticContent> entry : libURIs.entrySet()) {
-                final URI uri = entry.getKey();
-                libJarElements.append("<jar href=\"").append(libJARRelPath(uri)).append("\"/>");
-            }
-            tHelper.setProperty(LIBRARY_JARS_PROPERTY_NAME, libJarElements.toString());
-
-            JavaWebStartInfo.createAndAddDynamicContent(
-                    tHelper, dynamicContent, libJNLPRelPath(alias),
-                LIBRARY_DOCUMENT_TEMPLATE);
-
-            libExtensionElementsForMainDocument.append(extensionElement(alias, libJNLPRelPath(alias)));
-        }
-
-        tHelper.setProperty(JavaWebStartInfo.APP_LIBRARY_EXTENSION_PROPERTY_NAME,
-                libExtensionElementsForMainDocument.toString());
-    }
-
-    @Override
     public Set<FullAndPartURIs> earLevelDownloads() {
         if (earLevelDownloads == null) {
             earLevelDownloads = dc().getTransientAppMetaData(EAR_LEVEL_DOWNLOADS_KEY, HashSet.class);
@@ -210,16 +142,6 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             }
         }
         return earLevelDownloads;
-    }
-
-    @Override
-    public File rootForSignedFilesInApp() {
-        return new File(dc().getScratchDir("xml").getParentFile(), "signed/");
-    }
-
-    @Override
-    public ApplicationSignedJARManager signedJARManager() {
-        return signedJARManager;
     }
 
     /**
@@ -242,23 +164,6 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
     }
 
 
-    private String libJARRelPath(final URI absURI) {
-        return JavaWebStartInfo.relativeURIForProvidedOrGeneratedAppFile(dc(), absURI, this).toASCIIString();
-    }
-
-    private String extensionElement(final String alias, final String libURIText) {
-        return "<extension name=\"libJars" + (alias == null ? "" : "-" + alias) +
-                "\" href=\"" + libURIText + "\"/>";
-    }
-
-    private String librarySecurity(final String alias) {
-        return (alias == null ? "" : "<security><all-permissions/></security>");
-    }
-
-    private String libJNLPRelPath(final String alias) {
-        return "___lib/client-libs" + (alias == null ? "" : "-" + alias) + ".jnlp";
-    }
-
     /**
      * Creates downloadable artifacts for any JARs or directory contents on
      * which this nested app client might depend and adds them to the
@@ -269,22 +174,10 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
     private void processDependencies() throws IOException {
 
         /*
-         * Currently, for directory-deployed apps, we generate JAR files for
-         * the submodules.  This is primarily for Java Web Start support, but
-         * we also download those generated JARs as part of the "deploy --retrieve" or
+         * For directory-deployed apps, we generate JAR files for the submodules
+         * so they can be downloaded as part of the "deploy --retrieve" or
          * "get-client-stubs" operations.
-         *
          */
-
-
-        signedJARManager = new ApplicationSignedJARManager(
-                JWSAdapterManager.signingAlias(dc()),
-                jarSigner,
-                habitat,
-                dc(),
-                this,
-                earURI,
-                earDirUserURI(dc()));
 
         /*
          * Init the class path for the facade so it refers to the developer's app client,
@@ -932,16 +825,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                     // The file inside the directory is not another directory,
                     // so simply include it as another download with no
                     // special processing.
-                    URI fileURI = f.toURI();
-                    // Note that for Java Web Start support we need to sign JARs.
-                    // Even though this JAR appears as just another file in this
-                    // directory that was referenced from some JAR file in the app,
-                    // it might actually be referenced directly from the Class-Path
-                    // of JAR that will appear on the runtime class path. That
-                    // means we'll want to sign the JAR.
-                    if (f.getName().endsWith(".jar")) {
-                        fileURI = signedJARManager.addJAR(fileURI);
-                    }
+                    final URI fileURI = f.toURI();
                     final URI fileURIWithinEAR = earDirUserURI(dc()).resolve(earURI.relativize(fileURI));
                     final FullAndPartURIs fileDependency = new FullAndPartURIs(fileURI, fileURIWithinEAR);
                     downloadsForReferencedArtifacts.add(fileDependency);
@@ -967,11 +851,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
                 final Collection<FullAndPartURIs> downloadsForReferencedArtifacts) throws IOException {
 
             /*
-             * Add the JAR to the collection that must be downloaded to support
-             * the Java Web Start launch.  If the JAR is already signed it is
-             * simply added to the signed JAR manager.  If it is not signed by
-             * the developer then we sign it now so Java Web Start will be OK
-             * granting it the necessary permissions.
+             * Add the JAR to the collection that must be downloaded.
              */
             final URI fileURI = physicalFile().toURI();
             final URI uriWithinEAR = canonicalURIWithinEAR();
@@ -981,7 +861,6 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
             final URI uriWithinAnchor = earDirUserURI(dc()).resolve(uriWithinEAR);
             final FullAndPartURIs fileDependency = new FullAndPartURIs(fileURI, uriWithinAnchor);
             downloadsForReferencedArtifacts.add(fileDependency);
-            signedJARManager.addJAR(uriWithinAnchor, fileURI);
             recordArtifactAsProcessed(artifactURIsProcessed, downloadsForThisArtifact);
 
             final Manifest jarManifest;

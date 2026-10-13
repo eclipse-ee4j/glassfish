@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -71,12 +72,6 @@
         </sun:property>
 
 
-        <sun:property id="jw" rendered="#{pageSession.showJavaWebStart}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.deploy.JavaWebStart}" helpText="$resource{i18n.edit.JavaWebStartHelp}">
-            <sun:checkbox id="jwc" disabled="true"  selected="#{pageSession.javaWebStartEnabled}" selectedValue="true" >
-            </sun:checkbox>
-        </sun:property>
-
-        
         <sun:property id="locationProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.location}">
             <sun:staticText id="location" text="#{pageSession.valueMap['location']}"/>
         </sun:property>
@@ -95,12 +90,8 @@
            "<br /><br />
         </sun:property>
         <!beforeCreate
-            setPageSessionAttribute(key="javaWebStartEnabled" value="true");
             setPageSessionAttribute(key="implicitCdiEnabled" value="true");
             foreach (var="oneProp" list="#{pageSession.tableList}") {
-                if (#{requestScope.oneProp.name}=$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}){
-                    setPageSessionAttribute(key="javaWebStartEnabled" value="#{requestScope.oneProp.value}");
-                }
                 if (#{requestScope.oneProp.name}=implicitCdiEnabled){
                     setPageSessionAttribute(key="implicitCdiEnabled" value="#{requestScope.oneProp.value}");
                 }

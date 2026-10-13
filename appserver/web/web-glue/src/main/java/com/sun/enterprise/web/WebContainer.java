@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -143,7 +143,6 @@ import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.web.LogFacade.DEFAULT_WEB_MODULE_CONFLICT;
 import static org.glassfish.web.LogFacade.DUPLICATE_CONTEXT_ROOT;
 import static org.glassfish.web.LogFacade.INVALID_ENCODED_CONTEXT_ROOT;
@@ -163,10 +162,6 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     // -------------------------------------------------- Constants
 
     public static final String DISPATCHER_MAX_DEPTH = "dispatcher-max-depth";
-
-    public static final String JWS_APPCLIENT_EAR_NAME = "__JWSappclients";
-    public static final String JWS_APPCLIENT_WAR_NAME = "sys";
-    private static final String JWS_APPCLIENT_MODULE_NAME = JWS_APPCLIENT_EAR_NAME + ":" + JWS_APPCLIENT_WAR_NAME + ".war";
 
     private static final String DOL_DEPLOYMENT = "com.sun.enterprise.web.deployment.backend";
 
@@ -1609,12 +1604,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             logger.log(FINEST, LogFacade.WEB_MODULE_LOADING, params);
         }
 
-        File docBase = null;
-        if (JWS_APPCLIENT_MODULE_NAME.equals(webModuleName)) {
-            docBase = new File(System.getProperty(INSTALL_ROOT.getSystemPropertyName()));
-        } else {
-            docBase = webModuleConfig.getLocation();
-        }
+        File docBase = webModuleConfig.getLocation();
 
         webModule = (WebModule)
             _embedded.createContext(

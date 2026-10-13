@@ -21,7 +21,6 @@
 domain.xml
 admin-keyfile
 cacerts.p12
-client-jnlp-config.properties
 default-web.xml
 domain-passwords.p12
 glassfish-acc.xml

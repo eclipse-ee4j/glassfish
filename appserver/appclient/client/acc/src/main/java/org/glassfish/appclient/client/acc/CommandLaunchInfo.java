@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -134,7 +134,6 @@ public class CommandLaunchInfo {
         DIR(true),
         CLASSFILE(true),
         CLASS,
-        URL,
         UNKNOWN;
 
         private final boolean usesAppClientCommandForMainProgram;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +37,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +77,6 @@ import static org.glassfish.appclient.client.acc.CommandLaunchInfo.ClientLaunchT
  */
 public class AppClientContainerHolder implements ApplicationClientContainer {
 
-    private static final String ACC_CONFIG_CONTENT_PROPERTY_NAME = "glassfish-acc.xml.content";
     private static final String MAN_PAGE_PATH = "/org/glassfish/appclient/client/acc/appclient.1m";
 
     private static volatile AppClientContainerHolder instance;
@@ -295,10 +293,6 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
                 container = createContainerForAppClientArchiveOrDir(builder, launchInfo.getClientName(), appClientArgs);
                 break;
 
-            case URL:
-                container = createContainerForJWSLaunch(builder, launchInfo.getClientName(), appClientArgs);
-                break;
-
             case CLASS:
                 container = createContainerForClassName(builder, launchInfo.getClientName());
                 break;
@@ -323,13 +317,6 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
         AppclientCommandArguments appClientArgs) throws Exception, UserError {
         return builder.newContainer(Util.getURI(new File(appClientPath)), null,
             appClientArgs.getMainclass(), appClientArgs.getName(), appClientArgs.isTextauth());
-    }
-
-
-    private static AppClientContainer createContainerForJWSLaunch(Builder builder, String appClientPath,
-        AppclientCommandArguments appClientArgs) throws Exception, UserError {
-        return builder.newContainer(URI.create(appClientPath), null /* callbackHandler */, appClientArgs.getMainclass(),
-            appClientArgs.getName());
     }
 
 
@@ -360,32 +347,9 @@ public class AppClientContainerHolder implements ApplicationClientContainer {
         ClientContainer result = null;
         Reader configReader = null;
         try {
-            /*
-             * During a Java Web Start launch, the config is passed as a property value.
-             */
-            final String configInProperty = System.getProperty(ACC_CONFIG_CONTENT_PROPERTY_NAME);
-            final String configFileLocationForErrorMessage;
-            if (configInProperty == null) {
-                /*
-                 * This is not a Java Web Start launch, so read the configuration from a disk file.
-                 */
-                File configFile = checkXMLFile(configPath);
-                checkXMLFile(appClientCommandArgs.getConfigFilePath());
-                configReader = new FileReader(configFile);
-                configFileLocationForErrorMessage = configFile.getAbsolutePath();
-            } else {
-                /*
-                 * Awkwardly, the glassfish-acc.xml content refers to a config file. We work around this for Java Web Start launch by
-                 * capturing the content of that config file into a property setting in the generated JNLP document. We need to write
-                 * that content into a temporary file here on the client and then replace a placeholder in the glassfish-acc.xml content
-                 * with the path to that temp file.
-                 */
-                final File securityConfigTempFile = Util.writeTextToTempFile(configInProperty, "wss-client-config", ".xml", false);
-                final Properties p = new Properties();
-                p.setProperty("security.config.path", securityConfigTempFile.getAbsolutePath());
-                configReader = new StringReader(Util.replaceTokens(configInProperty, p));
-                configFileLocationForErrorMessage = null;
-            }
+            File configFile = checkXMLFile(configPath);
+            configReader = new FileReader(configFile);
+            final String configFileLocationForErrorMessage = configFile.getAbsolutePath();
 
             /*
              * Although JAXB makes it very simple to parse the XML into Java objects, we have to do several things explicitly to use

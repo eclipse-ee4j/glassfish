@@ -73,7 +73,6 @@ import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
  *                          || ---- <instance-1> (instanceDir)
  *                                  ||---- config
  *                                  ||---- applications
- *                                  ||---- java-web-start
  *                                  ||---- generated
  *                                  ||---- lib
  *                                  ||---- docroot

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,11 +42,10 @@ public class SaxParserHandlerFactory {
         /*
          *If the property com.sun.aas.installRoot is defined, use the
          *original implementation (SaxParserHandler) which fetches DTDs and
-         *schemas from the installation directory tree.  Otherwise, assume that
-         *the app client container is running under Java Web Start. In that
-         *case, there is no product installation directory (at least none can
-         *be assumed).  The DTDs and schemas will be retrieved from the
-         *JWS-specific jar file instead (SaxParserHandlerBundled).
+         *schemas from the installation directory tree.  Otherwise there is no
+         *product installation directory (at least none can be assumed) and
+         *the DTDs and schemas are retrieved from the class path instead
+         *(SaxParserHandlerBundled).
          *
          *bnevins, Oct 16, 2008.  On Oct. 8, 2008 installRoot was changed to be setup
          *earlier in the startup.  As a result, Embedded GF broke.  It sets up a fake installRoot,

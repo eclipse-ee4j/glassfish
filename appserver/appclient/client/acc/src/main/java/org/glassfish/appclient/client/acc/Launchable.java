@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -97,19 +97,17 @@ interface Launchable {
                         callerSuppliedMainClassName, callerSuppliedAppName,
                         Thread.currentThread().getContextClassLoader());
             }
-            if ( ! (result instanceof JWSFacadeLaunchable)) {
-                URL clientOrFacadeURL = new URL("file:" + result.getURI().getSchemeSpecificPart());
-                /*
-                 * For the embedded case especially there might not be an
-                 * ACCClassLoader instance yet.  Create one if needed
-                 * before proceeding.
-                 */
-                TransformingClassLoader cl = TransformingClassLoader.instance();
-                if (cl == null) {
-                    cl = TransformingClassLoader.newInstance(Thread.currentThread().getContextClassLoader(), false);
-                }
-                cl.appendURL(clientOrFacadeURL);
+            URL clientOrFacadeURL = new URL("file:" + result.getURI().getSchemeSpecificPart());
+            /*
+             * For the embedded case especially there might not be an
+             * ACCClassLoader instance yet.  Create one if needed
+             * before proceeding.
+             */
+            TransformingClassLoader cl = TransformingClassLoader.instance();
+            if (cl == null) {
+                cl = TransformingClassLoader.newInstance(Thread.currentThread().getContextClassLoader(), false);
             }
+            cl.appendURL(clientOrFacadeURL);
             return result;
         }
 

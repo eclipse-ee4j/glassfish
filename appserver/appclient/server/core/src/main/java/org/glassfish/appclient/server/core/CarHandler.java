@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -37,7 +37,6 @@ import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.archive.ArchiveDetector;
 import org.glassfish.api.deployment.archive.CarArchiveType;
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.jvnet.hk2.annotations.Service;
 
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
@@ -50,8 +49,8 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 @Service(name = CarArchiveType.ARCHIVE_TYPE)
 public class CarHandler extends AbstractArchiveHandler {
 
-    private static final Logger LOG = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-            JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
+    private static final Logger LOG = Logger.getLogger(AppClientDeployerHelper.ACC_MAIN_LOGGER,
+            AppClientDeployerHelper.LOG_MESSAGE_RESOURCE);
 
     @Inject
     @Named(CarArchiveType.ARCHIVE_TYPE)

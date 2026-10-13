@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2024, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -168,16 +168,6 @@ public class DFDeploymentProperties extends Properties {
                 Boolean.toString(availabilityEnabled));
     }
 
-    public boolean getJavaWebStartEnabled() {
-        return Boolean.parseBoolean(getProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED,
-                DEFAULT_JAVA_WEB_START_ENABLED));
-    }
-
-    public void setJavaWebStartEnabled(boolean javaWebStartEnabled) {
-        setProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED,
-                Boolean.toString(javaWebStartEnabled));
-    }
-
     public String getLibraries() {
         return getProperty(DEPLOY_OPTION_LIBRARIES, null);
     }
@@ -290,7 +280,6 @@ public class DFDeploymentProperties extends Properties {
     public static final String UPLOAD = "upload";
     public static final String EXTERNALLY_MANAGED = "externallyManaged";
     public static final String PATH = "path";
-    public static final String DEFAULT_JAVA_WEB_START_ENABLED = "true";
     public static final String DEPLOYMENT_PLAN = "deploymentplan";
 
     public static final String PROPERTY = "property";
@@ -309,7 +298,6 @@ public class DFDeploymentProperties extends Properties {
     public static final String RES_UNDEPLOYMENT = "resUndeployment";
     public static final String RES_REDEPLOYMENT = "resRedeployment";
     public static final String RES_NO_OP = "resNoOp";
-    public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED = "java-web-start-enabled";
     public static final String DEPLOY_OPTION_LIBRARIES = "libraries";
 
     // possible values for module state

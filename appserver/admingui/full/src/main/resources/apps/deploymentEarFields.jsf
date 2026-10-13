@@ -1,5 +1,6 @@
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -57,10 +58,6 @@
 
 <sun:property id="availability"  rendered="#{!pageSession.onlyDASExist}"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.deploy.availability}" helpText="$resource{i18n.deploy.availabilityHelp}">
     <sun:checkbox id="availability"  selected="#{pageSession.ear['availabilityEnabled']}" selectedValue="true" />
-</sun:property>
-
-<sun:property id="jw" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.deploy.JavaWebStart}" helpText="$resource{i18n.deploy.JavaWebStartHelp}">
-	<sun:checkbox id="jwc"  selected="#{pageSession.ear['PROPERTY-$constant{org.glassfish.admingui.common.deployment.DFDeploymentProperties.DEPLOY_OPTION_JAVA_WEB_START_ENABLED}']}" selectedValue="true" />
 </sun:property>
 
 <sun:property id="precmplProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.deploy.precompile}" helpText="$resource{i18n.deploy.PrecompileHelp}">

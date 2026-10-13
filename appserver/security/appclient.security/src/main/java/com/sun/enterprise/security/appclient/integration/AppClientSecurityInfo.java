@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -45,10 +45,9 @@ public interface AppClientSecurityInfo {
      * @param handler the CallbackHandler
      * @param username the static username if any was configured
      * @param password the static password if any was configured
-     * @Param isJWS set to true if it is Java WebStart client
      * @Param useGUIAuth flag when set to true indicates the use of GUI Authentication
      */
-    void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth);
+    void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler, String username, char[] password, boolean useGUIAuth);
 
     /**
      * @param type the credential type

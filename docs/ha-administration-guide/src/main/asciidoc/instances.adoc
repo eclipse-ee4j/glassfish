@@ -1320,9 +1320,6 @@ out of date in the cache.
   This directory is resynchronized when the `applications` directory is
   resynchronized. Therefore, only directories for applications that are
   deployed to the instance are resynchronized.
-`java-web-start`::
-  This directory is not resynchronized. It is created and populated as
-  required on each instance.
 `lib`::
 `lib/classes`::
   These directories contain common Java class files or JAR archives and

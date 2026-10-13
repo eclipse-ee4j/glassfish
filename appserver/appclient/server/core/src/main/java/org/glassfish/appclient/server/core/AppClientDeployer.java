@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -31,18 +31,12 @@ import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import java.util.jar.Attributes;
 
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.MetaData;
 import org.glassfish.api.deployment.UndeployCommandParameters;
-import org.glassfish.appclient.server.core.jws.JWSAdapterManager;
-import org.glassfish.appclient.server.core.jws.servedcontent.ASJarSigner;
 import org.glassfish.deployment.common.Artifacts;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DeploymentUtils;
@@ -56,9 +50,7 @@ import org.jvnet.hk2.annotations.Service;
  * Prepares JARs for download to the admin client and tracks which JARs should
  * be downloaded for each application.  (Downloads occur during
  * <code>deploy --retrieve</code> or <code>get-client-stubs</code> command
- * processing, or during Java Web Start launches of app clients.  Also creates
- * AppClientServerApplication instances for each client to provide Java Web Start
- * support.
+ * processing.)
  * <p>
  * Main responsibilities:
  * <ul>
@@ -120,8 +112,6 @@ public class AppClientDeployer
 
     public static final String APPCLIENT_FACADE_CLASS_FILE =
             "org/glassfish/appclient/client/AppClientFacade.class";
-    public static final String APPCLIENT_AGENT_MAIN_CLASS_FILE =
-            "org/glassfish/appclient/client/JWSAppClientContainerMain.class";
     public static final String APPCLIENT_COMMAND_CLASS_NAME = "org.glassfish.appclient.client.AppClientFacade";
     public static final Attributes.Name GLASSFISH_APPCLIENT_MAIN_CLASS =
             new Attributes.Name("GlassFish-AppClient-Main-Class");
@@ -146,36 +136,11 @@ public class AppClientDeployer
     @Inject
     private Applications applications;
 
-    @Inject
-    private ASJarSigner jarSigner;
-
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
-//    private DownloadableArtifacts downloadInfo = null;
-
-    /**
-     * Maps the app name to the user-friendly context root for that app.
-     */
-    private final Map<String,String> appAndClientNameToUserFriendlyContextRoot =
-            new HashMap<>();
-
-
-
     /** the class loader which knows about the org.glassfish.main.appclient.gf-client-module */
     private ClassLoader gfClientModuleClassLoader;
-
-    /**
-     * Each app client server application will listen for config change
-     * events - for creation, deletion, or change of java-web-start-enabled
-     * property settings.  Because they are not handled as services hk2 will
-     * not automatically register them for notification.  This deployer, though,
-     * is a service and so by implementing ConfigListener is registered
-     * by hk2 automatically for config changes.  The following Set collects
-     * all app client server applications so the deployer can forward
-     * notifications to each app client server app.
-     */
-    private final Set<AppClientServerApplication> appClientApps = new HashSet<>();
 
     public AppClientDeployer() {
     }
@@ -210,14 +175,7 @@ public class AppClientDeployer
             throw new RuntimeException(ex);
         }
 
-//        helper.addGroupFacadeToEARDownloads();
-        final AppClientServerApplication newACServerApp = newACServerApp(dc, helper);
-        appClientApps.add(newACServerApp);
-        return newACServerApp;
-    }
-
-    public Set<AppClientServerApplication> appClientApps() {
-        return appClientApps;
+        return newACServerApp(dc, helper);
     }
 
     private AppClientServerApplication newACServerApp(
@@ -229,7 +187,6 @@ public class AppClientDeployer
 
     @Override
     public void unload(AppClientServerApplication application, DeploymentContext dc) {
-        appClientApps.remove(application);
     }
 
     /**
@@ -266,22 +223,9 @@ public class AppClientDeployer
             helper.prepareJARs();
             addArtifactsToDownloads(helper, dc);
             addArtifactsToGeneratedFiles(helper, dc);
-            recordUserFriendlyContextRoot(helper, dc);
         } catch (Exception ex) {
             throw new DeploymentException(ex);
         }
-    }
-
-    /**
-     * Records the user-friendly path as a property for the app client module.
-     * This is primarily for ease-of-lookup from GetRelativeJWSURICommand.
-     *
-     * @param helper
-     * @param dc
-     */
-    private void recordUserFriendlyContextRoot(final AppClientDeployerHelper helper, final DeploymentContext dc) {
-        final String path = JWSAdapterManager.userFriendlyContextRoot(helper.appClientDesc(), dc.getAppProps());
-        dc.getModuleProps().put("jws.user.friendly.path", path);
     }
 
     private void addArtifactsToDownloads(
@@ -308,8 +252,7 @@ public class AppClientDeployer
                 dc,
                 archivist,
                 clientModuleLoader,
-                habitat,
-                jarSigner);
+                habitat);
         dc.addTransientAppMetaData(HELPER_KEY_NAME + moduleURI(dc), h.proxy());
         return h;
     }
@@ -336,38 +279,5 @@ public class AppClientDeployer
     private String moduleURI(final DeploymentContext dc) {
         ApplicationClientDescriptor acd = dc.getModuleMetaData(ApplicationClientDescriptor.class);
         return acd.getModuleDescriptor().getArchiveUri();
-    }
-
-
-    public void recordContextRoot(final String appName, final String clientURIWithinEAR,
-        final String userFriendlyContextRoot) {
-        String key = keyToAppAndClientNameMap(appName, clientURIWithinEAR);
-        appAndClientNameToUserFriendlyContextRoot.put(key, userFriendlyContextRoot);
-    }
-
-
-    public void removeContextRoot(final String appName, final String clientURIWithinEAR) {
-        String key = keyToAppAndClientNameMap(appName, clientURIWithinEAR);
-        appAndClientNameToUserFriendlyContextRoot.remove(key);
-    }
-
-
-    /**
-     * Returns the user-friendly context root for the specified app client.
-     * <p>
-     * Primarily used from the admin console for retrieving the context path
-     * for launching the specified app client.
-     * @param appName
-     * @param clientModuleURI
-     * @return
-     */
-    public String userFriendlyContextRoot(final String appName, final String clientModuleURI) {
-        String key = keyToAppAndClientNameMap(appName, clientModuleURI);
-        return appAndClientNameToUserFriendlyContextRoot.get(key);
-    }
-
-
-    private String keyToAppAndClientNameMap(final String appName, final String moduleURIText) {
-        return appName + "/" + (moduleURIText == null ? appName : moduleURIText);
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -21,7 +22,7 @@ import java.util.Properties;
 
 /**
  * This class is the application being tested and also the client which
- * is used to test if the given version is enabled. This is because an appclient/jws
+ * is used to test if the given version is enabled. This is because an appclient
  * application is executed on the client side.
  *
  * We have to setup a system to retrieve the client-stubs of the currently enabled
@@ -38,12 +39,9 @@ import java.util.Properties;
  * with testPositive=false.
  *
  * As a conclusion we can say that this test isn't consistant if launched from a
- * client-stub retrieved with the "asadmin get-client-stubs" command. Instead,
- * we choose to use the Java Web Start URL ([host:port/contextRoot], the
- * contextroot equals to the untagged if not provided in the deployment descriptor)
- *
- * The stubs are retrieved with JWS mechanism, it allows us to change the enabled status
- * and make some tests.
+ * client-stub retrieved with the "asadmin get-client-stubs" command for a fixed
+ * version. Instead, GetEnabledClientStubs looks up the currently enabled version
+ * with "asadmin list-applications" and retrieves the client-stubs of that version.
  *
  * @author Romain GRECOURT - SERLI (romain.grecourt@serli.com)
  */

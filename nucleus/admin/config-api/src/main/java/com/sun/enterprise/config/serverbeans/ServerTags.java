@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -954,8 +954,6 @@ public class ServerTags {
     public static final String LIBRARIES = "libraries";
 
     public static final String DIRECTORY_DEPLOYED = "directory-deployed";
-
-    public static final String JAVA_WEB_START_ENABLED = "java-web-start-enabled";
 
     // Tags for Element ejb-module
     public static final String EJB_MODULE = "ejb-module";

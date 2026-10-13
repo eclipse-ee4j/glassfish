@@ -2462,11 +2462,6 @@ Contains the web context root for the application or web application
 that was packaged as a WAR file. Overrides the corresponding element in
 the `application.xml` or `web.xml` file.
 
-If the parent element is `java-web-start-access`, this element contains
-the context root for the Java Web Start enabled application client
-module. If none is specified, a default is generated; see
-xref:#java-web-start-access[`java-web-start-access`].
-
 If you are setting up load balancing, web module context roots must be
 unique within a server instance. See the xref:ha-administration-guide.adoc[{productName} High Availability Administration Guide] for more
 information about load balancing.
@@ -2476,9 +2471,7 @@ information about load balancing.
 ==== Superelements
 
 xref:#web[`web`] (`glassfish-application.xml`),
-xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`),
-xref:#java-web-start-access[`java-web-start-access`]
-(`glassfish-application-client.xml`)
+xref:#glassfish-web-app[`glassfish-web-app`] (`glassfish-web.xml`)
 
 [[subelements-42]]
 
@@ -3350,26 +3343,6 @@ xref:#ejb-ref[`ejb-ref`] (`glassfish-web.xml`, `glassfish-ejb-jar.xml`,
 
 none - contains data
 
-[[eligible]]
-
-=== `eligible`
-
-Specifies whether the application client module is eligible to be Java
-Web Start enabled. Allowed values are `true` (the default) and `false`.
-
-[[superelements-61]]
-
-==== Superelements
-
-xref:#java-web-start-access[`java-web-start-access`]
-(`glassfish-application-client.xml`)
-
-[[subelements-59]]
-
-==== Subelements
-
-none - contains data
-
 [[endpoint-address-uri]]
 
 === `endpoint-address-uri`
@@ -4206,12 +4179,6 @@ xref:#message-destination[`message-destination`]
  |zero or more |Specifies the name of a logical message destination.
 
 a|
-xref:#java-web-start-access[`java-web-start-access`]
-
-
- |zero or one |Specifies changes to default Java Web Start parameters.
-
-a|
 xref:#version-identifier[`version-identifier`]
 
 
@@ -4935,87 +4902,6 @@ parameters.
 |===
 
 
-[[java-web-start-access]]
-
-=== `java-web-start-access`
-
-Specifies changes to default Java Web Start parameters for an embedded
-or stand-alone application client module.
-
-[[superelements-87]]
-
-==== Superelements
-
-xref:#glassfish-application-client[`glassfish-application-client`]
-(`glassfish-application-client.xml`)
-
-[[subelements-83]]
-
-==== Subelements
-
-The following table describes subelements for the
-`java-web-start-access` element.
-
-[[gauaw]]
-
-
-Table C-72 `java-web-start-access` subelements
-
-[width="100%",cols="15%,11%,74%",options="header",]
-|===
-|Element |Required |Description
-a|
-xref:#context-root[`context-root`]
-
-
- |zero or one a|
-Contains the context root for the Java Web Start enabled application
-client module. If none is specified, a default is generated.
-
-The default for a web module is as follows:
-
-[source]
-----
-http://host:port/app-name/relative-URI-to-appclient-jar
-----
-
-The default for a stand-alone application client module is as follows:
-
-[source]
-----
-http://host:port/module-name
-----
-
-If the `module-name` is not specified during deployment, the name of the
-EAR or JAR file without the extension is used. If the web module is not
-in EAR or JAR file format, a name is generated and written to the server
-log.
-
-a|
-xref:#eligible[`eligible`]
-
-
- |zero or one |Specifies whether the application client module is
-eligible to be Java Web Start enabled. Allowed values are `true` (the
-default) and `false`.
-
-a|
-xref:#vendor[`vendor`]
-
-
- |zero or one |Specifies the name of the vendor as it appears in Java
-Web Start download and launch screens. The default value is
-`Application Client`.
-
-a|
-xref:#jnlp-doc[`jnlp-doc`]
-
-
- |zero or one |Specifies the name of a custom JNLP file. If none is
-specified, a default JNLP file is generated.
-|===
-
-
 [[jdbc-connection-pool]]
 
 === `jdbc-connection-pool`
@@ -5603,61 +5489,6 @@ xref:#ejb[`ejb`], xref:#mdb-connection-factory[`mdb-connection-factory`]
 (`glassfish-ejb-jar.xml`)
 
 [[subelements-88]]
-
-==== Subelements
-
-none - contains data
-
-[[jnlp-doc]]
-
-=== `jnlp-doc`
-
-Contains the name of a custom JNLP file, which modifies the behavior of
-a Java Web Start enabled application client module. If none is
-specified, a default JNLP file is generated.
-
-The value of this element is a relative path with the following format:
-
-[source]
-----
-[path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
-----
-
-The default path-to-JAR-in-EAR is the current application client JAR
-file. For example, if the JNLP file is in the application client JAR
-file at `custom/myInfo.jnlp`, the element value would look like this:
-
-[source,xml]
-----
-<java-web-start-access>
-   <jnlp-doc>custom/myInfo.jnlp</jnlp-doc>
-</java-web-start-access>
-----
-
-If the application client is inside an EAR file, you can place the
-custom JNLP file inside another JAR file in the EAR. For example, if the
-JNLP file is in a JAR file at `other/myLib.jar`, the element value would
-look like this, with an exclamation point (`!`) separating the path to
-the JAR from the path in the JAR:
-
-[source,xml]
-----
-<java-web-start-access>
-   <jnlp-doc>other/myLib.jar!custom/myInfo.jnlp</jnlp-doc>
-</java-web-start-access>
-----
-
-For information about the allowed contents of a custom JNLP file, see
-"xref:application-development-guide.adoc#developing-java-clients[Developing Java Clients]" in {productName} Application Development Guide.
-
-[[superelements-93]]
-
-==== Superelements
-
-xref:#java-web-start-access[`java-web-start-access`]
-(`glassfish-application-client.xml`)
-
-[[subelements-89]]
 
 ==== Subelements
 
@@ -10709,64 +10540,6 @@ org.glassfish.web.valve.GlassFishValve interface from the current
    <property name="MyProperty2" value="MyValue2" />
 </valve>
 ----
-
-[[vendor]]
-
-=== `vendor`
-
-Specifies a vendor-specific icon, splash screen, text string, or a
-combination of these for Java Web Start download and launch screens. The
-complete format of this element's data is as follows:
-
-[source,xml]
-----
-<vendor>icon-image-URI::splash-screen-image-URI::vendor-text</vendor>
-----
-
-The following example vendor element contains an icon, a splash screen,
-and a text string:
-
-[source,xml]
-----
-<vendor>images/icon.jpg::otherDir/splash.jpg::MyCorp, Inc.</vendor>
-----
-
-The following example vendor element contains an icon and a text string:
-
-[source,xml]
-----
-<vendor>images/icon.jpg::MyCorp, Inc.</vendor>
-----
-
-The following example vendor element contains a splash screen and a text
-string; note the initial double colon:
-
-[source,xml]
-----
-<vendor>::otherDir/splash.jpg::MyCorp, Inc.</vendor>
-----
-
-The following example vendor element contains only a text string:
-
-[source,xml]
-----
-<vendor>MyCorp, Inc.</vendor>
-----
-
-The default value is the text string `Application Client`.
-
-[[superelements-211]]
-
-==== Superelements
-
-xref:#java-web-start-access[`java-web-start-access`]
-(`glassfish-application-client.xml`)
-
-[[subelements-203]]
-
-==== Subelements
-
-none - contains data
 
 [[version-identifier]]
 

@@ -18,7 +18,6 @@
 package com.sun.enterprise.deployment;
 
 import com.sun.enterprise.deployment.node.appclient.AppClientNode;
-import com.sun.enterprise.deployment.runtime.JavaWebStartAccessDescriptor;
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
@@ -70,7 +69,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
 
     private String mainClassName;
     private String callbackHandler;
-    private JavaWebStartAccessDescriptor jwsAccessDescriptor;
 
     /**
      * @return true if there is runtime information in this
@@ -620,20 +618,6 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
     @Override
     public DescriptorVisitor getTracerVisitor() {
         return new AppClientTracerVisitor();
-    }
-
-    public JavaWebStartAccessDescriptor getJavaWebStartAccessDescriptor() {
-        if (jwsAccessDescriptor == null) {
-            jwsAccessDescriptor = new JavaWebStartAccessDescriptor();
-            jwsAccessDescriptor.setBundleDescriptor(this);
-        }
-        return jwsAccessDescriptor;
-    }
-
-    public void setJavaWebStartAccessDescriptor(JavaWebStartAccessDescriptor descr) {
-        descr.setBundleDescriptor(this);
-        jwsAccessDescriptor = descr;
-
     }
 
     /**

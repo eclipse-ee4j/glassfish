@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,7 +41,6 @@ import java.util.logging.Logger;
 import org.glassfish.api.deployment.DeployCommandParameters;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.appclient.server.connector.CarType;
-import org.glassfish.appclient.server.core.jws.JavaWebStartInfo;
 import org.glassfish.deployment.common.ClientArtifactsManager;
 import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.ModuleDescriptor;
@@ -149,8 +148,8 @@ public class AppClientGroupFacadeGenerator {
         try {
             return VersioningUtils.getUntaggedName(appName) + "Client/";
         } catch (VersioningSyntaxException ex) {
-            Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
-                JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AppClientDeployerHelper.ACC_MAIN_LOGGER,
+                AppClientDeployerHelper.LOG_MESSAGE_RESOURCE).log(Level.SEVERE, null, ex);
         }
         return appName;
 

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -73,9 +73,6 @@ public abstract class AppClientInfo {
      */
     protected String mainClassNameToRun;
 
-    /** indicates if the app client has been launched using Java Web Start */
-    protected boolean isJWS;
-
     /**
      * descriptor from the app client module or a default one for the
      * .class file case and the regular java launch with main class case
@@ -85,12 +82,10 @@ public abstract class AppClientInfo {
     /**
      * Creates a new AppClientInfo for a main class file.
      *
-     * @param isJWS
      * @param logger
      * @param mainClassFromCommandLine
      */
-    public AppClientInfo(boolean isJWS, Logger logger, String mainClassFromCommandLine) {
-        this.isJWS = isJWS;
+    public AppClientInfo(Logger logger, String mainClassFromCommandLine) {
         _logger = logger;
         this.mainClassFromCommandLine = mainClassFromCommandLine;
     }
@@ -294,7 +289,6 @@ public abstract class AppClientInfo {
         String lineSep = System.getProperty("line.separator");
         StringBuilder result = new StringBuilder();
         result.append(this.getClass().getName() + ": " + lineSep);
-        result.append("  isJWS: " + isJWS);
         result.append("  main class to be run: " + mainClassNameToRun + lineSep);
         return result.toString();
 

@@ -84,7 +84,6 @@ prev=lof.html
 * xref:dd-elements.adoc#fvzca[C-69 idempotent-url-pattern Attributes]
 * xref:dd-elements.adoc#fvyyk[C-70 ior-security-config Subelements]
 * xref:dd-elements.adoc#fvzdu[C-71 java-method Subelements]
-* xref:dd-elements.adoc#gauaw[C-72 java-web-start-access subelements]
 * xref:dd-elements.adoc#dde-C-73[C-73 jdbc-connection-pool Subelements]
 * xref:dd-elements.adoc#dde-C-74[C-74 jdbc-connection-pool Attributes]
 * xref:dd-elements.adoc#dde-C-75[C-75 jdbc-connection-pool Database Properties]

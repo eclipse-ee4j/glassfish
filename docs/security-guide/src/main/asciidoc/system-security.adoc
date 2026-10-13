@@ -497,11 +497,6 @@ grant codeBase "file:${com.sun.aas.derbyRoot}/lib/-" {
 // permission for JDK's tools.jar to enable webservice annotation processing
 // at runtime by wsgen tool:
 //       permission java.lang.RuntimePermission "createClassLoader";
-//
-// permission for JDK's tools.jar to sign JARs at runtime for
-// Java Web Start support:
-//       permissions java.security.AllPermission;
-// on the advice of the JDK tools folks.  Should be refined later.
 grant codeBase "file:${com.sun.aas.javaRoot}/lib/tools.jar" {
     permission java.security.AllPermission;
 };

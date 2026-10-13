@@ -1409,10 +1409,7 @@ component is specified in the {productName}-specific XML descriptor
 === Assembling and Deploying an Application Client Module
 
 Deployment is necessary for application clients that communicate with
-EJB components or that use Java Web Start launch support. Java Web Start
-is supported for application clients and for applications that contain
-application clients. By default, Java Web Start is enabled in
-application clients and in {productName}.
+EJB components.
 
 
 [NOTE]
@@ -1458,11 +1455,8 @@ option to retrieve the client files as part of deploying the
 application.
 * Use the xref:reference-manual.adoc#get-client-stubs[`get-client-stubs`] subcommand to retrieve
 client files for a previously-deployed application.
-6. Test the client on the {productName} machine in one of the
-following ways:
-* If Java Web Start is enabled for the application client, use the
-Launch link on the Application Client Modules.
-* Run an application client by using the `appclient` script.
+6. Test the client on the {productName} machine by running the
+`appclient` script.
 +
 The `appclient` script is located in the as-install``/bin`` directory.
 +
@@ -1487,42 +1481,12 @@ information on the following topics:
 
 * Accessing EJB components and JMS resources from application clients
 * Connecting to a remote EJB module through a firewall
-* Using Java Web Start and creating a custom JNLP file
 * Using libraries with application clients
 * Specifying a splash screen, login retries, and other customizations
 
 [[to-prepare-another-machine-for-running-an-application-client]]
 
 ==== To Prepare Another Machine for Running an Application Client
-
-If Java Web Start is enabled, the default URL format for an application
-is ``http://`host:port``/``context-root. For example:
-
-[source]
-----
-http://localhost:80/myapp
-----
-
-The default URL format for a standalone application client module is
-``http://``host:port``/``module-id. For example:
-
-[source]
-----
-http://localhost:80/myclient
-----
-
-To set a different URL for an application client, set the `context-root`
-subelement of the xref:dd-elements.adoc#java-web-start-access[`java-web-start-access`]
-element in the `glassfish-application-client.xml` file.
-
-If the context-root or module-id is not specified during deployment, the
-name of the EAR or JAR file without the `.ear` or `.jar` extension is
-used. For an application, the relative path to the application client
-JAR file is also included. If the application or module is not in EAR or
-JAR file format, a context-root or module-id is generated. Regardless of
-how the context-root or module-id is determined, it is written to the
-server log. For details about naming, see xref:overview.adoc#naming-standards[Naming
-Standards].
 
 Before You Begin
 
@@ -1551,7 +1515,7 @@ You are now ready to run the client.
 
 See Also
 
-For more detailed information about Java Web Start and the
+For more detailed information about the
 `package-appclient` script, see xref:reference-manual.adoc#appclient[`appclient`(1M)].
 
 [[to-undeploy-an-application-client]]
@@ -1559,11 +1523,10 @@ For more detailed information about Java Web Start and the
 ==== To Undeploy an Application Client
 
 After application clients are downloaded, they remain on the client
-until they are manually removed. Use the Java Web Start control panel to
-discard downloaded application clients that used Java Web Start.
+until they are manually removed.
 
-If you undeploy an application client, you can no longer use Java Web
-Start, or any other mechanism, to download that application client
+If you undeploy an application client, you can no longer download that
+application client
 because it might be in an inconsistent state. If you try to launch an
 application client that was previously downloaded (even though the
 server side of the application client is no longer present), the results
@@ -1572,8 +1535,7 @@ tolerate such situations.
 
 You can write your application client so that it detects failures in
 contacting server-side components, but continues running. In this case,
-Java Web Start can run an undeployed application client while the client
-is cached locally. For example, your application client can be written
+the application client keeps running from the downloaded files. For example, your application client can be written
 to detect and then recover from `javax.naming.NamingException` when
 locating a resource, or from `java.rmi.RemoteException` when referring
 to a previously-located resource that becomes inaccessible.

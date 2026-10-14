@@ -23,19 +23,19 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
+
+import static java.lang.System.Logger.Level.ERROR;
 
 @Singleton
 public class HealthReporter {
 
     private static final String CONTEXT_KEY = "context";
 
-    private static final Logger LOGGER = Logger.getLogger(HealthReporter.class.getName());
+    private static final System.Logger LOG = System.getLogger(HealthReporter.class.getName());
 
     private final Map<String, List<HealthCheckInfo>> applicationHealthChecks = new ConcurrentHashMap<>();
 
@@ -47,7 +47,7 @@ public class HealthReporter {
             Thread.currentThread().setContextClassLoader(healthCheck.getClass().getClassLoader());
             return healthCheck.call();
         } catch (RuntimeException e) {
-            LOGGER.log(Level.SEVERE, "Health check failed", e);
+            LOG.log(ERROR, () -> "Health check " + healthCheck.getClass().getName() + " failed", e);
             return buildHealthCheckResponse(healthCheck.getClass().getName(), e);
         } finally {
             Thread.currentThread().setContextClassLoader(contextClassLoader);

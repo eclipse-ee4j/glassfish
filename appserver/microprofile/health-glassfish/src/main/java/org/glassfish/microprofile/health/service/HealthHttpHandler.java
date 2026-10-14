@@ -22,8 +22,6 @@ import jakarta.json.spi.JsonProvider;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.glassfish.grizzly.http.Method;
@@ -36,13 +34,15 @@ import org.glassfish.microprofile.health.HealthReport;
 import org.glassfish.microprofile.health.HealthReporter;
 import org.glassfish.microprofile.health.HealthReporter.ReportKind;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 /**
  * Serves the MicroProfile Health endpoints directly from Grizzly, so that they are available
  * also when no application is deployed and the web container is not started.
  */
 class HealthHttpHandler extends HttpHandler {
 
-    private static final Logger LOGGER = Logger.getLogger(HealthHttpHandler.class.getName());
+    private static final System.Logger LOG = System.getLogger(HealthHttpHandler.class.getName());
 
     private final HealthReporter healthReporter;
     private final String contextPath;
@@ -88,7 +88,7 @@ class HealthHttpHandler extends HttpHandler {
                     case DOWN -> HttpStatus.SERVICE_UNAVAILABLE_503;
                 });
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Unable to fetch health check status", e);
+                LOG.log(ERROR, "Unable to fetch health check status", e);
                 healthReport = new HealthReport(HealthCheckResponse.Status.DOWN, List.of());
                 response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR_500);
             }

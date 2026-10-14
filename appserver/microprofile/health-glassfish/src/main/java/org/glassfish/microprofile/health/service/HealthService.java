@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.health.HealthCheckResponse;
@@ -56,6 +54,10 @@ import org.glassfish.microprofile.health.GlassFishHealthCheckResponse;
 import org.glassfish.microprofile.health.HealthCheckInfo;
 import org.glassfish.microprofile.health.HealthReporter;
 import org.jvnet.hk2.annotations.Service;
+
+import static java.lang.System.Logger.Level.INFO;
+import static java.lang.System.Logger.Level.TRACE;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * Registers the server-wide {@link HealthReporter} and the MicroProfile Health endpoint at startup,
@@ -83,7 +85,7 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
     private static final String ADMIN_VIRTUAL_SERVER = "__asadmin";
     private static final String REASON_KEY = "reason";
 
-    private static final Logger LOGGER = Logger.getLogger(HealthService.class.getName());
+    private static final System.Logger LOG = System.getLogger(HealthService.class.getName());
 
     @Inject
     Events events;
@@ -128,7 +130,7 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
             httpHandler = new HealthHttpHandler(healthReporter, contextPath, classLoaderHierarchy.getCommonClassLoader());
             registerEndpoint();
         } else {
-            LOGGER.info("MicroProfile Health is disabled");
+            LOG.log(INFO, "MicroProfile Health is disabled");
         }
     }
 
@@ -139,7 +141,7 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
             try {
                 requestDispatcher.unregisterEndpoint(contextPath);
             } catch (EndpointRegistrationException e) {
-                LOGGER.log(Level.WARNING, "Unable to unregister the MicroProfile Health endpoint", e);
+                LOG.log(WARNING, "Unable to unregister the MicroProfile Health endpoint", e);
             }
         }
     }
@@ -174,8 +176,8 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
             path = path.substring(0, path.length() - 1);
         }
         if (path.isEmpty()) {
-            LOGGER.log(Level.WARNING, "Invalid value {0} of the {1} system property, using {2}",
-                new Object[] {value, MICROPROFILE_HEALTH_CONTEXT_PATH, DEFAULT_CONTEXT_PATH});
+            LOG.log(WARNING, () -> "Invalid value " + value + " of the " + MICROPROFILE_HEALTH_CONTEXT_PATH
+                + " system property, using " + DEFAULT_CONTEXT_PATH);
             return DEFAULT_CONTEXT_PATH;
         }
         return path.startsWith("/") ? path : "/" + path;
@@ -194,7 +196,7 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
         try {
             requestDispatcher.registerEndpoint(contextPath, virtualServers, httpHandler, null);
         } catch (EndpointRegistrationException e) {
-            LOGGER.log(Level.WARNING, "Unable to register the MicroProfile Health endpoint " + contextPath, e);
+            LOG.log(WARNING, () -> "Unable to register the MicroProfile Health endpoint " + contextPath, e);
         }
     }
 
@@ -231,10 +233,11 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
         try {
             return HealthCheckResponse.Status.valueOf(value.get());
         } catch (IllegalArgumentException e) {
-            if (!value.get().equals(lastInvalidValue)) {
-                lastInvalidValue = value.get();
-                LOGGER.log(Level.WARNING, "Invalid value {0} of the {1} property, using DOWN",
-                    new Object[] {value.get(), propertyName});
+            String invalidValue = value.get();
+            if (!invalidValue.equals(lastInvalidValue)) {
+                lastInvalidValue = invalidValue;
+                LOG.log(WARNING, () -> "Invalid value " + invalidValue + " of the " + propertyName
+                    + " property, using DOWN");
             }
             return HealthCheckResponse.Status.DOWN;
         }
@@ -250,7 +253,7 @@ public class HealthService implements EventListener, PostConstruct, PreDestroy {
             return ConfigProvider.getConfig(classLoaderHierarchy.getCommonClassLoader())
                 .getOptionalValue(propertyName, String.class);
         } catch (IllegalStateException e) {
-            LOGGER.log(Level.FINEST, "MicroProfile Config is not available", e);
+            LOG.log(TRACE, "MicroProfile Config is not available", e);
         }
         String value = System.getProperty(propertyName);
         if (value == null) {

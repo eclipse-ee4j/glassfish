@@ -15,6 +15,8 @@
  */
 package org.glassfish.microprofile.health.service;
 
+import jakarta.json.JsonObject;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +34,9 @@ import static org.glassfish.microprofile.health.service.HealthService.DEFAULT_CO
 import static org.glassfish.microprofile.health.service.HealthService.toContextPath;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HealthHttpHandlerTest {
 
@@ -73,15 +77,30 @@ public class HealthHttpHandlerTest {
     }
 
     @Test
-    public void json() {
+    public void jsonWithoutChecks() {
         HealthHttpHandler handler = new HealthHttpHandler(null, "/health", null);
+        JsonObject json = handler.toJson(new HealthReport(Status.UP, List.of()));
         assertAll(
-            () -> assertEquals("{\"checks\":[],\"status\":\"UP\"}",
-                handler.toJson(new HealthReport(Status.UP, List.of())).toString()),
-            () -> assertEquals("{\"checks\":[{\"name\":\"check\",\"status\":\"DOWN\",\"data\":{\"reason\":\"text\"}},"
-                + "{\"name\":\"other\",\"status\":\"UP\"}],\"status\":\"DOWN\"}",
-                handler.toJson(new HealthReport(Status.DOWN, List.of(
-                    new GlassFishHealthCheckResponse("check", Status.DOWN, Optional.of(Map.of("reason", "text"))),
-                    new GlassFishHealthCheckResponse("other", Status.UP, Optional.empty())))).toString()));
+            () -> assertEquals("UP", json.getString("status")),
+            () -> assertTrue(json.getJsonArray("checks").isEmpty()));
+    }
+
+    @Test
+    public void jsonWithChecks() {
+        HealthHttpHandler handler = new HealthHttpHandler(null, "/health", null);
+        JsonObject json = handler.toJson(new HealthReport(Status.DOWN, List.of(
+            new GlassFishHealthCheckResponse("check", Status.DOWN, Optional.of(Map.of("reason", "text"))),
+            new GlassFishHealthCheckResponse("other", Status.UP, Optional.empty()))));
+        JsonObject check = json.getJsonArray("checks").getJsonObject(0);
+        JsonObject other = json.getJsonArray("checks").getJsonObject(1);
+        assertAll(
+            () -> assertEquals("DOWN", json.getString("status")),
+            () -> assertEquals(2, json.getJsonArray("checks").size()),
+            () -> assertEquals("check", check.getString("name")),
+            () -> assertEquals("DOWN", check.getString("status")),
+            () -> assertEquals("text", check.getJsonObject("data").getString("reason")),
+            () -> assertEquals("other", other.getString("name")),
+            () -> assertEquals("UP", other.getString("status")),
+            () -> assertFalse(other.containsKey("data")));
     }
 }

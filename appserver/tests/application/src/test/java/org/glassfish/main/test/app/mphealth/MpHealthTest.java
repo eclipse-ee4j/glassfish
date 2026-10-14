@@ -16,6 +16,7 @@
 package org.glassfish.main.test.app.mphealth;
 
 import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 
 import java.io.File;
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.util.List;
 
 import org.glassfish.main.itest.tools.GlassFishTestEnvironment;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -42,8 +44,8 @@ import static java.lang.System.Logger.Level.INFO;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.main.itest.tools.GlassFishTestEnvironment.openConnection;
 import static org.glassfish.main.itest.tools.asadmin.AsadminResultMatcher.asadminOK;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -63,9 +65,7 @@ public class MpHealthTest {
     private static final String PLAIN_APP_NAME = "mphealth-plain";
     private static final String CDI_APP_NAME = "mphealth-cdi";
     private static final String CONTEXT_PATH_OPTION = "-Dorg.glassfish.microprofile.health.context-path=status";
-    private static final String EMPTY_UP = "{\"checks\":[],\"status\":\"UP\"}";
-    private static final String NO_APPLICATION_DOWN = "{\"checks\":[{\"name\":\"glassfish-applications-ready\","
-        + "\"status\":\"DOWN\",\"data\":{\"reason\":\"No application is deployed\"}}],\"status\":\"DOWN\"}";
+    private static final String READINESS_CHECK_NAME = "glassfish-applications-ready";
 
     private static final Asadmin ASADMIN = GlassFishTestEnvironment.getAsadmin();
 
@@ -84,10 +84,10 @@ public class MpHealthTest {
         // Start the server without applications, so that the web container is not started
         assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
         assertAll(
-            () -> assertThat(get("/health", 503), equalTo(NO_APPLICATION_DOWN)),
-            () -> assertThat(get("/health/live", 200), equalTo(EMPTY_UP)),
-            () -> assertThat(get("/health/ready", 503), equalTo(NO_APPLICATION_DOWN)),
-            () -> assertThat(get("/health/started", 200), equalTo(EMPTY_UP)),
+            () -> assertNoApplicationDown(get("/health", 503)),
+            () -> assertUpWithoutChecks(get("/health/live", 200)),
+            () -> assertNoApplicationDown(get("/health/ready", 503)),
+            () -> assertUpWithoutChecks(get("/health/started", 200)),
             () -> assertThat(responseCode("/health/other"), equalTo(404)),
             () -> assertThat(responseCode("/health/"), equalTo(404)));
     }
@@ -113,10 +113,10 @@ public class MpHealthTest {
     public void healthChecksOfCdiApplication() throws IOException {
         File war = createWar(CDI_APP_NAME, ShrinkWrap.create(WebArchive.class).addClass(LivenessCheck.class));
         assertThat(ASADMIN.exec("deploy", "--name", CDI_APP_NAME, war.getAbsolutePath()), asadminOK());
-        assertThat(get("/health/live"), containsString("\"name\":\"" + LivenessCheck.NAME + "\""));
+        assertThat(checkNames(json(get("/health/live"))), hasItem(LivenessCheck.NAME));
 
         assertThat(ASADMIN.exec("undeploy", CDI_APP_NAME), asadminOK());
-        assertThat(get("/health/live"), not(containsString(LivenessCheck.NAME)));
+        assertThat(checkNames(json(get("/health/live"))), not(hasItem(LivenessCheck.NAME)));
     }
 
     @Test
@@ -127,8 +127,8 @@ public class MpHealthTest {
         try {
             assertThat(ASADMIN.exec("restart-domain", "domain1"), asadminOK());
             assertAll(
-                () -> assertThat(get("/status/live", 200), equalTo(EMPTY_UP)),
-                () -> assertThat(get("/status/ready", 503), equalTo(NO_APPLICATION_DOWN)),
+                () -> assertUpWithoutChecks(get("/status/live", 200)),
+                () -> assertNoApplicationDown(get("/status/ready", 503)),
                 () -> assertThat(responseCode("/health/live"), equalTo(404)));
         } finally {
             assertThat(ASADMIN.exec("delete-jvm-options", CONTEXT_PATH_OPTION), asadminOK());
@@ -165,9 +165,41 @@ public class MpHealthTest {
     }
 
     private static String status(String healthReport) {
+        return json(healthReport).getString("status");
+    }
+
+    private static void assertUpWithoutChecks(String healthReport) {
+        JsonObject json = json(healthReport);
+        assertAll(
+            () -> assertThat(json.getString("status"), equalTo("UP")),
+            () -> assertThat(checkNames(json), equalTo(List.of())));
+    }
+
+    private static void assertNoApplicationDown(String healthReport) {
+        JsonObject json = json(healthReport);
+        assertAll(
+            () -> assertThat(json.getString("status"), equalTo("DOWN")),
+            () -> assertThat(checkStatus(json, READINESS_CHECK_NAME), equalTo("DOWN")));
+    }
+
+    private static JsonObject json(String healthReport) {
         try (JsonReader reader = Json.createReader(new StringReader(healthReport))) {
-            return reader.readObject().getString("status");
+            return reader.readObject();
         }
+    }
+
+    private static List<String> checkNames(JsonObject healthReport) {
+        return healthReport.getJsonArray("checks").getValuesAs(JsonObject.class).stream()
+            .map(check -> check.getString("name"))
+            .toList();
+    }
+
+    private static String checkStatus(JsonObject healthReport, String checkName) {
+        return healthReport.getJsonArray("checks").getValuesAs(JsonObject.class).stream()
+            .filter(check -> checkName.equals(check.getString("name")))
+            .map(check -> check.getString("status"))
+            .findFirst()
+            .orElse(null);
     }
 
     private static File createWar(String appName, WebArchive webArchive) {

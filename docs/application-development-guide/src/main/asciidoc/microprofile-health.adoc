@@ -35,9 +35,11 @@ and readiness endpoints report a `DOWN` health check named `glassfish-server-sta
 `glassfish-applications-ready` respectively.
 
 After the server is started, the readiness endpoint reports a `DOWN` health check named
-`glassfish-applications-ready` while no application is deployed. This differs from the
-MicroProfile Health specification, which requires `UP` after startup if there are no readiness
-checks, because a server without applications usually cannot serve any requests yet.
+`glassfish-applications-ready` while no application is deployed. GlassFish allows multiple
+deployments, so it cannot know whether an application with readiness checks will be deployed.
+As defined by the MicroProfile Health specification for such containers, readiness then reflects
+the `mp.health.default.readiness.empty.response` property, which is `DOWN` by default. Once an
+application is deployed, readiness reflects its readiness checks, and it is `UP` if there are none.
 
 The status of these health checks is configured by the following properties. If a property is
 set to `UP`, the corresponding health check is not reported at all.

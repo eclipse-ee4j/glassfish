@@ -89,6 +89,12 @@
         <microprofile.rest-client.version>4.0</microprofile.rest-client.version>
         <reactive-streams.version>1.0.4</reactive-streams.version>
 
+        <!-- MicroProfile Telemetry -->
+        <microprofile.telemetry.version>2.2-RC4</microprofile.telemetry.version>
+        <opentelemetry.version>1.66.0</opentelemetry.version>
+        <opentelemetry-instrumentation.version>2.31.1</opentelemetry-instrumentation.version>
+        <opentelemetry-semconv.version>1.44.0</opentelemetry-semconv.version>
+
         <!-- Admin console components -->
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>6.0.3</woodstock.version>
@@ -631,6 +637,25 @@
                 <groupId>org.eclipse.microprofile.rest.client</groupId>
                 <artifactId>microprofile-rest-client-api</artifactId>
                 <version>${microprofile.rest-client.version}</version>
+            </dependency>
+
+            <!-- MicroProfile Telemetry -->
+            <dependency>
+                <groupId>io.opentelemetry</groupId>
+                <artifactId>opentelemetry-bom</artifactId>
+                <version>${opentelemetry.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-annotations</artifactId>
+                <version>${opentelemetry-instrumentation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.semconv</groupId>
+                <artifactId>opentelemetry-semconv</artifactId>
+                <version>${opentelemetry-semconv.version}</version>
             </dependency>
 
             <!-- Other -->

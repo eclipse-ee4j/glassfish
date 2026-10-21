@@ -24,6 +24,7 @@ import jakarta.transaction.Transactional.TxType;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 import java.util.List;
 
@@ -55,5 +56,22 @@ public class GlassFishUserRestEndpoint {
     @Transactional(TxType.NOT_SUPPORTED)
     public long count() {
         return em.createQuery("select count(u) from User u", Long.class).getSingleResult();
+    }
+
+
+    /**
+     * Runs a slow query ({@code pg_sleep}) inside a transaction so the pooled connection is blocked in a
+     * socket read for the given number of seconds. Used by the tests to break pooled connections with a
+     * genuine socket-read failure (e.g. when the database becomes unreachable while the read is in flight).
+     *
+     * @param seconds how long the query should sleep on the database side
+     */
+    @GET
+    @Path("/sleep/{seconds}")
+    @Transactional(TxType.REQUIRES_NEW)
+    public void sleep(@PathParam("seconds") int seconds) {
+        em.createNativeQuery("SELECT 1 FROM pg_sleep(cast(?1 as double precision))")
+            .setParameter(1, seconds)
+            .getResultList();
     }
 }

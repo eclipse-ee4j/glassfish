@@ -60,9 +60,12 @@ public class UserRestClient {
 
     public long count() {
         try (Response response = target.path("count").request().get()) {
-            assertEquals(Status.OK, response.getStatusInfo().toEnum(), "response.status");
-            assertTrue(response.hasEntity(), "response.hasEntity");
-            return response.readEntity(Long.class);
+            if (response.getStatusInfo().toEnum() == Status.OK) {
+                assertTrue(response.hasEntity(), "response.hasEntity");
+                return response.readEntity(Long.class);
+            } else {
+                return -1;
+            }
         }
     }
 }

@@ -56,8 +56,6 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
      * autocommit mode of the physical connection
      */
     public void begin() throws ResourceException {
-        managedConnectionImpl.transactionStarted();
-
         try {
             managedConnectionImpl.getActualConnection().setAutoCommit(false);
         } catch (SQLException sqle) {
@@ -67,6 +65,8 @@ public class LocalTransactionImpl implements jakarta.resource.spi.LocalTransacti
 
             throw new LocalTransactionException(sqle.getMessage(), sqle);
         }
+
+        managedConnectionImpl.transactionStarted();
     }
 
     /**

@@ -304,7 +304,11 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
      */
     @Override
     protected void loadRAConfiguration() throws ConnectorRuntimeException{
-        if (connectorRuntime.isServer()) {
+        // In embedded mode the server also manages the JMS broker lifecycle, so
+        // the full server-side RA configuration (broker type, port, credentials,
+        // etc.) must be applied there too. Without this, embedded falls through
+        // to the appclient branch which forces BrokerType=REMOTE.
+        if (connectorRuntime.isServer() || connectorRuntime.isEmbedded()) {
             // Check whether MQ has started up or not.
             try {
                 setLifecycleProperties();
@@ -433,7 +437,7 @@ public class ActiveJmsResourceAdapter extends ActiveInboundResourceAdapterImpl i
     protected Set<ConnectorConfigProperty> mergeRAConfiguration(ResourceAdapterConfig raConfig,
         List<Property> raConfigProps) {
         Set<ConnectorConfigProperty> mergedProps = super.mergeRAConfiguration(raConfig, raConfigProps);
-        if (!connectorRuntime.isServer()) {
+        if (!connectorRuntime.isServer() && !connectorRuntime.isEmbedded()) {
             return mergedProps;
         }
 

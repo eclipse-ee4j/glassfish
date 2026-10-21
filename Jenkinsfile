@@ -34,7 +34,7 @@
 def javaVersion = '21'
 def mvnVersion = '3.9.16'
 // You can add -Psnapshots temporarily, if needed.
-def additionalMvnArgs = '-Psnapshots'
+def additionalMvnArgs = ''
 def antVersion = '1.10.18'
 def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
 
@@ -486,7 +486,7 @@ def generateMvnTestPod(job, label, command) {
 }
 
 def generateMvnTestPod(job, label) {
-   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -Ptck -pl :${job} -amd")
+   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -Ptck -Psnapshots -pl :${job} -amd")
 }
 
 pipeline {
@@ -575,14 +575,14 @@ pipeline {
                            timeout(time: 1, unit: 'HOURS') {
                               dumpSysInfo()
                               sh (label: 'mvn clean validate', script:  '''
-                              mvn -B -e -fae -ntp clean validate -Ptck,set-version-id
+                              mvn -B -e -fae -ntp clean validate -Ptck,set-version-id,snapshots
                               ''')
 // Makes build 6 minutes slower.
 //                              sh (label: 'Download Maven Plugins', script: '''
 //                              mvn -B -e dependency:resolve-plugins -T8C
 //                              ''')
                               sh (label: 'mvn install', script: '''
-                              mvn -B -e -ntp install -Pfastest,ci -T4C
+                              mvn -B -e -ntp install -Pfastest,ci,snapshots -T4C
                               ''')
                               sh (label: 'Pack for Test Stages', script: '''#!/usr/bin/env bash
                               set -euox pipefail
@@ -634,7 +634,7 @@ pipeline {
                         slaveConnectTimeout: 300,
                         yaml: mvnHeavyContainerCfg
                      ) {
-                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e -ntp clean verify -Pqa,ci,ci-main-tests")()
+                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e -ntp clean verify -Pqa,ci,ci-main-tests,snapshots")()
                      }
                   }
                }

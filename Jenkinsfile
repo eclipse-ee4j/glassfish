@@ -34,7 +34,7 @@
 def javaVersion = '21'
 def mvnVersion = '3.9.16'
 // You can add -Psnapshots temporarily, if needed.
-def additionalMvnArgs = ''
+def additionalMvnArgs = '-Psnapshots'
 def antVersion = '1.10.18'
 def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
 

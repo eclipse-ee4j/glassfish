@@ -1,0 +1,60 @@
+name: Fory gRPC cross-language code generation
+
+on:
+  push:
+    branches: [ 'feat/fory-grpc-ejb-idl' ]
+  pull_request:
+    paths:
+      - 'compatibility/fory-grpc/**'
+      - '.github/workflows/fory-grpc-compat.yml'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    name: Generate ${{ matrix.language }} Fory gRPC client
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [python, go]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install Apache Fory compiler
+        run: python -m pip install --upgrade fory-compiler
+
+      - name: Generate client sources
+        run: compatibility/fory-grpc/run-codegen.sh "${{ matrix.language }}"
+
+      - name: Validate generated Python sources
+        if: matrix.language == 'python'
+        run: python -m compileall -q compatibility/fory-grpc/generated/python
+
+      - name: Build the Go client against the generated sources
+        if: matrix.language == 'go'
+        run: |
+          cd compatibility/fory-grpc
+          go mod init compatibility/fory-grpc
+          go mod tidy
+          go vet ./...
+          go build -o /tmp/fory-grpc-client ./client
+          /tmp/fory-grpc-client -h 2>&1 | head -20 || true
+
+      - name: Upload generated client
+        uses: actions/upload-artifact@v4
+        with:
+          name: fory-grpc-${{ matrix.language }}
+          path: |
+            compatibility/fory-grpc/generated/${{ matrix.language }}
+            compatibility/fory-grpc/go.mod
+            compatibility/fory-grpc/go.sum

@@ -37,5 +37,11 @@
         <module>orb-enabler</module>
         <module>orb-connector</module>
         <module>orb-iiop</module>
+        <module>orb-http-protocol</module>
+        <module>orb-http-client</module>
+        <module>orb-http-server</module>
+        <module>orb-http-glassfish</module>
+        <module>orb-http-codec-fory</module>
+        <module>orb-http-fory-grpc</module>
     </modules>
 </project>

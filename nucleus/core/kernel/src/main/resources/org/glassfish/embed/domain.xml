@@ -37,11 +37,22 @@
       <property name="databaseName" value="${com.sun.aas.instanceRoot}/lib/databases/embedded_default" />
       <property name="connectionAttributes" value=";create=true" />
     </jdbc-connection-pool>
+    <!--
+      Default JMS connection factory. In a full GlassFish distribution these
+      resources are added by the gf-jms-connector module config bundle
+      (jms-module-conf.xml), which is not applied in embedded mode. Without them
+      the java:comp/DefaultJMSConnectionFactory logical JNDI name cannot resolve
+      to the physical jms/__defaultConnectionFactory resource.
+    -->
+    <connector-connection-pool name="jms/__defaultConnectionFactory-Connection-Pool" max-pool-size="250" steady-pool-size="1" resource-adapter-name="jmsra" connection-definition-name="jakarta.jms.ConnectionFactory">
+    </connector-connection-pool>
+    <connector-resource pool-name="jms/__defaultConnectionFactory-Connection-Pool" jndi-name="jms/__defaultConnectionFactory" object-type="system-all-req"></connector-resource>
   </resources>
   <servers>
     <server name="server" config-ref="server-config">
       <resource-ref ref="jdbc/__TimerPool" />
       <resource-ref ref="jdbc/__default" />
+      <resource-ref ref="jms/__defaultConnectionFactory" />
     </server>
   </servers>
  <configs>
@@ -77,6 +88,13 @@
       <jms-service type="EMBEDDED" default-jms-host="default_JMS_host">
         <jms-host name="default_JMS_host" host="localhost" port="7676" admin-user-name="admin" admin-password="admin" lazy-init="false"/>
       </jms-service>
+      <!--
+        Run the JMS Resource Adapter in EMBEDDED mode (in-JVM OpenMQ broker).
+        RevertToEmbedded keeps GlassFish from converting EMBEDDED to DIRECT and
+        imq.jmsra.direct=false keeps the RA from forcing DIRECT mode.
+      -->
+      <system-property name="com.sun.enterprise.connectors.system.RevertToEmbedded" value="true"/>
+      <system-property name="imq.jmsra.direct" value="false"/>
       <log-service file="${com.sun.aas.instanceRoot}/logs/server.log" log-rotation-limit-in-bytes="2000000">
         <module-log-levels />
       </log-service>

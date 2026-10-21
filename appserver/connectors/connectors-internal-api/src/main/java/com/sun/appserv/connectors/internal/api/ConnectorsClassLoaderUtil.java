@@ -21,6 +21,7 @@ import com.sun.enterprise.loader.ASURLClassLoader;
 import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import org.jvnet.hk2.annotations.Service;
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.belongsToSystemRA;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
+import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 
 
@@ -69,8 +71,13 @@ public class ConnectorsClassLoaderUtil {
     @Inject
     private Events events;
 
+    @Inject
+    private Provider<ConnectorRuntime> connectorRuntimeProvider;
+
 
     private volatile boolean rarsInitializedInEmbeddedServerMode;
+
+    private volatile boolean prepareShutdownHandled;
 
     public ConnectorClassFinder createRARClassLoader(String moduleDir, ClassLoader deploymentParent, String moduleName, List<URI> appLibs) throws ConnectorRuntimeException {
 
@@ -108,9 +115,30 @@ public class ConnectorsClassLoaderUtil {
             final DelegatingClassLoader.ClassFinder librariesCL = getLibrariesClassLoader(appLibs);
             final ConnectorClassFinder ccf = new ConnectorClassFinder(parent, moduleName, librariesCL);
 
+            // In embedded mode, stop the active resource adapters (including the
+            // JMS RA's embedded broker) during PREPARE_SHUTDOWN and release the
+            // RAR classloader's jar handles on SERVER_SHUTDOWN so the embedded
+            // instance root can be cleaned up afterwards.
+            // AppServerStartup.stop() sends PREPARE_SHUTDOWN before proceedTo(VAL);
+            // the RA shutdown inside proceedTo(VAL) (ResourceManager preDestroy ->
+            // stopAllActiveResourceAdapters) lazily resolves classes such as
+            // BrokerStateHandler$ShutdownRunnable through this loader. Stopping the
+            // RAs during PREPARE_SHUTDOWN - while this loader is still open - makes
+            // that lazy resolution succeed, and the later ResourceManager shutdown
+            // re-runs stopAllActiveResourceAdapters(), which is idempotent and
+            // becomes a no-op. The classloader close itself stays on
+            // SERVER_SHUTDOWN, after the RAs are already stopped.
             if (processEnvironment.getProcessType().isEmbedded()) {
                 events.register(event -> {
                     if (event.is(PREPARE_SHUTDOWN)) {
+                        if (!prepareShutdownHandled) {
+                            prepareShutdownHandled = true;
+                            ConnectorRuntime runtime = connectorRuntimeProvider.get();
+                            if (runtime != null) {
+                                runtime.shutdownAllActiveResourceAdapters();
+                            }
+                        }
+                    } else if (event.is(SERVER_SHUTDOWN)) {
                         try {
                             ccf.close();
                         } catch (IOException ioe) {

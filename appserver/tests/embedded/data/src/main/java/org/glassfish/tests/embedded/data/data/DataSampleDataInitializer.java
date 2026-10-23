@@ -41,8 +41,8 @@ public class DataSampleDataInitializer {
     public void init(@Observes Startup event) {
         LOG.log(Level.INFO, "initializing sample data: {0}", event);
         todoRepository.saveAll(List.of(
-                Todo.of("Say Hello to Jakarta EE 11"),
-                Todo.of("Upgrade to Jakarta EE 11")
+                Todo.of("Say Hello to Jakarta EE 12"),
+                Todo.of("Upgrade to Jakarta EE 12")
         ));
         LOG.log(Level.INFO, "initializing sample data is done: {0}", event);
     }

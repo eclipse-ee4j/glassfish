@@ -74,8 +74,8 @@ public class JakartaDataIT {
                 response.append(line);
             }
         }
-        assertTrue(response.toString().contains("Say Hello to Jakarta EE 11"));
-        assertTrue(response.toString().contains("Upgrade to Jakarta EE 11"));
+        assertTrue(response.toString().contains("Say Hello to Jakarta EE 12"));
+        assertTrue(response.toString().contains("Upgrade to Jakarta EE 12"));
     }
 
     @AfterAll

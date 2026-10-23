@@ -257,11 +257,6 @@
                 <artifactId>jakarta.nosql-api</artifactId>
                 <version>${jakarta.nosql-api.version}</version>
             </dependency>
-            <dependency>
-                <groupId>ee.omnifish</groupId>
-                <artifactId>jnosql-jakarta-persistence-osgi-bundle</artifactId>
-                <version>${jnosql.version}</version>
-            </dependency>
 
             <!-- Jakarta Persistence -->
             <dependency>

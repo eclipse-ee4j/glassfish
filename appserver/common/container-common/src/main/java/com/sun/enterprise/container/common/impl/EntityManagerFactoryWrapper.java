@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -23,22 +24,33 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.WebBundleDescriptor;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Cache;
+import jakarta.persistence.EntityAgent;
 import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityHandler;
+import jakarta.persistence.EntityListenerRegistration;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManager.CreationOption;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.SchemaManager;
+import jakarta.persistence.Statement;
+import jakarta.persistence.StatementReference;
 import jakarta.persistence.SynchronizationType;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.sql.ResultSetMapping;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -65,15 +77,29 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     private transient InvocationManager invocationManager;
     private transient ComponentEnvManager componentEnvManager;
 
+    // The module that declared the reference, if known. Not always the module of the component doing the
+    // lookup: a reference bound in java:app or java:global is visible to every module of the application,
+    // while the persistence unit it names is resolved in the scope of the module that declared it.
+    private transient BundleDescriptor referringBundle;
+
     private transient EntityManagerFactory entityManagerFactory;
 
     public EntityManagerFactoryWrapper(String unitName, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
+        this(unitName, null, invMgr, compEnvMgr);
+    }
+
+    public EntityManagerFactoryWrapper(String unitName, BundleDescriptor referringBundle, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
+        this.referringBundle = referringBundle;
         this.invocationManager = invMgr;
         this.componentEnvManager = compEnvMgr;
     }
 
     private EntityManagerFactory getDelegate() {
+        if (entityManagerFactory == null && referringBundle != null) {
+            entityManagerFactory = lookupEntityManagerFactory(referringBundle, referringBundle.getApplication(), unitName);
+        }
+
         if (entityManagerFactory == null) {
             entityManagerFactory = lookupEntityManagerFactory(invocationManager, componentEnvManager, unitName);
 
@@ -85,24 +111,20 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
         return entityManagerFactory;
     }
 
-    @Override
     public EntityManager createEntityManager() {
         return getDelegate().createEntityManager();
     }
 
     @Override
-    public EntityManager createEntityManager(Map map) {
-        return getDelegate().createEntityManager(map);
+    public @Nonnull
+    EntityManager createEntityManager(@Nullable Map<?, ?> properties) {
+        return getDelegate().createEntityManager(properties);
     }
 
     @Override
-    public EntityManager createEntityManager(SynchronizationType synchronizationType) {
-        return getDelegate().createEntityManager(synchronizationType);
-    }
-
-    @Override
-    public EntityManager createEntityManager(SynchronizationType synchronizationType, Map map) {
-        return getDelegate().createEntityManager(synchronizationType, map);
+    public @Nonnull
+    EntityManager createEntityManager(@Nonnull SynchronizationType synchronizationType, @Nullable Map<?, ?> properties) {
+        return getDelegate().createEntityManager(synchronizationType, properties);
     }
 
     @Override
@@ -190,6 +212,58 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
         getDelegate().runInTransaction(work);
     }
 
+    @Override
+    public EntityManager createEntityManager(CreationOption... options) {
+        return getDelegate().createEntityManager(options);
+    }
+
+    @Override
+    public EntityAgent createEntityAgent(jakarta.persistence.EntityAgent.CreationOption... options) {
+        return getDelegate().createEntityAgent(options);
+    }
+
+    @Override
+    public EntityAgent createEntityAgent(Map<?, ?> properties) {
+        return getDelegate().createEntityAgent(properties);
+    }
+
+    @Override
+    public <R> TypedQueryReference<R> addNamedQuery(String name, TypedQuery<R> query) {
+        return getDelegate().addNamedQuery(name, query);
+    }
+
+    @Override
+    public StatementReference addNamedStatement(String name, Statement statement) {
+        return getDelegate().addNamedStatement(name, statement);
+    }
+
+    @Override
+    public Map<String, StatementReference> getNamedStatements() {
+        return getDelegate().getNamedStatements();
+    }
+
+    @Override
+    public <R> Map<String, ResultSetMapping<R>> getResultSetMappings(Class<R> resultType) {
+        return getDelegate().getResultSetMappings(resultType);
+    }
+
+    @Override
+    public <E> EntityListenerRegistration addListener(Class<E> entityType, Class<? extends Annotation> callbackType,
+            Consumer<? super E> listener) {
+        return getDelegate().addListener(entityType, callbackType, listener);
+    }
+
+    @Override
+    public <H extends EntityHandler> void runInTransaction(Class<H> handlerClass, Consumer<H> work) {
+        getDelegate().runInTransaction(handlerClass, work);
+
+    }
+
+    @Override
+    public <R, H extends EntityHandler> R callInTransaction(Class<H> handlerClass, Function<H, R> work) {
+        return getDelegate().callInTransaction(handlerClass, work);
+    }
+
     /**
      * Lookup physical EntityManagerFactory based on current component invocation.
      *
@@ -215,7 +289,6 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     public static EntityManagerFactory lookupEntityManagerFactory(ComponentInvocationType componentInvocationType, String emfUnitName, Object descriptor) {
         Application application = null;
         BundleDescriptor module = null;
-        EntityManagerFactory entityManagerFactory = null;
 
         switch (componentInvocationType) {
 
@@ -248,6 +321,12 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
 
                 break;
         }
+
+        return lookupEntityManagerFactory(module, application, emfUnitName);
+    }
+
+    private static EntityManagerFactory lookupEntityManagerFactory(BundleDescriptor module, Application application, String emfUnitName) {
+        EntityManagerFactory entityManagerFactory = null;
 
         // First check module-level for a match.
         if (module != null) {
@@ -287,5 +366,7 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
         invocationManager = defaultServiceLocator.getService(InvocationManager.class);
         componentEnvManager = defaultServiceLocator.getService(ComponentEnvManager.class);
     }
+
+
 
 }

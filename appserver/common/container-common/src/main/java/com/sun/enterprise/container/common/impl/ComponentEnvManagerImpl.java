@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2024 Payara Foundation and/or its affiliates
  *
@@ -25,6 +25,7 @@ import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
 import com.sun.enterprise.deployment.AdministeredObjectDefinitionDescriptor;
 import com.sun.enterprise.deployment.Application;
 import com.sun.enterprise.deployment.ApplicationClientDescriptor;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.ConnectionFactoryDefinitionDescriptor;
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
 import com.sun.enterprise.deployment.DataSourceDefinitionDescriptor;
@@ -667,7 +668,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
             jndiBindings.add(
                 new CompEnvBinding(
                         toLogicalJndiName(descriptor),
-                        createFactoryForEntityManagerFactory(descriptor.getUnitName())));
+                        createFactoryForEntityManagerFactory(descriptor.getUnitName(), descriptor.getReferringBundleDescriptor())));
         }
 
         for (ServiceReferenceDescriptor descriptor : jndiNameEnvironment.getServiceReferenceDescriptors()) {
@@ -702,7 +703,11 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
     }
 
     public FactoryForEntityManagerFactoryWrapper createFactoryForEntityManagerFactory(String unitName) {
-        return new FactoryForEntityManagerFactoryWrapper(unitName, invocationManager, this);
+        return createFactoryForEntityManagerFactory(unitName, null);
+    }
+
+    public FactoryForEntityManagerFactoryWrapper createFactoryForEntityManagerFactory(String unitName, BundleDescriptor referringBundle) {
+        return new FactoryForEntityManagerFactoryWrapper(unitName, referringBundle, invocationManager, this);
     }
 
     private CompEnvBinding getCompEnvBinding(final ResourceEnvReferenceDescriptor next) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -18,6 +18,7 @@
 package com.sun.enterprise.container.common.impl;
 
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
+import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 
 import javax.naming.Context;
@@ -30,13 +31,18 @@ public class FactoryForEntityManagerFactoryWrapper implements NamingObjectFactor
     private final InvocationManager invocationManager;
     private final ComponentEnvManager componentEnvManager;
     private final String unitName;
+    private final BundleDescriptor referringBundle;
 
     public FactoryForEntityManagerFactoryWrapper(String unitName, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
+        this(unitName, null, invMgr, compEnvMgr);
+    }
+
+    public FactoryForEntityManagerFactoryWrapper(String unitName, BundleDescriptor referringBundle, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
+        this.referringBundle = referringBundle;
         this.invocationManager = invMgr;
         this.componentEnvManager = compEnvMgr;
     }
-
 
     @Override
     public boolean isCreateResultCacheable() {
@@ -46,7 +52,7 @@ public class FactoryForEntityManagerFactoryWrapper implements NamingObjectFactor
     @Override
     @SuppressWarnings("unchecked")
     public EntityManagerFactoryWrapper create(Context ic) {
-        return new EntityManagerFactoryWrapper(unitName, invocationManager, componentEnvManager);
+        return new EntityManagerFactoryWrapper(unitName, referringBundle, invocationManager, componentEnvManager);
     }
 
 }

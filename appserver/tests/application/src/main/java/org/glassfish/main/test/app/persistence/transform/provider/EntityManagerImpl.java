@@ -28,20 +28,22 @@ import jakarta.persistence.FindOption;
 import jakarta.persistence.FlushModeType;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.LockOption;
-import jakarta.persistence.Query;
 import jakarta.persistence.RefreshOption;
+import jakarta.persistence.Statement;
+import jakarta.persistence.StatementOrTypedQuery;
+import jakarta.persistence.StatementReference;
 import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
-import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.CriteriaSelect;
-import jakarta.persistence.criteria.CriteriaUpdate;
+import jakarta.persistence.criteria.CriteriaStatement;
 import jakarta.persistence.metamodel.Metamodel;
+import jakarta.persistence.sql.ResultSetMapping;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class EntityManagerImpl implements EntityManager {
 
@@ -67,11 +69,6 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public <T> T find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties) {
-        return null;
-    }
-
-    @Override
-    public <T> T find(Class<T> entityClass, Object primaryKey, LockModeType lockMode) {
         return null;
     }
 
@@ -121,11 +118,6 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public void refresh(Object entity, LockModeType lockMode) {
-
-    }
-
-    @Override
     public void refresh(Object entity, LockModeType lockMode, Map<String, Object> properties) {
 
     }
@@ -161,22 +153,7 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public Query createQuery(String qlString) {
-        return null;
-    }
-
-    @Override
-    public <T> TypedQuery<T> createQuery(CriteriaQuery<T> criteriaQuery) {
-        return null;
-    }
-
-    @Override
-    public Query createQuery(CriteriaUpdate updateQuery) {
-        return null;
-    }
-
-    @Override
-    public Query createQuery(CriteriaDelete deleteQuery) {
+    public StatementOrTypedQuery createQuery(String qlString) {
         return null;
     }
 
@@ -186,7 +163,7 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public Query createNamedQuery(String name) {
+    public StatementOrTypedQuery createNamedQuery(String name) {
         return null;
     }
 
@@ -196,17 +173,17 @@ public class EntityManagerImpl implements EntityManager {
     }
 
     @Override
-    public Query createNativeQuery(String sqlString) {
+    public StatementOrTypedQuery createNativeQuery(String sqlString) {
         return null;
     }
 
     @Override
-    public Query createNativeQuery(String sqlString, Class resultClass) {
+    public <T> TypedQuery<T> createNativeQuery(String sqlString, Class<T> resultClass) {
         return null;
     }
 
     @Override
-    public Query createNativeQuery(String sqlString, String resultSetMapping) {
+    public StatementOrTypedQuery createNativeQuery(String sqlString, String resultSetMapping) {
         return null;
     }
 
@@ -364,4 +341,94 @@ public class EntityManagerImpl implements EntityManager {
     public <C, T> T callWithConnection(ConnectionFunction<C, T> function) {
         return null;
     }
+
+    @Override
+    public void addOption(EntityManager.Option option) {
+    }
+
+    @Override
+    public Set<EntityManager.Option> getOptions() {
+        return null;
+    }
+
+    @Override
+    public <T> T get(Class<T> entityClass, Object id) {
+        return null;
+    }
+
+    @Override
+    public <T> T get(Class<T> entityClass, Object id, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public <T> List<T> getMultiple(Class<T> entityClass, List<?> ids, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public <T> List<T> findMultiple(Class<T> entityClass, List<?> ids, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public Statement createStatement(String qlString) {
+        return null;
+    }
+
+    @Override
+    public Statement createNamedStatement(String name) {
+        return null;
+    }
+
+    @Override
+    public Statement createNativeStatement(String sqlString) {
+        return null;
+    }
+
+    @Override
+    public <T> EntityGraph<T> getEntityGraph(Class<T> rootType, String graphName) {
+        return null;
+    }
+
+    @Override
+    public Statement createQuery(CriteriaStatement<?> statement) {
+        return null;
+    }
+
+    @Override
+    public Statement createStatement(CriteriaStatement<?> statement) {
+        return null;
+    }
+
+    @Override
+    public Statement createStatement(StatementReference reference) {
+        return null;
+    }
+
+    @Override
+    public <T> T get(EntityGraph<T> graph, Object id, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public <T> List<T> getMultiple(EntityGraph<T> graph, List<?> ids, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public <T> List<T> findMultiple(EntityGraph<T> graph, List<?> ids, FindOption... options) {
+        return null;
+    }
+
+    @Override
+    public <T> TypedQuery<T> createQuery(String qlString, EntityGraph<T> resultGraph) {
+        return null;
+    }
+
+    @Override
+    public <T> TypedQuery<T> createNativeQuery(String sqlString, ResultSetMapping<T> resultSetMapping) {
+        return null;
+    }
+
 }

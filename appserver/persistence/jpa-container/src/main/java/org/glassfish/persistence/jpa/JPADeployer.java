@@ -323,8 +323,15 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         }
 
         // Iterate through all the processPersistenceUnitDescriptors for this bundle and load the corresponding persistence unit
-        for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
-            loadPersistenceUnit(persistenceUnitDescriptor, deploymentContext);
+        try {
+            for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
+                loadPersistenceUnit(persistenceUnitDescriptor, deploymentContext);
+            }
+        } catch (RuntimeException e) {
+            // The deployment fails, so APPLICATION_PREPARED - where the factories are normally handed over
+            // or closed - never comes. Close the ones already created for the units before this one.
+            closeEntityManagerFactories(deploymentContext);
+            throw e;
         }
     }
 
@@ -502,6 +509,9 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                     // else it logs and swallows, which would silently skip the remaining units.
                     entityManagerFactory.close();
 
+                    // The deployment fails, so close the factories of the other units of this deployment as well
+                    closeEntityManagerFactories(deploymentContext);
+
                     // Need to wrap exception in DeploymentException else deployment will not fail.
                     throw new DeploymentException(e);
                 }
@@ -560,6 +570,30 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         }
 
         emfsCreatedForThisApp.add(entityManagerFactory);
+    }
+
+    /**
+     * Closes the still open entity manager factories created for the persistence units of a deployment that
+     * fails. Left open, the provider keeps their units registered with the classloader of the failed deployment,
+     * and a later deployment of the same application can pick those up (EclipseLink reuses a unit by its name and
+     * location), failing with classes it cannot load from that closed classloader.
+     */
+    private static void closeEntityManagerFactories(DeploymentContext deploymentContext) {
+        for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
+            PersistenceUnitLoader persistenceUnitLoader = deploymentContext.getTransientAppMetaData(
+                getUniquePersistenceUnitIdentifier(persistenceUnitDescriptor), PersistenceUnitLoader.class);
+
+            EntityManagerFactory entityManagerFactory =
+                persistenceUnitLoader == null ? null : persistenceUnitLoader.getEntityManagerFactory();
+
+            if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
+                try {
+                    entityManagerFactory.close();
+                } catch (RuntimeException e) {
+                    logger.log(FINE, "Closing entity manager factory of failed deployment", e);
+                }
+            }
+        }
     }
 
     private void closeEntityManagerFactories(ApplicationInfo appInfo) {

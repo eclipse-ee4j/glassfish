@@ -20,7 +20,7 @@ package org.glassfish.persistence.jpa.schemageneration;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.logging.LogDomains;
 
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
+import jakarta.persistence.PersistenceUnitTransactionType;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -17,19 +17,27 @@
 package org.glassfish.main.test.app.persistence.transform.provider;
 
 import jakarta.persistence.Cache;
+import jakarta.persistence.EntityAgent;
 import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityHandler;
+import jakarta.persistence.EntityListenerRegistration;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.persistence.Query;
 import jakarta.persistence.SchemaManager;
+import jakarta.persistence.Statement;
+import jakarta.persistence.StatementReference;
 import jakarta.persistence.SynchronizationType;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.TypedQueryReference;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.metamodel.Metamodel;
 import jakarta.persistence.spi.PersistenceUnitInfo;
+import jakarta.persistence.sql.ResultSetMapping;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -41,17 +49,12 @@ public class EntityManagerFactoryImpl implements EntityManagerFactory {
     }
 
     @Override
-    public EntityManager createEntityManager() {
+    public EntityManager createEntityManager(EntityManager.CreationOption... options) {
         return new EntityManagerImpl();
     }
 
     @Override
-    public EntityManager createEntityManager(Map properties) {
-        return null;
-    }
-
-    @Override
-    public EntityManager createEntityManager(SynchronizationType synchronizationType) {
+    public EntityManager createEntityManager(Map<?, ?> properties) {
         return null;
     }
 
@@ -144,4 +147,50 @@ public class EntityManagerFactoryImpl implements EntityManagerFactory {
     public <R> R callInTransaction(Function<EntityManager, R> work) {
         return null;
     }
+
+    @Override
+    public <H extends EntityHandler> void runInTransaction(Class<H> handlerClass, Consumer<H> work) {
+    }
+
+    @Override
+    public <R, H extends EntityHandler> R callInTransaction(Class<H> handlerClass, Function<H, R> work) {
+        return null;
+    }
+
+    @Override
+    public EntityAgent createEntityAgent(EntityAgent.CreationOption... options) {
+        return null;
+    }
+
+    @Override
+    public StatementReference addNamedStatement(String name, Statement statement) {
+        return null;
+    }
+
+    @Override
+    public Map<String, StatementReference> getNamedStatements() {
+        return null;
+    }
+
+    @Override
+    public <R> Map<String, ResultSetMapping<R>> getResultSetMappings(Class<R> resultType) {
+        return null;
+    }
+
+    @Override
+    public <E> EntityListenerRegistration addListener(Class<E> entityType,
+            Class<? extends Annotation> callbackType, Consumer<? super E> listener) {
+        return null;
+    }
+
+    @Override
+    public EntityAgent createEntityAgent(Map<?, ?> properties) {
+        return null;
+    }
+
+    @Override
+    public <R> TypedQueryReference<R> addNamedQuery(String name, TypedQuery<R> query) {
+        return null;
+    }
+
 }

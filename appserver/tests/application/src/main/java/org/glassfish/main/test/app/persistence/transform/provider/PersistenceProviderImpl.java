@@ -18,6 +18,7 @@ package org.glassfish.main.test.app.persistence.transform.provider;
 
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceConfiguration;
+import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.PersistenceProvider;
 import jakarta.persistence.spi.PersistenceUnitInfo;
 import jakarta.persistence.spi.ProviderUtil;
@@ -53,6 +54,21 @@ public class PersistenceProviderImpl implements PersistenceProvider {
 
     @Override
     public EntityManagerFactory createEntityManagerFactory(PersistenceConfiguration configuration) {
+        return null;
+    }
+
+    @Override
+    public boolean generateSchema(PersistenceConfiguration configuration) {
+        return false;
+    }
+
+    /**
+     * Added in Jakarta Persistence 4.0. This test registers its transformer through
+     * {@link PersistenceUnitInfo#addTransformer} in EntityManagerFactoryImpl, which is
+     * the path GlassFish uses, so nothing is returned here.
+     */
+    @Override
+    public ClassTransformer getClassTransformer(PersistenceUnitInfo info, Map<?, ?> properties) {
         return null;
     }
 }

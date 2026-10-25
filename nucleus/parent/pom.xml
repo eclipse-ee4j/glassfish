@@ -178,7 +178,7 @@
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <soteria.version>5.0.0-M3</soteria.version>
         <exousia.version>4.0.0-M2</exousia.version>
-        <epicyro.version>3.1.1</epicyro.version>
+        <epicyro.version>3.1.2</epicyro.version>
         <nimbus.version>10.9.1</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 

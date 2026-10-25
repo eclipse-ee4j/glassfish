@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -163,7 +163,7 @@ public abstract class AbstractBundleNode<T extends RootDeploymentDescriptor>
      * write the necessary attributes for the root node of this DDs document
      */
     protected void addBundleNodeAttributes(Element bundleNode, RootDeploymentDescriptor descriptor) {
-        String schemaLocation = TagNames.JAVAEE_NAMESPACE + " " + getSchemaURL();
+        String schemaLocation = TagNames.JAKARTAEE_NAMESPACE + " " + getSchemaURL();
         bundleNode.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:xsi", W3C_XML_SCHEMA_INSTANCE);
 
         // add all custom global namespaces

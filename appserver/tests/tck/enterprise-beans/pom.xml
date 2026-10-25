@@ -38,7 +38,7 @@
         <whitebox.directory>${project.build.directory}/whitebox</whitebox.directory>
         <derby.lib>${glassfish.home}/javadb/lib</derby.lib>
 
-        <tck.version>11.0.1</tck.version>
+        <tck.version>11.0.3</tck.version>
         <tck.common.version>11.1.1</tck.common.version>
         <tck.arquillian.version>11.1.3</tck.arquillian.version>
         <tck.test.user1>j2ee</tck.test.user1>

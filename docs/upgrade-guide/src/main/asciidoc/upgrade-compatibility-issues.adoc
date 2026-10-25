@@ -18,6 +18,7 @@ address these issues.
 
 The following topics are addressed here:
 
+* xref:#breaking-changes-in-glassfish-7-1-and-8-0[Breaking Changes in {productName} 7.1 and 8.0]
 * xref:#binary-compatible-releases-for-glassfish-server[Binary-Compatible Releases For {productName} {product-majorVersion}]
 * xref:#new-default-installation-directory[New Default Installation Directory]
 * xref:#changes-to-group-management-service-settings[Changes to Group Management Service Settings]
@@ -29,6 +30,143 @@ The following topics are addressed here:
 * xref:#applications-that-use-persistence[Applications That Use Persistence]
 * xref:#http-service-to-network-service-changes[HTTP Service to Network Service Changes]
 * xref:#nss-cryptographic-token-support[NSS Cryptographic Token Support]
+
+[[breaking-changes-in-glassfish-7-1-and-8-0]]
+
+=== Breaking Changes in {productName} 7.1 and 8.0
+
+The following changes in {productName} 7.1 and 8.0 are not backward
+compatible with {productName} 7.0 and earlier releases. Review them before
+you upgrade a domain, or a tool that manages {productName}.
+
+* xref:#required-jdk-version[Required JDK Version]
+* xref:#security-stores-use-the-pkcs12-format[Security Stores Use the PKCS12 Format]
+* xref:#changed-jvm-option-for-the-naming-service[Changed JVM Option for the Naming Service]
+* xref:#admin-cli-jar-is-no-longer-an-executable-jar[`admin-cli.jar` Is No Longer an Executable JAR]
+* xref:#stand-alone-clients-require-a-module-path[Stand-Alone Clients Require a Module Path]
+* xref:#embedded-glassfish-does-not-provide-default-security-stores[Embedded {productName} Does Not Provide Default Security Stores]
+* xref:#ide-support[IDE Support]
+
+[[required-jdk-version]]
+
+==== Required JDK Version
+
+{productName} 7.1 requires JDK 17 or later. {productName} 8.0 requires
+JDK 21 or later.
+
+[[security-stores-use-the-pkcs12-format]]
+
+==== Security Stores Use the PKCS12 Format
+
+{productName} 7.1 and later read the domain security stores only in the
+PKCS12 format:
+
+[width="100%",cols="<50%,<50%",options="header",]
+|===
+|{productName} 7.0 and earlier |{productName} 7.1 and later
+|`config/keystore.jks` (JKS) |`config/keystore.p12`
+|`config/cacerts.jks` (JKS) |`config/cacerts.p12`
+|`config/domain-passwords` (JCEKS) |`config/domain-passwords.p12`
+|`master-password` (JCEKS) |`master-password.p12`
+|===
+
+When you start a domain from an earlier release with the
+`asadmin start-domain --upgrade` subcommand, {productName} converts these
+stores to PKCS12, keeps the original files with the `.bak` extension, and
+updates the `javax.net.ssl.keyStore` and `javax.net.ssl.trustStore` JVM
+options that point to the old files.
+
+To convert the stores in the `config` directory manually, use the
+`keytool` command, for example:
+
+[source]
+----
+keytool -importkeystore -srckeystore keystore.jks -srcstoretype JKS \
+    -destkeystore keystore.p12 -deststoretype PKCS12
+keytool -importkeystore -srckeystore cacerts.jks -srcstoretype JKS \
+    -destkeystore cacerts.p12 -deststoretype PKCS12
+keytool -importkeystore -srckeystore domain-passwords -srcstoretype JCEKS \
+    -destkeystore domain-passwords.p12 -deststoretype PKCS12
+----
+
+Use the master password of the domain as the password of both the source
+and the destination store.
+
+[[changed-jvm-option-for-the-naming-service]]
+
+==== Changed JVM Option for the Naming Service
+
+The JVM option that opens the `javax.naming.spi` package now targets the
+`org.glassfish.main.jdke` module instead of the unnamed module. The
+`start-domain --upgrade` subcommand does not change this option. Before
+you start an upgraded domain, replace the following option in every
+`java-config` element of the `domain.xml` file:
+
+[source,xml]
+----
+<jvm-options>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</jvm-options>
+----
+
+with:
+
+[source,xml]
+----
+<jvm-options>--add-opens=java.naming/javax.naming.spi=org.glassfish.main.jdke</jvm-options>
+----
+
+[[admin-cli-jar-is-no-longer-an-executable-jar]]
+
+==== `admin-cli.jar` Is No Longer an Executable JAR
+
+The `admin-cli.jar` file moved from the as-install``/modules`` directory to
+the as-install directory, and it can no longer be started with
+`java -jar`. This JAR file is an internal part of {productName}.
+
+Scripts and tools must run `asadmin` subcommands with one of the
+following scripts in the as-install``/bin`` directory:
+
+* `asadmin` on UNIX and Linux systems
+* `asadmin.bat` on Windows systems
+* `asadmin.java` on any system, started as `java asadmin.java` followed by
+the subcommand and its options
+
+This change affects tools that start `admin-cli.jar` directly, for
+example older Arquillian containers and IDE plug-ins for {productName}.
+
+[[stand-alone-clients-require-a-module-path]]
+
+==== Stand-Alone Clients Require a Module Path
+
+The {productName} bootstrap libraries are now Java modules in the
+as-install``/lib/bootstrap`` directory. A stand-alone client that has only
+`gf-client.jar` on its class path fails with a `ClassNotFoundException`
+or a `NoInitialContextException`. For the new command line, see
+"xref:application-development-guide.adoc#developing-clients-without-the-acc[Developing Clients Without the ACC]"
+in {productName} Application Development Guide.
+
+Application clients started with the `appclient` script are not affected.
+
+[[embedded-glassfish-does-not-provide-default-security-stores]]
+
+==== Embedded {productName} Does Not Provide Default Security Stores
+
+Embedded {productName} no longer creates a keystore and a truststore. The
+stores that earlier releases created were copied from the JAR file, so
+their private keys were public. Embedded {productName} now uses the default
+stores of the JDK, or the stores set with the `javax.net.ssl.keyStore`
+and `javax.net.ssl.trustStore` system properties. To enable HTTPS, you
+must provide a keystore with a certificate. For more information, see
+xref:embedded-server-guide.adoc#security-stores[Security Stores] in
+{productName} Embedded Server Guide.
+
+[[ide-support]]
+
+==== IDE Support
+
+IDE plug-ins for {productName} that were released before {productName} 7.1
+might fail to register or start {productName} 7.1 and later. Update the
+plug-in, or the IDE, to a version that supports {productName} 7.1 and later,
+for example IntelliJ IDEA 2026.1 or Apache NetBeans 30.
 
 [[binary-compatible-releases-for-glassfish-server]]
 
@@ -200,7 +338,7 @@ In {productName} {product-majorVersion}, it is recommended that utility options 
 `asadmin` command precede the subcommand. Utility options are options
 that control the behavior of the `asadmin` utility, as distinguished
 from subcommand options. Use of the following options after the
-subcommand is deprecated and will be removed in {productName} 7.1.0.
+subcommand is deprecated and might be removed in a future release.
 
 * `--host`
 * `--port`

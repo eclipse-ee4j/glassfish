@@ -37,10 +37,11 @@ import static org.glassfish.tests.utils.example.TestServlet.RESPONSE_TEXT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Verifies that the MicroProfile Health endpoint of Embedded GlassFish works with an application
- * that does not use CDI.
+ * Verifies that the MicroProfile Health endpoint of Embedded GlassFish works without applications
+ * and with an application that does not use CDI.
  *
  * @see <a href="https://github.com/eclipse-ee4j/glassfish/issues/26255">issue 26255</a>
+ * @see <a href="https://github.com/eclipse-ee4j/glassfish/issues/26260">issue 26260</a>
  */
 public class MpHealthITest {
 
@@ -60,6 +61,17 @@ public class MpHealthITest {
     }
 
     @Test
+    public void healthWithoutApplication() throws Exception {
+        runtime = GlassFishRuntime.bootstrap();
+        GlassFishProperties props = new GlassFishProperties();
+        props.setPort("http-listener", HTTP_PORT);
+        runtime.newGlassFish(props).start();
+
+        assertHealth("/health/live", 200, "UP");
+        assertHealth("/health/ready", 503, "DOWN");
+    }
+
+    @Test
     public void healthWithoutCdiApplication() throws Exception {
         runtime = GlassFishRuntime.bootstrap();
         GlassFishProperties props = new GlassFishProperties();
@@ -72,11 +84,17 @@ public class MpHealthITest {
         assertEquals(WEBAPP_NAME, glassfish.getDeployer().deploy(war));
         assertEquals(RESPONSE_TEXT, ServerUtils.download(toURL("/" + WEBAPP_NAME)));
 
-        HttpURLConnection connection = (HttpURLConnection) toURL("/health").openConnection();
+        assertHealth("/health", 200, "UP");
+    }
+
+    private static void assertHealth(String path, int expectedResponseCode, String expectedStatus) throws Exception {
+        HttpURLConnection connection = (HttpURLConnection) toURL(path).openConnection();
         try {
-            assertEquals(200, connection.getResponseCode());
-            try (InputStream input = connection.getInputStream(); JsonReader reader = Json.createReader(input)) {
-                assertEquals("UP", reader.readObject().getString("status"));
+            int responseCode = connection.getResponseCode();
+            assertEquals(expectedResponseCode, responseCode, path);
+            try (InputStream input = responseCode < 400 ? connection.getInputStream() : connection.getErrorStream();
+                JsonReader reader = Json.createReader(input)) {
+                assertEquals(expectedStatus, reader.readObject().getString("status"), path);
             }
         } finally {
             connection.disconnect();

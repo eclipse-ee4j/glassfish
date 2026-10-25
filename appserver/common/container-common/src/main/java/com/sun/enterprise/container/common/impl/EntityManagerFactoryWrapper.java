@@ -76,15 +76,29 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     private transient InvocationManager invocationManager;
     private transient ComponentEnvManager componentEnvManager;
 
+    // The module that declared the reference, if known. Not always the module of the component doing the
+    // lookup: a reference bound in java:app or java:global is visible to every module of the application,
+    // while the persistence unit it names is resolved in the scope of the module that declared it.
+    private transient BundleDescriptor referringBundle;
+
     private transient EntityManagerFactory entityManagerFactory;
 
     public EntityManagerFactoryWrapper(String unitName, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
+        this(unitName, null, invMgr, compEnvMgr);
+    }
+
+    public EntityManagerFactoryWrapper(String unitName, BundleDescriptor referringBundle, InvocationManager invMgr, ComponentEnvManager compEnvMgr) {
         this.unitName = unitName;
+        this.referringBundle = referringBundle;
         this.invocationManager = invMgr;
         this.componentEnvManager = compEnvMgr;
     }
 
     private EntityManagerFactory getDelegate() {
+        if (entityManagerFactory == null && referringBundle != null) {
+            entityManagerFactory = lookupEntityManagerFactory(referringBundle, referringBundle.getApplication(), unitName);
+        }
+
         if (entityManagerFactory == null) {
             entityManagerFactory = lookupEntityManagerFactory(invocationManager, componentEnvManager, unitName);
             if (entityManagerFactory == null) {
@@ -122,8 +136,9 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public EntityManager createEntityManager(@Nonnull SynchronizationType synchronizationType, @Nullable Map<?, ?> map) {
-        return getDelegate().createEntityManager(synchronizationType, map);
+    @Nonnull
+    public EntityManager createEntityManager(@Nonnull SynchronizationType synchronizationType, @Nullable Map<?, ?> properties) {
+        return getDelegate().createEntityManager(properties);
     }
 
     @Nonnull
@@ -173,7 +188,7 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public Map<java.lang.String, java.lang.Object> getProperties() {
+    public Map<String, Object> getProperties() {
         return getDelegate().getProperties();
     }
 
@@ -245,7 +260,7 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public <H extends EntityHandler> void runInTransaction(@Nonnull Class<H> handlerClass, @Nonnull Consumer<H> work) {
+    public <H extends EntityHandler> void runInTransaction(Class<H> handlerClass, Consumer<H> work) {
         getDelegate().runInTransaction(handlerClass, work);
     }
 
@@ -274,7 +289,6 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     public static EntityManagerFactory lookupEntityManagerFactory(ComponentInvocationType componentInvocationType, String emfUnitName, Object descriptor) {
         Application application = null;
         BundleDescriptor module = null;
-        EntityManagerFactory entityManagerFactory = null;
 
         switch (componentInvocationType) {
 
@@ -307,6 +321,12 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
 
                 break;
         }
+
+        return lookupEntityManagerFactory(module, application, emfUnitName);
+    }
+
+    private static EntityManagerFactory lookupEntityManagerFactory(BundleDescriptor module, Application application, String emfUnitName) {
+        EntityManagerFactory entityManagerFactory = null;
 
         // First check module-level for a match.
         if (module != null) {

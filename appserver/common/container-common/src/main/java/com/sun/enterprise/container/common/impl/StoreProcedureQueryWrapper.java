@@ -50,8 +50,13 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
         return new StoreProcedureQueryWrapper(queryDelegate, emDelegate);
     }
 
+    // QueryWrapper keeps its own EntityManager reference private, and the typed
+    // result methods added in Jakarta Persistence 4.0 must detach their results too.
+    private final EntityManager entityManagerDelegate;
+
     private StoreProcedureQueryWrapper(StoredProcedureQuery qDelegate, EntityManager emDelegate) {
         super(qDelegate, emDelegate);
+        this.entityManagerDelegate = emDelegate;
     }
 
     @Override
@@ -253,13 +258,13 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
 
     @Override
     public <T> Parameter<T> registerConvertedParameter(int position,
-        Class<? extends AttributeConverter<T, ?>> converter, ParameterMode mode) {
+            Class<? extends AttributeConverter<T, ?>> converter, ParameterMode mode) {
         return queryDelegate.registerConvertedParameter(position, converter, mode);
     }
 
     @Override
     public <T> Parameter<T> registerConvertedParameter(String parameterName,
-        Class<? extends AttributeConverter<T, ?>> converter, ParameterMode mode) {
+            Class<? extends AttributeConverter<T, ?>> converter, ParameterMode mode) {
         return queryDelegate.registerConvertedParameter(parameterName, converter, mode);
     }
 
@@ -270,32 +275,32 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
 
     @Override
     public <R> List<R> getResultList(Class<R> resultClass) {
-        return queryDelegate.getResultList(resultClass);
+        return detached(queryDelegate.getResultList(resultClass));
     }
 
     @Override
     public <R> List<R> getResultList(ResultSetMapping<R> mapping) {
-        return queryDelegate.getResultList(mapping);
+        return detached(queryDelegate.getResultList(mapping));
     }
 
     @Override
     public <R> R getSingleResult(Class<R> resultClass) {
-        return queryDelegate.getSingleResult(resultClass);
+        return detached(queryDelegate.getSingleResult(resultClass));
     }
 
     @Override
     public <R> R getSingleResult(ResultSetMapping<R> mapping) {
-        return queryDelegate.getSingleResult(mapping);
+        return detached(queryDelegate.getSingleResult(mapping));
     }
 
     @Override
     public <R> R getSingleResultOrNull(Class<R> resultClass) {
-        return queryDelegate.getSingleResultOrNull(resultClass);
+        return detached(queryDelegate.getSingleResultOrNull(resultClass));
     }
 
     @Override
     public <R> R getSingleResultOrNull(ResultSetMapping<R> mapping) {
-        return queryDelegate.getSingleResultOrNull(mapping);
+        return detached(queryDelegate.getSingleResultOrNull(mapping));
     }
 
     @Override
@@ -304,13 +309,22 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
     }
 
     @Override
-    public StoredProcedureQuery addOption(Option option) {
+    public StoredProcedureQuery addOption(StoredProcedureQuery.Option option) {
         queryDelegate.addOption(option);
         return this;
     }
 
     @Override
-    public Set<Option> getOptions() {
+    public Set<StoredProcedureQuery.Option> getOptions() {
         return queryDelegate.getOptions();
+    }
+
+    /**
+     * Detaches a result the same way {@code QueryWrapper.getResultList()} does:
+     * clear the persistence context once the value has been read.
+     */
+    private <R> R detached(R result) {
+        entityManagerDelegate.clear();
+        return result;
     }
 }

@@ -77,10 +77,9 @@ import static com.sun.enterprise.container.common.spi.util.EntityManagerQueryMet
 import static com.sun.enterprise.container.common.spi.util.EntityManagerQueryMethod.UNWRAP;
 
 /**
- * Wrapper class for jakarta.persistence.Query objects returned from
- * non-transactional access of a container-managed transactional
- * EntityManager.  Proxying the Query object allows us to clear persistence
- * context after execution to allow for returned objects to be detached
+ * Wrapper class for jakarta.persistence.Query objects returned from non-transactional access of a container-managed
+ * transactional EntityManager. Proxying the Query object allows us to clear persistence context after execution to
+ * allow for returned objects to be detached
  *
  */
 public class QueryWrapper<T extends Query> implements Query {
@@ -89,12 +88,11 @@ public class QueryWrapper<T extends Query> implements Query {
 
     // Holds current query/em delegates.
     protected final T queryDelegate;
-    private EntityManager entityManagerDelegate;
+    protected EntityManager entityManagerDelegate;
 
     public static Query createQueryWrapper(Query queryDelegate, EntityManager emDelegate) {
         return new QueryWrapper<Query>(queryDelegate, emDelegate);
     }
-
 
     protected QueryWrapper(T qDelegate, EntityManager emDelegate) {
         queryDelegate = Objects.requireNonNull(qDelegate, "Query delegate must not be null.");
@@ -102,19 +100,18 @@ public class QueryWrapper<T extends Query> implements Query {
         callFlowAgent = new DummyCallFlowAgentImpl(); // TODO get it from ContainerUtil
     }
 
-
     @Deprecated(since = "9", forRemoval = true)
     @Override
     public List getResultList() {
         try {
-            if(callFlowAgent.isEnabled()) {
+            if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryStart(GET_RESULT_LIST);
             }
-            List retVal =  queryDelegate.getResultList();
+            List retVal = queryDelegate.getResultList();
             entityManagerDelegate.clear();
             return retVal;
         } finally {
-            if(callFlowAgent.isEnabled()) {
+            if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerQueryEnd();
             }
         }
@@ -275,8 +272,8 @@ public class QueryWrapper<T extends Query> implements Query {
         return this;
     }
 
-
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public Query setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
         try {
             if (callFlowAgent.isEnabled()) {
@@ -293,8 +290,8 @@ public class QueryWrapper<T extends Query> implements Query {
         return this;
     }
 
-
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public Query setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
         try {
             if (callFlowAgent.isEnabled()) {
@@ -310,7 +307,6 @@ public class QueryWrapper<T extends Query> implements Query {
 
         return this;
     }
-
 
     @Override
     public Query setParameter(String name, Object value) {
@@ -329,8 +325,8 @@ public class QueryWrapper<T extends Query> implements Query {
         return this;
     }
 
-
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public Query setParameter(String name, Date value, TemporalType temporalType) {
         try {
             if (callFlowAgent.isEnabled()) {
@@ -363,7 +359,6 @@ public class QueryWrapper<T extends Query> implements Query {
         return this;
     }
 
-
     @Override
     public Query setParameter(int position, Object value) {
         try {
@@ -379,7 +374,6 @@ public class QueryWrapper<T extends Query> implements Query {
 
         return this;
     }
-
 
     @Override
     @Deprecated(since = "9", forRemoval = true)
@@ -397,7 +391,6 @@ public class QueryWrapper<T extends Query> implements Query {
 
         return this;
     }
-
 
     @Override
     @Deprecated(since = "9", forRemoval = true)

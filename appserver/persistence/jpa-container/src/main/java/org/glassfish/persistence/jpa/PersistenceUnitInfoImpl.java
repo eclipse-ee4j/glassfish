@@ -21,11 +21,12 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.PersistenceUnitDescriptor;
 import com.sun.logging.LogDomains;
 
+import jakarta.persistence.FetchType;
+import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.SharedCacheMode;
 import jakarta.persistence.ValidationMode;
 import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.PersistenceUnitInfo;
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -325,8 +326,6 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         return provider;
     }
 
-    // TODO IMPLEMENT!
-
     @Override
     public String getScopeAnnotationName() {
         return persistenceUnitDescriptor.getScope();
@@ -335,6 +334,38 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
     @Override
     public List<String> getQualifierAnnotationNames() {
         return persistenceUnitDescriptor.getQualifiers();
+    }
+
+ // TODO IMPLEMENT!
+
+    @Override
+    public List<String> getAllClassNames() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public FetchType getDefaultToOneFetchType() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public List<String> getManagedPackageDescriptors() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public List<String> getManagedModuleDescriptors() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public List<String> getAllPackageDescriptors() {
+        throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    @Override
+    public List<String> getAllModuleDescriptors() {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 
 }

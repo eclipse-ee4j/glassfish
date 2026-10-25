@@ -50,7 +50,6 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaSelect;
 import jakarta.persistence.criteria.CriteriaStatement;
-import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.Metamodel;
 import jakarta.persistence.sql.ResultSetMapping;
 import jakarta.transaction.TransactionManager;
@@ -192,6 +191,18 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         doTxRequiredCheck();
 
+    }
+
+    private boolean isTransactionScopedWithoutTransaction() {
+        if (contextType != PersistenceContextType.TRANSACTION) {
+            return false;
+        }
+
+        if (entityManagerFactory == null) {
+            init();
+        }
+
+        return getCurrentTransaction() == null;
     }
 
     private void doTxRequiredCheck() {
@@ -500,26 +511,21 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     @Override
     @Deprecated(since = "9", forRemoval = true)
-    public Statement createQuery(CriteriaStatement<?> criteriaQuery) {
-        return createStatement(criteriaQuery);
-    }
-
-    @Override
-    public Statement createStatement(CriteriaStatement<?> criteriaQuery) {
-        Statement returnValue = null;
+    public Statement createQuery(CriteriaStatement<?> statement) {
+        // Unlike other create*Query() methods there is no need for a QueryWrapper here.
+        // QueryWrappers ensure entities returned by a query are detached; an update or
+        // delete statement returns no entities.
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(CREATE_QUERY_CRITERIA_QUERY);
+                callFlowAgent.entityManagerMethodStart(
+                    statement instanceof CriteriaDelete ? CREATE_QUERY_CRITERIA_DELETE : CREATE_QUERY_CRITERIA_UPDATE);
             }
-            EntityManager delegate = _getDelegate();
-            returnValue = delegate.createStatement(criteriaQuery);
-            returnValue = wrapStatementIfDetached(returnValue, delegate);
+            return _getDelegate().createQuery(statement);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
             }
         }
-        return returnValue;
     }
 
     @Override
@@ -647,7 +653,6 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         // tx is required so there's no need to do any non-tx cleanup
     }
-
 
     @Override
     public void refresh(Object entity, LockModeType lockMode, Map<String, Object> properties) {
@@ -873,8 +878,12 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public void detach(Object o) {
 
-        // TODO revisit this check once Linda confirms whether it is required or not.
-        doTransactionScopedTxCheck();
+        // Unlike persist, remove, merge and refresh, detach does not require a transaction: for a
+        // transaction-scoped persistence context without one it is a noop (Jakarta Persistence,
+        // "Entity Manager Operations and Transactions").
+        if (isTransactionScopedWithoutTransaction()) {
+            return;
+        }
 
         try {
             if (callFlowAgent.isEnabled()) {
@@ -887,7 +896,8 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
             }
         }
 
-        // tx is required so there's no need to do any non-tx cleanup
+        // only reached with a tx (or a non-transaction-scoped context), so there's no need to do
+        // any non-tx cleanup
     }
 
     @Override
@@ -1148,12 +1158,12 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
         return isDetached() ? QueryWrapper.createQueryWrapper(query, delegate) : query;
     }
 
-    private Statement wrapStatementIfDetached(Statement statement, EntityManager delegate) {
-        return isDetached() ? StatementWrapper.createQueryWrapper(statement, delegate) : statement;
-    }
-
     private StatementOrTypedQuery wrapStatementOrTypedQueryIfDetached(StatementOrTypedQuery statement, EntityManager delegate) {
         return isDetached() ? StatementOrTypedQueryWrapper.createQueryWrapper(statement, delegate) : statement;
+    }
+
+    private StatementOrTypedQuery wrapQueryIfDetached(StatementOrTypedQuery query, EntityManager delegate) {
+        return isDetached() ? StatementOrTypedQueryWrapper.createQueryWrapper(query, delegate) : query;
     }
 
     private void clearDetachedPersistenceContext(EntityManager em) {
@@ -1232,7 +1242,20 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     @Override
     public void refresh(Object entity, RefreshOption... options) {
-        _getDelegate().refresh(entity, options);
+        doTransactionScopedTxCheck();
+
+        try {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodStart(REFRESH_OBJECT_LOCKMODETYPE);
+            }
+            _getDelegate().refresh(entity, options);
+        } finally {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodEnd();
+            }
+        }
+
+        // tx is required so there's no need to do any non-tx cleanup
     }
 
     @Override
@@ -1257,7 +1280,22 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     @Override
     public <T> TypedQuery<T> createQuery(CriteriaSelect<T> selectQuery) {
-        return _getDelegate().createQuery(selectQuery);
+        TypedQuery<T> returnValue = null;
+
+        try {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodStart(CREATE_QUERY_CRITERIA_QUERY);
+            }
+            EntityManager delegate = _getDelegate();
+            returnValue = delegate.createQuery(selectQuery);
+
+            returnValue = wrapQueryIfDetached(returnValue, delegate);
+        } finally {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodEnd();
+            }
+        }
+        return returnValue;
     }
 
     @Override
@@ -1274,20 +1312,6 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public <C, T> T callWithConnection(ConnectionFunction<C, T> function) {
         return _getDelegate().callWithConnection(function);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     @Override
     public <T> T get(Class<T> entityClass, Object id) {
@@ -1331,32 +1355,33 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     @Override
     public Statement createStatement(String qlString) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().createStatement(qlString);
+    }
+
+    @Override
+    public Statement createStatement(CriteriaStatement<?> statement) {
+        return _getDelegate().createStatement(statement);
     }
 
     @Override
     public <T> TypedQuery<T> createQuery(String qlString, EntityGraph<T> resultGraph) {
-        // TODO Auto-generated method stub
-        return null;
+        EntityManager delegate = _getDelegate();
+        return wrapQueryIfDetached(delegate.createQuery(qlString, resultGraph), delegate);
     }
 
     @Override
     public Statement createNamedStatement(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().createNamedStatement(name);
     }
 
     @Override
     public Statement createStatement(StatementReference reference) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().createStatement(reference);
     }
 
     @Override
     public Statement createNativeStatement(String sqlString) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().createNativeStatement(sqlString);
     }
 
     @Override
@@ -1374,7 +1399,6 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public void addOption(Option option) {
         // TODO Auto-generated method stub
-
     }
 
     @Override

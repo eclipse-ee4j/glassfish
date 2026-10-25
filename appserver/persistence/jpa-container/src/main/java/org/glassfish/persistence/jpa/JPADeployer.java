@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -29,7 +29,6 @@ import com.sun.logging.LogDomains;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -324,8 +323,15 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         }
 
         // Iterate through all the processPersistenceUnitDescriptors for this bundle and load the corresponding persistence unit
-        for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
-            loadPersistenceUnit(persistenceUnitDescriptor, deploymentContext);
+        try {
+            for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
+                loadPersistenceUnit(persistenceUnitDescriptor, deploymentContext);
+            }
+        } catch (RuntimeException e) {
+            // The deployment fails, so APPLICATION_PREPARED - where the factories are normally handed over
+            // or closed - never comes. Close the ones already created for the units before this one.
+            closeEntityManagerFactories(deploymentContext);
+            throw e;
         }
     }
 
@@ -449,6 +455,11 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         }
     }
 
+    private static boolean isCompositeMember(PersistenceUnitDescriptor persistenceUnitDescriptor) {
+        return Boolean.parseBoolean(
+            persistenceUnitDescriptor.getProperties().getProperty("eclipselink.composite-unit.member"));
+    }
+
     private void doPersistenceSchemaGeneration(PersistenceUnitDescriptor persistenceUnitDescriptor, DeploymentContext deploymentContext) {
 
         // Get back the loader that we stored in loadPersistenceUnit()
@@ -468,7 +479,13 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         DeployCommandParameters deployCommandParameters = deploymentContext.getCommandParameters(DeployCommandParameters.class);
 
         // We do validation and execute Java2DB only on DAS
-        if (isDas()) {
+        //
+        // Not for an EclipseLink composite member: such a unit exists only to be picked up by the
+        // composite unit that lists its jar, and EclipseLink refuses to deploy it on its own
+        // (EclipseLink-28030), so creating an EntityManager for it here would fail the deployment of
+        // an application that is perfectly valid. Its factory is still saved below, so it is closed
+        // with the others.
+        if (isDas() && !isCompositeMember(persistenceUnitDescriptor)) {
 
             // APPLICATION_PREPARED will be called for create-application-ref
             // also. We should perform java2db only on first deploy
@@ -482,10 +499,18 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
                 // Entity manager creation also triggers DDL generation by provider.
                 try (EntityManager entityManager = entityManagerFactory.createEntityManager()) {
 
-                } catch (PersistenceException e) {
+                } catch (RuntimeException e) {
                     // Exception indicates something went wrong while performing validation. Clean
-                    // up and rethrow to fail deployment
+                    // up and rethrow to fail deployment.
+                    //
+                    // Not only PersistenceException: providers signal a unit they cannot deploy with
+                    // other runtime exceptions too (EclipseLink uses IllegalStateException), and the
+                    // event dispatcher only aborts the deployment for a DeploymentException - anything
+                    // else it logs and swallows, which would silently skip the remaining units.
                     entityManagerFactory.close();
+
+                    // The deployment fails, so close the factories of the other units of this deployment as well
+                    closeEntityManagerFactories(deploymentContext);
 
                     // Need to wrap exception in DeploymentException else deployment will not fail.
                     throw new DeploymentException(e);
@@ -545,6 +570,30 @@ public class JPADeployer extends SimpleDeployer<JPAContainer, JPApplicationConta
         }
 
         emfsCreatedForThisApp.add(entityManagerFactory);
+    }
+
+    /**
+     * Closes the still open entity manager factories created for the persistence units of a deployment that
+     * fails. Left open, the provider keeps their units registered with the classloader of the failed deployment,
+     * and a later deployment of the same application can pick those up (EclipseLink reuses a unit by its name and
+     * location), failing with classes it cannot load from that closed classloader.
+     */
+    private static void closeEntityManagerFactories(DeploymentContext deploymentContext) {
+        for (var persistenceUnitDescriptor : getPersistenceUnitDescriptors(deploymentContext)) {
+            PersistenceUnitLoader persistenceUnitLoader = deploymentContext.getTransientAppMetaData(
+                getUniquePersistenceUnitIdentifier(persistenceUnitDescriptor), PersistenceUnitLoader.class);
+
+            EntityManagerFactory entityManagerFactory =
+                persistenceUnitLoader == null ? null : persistenceUnitLoader.getEntityManagerFactory();
+
+            if (entityManagerFactory != null && entityManagerFactory.isOpen()) {
+                try {
+                    entityManagerFactory.close();
+                } catch (RuntimeException e) {
+                    logger.log(FINE, "Closing entity manager factory of failed deployment", e);
+                }
+            }
+        }
     }
 
     private void closeEntityManagerFactories(ApplicationInfo appInfo) {

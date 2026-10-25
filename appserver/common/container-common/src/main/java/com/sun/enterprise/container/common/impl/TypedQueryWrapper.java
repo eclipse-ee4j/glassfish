@@ -286,22 +286,27 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery<X>> implements
     }
 
     @Override
-    public long getResultCount() {
-        return queryDelegate.getResultCount();
-    }
-
-    @Override
     public PessimisticLockScope getLockScope() {
         return queryDelegate.getLockScope();
     }
 
     @Override
-    public TypedQuery<X> addOption(Option option) {
-        return queryDelegate.addOption(option);
+    public TypedQuery<X> addOption(TypedQuery.Option option) {
+        queryDelegate.addOption(option);
+        return this;
     }
 
     @Override
-    public Set<Option> getOptions() {
+    public Set<TypedQuery.Option> getOptions() {
         return queryDelegate.getOptions();
+    }
+
+    /**
+     * Returns a count rather than entities, so unlike {@link #getResultList()}
+     * there is nothing to detach afterwards.
+     */
+    @Override
+    public long getResultCount() {
+        return queryDelegate.getResultCount();
     }
 }

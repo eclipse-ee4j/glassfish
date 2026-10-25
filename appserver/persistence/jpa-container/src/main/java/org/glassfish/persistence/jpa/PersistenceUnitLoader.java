@@ -22,10 +22,10 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.ValidationMode;
 import jakarta.persistence.spi.PersistenceProvider;
 import jakarta.persistence.spi.PersistenceUnitInfo;
-import jakarta.persistence.spi.PersistenceUnitTransactionType;
 
 import java.util.HashMap;
 import java.util.Map;

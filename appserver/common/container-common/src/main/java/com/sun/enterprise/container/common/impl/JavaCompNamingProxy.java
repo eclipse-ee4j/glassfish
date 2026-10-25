@@ -26,26 +26,34 @@ import org.glassfish.api.naming.NamedNamingObjectProxy;
 import org.glassfish.api.naming.NamespacePrefixes;
 import org.jvnet.hk2.annotations.Service;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.ACC;
+import static org.glassfish.api.admin.ProcessEnvironment.ProcessType.Other;
 import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 
 @Service
 @NamespacePrefixes({ JavaCompNamingProxy.IN_APPCLIENT_CONTAINER })
 public final class JavaCompNamingProxy implements NamedNamingObjectProxy {
+
     static final String IN_APPCLIENT_CONTAINER = JNDI_CTX_JAVA_COMPONENT + "InAppClientContainer";
+
     @Inject
     private ProcessEnvironment processEnv;
 
     @Override
     public Object handle(String name) throws NamingException {
         if (IN_APPCLIENT_CONTAINER.equals(name)) {
-            Boolean isInAppClientContainer = Boolean.FALSE;
-            if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.ACC) {
-                isInAppClientContainer = Boolean.TRUE;
-            } else if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.Other) {
+            Boolean isInAppClientContainer = FALSE;
+            if (processEnv.getProcessType() == ACC) {
+                isInAppClientContainer = TRUE;
+            } else if (processEnv.getProcessType() == Other) {
                 throw new NamingException("Lookup failed for '" + name + "'");
             }
+
             return isInAppClientContainer;
         }
+
         return null;
     }
 }

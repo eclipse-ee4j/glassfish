@@ -6,6 +6,8 @@ on:
     paths:
     - 'docs/**'
     - '.github/workflows/build-docs.yml'
+env:
+  MAVEN_ARGS: ''
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -27,4 +29,3 @@ jobs:
         name: docs-pdfs
         path: docs/distribution/target/classes/*.pdf
         retention-days: 7
-

@@ -120,8 +120,10 @@ spec:
     env:
     - name: "HOME"
       value: "/home/jenkins"
+    - name: "MAVEN_ARGS"
+      value: "${additionalMvnArgs}"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication ${additionalMvnArgs}"
+      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
     - name: "ANT_HOME"
       value: "${antHome}"
     - name: "ANT_VERSION"

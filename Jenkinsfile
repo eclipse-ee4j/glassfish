@@ -14,18 +14,75 @@
 *
 * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 */
-def mvnVersion = '3.9.16'
+
+// See:
+// https://www.jenkins.io/doc/book/pipeline/syntax/
+// https://www.jenkins.io/doc/pipeline/steps/workflow-basic-steps
+// https://plugins.jenkins.io/kubernetes/
+// https://github.com/jenkinsci/kubernetes-plugin/blob/master/README.md
+// https://kubernetes.io/docs/concepts/workloads/pods/#working-with-pods
+// https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/
+// https://github.com/jenkinsci/docker-agents/releases
+// https://hub.docker.com/r/eclipsecbi/jiro-agent-basic-ubuntu
+// https://hub.docker.com/r/jenkins/inbound-agent/
+
+// These limits are collected from logs:
+// maximum cpu usage per Pod is 8300m
+// maximum cpu usage per Container is 8
+// maximum cpu usage is 44800m
+
 def javaVersion = '21'
-def jdkTool = "temurin-jdk${javaVersion}-latest"
-def mvnTool = "apache-maven-${mvnVersion}"
-// The inherited JIRO "basic" template has alwaysPullImage=true for jnlp.
-// Kubernetes-plugin inheritance treats false as a default value, so a child
-// containerTemplate cannot turn an inherited true back to false. Therefore the
-// test pods below reproduce the relevant basic pod mounts directly and define
-// jnlp as a non-inherited containerTemplate with alwaysPullImage=false.
-// Ant shell/test execution itself runs in a dedicated sidecar container; jnlp
-// is used only for Jenkins Remoting.
-def antPodCfg = """
+def mvnVersion = '3.9.16'
+// You can add -Psnapshots temporarily, if needed.
+def additionalMvnArgs = '-Psnapshots'
+def antVersion = '1.10.18'
+def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
+
+// Job groups are defined here, because sometimes we move them and it is easier
+// when these lists are close together.
+def ant_heavy_jobs = [
+    "connector_group_4",
+    "naming_all",
+    "ql_gf_full_profile_all"
+]
+
+def ant_light_jobs = [
+    "webservice_all",
+    "ejb_group_3",
+    "ejb_group_1",
+    "connector_group_1",
+    "deployment_all",
+    "security_all",
+    "jdbc_group4",
+    "jdbc_group3",
+    "web_jsp",
+    "cdi_all",
+    "ejb_group_2",
+    "ejb_group_embedded",
+    "jdbc_group1",
+    "jdbc_group5",
+    "connector_group_2",
+    "connector_group_3",
+    "jdbc_group2",
+    "persistence_all",
+    "ql_gf_web_profile_all",
+    "batch_all"
+]
+
+// jdbc-tests are not here, they need docker - they are executed just
+// on GitHub Actions (implicitly via .github/workflows/build-linux.yml)
+def mvn_jobs = [
+    "admin-tests-parent",
+    "application-tests",
+    "application-tests-individual",
+    "embedded-tests",
+    "glassfish-external-tck-microprofile-config",
+    "glassfish-external-tck-microprofile-health",
+    "glassfish-external-tck-microprofile-jwt",
+    "glassfish-external-tck-microprofile-rest-client"
+]
+
+def podYamlConfigurationTemplate = """
 apiVersion: v1
 kind: Pod
 spec:
@@ -33,156 +90,54 @@ spec:
     kubernetes.io/os: "linux"
   containers:
   - name: jnlp
+    imagePullPolicy: IfNotPresent
+    alwaysPullImage: false
+    tty: false
+    workingDir: "/home/jenkins/agent"
     env:
-    - name: "JENKINS_REMOTING_JAVA_OPTS"
-      value: "-showversion -XshowSettings:vm -Xmx256m -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true -Dorg.jenkinsci.plugins.gitclient.CliGitAPIImpl.useSETSID=true"
-    - name: "JAVA_TOOL_OPTIONS"
-      value: ""
-    - name: "_JAVA_OPTIONS"
-      value: ""
-    - name: "OPENJ9_JAVA_OPTIONS"
-      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    - name: "JENKINS_JAVA_OPTS"
+      value: "-Xms64m -Xmx768m -Xss512k -XX:MaxGCPauseMillis=1000 -XX:+UseShenandoahGC"
     volumeMounts:
-    - name: "m2-mvnd"
-      mountPath: "/home/jenkins/.m2/mvnd"
-    - name: "m2-dir"
-      mountPath: "/home/jenkins/.m2/toolchains.xml"
-      subPath: "toolchains.xml"
-      readOnly: true
-    - name: "m2-dir"
-      mountPath: "/home/jenkins/.mavenrc"
-      subPath: ".mavenrc"
-      readOnly: true
-    - name: "tools"
-      mountPath: "/opt/tools"
-      readOnly: true
-    - name: "m2-repository"
-      mountPath: "/home/jenkins/.m2/repository"
-    - name: "jenkins-home-basic"
-      mountPath: "/home/jenkins"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings-security.xml"
-      subPath: "settings-security.xml"
-      readOnly: true
-    - name: "m2-wrapper"
-      mountPath: "/home/jenkins/.m2/wrapper"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings.xml"
-      subPath: "settings.xml"
-      readOnly: true
     - name: "known-hosts"
       mountPath: "/home/jenkins/.ssh"
-  # Keep Jenkins Remoting in jnlp, but execute all Ant-side shell commands in
-  # this sidecar via container('ant'). This mirrors the Maven execution model
-  # and avoids Durable Task launching shells directly in the custom jnlp agent.
-  - name: ant
-    image: docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987
+    resources:
+      limits:
+        memory: "0.75Gi"
+        cpu: "500m"
+      requests:
+        memory: "0.75Gi"
+        cpu: "500m"
+  - name: action
+    image: maven:${mvnVersion}-eclipse-temurin-${javaVersion}
     imagePullPolicy: IfNotPresent
+    alwaysPullImage: false
     command:
-    - cat
-    tty: true
+    - sleep
+    args:
+    - 99d
+    tty: false
     workingDir: /home/jenkins/agent
     env:
     - name: "HOME"
       value: "/home/jenkins"
-    - name: "JAVA_HOME"
-      value: "/opt/tools/java/temurin/jdk-${javaVersion}/latest"
-    - name: "M2_HOME"
-      value: "/opt/tools/apache-maven/${mvnVersion}"
-    - name: "MAVEN_HOME"
-      value: "/opt/tools/apache-maven/${mvnVersion}"
-    - name: "PATH"
-      value: "/opt/tools/java/temurin/jdk-${javaVersion}/latest/bin:/opt/tools/apache-maven/${mvnVersion}/bin:/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    - name: "JAVA_TOOL_OPTIONS"
-      value: ""
-    - name: "_JAVA_OPTIONS"
-      value: ""
-    - name: "OPENJ9_JAVA_OPTIONS"
-      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
+    - name: "MAVEN_ARGS"
+      value: "${additionalMvnArgs}"
+    - name: "MAVEN_OPTS"
+      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
+    - name: "ANT_HOME"
+      value: "${antHome}"
+    - name: "ANT_VERSION"
+      value: "${antVersion}"
+    - name: "ANT_OPTS"
+      value: "-Duser.home=/home/jenkins -Xms64m -Xmx256m -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
     volumeMounts:
-    - name: "m2-mvnd"
-      mountPath: "/home/jenkins/.m2/mvnd"
-    - name: "m2-dir"
-      mountPath: "/home/jenkins/.m2/toolchains.xml"
-      subPath: "toolchains.xml"
-      readOnly: true
-    - name: "m2-dir"
-      mountPath: "/home/jenkins/.mavenrc"
-      subPath: ".mavenrc"
-      readOnly: true
-    - name: "tools"
-      mountPath: "/opt/tools"
-      readOnly: true
-    - name: "m2-repository"
-      mountPath: "/home/jenkins/.m2/repository"
-    - name: "jenkins-home-basic"
+    - name: "jenkins-home"
       mountPath: "/home/jenkins"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings-security.xml"
-      subPath: "settings-security.xml"
-      readOnly: true
-    - name: "m2-wrapper"
-      mountPath: "/home/jenkins/.m2/wrapper"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings.xml"
-      subPath: "settings.xml"
-      readOnly: true
     - name: "known-hosts"
       mountPath: "/home/jenkins/.ssh"
     - name: "workspace-volume"
       mountPath: "/home/jenkins/agent"
       readOnly: false
-    resources:
-      limits:
-        memory: "4096Mi"
-        cpu: "2000m"
-      requests:
-        # jnlp reserves 1 GiB; reserve only a small additional amount for
-        # the execution sidecar while keeping its 4 GiB runtime limit.
-        memory: "256Mi"
-        cpu: "500m"
-  volumes:
-  - name: "m2-mvnd"
-    emptyDir: {}
-  - name: "m2-dir"
-    configMap:
-      name: "m2-dir"
-  - name: "tools"
-    persistentVolumeClaim:
-      claimName: "tools-claim-jiro-glassfish"
-      readOnly: true
-  - name: "m2-repository"
-    emptyDir: {}
-  - name: "jenkins-home-basic"
-    emptyDir: {}
-  - name: "m2-wrapper"
-    emptyDir: {}
-  - name: "m2-secret-dir"
-    secret:
-      secretName: "m2-secret-dir"
-  - name: "known-hosts"
-    configMap:
-      name: "known-hosts"
-"""
-
-def mvnContainerCfg = """
-apiVersion: v1
-kind: Pod
-spec:
-  nodeSelector:
-    kubernetes.io/os: "linux"
-  containers:
-  - name: jnlp
-    env:
-    - name: "JENKINS_REMOTING_JAVA_OPTS"
-      value: "-showversion -XshowSettings:vm -Xmx256m -Dorg.jenkinsci.remoting.engine.JnlpProtocol3.disabled=true -Dorg.jenkinsci.plugins.gitclient.CliGitAPIImpl.useSETSID=true"
-    - name: "JAVA_TOOL_OPTIONS"
-      value: ""
-    - name: "_JAVA_OPTIONS"
-      value: ""
-    - name: "OPENJ9_JAVA_OPTIONS"
-      value: "-XX:+IgnoreUnrecognizedVMOptions -XX:+IdleTuningCompactOnIdle -XX:+IdleTuningGcOnIdle"
-    volumeMounts:
     - name: "m2-mvnd"
       mountPath: "/home/jenkins/.m2/mvnd"
     - name: "m2-dir"
@@ -193,42 +148,12 @@ spec:
       mountPath: "/home/jenkins/.mavenrc"
       subPath: ".mavenrc"
       readOnly: true
-    - name: "tools"
-      mountPath: "/opt/tools"
-      readOnly: true
-    - name: "m2-repository"
-      mountPath: "/home/jenkins/.m2/repository"
-    - name: "jenkins-home-basic"
-      mountPath: "/home/jenkins"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings-security.xml"
-      subPath: "settings-security.xml"
-      readOnly: true
     - name: "m2-wrapper"
       mountPath: "/home/jenkins/.m2/wrapper"
-    - name: "m2-secret-dir"
-      mountPath: "/home/jenkins/.m2/settings.xml"
-      subPath: "settings.xml"
-      readOnly: true
-    - name: "known-hosts"
-      mountPath: "/home/jenkins/.ssh"
-  - name: maven
-    image: maven:${mvnVersion}-eclipse-temurin-${javaVersion}
-    imagePullPolicy: IfNotPresent
-    command:
-    - cat
-    tty: true
-    env:
-    - name: "HOME"
-      value: "/home/jenkins"
-    - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xmx2g -Xss512k -XX:+UseG1GC -XX:+UseStringDeduplication"
-    volumeMounts:
-    - name: "jenkins-home"
-      mountPath: "/home/jenkins"
-      readOnly: false
     - name: "maven-repo-shared-storage"
       mountPath: "/home/jenkins/.m2/repository"
+    - name: "maven-repo-local-storage"
+      mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
     - name: "settings-xml"
       mountPath: "/home/jenkins/.m2/settings.xml"
       subPath: "settings.xml"
@@ -237,46 +162,30 @@ spec:
       mountPath: "/home/jenkins/.m2/settings-security.xml"
       subPath: "settings-security.xml"
       readOnly: true
-    - name: "maven-repo-local-storage"
-      mountPath: "/home/jenkins/.m2/repository/org/glassfish/main"
-    - name: "workspace-volume"
-      mountPath: "/home/jenkins/agent"
-      readOnly: false
-    resources:
-      limits:
-        memory: "8Gi"
-        cpu: "5500m"
-      requests:
-        memory: "6Gi"
-        cpu: "2000m"
+    resources: VAR_RESOURCES
   volumes:
+  - name: "jenkins-home"
+    emptyDir:
+      sizeLimit: "4Gi"
+  - name: "known-hosts"
+    configMap:
+      name: "known-hosts"
   - name: "m2-mvnd"
     emptyDir: {}
   - name: "m2-dir"
     configMap:
       name: "m2-dir"
-  - name: "tools"
-    persistentVolumeClaim:
-      claimName: "tools-claim-jiro-glassfish"
-      readOnly: true
-  - name: "m2-repository"
-    emptyDir: {}
-  - name: "jenkins-home-basic"
-    emptyDir: {}
   - name: "m2-wrapper"
     emptyDir: {}
   - name: "m2-secret-dir"
     secret:
       secretName: "m2-secret-dir"
-  - name: "known-hosts"
-    configMap:
-      name: "known-hosts"
-  - name: "jenkins-home"
-    emptyDir:
-      sizeLimit: "4Gi"
   - name: "maven-repo-shared-storage"
     persistentVolumeClaim:
       claimName: "glassfish-maven-repo-storage"
+  - name: "maven-repo-local-storage"
+    emptyDir:
+      sizeLimit: "2Gi"
   - name: "settings-xml"
     secret:
       secretName: "m2-secret-dir"
@@ -289,75 +198,113 @@ spec:
       items:
       - key: "settings-security.xml"
         path: "settings-security.xml"
-  - name: "maven-repo-local-storage"
-    emptyDir:
-      sizeLimit: "2Gi"
-
 """
 
-def mvnBuildContainerCfg = mvnContainerCfg.replace(
-"""    resources:
-      limits:
-        memory: "8Gi"
-        cpu: "5500m"
-      requests:
-        memory: "6Gi"
-        cpu: "2000m"
+def antHeavyContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
 """,
 """    resources:
       limits:
-        memory: "8Gi"
-        cpu: "5500m"
+        memory: "4Gi"
+        cpu: "3000m"
+      requests:
+        memory: "4Gi"
+        cpu: "3000m"
+"""
+)
+
+def antLightContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
+""",
+"""    resources:
+      limits:
+        memory: "3.2Gi"
+        cpu: "2500m"
+      requests:
+        memory: "3.2Gi"
+        cpu: "2500m"
+"""
+)
+
+def mvnHeavyContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
+""",
+"""    resources:
+      limits:
+        memory: "7Gi"
+        cpu: "7800m"
+      requests:
+        memory: "7Gi"
+        cpu: "7800m"
+"""
+)
+
+def mvnLightContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
+""",
+"""    resources:
+      limits:
+        memory: "5Gi"
+        cpu: "4000m"
       requests:
         memory: "5Gi"
-        cpu: "2000m"
+        cpu: "4000m"
 """
 )
 
-def mvnLightContainerCfg = mvnContainerCfg.replace(
-"""    resources:
-      limits:
-        memory: "8Gi"
-        cpu: "5500m"
-      requests:
-        memory: "6Gi"
-        cpu: "2000m"
+def tinyContainerCfg = podYamlConfigurationTemplate.replace(
+"""    resources: VAR_RESOURCES
 """,
 """    resources:
       limits:
-        memory: "6Gi"
-        cpu: "5500m"
+        memory: "1Gi"
+        cpu: "1000m"
       requests:
-        memory: "3.5Gi"
-        cpu: "2000m"
+        memory: "1Gi"
+        cpu: "1000m"
 """
 )
 
+def installAntToSharedCache() {
+   sh (label: 'Ant Installation', script: '''
+   if [ ! -x "${ANT_HOME}/bin/ant" ]; then
+      echo "Installing Ant ${ANT_VERSION} into shared cache..."
+      tmp_extract=\$(mktemp -d -p /home/jenkins/.m2/repository/.ci-tools 2>/dev/null || mktemp -d)
+      mkdir -p /home/jenkins/.m2/repository/.ci-tools
+      curl -fsSL "https://downloads.apache.org/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz" -o "\${tmp_extract}/ant.tar.gz"
+      tar -xzf "\${tmp_extract}/ant.tar.gz" -C "\${tmp_extract}"
+      chmod +x "\${tmp_extract}/apache-ant-${ANT_VERSION}/bin/ant"
+      mv "\${tmp_extract}/apache-ant-${ANT_VERSION}" "${ANT_HOME}" 2>/dev/null || true
+      rm -rf "\${tmp_extract}"
+   else
+      echo "Ant ${ANT_VERSION} already present in shared cache, skipping install."
+   fi
+   "${ANT_HOME}/bin/ant" -version
+   ''')
+}
+
 def dumpSysInfo() {
-   sh """
+   sh (label: 'Dump System Info', script: """
    id || true
    uname -a || true
    env | sort || true
    df -h || true
-   hostname -I || true
    \${JAVA_HOME}/bin/jcmd || true
    mvn -version || true
-   ant -version || true
+   \${ANT_HOME}/bin/ant -version || true
    ps -e -o start,etime,pid,rss,drs,command || true
    lscpu || true
    cat /proc/meminfo || true
    ulimit -a || true
-   """
+   """)
 }
-def startVmstatLogging(String stageName) {
-   sh """
-   mkdir -p "${WORKSPACE}/logs"
-   vmstat -t -w -a -y 10 > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 & echo \$! > "${WORKSPACE}/vmstat.pid"
 
-   # Record this container's current and peak memory usage every 10 seconds.
-   # Prefer cgroup v2 and fall back to the cgroup v1 memory controller used by
-   # the current Eclipse CI workers. Values are bytes. If neither is available,
-   # skip the diagnostic without affecting the build.
+def startVmstatLogging(String stageName) {
+   sh (label: 'Start Performance Logging', script: """
+   mkdir -p "${WORKSPACE}/logs"
+   setsid vmstat -t -w -a -y 10 < /dev/null > "${WORKSPACE}/logs/vmstat-${stageName}.log" 2>&1 &
+   echo \$! > "${WORKSPACE}/vmstat.pid"
+
    if [ -r /sys/fs/cgroup/memory.current ]; then
       memory_current=/sys/fs/cgroup/memory.current
       memory_peak=/sys/fs/cgroup/memory.peak
@@ -370,25 +317,26 @@ def startVmstatLogging(String stageName) {
    fi
 
    if [ -n "\$memory_current" ]; then
-      (
-         printf '# current=%s peak=%s\n' "\$memory_current" "\$memory_peak"
+      setsid sh -c '
+         printf "# current=%s peak=%s\\n" "'"\$memory_current"'" "'"\$memory_peak"'"
          while true; do
-            current=\$(cat "\$memory_current" 2>/dev/null || echo unavailable)
-            if [ -n "\$memory_peak" ] && [ -r "\$memory_peak" ]; then
-               peak=\$(cat "\$memory_peak" 2>/dev/null || echo unavailable)
+            current=\$(cat "'"\$memory_current"'" 2>/dev/null || echo unavailable)
+            if [ -n "'"\$memory_peak"'" ] && [ -r "'"\$memory_peak"'" ]; then
+               peak=\$(cat "'"\$memory_peak"'" 2>/dev/null || echo unavailable)
             else
                peak=unavailable
             fi
-            printf '%s memory.current=%s memory.peak=%s\n' "\$(date '+%Y-%m-%dT%H:%M:%S%z')" "\$current" "\$peak"
+            printf "%s memory.current=%s memory.peak=%s\\n" "\$(date "+%Y-%m-%dT%H:%M:%S%z")" "\$current" "\$peak"
             sleep 10
          done
-      ) > "${WORKSPACE}/logs/cgroup-memory-${stageName}.log" 2>&1 &
+      ' < /dev/null > "${WORKSPACE}/logs/cgroup-memory-${stageName}.log" 2>&1 &
       echo \$! > "${WORKSPACE}/cgroup-memory.pid"
    fi
-   """
+   """)
 }
+
 def stopVmstatLogging() {
-   sh """
+   sh (label: "Stop Performance Logging", script: """
    for pidfile in vmstat.pid cgroup-memory.pid; do
       if [ -f "${WORKSPACE}/\$pidfile" ]; then
          pkill -F "${WORKSPACE}/\$pidfile" || true
@@ -396,419 +344,153 @@ def stopVmstatLogging() {
       fi
    done
    df -h || true
-   """
+   """)
    archiveArtifacts artifacts: "logs/*", allowEmptyArchive: true
 }
-// Use deterministic per-build jitter instead of java.util.Random so this stays
-// simple and reproducible in Jenkins Pipeline execution.
-def podJitterSeconds(String key, int maxInclusive) {
-   if (maxInclusive <= 0) {
-      return 0
-   }
-   String buildSeed = env.BUILD_TAG ?: env.BUILD_NUMBER ?: '0'
-   String seed = "${buildSeed}:${key}"
-   int positiveHash = seed.hashCode() & 0x7fffffff
-   return positiveHash % (maxInclusive + 1)
+
+def archiveFiles(fileMask) {
+    try {
+       archiveArtifacts artifacts: "${fileMask}", onlyIfSuccessful: false, allowEmptyArchive: true
+    } catch (Throwable e) {
+        echo "⚠️ Archivation failed for file mask " + fileMask + ": " + e
+        currentBuild.description = (currentBuild.description ?: '') + "<br/>⚠️ Failed archivation for file mask " + fileMask
+    }
 }
 
-// Dynamic pod slot 0 starts immediately. Every following slot is spaced by
-// 3 seconds and receives another 0-2 seconds of jitter.
-def staggerPodStart(int slot, String job) {
-   if (slot == 0) {
-      echo "${job}: requesting pod immediately (slot 0)"
-      return
-   }
-   int baseDelay = slot * 3
-   int jitter = podJitterSeconds("start:${job}", 2)
-   int delay = baseDelay + jitter
-   echo "${job}: delaying pod request by ${delay}s (slot ${slot}, base ${baseDelay}s + jitter ${jitter}s)"
-   sleep time: delay, unit: 'SECONDS'
-}
-
-// Five total attempts. Each retry waits substantially longer than the previous
-// one before asking Kubernetes for another fresh pod:
-//   attempt 2:  20-30s
-//   attempt 3:  40-60s
-//   attempt 4:  80-120s
-//   attempt 5: 160-240s
-def waitBeforePodRetry(int attempt, String job) {
-   if (attempt <= 1) {
-      return
-   }
-   int baseDelay = 20 * (1 << (attempt - 2))
-   int jitter = podJitterSeconds("retry:${job}:${attempt}", baseDelay.intdiv(2))
-   int delay = baseDelay + jitter
-   echo "${job}: Kubernetes agent attempt ${attempt}/5; waiting ${delay}s before requesting a fresh pod"
-   sleep time: delay, unit: 'SECONDS'
-}
-
-def runAntJob(job, int startSlot, String nodeCfg) {
-   stage("${job}") {
-      if (startSlot >= 0) {
-         staggerPodStart(startSlot, job)
-      } else {
-         echo "${job}: Ant worker slot is free; requesting pod now"
-      }
-      // A normal Ant/JUnit test failure or a 30-minute Ant-suite timeout gets
-      // one retry in a completely fresh pod. This is deliberately separate
-      // from the five Kubernetes-agent infrastructure retries below.
-      for (int testAttempt = 1; testAttempt <= 2; testAttempt++) {
-         boolean antTestsFailed = false
-         boolean antTestsTimedOut = false
-         if (testAttempt > 1) {
-            echo "${job}: retrying Ant tests once in a fresh pod (test attempt ${testAttempt}/2)"
-            // Give Kubernetes a moment to release the previous pod's quota.
-            sleep time: 10, unit: 'SECONDS'
-         }
-         podTemplate(
-            containers: [
-               containerTemplate(
-                  name: 'jnlp',
-                  image: 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987',
-                  alwaysPullImage: false,
-                  ttyEnabled: true,
-                  workingDir: '/home/jenkins/agent',
-                  resourceRequestMemory: '1024Mi',
-                  resourceRequestCpu: '250m',
-                  resourceLimitMemory: '1024Mi',
-                  resourceLimitCpu: '500m'
-               )
-            ],
-            yaml: nodeCfg
-         ) {
-            int attempt = 0
-            retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
-               attempt++
-               waitBeforePodRetry(attempt, job)
-               // Reset this for every infrastructure retry. A completed Ant
-               // run with JUnit failures/errors or a 30-minute suite timeout
-               // may request the one test retry.
-               antTestsFailed = false
-               node(POD_LABEL) {
-                  boolean vmstatStarted = false
-                  try {
-                     container('ant') {
-                        // Fail quickly if Jenkins cannot execute commands in the
-                        // sidecar. In build #7 a broken first sh otherwise took
-                        // about two hours to be detected by Durable Task.
-                        timeout(time: 2, unit: 'MINUTES') {
-                           sh '''
-                           echo "Ant execution container: ${POD_CONTAINER:-unknown}"
-                           id
-                           test -w "${WORKSPACE}"
-                           test -x /bin/sh
-                           '''
-                        }
-                        startVmstatLogging("ant-${job}")
-                        vmstatStarted = true
-                        unstash 'maven-repo'
-                        unstash 'appserv-tests'
-                        withAnt(installation: 'apache-ant-latest') {
-                           // withAnt replaces PATH with one containing the installed Ant,
-                           // so restore the Maven bin directory inside that scope.
-                           // BUNDLES_DIR must be absolute: CDI stores the JaCoCo
-                           // -javaagent path in domain.xml and then restarts GlassFish.
-                           withEnv([
-                              "PATH+MAVEN=/opt/tools/apache-maven/3.9.16/bin",
-                              "BUNDLES_DIR=${env.WORKSPACE}/bundles",
-                              "ANT_JOB=${job}",
-                              "ANT_TEST_ATTEMPT=${testAttempt}"
-                           ]) {
-                              dumpSysInfo()
-                              sh '''
-                              mkdir -p ${WORKSPACE}/appserver/tests
-                              tar -xvf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              tar -xvf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
-                              '''
-                              int antRunStatus = sh(
-                                 returnStatus: true,
-                                 script: '''
-                                 set +e
-
-                                 # GNU timeout remains responsible for terminating
-                                 # the suite at 30 minutes. Shortly beforehand,
-                                 # capture Java thread dumps while the hung JVMs
-                                 # are still alive.
-                                 (
-                                    sleep 1770
-                                    if pgrep -f "runtests.sh ${ANT_JOB}" >/dev/null 2>&1; then
-                                       dump_dir="${WORKSPACE}/results/timeout-thread-dumps/attempt-${ANT_TEST_ATTEMPT}"
-                                       mkdir -p "${dump_dir}"
-
-                                       {
-                                          echo "Ant job: ${ANT_JOB}"
-                                          echo "Attempt: ${ANT_TEST_ATTEMPT}"
-                                          echo "Captured at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-                                          echo
-                                          echo "===== PROCESS TREE ====="
-                                          ps -e -o pid,ppid,stat,etime,%cpu,%mem,args --forest
-                                          echo
-                                          echo "===== JCMD -L ====="
-                                          if command -v jcmd >/dev/null 2>&1; then
-                                             jcmd -l || true
-                                          else
-                                             echo "jcmd is not available"
-                                          fi
-                                       } > "${dump_dir}/processes.txt" 2>&1
-
-                                       for pid in $(pgrep -x java 2>/dev/null); do
-                                          dump_file="${dump_dir}/java-${pid}-threads.txt"
-                                          {
-                                             echo "Ant job: ${ANT_JOB}"
-                                             echo "Attempt: ${ANT_TEST_ATTEMPT}"
-                                             echo "PID: ${pid}"
-                                             echo "Captured at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-                                             echo
-                                             ps -p "${pid}" -o pid,ppid,stat,etime,%cpu,%mem,args
-                                             echo
-                                          } > "${dump_file}" 2>&1
-
-                                          dumped=false
-                                          if command -v jcmd >/dev/null 2>&1; then
-                                             echo "===== jcmd ${pid} Thread.print -l =====" >> "${dump_file}"
-                                             if timeout 8s jcmd "${pid}" Thread.print -l >> "${dump_file}" 2>&1; then
-                                                dumped=true
-                                             else
-                                                echo "jcmd Thread.print failed or timed out" >> "${dump_file}"
-                                             fi
-                                          fi
-
-                                          if [ "${dumped}" != "true" ] && command -v jstack >/dev/null 2>&1; then
-                                             echo >> "${dump_file}"
-                                             echo "===== jstack -l ${pid} =====" >> "${dump_file}"
-                                             timeout 8s jstack -l "${pid}" >> "${dump_file}" 2>&1 || \
-                                                echo "jstack failed or timed out" >> "${dump_file}"
-                                          fi
-                                       done
-                                    fi
-                                 ) &
-                                 thread_dump_watchdog_pid=$!
-
-                                 timeout --signal=TERM --kill-after=2m 30m ./runtests.sh "${ANT_JOB}"
-                                 ant_status=$?
-
-                                 # If the test finished before 29m30s, stop the
-                                 # sleeping diagnostics watchdog. If it already
-                                 # ran, this is harmless.
-                                 kill "${thread_dump_watchdog_pid}" >/dev/null 2>&1 || true
-                                 wait "${thread_dump_watchdog_pid}" >/dev/null 2>&1 || true
-
-                                 exit "${ant_status}"
-                                 '''
-                              )
-                              if (antRunStatus == 124) {
-                                 antTestsTimedOut = true
-                                 antTestsFailed = true
-                                 if (testAttempt == 1) {
-                                    // runtests.sh normally creates this archive
-                                    // from results/ while handling TERM. Preserve
-                                    // the timed-out first attempt, including the
-                                    // pre-timeout thread dumps, before retrying.
-                                    sh """
-                                    if [ -f '${job}-results.tar.gz' ]; then
-                                       mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
-                                    fi
-                                    """
-                                    echo "${job}: Ant tests timed out after 30 minutes; scheduling one fresh-pod retry"
-                                 } else {
-                                    error "${job}: Ant tests timed out again after 30 minutes on the fresh-pod retry"
-                                 }
-                              } else if (antRunStatus != 0) {
-                                 error "${job}: runtests.sh exited with status ${antRunStatus}"
-                              }
-                           }
-                        }
-                        if (!antTestsTimedOut) {
-                           // Do not invoke Jenkins' junit step yet. Publishing a
-                           // failed report immediately marks the build UNSTABLE and
-                           // that result cannot later be improved to SUCCESS.
-                           //
-                           // runtests.sh writes JUnit reports under this directory.
-                           // Retry once if any report has a non-zero failures or
-                           // errors attribute. No report retains the old
-                           // allowEmptyResults behaviour and does not trigger a
-                           // speculative retry.
-                           int junitFailureStatus = sh(
-                              returnStatus: true,
-                              script: '''
-                              for report in results/junitreports/*.xml; do
-                                 [ -e "$report" ] || continue
-                                 if grep -Eq 'failures="[1-9][0-9]*"|errors="[1-9][0-9]*"' "$report"; then
-                                    exit 1
-                                 fi
-                              done
-                              exit 0
-                              '''
-                           )
-                           antTestsFailed = (junitFailureStatus != 0)
-                           if (antTestsFailed && testAttempt == 1) {
-                              echo "${job}: JUnit report contains failures/errors; scheduling one fresh-pod retry"
-                              // Preserve the failed attempt for diagnostics without
-                              // publishing its JUnit XML to Jenkins.
-                              sh """
-                              if [ -f '${job}-results.tar.gz' ]; then
-                                 mv '${job}-results.tar.gz' '${job}-flaky-attempt1-results.tar.gz'
-                              fi
-                              """
-                           }
-                        }
-                     }
-                  } finally {
-                     if (vmstatStarted) {
-                        container('ant') {
-                           stopVmstatLogging()
-                        }
-                     }
-                     archiveArtifacts artifacts: "results/timeout-thread-dumps/**", allowEmptyArchive: true
-                     if (antTestsFailed && testAttempt == 1) {
-                        archiveArtifacts artifacts: "${job}-flaky-attempt1-results.tar.gz", allowEmptyArchive: true
-                     } else {
-                        // Publish only a passing first attempt or the final
-                        // second attempt. Thus a flaky first failure which
-                        // passes on retry does not leave the build UNSTABLE.
-                        archiveArtifacts artifacts: "${job}-results.tar.gz", allowEmptyArchive: true
-                        junit testResults: 'results/junitreports/*.xml',
-                              allowEmptyResults: true,
-                              stdioRetention: 'FAILED'
-                     }
-                  }
-               }
-            }
-         }
-         if (!antTestsFailed) {
-            if (testAttempt > 1) {
-               echo "${job}: Ant tests passed on retry"
-            }
-            break
-         }
-         if (testAttempt == 2) {
-            echo "${job}: Ant tests still contain failures/errors after the single fresh-pod retry"
-         }
-      }
-   }
-}
-
-// Each Ant worker runs one job at a time. With 10 workers, at most 10 Ant
-// pod allocations can be active concurrently. When a worker finishes a job, it
-// immediately starts its next assigned job (without another initial stagger).
-def generateAntWorker(int workerNumber, List jobs, String nodeCfg, int initialStartSlot) {
+// Allocation of a node to execute action and the execution. If the allocation fails,
+// it can be repeated several times (maxInfraRetries).
+// job - job and stage name
+// label - used to limit the number of running parallel stages of the same label
+// action - action to execute
+def runOnNode(String job, String label, boolean archiveServerLogs, Closure action) {
    return {
-      echo "Ant worker ${workerNumber}: ${jobs.size()} assigned job(s)"
-      for (int jobIndex = 0; jobIndex < jobs.size(); jobIndex++) {
-         String job = jobs[jobIndex]
-         int startSlot = jobIndex == 0 ? initialStartSlot : -1
-         runAntJob(job, startSlot, nodeCfg)
-      }
-   }
-}
-
-def generateMvnTestPodTemplate(job, nodeCfg, int startSlot) {
-   return {
-      stage("${job}") {
-         staggerPodStart(startSlot, job)
-         podTemplate(
-            containers: [
-               containerTemplate(
-                  name: 'jnlp',
-                  image: 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987',
-                  alwaysPullImage: false,
-                  ttyEnabled: true,
-                  workingDir: '/home/jenkins/agent',
-                  resourceRequestMemory: '1024Mi',
-                  resourceRequestCpu: '250m',
-                  resourceLimitMemory: '1024Mi',
-                  resourceLimitCpu: '500m'
-               )
-            ],
-            yaml: nodeCfg
-         ) {
-            int attempt = 0
-            retry(count: 5, conditions: [kubernetesAgent(), nonresumable()]) {
-               attempt++
-               waitBeforePodRetry(attempt, job)
-               node(POD_LABEL) {
+   try {
+      def infraRetries = 0
+      def maxInfraRetries = 10
+      while (infraRetries < maxInfraRetries) {
+         def infraError = false
+         try {
+            node("${label}") {
+               stage("${job}") {
                   try {
-                     checkout scm
-                     container('maven') {
+                     container('action') {
                         script {
+                           def vmstatStarted = false
                            try {
-                              startVmstatLogging("mvn-${job}")
+                              startVmstatLogging("${job}")
+                              vmstatStarted = true
                               dumpSysInfo()
                               unstash 'maven-repo'
-                              timeout(time: 4, unit: 'HOURS') {
-                                 sh '''
-                                 tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                                 '''
-                                 sh """
-                                 mvn -V -B -e clean verify -Psnapshots -pl :${job} -amd
-                                 """
-                              }
+                              action()
                            } finally {
-                              stopVmstatLogging()
+                              if (vmstatStarted) {
+                                 stopVmstatLogging()
+                              }
                            }
                         }
                      }
+                  } catch (Throwable e) {
+                     def errorMsg = e.getMessage() ?: ""
+                     if (errorMsg.contains("Failed to start websocket connection")) {
+                        infraError = true
+                        echo "Job ${job} with label ${label}: ⚠️ K8s Infrastructure failure detected: ${errorMsg}."
+                     } else {
+                        throw e
+                     }
                   } finally {
-                     archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
+                     if (!infraError) {
+                        if (archiveServerLogs) {
+                           archiveFiles("**/server.log*")
+                        } else {
+                           archiveFiles("${job}-results.tar.gz")
+                           junit testResults: 'results/junitreports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        }
+                        // Some ant jobs use maven too.
+                        junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
+                        junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED', skipPublishingChecks: true, healthScaleFactor: 0.0
 // Makes Jenkins UI extremely slow in current version
-//                     recordIssues id: "checkstyle-${job}", name: "CheckStyle - ${job}", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+//              recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+                     }
                   }
                }
             }
+         } catch (Throwable e) {
+            def errorStr = e.toString() ?: ""
+            boolean isQueueError = errorStr.contains("Queue task was cancelled") && errorStr.contains("FlowInterruptedException")
+            if (isQueueError) {
+               infraError = true
+               echo "Job ${job} with label ${label}: ⚠️ Node/Queue connection lost: ${errorStr}."
+            }
+            if (infraError) {
+               infraRetries++
+               currentBuild.description = (currentBuild.description ?: '') + "<br/>⚠️ Job ${job} had issues initializing a pod (Attempt ${infraRetries}/${maxInfraRetries})! ${errorStr}"
+               if (infraRetries >= maxInfraRetries) {
+                  echo "Job ${job} with label ${label}: ❌ Exceeded maximum infrastructure retries (${maxInfraRetries})."
+                  throw e
+               }
+
+               // Brief pause before trying to queue a brand new node request
+               sleep(time: 15, unit: 'SECONDS')
+            } else {
+               // Build failed or unknown error.
+               throw e
+            }
+         }
+         // No exceptions, no repeats = success!
+         if (!infraError) {
+            break
          }
       }
+   } catch (Throwable e) {
+      echo "Job ${job} with label ${label}: ❌ " + e
+      throw e
+   }
    }
 }
 
-def mvn_jobs = [
-    "admin-tests-parent",
-    "application-tests",
-    "embedded-tests"
-]
-def mvnSlotOffset = 1
-
-def parallelStagesMapMvn = mvn_jobs.collectEntries {
-   ["${it}": generateMvnTestPodTemplate(it, mvnLightContainerCfg, mvnSlotOffset + mvn_jobs.indexOf(it))]
+def generateAntPod(job, label) {
+   return runOnNode(job, label, false, {
+      unstash 'appserv-tests'
+      timeout(time: 1, unit: 'HOURS') {
+         sh (label: 'Unpack Requirements', script: '''
+         # Mandatory requirement -> fail fast if not available.
+         export BUNDLES_DIR="${WORKSPACE}/bundles"
+         export PATH="${ANT_HOME}/bin:${PATH}"
+         ant -version
+         mvn -version
+         ls -la ${WORKSPACE}
+         mkdir -p ${WORKSPACE}/appserver/tests
+         tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+         tar -xzf ${BUNDLES_DIR}/appserv-tests.tar.gz -C ${WORKSPACE}
+         ''')
+         sh (label: "./runtests.sh ${job}", script: """
+         export BUNDLES_DIR="\${WORKSPACE}/bundles"
+         export PATH="\${ANT_HOME}/bin:\${PATH}"
+         ./runtests.sh ${job}
+         """)
+      }
+   })
 }
 
-// Global Ant concurrency limit. This is deliberately implemented with a fixed
-// number of Pipeline worker branches instead of depending on Lockable Resources
-// or Throttle Concurrent Builds plugins.
-def maxConcurrentAntPods = 10
-
-// Balance the complete worker queues using observed runtimes from successful
-// runs #7 and #13. Start ejb_group_2 in the first wave so that a repeat of its
-// timer-test hang reaches the 30-minute timeout/retry as early as possible.
-// The planning cost uses the slower observed runtime for each suite plus roughly
-// 1.5 minutes of fresh-pod/setup overhead per job.
-def antWorkerJobs = [
-   ["cdi_all", "ejb_group_embedded", "ql_gf_web_profile_all"],
-   ["ejb_group_2", "security_all"],
-   ["deployment_all", "jdbc_group2", "connector_group_3"],
-   ["connector_group_4", "ql_gf_full_profile_all"],
-   ["web_jsp", "jdbc_group1", "batch_all"],
-   ["webservice_all", "connector_group_2"],
-   ["ejb_group_1", "jdbc_group4"],
-   ["ejb_group_3", "persistence_all"],
-   ["jdbc_group3", "jdbc_group5"],
-   ["connector_group_1", "naming_all"]
-]
-assert antWorkerJobs.size() == maxConcurrentAntPods
-
-def parallelStagesMapAntWorkers = [:]
-for (int workerIndex = 0; workerIndex < maxConcurrentAntPods; workerIndex++) {
-   def jobsForWorker = antWorkerJobs[workerIndex]
-   if (!jobsForWorker.isEmpty()) {
-      // main-tests uses the immediate Maven slot 0; the three dynamic Maven
-      // pods use slots 1..3. Stagger the first Ant job in each worker across
-      // slots 4..13; later jobs start when their worker is free.
-      int initialStartSlot = mvnSlotOffset + mvn_jobs.size() + workerIndex
-      parallelStagesMapAntWorkers["ant-worker-${workerIndex + 1}"] =
-         generateAntWorker(workerIndex + 1, jobsForWorker, antPodCfg, initialStartSlot)
-   }
+def generateMvnTestPod(job, label, command) {
+   return runOnNode(job, label, true, {
+      unstash 'git'
+      timeout(time: 1, unit: 'HOURS') {
+         sh (label: 'Unpack Requirements', script: '''
+         git reset --hard
+         tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
+         ''')
+         sh (label: "${command}", script: """
+         ${command}
+         """)
+      }
+   })
 }
+
+def generateMvnTestPod(job, label) {
+   return generateMvnTestPod(job, label, "mvn -V -B -e -ntp clean verify -Ptck -pl :${job} -amd")
+}
+
 pipeline {
    // Do not hold one large Maven pod for the lifetime of the Pipeline.
    // Prepare/Build and main-tests each get their own stage-scoped Maven pod,
@@ -823,10 +505,13 @@ pipeline {
       PORT_HTTP=8080
       PORT_HTTPS=8181
    }
+
    options {
       // numToKeepStr - we need to know if it is changing.
       // artifactNumToKeepStr - they are quite large, so we keep just the last products.
       buildDiscarder(logRotator(numToKeepStr: '1', artifactNumToKeepStr: '1'))
+      // Abort older builds of the current branch
+      disableConcurrentBuilds(abortPrevious: true)
       // Any failure will cause interruption of other running steps.
       // Dynamic Kubernetes-agent infrastructure failures are retried inside each branch first.
       parallelsAlwaysFailFast()
@@ -841,55 +526,33 @@ pipeline {
       // global timeout, abort after 6 hours
       timeout(time: 8, unit: 'HOURS')
    }
+
    stages {
-      stage('StopOld') {
-         steps {
-            script {
-               milestone ordinal: Integer.parseInt(env.BUILD_NUMBER), label: "Build ${env.BUILD_NUMBER}"
-            }
-         }
-      }
-      // Check Changes and Build deliberately share one Maven pod. The pod is
-      // released immediately after Build instead of remaining reserved during
-      // the whole Test fan-out.
+      // Check Changes and Build deliberately share one pod. The pod is
+      // released immediately after Build.
       stage('Prepare') {
          agent {
             kubernetes {
-               // Do not inherit "basic" here: its jnlp ContainerTemplate has
-               // alwaysPullImage=true, and the plugin cannot override inherited true
-               // with false. The relevant basic mounts are reproduced in mvnContainerCfg.
-               yaml mvnBuildContainerCfg
-               containerTemplate {
-                  name 'jnlp'
-                  image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
-                  alwaysPullImage false
-                  ttyEnabled true
-                  workingDir '/home/jenkins/agent'
-                  resourceRequestMemory '1024Mi'
-                  resourceRequestCpu '250m'
-                  resourceLimitMemory '1024Mi'
-                  resourceLimitCpu '500m'
-               }
+               instanceCap 3
+               yaml mvnHeavyContainerCfg
             }
          }
          stages {
             stage('Check Changes') {
                steps {
                   checkout scm
-                  container('maven') {
+                  container('action') {
                      script {
+                        // Workaround - after regular purging of the repository mvn fails with AccessDeniedException.
+                        sh "mkdir -p /home/jenkins/.m2/repository/org"
                         // Default: run tests
                         env.SKIP_TESTS = "false"
                         // Only check for docs-only changes in PR builds
                         if (env.CHANGE_TARGET) {
                            echo "PR build detected, checking if only docs changed..."
-                           def relevantChanges = sh(
-                              script: '''
-                                 (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
-                              ''',
-                              returnStdout: true
-                           ).trim()
-
+                           def relevantChanges = sh(label: 'Git Diff Check', returnStdout: true, script: '''
+                              (git diff --exit-code --name-only origin/${CHANGE_TARGET}...HEAD && echo "all") | sed '/^docs[/]/d'
+                              ''').trim()
                            if (relevantChanges == "") {
                               env.SKIP_TESTS = "true"
                               echo "✓ Only docs/ changes detected - tests will be skipped"
@@ -900,50 +563,53 @@ pipeline {
                            echo "Non-PR build - tests will always run"
                         }
                      }
+                     // Stash takes some time,
+                     stash includes: '.git/**/*', name: 'git', useDefaultExcludes: false
                   }
                }
             }
             stage('Build') {
                steps {
-                  checkout scm
-                  container('maven') {
+                  container('action') {
                      script {
-                         try {
-                            startVmstatLogging('mvn-build')
-                            dumpSysInfo()
-                            timeout(time: 1, unit: 'HOURS') {
-                               sh '''
-                               # Validate the structure in all submodules (especially version ids)
-                               mvn -V -B -e -fae clean validate -Ptck,set-version-id,snapshots
-                               '''
-                               sh '''
-                               # Try to prevent Could not transfer artifact ... from/to eclipse.maven.central.mirror ..
-                               # the trustAnchors parameter must be non-empty
-                               mvn -B dependency:go-offline -T4C
-                               '''
-                               sh '''
-                               mvn -B -e install -Pfastest,ci,snapshots -T4C
-                               '''
-                               sh '''
-                               mvn -B -e clean
-                               mkdir -p ${BUNDLES_DIR}
-                               tar -c -C ${WORKSPACE} runtests.sh appserver/tests/common_test.sh appserver/tests/gftest.sh appserver/tests/appserv-tests appserver/tests/quicklook | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
-                               tar -c -C /home/jenkins/.m2/repository org/glassfish/main | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
-                               '''
-                               sh '''
-                               # For easy access to built artifacts and using them elsewhere
-                               gfVersion="$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)"
-                               mvn_copy="mvn -N org.apache.maven.plugins:maven-dependency-plugin:3.9.0:copy -DoutputDirectory=${BUNDLES_DIR}"
-                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:glassfish:${gfVersion}:zip"
-                               ${mvn_copy} -Dartifact="org.glassfish.main.distributions:web:${gfVersion}:zip"
-                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
-                               ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-web:${gfVersion}:jar"
-                               ls -la ${BUNDLES_DIR}
-                               '''
-                            }
-                         } finally {
-                            stopVmstatLogging()
-                         }
+                        try {
+                           startVmstatLogging('mvn-build')
+                           timeout(time: 1, unit: 'HOURS') {
+                              dumpSysInfo()
+                              sh (label: 'mvn clean validate', script:  '''
+                              mvn -B -e -fae -ntp clean validate -Ptck,set-version-id
+                              ''')
+// Makes build 6 minutes slower.
+//                              sh (label: 'Download Maven Plugins', script: '''
+//                              mvn -B -e dependency:resolve-plugins -T8C
+//                              ''')
+                              sh (label: 'mvn install', script: '''
+                              mvn -B -e -ntp install -Pfastest,ci -T4C
+                              ''')
+                              sh (label: 'Pack for Test Stages', script: '''#!/usr/bin/env bash
+                              set -euox pipefail
+                              mvn -B -e -ntp clean
+                              mkdir -p ${BUNDLES_DIR}
+                              tar -c -C ${WORKSPACE} runtests.sh appserver/tests/{common_test.sh,gftest.sh,appserv-tests,quicklook} \
+                               | gzip --fast > ${BUNDLES_DIR}/appserv-tests.tar.gz
+                              tar -c -C /home/jenkins/.m2/repository org/glassfish/main \
+                               | gzip --fast > ${BUNDLES_DIR}/maven-repo.tar.gz
+                              ''')
+                              sh (label: "Copy to ${BUNDLES_DIR} for downloads", script: '''
+                              # For easy access to built artifacts and using them elsewhere
+                              gfVersion="$(mvn -B -ntp help:evaluate -Dexpression=project.version -q -DforceStdout)"
+                              mvn_copy="mvn -B -ntp -N dependency:copy -DoutputDirectory=${BUNDLES_DIR}"
+                              ${mvn_copy} -Dartifact="org.glassfish.main.distributions:glassfish:${gfVersion}:zip"
+                              ${mvn_copy} -Dartifact="org.glassfish.main.distributions:web:${gfVersion}:zip"
+                              ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-all:${gfVersion}:jar"
+                              ${mvn_copy} -Dartifact="org.glassfish.main.extras:glassfish-embedded-web:${gfVersion}:jar"
+                              ls -la ${BUNDLES_DIR}
+                              ''')
+                              installAntToSharedCache()
+                           }
+                        } finally {
+                           stopVmstatLogging()
+                        }
                      }
                   }
                   archiveArtifacts artifacts: 'bundles/*.zip', onlyIfSuccessful: true
@@ -954,109 +620,96 @@ pipeline {
             }
          }
       }
+
       stage('Test') {
          when {
             environment name: 'SKIP_TESTS', value: 'false'
          }
          parallel {
-            stage('main-tests') {
-               // main-tests used to reuse the pipeline-wide Maven pod. Give it
-               // its own pod so that pod disappears as soon as main-tests and
-               // its post actions are complete.
-               agent {
-                  kubernetes {
-                     yaml mvnContainerCfg
-                     containerTemplate {
-                        name 'jnlp'
-                        image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
-                        alwaysPullImage false
-                        ttyEnabled true
-                        workingDir '/home/jenkins/agent'
-                        resourceRequestMemory '1024Mi'
-                        resourceRequestCpu '250m'
-                        resourceLimitMemory '1024Mi'
-                        resourceLimitCpu '500m'
+            stage('Maven Checks') {
+               steps {
+                  script {
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-heavy'
+                     podTemplate(
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        slaveConnectTimeout: 300,
+                        yaml: mvnHeavyContainerCfg
+                     ) {
+                        generateMvnTestPod('mvn', nodeGroupLabel, "mvn -B -e -ntp clean verify -Pqa,ci,ci-main-tests")()
                      }
                   }
                }
+            }
+            stage('Maven IT') {
                steps {
-                  checkout scm
-                  container('maven') {
-                     script {
-                        try {
-                           startVmstatLogging('main-tests')
-                           dumpSysInfo()
-                           unstash 'maven-repo'
-                           timeout(time: 4, unit: 'HOURS') {
-                              // A fresh main-tests pod has an empty
-                              // org/glassfish/main repository, unlike the old
-                              // pipeline-wide pod which had performed Build.
-                              sh '''
-                              tar -xzf ${BUNDLES_DIR}/maven-repo.tar.gz --overwrite -m -p -C /home/jenkins/.m2/repository
-                              '''
-                              sh '''
-                              mvn -B -e clean verify -Pqa,ci,ci-main-tests,snapshots
-                              '''
-                           }
-                        } finally {
-                           stopVmstatLogging()
+                  script {
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-maven-shared-pod-light'
+                     podTemplate(
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        slaveConnectTimeout: 300,
+                        yaml: mvnLightContainerCfg
+                     ) {
+                        echo "Starting parallel ITests stages."
+                        parallel mvn_jobs.collectEntries {
+                           ["${it}": generateMvnTestPod(it, nodeGroupLabel)]
                         }
+                        echo "Finished parallel ITests stages."
                      }
                   }
                }
-               post {
-                  always {
-                     archiveArtifacts artifacts: "**/server.log*", onlyIfSuccessful: false, allowEmptyArchive: true
-                     junit testResults: '**/surefire-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-                     junit testResults: '**/failsafe-reports/*.xml', allowEmptyResults: true, stdioRetention: 'FAILED'
-// Makes Jenkins UI extremely slow in current version
-//                     recordIssues name: "CheckStyle - main", enabledForFailure: true, tools: [checkStyle(pattern: '**/checkstyle-result.xml')]
+            }
+            stage('Ant-Heavy') {
+               steps {
+                  script {
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-heavy'
+                     podTemplate(
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        slaveConnectTimeout: 300,
+                        yaml: antHeavyContainerCfg
+                     ) {
+                        echo "Starting parallel Ant-Heavy stages."
+                        parallel ant_heavy_jobs.collectEntries {
+                           ["${it}": generateAntPod(it, nodeGroupLabel)]
+                        }
+                        echo "Finished parallel Ant-Heavy stages."
+                     }
                   }
                }
             }
-            stage('itests') {
+            stage('Ant-Light') {
                steps {
                   script {
-                     parallel parallelStagesMapMvn
-                  }
-               }
-            }
-            stage('ant-tests') {
-               steps {
-                  script {
-                     parallel parallelStagesMapAntWorkers
+                     def nodeGroupLabel = env.JOB_BASE_NAME + '-ant-shared-pod-light'
+                     podTemplate(
+                        name: nodeGroupLabel,
+                        label: nodeGroupLabel,
+                        slaveConnectTimeout: 300,
+                        yaml: antLightContainerCfg
+                     ) {
+                        echo "Starting parallel Ant-Light stages."
+                        parallel ant_light_jobs.collectEntries {
+                           ["${it}": generateAntPod(it, nodeGroupLabel)]
+                        }
+                        echo "Finished parallel Ant-Light stages."
+                     }
                   }
                }
             }
          }
       }
-      // The old pipeline-wide agent provided a workspace for the successful
-      // post block that overwrote the preserved test stashes. Preserve that
-      // behaviour with a tiny JNLP-only pod rather than retaining a Maven pod.
-      stage('Clear successful stashes') {
+
+      stage('Clear Stashes') {
          agent {
             kubernetes {
-               yaml '''
-apiVersion: v1
-kind: Pod
-spec:
-  nodeSelector:
-    kubernetes.io/os: "linux"
-'''
-               containerTemplate {
-                  name 'jnlp'
-                  image 'docker.io/eclipsecbi/jiro-agent-basic-ubuntu:remoting-3355.3357.v931d3c992987'
-                  alwaysPullImage false
-                  ttyEnabled true
-                  workingDir '/home/jenkins/agent'
-                  resourceRequestMemory '1024Mi'
-                  resourceRequestCpu '250m'
-                  resourceLimitMemory '1024Mi'
-                  resourceLimitCpu '500m'
-               }
+               yaml tinyContainerCfg
             }
          }
          steps {
+            // Overwrite stashes with empty content
+            stash includes: 'nothing', name: 'git', allowEmpty: true
             stash includes: 'nothing', name: 'appserv-tests', allowEmpty: true
             stash includes: 'nothing', name: 'maven-repo', allowEmpty: true
          }

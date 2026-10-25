@@ -1,7 +1,7 @@
 <!--
 
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
-    Copyright (c) 2021 Contributors to the Eclipse Foundation
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,8 +53,12 @@ monitoring     web  800
   <sun:form id="treeForm">
     <!beforeCreate
       gf.listConfigs(configs="#{pageSession.configsList}");
-      setAttribute(key="configName" value="#{pageSession.configsList[0]}");
-      gf.encodeId(id="${configName}" result="#{requestScope.configNameId}");
+      // The list is empty when the configurations cannot be read; the tree
+      // must still be rendered, so don't generate an id for a missing config.
+      if ("#{pageSession.configsList[0]}") {
+          setAttribute(key="configName" value="#{pageSession.configsList[0]}");
+          gf.encodeId(id="${configName}" result="#{requestScope.configNameId}");
+      }
     />
     <h:commandButton id="update" style="display: none;">
         <!command

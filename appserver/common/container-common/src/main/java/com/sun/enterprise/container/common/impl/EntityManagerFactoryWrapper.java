@@ -32,7 +32,6 @@ import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityHandler;
 import jakarta.persistence.EntityListenerRegistration;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManager.CreationOption;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnitTransactionType;
 import jakarta.persistence.PersistenceUnitUtil;
@@ -71,7 +70,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serializable {
 
-    private static final long serialVersionUID = 4719469920862714502L;
+    private static final long serialVersionUID = 4L;
 
     private final String unitName;
     private transient InvocationManager invocationManager;
@@ -102,34 +101,75 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
 
         if (entityManagerFactory == null) {
             entityManagerFactory = lookupEntityManagerFactory(invocationManager, componentEnvManager, unitName);
-
             if (entityManagerFactory == null) {
                 throw new IllegalStateException("Unable to retrieve EntityManagerFactory for unitName " + unitName);
             }
         }
-
         return entityManagerFactory;
     }
 
-    public EntityManager createEntityManager() {
-        return getDelegate().createEntityManager();
+    @Override
+    public String getName() {
+        return getDelegate().getName();
     }
 
     @Override
-    public @Nonnull
-    EntityManager createEntityManager(@Nullable Map<?, ?> properties) {
+    @Nonnull
+    public EntityAgent createEntityAgent(@Nullable EntityAgent.CreationOption... options) {
+        return getDelegate().createEntityAgent(options);
+    }
+
+    @Override
+    @Nonnull
+    public EntityAgent createEntityAgent(@Nullable Map<?, ?> properties) {
+        return getDelegate().createEntityAgent(properties);
+    }
+
+    @Override
+    public EntityManager createEntityManager(@Nullable EntityManager.CreationOption... options) {
+        return getDelegate().createEntityManager(options);
+    }
+
+    @Override
+    public EntityManager createEntityManager(@Nullable Map<?, ?> map) {
+        return getDelegate().createEntityManager(map);
+    }
+
+    @Override
+    @Nonnull
+    public EntityManager createEntityManager(@Nonnull SynchronizationType synchronizationType, @Nullable Map<?, ?> properties) {
         return getDelegate().createEntityManager(properties);
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    EntityManager createEntityManager(@Nonnull SynchronizationType synchronizationType, @Nullable Map<?, ?> properties) {
-        return getDelegate().createEntityManager(synchronizationType, properties);
+    public <E> EntityListenerRegistration addListener(
+            @Nonnull Class<E> entityType,
+            @Nonnull Class<? extends Annotation> callbackType,
+            @Nonnull Consumer<? super E> listener) {
+        return getDelegate().addListener(entityType, callbackType, listener);
+    }
+
+    @Override
+    public <T> void addNamedEntityGraph(String graphName, EntityGraph<T> entityGraph) {
+        getDelegate().addNamedEntityGraph(graphName, entityGraph);
     }
 
     @Override
     public void addNamedQuery(String name, Query query) {
         getDelegate().addNamedQuery(name, query);
+    }
+
+    @Override
+    @Nonnull
+    public <R> TypedQueryReference<R> addNamedQuery(@Nonnull String name, @Nonnull TypedQuery<R> query) {
+        return getDelegate().addNamedQuery(name, query);
+    }
+
+    @Override
+    @Nonnull
+    public StatementReference addNamedStatement(@Nonnull String name, @Nonnull Statement statement) {
+        return getDelegate().addNamedStatement(name, statement);
     }
 
     @Override
@@ -148,7 +188,7 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public Map<java.lang.String, java.lang.Object> getProperties() {
+    public Map<String, Object> getProperties() {
         return getDelegate().getProperties();
     }
 
@@ -173,18 +213,13 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public <T> void addNamedEntityGraph(String graphName, EntityGraph<T> entityGraph) {
-        getDelegate().addNamedEntityGraph(graphName, entityGraph);
-    }
-
-    @Override
     public <R> R callInTransaction(Function<EntityManager, R> work) {
         return getDelegate().callInTransaction(work);
     }
 
     @Override
-    public String getName() {
-        return getDelegate().getName();
+    public <R, H extends EntityHandler> R callInTransaction(@Nonnull Class<H> handlerClass, @Nonnull Function<H,R> work) {
+        return getDelegate().callInTransaction(handlerClass, work);
     }
 
     @Override
@@ -195,6 +230,18 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     @Override
     public <R> Map<String, TypedQueryReference<R>> getNamedQueries(Class<R> resultType) {
         return getDelegate().getNamedQueries(resultType);
+    }
+
+    @Override
+    @Nonnull
+    public Map<String, StatementReference> getNamedStatements() {
+        return getDelegate().getNamedStatements();
+    }
+
+    @Override
+    @Nonnull
+    public <R> Map<String, ResultSetMapping<R>> getResultSetMappings(@Nonnull Class<R> resultType) {
+        return getDelegate().getResultSetMappings(resultType);
     }
 
     @Override
@@ -213,55 +260,8 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
     }
 
     @Override
-    public EntityManager createEntityManager(CreationOption... options) {
-        return getDelegate().createEntityManager(options);
-    }
-
-    @Override
-    public EntityAgent createEntityAgent(jakarta.persistence.EntityAgent.CreationOption... options) {
-        return getDelegate().createEntityAgent(options);
-    }
-
-    @Override
-    public EntityAgent createEntityAgent(Map<?, ?> properties) {
-        return getDelegate().createEntityAgent(properties);
-    }
-
-    @Override
-    public <R> TypedQueryReference<R> addNamedQuery(String name, TypedQuery<R> query) {
-        return getDelegate().addNamedQuery(name, query);
-    }
-
-    @Override
-    public StatementReference addNamedStatement(String name, Statement statement) {
-        return getDelegate().addNamedStatement(name, statement);
-    }
-
-    @Override
-    public Map<String, StatementReference> getNamedStatements() {
-        return getDelegate().getNamedStatements();
-    }
-
-    @Override
-    public <R> Map<String, ResultSetMapping<R>> getResultSetMappings(Class<R> resultType) {
-        return getDelegate().getResultSetMappings(resultType);
-    }
-
-    @Override
-    public <E> EntityListenerRegistration addListener(Class<E> entityType, Class<? extends Annotation> callbackType,
-            Consumer<? super E> listener) {
-        return getDelegate().addListener(entityType, callbackType, listener);
-    }
-
-    @Override
     public <H extends EntityHandler> void runInTransaction(Class<H> handlerClass, Consumer<H> work) {
         getDelegate().runInTransaction(handlerClass, work);
-
-    }
-
-    @Override
-    public <R, H extends EntityHandler> R callInTransaction(Class<H> handlerClass, Function<H, R> work) {
-        return getDelegate().callInTransaction(handlerClass, work);
     }
 
     /**
@@ -366,7 +366,4 @@ public class EntityManagerFactoryWrapper implements EntityManagerFactory, Serial
         invocationManager = defaultServiceLocator.getService(InvocationManager.class);
         componentEnvManager = defaultServiceLocator.getService(ComponentEnvManager.class);
     }
-
-
-
 }

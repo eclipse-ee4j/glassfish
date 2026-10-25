@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -43,7 +44,7 @@ import java.util.Set;
  *
  * @see QueryWrapper for more details about why the wrapper is needed
  */
-public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implements TypedQuery<X> {
+public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery<X>> implements TypedQuery<X> {
 
 
     public static <X> TypedQuery<X> createQueryWrapper(TypedQuery<X> queryDelegate, EntityManager emDelegate) {
@@ -62,12 +63,20 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
     }
 
     @Override
+    public TypedQuery<X> setTimeout(Timeout timeout) {
+        super.setTimeout(timeout);
+        return this;
+    }
+
+    @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setCacheRetrieveMode(CacheRetrieveMode cacheRetrieveMode) {
         super.setCacheRetrieveMode(cacheRetrieveMode);
         return this;
     }
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setCacheStoreMode(CacheStoreMode cacheStoreMode) {
         super.setCacheStoreMode(cacheStoreMode);
         return this;
@@ -75,12 +84,14 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
 
     @SuppressWarnings("unchecked")
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public X getSingleResultOrNull() {
         return (X) super.getSingleResultOrNull();
     }
 
     @SuppressWarnings("unchecked")
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public List<X> getResultList() {
         // If this method is called, the current instance is guarantied to be of type TypedQuery<X>
         // It is safe to cast here.
@@ -89,23 +100,29 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
 
     @SuppressWarnings("unchecked")
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public X getSingleResult() {
         // If this method is called, the current instance is guarantied to be of type TypedQuery<X>
         // It is safe to cast here.
         return (X) super.getSingleResult();
     }
 
+
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setMaxResults(int maxResults) {
         super.setMaxResults(maxResults);
         return this;
     }
 
+
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setFirstResult(int startPosition) {
         super.setFirstResult(startPosition);
         return this;
     }
+
 
     @Override
     public TypedQuery<X> setHint(String hintName, Object value) {
@@ -113,85 +130,139 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
         return this;
     }
 
+
+    @Override
+    public TypedQuery<X> setParameters(Object... arguments) {
+        super.setParameters(arguments);
+        return this;
+    }
+
+
     @Override
     public <T> TypedQuery<X> setParameter(Parameter<T> param, T value) {
         super.setParameter(param, value);
         return this;
     }
 
-    @Override
-    public TypedQuery<X> setParameter(Parameter<Date> param, Date value,  TemporalType temporalType) {
-       super.setParameter(param, value, temporalType);
-       return this;
-   }
 
     @Override
-    public TypedQuery<X> setParameter(Parameter<Calendar> param, Calendar value,  TemporalType temporalType) {
-       super.setParameter(param, value, temporalType);
-       return this;
-   }
+    @Deprecated(since = "9", forRemoval = true)
+    public TypedQuery<X> setParameter(Parameter<Date> param, Date value, TemporalType temporalType) {
+        super.setParameter(param, value, temporalType);
+        return this;
+    }
+
+
+    @Override
+    @Deprecated(since = "9", forRemoval = true)
+    public TypedQuery<X> setParameter(Parameter<Calendar> param, Calendar value, TemporalType temporalType) {
+        super.setParameter(param, value, temporalType);
+        return this;
+    }
+
 
     @Override
     public TypedQuery<X> setParameter(String name, Object value) {
-       super.setParameter(name, value);
-       return this;
-   }
+        super.setParameter(name, value);
+        return this;
+    }
+
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setParameter(String name, Date value, TemporalType temporalType) {
-       super.setParameter(name, value, temporalType);
-       return this;
-   }
+        super.setParameter(name, value, temporalType);
+        return this;
+    }
+
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setParameter(String name, Calendar value, TemporalType temporalType) {
-       super.setParameter(name, value, temporalType);
-       return this;
-   }
+        super.setParameter(name, value, temporalType);
+        return this;
+    }
+
 
     @Override
     public TypedQuery<X> setParameter(int position, Object value) {
-       super.setParameter(position, value);
-       return this;
-   }
+        super.setParameter(position, value);
+        return this;
+    }
+
 
     @Override
-    public TypedQuery<X> setParameter(int position, Date value,  TemporalType temporalType) {
-       super.setParameter(position, value, temporalType);
-       return this;
-   }
+    @Deprecated(since = "9", forRemoval = true)
+    public TypedQuery<X> setParameter(int position, Date value, TemporalType temporalType) {
+        super.setParameter(position, value, temporalType);
+        return this;
+    }
+
 
     @Override
-    public TypedQuery<X> setParameter(int position, Calendar value,  TemporalType temporalType) {
-       super.setParameter(position, value, temporalType);
-       return this;
-   }
+    @Deprecated(since = "9", forRemoval = true)
+    public TypedQuery<X> setParameter(int position, Calendar value, TemporalType temporalType) {
+        super.setParameter(position, value, temporalType);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setParameter(String name, P value, Class<P> type) {
+        super.setParameter(name, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setParameter(String name, P value, Type<P> type) {
+        super.setParameter(name, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setParameter(int position, P value, Class<P> type) {
+        super.setParameter(position, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setParameter(int position, P value, Type<P> type) {
+        super.setParameter(position, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setConvertedParameter(String name, P value, Class<? extends AttributeConverter<P, ?>> converter) {
+        super.setConvertedParameter(name, value, converter);
+        return this;
+    }
+
+
+    @Override
+    public <P> TypedQuery<X> setConvertedParameter(int position, P value, Class<? extends AttributeConverter<P, ?>> converter) {
+        super.setConvertedParameter(position, value, converter);
+        return this;
+    }
+
 
     @Override
     public <T> Parameter<T> getParameter(String name, Class<T> type) {
-       return super.getParameter(name, type);
-   }
+        return super.getParameter(name, type);
+    }
 
     @Override
     public <T> Parameter<T> getParameter(int position, Class<T> type) {
        return super.getParameter(position, type);
-   }
+    }
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public TypedQuery<X> setFlushMode(FlushModeType flushMode) {
         super.setFlushMode(flushMode);
-        return this;
-    }
-
-    @Override
-    public TypedQuery<X> setLockMode(LockModeType lockModeType) {
-        super.setLockMode(lockModeType);
-        return this;
-    }
-
-    @Override
-    public TypedQuery<X> setTimeout(Timeout timeout) {
-        super.setTimeout(timeout);
         return this;
     }
 
@@ -202,46 +273,9 @@ public class TypedQueryWrapper<X> extends QueryWrapper<TypedQuery <X> > implemen
     }
 
     @Override
-    public TypedQuery<X> setParameters(Object... arguments) {
-        super.setParameters(arguments);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setParameter(String name, P value, Class<P> type) {
-        super.setParameter(name, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setParameter(String name, P value, Type<P> type) {
-        super.setParameter(name, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setParameter(int position, P value, Class<P> type) {
-        super.setParameter(position, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setParameter(int position, P value, Type<P> type) {
-        super.setParameter(position, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setConvertedParameter(String name, P value,
-            Class<? extends AttributeConverter<P, ?>> converter) {
-        super.setConvertedParameter(name, value, converter);
-        return this;
-    }
-
-    @Override
-    public <P> TypedQuery<X> setConvertedParameter(int position, P value,
-            Class<? extends AttributeConverter<P, ?>> converter) {
-        super.setConvertedParameter(position, value, converter);
+    @Deprecated(since = "9", forRemoval = true)
+    public TypedQuery<X> setLockMode(LockModeType lockModeType) {
+        super.setLockMode(lockModeType);
         return this;
     }
 

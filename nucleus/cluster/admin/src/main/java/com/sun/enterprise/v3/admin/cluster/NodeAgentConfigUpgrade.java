@@ -59,6 +59,29 @@ public class NodeAgentConfigUpgrade implements ConfigurationUpgrade, PostConstru
 
     public void postConstruct() {
 
+        // first, check if the nodes element already exists.
+        final Nodes nodes = domain.getNodes();
+        if (nodes != null) {
+            if (!nodes.getNode().isEmpty()) {
+                // if nodes element exists, and it's not empty, there's no need to do the upgrade.
+                return;
+            }
+            // otherwise, remove the empty nodes element, then move on.
+            try {
+                ConfigSupport.apply(new SingleConfigCode<Domain>() {
+                    @Override
+                    public Object run(Domain d) throws PropertyVetoException, TransactionFailure {
+                        d.setNodes(null);
+                        return null;
+                    }
+                }, domain);
+            } catch (Exception e) {
+                Logger.getAnonymousLogger().log(Level.SEVERE,
+                        "Failure while removing empty nodes config", e);
+                throw new RuntimeException(e);
+            }
+        }
+
         final NodeAgents nodeAgents = domain.getNodeAgents();
         if (nodeAgents == null) {
             createDefaultNodeList();

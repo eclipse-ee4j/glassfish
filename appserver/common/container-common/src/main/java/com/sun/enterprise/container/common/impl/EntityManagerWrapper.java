@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,7 +20,6 @@ package com.sun.enterprise.container.common.impl;
 import com.sun.enterprise.container.common.spi.JavaEEContainer;
 import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
 import com.sun.enterprise.container.common.spi.util.ComponentEnvManager;
-import com.sun.enterprise.container.common.spi.util.EntityManagerMethod;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.logging.LogDomains;
 
@@ -72,6 +71,54 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Service;
 
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CLEAR;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CLOSE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CONTAINS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_ENTITY_GRAPH_CLASS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_ENTITY_GRAPH_STRING;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_NAMED_QUERY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_NAMED_STORED_PROCEDURE_QUERY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_NATIVE_QUERY_STRING;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_NATIVE_QUERY_STRING_CLASS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_NATIVE_QUERY_STRING_STRING;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_QUERY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_QUERY_CRITERIA_DELETE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_QUERY_CRITERIA_QUERY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_QUERY_CRITERIA_UPDATE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_QUERY_STRING_CLASS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY_STRING_CLASS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY_STRING_STRING;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.DETATCH;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.FIND;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.FIND_CLASS_OBJECT_LOCKMODETYPE_PROPERTIES;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.FLUSH;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_CRITERIA_BUILDER;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_DELEGATE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_ENTITY_GRAPH;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_ENTITY_GRAPHS;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_ENTITY_MANAGER_FACTORY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_FLUSH_MODE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_LOCK_MODE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_METAMODEL;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_PROPERTIES;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_REFERENCE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.GET_TRANSACTION;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.IS_JOINED_TO_TRANSACTION;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.IS_OPEN;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.JOIN_TRANSACTION;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.LOCK;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.LOCK_LOCKMODETYPE_MAP;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.MERGE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.PERSIST;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.REFRESH;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.REFRESH_OBJECT_LOCKMODETYPE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.REFRESH_OBJECT_LOCKMODETYPE_MAP;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.REFRESH_OBJECT_PROPERTIES;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.REMOVE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.SET_FLUSH_MODE;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.SET_PROPERTY;
+import static com.sun.enterprise.container.common.spi.util.EntityManagerMethod.UNWRAP;
 import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
 import static jakarta.persistence.SynchronizationType.UNSYNCHRONIZED;
 import static java.util.logging.Level.FINE;
@@ -283,7 +330,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.PERSIST);
+                callFlowAgent.entityManagerMethodStart(PERSIST);
             }
             _getDelegate().persist(entity);
         } finally {
@@ -301,7 +348,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.MERGE);
+                callFlowAgent.entityManagerMethodStart(MERGE);
             }
             return _getDelegate().merge(entity);
         } finally {
@@ -319,7 +366,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.REMOVE);
+                callFlowAgent.entityManagerMethodStart(REMOVE);
             }
             _getDelegate().remove(entity);
         } finally {
@@ -337,7 +384,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.FIND);
+                callFlowAgent.entityManagerMethodStart(FIND);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.find(entityClass, primaryKey);
@@ -356,7 +403,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.FIND);
+                callFlowAgent.entityManagerMethodStart(FIND);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.find(entityClass, primaryKey, properties);
@@ -375,7 +422,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.FIND_CLASS_OBJECT_LOCKMODETYPE_PROPERTIES);
+                callFlowAgent.entityManagerMethodStart(FIND_CLASS_OBJECT_LOCKMODETYPE_PROPERTIES);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.find(entityClass, primaryKey, lockMode, properties);
@@ -394,7 +441,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_REFERENCE);
+                callFlowAgent.entityManagerMethodStart(GET_REFERENCE);
             }
             returnValue = _getDelegate().getReference(entityClass, primaryKey);
         } finally {
@@ -412,7 +459,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.FLUSH);
+                callFlowAgent.entityManagerMethodStart(FLUSH);
             }
             _getDelegate().flush();
         } finally {
@@ -427,15 +474,13 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public StatementOrTypedQuery createQuery(String ejbqlString) {
         StatementOrTypedQuery returnValue = null;
-
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_QUERY);
+                callFlowAgent.entityManagerMethodStart(CREATE_QUERY);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createQuery(ejbqlString);
-            returnValue = wrapQueryIfDetached(returnValue, delegate);
-
+            returnValue = wrapStatementOrTypedQueryIfDetached(returnValue, delegate);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
@@ -450,7 +495,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_QUERY_STRING_CLASS);
+                callFlowAgent.entityManagerMethodStart(CREATE_QUERY_STRING_CLASS);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createQuery(ejbqlString, resultClass);
@@ -465,59 +510,70 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     }
 
     @Override
-    public StatementOrTypedQuery createNamedQuery(String name) {
-        StatementOrTypedQuery returnValue = null;
-
+    @Deprecated(since = "9", forRemoval = true)
+    public Statement createQuery(CriteriaStatement<?> statement) {
+        // Unlike other create*Query() methods there is no need for a QueryWrapper here.
+        // QueryWrappers ensure entities returned by a query are detached; an update or
+        // delete statement returns no entities.
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NAMED_QUERY);
+                callFlowAgent.entityManagerMethodStart(
+                    statement instanceof CriteriaDelete ? CREATE_QUERY_CRITERIA_DELETE : CREATE_QUERY_CRITERIA_UPDATE);
             }
-            EntityManager delegate = _getDelegate();
-            returnValue = delegate.createNamedQuery(name);
-            returnValue = wrapQueryIfDetached(returnValue, delegate);
-
+            return _getDelegate().createQuery(statement);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
             }
         }
+    }
 
+    @Override
+    public StatementOrTypedQuery createNamedQuery(String name) {
+        StatementOrTypedQuery returnValue = null;
+        try {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodStart(CREATE_NAMED_QUERY);
+            }
+            EntityManager delegate = _getDelegate();
+            returnValue = delegate.createNamedQuery(name);
+            returnValue = wrapStatementOrTypedQueryIfDetached(returnValue, delegate);
+        } finally {
+            if (callFlowAgent.isEnabled()) {
+                callFlowAgent.entityManagerMethodEnd();
+            }
+        }
         return returnValue;
     }
 
     @Override
     public <T> TypedQuery<T> createNamedQuery(String name, Class<T> resultClass) {
         TypedQuery<T> returnValue = null;
-
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NAMED_QUERY);
+                callFlowAgent.entityManagerMethodStart(CREATE_NAMED_QUERY);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createNamedQuery(name, resultClass);
-
             returnValue = wrapQueryIfDetached(returnValue, delegate);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
             }
         }
-
         return returnValue;
     }
 
     @Override
     public StatementOrTypedQuery createNativeQuery(String sqlString) {
         StatementOrTypedQuery returnValue = null;
-
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NATIVE_QUERY_STRING);
+                callFlowAgent.entityManagerMethodStart(CREATE_NATIVE_QUERY_STRING);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createNativeQuery(sqlString);
-            returnValue = wrapQueryIfDetached(returnValue, delegate);
-
+            returnValue = wrapStatementOrTypedQueryIfDetached(returnValue, delegate);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
@@ -529,14 +585,12 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public <T> TypedQuery<T> createNativeQuery(String sqlString, Class<T> resultClass) {
         TypedQuery<T> returnValue = null;
-
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NATIVE_QUERY_STRING_CLASS);
+                callFlowAgent.entityManagerMethodStart(CREATE_NATIVE_QUERY_STRING_CLASS);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createNativeQuery(sqlString, resultClass);
-
             returnValue = wrapQueryIfDetached(returnValue, delegate);
         } finally {
             if (callFlowAgent.isEnabled()) {
@@ -549,15 +603,13 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public StatementOrTypedQuery createNativeQuery(String sqlString, String resultSetMapping) {
         StatementOrTypedQuery returnValue = null;
-
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NATIVE_QUERY_STRING_STRING);
+                callFlowAgent.entityManagerMethodStart(CREATE_NATIVE_QUERY_STRING_STRING);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createNativeQuery(sqlString, resultSetMapping);
-            returnValue = wrapQueryIfDetached(returnValue, delegate);
-
+            returnValue = wrapStatementOrTypedQueryIfDetached(returnValue, delegate);
         } finally {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodEnd();
@@ -572,7 +624,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.REFRESH);
+                callFlowAgent.entityManagerMethodStart(REFRESH);
             }
             _getDelegate().refresh(entity);
         } finally {
@@ -590,7 +642,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.REFRESH_OBJECT_PROPERTIES);
+                callFlowAgent.entityManagerMethodStart(REFRESH_OBJECT_PROPERTIES);
             }
             _getDelegate().refresh(entity, properties);
         } finally {
@@ -608,7 +660,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.REFRESH_OBJECT_LOCKMODETYPE_MAP);
+                callFlowAgent.entityManagerMethodStart(REFRESH_OBJECT_LOCKMODETYPE_MAP);
             }
             _getDelegate().refresh(entity, lockMode, properties);
         } finally {
@@ -625,7 +677,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CONTAINS);
+                callFlowAgent.entityManagerMethodStart(CONTAINS);
             }
             EntityManager delegate = _getDelegate();
             return delegate.contains(entity);
@@ -643,7 +695,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_LOCK_MODE);
+                callFlowAgent.entityManagerMethodStart(GET_LOCK_MODE);
             }
             return _getDelegate().getLockMode(o);
         } finally {
@@ -660,7 +712,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.SET_PROPERTY);
+                callFlowAgent.entityManagerMethodStart(SET_PROPERTY);
             }
             _getDelegate().setProperty(propertyName, value);
         } finally {
@@ -677,7 +729,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_PROPERTIES);
+                callFlowAgent.entityManagerMethodStart(GET_PROPERTIES);
             }
             return _getDelegate().getProperties();
         } finally {
@@ -691,7 +743,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public void close() {
 
         if (callFlowAgent.isEnabled()) {
-            callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CLOSE);
+            callFlowAgent.entityManagerMethodStart(CLOSE);
             callFlowAgent.entityManagerMethodEnd();
         }
         // close() not allowed on container-managed EMs.
@@ -702,7 +754,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public boolean isOpen() {
 
         if (callFlowAgent.isEnabled()) {
-            callFlowAgent.entityManagerMethodStart(EntityManagerMethod.IS_OPEN);
+            callFlowAgent.entityManagerMethodStart(IS_OPEN);
             callFlowAgent.entityManagerMethodEnd();
         }
         // Not relevant for container-managed EMs. Just return true.
@@ -714,7 +766,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_TRANSACTION);
+                callFlowAgent.entityManagerMethodStart(GET_TRANSACTION);
             }
             return _getDelegate().getTransaction();
         } finally {
@@ -729,7 +781,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_ENTITY_MANAGER_FACTORY);
+                callFlowAgent.entityManagerMethodStart(GET_ENTITY_MANAGER_FACTORY);
             }
             if (entityManagerFactory == null) {
                 init();
@@ -751,7 +803,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_CRITERIA_BUILDER);
+                callFlowAgent.entityManagerMethodStart(GET_CRITERIA_BUILDER);
             }
             return _getDelegate().getCriteriaBuilder();
         } finally {
@@ -767,7 +819,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_METAMODEL);
+                callFlowAgent.entityManagerMethodStart(GET_METAMODEL);
             }
             return _getDelegate().getMetamodel();
         } finally {
@@ -783,7 +835,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.LOCK);
+                callFlowAgent.entityManagerMethodStart(LOCK);
             }
             _getDelegate().lock(entity, lockMode);
         } finally {
@@ -798,7 +850,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.LOCK_LOCKMODETYPE_MAP);
+                callFlowAgent.entityManagerMethodStart(LOCK_LOCKMODETYPE_MAP);
             }
             _getDelegate().lock(entity, lockMode, properties);
         } finally {
@@ -813,7 +865,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CLEAR);
+                callFlowAgent.entityManagerMethodStart(CLEAR);
             }
             _getDelegate().clear();
         } finally {
@@ -835,7 +887,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.DETATCH);
+                callFlowAgent.entityManagerMethodStart(DETATCH);
             }
             _getDelegate().detach(o);
         } finally {
@@ -853,7 +905,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_DELEGATE);
+                callFlowAgent.entityManagerMethodStart(GET_DELEGATE);
             }
             return _getDelegate();
         } finally {
@@ -869,7 +921,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_FLUSH_MODE);
+                callFlowAgent.entityManagerMethodStart(GET_FLUSH_MODE);
             }
             return _getDelegate().getFlushMode();
         } finally {
@@ -884,7 +936,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.SET_FLUSH_MODE);
+                callFlowAgent.entityManagerMethodStart(SET_FLUSH_MODE);
             }
             _getDelegate().setFlushMode(flushMode);
         } finally {
@@ -903,7 +955,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.JOIN_TRANSACTION);
+                callFlowAgent.entityManagerMethodStart(JOIN_TRANSACTION);
             }
             _getDelegate().joinTransaction();
         } finally {
@@ -919,7 +971,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.UNWRAP);
+                callFlowAgent.entityManagerMethodStart(UNWRAP);
             }
             return _getDelegate().unwrap(tClass);
         } finally {
@@ -935,7 +987,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_NAMED_STORED_PROCEDURE_QUERY);
+                callFlowAgent.entityManagerMethodStart(CREATE_NAMED_STORED_PROCEDURE_QUERY);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createNamedStoredProcedureQuery(name);
@@ -955,7 +1007,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY);
+                callFlowAgent.entityManagerMethodStart(CREATE_STORED_PROCEDURE_QUERY);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createStoredProcedureQuery(procedureName);
@@ -975,7 +1027,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY_STRING_CLASS);
+                callFlowAgent.entityManagerMethodStart(CREATE_STORED_PROCEDURE_QUERY_STRING_CLASS);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createStoredProcedureQuery(procedureName, resultClasses);
@@ -995,7 +1047,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_STORED_PROCEDURE_QUERY_STRING_STRING);
+                callFlowAgent.entityManagerMethodStart(CREATE_STORED_PROCEDURE_QUERY_STRING_STRING);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createStoredProcedureQuery(procedureName, resultSetMappings);
@@ -1013,7 +1065,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public boolean isJoinedToTransaction() {
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.IS_JOINED_TO_TRANSACTION);
+                callFlowAgent.entityManagerMethodStart(IS_JOINED_TO_TRANSACTION);
             }
             return _getDelegate().isJoinedToTransaction();
         } finally {
@@ -1027,7 +1079,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public <T> EntityGraph<T> createEntityGraph(Class<T> rootType) {
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_ENTITY_GRAPH_CLASS);
+                callFlowAgent.entityManagerMethodStart(CREATE_ENTITY_GRAPH_CLASS);
             }
             return _getDelegate().createEntityGraph(rootType);
         } finally {
@@ -1041,7 +1093,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public EntityGraph<?> createEntityGraph(String graphName) {
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_ENTITY_GRAPH_STRING);
+                callFlowAgent.entityManagerMethodStart(CREATE_ENTITY_GRAPH_STRING);
             }
             return _getDelegate().createEntityGraph(graphName);
         } finally {
@@ -1055,7 +1107,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public EntityGraph<?> getEntityGraph(String graphName) {
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_ENTITY_GRAPH);
+                callFlowAgent.entityManagerMethodStart(GET_ENTITY_GRAPH);
             }
             return _getDelegate().getEntityGraph(graphName);
         } finally {
@@ -1069,7 +1121,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     public <T> List<EntityGraph<? super T>> getEntityGraphs(Class<T> entityClass) {
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.GET_ENTITY_GRAPHS);
+                callFlowAgent.entityManagerMethodStart(GET_ENTITY_GRAPHS);
             }
             return _getDelegate().getEntityGraphs(entityClass);
         } finally {
@@ -1104,6 +1156,10 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     private Query wrapQueryIfDetached(Query query, EntityManager delegate) {
         return isDetached() ? QueryWrapper.createQueryWrapper(query, delegate) : query;
+    }
+
+    private StatementOrTypedQuery wrapStatementOrTypedQueryIfDetached(StatementOrTypedQuery statement, EntityManager delegate) {
+        return isDetached() ? StatementOrTypedQueryWrapper.createQueryWrapper(statement, delegate) : statement;
     }
 
     private StatementOrTypedQuery wrapQueryIfDetached(StatementOrTypedQuery query, EntityManager delegate) {
@@ -1190,7 +1246,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.REFRESH_OBJECT_LOCKMODETYPE);
+                callFlowAgent.entityManagerMethodStart(REFRESH_OBJECT_LOCKMODETYPE);
             }
             _getDelegate().refresh(entity, options);
         } finally {
@@ -1228,7 +1284,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
         try {
             if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(EntityManagerMethod.CREATE_QUERY_CRITERIA_QUERY);
+                callFlowAgent.entityManagerMethodStart(CREATE_QUERY_CRITERIA_QUERY);
             }
             EntityManager delegate = _getDelegate();
             returnValue = delegate.createQuery(selectQuery);
@@ -1259,14 +1315,12 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
 
     @Override
     public <T> T get(Class<T> entityClass, Object id) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().get(entityClass, id);
     }
 
     @Override
     public <T> T get(Class<T> entityClass, Object id, FindOption... options) {
-        // TODO Auto-generated method stub
-        return null;
+        return _getDelegate().get(entityClass, id, options);
     }
 
     @Override
@@ -1343,29 +1397,8 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     }
 
     @Override
-    public Statement createQuery(CriteriaStatement<?> statement) {
-        // Unlike other create*Query() methods there is no need for a QueryWrapper here.
-        // QueryWrappers ensure entities returned by a query are detached; an update or
-        // delete statement returns no entities.
-        try {
-            if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodStart(
-                    statement instanceof CriteriaDelete
-                        ? EntityManagerMethod.CREATE_QUERY_CRITERIA_DELETE
-                        : EntityManagerMethod.CREATE_QUERY_CRITERIA_UPDATE);
-            }
-            return _getDelegate().createQuery(statement);
-        } finally {
-            if (callFlowAgent.isEnabled()) {
-                callFlowAgent.entityManagerMethodEnd();
-            }
-        }
-    }
-
-    @Override
     public void addOption(Option option) {
         // TODO Auto-generated method stub
-
     }
 
     @Override
@@ -1373,5 +1406,4 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
         // TODO Auto-generated method stub
         return null;
     }
-
 }

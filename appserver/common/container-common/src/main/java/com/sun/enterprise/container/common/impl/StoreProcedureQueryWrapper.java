@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -15,7 +16,6 @@
  */
 
 package com.sun.enterprise.container.common.impl;
-
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.CacheRetrieveMode;
@@ -78,8 +78,20 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
     }
 
     @Override
+    public StoredProcedureQuery setTimeout(Timeout timeout) {
+        super.setTimeout(timeout);
+        return this;
+    }
+
+    @Override
     public StoredProcedureQuery setHint(String hintName, Object value) {
         super.setHint(hintName, value);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setParameters(Object... arguments) {
+        super.setParameters(arguments);
         return this;
     }
 
@@ -126,20 +138,71 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
     }
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public StoredProcedureQuery setParameter(int position, Calendar value, TemporalType temporalType) {
         super.setParameter(position, value, temporalType);
         return this;
     }
 
     @Override
+    @Deprecated(since = "9", forRemoval = true)
     public StoredProcedureQuery setParameter(int position, Date value, TemporalType temporalType) {
         super.setParameter(position, value, temporalType);
         return this;
     }
 
+
     @Override
+    public <P> StoredProcedureQuery setParameter(String name, P value, Class<P> type) {
+        super.setParameter(name, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> StoredProcedureQuery setParameter(String name, P value, Type<P> type) {
+        super.setParameter(name, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> StoredProcedureQuery setParameter(int position, P value, Class<P> type) {
+        super.setParameter(position, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> StoredProcedureQuery setParameter(int position, P value, Type<P> type) {
+        super.setParameter(position, value, type);
+        return this;
+    }
+
+
+    @Override
+    public <P> StoredProcedureQuery setConvertedParameter(String name, P value, Class<? extends AttributeConverter<P, ?>> converter) {
+        super.setConvertedParameter(name, value, converter);
+        return this;
+    }
+
+
+    @Override
+    public <P> StoredProcedureQuery setConvertedParameter(int position, P value, Class<? extends AttributeConverter<P, ?>> converter) {
+        super.setConvertedParameter(position, value, converter);
+        return this;
+    }
+
+    @Override
+    @Deprecated(since = "9", forRemoval = true)
     public StoredProcedureQuery setFlushMode(FlushModeType flushMode) {
         super.setFlushMode(flushMode);
+        return this;
+    }
+
+    @Override
+    public StoredProcedureQuery setQueryFlushMode(QueryFlushMode flushMode) {
+        super.setQueryFlushMode(flushMode);
         return this;
     }
 
@@ -176,62 +239,6 @@ public class StoreProcedureQueryWrapper extends QueryWrapper<StoredProcedureQuer
     @Override
     public int getUpdateCount() {
         return queryDelegate.getUpdateCount();
-    }
-
-    @Override
-    public StoredProcedureQuery setTimeout(Timeout timeout) {
-        super.setTimeout(timeout);
-        return this;
-    }
-
-    @Override
-    public StoredProcedureQuery setQueryFlushMode(QueryFlushMode flushMode) {
-        super.setQueryFlushMode(flushMode);
-        return this;
-    }
-
-    @Override
-    public StoredProcedureQuery setParameters(Object... arguments) {
-        super.setParameters(arguments);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setParameter(String name, P value, Class<P> type) {
-        super.setParameter(name, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setParameter(String name, P value, Type<P> type) {
-        super.setParameter(name, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setParameter(int position, P value, Class<P> type) {
-        super.setParameter(position, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setParameter(int position, P value, Type<P> type) {
-        super.setParameter(position, value, type);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setConvertedParameter(String name, P value,
-            Class<? extends AttributeConverter<P, ?>> converter) {
-        super.setConvertedParameter(name, value, converter);
-        return this;
-    }
-
-    @Override
-    public <P> StoredProcedureQuery setConvertedParameter(int position, P value,
-            Class<? extends AttributeConverter<P, ?>> converter) {
-        super.setConvertedParameter(position, value, converter);
-        return this;
     }
 
     @Override

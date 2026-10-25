@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
@@ -63,7 +62,6 @@ public class ActiveRAFactory {
         ActiveResourceAdapter activeResourceAdapter = null;
         ClassLoader originalContextClassLoader = null;
 
-        ProcessEnvironment.ProcessType processType = ConnectorRuntime.getRuntime().getEnvironment();
         ResourceAdapter ra = null;
         String raClass = cd.getResourceAdapterClass();
 
@@ -72,14 +70,18 @@ public class ActiveRAFactory {
             // If raClass is available, load it...
 
             if (raClass != null && !raClass.equals("")) {
-                if (processType == ProcessEnvironment.ProcessType.Server) {
-                    ra = (ResourceAdapter)
-                            loader.loadClass(raClass).newInstance();
-                } else {
-                    //ra = (ResourceAdapter) Class.forName(raClass).newInstance();
-                    ra = (ResourceAdapter)
-                            Thread.currentThread().getContextClassLoader().loadClass(raClass).newInstance();
-                }
+                // Load the RA bean through the resource adapter's own classloader
+                // whenever it is available, regardless of the process type. Only
+                // fall back to the thread context classloader when no RAR
+                // classloader was provided. Loading the RA bean from a different
+                // classloader than the rest of the RAR (e.g. from the thread
+                // context classloader in embedded mode) produces a different
+                // Class identity and breaks instanceof checks inside the RA,
+                // such as MQJMSRA_AS4001 in the OpenMQ JMS resource adapter.
+                ClassLoader raClassLoader = loader != null
+                        ? loader
+                        : Thread.currentThread().getContextClassLoader();
+                ra = (ResourceAdapter) raClassLoader.loadClass(raClass).newInstance();
             }
 
             originalContextClassLoader = Utility.setContextClassLoader(loader);

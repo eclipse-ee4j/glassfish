@@ -142,7 +142,7 @@
         <jersey.version>5.0.0-M1</jersey.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta.persistence-api.version>4.0.0-SNAPSHOT</jakarta.persistence-api.version>
+        <jakarta.persistence-api.version>4.0.0-M7</jakarta.persistence-api.version>
         <eclipselink.version>6.0.0-SNAPSHOT</eclipselink.version>
         <eclipselink.asm.version>9.10.0</eclipselink.asm.version>
 
@@ -178,7 +178,7 @@
         <jakarta.authentication-api.version>3.1.0</jakarta.authentication-api.version>
         <soteria.version>5.0.0-M3</soteria.version>
         <exousia.version>4.0.0-M2</exousia.version>
-        <epicyro.version>3.1.2-SNAPSHOT</epicyro.version>
+        <epicyro.version>3.1.2</epicyro.version>
         <nimbus.version>10.9.1</nimbus.version>
         <jcip.version>1.0.2</jcip.version>
 
@@ -1817,8 +1817,8 @@
                                         </rule>
 
                                         <rule>
-                                            <groupId>jakarta.enterprise</groupId>
-                                            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+                                            <groupId>jakarta.cdi</groupId>
+                                            <artifactId>jakarta.cdi-api</artifactId>
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>

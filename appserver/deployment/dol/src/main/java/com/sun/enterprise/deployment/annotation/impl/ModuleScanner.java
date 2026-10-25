@@ -39,7 +39,9 @@ import java.util.zip.ZipException;
 
 import org.glassfish.apf.impl.JavaEEScanner;
 import org.glassfish.api.deployment.archive.ReadableArchive;
+import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.classmodel.reflect.AnnotatedElement;
 import org.glassfish.hk2.classmodel.reflect.AnnotationType;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
@@ -166,10 +168,15 @@ public abstract class ModuleScanner<T extends Descriptor> extends JavaEEScanner<
 
     protected void calculateResults(T descriptor) {
         try {
-            classParser.awaitTermination();
+            final Exception[] parserExceptions = classParser.awaitTermination();
+            if (parserExceptions.length > 0) {
+                final MultiException e = new MultiException(List.of(parserExceptions));
+                LOG.log(Level.SEVERE, ANNOTATION_SCANNING_EXCEPTION, e);
+                throw e;
+            }
         } catch (InterruptedException e) {
-            LOG.log(Level.SEVERE, ANNOTATION_SCANNING_EXCEPTION, e);
-            return;
+            Thread.currentThread().interrupt();
+            throw new DeploymentException(e);
         }
         ParsingContext context = classParser.getContext();
         final boolean isFullAttribute;

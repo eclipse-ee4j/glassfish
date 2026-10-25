@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -65,6 +66,9 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.util.Enumerator;
 
 import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Standard implementation of the <b>Session</b> interface. This object is serializable, so that it can be stored in
@@ -89,6 +93,11 @@ public class StandardSession implements HttpSession, Session, Serializable {
     private static final Logger log = LogFacade.getLogger();
 
     private static final ResourceBundle rb = log.getResourceBundle();
+
+    /**
+     * Largest distance from the current time accepted by {@link #toNanoTime(long)}.
+     */
+    private static final long MAX_CLOCK_SHIFT_MILLIS = NANOSECONDS.toMillis(Long.MAX_VALUE / 4);
 
     // ----------------------------------------------------------- Constructors
 
@@ -267,6 +276,13 @@ public class StandardSession implements HttpSession, Session, Serializable {
     protected long thisAccessedTime = creationTime;
 
     /**
+     * {@link System#nanoTime()} of the current access, used to measure inactivity so that system clock changes neither
+     * shorten nor extend the session. NOTE: This value is not included in the serialized version of this object; it is
+     * derived from {@link #thisAccessedTime} when the session is deserialized.
+     */
+    protected transient volatile long thisAccessedNanos = System.nanoTime();
+
+    /**
      * The session version, incremented and used by in-memory-replicating session managers
      */
     protected AtomicLong version = new AtomicLong(-1);
@@ -316,6 +332,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
         this.creationTime = time;
         this.lastAccessedTime = time;
         this.thisAccessedTime = time;
+        this.thisAccessedNanos = toNanoTime(time);
 
     }
 
@@ -653,6 +670,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
     public void access() {
         this.lastAccessedTime = this.thisAccessedTime;
         this.thisAccessedTime = System.currentTimeMillis();
+        this.thisAccessedNanos = System.nanoTime();
 
         evaluateIfValid();
     }
@@ -937,14 +955,23 @@ public class StandardSession implements HttpSession, Session, Serializable {
      */
     @Override
     public boolean hasExpired() {
-
-        if (maxInactiveInterval >= 0 && (System.currentTimeMillis() - thisAccessedTime >= maxInactiveInterval * 1000L)) {
-            return true;
-        } else {
-            return false;
-        }
+        return maxInactiveInterval >= 0 && System.nanoTime() - thisAccessedNanos >= SECONDS.toNanos(maxInactiveInterval);
     }
     // END SJSAS 6329289
+
+    /**
+     * Converts a time in milliseconds since the epoch to the corresponding {@link System#nanoTime()} value. The distance
+     * from the current time is bounded, so that the nanosecond arithmetic in {@link #hasExpired()} cannot overflow.
+     *
+     * @param timeMillis time in milliseconds since the epoch
+     * @return the corresponding {@link System#nanoTime()} value
+     */
+    static long toNanoTime(long timeMillis) {
+        final long nowMillis = System.currentTimeMillis();
+        final long boundedMillis = Math.max(nowMillis - MAX_CLOCK_SHIFT_MILLIS,
+            Math.min(nowMillis + MAX_CLOCK_SHIFT_MILLIS, timeMillis));
+        return System.nanoTime() - MILLISECONDS.toNanos(nowMillis - boundedMillis);
+    }
 
     /**
      * Increments the version number
@@ -1708,6 +1735,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
         isNew = ((Boolean) stream.readObject()).booleanValue();
         isValid = ((Boolean) stream.readObject()).booleanValue();
         thisAccessedTime = ((Long) stream.readObject()).longValue();
+        thisAccessedNanos = toNanoTime(thisAccessedTime);
         /*
          * SJSWS 6371339 principal = null; // Transient only // setId((String) stream.readObject()); id = (String)
          * stream.readObject();

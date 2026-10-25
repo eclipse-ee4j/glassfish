@@ -57,6 +57,8 @@ public final class ProcessUtils {
 
     /** 1 second is long enough for local connection */
     private static final int SOCKET_CONNECT_TIMEOUT = 1000;
+    /** Pause between evaluations of the sign in {@link #waitFor(Supplier, Duration, boolean)} */
+    private static final long WAIT_FOR_POLL_INTERVAL_MILLIS = 10L;
     private static final String[] PATH = getSystemPath();
 
     private ProcessUtils() {
@@ -282,7 +284,12 @@ public final class ProcessUtils {
                 if (sign.get()) {
                     return true;
                 }
-                Thread.onSpinWait();
+                try {
+                    Thread.sleep(WAIT_FOR_POLL_INTERVAL_MILLIS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return false;
+                }
             }
             return false;
         };

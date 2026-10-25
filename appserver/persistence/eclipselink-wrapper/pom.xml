@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -86,6 +87,17 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <!--
+            Required by org.eclipse.persistence.oracle: the Oracle extension declares a
+            mandatory Import-Package of org.eclipse.persistence.json, so without this
+            module the extension never resolves and the Oracle*Platform classes cannot
+            be loaded at all. See https://github.com/eclipse-ee4j/glassfish/issues/24212
+        -->
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.json</artifactId>
             <scope>compile</scope>
         </dependency>
         <dependency>

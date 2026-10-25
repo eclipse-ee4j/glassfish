@@ -155,7 +155,9 @@ public class ConnectorsClassLoaderUtil {
 
         File file = new File(moduleDir);
         try {
-            connectorClassFinder.appendURL(file.toURI().toURL());
+            // A RAR module directory is fully extracted before its class loader exists and is
+            // not written to afterwards, so its content can be indexed to speed up class search later.
+            connectorClassFinder.appendIndexedURL(file.toURI().toURL());
             appendJars(file, connectorClassFinder);
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);

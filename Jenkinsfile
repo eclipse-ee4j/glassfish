@@ -34,7 +34,7 @@
 def javaVersion = '21'
 def mvnVersion = '3.9.16'
 // You can add -Psnapshots temporarily, if needed.
-def additionalMvnArgs = ''
+def additionalMvnArgs = '-Psnapshots'
 def antVersion = '1.10.18'
 def antHome = "/home/jenkins/.m2/repository/.ci-tools/apache-ant-${antVersion}"
 
@@ -120,8 +120,10 @@ spec:
     env:
     - name: "HOME"
       value: "/home/jenkins"
+    - name: "MAVEN_ARGS"
+      value: "${additionalMvnArgs}"
     - name: "MAVEN_OPTS"
-      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication ${additionalMvnArgs}"
+      value: "-Duser.home=/home/jenkins -Xms1g -Xmx1g -Xss512k -XX:MaxGCPauseMillis=200 -XX:+UseShenandoahGC -XX:+UseStringDeduplication"
     - name: "ANT_HOME"
       value: "${antHome}"
     - name: "ANT_VERSION"

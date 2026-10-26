@@ -15,23 +15,10 @@
  */
 package org.glassfish.main.jnosql.nosql;
 
-import jakarta.data.repository.DataRepository;
-import jakarta.nosql.Embeddable;
-import jakarta.nosql.Entity;
-
-import java.util.Objects;
-import java.util.Set;
-
-import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
-import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.main.jnosql.hk2types.Hk2TypesUtil;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
-
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.util.stream.Collectors.toUnmodifiableSet;
-import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
-import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
 
 /**
  * Server global implementation of class scanner for NoSQL repositories. Must be stateless.
@@ -39,15 +26,16 @@ import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
  *
  * @author Ondro Mihalyi
  */
-public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
+public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner {
 
     public static final String NOSQL_DATA_ENABLED_META_DATA_KEY = "NoSqlDataEnabled";
 
-    private static final System.Logger LOG = System.getLogger(GlassFishNoSqlClassScanner.class.getName());
+    private static final Class<jakarta.nosql.Entity> CLASS_ENTITY = jakarta.nosql.Entity.class;
+    private static final Class<jakarta.nosql.Embeddable> CLASS_EMBEDDABLE = jakarta.nosql.Embeddable.class;
 
     @Override
     public boolean isEnabled() {
-        final DeploymentContext deploymentContext = getDeploymentContext();
+        final DeploymentContext deploymentContext = Hk2TypesUtil.getDeploymentContext();
         if (deploymentContext != null) {
             Boolean enabled = deploymentContext.getTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, Boolean.class);
             if (enabled == null) {
@@ -60,68 +48,25 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
 
     }
 
-    private boolean isAnyEntityFound() {
-        return getTypes().getAllTypes()
-                .stream()
-                .filter(ClassModel.class::isInstance)
-                .anyMatch(type -> type.getAnnotation(Entity.class.getName()) != null);
-    }
-
-    @Override
-    public Set<Class<?>> entities() {
-        final Set<Class<?>> result = findClassesWithAnnotation(Entity.class);
-        LOG.log(DEBUG, () -> "Found NoSql entities: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> repositories() {
-        Set<Class<?>> result = repositoriesStream().collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected NoSql repository interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> embeddables() {
-        Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
-        LOG.log(DEBUG, () -> "Detected NoSql embeddables: " + result);
-        return result;
-    }
-
-    @Override
-    public <T extends DataRepository<?, ?>> Set<Class<?>> repositories(Class<T> filter) {
-        Objects.requireNonNull(filter, "filter is required");
-        return repositoriesStream()
-                .filter(filter::isAssignableFrom)
-                .collect(toUnmodifiableSet());
-    }
-
-    @Override
-    public Set<Class<?>> repositoriesStandard() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected standard NoSql repository interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> customRepositories() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected custom NoSql interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    protected boolean isSupportedEntityType(GeneralInterfaceModel entityType) {
-        return null != entityType.getAnnotation(Entity.class);
-    }
-
     @Override
     protected String getProviderName() {
         return "Eclipse_JNoSQL";
     }
 
     @Override
-    public Set<Class<?>> projections() {
-        return Set.of();
+    protected Class<?> getSupportedEntityAnnotation() {
+        return CLASS_ENTITY;
+    }
+
+    @Override
+    protected Class<?> getSupportedEmbeddableAnnotation() {
+        return CLASS_EMBEDDABLE;
+    }
+
+    private static boolean isAnyEntityFound() {
+        return Hk2TypesUtil.getTypes().getAllTypes()
+                .stream()
+                .filter(ClassModel.class::isInstance)
+                .anyMatch(type -> type.getAnnotation(CLASS_ENTITY.getName()) != null);
     }
 }

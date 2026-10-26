@@ -26,6 +26,7 @@ import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
 
+import java.lang.System.Logger;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +46,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
@@ -69,6 +71,9 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 // TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
+    private static final Logger LOG = System.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
+
+
     /*
      * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
      * the GlassFishClassScanner before it's used there
@@ -80,6 +85,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         BeanManager beanManager) {
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
+        LOG.log(INFO, () -> "Jakarta Persistence: " + toEnabled(jpaEnabled) + ", NoSQL: " + toEnabled(noSqlEnabled));
 
         // We use empty types if we don't need real types instance to free some memory after deployment
         // TODO: Keep only required types - entities and repositories, to avoid keeping the whole types instance after deployment
@@ -136,6 +142,10 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                     .alternative(true)
                     .priority(INTEGRATION_BEANS_PRIORITY);
         }
+    }
+
+    private static String toEnabled(boolean enabled) {
+        return enabled ? "Enabled" : "Disabled";
     }
 
     private static Types getTypes() {

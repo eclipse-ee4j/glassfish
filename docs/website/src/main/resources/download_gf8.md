@@ -3,6 +3,39 @@
 Eclipse GlassFish is an application server, implementing Jakarta EE.
 This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/release/11) specification, which is a major new feature release. Eclipse GlassFish 8 requires JDK 21 or higher.
 
+## Eclipse GlassFish 8.0.5
+
+GlassFish 8.0.5 improves deployment speed and fixes more than twenty issues
+including security risks own or in dependencies.
+
+### Main Changes
+
+* Honor the configured TLS cipher suite order
+* Removed "perfect hostname" logic, prefer localhost until user domain admin says otherwise using `AS_HOSTNAME` env property
+* Improved database connection pool behavior
+* Measure HTTP session inactivity with a monotonic clock
+* Deployment speed improvements
+* Improved support for Oracle databases
+* Embedded GlassFish now supports JMS and Jakarta Data
+* Malformed URL in requests now don't cause HTTP 500 but HTTP 400
+
+### Download
+
+* [Eclipse GlassFish 8.0.5, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.5.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/glassfish/8.0.5)
+* [Eclipse GlassFish 8.0.5, Jakarta EE Web Profile 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/web-8.0.5.zip) (zip)
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.distributions/web/8.0.5)
+* [Eclipse GlassFish Embedded 8.0.5, Jakarta EE Platform 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-all/8.0.5/glassfish-embedded-all-8.0.5.jar) (jar) — run with `java -jar glassfish-embedded-all-8.0.5.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-all/8.0.5)
+* [Eclipse GlassFish Embedded 8.0.5, Jakarta EE Web Profile 11](https://repo1.maven.org/maven2/org/glassfish/main/extras/glassfish-embedded-web/8.0.5/glassfish-embedded-web-8.0.5.jar) (jar) — run with `java -jar glassfish-embedded-web-8.0.5.jar`, no installation required
+  * [Maven coordinates](https://central.sonatype.com/artifact/org.glassfish.main.extras/glassfish-embedded-web/8.0.5)
+
+More details:
+
+* [Eclipse GlassFish 8.0.5 Release Notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.5)
+* [Jakarta EE Specifications](https://jakarta.ee/specifications/) for more info about Jakarta EE
+
+
 ## Eclipse GlassFish 8.0.4
 
 This release focuses on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.  It also bring huge Jakarta Faces rendering performance improvements with an upgraded Mojarra, which now renders pages [3 times faster than before](https://github.com/eclipse-ee4j/mojarra/issues/5753#issuecomment-4929605047).

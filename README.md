@@ -38,6 +38,7 @@ or [buying their services.](#professional-services-and-enterprise-support)
 
 | GlassFish Version | Jakarta EE Version | Java Requirements |
 |:------------------|:-------------------|:------------------|
+| 9.0               | 12                 | 21, 25, 27        |
 | 8.0               | 11                 | 21, 25            |
 | 7.1               | 10                 | 17, 21, 25        |
 | 7.0               | 10                 | 11, 17, 21        |
@@ -51,7 +52,7 @@ or [buying their services.](#professional-services-and-enterprise-support)
 ### Prerequisites
 
 * JDK21+
-* Maven 3.9.0+
+* Maven 3.9.16+
 
 ### Execution
 

@@ -1,6 +1,6 @@
 # Eclipse GlassFish Downloads
 
-## Eclipse GlassFish 8.0.4
+## Eclipse GlassFish 8.0.5
 
 Eclipse GlassFish is an application server, implementing Jakarta EE. This release is corresponding with the [Jakarta EE 11](https://jakarta.ee/release/11) specification, which is a major new feature release. Eclipse GlassFish 8 requires JDK 21 or higher.
 

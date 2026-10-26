@@ -19,6 +19,10 @@ including security risks own or in dependencies.
 * Embedded GlassFish now supports JMS and Jakarta Data
 * Malformed URL in requests now don't cause HTTP 500 but HTTP 400
 
+### TCK results
+
+ * [Full](./certifications/jakarta-platform/11/TCK-Results-8.0.5.md)
+
 ### Download
 
 * [Eclipse GlassFish 8.0.5, Jakarta EE Platform 11](https://www.eclipse.org/downloads/download.php?file=/ee4j/glassfish/glassfish-8.0.5.zip) (zip)

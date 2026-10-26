@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -76,7 +77,7 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="1024")
+    @Attribute (defaultValue="8192")
     @Min(value=128)
     String getMessageFragmentSize();
 

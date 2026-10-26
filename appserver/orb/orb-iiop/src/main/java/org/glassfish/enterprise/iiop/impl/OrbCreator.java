@@ -80,7 +80,15 @@ final class OrbCreator {
     private static final String GLASSFISH_INITIALIZER = GlassFishORBInitializer.class.getName();
 
     private static final String SUN_GIOP_DEFAULT_FRAGMENT_SIZE = "8192";
-    private static final String SUN_GIOP_DEFAULT_BUFFER_SIZE = "8192";
+
+    /**
+     * The buffer a GIOP message starts in. The ORB grows it, up to the
+     * fragment size, only for the messages that need more, so a large
+     * message-fragment-size no longer makes every small request and reply
+     * allocate that much. 1024 is what small messages had before, when the
+     * buffer was always the fragment size and that defaulted to 1024.
+     */
+    private static final int INITIAL_BUFFER_SIZE = 1024;
 
     // This will only apply for stand-alone java clients, since
     // in the server the orb port comes from domain.xml, and in an appclient
@@ -302,12 +310,12 @@ final class OrbCreator {
             } else {
                 fragmentSize = String.valueOf(fsize);
             }
-            bufferSize = fragmentSize;
+            bufferSize = String.valueOf(Math.min(Integer.parseInt(fragmentSize), INITIAL_BUFFER_SIZE));
         } catch (NumberFormatException nfe) {
             LOG.log(WARNING, "The message fragment size {0} must be an integer, using default value {1} instead.",
                 fragmentSize, SUN_GIOP_DEFAULT_FRAGMENT_SIZE);
             fragmentSize = SUN_GIOP_DEFAULT_FRAGMENT_SIZE;
-            bufferSize = SUN_GIOP_DEFAULT_BUFFER_SIZE;
+            bufferSize = String.valueOf(INITIAL_BUFFER_SIZE);
         }
         props.setProperty(ORBConstants.GIOP_FRAGMENT_SIZE, fragmentSize);
         props.setProperty(ORBConstants.GIOP_BUFFER_SIZE, bufferSize);

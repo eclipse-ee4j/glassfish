@@ -88,6 +88,19 @@ public class ProcessManagerTest {
     @Test
     @Timeout(value = 5, unit = TimeUnit.SECONDS)
     @DisabledOnOs(WINDOWS)
+    void parseCommandOutputAfterDelay() {
+        ProcessManager pm = new ProcessManager("sh", "-c", "sleep 1; echo hello");
+        pm.setEcho(false);
+        int exitCode = assertDoesNotThrow(pm::execute);
+        assertAll(
+                () -> assertEquals(0, exitCode),
+                () -> assertEquals("hello\n", pm.getStdout())
+        );
+    }
+
+    @Test
+    @Timeout(value = 5, unit = TimeUnit.SECONDS)
+    @DisabledOnOs(WINDOWS)
     void waitForTextInStdOutAndAbandonBeforeProcessTerminated() {
         ProcessManager pm = new ProcessManager("sh", "-c", "echo \"start\nhello\"; sleep 1; echo \"continue\"; sleep 8");
         pm.setEcho(false);

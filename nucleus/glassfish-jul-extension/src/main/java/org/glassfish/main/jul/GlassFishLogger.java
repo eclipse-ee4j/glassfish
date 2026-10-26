@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -84,8 +84,10 @@ public class GlassFishLogger extends Logger {
         if (logger.getParent() != null) {
             setParent(logger.getParent());
         }
-        if (logger.getResourceBundle() != null) {
-            setResourceBundle(logger.getResourceBundle());
+        // getResourceBundle() does lookup and can set the name, but the name still might be null.
+        final ResourceBundle resourceBundle = logger.getResourceBundle();
+        if (resourceBundle != null && logger.getResourceBundleName() != null) {
+            setResourceBundle(resourceBundle);
         }
         for (final Handler handler : logger.getHandlers()) {
             addHandler(handler);

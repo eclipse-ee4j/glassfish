@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2024 Contributors to Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -55,7 +55,9 @@ import jakarta.servlet.http.HttpUpgradeHandler;
 import jakarta.servlet.jsp.JspFactory;
 import jakarta.servlet.jsp.tagext.JspTag;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.net.BindException;
 import java.net.MalformedURLException;
 import java.text.MessageFormat;
@@ -1946,7 +1948,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
                         msg = MessageFormat.format(msg, contextRoot, host.getName());
                         logger.log(WARNING, msg, ex);
                     }
-
+                    if (DEFAULT_WEB_MODULE_NAME.equals(context.getModuleName())) {
+                        closeDefaultWebModuleClassLoader(context);
+                    }
                     if (logger.isLoggable(FINEST)) {
                         logger.log(FINEST, LogFacade.CONTEXT_UNDEPLOYED, new Object[] { contextRoot, host });
                     }
@@ -1980,6 +1984,21 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
         if (!hasBeenUndeployed) {
             logger.log(SEVERE, LogFacade.UNDEPLOY_ERROR, contextRoot);
+        }
+    }
+
+    /**
+     * The default web module is created by {@link VirtualServer#createSystemDefaultWebModuleIfNecessary(WebArchivist)}
+     * with its own class loader. Unlike deployed applications, nothing else closes that class loader.
+     */
+    private void closeDefaultWebModuleClassLoader(WebModule webModule) {
+        WebModuleConfig webModuleConfig = webModule.getWebModuleConfig();
+        if (webModuleConfig != null && webModuleConfig.getAppClassLoader() instanceof Closeable classLoader) {
+            try {
+                classLoader.close();
+            } catch (IOException e) {
+                logger.log(WARNING, e, () -> "Failed to close the class loader of the default web module of " + webModule.getParent());
+            }
         }
     }
 

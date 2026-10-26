@@ -1470,6 +1470,10 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
 
     void addProbes(boolean globalAccessLoggingEnabled) {
         for (final NetworkListener listener : getGrizzlyNetworkListeners()) {
+            if (!Boolean.valueOf(listener.getEnabled())) {
+                // A disabled listener has no Grizzly proxy, so there is nothing to add probes to.
+                continue;
+            }
             try {
                 final GrizzlyProxy proxy = (GrizzlyProxy) grizzlyService.lookupNetworkProxy(listener);
                 if (proxy != null) {

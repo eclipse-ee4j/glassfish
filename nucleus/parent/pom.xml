@@ -102,7 +102,7 @@
         <java.version.max-supported>25</java.version.max-supported>
         <java.version.jakartaee.required>21</java.version.jakartaee.required>
 
-        <!-- Jakarta EE platform -->
+        <!-- Jakarta EE platform - used in html files -->
         <jakartaee>11</jakartaee>
         <jakarta.platform.version>11.0.0</jakarta.platform.version>
 

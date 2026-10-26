@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2023, 2025 Eclipse Foundation and/or its affiliates.
  *
  * This program and the accompanying materials are made available under the
@@ -31,9 +32,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -45,7 +45,6 @@ import static java.lang.Runtime.version;
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
-import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.zip.ZipFile.OPEN_READ;
 import static org.glassfish.web.loader.LogFacade.ILLEGAL_JAR_PATH;
 import static org.glassfish.web.loader.LogFacade.UNABLE_TO_CREATE;
@@ -64,10 +63,16 @@ class JarFileManager implements Closeable {
 
     private static final Logger LOG = System.getLogger(JarFileManager.class.getName());
 
+    /**
+     * Shared by all instances, so that an instance which is never closed cannot keep a thread alive.
+     * The thread must not inherit the context class loader or the inheritable thread locals of the thread
+     * which happened to open the JAR files first, otherwise it keeps that application reachable.
+     */
+    private static final ScheduledThreadPoolExecutor SCHEDULER = createScheduler();
+
     /** The list of JARs, in the order they should be searched for locally loaded classes or resources. */
     private final List<JarResource> files = new ArrayList<>();
 
-    private final ScheduledExecutorService scheduler = newScheduledThreadPool(1, new JarFileManagerThreadFactory());
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Lock readLock = lock.readLock();
     private final Lock writeLock = lock.writeLock();
@@ -196,7 +201,6 @@ class JarFileManager implements Closeable {
     @Override
     public void close() throws IOException {
         closeJarFiles();
-        scheduler.shutdown();
     }
 
 
@@ -225,7 +229,7 @@ class JarFileManager implements Closeable {
                 }
             }
             LOG.log(DEBUG, "JAR files are open. If unused, will be closed after {0} s", SECONDS_TO_CLOSE_UNUSED_JARS);
-            this.unusedJarsCheck = scheduler.scheduleAtFixedRate(this::closeJarFilesIfNotUsed, SECONDS_TO_CHECK_UNUSED_JARS,
+            this.unusedJarsCheck = SCHEDULER.scheduleAtFixedRate(this::closeJarFilesIfNotUsed, SECONDS_TO_CHECK_UNUSED_JARS,
                 SECONDS_TO_CHECK_UNUSED_JARS, TimeUnit.SECONDS);
             return true;
         } finally {
@@ -409,15 +413,15 @@ class JarFileManager implements Closeable {
         }
     }
 
-    private static class JarFileManagerThreadFactory implements ThreadFactory {
-        private int counter = 1;
-
-        @Override
-        public Thread newThread(Runnable runnable) {
-            Thread thread = new Thread(runnable, "JarFileManager-" + counter++);
-            thread.setDaemon(true);
-            thread.setPriority(Thread.MIN_PRIORITY);
+    private static ScheduledThreadPoolExecutor createScheduler() {
+        final ClassLoader contextClassLoader = JarFileManager.class.getClassLoader();
+        final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1, runnable -> {
+            Thread thread = Thread.ofPlatform().name("JarFileManager").daemon().priority(Thread.MIN_PRIORITY)
+                .inheritInheritableThreadLocals(false).unstarted(runnable);
+            thread.setContextClassLoader(contextClassLoader);
             return thread;
-        }
+        });
+        scheduler.setRemoveOnCancelPolicy(true);
+        return scheduler;
     }
 }

@@ -75,8 +75,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1.2</microprofile.config-api.version>
-        <helidon-config.version>4.5.2</helidon-config.version>
-
+        <helidon-config.version>4.5.5</helidon-config.version>
 
         <!-- MicroProfile Health -->
         <microprofile.health-api.version>4.0.1</microprofile.health-api.version>
@@ -96,8 +95,8 @@
         <woodstock-json.version>2.0</woodstock-json.version>
 
         <!-- Other -->
-        <dbschema.version>2.9.0</dbschema.version>
-        <schema2beans.version>2.9.0</schema2beans.version>
+        <dbschema.version>3.1.0</dbschema.version>
+        <schema2beans.version>3.1.0</schema2beans.version>
         <derby.version>10.17.1.0</derby.version>
         <derby.repackaged.version>${derby.version}</derby.repackaged.version>
         <wsdl4j.version>1.6.3</wsdl4j.version>
@@ -297,6 +296,11 @@
             <dependency>
                 <groupId>org.eclipse.persistence</groupId>
                 <artifactId>org.eclipse.persistence.oracle</artifactId>
+                <version>${eclipselink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>org.eclipse.persistence.json</artifactId>
                 <version>${eclipselink.version}</version>
             </dependency>
             <dependency>
@@ -673,7 +677,7 @@
                         <dependency>
                             <groupId>org.codehaus.plexus</groupId>
                             <artifactId>plexus-utils</artifactId>
-                            <version>4.0.3</version>
+                            <version>4.1.0</version>
                         </dependency>
                     </dependencies>
                 </plugin>

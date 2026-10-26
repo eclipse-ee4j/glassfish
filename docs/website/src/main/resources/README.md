@@ -100,6 +100,11 @@ GlassFish delivers comprehensive support for all required and optional **Jakarta
 
 Download links are available from the [GlassFish Download page](download.md).
 
+## October 4, 2026 -- Eclipse GlassFish 8.0.5 Available
+
+GlassFish 8.0.5 improves deployment speed and fixes more than twenty issues including security risks in GlassFish or in dependencies.
+See version [release notes](https://github.com/eclipse-ee4j/glassfish/releases/tag/8.0.5) for more details.
+
 ## August 3, 2026 -- Eclipse GlassFish 8.0.4 Available
 
 GlassFish 8.0.4 focused on the upgrade path from GlassFish 7, on Embedded GlassFish, and on CDI integration.  It also bring huge Jakarta Faces rendering performance improvements with an upgraded Mojarra, which now renders pages [3 times faster than before](https://github.com/eclipse-ee4j/mojarra/issues/5753#issuecomment-4929605047).

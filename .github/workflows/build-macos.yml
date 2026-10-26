@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-15
+    runs-on: macos-26
     name: Build GlassFish on MacOS
     steps:
     - uses: actions/checkout@v5
@@ -27,10 +27,6 @@ jobs:
         set -x
         hostname
         env | sort
-        ifconfig
-        scutil --dns
-        scutil --nwi
-        netstat -rn
         sysctl -n machdep.cpu.brand_string
         sysctl -n hw.physicalcpu
         sysctl -n hw.logicalcpu
@@ -43,12 +39,15 @@ jobs:
       run: |
         mvn -B -e -ntp clean install -Psnapshots '-Dcheckstyle.skip=true' -pl :common-util
         mvn -B -e -ntp clean install -Psnapshots '-Dcheckstyle.skip=true' -pl :glassfish-itest-tools
-    - name: Upload server logs
+    - name: Upload logs
       uses: actions/upload-artifact@v4
       if: failure()
       with:
-        name: server-logs
-        path: '**/server.log*'
+        name: logs
+        path: |
+          **/server.log*
+          **/*.dumpstream
+          **/hs_err_pid*.log
         retention-days: 3
     - name: Publish Test Report
       uses: mikepenz/action-junit-report@v5

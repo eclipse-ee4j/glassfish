@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025, 2026 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,25 +19,18 @@ package org.glassfish.web.embed.impl;
 import com.sun.enterprise.deployment.annotation.impl.ModuleScanner;
 import com.sun.enterprise.deployment.archivist.ArchivistFor;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import org.glassfish.apf.Scanner;
 import org.glassfish.api.deployment.archive.ArchiveType;
-import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.ScatteredWarArchiveType;
+import org.glassfish.api.deployment.archive.WarArchiveType;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.internal.api.Globals;
-import org.glassfish.web.LogFacade;
+import org.glassfish.web.deployment.annotation.impl.WarScanner;
 import org.glassfish.web.deployment.archivist.WebArchivist;
 import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
-import org.glassfish.web.deployment.descriptor.WebFragmentDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -49,10 +42,7 @@ import org.jvnet.hk2.annotations.Service;
 @ArchivistFor(ScatteredWarArchiveType.ARCHIVE_TYPE)
 public class ScatteredWebArchivist extends WebArchivist {
 
-    private static final Logger LOG = LogFacade.getLogger();
     private static URL defaultWebXmlLocation;
-
-    private final EmbeddedWebScanner embeddedScanner = new EmbeddedWebScanner();
 
     static void setDefaultWebXml(URL defaultWebXml) {
         defaultWebXmlLocation = defaultWebXml;
@@ -78,63 +68,16 @@ public class ScatteredWebArchivist extends WebArchivist {
 
 
     /**
-     * @return the scanner for this archivist, usually it is the scanner regitered
-     *         with the same module type as this archivist, but subclasses can return
-     *         a different version
+     * Embedded GlassFish deploys regular WAR files (a {@code ScatteredArchive} is assembled
+     * into one as well), so the annotations must be scanned the same way as on the server,
+     * including the JAR files in {@code WEB-INF/lib}. The module type of this archivist has
+     * no scanner of its own, so the one registered for the war module type is used.
+     *
+     * @return the {@link WarScanner}
      */
     @Override
-    public EmbeddedWebScanner getScanner() {
-        return this.embeddedScanner;
-    }
-
-    private static class EmbeddedWebScanner extends ModuleScanner<WebBundleDescriptorImpl> {
-
-        private final Set<Class<?>> elements = new HashSet<>();
-        private ClassLoader classLoader;
-
-        @Override
-        public void process(ReadableArchive archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader,
-            Parser parser) throws IOException {
-            this.classLoader = classLoader;
-            this.elements.clear();
-            // in embedded mode, we don't scan archive, we just process all classes.
-            // For the web module itself the classes live under WEB-INF/classes/, while for a web
-            // fragment the entries come from its nested JAR and are relative to that JAR's root.
-            final String classPrefix = (descriptor instanceof WebFragmentDescriptor) ? "" : "WEB-INF/classes/";
-            Enumeration<String> fileEntries = descriptor.getArchiveFileEntries(archiveFile);
-            while (fileEntries.hasMoreElements()) {
-                String entry = fileEntries.nextElement();
-                if (entry.startsWith(classPrefix) && entry.endsWith(".class") && !entry.endsWith("module-info.class")) {
-                    try {
-                        elements.add(classLoader.loadClass(toClassName(entry, classPrefix)));
-                    } catch (ClassNotFoundException e) {
-                        LOG.log(Level.WARNING, "Cannot load class " + entry, e);
-                    }
-                }
-            }
-        }
-
-
-        @Override
-        protected void process(File archiveFile, WebBundleDescriptorImpl descriptor, ClassLoader classLoader) {
-        }
-
-
-        private String toClassName(String entryName, String classPrefix) {
-            String name = entryName.substring(classPrefix.length(), entryName.length() - ".class".length());
-            return name.replaceAll("/", ".");
-        }
-
-
-        @Override
-        public Set<Class<?>> getElements() {
-            return elements;
-        }
-
-
-        @Override
-        public ClassLoader getClassLoader() {
-            return classLoader;
-        }
+    @SuppressWarnings("unchecked")
+    public ModuleScanner<WebBundleDescriptorImpl> getScanner() {
+        return (ModuleScanner<WebBundleDescriptorImpl>) habitat.getService(Scanner.class, WarArchiveType.ARCHIVE_TYPE);
     }
 }

@@ -33,6 +33,8 @@ import javax.sql.DataSource;
 import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
+import static java.lang.System.Logger.Level.ERROR;
+
 /**
  * This descriptor represents a dependency on a resource.
  * @author Danny Coward
@@ -61,6 +63,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
     private static final String ORB_RESOURCE_TYPE = "org.omg.CORBA.ORB";
     private static final String WEBSERVICE_CONTEXT_TYPE = "jakarta.xml.ws.WebServiceContext";
 
+    private static final System.Logger LOG = System.getLogger(ResourceReferenceDescriptor.class.getName());
     private String type;
 
     private ResourcePrincipalDescriptor resourcePrincipalDescriptor;
@@ -544,6 +547,7 @@ public class ResourceReferenceDescriptor extends EnvironmentProperty implements 
                 // ConnectionFactory class of a resource adapter
                 Class.forName(type, true, Thread.currentThread().getContextClassLoader());
             } catch (Throwable t) {
+                LOG.log(ERROR, t.getMessage(), t);
                 if (Descriptor.isBoundsChecking()) {
                     throw new IllegalArgumentException(
                         I18N.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",

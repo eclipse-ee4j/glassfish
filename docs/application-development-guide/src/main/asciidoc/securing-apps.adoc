@@ -471,6 +471,26 @@ the method returns without throwing an exception, the {productName}
 assumes that the realm is ready to service authentication requests. If
 an exception is thrown, the realm is disabled.
 
+The method must call `super.init(props)` first. The inherited
+implementation processes the properties that are common to all realms:
+`jaas-context`, `assign-groups`, and `group-mapping`. Any other property
+that the realm needs later must be read from `props` in this method,
+because the realm does not keep the `props` object. For example:
+
+[source,java]
+----
+@Override
+public void init(Properties props) throws BadRealmException, NoSuchRealmException {
+    super.init(props);
+
+    String url = props.getProperty("url");
+    if (url == null) {
+        throw new BadRealmException("Missing required property url.");
+    }
+    setProperty("url", url);
+}
+----
+
 [source,java]
 ----
 public String getAuthType()
@@ -481,40 +501,58 @@ authentication done by this realm.
 
 [source,java]
 ----
-public abstract Enumeration getGroupNames(String username) throws
-    InvalidOperationException, NoSuchUserException
+public Enumeration<String> getGroupNames(String username) throws NoSuchUserException
 ----
 
-This method returns an `Enumeration` (of `String` objects) enumerating
-the groups (if any) to which the given `username` belongs in this realm.
+This method returns an `Enumeration` of the names of the groups (if any)
+to which the given `username` belongs in this realm.
 
-Custom realms that manage users must implement the following additional
-methods:
+Custom realms can override the following method:
 
 [source,java]
 ----
-public abstract boolean supportsUserManagement();
+public String getJAASContext()
+----
+
+This method returns the name of the JAAS context that the {productName}
+uses to authenticate users of this realm. The name must match an entry
+in the domain-dir``/config/login.conf`` file, see
+xref:#connecting-the-custom-realm-and-the-login-module[Connecting the
+Custom Realm and the Login Module]. The inherited implementation returns
+the value of the `jaas-context` property of the realm, provided that
+`init` called `super.init(props)`. Override this method only if the realm
+must always use a fixed JAAS context regardless of its configuration. If
+the method returns `null`, authentication against the realm fails.
+
+Custom realms that manage users can override the following additional
+methods. The inherited implementations throw an exception, except for
+`supportsUserManagement`, which returns `false`, and `persist`, which
+does nothing.
+
+[source,java]
+----
+public boolean supportsUserManagement();
 ----
 
 This method returns `true` if the realm supports user management.
 
 [source,java]
 ----
-public abstract Enumeration getGroupNames() throws BadRealmException;
+public Enumeration<String> getGroupNames() throws BadRealmException;
 ----
 
 This method returns an `Enumeration` of all group names.
 
 [source,java]
 ----
-public abstract Enumeration getUserNames() throws BadRealmException;
+public Enumeration<String> getUserNames() throws BadRealmException;
 ----
 
 This method returns an `Enumeration` of all user names.
 
 [source,java]
 ----
-public abstract void refresh() throws BadRealmException;
+public void refresh() throws BadRealmException;
 ----
 
 This method refreshes the realm data so that new users and groups are
@@ -522,14 +560,14 @@ visible.
 
 [source,java]
 ----
-public abstract void persist() throws BadRealmException;
+public void persist() throws BadRealmException;
 ----
 
 This method persists the realm data to permanent storage.
 
 [source,java]
 ----
-public abstract User getUser(String name) throws NoSuchUserException,
+public User getUser(String name) throws NoSuchUserException,
 BadRealmException;
 ----
 
@@ -538,7 +576,7 @@ user.
 
 [source,java]
 ----
-public abstract void addUser(String name, String password, String[] groupList) throws
+public void addUser(String name, String password, String[] groupList) throws
 BadRealmException, IASSecurityException;
 ----
 
@@ -546,7 +584,7 @@ This method adds a new user, who cannot already exist.
 
 [source,java]
 ----
-public abstract void removeUser(String name) throws NoSuchUserException,
+public void removeUser(String name) throws NoSuchUserException,
 BadRealmException;
 ----
 
@@ -554,7 +592,7 @@ This method removes a user, who must exist.
 
 [source,java]
 ----
-public abstract void updateUser(String name, String newName, String password,
+public void updateUser(String name, String newName, String password,
 String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException;
 ----
 
@@ -563,7 +601,7 @@ This method updates data for a user, who must exist.
 
 [NOTE]
 ====
-The array passed to the `commitUseAuthentication` method should be newly
+The array passed to the `commitUserAuthentication` method should be newly
 created and otherwise unreferenced. This is because the group name array
 elements are set to null after authentication as part of cleanup. So the
 second time your custom realm executes it returns an array with null
@@ -576,6 +614,35 @@ its `authenticate` method, copy the values from the member variables,
 and return the `String` array. Or it can use `clone` on the member
 variables.
 ====
+
+[[connecting-the-custom-realm-and-the-login-module]]
+
+===== Connecting the Custom Realm and the Login Module
+
+The realm and the login module are connected through a JAAS context. To
+do this, perform the following steps:
+
+1. Declare a JAAS context for the login module in the
+domain-dir``/config/login.conf`` file. For example:
++
+[source]
+----
+customRealm {
+    com.example.security.CustomLoginModule required;
+};
+----
+2. Restart the domain so that the `login.conf` file is read again.
+3. Create the realm and set its `jaas-context` property to the name of
+the JAAS context. For example:
++
+[source]
+----
+asadmin> create-auth-realm --classname com.example.security.CustomRealm
+--property jaas-context=customRealm custom-realm
+----
+
+For more information, see the xref:reference-manual.adoc#create-auth-realm[`create-auth-realm`(1)]
+help page.
 
 
 [[java-ee-security-api-support]]

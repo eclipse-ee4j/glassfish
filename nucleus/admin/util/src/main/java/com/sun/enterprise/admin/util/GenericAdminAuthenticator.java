@@ -286,18 +286,29 @@ public class GenericAdminAuthenticator implements AdminAccessController, JMXAuth
         }
     }
 
-    // Check for X-GlassFish-Remote-Host header (set by AdminConsoleAuthModule in the Admin Console UI).
-    // If present and request is from localhost, use the header value for tracking instead. Otherwise return remote host.
-    // Also check X-Real-IP and X-Forwarded-For headers when the serverName is configured (reverse proxy setup).
+    /**
+     * Checks whether the request was sent by the Admin Console: it carries the
+     * {@value AdminConstants#GLASSFISH_REMOTE_HOST_HEADER} header (set by AdminConsoleAuthModule)
+     * and comes from the local host, because the Admin Console always runs co-located with the server.
+     *
+     * @param req the admin request
+     * @return {@code true} if the request originates from the Admin Console
+     */
+    public static boolean isLocalAdminConsoleRequest(final Request req) {
+        final String consoleRemoteHost = req.getHeader(AdminConstants.GLASSFISH_REMOTE_HOST_HEADER);
+        return consoleRemoteHost != null && !consoleRemoteHost.isBlank() && NetUtils.isLocal(req.getRemoteAddr());
+    }
+
+    // For Admin Console requests, use the real remote host from the X-GlassFish-Remote-Host header for tracking.
+    // Also check X-Real-IP and X-Forwarded-For headers of remote requests when behind a reverse proxy.
+    // Otherwise return remote host.
     private String detectRemoteHostForTracking(final AdminCallbackHandler cbh, final Request req) {
         String remoteHostForTracking = cbh.remoteHost();
 
-        if (NetUtils.isLocal(req.getRemoteAddr())) {
-            String forwardedHost = req.getHeader("X-GlassFish-Remote-Host");
-            if (forwardedHost != null && !forwardedHost.isBlank()) {
-                return forwardedHost;
-            }
-        } else if (isBehindProxyEnabled()) {
+        if (isLocalAdminConsoleRequest(req)) {
+            return req.getHeader(AdminConstants.GLASSFISH_REMOTE_HOST_HEADER);
+        }
+        if (!NetUtils.isLocal(req.getRemoteAddr()) && isBehindProxyEnabled()) {
             return NetUtils.getRemoteHost(
                 new NetUtils.RequestInfoProvider() {
                     @Override

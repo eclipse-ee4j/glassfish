@@ -18,6 +18,7 @@ The following topics are addressed here:
 * xref:#running-from-command-line[Running {productName} Embedded Server from Command Line]
 * xref:#testing-applications-with-the-maven-plug-in-for-embedded-glassfish-server[Using the Maven Plug-in for Embedded {productName}]
 * xref:#including-the-glassfish-server-embedded-server-api-in-applications[Including the {productName} Embedded Server API in Applications]
+* xref:#security-stores[Security Stores]
 * xref:#default-java-persistence-data-source-for-embedded-glassfish-server[Default Java Persistence Data Source for Embedded {productName}]
 * xref:#changing-log-levels-in-embedded-glassfish-server[Changing Log Levels in Embedded {productName}]
 * xref:#monitoring-embedded-glassfish-server-with-jmx[Monitoring Embedded {productName} with JMX]
@@ -1715,6 +1716,36 @@ public class Main {
     }
 }
 ----
+
+[[security-stores]]
+
+== Security Stores
+
+Embedded {productName} does not create a keystore or a truststore. It
+uses the default stores of the JDK, or the stores set with the standard
+`javax.net.ssl` system properties:
+
+* `javax.net.ssl.keyStore` and `javax.net.ssl.keyStorePassword`
+* `javax.net.ssl.trustStore` and `javax.net.ssl.trustStorePassword`
+
+The HTTPS listener is disabled by default. If you enable it, you must
+provide a keystore with a private key and a certificate under the `s1as`
+alias, which is the certificate name that the HTTPS listener uses by
+default. Otherwise, the HTTPS listener starts but cannot complete a TLS
+handshake. For example:
+
+[source]
+----
+keytool -genkeypair -alias s1as -keyalg RSA -dname CN=localhost \
+    -keystore keystore.p12 -storetype PKCS12 -storepass changeit
+
+java -Djavax.net.ssl.keyStore=keystore.p12 \
+    -Djavax.net.ssl.keyStorePassword=changeit \
+    -jar glassfish-embedded-all.jar --httpsPort=8181 app.war
+----
+
+To use a certificate with a different alias, change the `cert-nickname`
+attribute of the `ssl` element of the HTTPS listener.
 
 [[default-java-persistence-data-source-for-embedded-glassfish-server]]
 

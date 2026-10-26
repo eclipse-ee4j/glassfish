@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -41,7 +41,6 @@ import javax.xml.stream.XMLResolver;
 import javax.xml.stream.XMLStreamException;
 
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationCleanup;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.config.support.DomainXmlPreParser.DomainXmlPreParserException;
@@ -67,6 +66,7 @@ import static com.sun.enterprise.config.util.ConfigApiLoggerInfo.totalTimeToPars
 import static java.util.logging.Level.CONFIG;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
 
 /**
  * Locates and parses the portion of <tt>domain.xml</tt> that we care.
@@ -82,7 +82,7 @@ public abstract class DomainXml implements Populator {
     @Inject
     StartupContext context;
     @Inject
-    protected ServiceLocator habitat;
+    protected ServiceLocator locator;
     @Inject
     @Optional
     private ModulesRegistry registry;
@@ -102,7 +102,7 @@ public abstract class DomainXml implements Populator {
             parentClassLoader = getClass().getClassLoader();
         }
 
-        ServiceLocatorUtilities.addOneConstant(habitat, parentClassLoader, null, ClassLoader.class);
+        ServiceLocatorUtilities.addOneConstant(locator, parentClassLoader, null, ClassLoader.class);
 
         String instance = env.getInstanceName();
         URL domainURL = null;
@@ -111,11 +111,11 @@ public abstract class DomainXml implements Populator {
             parseDomainXml(parser, domainURL, instance);
         } catch (NoBackupException ex) {
             /* Both files do not exists or are empty */
-            throw new ConfigPopulatorException("Failed to parse domain.xml", ex);
+            throw new ConfigPopulatorException("Failed to parse domain.xml located at " + domainURL, ex);
         } catch (Throwable ex) {
             if (domainURL == null || isBackupFile(domainURL)) {
                 /* Already tried backup file */
-                throw new ConfigPopulatorException("Failed to parse domain.xml", ex);
+                throw new ConfigPopulatorException("Failed to parse domain.xml located at " + domainURL, ex);
             }
             /* Retry with backup file*/
             try {
@@ -123,7 +123,7 @@ public abstract class DomainXml implements Populator {
                 parseDomainXml(parser, getAlternativeDomainXml(env), instance);
             } catch (Throwable e) {
                 e.addSuppressed(ex);
-                throw new ConfigPopulatorException("Failed to parse domain.xml", e);
+                throw new ConfigPopulatorException("Failed to parse domain.xml located at " + domainURL, e);
             }
         }
         if (isBackupFile(domainURL)) {
@@ -142,12 +142,13 @@ public abstract class DomainXml implements Populator {
         }
 
         // run the cleanup.
-        for (ServiceHandle<?> cc : habitat.getAllServiceHandles(ConfigurationCleanup.class)) {
+        for (ServiceHandle<?> cleanupHandle : locator.getAllServiceHandles(ConfigurationCleanup.class)) {
             try {
-                cc.getService(); // run the upgrade
-                LOG.log(FINE, successfulCleanupWith, cc.getClass());
+                // run the upgrade
+                cleanupHandle.getService();
+                LOG.log(FINE, successfulCleanupWith, cleanupHandle.getClass());
             } catch (Exception e) {
-                LOG.log(SEVERE, cleaningDomainXmlFailed, new Object[] {cc.getClass(), e});
+                LOG.log(SEVERE, cleaningDomainXmlFailed, new Object[] {cleanupHandle.getClass(), e});
                 LOG.log(Level.FINE, "Cleaning the domain.xml failed!", e);
             }
         }
@@ -161,30 +162,30 @@ public abstract class DomainXml implements Populator {
 
     protected void decorate() {
 
-        Server server = habitat.getService(Server.class, env.getInstanceName());
+        Server server = locator.getService(Server.class, env.getInstanceName());
         if (server == null) {
             LOG.log(SEVERE, badEnv, env.getInstanceName());
             return;
         }
-        ServiceLocatorUtilities.addOneConstant(habitat, server, ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
+        ServiceLocatorUtilities.addOneConstant(locator, server, DEFAULT_INSTANCE_NAME, Server.class);
 
-        server.getConfig().addIndex(habitat, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        server.getConfig().addIndex(locator, DEFAULT_INSTANCE_NAME);
 
-        Cluster c = server.getCluster();
-        if (c != null) {
-            ServiceLocatorUtilities.addOneConstant(habitat, c, ServerEnvironment.DEFAULT_INSTANCE_NAME, Cluster.class);
+        Cluster cluster = server.getCluster();
+        if (cluster != null) {
+            ServiceLocatorUtilities.addOneConstant(locator, cluster, DEFAULT_INSTANCE_NAME, Cluster.class);
         }
     }
 
     protected void upgrade() {
 
         // run the upgrades...
-        for (ServiceHandle<?> cu : habitat.getAllServiceHandles(ConfigurationUpgrade.class)) {
+        for (ServiceHandle<?> cfgUpgrade : locator.getAllServiceHandles(ConfigurationUpgrade.class)) {
             try {
-                cu.getService(); // run the upgrade
-                LOG.log(FINE, successfulUpgrade, cu.getClass());
+                cfgUpgrade.getService(); // run the upgrade
+                LOG.log(FINE, successfulUpgrade, cfgUpgrade.getClass());
             } catch (Exception e) {
-                LOG.log(Level.SEVERE, failedUpgrade, new Object[] {cu.getClass(), e});
+                LOG.log(Level.SEVERE, failedUpgrade, new Object[] {cfgUpgrade.getClass(), e});
                 LOG.log(Level.FINE, "Upgrade of the domain.xml failed!", e);
             }
         }

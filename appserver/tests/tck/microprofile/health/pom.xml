@@ -106,9 +106,13 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>tck-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <dependenciesToScan>
+                        <dependency>org.eclipse.microprofile.health:microprofile-health-tck</dependency>
+                    </dependenciesToScan>
+                    <includes>**/*</includes>
+                    <systemPropertyVariables>
+                        <project.build.directory>${project.build.directory}</project.build.directory>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>

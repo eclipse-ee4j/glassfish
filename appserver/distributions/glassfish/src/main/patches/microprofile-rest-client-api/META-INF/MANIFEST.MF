@@ -11,7 +11,7 @@ Bundle-Vendor: Eclipse Foundation
 Import-Package: jakarta.enterprise.context;version="[3,5)";resolution:
  =optional,jakarta.enterprise.inject;version="[3,5)";resolution:=optio
  nal,jakarta.enterprise.util;version="[3,5)";resolution:=optional,jaka
- rta.inject;resolution:=optional;version="[2.0,4)",org.eclipse.micropr
+ rta.inject;resolution:=optional;version="[2.0,5)",org.eclipse.micropr
  ofile.config;version="[3,4)";resolution:=optional,jakarta.annotation;
  version="[2.1,4)",jakarta.ws.rs.core;version="[3.1,5)",java.lang,java
  .lang.annotation,java.lang.invoke,java.net,java.security,java.util,ja

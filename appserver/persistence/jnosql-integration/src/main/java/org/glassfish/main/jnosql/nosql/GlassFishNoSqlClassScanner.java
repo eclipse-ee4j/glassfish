@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,7 +25,6 @@ import java.util.Set;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
-import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
 
@@ -52,7 +51,6 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
         if (deploymentContext != null) {
             Boolean enabled = deploymentContext.getTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, Boolean.class);
             if (enabled == null) {
-                ApplicationInfo appInfo = deploymentContext.getModuleMetaData(ApplicationInfo.class);
                 enabled = isAnyEntityFound() && super.isEnabled();
                 deploymentContext.addTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, enabled);
             }
@@ -124,8 +122,6 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implem
 
     @Override
     public Set<Class<?>> projections() {
-        // TODO Auto-generated method stub
-        return null;
+        return Set.of();
     }
-
 }

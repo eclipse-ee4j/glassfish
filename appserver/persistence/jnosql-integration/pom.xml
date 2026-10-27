@@ -138,7 +138,6 @@
                     <instructions>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-17</_runee>
-
                         <Import-Package>
                             org.eclipse.jnosql.communication,
                             *

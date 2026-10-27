@@ -36,16 +36,15 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner {
     @Override
     public boolean isEnabled() {
         final DeploymentContext deploymentContext = Hk2TypesUtil.getDeploymentContext();
-        if (deploymentContext != null) {
-            Boolean enabled = deploymentContext.getTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, Boolean.class);
-            if (enabled == null) {
-                enabled = isAnyEntityFound() && super.isEnabled();
-                deploymentContext.addTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, enabled);
-            }
-            return enabled;
+        if (deploymentContext == null) {
+            return true;
         }
-        return true;
-
+        Boolean enabled = deploymentContext.getTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, Boolean.class);
+        if (enabled == null) {
+            enabled = isAnyEntityFound() && super.isEnabled();
+            deploymentContext.addTransientAppMetaData(NOSQL_DATA_ENABLED_META_DATA_KEY, enabled);
+        }
+        return enabled;
     }
 
     @Override

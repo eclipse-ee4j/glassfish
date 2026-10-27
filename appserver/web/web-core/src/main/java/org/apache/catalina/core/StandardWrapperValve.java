@@ -151,13 +151,11 @@ final class StandardWrapperValve extends ValveBase {
             }
         } catch (ServletException e) {
             log(format(rb.getString(SERVLET_ALLOCATE_EXCEPTION), wrapper.getName()), e);
-
             throwable = e;
             exception(request, response, e);
             servlet = null;
         } catch (Throwable e) {
             log(format(rb.getString(SERVLET_ALLOCATE_EXCEPTION), wrapper.getName()), e);
-
             throwable = e;
             exception(request, response, e);
             servlet = null;
@@ -205,11 +203,11 @@ final class StandardWrapperValve extends ValveBase {
             throwable = e;
             exception(request, response, e);
         } catch (IOException e) {
-            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         } catch (UnavailableException e) {
-            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()), e);
             wrapper.unavailable(e);
             long available = wrapper.getAvailable();
             if ((available > 0L) && (available < Long.MAX_VALUE)) {
@@ -232,7 +230,7 @@ final class StandardWrapperValve extends ValveBase {
             throwable = e;
             exception(request, response, e);
         } catch (Throwable e) {
-            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SERVLET_SERVICE_EXCEPTION), wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         }

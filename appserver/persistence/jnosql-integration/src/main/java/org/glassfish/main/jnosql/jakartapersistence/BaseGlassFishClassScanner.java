@@ -29,6 +29,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.jnosql.mapping.NoSQLRepository;
 import org.eclipse.jnosql.mapping.metadata.ClassScanner;
 import org.glassfish.hk2.classmodel.reflect.AnnotationModel;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
@@ -52,7 +53,8 @@ public abstract class BaseGlassFishClassScanner implements ClassScanner {
     private static final Set<String> STANDARD_INTERFACES = Set.of(
             BasicRepository.class.getName(),
             CrudRepository.class.getName(),
-            DataRepository.class.getName()
+            DataRepository.class.getName(),
+            NoSQLRepository.class.getName()
     );
 
     protected abstract String getProviderName();

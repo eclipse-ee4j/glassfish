@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -51,8 +52,7 @@ public class AdHocContextValve implements GlassFishValve {
 
     private static final ResourceBundle rb = logger.getResourceBundle();
 
-    private static final String VALVE_INFO =
-        "com.sun.enterprise.web.AdHocContextValve";
+    private static final String VALVE_INFO = "com.sun.enterprise.web.AdHocContextValve";
 
     // The web module with which this valve is associated
     private WebModule context;
@@ -82,14 +82,12 @@ public class AdHocContextValve implements GlassFishValve {
      * @param request The request to process
      * @param response The response to return
      */
-    public int invoke(Request request, Response response)
-            throws IOException, ServletException {
+    public int invoke(Request request, Response response) throws IOException, ServletException {
 
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();
         HttpServletResponse hres = (HttpServletResponse) response.getResponse();
 
-        String adHocServletName =
-            context.getAdHocServletName(hreq.getServletPath());
+        String adHocServletName = context.getAdHocServletName(hreq.getServletPath());
 
         Wrapper adHocWrapper = (Wrapper) context.findChild(adHocServletName);
         if (adHocWrapper != null) {
@@ -98,15 +96,9 @@ public class AdHocContextValve implements GlassFishValve {
                 adHocServlet = adHocWrapper.allocate();
                 adHocServlet.service(hreq, hres);
             } catch (Throwable t) {
-                hres.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                String msg = rb.getString(LogFacade.ADHOC_SERVLET_SERVICE_ERROR);
-                msg = MessageFormat.format(
-                            msg,
-                            new Object[] { hreq.getServletPath() });
-                response.setDetailMessage(msg);
-                if (logger.isLoggable(Level.FINE)) {
-                    logger.log(Level.FINE, msg, t);
-                }
+                logger.log(Level.FINE, "AdHoc servlet failed: " + adHocServletName, t);
+                hres.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, MessageFormat.format(rb.getString(LogFacade.ADHOC_SERVLET_SERVICE_ERROR),
+                    new Object[] {hreq.getServletPath()}));
                 return END_PIPELINE;
             } finally {
                 if (adHocServlet != null) {
@@ -114,12 +106,8 @@ public class AdHocContextValve implements GlassFishValve {
                 }
             }
         } else {
-            hres.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            String msg = rb.getString(LogFacade.NO_ADHOC_SERVLET);
-            msg = MessageFormat.format(
-                            msg,
-                            new Object[] { hreq.getServletPath() });
-            response.setDetailMessage(msg);
+            hres.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                MessageFormat.format(rb.getString(LogFacade.NO_ADHOC_SERVLET), new Object[] {hreq.getServletPath()}));
             return END_PIPELINE;
         }
 

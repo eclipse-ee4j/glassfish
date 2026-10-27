@@ -689,10 +689,18 @@ public final class ApplicationDispatcher implements RequestDispatcher {
             }
         } catch (ServletException e) {
             log.log(Level.SEVERE, deallocateServletExceptionMsg, e);
-            servletException = e;
+            if (servletException == null) {
+                servletException = e;
+            } else {
+                servletException.addSuppressed(e);
+            }
         } catch (Throwable e) {
             log.log(Level.SEVERE, deallocateServletExceptionMsg, e);
-            servletException = new ServletException(deallocateServletExceptionMsg, e);
+            if (servletException == null) {
+                servletException = new ServletException(deallocateServletExceptionMsg, e);
+            } else {
+                servletException.addSuppressed(e);
+            }
         }
 
         // Reset the old context class loader

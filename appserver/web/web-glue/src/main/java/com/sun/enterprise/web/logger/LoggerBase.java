@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -194,7 +195,9 @@ abstract class LoggerBase implements Logger {
         CharArrayWriter buf = new CharArrayWriter();
         PrintWriter writer = new PrintWriter(buf);
         writer.println(msg);
-        throwable.printStackTrace(writer);
+        if (throwable != null) {
+            throwable.printStackTrace(writer);
+        }
         Throwable rootCause = null;
         if (throwable instanceof LifecycleException)
             rootCause = ((LifecycleException) throwable).getCause();

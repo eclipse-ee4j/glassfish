@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -149,7 +150,7 @@ final class StandardWrapperValve extends ValveBase {
                 response.setDetailMessage(format(rb.getString(SERVLET_UNAVAILABLE), wrapper.getName()));
             }
         } catch (ServletException e) {
-            log(format(rb.getString(SERVLET_ALLOCATE_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SERVLET_ALLOCATE_EXCEPTION), wrapper.getName()), e);
 
             throwable = e;
             exception(request, response, e);
@@ -166,11 +167,11 @@ final class StandardWrapperValve extends ValveBase {
         try {
             response.sendAcknowledgement();
         } catch (IOException e) {
-            log(format(rb.getString(SEND_ACKNOWLEDGEMENT_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SEND_ACKNOWLEDGEMENT_EXCEPTION), wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
         } catch (Throwable e) {
-            log(format(rb.getString(SEND_ACKNOWLEDGEMENT_EXCEPTION), wrapper.getName()));
+            log(format(rb.getString(SEND_ACKNOWLEDGEMENT_EXCEPTION), wrapper.getName()), e);
             throwable = e;
             exception(request, response, e);
             servlet = null;

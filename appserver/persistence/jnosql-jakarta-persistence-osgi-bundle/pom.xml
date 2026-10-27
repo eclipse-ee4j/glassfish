@@ -62,17 +62,17 @@
                 <configuration>
                     <instructions>
                         <_noimportjava>true</_noimportjava>
-                        <_runee>JavaSE-17</_runee>
+                        <_runee>JavaSE-21</_runee>
                         <!-- <Automatic-Module-Name>org.eclipse.jnosql.jakartapersistence</Automatic-Module-Name> -->
                         <Extension-Name>org.eclipse.jnosql.jakartapersistence</Extension-Name>
 
                         <Bundle-SymbolicName>org.eclipse.jnosql.jakartapersistence</Bundle-SymbolicName>
                         <Bundle-Version>${project.version}</Bundle-Version>
                         <Bundle-Name>Jakarta Data Implementation ${project.version}</Bundle-Name>
-                        <Bundle-Description>Eclipse Jakarta Data Implementation (jakarta.data/1.0) ${project.version}</Bundle-Description>
+                        <Bundle-Description>Eclipse Jakarta Data Implementation (jakarta.data/1.1) ${project.version}</Bundle-Description>
 
                         <Specification-Title>Jakarta Data</Specification-Title>
-                        <Specification-Version>1.0</Specification-Version>
+                        <Specification-Version>1.1</Specification-Version>
                         <Specification-Vendor>Eclipse Foundation</Specification-Vendor>
 
                         <Implementation-Title>JNoSQL Jakarta Persistence</Implementation-Title>
@@ -85,6 +85,7 @@
                             *
                         </Import-Package>
                         <Embed-Dependency>
+                            !jakarta.annotation-api.*,
                             !jakarta.data-api.*,
                             !jakarta.persistence-api.*,
                             !jakarta.validation-api.*,
@@ -125,9 +126,10 @@
                             <failOnMissingClassifierArtifact>false</failOnMissingClassifierArtifact>
                             <outputDirectory>${project.build.directory}/dependency-sources</outputDirectory>
                             <includes>**/*.java</includes>
-                            <includeGroupIds>org.eclipse.jnosql.mapping,
+                            <includeGroupIds>
+                                org.eclipse.jnosql.mapping,
                                 org.eclipse.jnosql.communication,
-                                ee.omnifish</includeGroupIds>
+                            </includeGroupIds>
                         </configuration>
                     </execution>
                 </executions>

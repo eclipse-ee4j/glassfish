@@ -17,6 +17,7 @@ package org.glassfish.main.test.app.persistence.data.repository.nosql;
 
 import java.io.File;
 import java.net.http.HttpResponse;
+import java.util.stream.Stream;
 
 import org.glassfish.main.itest.tools.TestUtilities;
 import org.glassfish.main.itest.tools.asadmin.Asadmin;
@@ -81,10 +82,10 @@ public class DataNoSqlRepositoryTest {
         PomEquippedResolveStage resolver =
                 Maven.resolver().loadPomFromFile("pom.xml");
 
-        File[] mongoDependencies = resolver
+        File[] mongoDependencies = Stream.of(resolver
                 .resolve("org.eclipse.jnosql.databases:jnosql-mongodb")
                 .withTransitivity()
-                .asFile();
+                .asFile()).filter(f -> f.getName().contains("mongodb") || f.getName().contains("bson")).toArray(File[]::new);
 
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
                 .addPackage(TEST_PACKAGE)

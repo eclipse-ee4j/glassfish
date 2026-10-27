@@ -186,7 +186,17 @@
                                                 </condition>
                                             </fail>
                                             <echo>PATCHING @{destfile}</echo>
-                                            <zip update="true" basedir="@{basedir}" destfile="@{destfile}" whenempty="fail" />
+                                            <!-- Not zip update="true": that replaces an entry only when the patch
+                                                 file is newer than it, so a jar released after the patches were
+                                                 last checked out silently kept its own manifest.
+                                                 The patch files go in first, and duplicate="preserve" then drops
+                                                 the jar's own copies of them ("already added, skipping"). -->
+                                            <move file="@{destfile}" tofile="@{destfile}.unpatched" overwrite="true" />
+                                            <zip destfile="@{destfile}" duplicate="preserve">
+                                                <fileset dir="@{basedir}" />
+                                                <zipfileset src="@{destfile}.unpatched" />
+                                            </zip>
+                                            <delete file="@{destfile}.unpatched" />
                                         </sequential>
                                     </macrodef>
 

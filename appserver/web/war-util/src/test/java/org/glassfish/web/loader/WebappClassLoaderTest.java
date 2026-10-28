@@ -29,6 +29,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.web.loader.WebappClassLoader.MOJARRA_PACKAGE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -43,7 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class WebappClassLoaderTest {
 
     private static final String FACES_API_RESOURCE = "jakarta/faces/marker.txt";
-    private static final String FACES_IMPL_RESOURCE = "com/sun/faces/marker.txt";
+    private static final String FACES_IMPL_RESOURCE = MOJARRA_PACKAGE.replace('.', '/') + "/marker.txt";
 
     private static Path docBase;
     private static Path repo;

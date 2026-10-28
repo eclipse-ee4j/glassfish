@@ -128,6 +128,10 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
 
     private static final Function<String, String> PACKAGE_TO_PATH = pkg -> pkg.replace('.', '/');
 
+    /** Root package of the Mojarra implementation classes in jakarta.faces.jar */
+    static final String MOJARRA_PACKAGE = "com.sun.faces";
+    private static final String MOJARRA_PATH = PACKAGE_TO_PATH.apply(MOJARRA_PACKAGE);
+
     /** The path which will be monitored for added Jar files. */
     private static final String WEB_INF_LIB = "/WEB-INF/lib";
 
@@ -142,7 +146,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         "org.xml.sax",                               // SAX 1 & 2 (JRE, jrt-fs.jar)
         "org.w3c.dom",                               // DOM 1 & 2 (JRE, jrt-fs.jar)
         "org.glassfish.wasp.taglibs.standard",       // wasp.jar
-        "com.sun.faces",                             // jakarta.faces.jar
+        MOJARRA_PACKAGE,                             // jakarta.faces.jar
         "org.eclipse.microprofile"                   // MicroProfile classes
     );
     private static final Set<String> DELEGATED_RESOURCE_PATHS = DELEGATED_PACKAGES.stream()
@@ -1364,7 +1368,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         if (overridablePackages.stream().anyMatch(packageName::startsWith)) {
             return false;
         }
-        if (className.startsWith("jakarta.faces.") || className.startsWith("com.sun.faces.")) {
+        if (className.startsWith("jakarta.faces.") || className.startsWith(MOJARRA_PACKAGE + '.')) {
             // Bundled Faces implementation: myfaces-api uses jakarta.faces packages,
             // Mojarra both jakarta.faces and com.sun.faces packages.
             return !useMyFaces;
@@ -1389,7 +1393,7 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         if (overridablePackages.stream().map(PACKAGE_TO_PATH).anyMatch(name::startsWith)) {
             return false;
         }
-        if (name.startsWith("jakarta/faces/") || name.startsWith("com/sun/faces/")) {
+        if (name.startsWith("jakarta/faces/") || name.startsWith(MOJARRA_PATH + '/')) {
             // Bundled Faces implementation: myfaces-api uses jakarta.faces packages,
             // Mojarra both jakarta.faces and com.sun.faces packages.
             return !useMyFaces;

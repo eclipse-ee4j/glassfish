@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,8 +42,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class WebappClassLoaderTest {
 
+    private static final String FACES_API_RESOURCE = "jakarta/faces/marker.txt";
+    private static final String FACES_IMPL_RESOURCE = "com/sun/faces/marker.txt";
+
     private static Path docBase;
     private static Path repo;
+    private static Path parentRepo;
 
 
     @BeforeAll
@@ -53,6 +57,14 @@ class WebappClassLoaderTest {
         Files.createFile(repo.resolve("file1.txt"));
         Path dir1 = Files.createDirectory(repo.resolve("Dir1"));
         Files.createFile(dir1.resolve("fileInDir1.txt"));
+        parentRepo = Files.createDirectory(docBase.resolve("parent"));
+        for (Path root : new Path[] {repo, parentRepo}) {
+            for (String resource : new String[] {FACES_API_RESOURCE, FACES_IMPL_RESOURCE}) {
+                Path file = root.resolve(resource);
+                Files.createDirectories(file.getParent());
+                Files.createFile(file);
+            }
+        }
     }
 
 
@@ -113,8 +125,40 @@ class WebappClassLoaderTest {
     }
 
 
+    @Test
+    public void facesResourcesFromServerByDefault() throws Exception {
+        WebappClassLoader classLoader = createCL(new URLClassLoader(new URL[] {parentRepo.toUri().toURL()}));
+        classLoader.start();
+        assertAll(
+            () -> assertThat(classLoader.getResource(FACES_API_RESOURCE).toExternalForm(),
+                endsWith("/parent/" + FACES_API_RESOURCE)),
+            () -> assertThat(classLoader.getResource(FACES_IMPL_RESOURCE).toExternalForm(),
+                endsWith("/parent/" + FACES_IMPL_RESOURCE))
+        );
+    }
+
+
+    @Test
+    public void facesResourcesFromApplicationWithBundledFaces() throws Exception {
+        WebappClassLoader classLoader = createCL(new URLClassLoader(new URL[] {parentRepo.toUri().toURL()}));
+        classLoader.setUseMyFaces(true);
+        classLoader.start();
+        assertAll(
+            () -> assertThat(classLoader.getResource(FACES_API_RESOURCE).toExternalForm(),
+                endsWith("/repo1/" + FACES_API_RESOURCE)),
+            () -> assertThat(classLoader.getResource(FACES_IMPL_RESOURCE).toExternalForm(),
+                endsWith("/repo1/" + FACES_IMPL_RESOURCE))
+        );
+    }
+
+
     private WebappClassLoader createCL() {
-        WebappClassLoader classLoader = new WebappClassLoader(WebappClassLoaderTest.class.getClassLoader());
+        return createCL(WebappClassLoaderTest.class.getClassLoader());
+    }
+
+
+    private WebappClassLoader createCL(ClassLoader parent) {
+        WebappClassLoader classLoader = new WebappClassLoader(parent);
         WebDirContext webDirContext = new WebDirContext();
         webDirContext.setDocBase(docBase.toFile().getAbsolutePath());
         classLoader.setResources(webDirContext);

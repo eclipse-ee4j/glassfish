@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -1364,8 +1364,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         if (overridablePackages.stream().anyMatch(packageName::startsWith)) {
             return false;
         }
-        if (className.startsWith("jakarta.faces.")) {
-            // myfaces-api uses jakarta.faces packages
+        if (className.startsWith("jakarta.faces.") || className.startsWith("com.sun.faces.")) {
+            // Bundled Faces implementation: myfaces-api uses jakarta.faces packages,
+            // Mojarra both jakarta.faces and com.sun.faces packages.
             return !useMyFaces;
         }
         if (DELEGATED_PACKAGES.stream().anyMatch(packageName::startsWith)) {
@@ -1388,8 +1389,9 @@ public final class WebappClassLoader extends GlassfishUrlClassLoader implements 
         if (overridablePackages.stream().map(PACKAGE_TO_PATH).anyMatch(name::startsWith)) {
             return false;
         }
-        if (name.startsWith("jakarta/faces/")) {
-            // myfaces-api uses jakarta.faces packages
+        if (name.startsWith("jakarta/faces/") || name.startsWith("com/sun/faces/")) {
+            // Bundled Faces implementation: myfaces-api uses jakarta.faces packages,
+            // Mojarra both jakarta.faces and com.sun.faces packages.
             return !useMyFaces;
         }
         if (name.startsWith("META-INF/services/org.glassfish.jersey.client.spi.DefaultSslContextProvider")) {

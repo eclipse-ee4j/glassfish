@@ -15,14 +15,8 @@
  */
 package org.glassfish.main.jnosql.nosql;
 
-import jakarta.enterprise.context.ApplicationScoped;
-
-import java.io.File;
-import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.document.DocumentTemplate;
@@ -30,6 +24,7 @@ import org.eclipse.jnosql.mapping.reflection.Reflections;
 import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.main.jnosql.util.LibraryBeans.applicationScopedClassesIn;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -55,24 +50,5 @@ class JNoSqlIntegrationExtensionTest {
         beans.removeAll(NOT_REGISTERED);
 
         assertThat(Set.of(JNoSqlIntegrationExtension.JNOSQL_BEANS), equalTo(beans));
-    }
-
-    private static Set<Class<?>> applicationScopedClassesIn(Class<?> library) throws Exception {
-        Set<Class<?>> classes = new HashSet<>();
-        File jar = new File(library.getProtectionDomain().getCodeSource().getLocation().toURI());
-        try (JarFile jarFile = new JarFile(jar)) {
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                String name = entries.nextElement().getName();
-                if (name.endsWith(".class") && !name.contains("-")) {
-                    Class<?> type = Class.forName(name.replace('/', '.').substring(0, name.length() - 6), false,
-                            library.getClassLoader());
-                    if (type.isAnnotationPresent(ApplicationScoped.class)) {
-                        classes.add(type);
-                    }
-                }
-            }
-        }
-        return classes;
     }
 }

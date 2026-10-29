@@ -54,12 +54,13 @@ import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredQueryO
 import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryOperationProvider;
 import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
 import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredReturnType;
+import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
 
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 
 /**
- * Registers JNoSQL CDI beans that are needed for JNoSQL but not for Jakarta
- * Data over JPA
+ * Registers the CDI beans of the JNoSQL libraries, which both NoSQL repositories and the JNoSQL
+ * Jakarta Persistence driver use
  *
  * TODO - If classloader delegation is disabled, veto our beans if the app provides alternatives
  *
@@ -70,7 +71,7 @@ public class JNoSqlIntegrationExtension implements Extension {
     /*
      * The CDI beans of the JNoSQL libraries that GlassFish provides. An application that bundles these
      * libraries gets the beans from bean discovery; GlassFish adds them for applications that only bring
-     * a NoSQL driver.
+     * a NoSQL driver, or use Jakarta Data over Jakarta Persistence.
      */
     static final Class<?>[] JNOSQL_BEANS = {
             // jnosql-mapping-core
@@ -115,7 +116,7 @@ public class JNoSqlIntegrationExtension implements Extension {
     };
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
-        if (new GlassFishNoSqlClassScanner().isEnabled()) {
+        if (new GlassFishNoSqlClassScanner().isEnabled() || new GlassFishJakartaPersistenceClassScanner().isEnabled()) {
             addAnnotatedTypes(beforeBeanDiscovery, JNOSQL_BEANS);
         }
     }

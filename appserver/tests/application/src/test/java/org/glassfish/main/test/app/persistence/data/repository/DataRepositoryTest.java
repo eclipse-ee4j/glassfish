@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 /**
  * Smoketest using a minimal Jakarta Data application with a default Jakarta Persisence data source.
  */
-@Disabled("SqlRepositoryProducer can not be found, and also hard to import since has no default constructor - WELD-001435: Normal scoped bean class org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer is not proxyable because it has no no-args constructor")
+@Disabled("JNoSQL 2.0 rejects FooRepository.deleteAll(), a @Delete method without parameters: CoreDeleteOperation throws \"Delete operation requires one parameter instead of: []\"")
 public class DataRepositoryTest {
 
     private static final System.Logger LOG = System.getLogger(DataRepositoryTest.class.getName());

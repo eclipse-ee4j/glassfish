@@ -42,7 +42,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@Disabled
+@Disabled("JNoSQL 2.0 ignores interceptor bindings on repositories: since jnosql-extensions 0fa1ef5d, AbstractRepositoryPersistenceBean.create no longer calls CdiUtil.copyInterceptors, so @Transactional(REQUIRES_NEW) on TransactionRepository has no effect")
 public class TransactionalAnnotationTest {
 
     private static final System.Logger LOG = System.getLogger(TransactionalAnnotationTest.class.getName());

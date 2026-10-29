@@ -22,6 +22,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 import jakarta.interceptor.Interceptor;
@@ -31,11 +32,27 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jnosql.extensions.sql.SqlTemplateFactory;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCountAllOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCountByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCursorPaginationOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlDeleteByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlDeleteOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlExistsByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlFindAllOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlFindByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlParameterBasedOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlQueryBuilder;
+import org.eclipse.jnosql.extensions.sql.repository.SqlQueryOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryOperationProvider;
+import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer;
+import org.eclipse.jnosql.extensions.sql.repository.SqlReturnType;
 import org.eclipse.jnosql.extensions.sql.repository.spi.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
+import org.eclipse.jnosql.jakartapersistence.mapping.repository.PersistenceRepositoryProducer;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
@@ -48,6 +65,7 @@ import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**
@@ -73,6 +91,35 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
 
     private static final Logger LOG = System.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
 
+    /*
+     * The CDI beans of the JNoSQL Jakarta Persistence driver, except those added after bean discovery below.
+     * An application that bundles the driver gets the beans from bean discovery; GlassFish adds them for
+     * applications that don't. The driver also uses the beans of the JNoSQL libraries, see JNoSqlIntegrationExtension.
+     */
+    static final Class<?>[] JAKARTA_PERSISTENCE_BEANS = {
+            PersistenceRepositoryProducer.class,
+            SqlCountAllOperation.class,
+            SqlCountByOperation.class,
+            SqlCursorPaginationOperation.class,
+            SqlDeleteByOperation.class,
+            SqlDeleteOperation.class,
+            SqlExistsByOperation.class,
+            SqlFindAllOperation.class,
+            SqlFindByOperation.class,
+            SqlParameterBasedOperation.class,
+            SqlQueryBuilder.class,
+            SqlQueryOperation.class,
+            SqlRepositoryOperationProvider.class,
+            SqlRepositoryProducer.class,
+            SqlReturnType.class,
+            SqlTemplateFactory.class
+    };
+
+    void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
+        if (new GlassFishJakartaPersistenceClassScanner().isEnabled()) {
+            addAnnotatedTypes(beforeBeanDiscovery, JAKARTA_PERSISTENCE_BEANS);
+        }
+    }
 
     /*
      * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register

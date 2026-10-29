@@ -82,10 +82,12 @@ public class DataNoSqlRepositoryTest {
         PomEquippedResolveStage resolver =
                 Maven.resolver().loadPomFromFile("pom.xml");
 
+        // Only the driver and its libraries, GlassFish provides the rest of JNoSQL
         File[] mongoDependencies = Stream.of(resolver
                 .resolve("org.eclipse.jnosql.databases:jnosql-mongodb")
                 .withTransitivity()
-                .asFile()).filter(f -> f.getName().contains("mongodb") || f.getName().contains("bson")).toArray(File[]::new);
+                .asFile()).filter(f -> f.getName().contains("mongodb") || f.getName().contains("bson")
+                        || f.getName().startsWith("jnosql-database-commons")).toArray(File[]::new);
 
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
                 .addPackage(TEST_PACKAGE)
@@ -113,6 +115,26 @@ public class DataNoSqlRepositoryTest {
 
     @Test
     public void test() throws Exception {
+        assertProductFound();
+    }
+
+    /*
+     * JNoSQL is shared by all applications, so it must not keep using the driver of a previous deployment
+     */
+    @Test
+    public void testAfterRedeploy() throws Exception {
+        assertThat(
+                ASADMIN.exec(
+                        "redeploy",
+                        "--name",
+                        APP_NAME,
+                        warFile.getAbsolutePath()),
+                asadminOK());
+
+        assertProductFound();
+    }
+
+    private static void assertProductFound() throws Exception {
         final HttpResponse<String> response =
                 getHttpResource(APP_NAME + "/TestServlet");
 

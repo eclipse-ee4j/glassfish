@@ -43,10 +43,6 @@
                     <groupId>org.eclipse.jnosql.mapping</groupId>
                     <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jnosql.mapping</groupId>
-                    <artifactId>jnosql-mapping-reflection</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
@@ -80,8 +76,10 @@
                         <Implementation-Vendor>Eclipse</Implementation-Vendor>
                         <Implementation-Vendor-Id>org.glassfish</Implementation-Vendor-Id>
 
+                        <!-- ClassGraph is only used by the class scanner of jnosql-mapping-reflection;
+                             GlassFish provides its own scanner -->
                         <Import-Package>
-                            !org.eclipse.jnosql.mapping.reflection.*,
+                            !io.github.classgraph.*,
                             *
                         </Import-Package>
                         <Embed-Dependency>
@@ -91,7 +89,6 @@
                             !jakarta.validation-api.*,
                             !jakarta.nosql-api.*,
                             !antlr4-runtime.*,
-                            !jnosql-mapping-reflection,
                             !classgraph,
                             *;scope=compile|runtime
                         </Embed-Dependency>

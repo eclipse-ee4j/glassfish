@@ -15,10 +15,17 @@
  */
 package org.glassfish.main.jnosql.nosql;
 
+import jakarta.nosql.AttributeConverter;
+import jakarta.nosql.Converter;
+
+import java.util.Set;
+
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.main.jnosql.hk2types.Hk2TypesUtil;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
+
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 /**
  * Server global implementation of class scanner for NoSQL repositories. Must be stateless.
@@ -29,6 +36,7 @@ import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
 public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner {
 
     public static final String NOSQL_DATA_ENABLED_META_DATA_KEY = "NoSqlDataEnabled";
+    public static final String NOSQL_AUTO_APPLY_CONVERTERS_META_DATA_KEY = "NoSqlAutoApplyConverters";
 
     private static final Class<jakarta.nosql.Entity> CLASS_ENTITY = jakarta.nosql.Entity.class;
     private static final Class<jakarta.nosql.Embeddable> CLASS_EMBEDDABLE = jakarta.nosql.Embeddable.class;
@@ -47,6 +55,25 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner {
         return enabled;
     }
 
+    /*
+     * JNoSQL asks for these for every field it maps, so during deployment they are kept in the deployment context
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<Class<? extends AttributeConverter<?, ?>>> autoApplyConverters() {
+        final DeploymentContext deploymentContext = Hk2TypesUtil.getDeploymentContext();
+        if (deploymentContext == null) {
+            return findAutoApplyConverters();
+        }
+        Set<Class<? extends AttributeConverter<?, ?>>> converters =
+                deploymentContext.getTransientAppMetaData(NOSQL_AUTO_APPLY_CONVERTERS_META_DATA_KEY, Set.class);
+        if (converters == null) {
+            converters = findAutoApplyConverters();
+            deploymentContext.addTransientAppMetaData(NOSQL_AUTO_APPLY_CONVERTERS_META_DATA_KEY, converters);
+        }
+        return converters;
+    }
+
     @Override
     protected String getProviderName() {
         return "Eclipse_JNoSQL";
@@ -60,6 +87,16 @@ public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner {
     @Override
     protected Class<?> getSupportedEmbeddableAnnotation() {
         return CLASS_EMBEDDABLE;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<Class<? extends AttributeConverter<?, ?>>> findAutoApplyConverters() {
+        return findClassesWithAnnotation(Converter.class)
+                .stream()
+                .filter(AttributeConverter.class::isAssignableFrom)
+                .filter(type -> type.getAnnotation(Converter.class).autoApply())
+                .map(type -> (Class<? extends AttributeConverter<?, ?>>) type)
+                .collect(toUnmodifiableSet());
     }
 
     private static boolean isAnyEntityFound() {

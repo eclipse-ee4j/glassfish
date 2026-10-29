@@ -15,7 +15,9 @@
  */
 package org.glassfish.main.jnosql.util;
 
+import jakarta.annotation.Priority;
 import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.Alternative;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
@@ -39,9 +41,15 @@ public final class CdiExtensionUtil {
         // utility class
     }
 
-    public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, BeanManager beanManager, Class<?>... types) {
+    /**
+     * Adds the given classes as beans, as bean discovery would if they were part of the application.
+     * They are enabled as alternatives to override the same beans in case they are added as application libraries.
+     */
+    public static void addAnnotatedTypes(BeforeBeanDiscovery beforeBean, Class<?>... types) {
         for (Class<?> type : types) {
-            beforeBean.addAnnotatedType(beanManager.createAnnotatedType(type), "JNoSQL " + type.getName());
+            beforeBean.addAnnotatedType(type, "GlassFish " + type.getName())
+                    .add(Alternative.Literal.INSTANCE)
+                    .add(IntegrationBeansPriority.LITERAL);
         }
     }
 
@@ -75,6 +83,10 @@ public final class CdiExtensionUtil {
         };
     }
 
-
+    // jakarta.annotation.Priority has no literal
+    @Priority(INTEGRATION_BEANS_PRIORITY)
+    private static final class IntegrationBeansPriority {
+        static final Priority LITERAL = IntegrationBeansPriority.class.getAnnotation(Priority.class);
+    }
 
 }

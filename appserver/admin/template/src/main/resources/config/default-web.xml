@@ -46,7 +46,7 @@
   <!-- bootstrapping JSF for the web application.                      -->
 
   <context-param>
-      <param-name>com.sun.faces.forceLoadConfiguration</param-name>
+      <param-name>org.glassfish.mojarra.forceLoadConfiguration</param-name>
       <param-value>true</param-value>
   </context-param>
 

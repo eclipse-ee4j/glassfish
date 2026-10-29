@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -74,7 +74,8 @@ public class PersistenceUnitsDescriptor extends RootDeploymentDescriptor {
 
     @Override
     public ArchiveType getModuleType() {
-        throw new RuntimeException();
+        // Don't throw exception, print would crash -> logging uses it.
+        return null;
     }
 
     @Override

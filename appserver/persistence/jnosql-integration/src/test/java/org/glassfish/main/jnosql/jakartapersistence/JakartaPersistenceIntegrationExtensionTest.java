@@ -18,11 +18,7 @@ package org.glassfish.main.jnosql.jakartapersistence;
 import java.util.Set;
 
 import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer;
-import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
-import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
-import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor.RunInGlobalTransaction;
-import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
 import org.junit.jupiter.api.Test;
 
 import static org.glassfish.main.jnosql.util.LibraryBeans.applicationScopedClassesIn;
@@ -36,9 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class JakartaPersistenceIntegrationExtensionTest {
 
     /** Added by the extension after bean discovery */
-    private static final Set<Class<?>> ADDED_AFTER_BEAN_DISCOVERY = Set.of(EntityManagerProvider.class,
-            EnsureTransactionInterceptor.class, PersistenceDatabaseManagerProvider.class,
-            PersistenceUnitCacheProvider.class, RunInGlobalTransaction.class);
+    private static final Set<Class<?>> ADDED_AFTER_BEAN_DISCOVERY = Set.of(EnsureTransactionInterceptor.class);
 
     @Test
     void registersTheBeansOfTheDriver() throws Exception {

@@ -38,8 +38,8 @@ class JNoSqlIntegrationExtensionTest {
     private static final Class<?>[] LIBRARIES = {
             Converters.class, EntityConverter.class, DocumentTemplate.class, Reflections.class};
 
-    /** Registered by the Jakarta Persistence integration, or not used as a bean */
-    private static final Set<Class<?>> NOT_REGISTERED = Set.of(Converters.class, Reflections.class);
+    /** Not used as a bean */
+    private static final Set<Class<?>> NOT_REGISTERED = Set.of(Reflections.class);
 
     @Test
     void registersTheBeansOfTheJNoSqlLibraries() throws Exception {

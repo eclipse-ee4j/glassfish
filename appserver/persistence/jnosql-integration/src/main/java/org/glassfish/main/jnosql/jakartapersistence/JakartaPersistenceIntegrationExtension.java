@@ -25,7 +25,6 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
-import jakarta.interceptor.Interceptor;
 
 import java.lang.System.Logger;
 import java.util.Collection;
@@ -54,7 +53,6 @@ import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionIntercepto
 import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.repository.PersistenceRepositoryProducer;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
-import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Type;
@@ -63,6 +61,8 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 
+import static jakarta.interceptor.Interceptor.Priority.LIBRARY_BEFORE;
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
@@ -112,7 +112,12 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
             SqlRepositoryOperationProvider.class,
             SqlRepositoryProducer.class,
             SqlReturnType.class,
-            SqlTemplateFactory.class
+            SqlTemplateFactory.class,
+
+            PersistenceDatabaseManagerProvider.class,
+            EntityManagerProvider.class,
+            EnsureTransactionInterceptor.RunInGlobalTransaction.class,
+            PersistenceUnitCacheProvider.class
     };
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
@@ -125,11 +130,8 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
      * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
      * the GlassFishClassScanner before it's used there
      */
-    void afterBeanDiscovery(
-        @Observes
-        @Priority(Interceptor.Priority.LIBRARY_BEFORE)
-        AfterBeanDiscovery afterBeanDiscovery,
-        BeanManager beanManager) {
+    void afterBeanDiscovery(@Observes @Priority(LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
         LOG.log(INFO, () -> "Jakarta Persistence: " + toEnabled(jpaEnabled) + ", NoSQL: " + toEnabled(noSqlEnabled));
@@ -148,7 +150,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .types(MethodInterceptor.class)
                 .qualifiers(MethodInterceptor.Repository.INSTANCE)
                 .alternative(true)
-                .priority(Interceptor.Priority.PLATFORM_BEFORE)
+                .priority(PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);
 
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
@@ -167,19 +169,14 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
         Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
         for (var dummyBeanClass : dummyBeansClasses) {
             afterBeanDiscovery.addBean()
-                    .types(dummyBeanClass)
-                    .scope(ApplicationScoped.class)
-                    .qualifiers(Default.Literal.INSTANCE)
-                    .createWith(ctx -> null);
+                              .types(dummyBeanClass)
+                              .scope(ApplicationScoped.class)
+                              .qualifiers(Default.Literal.INSTANCE)
+                              .createWith(ctx -> null);
         }
 
         List<BeanConfigurator<?>> configurations = List.of(
-                addBean(Converters.class, afterBeanDiscovery, beanManager),
-                addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager),
-                addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager),
-                addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager),
-                addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager),
-                addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
+                addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
         );
 
         for (BeanConfigurator<?> configurator : configurations) {
@@ -196,10 +193,10 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
     }
 
     private static Types getTypes() {
-        DeploymentContext deploymentContext
-                = Globals.getDefaultHabitat()
-                        .getService(Deployment.class)
-                        .getCurrentDeploymentContext();
+        DeploymentContext deploymentContext =
+            Globals.get(Deployment.class)
+                   .getCurrentDeploymentContext();
+
         return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
     }
 

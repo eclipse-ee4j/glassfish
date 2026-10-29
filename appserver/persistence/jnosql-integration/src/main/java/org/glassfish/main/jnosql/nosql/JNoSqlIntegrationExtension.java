@@ -19,6 +19,7 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
 
+import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.repository.operations.CoreBaseRepositoryOperationProvider;
 import org.eclipse.jnosql.mapping.core.repository.operations.CoreDefaultMethodOperator;
 import org.eclipse.jnosql.mapping.core.repository.operations.CoreDeleteOperation;
@@ -75,6 +76,7 @@ public class JNoSqlIntegrationExtension implements Extension {
      */
     static final Class<?>[] JNOSQL_BEANS = {
             // jnosql-mapping-core
+            Converters.class,
             CoreBaseRepositoryOperationProvider.class,
             CoreDefaultMethodOperator.class,
             CoreDeleteOperation.class,

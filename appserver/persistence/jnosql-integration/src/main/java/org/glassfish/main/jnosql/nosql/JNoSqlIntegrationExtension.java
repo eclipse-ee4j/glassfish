@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,8 @@ package org.glassfish.main.jnosql.nosql;
 import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
+
+import java.lang.System.Logger;
 
 import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.repository.operations.CoreBaseRepositoryOperationProvider;
@@ -57,6 +59,7 @@ import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredReposi
 import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredReturnType;
 import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
 
+import static java.lang.System.Logger.Level.DEBUG;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 
 /**
@@ -68,6 +71,8 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
  * @author Ondro Mihalyi
  */
 public class JNoSqlIntegrationExtension implements Extension {
+
+    private static final Logger LOG = System.getLogger(JNoSqlIntegrationExtension.class.getName());
 
     /*
      * The CDI beans of the JNoSQL libraries that GlassFish provides. An application that bundles these
@@ -118,9 +123,9 @@ public class JNoSqlIntegrationExtension implements Extension {
     };
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
+        LOG.log(DEBUG, "beforeBeanDiscovery(beforeBeanDiscovery={0})", beforeBeanDiscovery);
         if (new GlassFishNoSqlClassScanner().isEnabled() || new GlassFishJakartaPersistenceClassScanner().isEnabled()) {
             addAnnotatedTypes(beforeBeanDiscovery, JNOSQL_BEANS);
         }
     }
-
 }

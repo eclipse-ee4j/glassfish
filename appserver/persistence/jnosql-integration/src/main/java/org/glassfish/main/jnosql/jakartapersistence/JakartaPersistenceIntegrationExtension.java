@@ -24,11 +24,9 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 
 import java.lang.System.Logger;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jnosql.extensions.sql.SqlTemplateFactory;
@@ -63,6 +61,7 @@ import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 
 import static jakarta.interceptor.Interceptor.Priority.LIBRARY_BEFORE;
 import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static java.lang.System.Logger.Level.DEBUG;
 import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
@@ -130,8 +129,12 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
      * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
      * the GlassFishClassScanner before it's used there
      */
-    void afterBeanDiscovery(@Observes @Priority(LIBRARY_BEFORE) AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-
+    void afterBeanDiscovery(
+        @Observes
+        @Priority(LIBRARY_BEFORE)
+        AfterBeanDiscovery afterBeanDiscovery,
+        BeanManager beanManager
+    ) {
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
         LOG.log(INFO, () -> "Jakarta Persistence: " + toEnabled(jpaEnabled) + ", NoSQL: " + toEnabled(noSqlEnabled));
@@ -161,11 +164,11 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
      * Exposes them as alternatives so that they override any beans defined in the app
      */
     private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
-           In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
-           only beans in the deployed app are added to a bean archive. Beans defined by an EE container
-           don't automatically have a bean archive.
-         */
+        LOG.log(DEBUG, "defineJNoSqlBeans(afterBeanDiscovery={0}, beanManager={1})", afterBeanDiscovery, beanManager);
+        // This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
+        // In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
+        // only beans in the deployed app are added to a bean archive. Beans defined by an EE container
+        // don't automatically have a bean archive.
         Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
         for (var dummyBeanClass : dummyBeansClasses) {
             afterBeanDiscovery.addBean()
@@ -175,17 +178,11 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                               .createWith(ctx -> null);
         }
 
-        List<BeanConfigurator<?>> configurations = List.of(
-                addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
-        );
-
-        for (BeanConfigurator<?> configurator : configurations) {
-            configurator
-                    .scope(ApplicationScoped.class)
-                    // enable as alternative to override beans in case they are added as application libraries
-                    .alternative(true)
-                    .priority(INTEGRATION_BEANS_PRIORITY);
-        }
+        addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
+            .scope(ApplicationScoped.class)
+            // enable as alternative to override beans in case they are added as application libraries
+            .alternative(true)
+            .priority(INTEGRATION_BEANS_PRIORITY);
     }
 
     private static String toEnabled(boolean enabled) {

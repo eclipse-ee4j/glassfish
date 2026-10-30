@@ -28,6 +28,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +44,7 @@ import org.glassfish.internal.api.DelegatingClassLoader;
 import org.jvnet.hk2.annotations.Service;
 
 import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.belongsToSystemRA;
+import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.WARNING;
 import static org.glassfish.api.event.EventTypes.PREPARE_SHUTDOWN;
 import static org.glassfish.api.event.EventTypes.SERVER_SHUTDOWN;
@@ -137,6 +140,10 @@ public class ConnectorsClassLoaderUtil {
                             if (runtime != null) {
                                 runtime.shutdownAllActiveResourceAdapters();
                             }
+                            // Shut down the embedded Derby engine so its files are released
+                            // before the instance root is deleted (open files cannot be
+                            // deleted on Windows).
+                            shutdownDerbyDatabases();
                         }
                     } else if (event.is(SERVER_SHUTDOWN)) {
                         try {
@@ -164,6 +171,23 @@ public class ConnectorsClassLoaderUtil {
         }
 
         return connectorClassFinder;
+    }
+
+    /**
+     * Shuts down the embedded Derby engine, if it is running. Embedded Derby databases keep
+     * their files locked until the engine is shut down explicitly, which prevents the instance
+     * root from being deleted on Windows (open files cannot be deleted there).
+     */
+    private static void shutdownDerbyDatabases() {
+        try {
+            // The shutdown URL shuts down all Derby databases in this JVM. Derby signals a
+            // successful shutdown by throwing an SQLException, so the connection is never returned.
+            DriverManager.getConnection("jdbc:derby:;shutdown=true");
+        } catch (SQLException e) {
+            // Expected: Derby reports shutdown (or "no database running") by throwing. If the
+            // shutdown did not happen, the instance root cleanup reports the locked files.
+            LOG.log(FINE, "Embedded Derby shutdown: " + e.getMessage());
+        }
     }
 
     private boolean extractRar(String rarName, String destination) {

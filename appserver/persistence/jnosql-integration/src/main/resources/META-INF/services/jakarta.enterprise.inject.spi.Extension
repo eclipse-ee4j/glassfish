@@ -1,3 +1,5 @@
 org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension
 org.glassfish.main.jnosql.nosql.JNoSqlIntegrationExtension
+org.eclipse.jnosql.mapping.document.spi.DocumentExtension
+org.eclipse.jnosql.mapping.reflection.spi.ReflectionEntityMetadataExtension
 org.eclipse.jnosql.extensions.sql.repository.spi.JakartaPersistenceExtension

@@ -10,7 +10,7 @@
 
     <dependencySets>
         <!--
-            microprofile-config contains GlassFish-specific overrides of Helidon resources. 
+            microprofile-config contains GlassFish-specific overrides of Helidon resources.
             It must be unpacked before all other jars so its classes take precedence.
             Note that the default behavior of assembly plugin is that it skips duplicates, first occurence wins.
         -->

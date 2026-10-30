@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,33 +15,56 @@
  */
 package org.glassfish.main.jnosql.nosql;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import jakarta.enterprise.inject.Default;
-import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
-import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
 
-import java.util.List;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
 
-import org.eclipse.jnosql.mapping.DatabaseQualifier;
-import org.eclipse.jnosql.mapping.document.DocumentTemplate;
-import org.eclipse.jnosql.mapping.metadata.EntitiesMetadata;
-import org.eclipse.jnosql.mapping.metadata.GroupEntityMetadata;
-import org.eclipse.jnosql.mapping.semistructured.EntityConverter;
+import org.eclipse.jnosql.mapping.core.Converters;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreBaseRepositoryOperationProvider;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreDefaultMethodOperator;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreDeleteOperation;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreInsertOperation;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreProviderOperation;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreSaveOperation;
+import org.eclipse.jnosql.mapping.core.repository.operations.CoreUpdateOperation;
+import org.eclipse.jnosql.mapping.core.repository.operations.DefaultBuiltInMethodOperator;
+import org.eclipse.jnosql.mapping.core.repository.operations.DefaultCustomRepositoryMethodOperator;
+import org.eclipse.jnosql.mapping.core.repository.operations.DefaultInfrastructureOperatorProvider;
+import org.eclipse.jnosql.mapping.core.repository.operations.DefaultObjectMethodOperator;
+import org.eclipse.jnosql.mapping.document.DefaultDocumentTemplate;
+import org.eclipse.jnosql.mapping.document.DocumentTemplateProducer;
+import org.eclipse.jnosql.mapping.document.configuration.DocumentManagerSupplier;
+import org.eclipse.jnosql.mapping.reflection.DefaultEntitiesMetadata;
+import org.eclipse.jnosql.mapping.reflection.ReflectionLifecycleEventHandler;
+import org.eclipse.jnosql.mapping.reflection.repository.ReflectionRepositoriesMetadata;
+import org.eclipse.jnosql.mapping.semistructured.DefaultEntityConverter;
+import org.eclipse.jnosql.mapping.semistructured.DefaultEntityConverterFactory;
 import org.eclipse.jnosql.mapping.semistructured.EventPersistManager;
-import org.glassfish.main.jnosql.jakartapersistence.JakartaPersistenceIntegrationExtension;
-import org.glassfish.main.jnosql.nosql.metadata.NoSqlEntitiesMetadata;
-import org.glassfish.main.jnosql.nosql.metadata.reflection.ReflectionGroupEntityMetadata;
-import org.glassfish.main.jnosql.util.CdiExtensionUtil;
+import org.eclipse.jnosql.mapping.semistructured.ProjectorConverter;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemiStructuredDeleteOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredCountAllOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredCountByOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredCursorPaginationOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredDeleteByOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredExistsByOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredFindAllOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredFindByOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredParameterBasedOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredQueryBuilder;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredQueryOperation;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryOperationProvider;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredRepositoryProducer;
+import org.eclipse.jnosql.mapping.semistructured.repository.SemistructuredReturnType;
+import org.glassfish.main.jnosql.jakartapersistence.GlassFishJakartaPersistenceClassScanner;
 
-import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
+import static java.lang.System.Logger.Level.DEBUG;
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 
 /**
- * Registers JNoSQL CDI beans that are needed for JNoSQL but not for Jakarta
- * Data over JPA
+ * Registers the CDI beans of the JNoSQL libraries, which both NoSQL repositories and the JNoSQL
+ * Jakarta Persistence driver use
  *
  * TODO - If classloader delegation is disabled, veto our beans if the app provides alternatives
  *
@@ -49,38 +72,60 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
  */
 public class JNoSqlIntegrationExtension implements Extension {
 
-    private static final Logger LOGGER = Logger.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
-
-    void afterBeanDiscovery(@Observes AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-
-        defineJNoSqlBeans(afterBeanDiscovery, beanManager);
-    }
+    private static final Logger LOG = System.getLogger(JNoSqlIntegrationExtension.class.getName());
 
     /*
-     * Exposes all beans we need from JNoSQL - defined in dependencies external to GlassFish
-     * Exposes them as alternatives so that they override any beans defined in the app
+     * The CDI beans of the JNoSQL libraries that GlassFish provides. An application that bundles these
+     * libraries gets the beans from bean discovery; GlassFish adds them for applications that only bring
+     * a NoSQL driver, or use Jakarta Data over Jakarta Persistence.
      */
-    private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
+    static final Class<?>[] JNOSQL_BEANS = {
+            // jnosql-mapping-core
+            Converters.class,
+            CoreBaseRepositoryOperationProvider.class,
+            CoreDefaultMethodOperator.class,
+            CoreDeleteOperation.class,
+            CoreInsertOperation.class,
+            CoreProviderOperation.class,
+            CoreSaveOperation.class,
+            CoreUpdateOperation.class,
+            DefaultBuiltInMethodOperator.class,
+            DefaultCustomRepositoryMethodOperator.class,
+            DefaultInfrastructureOperatorProvider.class,
+            DefaultObjectMethodOperator.class,
+            // jnosql-mapping-semistructured
+            DefaultEntityConverter.class,
+            DefaultEntityConverterFactory.class,
+            EventPersistManager.class,
+            ProjectorConverter.class,
+            SemiStructuredDeleteOperation.class,
+            SemistructuredCountAllOperation.class,
+            SemistructuredCountByOperation.class,
+            SemistructuredCursorPaginationOperation.class,
+            SemistructuredDeleteByOperation.class,
+            SemistructuredExistsByOperation.class,
+            SemistructuredFindAllOperation.class,
+            SemistructuredFindByOperation.class,
+            SemistructuredParameterBasedOperation.class,
+            SemistructuredQueryBuilder.class,
+            SemistructuredQueryOperation.class,
+            SemistructuredRepositoryOperationProvider.class,
+            SemistructuredRepositoryProducer.class,
+            SemistructuredReturnType.class,
+            // jnosql-mapping-document
+            DefaultDocumentTemplate.class,
+            DocumentManagerSupplier.class,
+            DocumentTemplateProducer.class,
+            // jnosql-mapping-reflection
+            DefaultEntitiesMetadata.class,
+            ReflectionLifecycleEventHandler.class,
+            ReflectionRepositoriesMetadata.class
+    };
 
-        List<BeanConfigurator<?>> configurations = List.of(
-                addBean(ReflectionGroupEntityMetadata.class, afterBeanDiscovery, beanManager)
-                    .addType(GroupEntityMetadata.class),
-                addBean(NoSqlEntitiesMetadata.class, afterBeanDiscovery, beanManager)
-                    .addType(EntitiesMetadata.class),
-                addBean(GlassFishEntityConverter.class, afterBeanDiscovery, beanManager)
-                        .types(EntityConverter.class),
-                addBean(EventPersistManager.class, afterBeanDiscovery, beanManager),
-                addBean(GlassFishDocumentTemplate.class, afterBeanDiscovery, beanManager)
-                .types(DocumentTemplate.class)
-                .qualifiers(Default.Literal.INSTANCE, DatabaseQualifier.ofDocument())
-        );
-        for (BeanConfigurator<?> configurator : configurations) {
-            configurator
-                    .scope(ApplicationScoped.class)
-                    // enable as alternative to override beans in case they are added as application libraries
-                    .alternative(true)
-                    .priority(CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY);
+    void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
+        LOG.log(DEBUG, "beforeBeanDiscovery(beforeBeanDiscovery={0})", beforeBeanDiscovery);
+        if (new GlassFishNoSqlClassScanner().isEnabled() || new GlassFishJakartaPersistenceClassScanner().isEnabled()) {
+            addAnnotatedTypes(beforeBeanDiscovery, JNOSQL_BEANS);
         }
     }
-
 }

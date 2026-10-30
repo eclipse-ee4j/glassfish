@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,25 +15,14 @@
  */
 package org.glassfish.main.jnosql.jakartapersistence;
 
-import jakarta.data.repository.DataRepository;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Entity;
-
-import java.util.Objects;
-import java.util.Set;
-
 import org.eclipse.jnosql.jakartapersistence.JNoSQLJakartaPersistence;
 import org.eclipse.jnosql.jakartapersistence.mapping.metadata.JakartaPersistenceClassScanner;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
-import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
+import org.glassfish.main.jnosql.hk2types.Hk2TypesUtil;
 import org.glassfish.persistence.jpa.JPADeployer;
-
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.util.stream.Collectors.toUnmodifiableSet;
-import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
 
 /**
  * Server global implementation of class scanner for JPA repositories. Must be stateless.
@@ -45,11 +34,12 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
 
     public static final String JPA_DATA_ENABLED_META_DATA_KEY = "JPADataEnabled";
 
-    private static final System.Logger LOG = System.getLogger(GlassFishJakartaPersistenceClassScanner.class.getName());
+    private static final Class<jakarta.persistence.Entity> CLASS_ENTITY = jakarta.persistence.Entity.class;
+    private static final Class<jakarta.persistence.Embeddable> CLASS_EMBEDDABLE = jakarta.persistence.Embeddable.class;
 
     @Override
     public boolean isEnabled() {
-        final DeploymentContext deploymentContext = getDeploymentContext();
+        final DeploymentContext deploymentContext = Hk2TypesUtil.getDeploymentContext();
         if (deploymentContext != null) {
             Boolean enabled = deploymentContext.getTransientAppMetaData(JPA_DATA_ENABLED_META_DATA_KEY, Boolean.class);
             if (enabled == null) {
@@ -63,71 +53,23 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
         return true;
     }
 
-    private JPADeployer getJPADeployer() {
-        final ServiceLocator locator = Globals.getDefaultHabitat();
-        return locator != null
-                ? locator
-                        .getService(JPADeployer.class)
-                : null;
-    }
-
-    @Override
-    public Set<Class<?>> entities() {
-        final Set<Class<?>> result = findClassesWithAnnotation(Entity.class);
-        LOG.log(DEBUG, () -> "Found JPA entities: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> repositories() {
-        Set<Class<?>> result = repositoriesStream().collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected JPA repository interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> embeddables() {
-        Set<Class<?>> result = findClassesWithAnnotation(Embeddable.class);
-        LOG.log(DEBUG, () -> "Detected JPA embeddables: " + result);
-        return result;
-    }
-
-    @Override
-    public <T extends DataRepository<?, ?>> Set<Class<?>> repositories(Class<T> filter) {
-        Objects.requireNonNull(filter, "filter is required");
-        return repositoriesStream()
-                .filter(filter::isAssignableFrom)
-                .collect(toUnmodifiableSet());
-    }
-
-    @Override
-    public Set<Class<?>> repositoriesStandard() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected standard JPA repository interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    public Set<Class<?>> customRepositories() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
-        LOG.log(DEBUG, () -> "Detected custom JPA interfaces: " + result);
-        return result;
-    }
-
-    @Override
-    protected boolean isSupportedEntityType(GeneralInterfaceModel entityType) {
-        return null != entityType.getAnnotation(Entity.class);
-    }
-
     @Override
     protected String getProviderName() {
         return JNoSQLJakartaPersistence.PROVIDER;
     }
 
     @Override
-    public Set<Class<?>> projections() {
-        // TODO Auto-generated method stub
-        return null;
+    protected Class<?> getSupportedEntityAnnotation() {
+        return CLASS_ENTITY;
     }
 
+    @Override
+    protected Class<?> getSupportedEmbeddableAnnotation() {
+        return CLASS_EMBEDDABLE;
+    }
+
+    private static JPADeployer getJPADeployer() {
+        final ServiceLocator locator = Globals.getDefaultHabitat();
+        return locator == null ? null : locator.getService(JPADeployer.class);
+    }
 }

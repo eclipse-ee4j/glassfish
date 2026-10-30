@@ -62,11 +62,6 @@
             <groupId>org.jboss.shrinkwrap.resolver</groupId>
             <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.parsson</groupId>
-            <artifactId>parsson</artifactId>
-            <scope>test</scope>
-        </dependency>
 
         <dependency>
             <groupId>jakarta.platform</groupId>
@@ -86,6 +81,12 @@
         <dependency>
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.nosql</groupId>
+            <artifactId>jakarta.nosql-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -137,6 +138,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.parsson</groupId>
+            <artifactId>parsson</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.tyrus</groupId>
             <artifactId>tyrus-client</artifactId>
             <scope>test</scope>
@@ -156,11 +162,6 @@
             <artifactId>jnosql-mongodb</artifactId>
             <version>${jnosql.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.nosql</groupId>
-            <artifactId>jakarta.nosql-api</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -204,12 +205,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
-                </configuration>
             </plugin>
         </plugins>
     </build>

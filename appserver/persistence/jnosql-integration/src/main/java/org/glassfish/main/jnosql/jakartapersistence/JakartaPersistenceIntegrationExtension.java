@@ -22,21 +22,35 @@ import jakarta.enterprise.event.Observes;
 import jakarta.enterprise.inject.Default;
 import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.BeforeBeanDiscovery;
 import jakarta.enterprise.inject.spi.Extension;
-import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
-import jakarta.interceptor.Interceptor;
 
+import java.lang.System.Logger;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jnosql.extensions.sql.SqlTemplateFactory;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCountAllOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCountByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlCursorPaginationOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlDeleteByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlDeleteOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlExistsByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlFindAllOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlFindByOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlParameterBasedOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlQueryBuilder;
+import org.eclipse.jnosql.extensions.sql.repository.SqlQueryOperation;
+import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryOperationProvider;
+import org.eclipse.jnosql.extensions.sql.repository.SqlRepositoryProducer;
+import org.eclipse.jnosql.extensions.sql.repository.SqlReturnType;
 import org.eclipse.jnosql.extensions.sql.repository.spi.AbstractRepositoryPersistenceBean;
 import org.eclipse.jnosql.jakartapersistence.communication.EntityManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.communication.PersistenceDatabaseManagerProvider;
 import org.eclipse.jnosql.jakartapersistence.mapping.EnsureTransactionInterceptor;
 import org.eclipse.jnosql.jakartapersistence.mapping.cache.PersistenceUnitCacheProvider;
+import org.eclipse.jnosql.jakartapersistence.mapping.repository.PersistenceRepositoryProducer;
 import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
-import org.eclipse.jnosql.mapping.core.Converters;
 import org.eclipse.jnosql.mapping.core.spi.AbstractBean;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.hk2.classmodel.reflect.Type;
@@ -45,7 +59,12 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.main.jnosql.nosql.GlassFishNoSqlClassScanner;
 
+import static jakarta.interceptor.Interceptor.Priority.LIBRARY_BEFORE;
+import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.INFO;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.INTEGRATION_BEANS_PRIORITY;
+import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addAnnotatedTypes;
 import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 
 /**
@@ -69,17 +88,56 @@ import static org.glassfish.main.jnosql.util.CdiExtensionUtil.addBean;
 // TODO - activate this extension and JNoSQL extensions from a sniffer only if interfaces with @Repository annotation exist in the app
 public class JakartaPersistenceIntegrationExtension implements Extension {
 
+    private static final Logger LOG = System.getLogger(JakartaPersistenceIntegrationExtension.class.getName());
+
+    /*
+     * The CDI beans of the JNoSQL Jakarta Persistence driver, except those added after bean discovery below.
+     * An application that bundles the driver gets the beans from bean discovery; GlassFish adds them for
+     * applications that don't. The driver also uses the beans of the JNoSQL libraries, see JNoSqlIntegrationExtension.
+     */
+    static final Class<?>[] JAKARTA_PERSISTENCE_BEANS = {
+            PersistenceRepositoryProducer.class,
+            SqlCountAllOperation.class,
+            SqlCountByOperation.class,
+            SqlCursorPaginationOperation.class,
+            SqlDeleteByOperation.class,
+            SqlDeleteOperation.class,
+            SqlExistsByOperation.class,
+            SqlFindAllOperation.class,
+            SqlFindByOperation.class,
+            SqlParameterBasedOperation.class,
+            SqlQueryBuilder.class,
+            SqlQueryOperation.class,
+            SqlRepositoryOperationProvider.class,
+            SqlRepositoryProducer.class,
+            SqlReturnType.class,
+            SqlTemplateFactory.class,
+
+            PersistenceDatabaseManagerProvider.class,
+            EntityManagerProvider.class,
+            EnsureTransactionInterceptor.RunInGlobalTransaction.class,
+            PersistenceUnitCacheProvider.class
+    };
+
+    void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {
+        if (new GlassFishJakartaPersistenceClassScanner().isEnabled()) {
+            addAnnotatedTypes(beforeBeanDiscovery, JAKARTA_PERSISTENCE_BEANS);
+        }
+    }
+
     /*
      * Must be triggered before the JakartaPersistenceExtension from JNoSQL to register
      * the GlassFishClassScanner before it's used there
      */
     void afterBeanDiscovery(
         @Observes
-        @Priority(Interceptor.Priority.LIBRARY_BEFORE)
+        @Priority(LIBRARY_BEFORE)
         AfterBeanDiscovery afterBeanDiscovery,
-        BeanManager beanManager) {
+        BeanManager beanManager
+    ) {
         boolean jpaEnabled = new GlassFishJakartaPersistenceClassScanner().isEnabled();
         boolean noSqlEnabled = new GlassFishNoSqlClassScanner().isEnabled();
+        LOG.log(INFO, () -> "Jakarta Persistence: " + toEnabled(jpaEnabled) + ", NoSQL: " + toEnabled(noSqlEnabled));
 
         // We use empty types if we don't need real types instance to free some memory after deployment
         // TODO: Keep only required types - entities and repositories, to avoid keeping the whole types instance after deployment
@@ -95,7 +153,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
                 .types(MethodInterceptor.class)
                 .qualifiers(MethodInterceptor.Repository.INSTANCE)
                 .alternative(true)
-                .priority(Interceptor.Priority.PLATFORM_BEFORE)
+                .priority(PLATFORM_BEFORE)
                 .scope(ApplicationScoped.class);
 
         defineJNoSqlBeans(afterBeanDiscovery, beanManager);
@@ -106,43 +164,36 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
      * Exposes them as alternatives so that they override any beans defined in the app
      */
     private void defineJNoSqlBeans(AfterBeanDiscovery afterBeanDiscovery, BeanManager beanManager) {
-        /* This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
-           In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
-           only beans in the deployed app are added to a bean archive. Beans defined by an EE container
-           don't automatically have a bean archive.
-         */
+        LOG.log(DEBUG, "defineJNoSqlBeans(afterBeanDiscovery={0}, beanManager={1})", afterBeanDiscovery, beanManager);
+        // This is just to define beanManager for some classes in an EE context, they shouldn't be injected.
+        // In Java SE context, the whole JVM is a single bean archive, so it's not needed there. But in EE,
+        // only beans in the deployed app are added to a bean archive. Beans defined by an EE container
+        // don't automatically have a bean archive.
         Class<?>[] dummyBeansClasses = {AbstractBean.class, AbstractRepositoryPersistenceBean.class};
         for (var dummyBeanClass : dummyBeansClasses) {
             afterBeanDiscovery.addBean()
-                    .types(dummyBeanClass)
-                    .scope(ApplicationScoped.class)
-                    .qualifiers(Default.Literal.INSTANCE)
-                    .createWith(ctx -> null);
+                              .types(dummyBeanClass)
+                              .scope(ApplicationScoped.class)
+                              .qualifiers(Default.Literal.INSTANCE)
+                              .createWith(ctx -> null);
         }
 
-        List<BeanConfigurator<?>> configurations = List.of(
-                addBean(Converters.class, afterBeanDiscovery, beanManager),
-                addBean(PersistenceDatabaseManagerProvider.class, afterBeanDiscovery, beanManager),
-                addBean(EntityManagerProvider.class, afterBeanDiscovery, beanManager),
-                addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager),
-                addBean(EnsureTransactionInterceptor.RunInGlobalTransaction.class, afterBeanDiscovery, beanManager),
-                addBean(PersistenceUnitCacheProvider.class, afterBeanDiscovery, beanManager)
-        );
+        addBean(EnsureTransactionInterceptor.class, afterBeanDiscovery, beanManager)
+            .scope(ApplicationScoped.class)
+            // enable as alternative to override beans in case they are added as application libraries
+            .alternative(true)
+            .priority(INTEGRATION_BEANS_PRIORITY);
+    }
 
-        for (BeanConfigurator<?> configurator : configurations) {
-            configurator
-                    .scope(ApplicationScoped.class)
-                    // enable as alternative to override beans in case they are added as application libraries
-                    .alternative(true)
-                    .priority(INTEGRATION_BEANS_PRIORITY);
-        }
+    private static String toEnabled(boolean enabled) {
+        return enabled ? "Enabled" : "Disabled";
     }
 
     private static Types getTypes() {
-        DeploymentContext deploymentContext
-                = Globals.getDefaultHabitat()
-                        .getService(Deployment.class)
-                        .getCurrentDeploymentContext();
+        DeploymentContext deploymentContext =
+            Globals.get(Deployment.class)
+                   .getCurrentDeploymentContext();
+
         return deploymentContext.getTransientAppMetaData(Types.class.getName(), Types.class);
     }
 

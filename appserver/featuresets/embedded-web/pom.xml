@@ -160,7 +160,6 @@
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-cli</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -180,7 +179,6 @@
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>admin-util</artifactId>
             <version>${project.version}</version>
-
             <exclusions>
                 <exclusion>
                     <groupId>com.sun.xml.bind</groupId>
@@ -654,11 +652,6 @@
             <groupId>org.glassfish.main.persistence</groupId>
             <artifactId>jnosql-integration</artifactId>
             <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jnosql.mapping</groupId>
-            <artifactId>jnosql-jakarta-persistence</artifactId>
-            <version>${jnosql.version}</version>
         </dependency>
 
         <dependency>

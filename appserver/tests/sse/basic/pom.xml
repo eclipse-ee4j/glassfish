@@ -57,15 +57,14 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>3.16.0</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>
-                <version>2.1-beta-1</version>
+                <version>3.5.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
@@ -99,9 +98,9 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.glassfish</groupId>
-                        <artifactId>maven-embedded-glassfish-plugin</artifactId>
-                        <version>3.1.1</version>
+                        <groupId>org.glassfish.embedded</groupId>
+                        <artifactId>embedded-glassfish-maven-plugin</artifactId>
+                        <version>8.1</version>
                         <configuration>
                             <app>${project.build.directory}/${build.finalName}.war</app>
                             <port>8080</port>

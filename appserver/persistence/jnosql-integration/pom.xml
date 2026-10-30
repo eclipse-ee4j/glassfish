@@ -47,16 +47,7 @@
                     <groupId>org.eclipse.jnosql.mapping</groupId>
                     <artifactId>jnosql-jakarta-persistence-scanner</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.eclipse.jnosql.mapping</groupId>
-                    <artifactId>jnosql-mapping-reflection</artifactId>
-                </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jnosql.mapping</groupId>
-            <artifactId>jnosql-mapping-reflection</artifactId>
-            <version>${jnosql.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.data</groupId>
@@ -138,7 +129,6 @@
                     <instructions>
                         <_noimportjava>true</_noimportjava>
                         <_runee>JavaSE-17</_runee>
-
                         <Import-Package>
                             org.eclipse.jnosql.communication,
                             *

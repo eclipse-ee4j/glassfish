@@ -103,13 +103,10 @@
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>tck-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
                     <dependenciesToScan>
                         <dependency>org.eclipse.microprofile.config:microprofile-config-tck</dependency>
                     </dependenciesToScan>
-
+                    <includes>**/*</includes>
                     <!-- Required for org.eclipse.microprofile.config.tck.CDIPropertyNameMatchingTest -->
                     <environmentVariables>
                         <MP_TCK_ENV_DUMMY>dummy</MP_TCK_ENV_DUMMY>
@@ -121,9 +118,15 @@
                         <customer_name>Bob</customer_name>
                     </environmentVariables>
                     <systemPropertyVariables>
+                        <project.build.directory>${project.build.directory}</project.build.directory>
                         <mp.tck.prop.dummy>dummy</mp.tck.prop.dummy>
                         <customer.hobby>Tennis</customer.hobby>
                         <config_ordinal>120</config_ordinal>
+                        <glassfish.systemProperties>
+                            mp.tck.prop.dummy=dummy
+                            customer.hobby=Tennis
+                            config_ordinal=120
+                        </glassfish.systemProperties>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>

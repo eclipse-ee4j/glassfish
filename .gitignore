@@ -63,3 +63,4 @@ appserver/tests/appserv-tests/temppwd
 
 opendj-*.zip
 /opendj/
+/derby.log

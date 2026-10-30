@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -1419,7 +1419,7 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
     @Override
     public void unavailable(UnavailableException unavailable) {
         String msg = format(rb.getString(LogFacade.MARK_SERVLET_UNAVAILABLE), neutralizeForLog(getName()));
-        getServletContext().log(msg);
+        getServletContext().log(msg, unavailable);
         if (unavailable == null) {
             setAvailable(Long.MAX_VALUE);
         } else if (unavailable.isPermanent()) {

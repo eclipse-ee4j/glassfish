@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -1792,7 +1793,7 @@ public class LogFacade {
 
     @LogMessageInfo(
         message = "Marking servlet {0} as unavailable",
-        level = "FINE"
+        level = "INFO"
     )
     public static final String MARK_SERVLET_UNAVAILABLE = prefix + "00269";
 

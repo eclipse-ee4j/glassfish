@@ -1,5 +1,6 @@
 Manifest-Version: 1.0
 Created-By: Apache Maven Bundle Plugin 6.0.0
+Java-Version: 21
 Build-Jdk-Spec: 21
 Bundle-Description: Jakarta NoSQL 1.1 API jar
 Bundle-DocURL: https://www.eclipse.org
@@ -10,10 +11,9 @@ Bundle-Name: Jakarta NoSQL API jar
 Bundle-SymbolicName: jakarta.nosql-api
 Bundle-Vendor: Eclipse Foundation
 Bundle-Version: 1.1
-Export-Package: jakarta.nosql;version="1.1.0",jakarta.nosql.communicatio
- n.spi;version="1.1.0"
+Export-Package: jakarta.nosql;version="1.1.0"
 Extension-Name: jakarta.nosql
-Implementation-Version: 1.1.0-M2
+Implementation-Version: 1.1.0-M3
 Import-Package: java.lang,java.lang.annotation,java.time,java.util,java.
  util.stream
 Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=21))"

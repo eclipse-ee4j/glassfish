@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2023 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -40,10 +40,12 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import jakarta.ejb.EJBLocalObject;
 import jakarta.ejb.EJBObject;
+import jakarta.ejb.TransactionAttribute;
 import jakarta.inject.Inject;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -665,11 +667,56 @@ public abstract class EjbDescriptor extends EjbBeanDescriptor {
         if (containerTransaction != null) {
             return containerTransaction;
         }
+        if (MethodDescriptor.TIMER_METHOD.equals(methodDescriptor.getEjbClassSymbol())) {
+            containerTransaction = getTimerMethodContainerTransaction(methodDescriptor);
+            if (containerTransaction != null) {
+                getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
+                return containerTransaction;
+            }
+        }
         if (Descriptor.isBoundsChecking() && usesDefaultTransaction) {
             containerTransaction = new ContainerTransaction(ContainerTransaction.REQUIRED, "");
             getMethodContainerTransactions().put(methodDescriptor, containerTransaction);
         }
         return containerTransaction;
+    }
+
+    /**
+     * {@code @Schedule} methods are never added to {@link #getTxBusinessMethodDescriptors()}, so
+     * their {@code @TransactionAttribute} is not bound under the TIMER_METHOD descriptor used to
+     * look it up. Match a descriptor bound under another method-intf by signature, then read the
+     * annotation from the method or its declaring class for methods that are not business
+     * methods at all (private {@code @Schedule} methods).
+     */
+    private ContainerTransaction getTimerMethodContainerTransaction(MethodDescriptor methodDescriptor) {
+        for (Entry<MethodDescriptor, ContainerTransaction> entry : getMethodContainerTransactions().entrySet()) {
+            MethodDescriptor other = entry.getKey();
+            if (methodDescriptor.getName().equals(other.getName())
+                && Arrays.equals(methodDescriptor.getParameterClassNames(), other.getParameterClassNames())) {
+                return entry.getValue();
+            }
+        }
+        Method method = methodDescriptor.getDeclaredMethod(this);
+        if (method == null) {
+            return null;
+        }
+        TransactionAttribute annotation = method.getAnnotation(TransactionAttribute.class);
+        if (annotation == null) {
+            annotation = method.getDeclaringClass().getAnnotation(TransactionAttribute.class);
+        }
+        String attribute = annotation == null ? null : toDescriptorTransactionAttribute(annotation);
+        return attribute == null ? null : new ContainerTransaction(attribute, "");
+    }
+
+    private static String toDescriptorTransactionAttribute(TransactionAttribute annotation) {
+        return switch (annotation.value()) {
+            case MANDATORY -> ContainerTransaction.MANDATORY;
+            case NEVER -> ContainerTransaction.NEVER;
+            case NOT_SUPPORTED -> ContainerTransaction.NOT_SUPPORTED;
+            case REQUIRED -> ContainerTransaction.REQUIRED;
+            case REQUIRES_NEW -> ContainerTransaction.REQUIRES_NEW;
+            case SUPPORTS -> ContainerTransaction.SUPPORTS;
+        };
     }
 
     private boolean needToConvertMethodContainerTransactions() {

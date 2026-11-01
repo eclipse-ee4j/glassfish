@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -42,5 +43,8 @@ public interface PersistenceTagNames extends TagNames {
     public static String VALIDATION_MODE = "validation-mode";
     public static String SCOPE = "scope";
     public static String QUALIFIER = "qualifier";
+    public static String PACKAGE_DESCRIPTOR = "package-descriptor";
+    public static String MODULE_DESCRIPTOR = "module-descriptor";
+    public static String DEFAULT_TO_ONE_FETCH_TYPE = "default-to-one-fetch-type";
 
 }

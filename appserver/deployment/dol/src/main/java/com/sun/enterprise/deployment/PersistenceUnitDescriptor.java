@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.deployment;
 
+import jakarta.persistence.FetchType;
 import jakarta.persistence.SharedCacheMode;
 import jakarta.persistence.ValidationMode;
 
@@ -51,10 +52,13 @@ public class PersistenceUnitDescriptor extends Descriptor {
     private final List<String> mappingFiles = new ArrayList<>();
     private final List<String> jarFiles = new ArrayList<>();
     private final List<String> classes = new ArrayList<>();
+    private final List<String> packageDescriptors = new ArrayList<>();
+    private final List<String> moduleDescriptors = new ArrayList<>();
     private final List<String> qualifiers = new ArrayList<>();
     private final Properties properties = new Properties();
 
     private boolean excludeUnlistedClasses;
+    private FetchType defaultToOneFetchType;
     private SharedCacheMode sharedCacheMode;
     private ValidationMode validationMode;
 
@@ -169,6 +173,22 @@ public class PersistenceUnitDescriptor extends Descriptor {
 
     }
 
+    public List<String> getPackageDescriptors() {
+        return Collections.unmodifiableList(packageDescriptors);
+    }
+
+    public void addPackageDescriptor(String packageName) {
+        packageDescriptors.add(packageName);
+    }
+
+    public List<String> getModuleDescriptors() {
+        return Collections.unmodifiableList(moduleDescriptors);
+    }
+
+    public void addModuleDescriptor(String moduleName) {
+        moduleDescriptors.add(moduleName);
+    }
+
     public List<String> getQualifiers() {
         return Collections.unmodifiableList(qualifiers);
     }
@@ -191,6 +211,23 @@ public class PersistenceUnitDescriptor extends Descriptor {
 
     public void setExcludeUnlistedClasses(boolean excludeUnlistedClasses) {
         this.excludeUnlistedClasses = excludeUnlistedClasses;
+    }
+
+    public FetchType getDefaultToOneFetchType() {
+        if (defaultToOneFetchType == null) {
+            return FetchType.EAGER;
+        }
+
+        return defaultToOneFetchType;
+    }
+
+    public void setDefaultToOneFetchType(String defaultToOneFetchType) {
+        FetchType fetchType = FetchType.valueOf(defaultToOneFetchType);
+        // valueOf accepts DEFAULT, which persistence.xsd doesn't allow for this element
+        if (fetchType == FetchType.DEFAULT) {
+            throw new IllegalArgumentException("The default-to-one-fetch-type cannot be " + fetchType);
+        }
+        this.defaultToOneFetchType = fetchType;
     }
 
     public SharedCacheMode getSharedCacheMode() {

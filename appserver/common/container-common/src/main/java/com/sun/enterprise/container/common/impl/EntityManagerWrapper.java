@@ -691,8 +691,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     @Override
     public LockModeType getLockMode(Object o) {
 
-        doTxRequiredCheck();
-
+        // Since Persistence 4.0 no transaction is required, like for contains()
         try {
             if (callFlowAgent.isEnabled()) {
                 callFlowAgent.entityManagerMethodStart(GET_LOCK_MODE);
@@ -703,8 +702,6 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
                 callFlowAgent.entityManagerMethodEnd();
             }
         }
-
-        // tx is required so there's no need to do any non-tx cleanup
     }
 
     @Override

@@ -93,23 +93,6 @@
         <glassfishbuild-maven-plugin.assemblyInputDirectory>${project.build.outputDirectory}</glassfishbuild-maven-plugin.assemblyInputDirectory>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Jakarta CDI -->
-            <dependency>
-                <groupId>jakarta.cdi</groupId>
-                <artifactId>jakarta.cdi-api</artifactId>
-                <version>${jakarta.cdi-api.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.inject</groupId>
-                        <artifactId>jakarta.inject</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <build>
         <pluginManagement>
             <plugins>

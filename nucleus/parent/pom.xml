@@ -192,9 +192,9 @@
         <!-- Jakarta Data / NoSQL -->
         <jakarta.data-api.version>1.1.0-M4</jakarta.data-api.version>
         <jakarta.data.spec.version>1.1</jakarta.data.spec.version>
-        <jakarta.nosql-api.version>1.1.0-M3</jakarta.nosql-api.version>
+        <jakarta.nosql-api.version>1.1.0-M4</jakarta.nosql-api.version>
         <jakarta.nosql.spec.version>1.1.0</jakarta.nosql.spec.version>
-        <jnosql.version>2.0.0-SNAPSHOT</jnosql.version>
+        <jnosql.version>2.0.0-M1</jnosql.version>
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.1</jakarta.transaction-api.version>
@@ -329,6 +329,19 @@
                 <version>${project.version}</version>
                 <!-- default scope; some modules have to set another -->
                 <scope>test</scope>
+            </dependency>
+
+            <!-- Jakarta CDI -->
+            <dependency>
+                <groupId>jakarta.cdi</groupId>
+                <artifactId>jakarta.cdi-api</artifactId>
+                <version>${jakarta.cdi-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.inject</groupId>
+                        <artifactId>jakarta.inject</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <!-- Jakarta Expression Language -->

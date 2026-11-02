@@ -98,7 +98,7 @@
         <!-- WARN: Manifest must be patched: -->
         <!-- Added: org.osgi.framework;resolution:=optional -->
         <!-- Changed: Jakarta Annotation was [2,3), we need [2, 4) -->
-        <hibernate-validator.version>9.1.4.Final</hibernate-validator.version>
+        <hibernate-validator.version>9.1.6.Final</hibernate-validator.version>
 
         <!-- Jakarta XML Web Services -->
         <jakarta.xml.ws-api.version>4.0.3</jakarta.xml.ws-api.version>

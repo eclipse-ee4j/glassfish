@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+    Copyright (c) 2026 Contributors to the Eclipse Foundation. All rights reserved.
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -37,5 +38,5 @@
     </locale-charset-info>
     <class-loader
         delegate="true"
-        extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-${woodstock.version}.jar:WEB-INF/extra/dojo-${woodstock.version}.jar:WEB-INF/extra/woodstock-webui-jsf-${woodstock.version}.jar:WEB-INF/extra/prototype-${woodstock.version}.jar:WEB-INF/extra/commons-io-${commons-io.version}.jar" />
+        extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-${project.version}.jar:WEB-INF/extra/dojo-${woodstock.version}.jar:WEB-INF/extra/woodstock-webui-jsf-${woodstock.version}.jar:WEB-INF/extra/prototype-${woodstock.version}.jar:WEB-INF/extra/commons-io-${commons-io.version}.jar" />
 </sun-web-app>

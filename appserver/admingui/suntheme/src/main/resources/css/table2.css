@@ -1,0 +1,114 @@
+/*
+ * Copyright (c) 2007, 2019 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+
+/* Top level div tag */
+.Tbl2_sun4 {
+    /* Styles from old table */
+    -moz-border-radius-topleft:5px; 
+    -moz-border-radius-topright:5px;
+    border-style:solid;
+    border-width:1px;
+    border-color:#A0A3A5; 
+    border-top-color:#35556A; 
+    background-color:#E5E9ED; 
+    color:#000;
+}
+
+/* Title */ 
+.Tbl2Ttl_sun4 {
+    border-bottom-style:solid; 
+    border-bottom-width:1px;
+
+    /* Styles from old table */
+    color:#fff; 
+    background:#36586F url(../images/table/table_titlebar_gradient.gif) bottom left repeat-x;
+    text-align:left; 
+    background-position:5px 5px; 
+    padding:3px 10px 2px 10px;
+    -moz-border-radius-topleft:5px; 
+    -moz-border-radius-topright:5px;
+}
+
+/* Margin */
+.Tbl2Mgn_sun4 {
+    padding:6px;
+}
+
+/* Actions */
+.Tbl2Act_sun4 {
+    /* Styles from old table */
+    vertical-align:middle;
+}
+
+/* Outer div to capture absolutely positioned header/footer */
+.Tbl2Grps_sun4 {
+    position: relative;
+    padding-bottom: 2.9em; /* Must be dynamic */
+    padding-top: 3.1em; /* Must be dynamic */
+    width: 100%; /* Required for IE */
+}
+
+/* Inner div enabling table to scroll */
+.Tbl2Grp_sun4 {
+    overflow: auto;
+}
+
+/* Group header */
+.Tbl2GrpHdr_sun4 {
+    position: absolute;
+    top: 7px;
+    left: 0px;
+}
+.Tbl2GrpHdr_sun4 th {
+    min-height:1.5em;
+}
+.Tbl2GrpHdrTxt_sun4 {
+    float: left;
+}
+.Tbl2GrpHdrRowsTxt_sun4 {
+    float: right;
+}
+
+/* Column header */
+.Tbl2ColHdr_sun4 {
+    position: absolute;
+    top: 1.95em; /* Must be dynamic */
+    left: 0px;
+}
+.Tbl2ColHdr_sun4 th {
+    text-align: left;
+    min-height:1.5em;
+}
+
+/* Column footer */
+.Tbl2ColFtr_sun4 {
+    position: absolute;
+    bottom: 1.35em; /* Must be dynamic */
+    left: 0px;
+}
+.Tbl2ColFtr_sun4 td {
+    min-height:1.5em;
+}
+
+/* Group footer */
+.Tbl2GrpFtr_sun4 {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+}
+.Tbl2GrpFtr_sun4 td {
+    min-height:1.5em;
+}

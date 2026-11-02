@@ -18,13 +18,21 @@
 package org.glassfish.grizzly.config;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.security.KeyStore;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.glassfish.grizzly.Transport;
 import org.glassfish.grizzly.config.dom.NetworkAddressValidator;
@@ -50,6 +58,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_FILENAME_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.TRUSTSTORE_FILENAME_DEFAULT;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
 import static org.glassfish.embeddable.GlassFishVariable.TRUSTSTORE_FILE;
@@ -324,6 +333,65 @@ public class GrizzlyConfigTest {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
             }
+        }
+    }
+
+    @Test
+    public void sslStoreWithoutPassword() throws Exception {
+        final File keyStoreFile = new File("target/test-classes/keystore-password.p12");
+        final File trustStoreFile = new File("target/test-classes/cacerts-password.p12");
+        Files.deleteIfExists(keyStoreFile.toPath());
+        Files.deleteIfExists(trustStoreFile.toPath());
+        final KeyTool keyTool = new KeyTool(keyStoreFile, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        keyTool.generateKeyPair("s1as", "CN=localhost", "RSA", 1);
+        keyTool.copyCertificate("s1as", trustStoreFile);
+        final SSLContext clientContext = createClientContext(trustStoreFile);
+        GrizzlyConfig grizzlyConfig = null;
+        try {
+            // The server password properties match the stores, they must not be used anyway.
+            configure();
+            grizzlyConfig = new GrizzlyConfig("grizzly-config-ssl-store-without-password.xml");
+            grizzlyConfig.setupNetwork();
+            int count = 0;
+            for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
+                helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
+            }
+
+            assertEquals("<html><body>You've found the server on port 38089</body></html>",
+                getContent(URI.create("https://localhost:38089").toURL(), clientContext));
+            assertThrows(IOException.class,
+                () -> getContent(URI.create("https://localhost:38090").toURL(), clientContext),
+                "key-store without key-store-password");
+            assertThrows(IOException.class,
+                () -> getContent(URI.create("https://localhost:38091").toURL(), clientContext),
+                "trust-store without trust-store-password");
+        } finally {
+            if (grizzlyConfig != null) {
+                grizzlyConfig.shutdown();
+            }
+        }
+    }
+
+    private static SSLContext createClientContext(File trustStoreFile) throws Exception {
+        final KeyStore trustStore = KeyStore.getInstance("PKCS12");
+        try (InputStream input = new FileInputStream(trustStoreFile)) {
+            trustStore.load(input, KEYSTORE_PASSWORD_DEFAULT.toCharArray());
+        }
+        final TrustManagerFactory trustManagerFactory = TrustManagerFactory
+            .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        trustManagerFactory.init(trustStore);
+        final SSLContext context = SSLContext.getInstance("TLS");
+        context.init(null, trustManagerFactory.getTrustManagers(), null);
+        return context;
+    }
+
+    private static String getContent(URL url, SSLContext clientContext) throws IOException {
+        final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+        connection.setSSLSocketFactory(clientContext.getSocketFactory());
+        try {
+            return new String(connection.getInputStream().readAllBytes(), UTF_8);
+        } finally {
+            connection.disconnect();
         }
     }
 

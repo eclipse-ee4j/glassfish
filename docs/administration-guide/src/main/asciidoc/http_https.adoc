@@ -516,6 +516,7 @@ The following topics are addressed here:
 * <<To Delete an HTTP Network Listener>>
 * <<To Configure an HTTP Listener for SSL>>
 * <<To Configure Optional Client Authentication for SSL>>
+* <<To Configure a Key Store and Trust Store for an HTTP Listener>>
 * <<To Configure a Custom SSL Implementation>>
 * <<To Delete SSL From an HTTP Listener>>
 * <<To Assign a Default Virtual Server to an HTTP Listener>>
@@ -718,6 +719,27 @@ the SSL protocol to the value `want`. For example:
 asadmin> set configs.config.config-name.network-config.protocols.\
 protocol.listener-name.ssl.client-auth=want
 ----
+
+[[to-configure-a-key-store-and-trust-store-for-an-http-listener]]
+
+===== To Configure a Key Store and Trust Store for an HTTP Listener
+
+By default, the SSL protocol of an HTTP listener uses the key store and
+the trust store of the server. To use a different key store or trust
+store for one listener, set the `key-store` or `trust-store` property of
+the SSL protocol to the path of the store, together with the
+`key-store-password` or `trust-store-password` property. For example:
+
+[source]
+----
+asadmin> set configs.config.config-name.network-config.protocols.protocol.listener-name.ssl.key-store-password=store-password
+asadmin> set configs.config.config-name.network-config.protocols.protocol.listener-name.ssl.key-store=/path/to/keystore.p12
+----
+
+The password is required for a store configured in the SSL protocol. If
+`key-store` is set without `key-store-password`, or `trust-store` is set
+without `trust-store-password`, the error is logged and SSL is not
+available for the listener.
 
 [[to-configure-a-custom-ssl-implementation]]
 

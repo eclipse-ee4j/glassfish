@@ -47,6 +47,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_PASSWORD_DEFAULT;
 import static com.sun.enterprise.util.SystemPropertyConstants.KEYSTORE_TYPE_DEFAULT;
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.ERROR;
 import static java.lang.System.Logger.Level.WARNING;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_FILE;
 import static org.glassfish.embeddable.GlassFishVariable.KEYSTORE_PASSWORD;
@@ -126,6 +127,9 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     private SSLContext configureSSL() {
         try {
             final SSLContext newSslContext = initializeSSLContext();
+            if (newSslContext == null) {
+                return null;
+            }
 
             if (ssl != null) {
                 final List<String> enabledProtocols = getListOfEnabledProtocols();
@@ -157,6 +161,17 @@ public class SSLConfigurator extends SSLEngineConfigurator {
 
     private SSLContext initializeSSLContext() {
         try {
+            final String keyStorePassword = ssl == null ? null : getKeyStorePassword(ssl);
+            final String trustStorePassword = ssl == null ? null : getTrustStorePassword(ssl);
+            if (ssl != null) {
+                final boolean keyStorePasswordMissing = isPasswordMissing(ssl, "key-store", ssl.getKeyStore(),
+                    keyStorePassword);
+                final boolean trustStorePasswordMissing = isPasswordMissing(ssl, "trust-store", ssl.getTrustStore(),
+                    trustStorePassword);
+                if (keyStorePasswordMissing || trustStorePasswordMissing) {
+                    return null;
+                }
+            }
             final SSLContextFactory sslContextFactory = getSslImplementation().getSSLContextFactory();
             if (ssl != null) {
                 if (ssl.getCrlFile() != null) {
@@ -177,7 +192,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             markConfiguredStore(sslContextFactory, ATTR_KEYSTORE_CONFIGURED, ssl == null ? null : ssl.getKeyStore());
             setAttribute(sslContextFactory, "keystoreType", ssl == null ? null : ssl.getKeyStoreType(),
                 KEYSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
-            setAttribute(sslContextFactory, "keystorePass", ssl == null ? null : getKeyStorePassword(ssl),
+            setAttribute(sslContextFactory, "keystorePass", keyStorePassword,
                 KEYSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
 
             // Trust store settings
@@ -186,7 +201,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             markConfiguredStore(sslContextFactory, ATTR_TRUSTSTORE_CONFIGURED, ssl == null ? null : ssl.getTrustStore());
             setAttribute(sslContextFactory, "truststoreType", ssl == null ? null : ssl.getTrustStoreType(),
                 TRUSTSTORE_TYPE.getSystemPropertyName(), KEYSTORE_TYPE_DEFAULT);
-            setAttribute(sslContextFactory, "truststorePass", ssl == null ? null : getTrustStorePassword(ssl),
+            setAttribute(sslContextFactory, "truststorePass", trustStorePassword,
                 TRUSTSTORE_PASSWORD.getSystemPropertyName(), KEYSTORE_PASSWORD_DEFAULT);
 
             // Cert nick name
@@ -254,15 +269,44 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         if (!LOG.isLoggable(WARNING)) {
             return;
         }
-        final StringBuilder name = new StringBuilder();
-        for (NetworkListener listener : ((Protocol) ssl.getParent()).findNetworkListeners()) {
-            if (name.length() != 0) {
-                name.append(", ");
-            }
-            name.append(listener.getName());
-        }
+        final String name = getNetworkListenerNames(ssl);
         LOG.log(WARNING, () -> "WEB0307: All SSL " + type + " disabled for network-listener " + name
             + ", using SSL implementation specific defaults");
+    }
+
+    /**
+     * A store configured in the ssl element must come with its own password. Without it the
+     * password would be resolved from the system properties of the server, which are not related
+     * to that store.
+     *
+     * @param ssl the ssl element.
+     * @param attribute the name of the store attribute, used in the error message.
+     * @param store the store configured in the ssl element, may be null.
+     * @param password the password resolved from the ssl element, may be null.
+     * @return true if the store is configured but its password is not.
+     */
+    private static boolean isPasswordMissing(final Ssl ssl, final String attribute, final String store,
+        final String password) {
+        if (store == null || store.isBlank() || password != null) {
+            return false;
+        }
+        LOG.log(ERROR, () -> "The ssl element of the network-listener " + getNetworkListenerNames(ssl) + " sets "
+            + attribute + "=" + store + " but no " + attribute + "-password. The password is required for a "
+            + attribute + " configured in the ssl element, SSL is not available for this listener.");
+        return true;
+    }
+
+    private static String getNetworkListenerNames(final Ssl ssl) {
+        final StringBuilder names = new StringBuilder();
+        if (ssl.getParent() instanceof Protocol protocol) {
+            for (NetworkListener listener : protocol.findNetworkListeners()) {
+                if (names.length() != 0) {
+                    names.append(", ");
+                }
+                names.append(listener.getName());
+            }
+        }
+        return names.toString();
     }
 
     public boolean isAllowLazyInit() {

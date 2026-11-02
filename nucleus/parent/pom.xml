@@ -331,6 +331,19 @@
                 <scope>test</scope>
             </dependency>
 
+            <!-- Jakarta CDI -->
+            <dependency>
+                <groupId>jakarta.cdi</groupId>
+                <artifactId>jakarta.cdi-api</artifactId>
+                <version>${jakarta.cdi-api.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>jakarta.inject</groupId>
+                        <artifactId>jakarta.inject</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <!-- Jakarta Expression Language -->
             <dependency>
                 <groupId>jakarta.el</groupId>

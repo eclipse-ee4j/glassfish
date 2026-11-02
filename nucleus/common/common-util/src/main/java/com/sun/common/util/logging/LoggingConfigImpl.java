@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -346,12 +346,9 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
         while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
-            // convert the name in domain.xml to the name in logging.properties if needed
-            if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
-                key = LoggingXMLNames.xmltoPropsMap.get(key);
-            }
-
-            m.put(key, props.getProperty(key));
+            // The value must be read under the key present in the file; only the reported
+            // name is converted from the legacy domain.xml name if needed.
+            m.put(LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key), props.getProperty(key));
         }
         return m;
     }
@@ -369,12 +366,9 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         Enumeration<?> e = props.propertyNames();
         while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
-            // convert the name in domain.xml to the name in logging.properties if needed
-            if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
-                key = LoggingXMLNames.xmltoPropsMap.get(key);
-            }
-
-            m.put(key, props.getProperty(key));
+            // The value must be read under the key present in the file; only the reported
+            // name is converted from the legacy domain.xml name if needed.
+            m.put(LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key), props.getProperty(key));
         }
         return m;
     }
@@ -620,8 +614,8 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             String key = loggingPropertyNames.nextElement();
 
             // Convert the name in domain.xml to the name in logging.properties if needed
-            key = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
-            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(key)) {
+            String name = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
+            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(name)) {
                 return props.getProperty(key);
             }
         }
@@ -642,8 +636,8 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
             String key = loggingPropertyNames.nextElement();
 
             // convert the name in domain.xml to the name in logging.properties if needed
-            key = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
-            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(key)) {
+            String name = LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key);
+            if (GlassFishLogHandlerProperty.OUTPUT_FILE.getPropertyFullName().equals(name)) {
                 return props.getProperty(key);
             }
         }
@@ -672,11 +666,10 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
         Enumeration<?> e = propsLoggingTemplate.propertyNames();
         while (e.hasMoreElements()) {
             String key = (String) e.nextElement();
-            // convert the name in domain.xml to the name in logging.properties if needed
-            if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
-                key = LoggingXMLNames.xmltoPropsMap.get(key);
-            }
-            m.put(key, propsLoggingTemplate.getProperty(key));
+            // The value must be read under the key present in the file; only the reported
+            // name is converted from the legacy domain.xml name if needed.
+            m.put(LoggingXMLNames.xmltoPropsMap.getOrDefault(key, key),
+                propsLoggingTemplate.getProperty(key));
         }
         return m;
     }

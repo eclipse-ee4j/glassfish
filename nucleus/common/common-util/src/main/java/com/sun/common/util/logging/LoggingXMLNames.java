@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -75,6 +75,13 @@ public class LoggingXMLNames {
 
     private static final String LEVEL = ".level";
 
+    /**
+     * {@link LogDomains#DOMAIN_ROOT} is a logger name <em>prefix</em> and already ends with
+     * a dot, so it must not be concatenated with {@link #LEVEL} directly.
+     */
+    private static final String DOMAIN_ROOT_LOGGER
+        = LogDomains.DOMAIN_ROOT.substring(0, LogDomains.DOMAIN_ROOT.length() - 1);
+
     /** Mapping of the names used in domain.xml to the names used in logging.properties */
     public static final Map<String, String> xmltoPropsMap = Map.ofEntries(
         entry(logHandler, KEY_ROOT_HANDLERS.getPropertyName()),
@@ -86,7 +93,7 @@ public class LoggingXMLNames {
         entry(logRotationLimitInBytes, ROTATION_LIMIT_SIZE.getPropertyFullName()),
         entry(logRotationTimelimitInMinutes, ROTATION_LIMIT_TIME.getPropertyFullName()),
 
-        entry(root, LogDomains.DOMAIN_ROOT + LEVEL),
+        entry(root, DOMAIN_ROOT_LOGGER + LEVEL),
         entry(server, LogDomains.SERVER_LOGGER + LEVEL),
         entry(ejbcontainer, LogDomains.EJB_LOGGER + LEVEL),
         entry(cmpcontainer, LogDomains.CMP_LOGGER + LEVEL),

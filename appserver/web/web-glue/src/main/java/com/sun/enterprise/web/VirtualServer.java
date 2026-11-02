@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -871,22 +871,27 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     /**
      * Configures this virtual server with the specified log file.
      *
-     * @param logFile The value of the virtual server's log-file attribute in the domain.xml
+     * @param logFile The value of the virtual server's log-file attribute in the domain.xml,
+     *            {@code null} if the attribute is not set
+     * @param logServiceFile The server log file, {@code null} if it is not known
      */
     synchronized void setLogFile(String logFile, String logLevel, String logServiceFile) {
         _logger.log(Level.CONFIG, "setLogFile(logFile={0}, logServiceFile={1})",
             new Object[] {logFile, logServiceFile});
 
-        /*
-         * Configure separate logger for this virtual server only if 'log-file' attribute of this <virtual-server> and 'file'
-         * attribute of <log-service> are different (See 6189219).
-         */
-        boolean customLog = (logFile != null && logServiceFile != null
-            && !new File(logFile).equals(new File(logServiceFile)));
+        // The log-file attribute is optional; without it this virtual server logs into the
+        // server log, wherever that currently is.
+        final String vsLogFile = logFile == null ? logServiceFile : logFile;
 
-        boolean logFileChanged = logFile != null
-            && ((fileLoggerHandler != null && !logFile.equals(fileLoggerHandler.getLogFile()))
-                || fileLoggerHandler == null);
+        /*
+         * Configure separate logger for this virtual server only if its log file and the server
+         * log file are different (See 6189219).
+         */
+        boolean customLog = vsLogFile != null && logServiceFile != null
+            && !new File(vsLogFile).equals(new File(logServiceFile));
+
+        boolean logFileChanged = fileLoggerHandler == null
+            || !fileLoggerHandler.getLogFile().equals(vsLogFile);
 
         /*
          * Exit early if the log file isn't being changed.
@@ -948,7 +953,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         }
 
         // create and add new handler
-        fileLoggerHandler = fileLoggerHandlerFactory.getHandler(logFile);
+        fileLoggerHandler = fileLoggerHandlerFactory.getHandler(vsLogFile);
         newLogger.addHandler(fileLoggerHandler);
         newLogger.setUseParentHandlers(false);
         setLogger(newLogger);

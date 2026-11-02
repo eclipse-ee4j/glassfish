@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,6 +32,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -336,36 +337,42 @@ public class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
         return persistenceUnitDescriptor.getQualifiers();
     }
 
- // TODO IMPLEMENT!
-
-    @Override
-    public List<String> getAllClassNames() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
-    @Override
-    public FetchType getDefaultToOneFetchType() {
-        throw new UnsupportedOperationException("Not yet implemented");
-    }
-
     @Override
     public List<String> getManagedPackageDescriptors() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return persistenceUnitDescriptor.getPackageDescriptors(); // its already unmodifiable
     }
 
     @Override
     public List<String> getManagedModuleDescriptors() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return persistenceUnitDescriptor.getModuleDescriptors(); // its already unmodifiable
+    }
+
+    // TODO GlassFish doesn't discover persistence unit members yet, so the complete lists below hold
+    // only what persistence.xml lists: no classes named in mapping files, and nothing found by scanning
+    // the root or the jar files for types and descriptors bearing a discoverable annotation.
+
+    @Override
+    public List<String> getAllClassNames() {
+        return withoutDuplicates(getManagedClassNames());
     }
 
     @Override
     public List<String> getAllPackageDescriptors() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return withoutDuplicates(getManagedPackageDescriptors());
     }
 
     @Override
     public List<String> getAllModuleDescriptors() {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return withoutDuplicates(getManagedModuleDescriptors());
+    }
+
+    @Override
+    public FetchType getDefaultToOneFetchType() {
+        return persistenceUnitDescriptor.getDefaultToOneFetchType();
+    }
+
+    private static List<String> withoutDuplicates(List<String> names) {
+        return List.copyOf(new LinkedHashSet<>(names));
     }
 
 }

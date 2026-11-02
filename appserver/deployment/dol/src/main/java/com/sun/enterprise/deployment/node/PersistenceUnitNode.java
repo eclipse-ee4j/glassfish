@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -115,6 +115,9 @@ public class PersistenceUnitNode extends DeploymentDescriptorNode {
         table.put(PersistenceTagNames.VALIDATION_MODE, "setValidationMode");
         table.put(PersistenceTagNames.SCOPE, "setScope");
         table.put(PersistenceTagNames.QUALIFIER, "addQualifier");
+        table.put(PersistenceTagNames.PACKAGE_DESCRIPTOR, "addPackageDescriptor");
+        table.put(PersistenceTagNames.MODULE_DESCRIPTOR, "addModuleDescriptor");
+        table.put(PersistenceTagNames.DEFAULT_TO_ONE_FETCH_TYPE, "setDefaultToOneFetchType");
         this.dispatchTable = table;
     }
 

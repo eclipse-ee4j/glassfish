@@ -100,10 +100,5 @@
             <artifactId>org.eclipse.persistence.json</artifactId>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.asm</artifactId>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 </project>

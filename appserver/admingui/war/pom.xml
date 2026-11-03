@@ -73,7 +73,17 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.woodstock.external</groupId>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>dojo</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -83,12 +93,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.woodstock.external</groupId>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>prototype</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.woodstock</groupId>
+            <groupId>org.glassfish.main.admingui</groupId>
             <artifactId>woodstock-webui-jsf</artifactId>
             <scope>provided</scope>
         </dependency>
@@ -131,6 +141,7 @@
                             <outputDirectory>${dependencies.extra.directory}</outputDirectory>
                             <includeArtifactIds>
                                 commons-io,
+                                commons-fileupload2-core,commons-fileupload2-jakarta-servlet6,
                                 dojo,json,prototype,
                                 woodstock-webui-jsf,woodstock-webui-jsf-suntheme
                             </includeArtifactIds>

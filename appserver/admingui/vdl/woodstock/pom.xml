@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.admingui</groupId>
+        <artifactId>vdl</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>woodstock-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <name>Woodstock</name>
+    <description>The Woodstock Jakarta Faces components used by the GlassFish Admin Console</description>
+
+    <modules>
+        <module>woodstock-dt</module>
+        <module>woodstock-webui-jsf</module>
+        <module>woodstock-external</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dojo.version>1.16.5</dojo.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.sun.faces.extensions</groupId>
+                <artifactId>jsf-extensions-dynamic-faces</artifactId>
+                <version>${jsf-ext.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jvnet.hudson.svnkit</groupId>
+                        <artifactId>svnkit</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.maven.wagon</groupId>
+                        <artifactId>wagon-provider-api</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.jvnet.wagon-svn</groupId>
+                        <artifactId>wagon-svn</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.sun.faces.extensions</groupId>
+                <artifactId>jsf-extensions-common</artifactId>
+                <version>${jsf-ext.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.help</groupId>
+                <artifactId>javahelp</artifactId>
+                <version>2.0.05</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.portlet</groupId>
+                <artifactId>portlet-api</artifactId>
+                <version>3.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>1.7</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.13.2</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

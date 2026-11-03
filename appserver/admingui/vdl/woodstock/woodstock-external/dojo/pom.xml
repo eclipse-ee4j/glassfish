@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation. All rights reserved.
+    Copyright (c) 2019, 2020 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.glassfish.main.admingui</groupId>
+        <artifactId>woodstock-external</artifactId>
+        <version>9.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>dojo</artifactId>
+
+    <name>Dojo JS Repackaged</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifact>
+                                    <groupId>org.dojotoolkit</groupId>
+                                    <artifactId>dojo</artifactId>
+                                    <version>${dojo.version}</version>
+                                    <classifier>distribution</classifier>
+                                    <type>zip</type>
+                                    <overWrite>false</overWrite>
+                                    <outputDirectory>${project.build.directory}/dependency/</outputDirectory>
+                                </artifact>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <descriptors>
+                                <descriptor>${basedir}/src/main/assembly/${project.artifactId}.xml</descriptor>
+                            </descriptors>
+                            <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+                            <attach>false</attach>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <useProjectArtifact>false</useProjectArtifact>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.directory}/dojo</classesDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,31 @@
+Packages examined in compilation unit:
+#foreach ($packageName in $packageNameSet)
+    ${packageName}
+#end
+
+Total number of components found: ${componentInfoSet.size()}
+Total number of renderers found: ${rendererInfoSet.size()}
+
+
+Components
+----------
+#foreach ($componentInfo in $componentInfoSet)
+#if ($componentInfo.superClassInfo)
+    ${componentInfo.displayName} (${componentInfo.qualifiedName} extends ${componentInfo.superClassInfo.qualifiedName})
+#else
+    ${componentInfo.displayName} (${componentInfo.qualifiedName})
+#end
+        Declared Properties:
+#foreach ($propertyInfo in $componentInfo.propertyInfos)
+            $propertyInfo.name ($propertyInfo.type)
+#end
+        Inherited Properties:
+#foreach ($propertyInfo in $componentInfo.inheritedPropertyInfos)
+            $propertyInfo.name ($propertyInfo.type)
+#end
+        Events:
+#foreach ($eventInfo in $componentInfo.inheritedEventInfos)
+            $eventInfo.name (listener = ${eventInfo.listenerClassName}, method = ${eventInfo.listenerMethodSignature})
+#end
+#end
+    

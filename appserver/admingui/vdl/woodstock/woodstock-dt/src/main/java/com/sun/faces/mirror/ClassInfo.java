@@ -1,0 +1,194 @@
+/*
+ * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License v. 2.0, which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * This Source Code may also be made available under the following Secondary
+ * Licenses when the conditions for such availability set forth in the
+ * Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+ * version 2 with the GNU Classpath Exception, which is available at
+ * https://www.gnu.org/software/classpath/license.html.
+ *
+ * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+ */
+package com.sun.faces.mirror;
+
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * An interface that defines the basic metadata available for a class with one
+ * or more properties. This may be a component class or a non-component base
+ * class, either in the current compilation unit, or in an external library.
+ */
+public abstract class ClassInfo {
+
+    /**
+     * Returns the name of this class.
+     * @return String
+     */
+    public abstract String getClassName();
+
+    /**
+     * Returns the name of this class package.
+     * @return String
+     */
+    public abstract String getPackageName();
+
+    /**
+     * Returns the info for this class's super class. If this class extends a
+     * class which provides no properties, then this method should return null.
+     *
+     * @return Value of property superClassInfo.
+     */
+    public abstract ClassInfo getSuperClassInfo();
+
+    /**
+     * Returns a map in which keys are property names (see
+     * {@link PropertyInfo#getName}), and values are instance of
+     * {@link PropertyInfo}. The map contains all properties explicitly declared
+     * in this class (which may or may not override properties in the super
+     * class), as well as all properties declared in any interface which this
+     * class implements.
+     *
+     * @return Value of property propertyInfoMap.
+     */
+    public abstract Map<String, PropertyInfo> getPropertyInfos();
+
+    /**
+     * Returns a map in which keys are event names (see
+     * {@link EventInfo#getName}), and values are instance of {@link EventInfo}.
+     * The map contains all events explicitly declared in this class, (which may
+     * or may not override events in the super class), as well as all events
+     * declared in any interface which this class implements.
+     *
+     * @return Value of property eventInfoMap.
+     */
+    public abstract Map<String, EventInfo> getEventInfos();
+
+    /**
+     * Returns the default property for this class, or null if the class has no
+     * default property. If a default property was specified explicitly as part
+     * of a class's annotations, or implicitly via introspection, it is
+     * returned. Otherwise, if this class is a Faces component class and
+     * implements {@link jakarta.faces.component.ValueHolder}, the {@code value}
+     * property is returned. Otherwise null is returned.
+     * @return PropertyInfo
+     */
+    public abstract PropertyInfo getDefaultPropertyInfo();
+
+    /**
+     * Returns the default event for this class, or null if the class has no
+     * default event. If a default event was specified explicitly as part of a
+     * class's annotations, or implicitly via introspection, it is returned.
+     * Otherwise, if this class is a Faces component class and implements
+     * {@link jakarta.faces.component.ValueHolder}, the {@code valueChange} event
+     * is returned if it is defined; if it implements (@link
+     * jakarta.faces.component.ActionSource}, the {@code action} event is returned
+     * if it is defined.
+     * @return EventInfo
+     */
+    public abstract EventInfo getDefaultEventInfo();
+
+    /**
+     * Returns the fully qualified name of this class.
+     * @return String
+     */
+    public String getQualifiedName() {
+        return getPackageName() + "." + getClassName();
+    }
+
+    /**
+     * Returns true if the fully qualified name specified belongs to a class or
+     * interface that is a super class or super interface of this class.
+     * @param qualifiedClassName type to test
+     * @return {@code true} if the class represented by this instance can be
+     * assigned to the given class name, {@code false} otherwise
+     */
+    public abstract boolean isAssignableTo(String qualifiedClassName);
+
+    /**
+     * Returns a unique, generated key for the property specified, suitable for
+     * use as a key in a properties resource bundle file, if the property
+     * corresponds to a localizable annotation element.For example, the property
+     * {@link DeclaredComponentInfo#getDisplayName}) corresponds to the
+     * localizable annotation element
+     * {@link com.sun.faces.Component#displayName} so a unique key for it may be
+     * generated by calling<pre>
+     *    String key = declaredComponentInfo.getKey("displayName");
+     * </pre> If the specified property does not correspond to a localizable
+     * annotation, returns null. If the specified property does not exist,
+     * throws {@link
+     * java.lang.NoSuchMethodException}. Only properties of type
+     * {@link java.lang.String} are supported.
+     *
+     * @param propertyName property name to get the key of
+     * @return String
+     * @throws java.lang.NoSuchMethodException if the method is not found
+     */
+    public String getKey(final String propertyName)
+            throws NoSuchMethodException {
+
+        String methodName = "get" + propertyName.substring(0, 1).toUpperCase()
+                + propertyName.substring(1);
+        this.getClass().getMethod(methodName);
+        String baseName = this.getClassName();
+        return baseName + "_" + propertyName;
+    }
+
+    /**
+     * Returns a set of the names of all public methods accessible through this
+     * class, whether declared by it, or inherited.
+     * @return {@code Set<String>}
+     */
+    abstract Set<String> getMethodNames();
+
+    /**
+     * This implementation tests the equality using the class name and the
+     * package name.
+     * @param obj object to test equality against this instance
+     * @return {@code true} if equal, {@code false} otherwise
+     */
+    @Override
+    public boolean equals(final Object obj) {
+        if (!(obj instanceof ClassInfo)) {
+            return false;
+        }
+        ClassInfo that = (ClassInfo) obj;
+        if (this.getClassName() == null && that.getClassName() != null) {
+            return false;
+        }
+        if (!this.getClassName().equals(that.getClassName())) {
+            return false;
+        }
+        if (this.getPackageName() == null && that.getPackageName() != null) {
+            return false;
+        }
+        return this.getClassName().equals(that.getClassName())
+                && this.getPackageName().equals(that.getPackageName());
+    }
+
+    /**
+     * This implementation uses the class name and the package name to compute
+     * the hash code of this instance.
+     * @return hash code
+     */
+    @Override
+    @SuppressWarnings("checkstyle:magicnumber")
+    public int hashCode() {
+        int hash = 3;
+        String className = this.getClassName();
+        String packageName = this.getPackageName();
+        hash = 31 * hash;
+        if (className != null) {
+            hash = hash + className.hashCode();
+        }
+        hash = 31 * hash;
+        if (packageName != null) {
+            hash = hash + packageName.hashCode();
+        }
+        return hash;
+    }
+}

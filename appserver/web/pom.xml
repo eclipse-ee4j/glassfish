@@ -40,7 +40,6 @@
         <module>jstl-connector</module>
         <module>jersey-mvc-connector</module>
         <module>jersey-ejb-component-provider</module>
-        <module>jsf-connector</module>
         <module>jspcaching-connector</module>
         <module>gui-plugin-common</module>
         <module>web-glue</module>

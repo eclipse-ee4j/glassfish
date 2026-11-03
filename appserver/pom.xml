@@ -75,7 +75,7 @@
 
         <!-- MicroProfile Config -->
         <microprofile.config-api.version>3.1.2</microprofile.config-api.version>
-        <helidon-config.version>4.5.5</helidon-config.version>
+        <helidon-config.version>4.5.6</helidon-config.version>
 
         <!-- MicroProfile Health -->
         <!-- WARN: Requires patching of the manifest! -->
@@ -92,8 +92,8 @@
 
         <!-- Admin console components -->
         <jsf-ext.version>0.2</jsf-ext.version>
-        <woodstock.version>6.0.3</woodstock.version>
         <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
+        <commons-fileupload2.version>2.0.0-M5</commons-fileupload2.version>
         <woodstock-json.version>2.0</woodstock-json.version>
 
         <!-- Other -->
@@ -305,11 +305,6 @@
                 <artifactId>org.eclipse.persistence.json</artifactId>
                 <version>${eclipselink.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.eclipse.persistence</groupId>
-                <artifactId>org.eclipse.persistence.asm</artifactId>
-                <version>${eclipselink.asm.version}</version>
-            </dependency>
 
             <!-- Jakarta Transactions -->
             <dependency>
@@ -428,7 +423,7 @@
             <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
-                <version>1.22.1</version>
+                <version>1.23.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -555,23 +550,9 @@
 
             <!-- Admin console components -->
             <dependency>
-                <groupId>org.glassfish.woodstock</groupId>
+                <groupId>org.glassfish.main.admingui</groupId>
                 <artifactId>woodstock-webui-jsf</artifactId>
-                <version>${woodstock.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.sun.faces.extensions</groupId>
-                        <artifactId>jsf-extensions-common</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.faces.extensions</groupId>
-                        <artifactId>jsf-extensions-dynamic-faces</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>javax.help</groupId>
-                        <artifactId>javahelp</artifactId>
-                    </exclusion>
-                </exclusions>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.main.admingui</groupId>
@@ -584,19 +565,29 @@
                 <version>${woodstock-json.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.woodstock.external</groupId>
+                <groupId>org.glassfish.main.admingui</groupId>
                 <artifactId>dojo</artifactId>
-                <version>${woodstock.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish.woodstock.external</groupId>
+                <groupId>org.glassfish.main.admingui</groupId>
                 <artifactId>prototype</artifactId>
-                <version>${woodstock.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>dataprovider</artifactId>
                 <version>${woodstock-dataprovider.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-fileupload2-core</artifactId>
+                <version>${commons-fileupload2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
+                <version>${commons-fileupload2.version}</version>
             </dependency>
 
             <!-- HK2 -->

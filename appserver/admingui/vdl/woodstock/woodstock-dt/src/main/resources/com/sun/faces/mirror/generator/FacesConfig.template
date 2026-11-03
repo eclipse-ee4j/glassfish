@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This file was generated automatically on ${date}. -->
+
+<faces-config
+    xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+    version="4.0">
+
+    <application>
+#foreach ($name in $javaeeResolverNameSet)
+        <el-resolver>${name}</el-resolver>
+#end
+    </application>
+#foreach ($componentInfo in $componentInfoSet)
+    <component>
+        <display-name>${componentInfo.displayName}</display-name>
+        <component-type>${componentInfo.type}</component-type>
+        <component-class>${componentInfo.qualifiedName}</component-class>
+    </component>
+#end
+    <render-kit>
+#foreach ($rendererInfo in $rendererInfoSet)
+#foreach ($rendering in $rendererInfo.getRenderings())
+#foreach ($componentFamily in $rendering.componentFamilies)
+        <renderer>
+            <component-family>${componentFamily}</component-family>
+            <renderer-type>${rendering.rendererType}</renderer-type>
+            <renderer-class>${rendererInfo.qualifiedName}</renderer-class>
+        </renderer>
+#end
+#end
+#end
+    </render-kit>
+</faces-config>

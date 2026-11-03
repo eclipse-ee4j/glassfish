@@ -96,12 +96,12 @@
                             !io.helidon.inject.runtime,*
                         </Import-Package>
 
-                        <!-- A list of packages that are exposed to classes outside the bundle -->
-                        <Export-Package>
-                            io.helidon.common.config,
-                            io.helidon.config,
-                            io.helidon.config.mp,
-                        </Export-Package>
+                        <!--
+                            Applications only use the MicroProfile Config API, which another bundle exports.
+                            The converters are in io.helidon.config.mp; applications must be able to load them
+                            to deserialize a converter (MicroProfile Config TCK ConverterTest).
+                        -->
+                        <Export-Package>io.helidon.config.mp</Export-Package>
 
                         <!-- A list of dependencies to include in the bundle (as they're not native OSGI bundles) -->
                         <Embed-Dependency>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,9 +36,9 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 import static com.sun.enterprise.admin.launcher.GFLauncher.LaunchType.fake;
-import static com.sun.enterprise.admin.launcher.GFLauncherLogger.COMMAND_LINE;
 import static com.sun.enterprise.util.OS.isDarwin;
 import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
@@ -219,8 +219,6 @@ public abstract class GFLauncher {
             throw e;
         } catch (Exception e) {
             throw new GFLauncherException(e);
-        } finally {
-            GFLauncherLogger.removeLogFileHandler();
         }
     }
 
@@ -266,10 +264,6 @@ public abstract class GFLauncher {
 
         // Run the glassFishProcess and attach Stream Drainers
         try {
-            // We have to abandon server.log file to avoid file locking issues on Windows.
-            // From now on the server.log file is owned by the server, not by launcher.
-            GFLauncherLogger.removeLogFileHandler();
-
             // Startup GlassFish
             glassFishProcess = processBuilder.start();
 
@@ -320,9 +314,28 @@ public abstract class GFLauncher {
     }
 
 
+    /**
+     * Creates the parent directory of the server's log file, so JVM options can refer to it
+     * (ie. <code>-Xlog:gc:file=${com.sun.aas.instanceRoot}/logs/gc.log</code>).
+     * The log file itself is owned by the server, the launcher never writes to it.
+     *
+     * @param logFile the server's log file
+     */
+    static void createLogDirectory(Path logFile) {
+        if (logFile == null || logFile.getParent() == null) {
+            return;
+        }
+        try {
+            Files.createDirectories(logFile.getParent());
+        } catch (IOException e) {
+            LOG.log(WARNING, () -> "Could not create the directory for the server log file " + logFile, e);
+        }
+    }
+
     private void logCommandLine() {
         if (!isFakeLaunch()) {
-            GFLauncherLogger.info(COMMAND_LINE, commandLine.toString("\n"));
+            // The server logs its command line itself, StartServerHelper prints it if the start fails.
+            LOG.log(DEBUG, () -> "JVM invocation command line:\n" + commandLine.toString("\n"));
         }
     }
 

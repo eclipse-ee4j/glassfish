@@ -234,7 +234,7 @@ class GlassFishMainLauncher extends GFLauncher {
 
         adminFileRealmKeyFile = resolveAdminFileRealmKeyFile(domainXML, resolver);
         logFile = resolveLogFile(domainXML.getLogFilename(), callerParameters, resolver);
-        GFLauncherLogger.addLogFileHandler(logFile);
+        createLogDirectory(logFile);
 
         javaExe = resolveJavaExecutable();
 

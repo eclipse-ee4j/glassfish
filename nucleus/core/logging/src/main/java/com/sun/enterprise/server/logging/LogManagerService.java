@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2024 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -32,8 +32,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -124,6 +128,35 @@ public class LogManagerService implements org.glassfish.internal.api.LogManager 
         configureFileMonitoring(loggingPropertiesFile);
         LOG.config("LogManagerService completed successfuly ...");
         LOG.log(Level.INFO, LogFacade.GF_VERSION_INFO, Version.getProductIdInfo());
+        // Embedded GlassFish runs in the user's JVM, its command line is not ours to publish.
+        LOG.log(env.isEmbedded() ? Level.FINE : Level.INFO,
+            () -> "JVM invocation command line:\n" + String.join("\n", getJvmCommandLine()));
+    }
+
+
+    /**
+     * Reconstructs the command line of the current JVM. The launcher used to log it to the server
+     * log file before the server started, which mixed its own log format into the server's file.
+     *
+     * @return the java executable, JVM options, module path, class path, main class and its arguments.
+     */
+    private static List<String> getJvmCommandLine() {
+        final List<String> commandLine = new ArrayList<>();
+        commandLine.add(ProcessHandle.current().info().command()
+            .orElseGet(() -> Path.of(System.getProperty("java.home"), "bin", "java").toString()));
+        // The module path is already included in the input arguments.
+        commandLine.addAll(ManagementFactory.getRuntimeMXBean().getInputArguments());
+        final String classPath = System.getProperty("java.class.path");
+        // "." is the default when no class path was set.
+        if (classPath != null && !classPath.isEmpty() && !".".equals(classPath)) {
+            commandLine.add("--class-path");
+            commandLine.add(classPath);
+        }
+        final String mainCommand = System.getProperty("sun.java.command");
+        if (mainCommand != null) {
+            commandLine.add(mainCommand);
+        }
+        return commandLine;
     }
 
 

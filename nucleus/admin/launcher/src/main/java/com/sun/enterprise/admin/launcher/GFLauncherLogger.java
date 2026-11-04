@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,10 +17,6 @@
 
 package com.sun.enterprise.admin.launcher;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,7 +26,6 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
 import org.glassfish.main.jdke.i18n.LocalStringsImpl;
-import org.glassfish.main.jul.formatter.ODLLogFormatter;
 import org.glassfish.main.jul.handler.SimpleLogHandler;
 
 import static java.util.logging.Level.FINE;
@@ -40,7 +35,8 @@ import static java.util.logging.Level.WARNING;
 
 /**
  * Special logger for launchers used to start server in separate JVMs.
- * After that the launcher instance dies, but first it must close all ouputs, specially log files.
+ * The launcher never writes to the server's log file - the server owns it and logs
+ * its own JVM command line using its own logging configuration.
  *
  * @author bnevins
  */
@@ -60,7 +56,6 @@ public class GFLauncherLogger {
     private final static Logger LOG;
     private final static LocalStringsImpl strings = new LocalStringsImpl(GFLauncherLogger.class);
     private static final Handler HANDLER_STDOUT;
-    private static FileHandler logfileHandler;
 
     static {
         LOG = Logger.getLogger(LOGGER_NAME, SHARED_LOGMESSAGE_RESOURCE);
@@ -80,9 +75,6 @@ public class GFLauncherLogger {
 
     @LogMessageInfo(message = "Could not locate the flashlight agent here: {0}", comment = "catastrophic error", cause = "see message", action = "Find the agent file.", level = "SEVERE")
     public static final String NO_FLASHLIGHT_AGENT = "NCLS-GFLAUNCHER-00003";
-
-    @LogMessageInfo(message = "JVM invocation command line:\n{0}", comment = "Routine Information", cause = "NA", action = "NA", level = "INFO")
-    public static final String COMMAND_LINE = "NCLS-GFLAUNCHER-00005";
 
     private GFLauncherLogger() {
     }
@@ -110,40 +102,4 @@ public class GFLauncherLogger {
     static void setConsoleLevel(Level level) {
         HANDLER_STDOUT.setLevel(level);
     }
-
-
-    /**
-     * IMPORTANT! The server's logfile is added to the *local* LOG.
-     * The files are kept open by the handler, so don't forget to close the handler
-     * calling {@link #removeLogFileHandler()}.
-     *
-     * @param logFile The logfile
-     * @throws GFLauncherException if the info object has not been setup
-     */
-    static void addLogFileHandler(Path logFile) throws GFLauncherException {
-        try {
-            if (logFile == null || logfileHandler != null) {
-                return;
-            }
-            Files.createDirectories(logFile.getParent());
-            logfileHandler = new FileHandler(logFile.toString(), true);
-            logfileHandler.setFormatter(new ODLLogFormatter());
-            logfileHandler.setLevel(INFO);
-            LOG.addHandler(logfileHandler);
-        } catch (IOException e) {
-            // should be seen in verbose and watchdog modes for debugging
-            e.printStackTrace();
-        }
-
-    }
-
-    static void removeLogFileHandler() {
-        FileHandler handler = logfileHandler;
-        logfileHandler = null;
-        if (handler != null) {
-            LOG.removeHandler(handler);
-            handler.close();
-        }
-    }
-
 }

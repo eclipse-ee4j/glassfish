@@ -133,7 +133,7 @@ class GFEmbeddedLauncher extends GFLauncher {
 
         File logsDir = new File(domainDir, "logs");
         logFile = new File(logsDir, "server.log").toPath().toAbsolutePath();
-        GFLauncherLogger.addLogFileHandler(logFile);
+        createLogDirectory(logFile);
 
         setCommandLine(prepareCommandLine());
     }

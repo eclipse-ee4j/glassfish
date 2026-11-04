@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+
+<!-- This file was generated automatically on ${date}. -->
+
+## TODO Extract javadoc for taglib descriptions
+    
+<facelet-taglib version="4.0"
+                xmlns="https://jakarta.ee/xml/ns/jakartaee"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facelettaglibrary_4_0.xsd">
+    <namespace>${namespace}</namespace>
+    <short-name>${namespacePrefix}</short-name>
+#foreach ($componentInfo in $componentInfoSet)
+#if ($componentInfo.isTag())
+    <tag>
+        <tag-name>${componentInfo.tagName}</tag-name>
+        <component>
+            <description>
+                <![CDATA[
+                    ${componentInfo.tagDescription}
+                ]]>
+            </description>
+            <component-type>${componentInfo.type}</component-type>
+            <renderer-type>${componentInfo.tagRendererType}</renderer-type>
+        </component>
+#*
+        <attribute>
+            <description>
+                A ValueExpression that resolves to the UIComponent that corresponds
+                to this tag. This binding allows the Java bean that contains the UIComponent
+                to manipulate the UIComponent, its properties, and its children.
+            </description>
+            <name>binding</name>
+            <required>false</required>
+            <type>${componentInfo.qualifiedName}</type>
+        </attribute>
+#foreach ($propertyInfo in $componentInfo.propertyInfos)
+#if ($propertyInfo.name == 'id' && $propertyInfo.attributeInfo)
+        <attribute>
+            <name>${propertyInfo.attributeInfo.name}</name>
+            <required>false</required>
+            <type>${propertyInfo.type}</type>
+        </attribute>
+#elseif ($propertyInfo.attributeInfo)
+        <attribute>
+#if ($propertyInfo.attributeInfo.description)
+            <description><![CDATA[${propertyInfo.attributeInfo.description}]]></description>
+#end
+            <name>${propertyInfo.attributeInfo.name}</name>
+#if ($propertyInfo.attributeInfo.isRequired())
+            <required>true</required>
+#else
+            <required>false</required>
+#end
+#if ($propertyInfo.type == 'jakarta.el.MethodExpression')
+#if ($propertyInfo.attributeInfo.methodSignature)
+            <method-signature>${propertyInfo.attributeInfo.methodSignature}</method-signature>
+#else
+            <type>${propertyInfo.type}</type>
+#end
+#end##if ($propertyInfo.type == 'jakarta.el.MethodExpression')
+        </attribute>
+#end##if ($propertyInfo.attributeInfo)
+#end##foreach ($propertyInfo in $componentInfo.propertyInfos)
+
+#if ($componentInfo.inheritedPropertyInfos.size() > 0)
+        <!-- Inherited properties -->
+#end
+#foreach ($propertyInfo in $componentInfo.inheritedPropertyInfos)
+#if ($propertyInfo.name == 'id' && $propertyInfo.attributeInfo)
+        <attribute>
+            <name>${propertyInfo.attributeInfo.name}</name>
+            <required>false</required>
+            <type>${propertyInfo.type}</type>
+        </attribute>
+#elseif ($propertyInfo.attributeInfo)
+        <attribute>
+#if ($propertyInfo.attributeInfo.description)
+            <description><![CDATA[${propertyInfo.attributeInfo.description}]]></description>
+#end
+            <name>${propertyInfo.attributeInfo.name}</name>
+#if ($propertyInfo.attributeInfo.isRequired())
+            <required>true</required>
+#else
+            <required>false</required>
+#end
+#if ($propertyInfo.type == 'jakarta.el.MethodExpression')
+#if ($propertyInfo.attributeInfo.methodSignature)
+            <method-signature>${propertyInfo.attributeInfo.methodSignature}</method-signature>
+#else
+            <type>${propertyInfo.type}</type>
+#end
+#end##if ($propertyInfo.type == 'jakarta.el.MethodExpression')
+        </attribute>
+#end##if ($propertyInfo.attributeInfo)
+#end##foreach ($propertyInfo in $componentInfo.inheritedPropertyInfos)
+*#
+    </tag>
+#end
+#end
+</facelet-taglib>

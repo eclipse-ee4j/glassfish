@@ -147,7 +147,6 @@
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>4.0.0-M7</jakarta.persistence-api.version>
         <eclipselink.version>6.0.0-SNAPSHOT</eclipselink.version>
-        <eclipselink.asm.version>9.10.0</eclipselink.asm.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.2.0-M1</jakarta.mail-api.version>
@@ -161,8 +160,8 @@
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>5.0.0-M5</jakarta.faces-api.version>
-        <mojarra.version>5.0.0-M5</mojarra.version>
+        <jakarta.faces-api.version>5.0.0-M11</jakarta.faces-api.version>
+        <mojarra.version>5.0.0-M11</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.3.0-M2</jakarta.websocket-api.version>
@@ -213,13 +212,13 @@
         <jakarta.jsonp-api.version>2.1.3</jakarta.jsonp-api.version>
         <parsson.version>1.1.9</parsson.version>
         <parsson-media.version>1.1.9</parsson-media.version>
-        <jakarta.json.bind-api.version>3.1.0-M1</jakarta.json.bind-api.version>
-        <yasson.version>3.0.5</yasson.version>
+        <jakarta.json.bind-api.version>3.1.0-M2</jakarta.json.bind-api.version>
+        <yasson.version>3.1.0-M2</yasson.version>
 
         <!-- Jakarta Pages and Jakarta Standard Tag Library -->
         <jakarta.pages-api.version>4.1.0-M2</jakarta.pages-api.version>
         <jstl-api.version>3.0.2</jstl-api.version>
-        <wasp.version>4.0.0</wasp.version>
+        <wasp.version>4.0.4</wasp.version>
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.1</jakarta.mvc-api.version>
@@ -228,7 +227,7 @@
         <!-- Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.4</xmlsec.version>
         <woodstox.version>7.3.0</woodstox.version>
-        <stax2-api.version>4.3.1</stax2-api.version>
+        <stax2-api.version>4.3.2</stax2-api.version>
 
         <!-- GlassFish Components -->
         <grizzly.version>5.0.3</grizzly.version>
@@ -254,22 +253,22 @@
         <jboss.logging.annotation.version>3.0.4.Final</jboss.logging.annotation.version>
         <jboss.logging.version>3.6.3.Final</jboss.logging.version>
         <javassist.version>3.33.0-GA</javassist.version>
-        <asm.version>9.10.1</asm.version>
-        <jsch.version>2.28.7</jsch.version>
+        <asm.version>9.11.1</asm.version>
+        <jsch.version>2.28.8</jsch.version>
         <antlr2.version>2.7.7</antlr2.version>
         <antlr2-repackaged.version>2.7.8</antlr2-repackaged.version>
         <antlr4.version>4.13.2</antlr4.version>
         <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
         <ant.version>1.10.18</ant.version>
         <ant-osgi.version>1.10.18</ant-osgi.version>
-        <jackson.version>2.22.3</jackson.version>
+        <jackson.version>2.22.4</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
-        <fasterxml.classmate.version>1.7.3</fasterxml.classmate.version>
+        <fasterxml.classmate.version>1.8.0</fasterxml.classmate.version>
         <stax-api.version>1.0-2</stax-api.version>
         <jettison.version>1.5.7</jettison.version>
         <mimepull.version>1.11.0</mimepull.version>
         <jna.version>5.19.1</jna.version>
-        <jline.version>4.4.6</jline.version>
+        <jline.version>4.4.8</jline.version>
 
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
 
@@ -281,8 +280,8 @@
         <shrinkwrap.version>3.3.7</shrinkwrap.version>
         <testcontainers.version>2.0.5</testcontainers.version>
 
-        <surefire.version>3.6.0</surefire.version>
-        <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
+        <surefire.version>3.6.1</surefire.version>
+        <junit5-surefire-tree-reporter.version>2.2.0</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -867,7 +866,7 @@
             <dependency>
                 <groupId>org.htmlunit</groupId>
                 <artifactId>htmlunit</artifactId>
-                <version>5.5.0</version>
+                <version>5.7.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -2217,13 +2216,30 @@
                                             </ignoreVersions>
                                         </rule>
 
+                                        <!--
+                                            Helidon 27 and later follow the JDK version, need that JDK (27 needs Java 27)
+                                            and dropped MicroProfile. Ignore them while GlassFish targets Java 21.
+                                            A groupId without wildcards also matches its subgroups (io.helidon.common, ...);
+                                            a "*" would lose to the catch-all rule above.
+                                        -->
                                         <rule>
-                                            <groupId>io.helidon.microprofile.config</groupId>
+                                            <groupId>io.helidon</groupId>
                                             <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>range</type>
-                                                    <version>[5.0,)</version>
+                                                    <!-- 27-alpha is the lowest 27 version, so this also covers the 27 milestones -->
+                                                    <version>[27-alpha,)</version>
                                                 </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <!--
+                                            MicroProfile now releases separately (helidon-io/helidon-microprofile),
+                                            so keep showing its new final releases here.
+                                        -->
+                                        <rule>
+                                            <groupId>io.helidon.microprofile.config</groupId>
+                                            <ignoreVersions>
                                                 <ignoreVersion>
                                                     <type>regex</type>
                                                     <version>.*-M.*</version>
@@ -2560,7 +2576,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.15</jacoco.version>
+                <jacoco.version>0.8.16</jacoco.version>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

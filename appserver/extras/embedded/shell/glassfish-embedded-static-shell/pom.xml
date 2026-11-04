@@ -688,11 +688,6 @@
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.asm</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>
             <optional>true</optional>
         </dependency>
@@ -948,12 +943,6 @@
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>gf-web-connector</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.web</groupId>
-            <artifactId>jsf-connector</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

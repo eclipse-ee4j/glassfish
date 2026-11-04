@@ -77,11 +77,6 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
-            <artifactId>jsf-connector</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.web</groupId>
             <artifactId>jspcaching-connector</artifactId>
             <version>${project.version}</version>
         </dependency>

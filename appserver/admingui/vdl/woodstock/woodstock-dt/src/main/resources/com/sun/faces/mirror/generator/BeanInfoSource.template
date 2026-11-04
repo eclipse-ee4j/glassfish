@@ -1,0 +1,389 @@
+package ${beanInfoPackage};
+
+import java.awt.Image;
+import java.beans.*;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.ResourceBundle;
+
+import com.sun.rave.designtime.CategoryDescriptor;
+import com.sun.rave.designtime.Constants;
+import com.sun.rave.designtime.faces.FacetDescriptor;
+import com.sun.rave.designtime.markup.AttributeDescriptor;
+
+/**
+ * This file was generated automatically on ${date}.
+ */
+
+abstract class ${beanInfoClass} extends SimpleBeanInfo {
+    
+    /**
+     * The class of the component (bean) to which this BeanInfo corresponds.
+     */
+    protected Class beanClass = ${componentInfo.qualifiedName}.class;
+
+#if ($resourceBundle)
+    protected static ResourceBundle resourceBundle =
+        ResourceBundle.getBundle("${resourceBundle}", Locale.getDefault(), ${beanInfoClass}.class.getClassLoader());
+#end
+    
+    private BeanDescriptor beanDescriptor;
+    
+
+    /**
+     * Return the <code>BeanDescriptor</code> for this bean.
+     */
+    public BeanDescriptor getBeanDescriptor() {
+
+        if (beanDescriptor == null) {
+            beanDescriptor = new BeanDescriptor(this.beanClass);
+#if ($resourceBundle) 
+            beanDescriptor.setDisplayName(resourceBundle.getString("${componentInfo.getKey('displayName')}"));
+            beanDescriptor.setShortDescription(resourceBundle.getString("${componentInfo.getKey('shortDescription')}"));
+#else
+            beanDescriptor.setDisplayName("${componentInfo.displayName}");
+#if ($componentInfo.shortDescription)
+            beanDescriptor.setShortDescription("${componentInfo.shortDescription}");
+#end
+#end
+            beanDescriptor.setValue(Constants.BeanDescriptor.FACET_DESCRIPTORS,
+                    this.getFacetDescriptors());
+#if ($componentInfo.helpKey)
+            beanDescriptor.setValue(Constants.BeanDescriptor.HELP_KEY, "${componentInfo.helpKey}");
+#end
+            beanDescriptor.setValue(Constants.BeanDescriptor.INSTANCE_NAME, "${componentInfo.instanceName}");
+#if ($componentInfo.isContainer())
+            beanDescriptor.setValue(Constants.BeanDescriptor.IS_CONTAINER, Boolean.TRUE);
+#end
+            beanDescriptor.setValue(Constants.BeanDescriptor.PROPERTIES_HELP_KEY,"${componentInfo.propertiesHelpKey}");
+            beanDescriptor.setValue(Constants.BeanDescriptor.PROPERTY_CATEGORIES,
+                    this.getCategoryDescriptors());
+#if ($componentInfo.isTag())
+            beanDescriptor.setValue(Constants.BeanDescriptor.TAG_NAME, "${componentInfo.tagName}");
+            beanDescriptor.setValue(Constants.BeanDescriptor.TAGLIB_PREFIX, "${namespacePrefix}");
+            beanDescriptor.setValue(Constants.BeanDescriptor.TAGLIB_URI, "${namespace}");
+#end
+        }
+        return beanDescriptor;
+        
+    }
+    
+    
+    private int defaultPropertyIndex = -2;
+    
+    /**
+     * Return the index of the default property, or -1 if there is no default property.
+     */
+    public int getDefaultPropertyIndex() {
+        if (defaultPropertyIndex == -2) {
+            defaultPropertyIndex = -1;
+#if ($componentInfo.defaultPropertyInfo)
+            String defaultPropertyName = "${componentInfo.defaultPropertyInfo.name}";
+            PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors();
+            if (propertyDescriptors != null) {
+                for (int i = 0; i < propertyDescriptors.length; i++) {
+                    if (defaultPropertyName.equals(propertyDescriptors[i].getName())) {
+                        defaultPropertyIndex = i;
+                        break;
+                    }
+                }
+            }
+#end
+        }
+        return defaultPropertyIndex;
+    }
+    
+    private int defaultEventIndex = -2;
+    
+    /**
+     * Return the index of the default event, or -1 if there is no default event.
+     */
+    public int getDefaultEventIndex() {
+        if (defaultEventIndex == -2) {
+            defaultEventIndex = -1;
+#if ($componentInfo.defaultEventInfo)
+            String defaultEventName = "${componentInfo.defaultEventInfo.name}";
+            EventSetDescriptor[] eventDescriptors = getEventSetDescriptors();
+            if (eventDescriptors != null) {
+                for (int i = 0; i < eventDescriptors.length; i++) {
+                    if (defaultEventName.equals(eventDescriptors[i].getName())) {
+                        defaultEventIndex = i;
+                        break;
+                    }
+                }
+            } 
+#end
+        }
+        return defaultEventIndex;
+    }
+
+    private CategoryDescriptor[] categoryDescriptors;
+    
+    /**
+     * Returns an array of <code>CategoryDescriptor</code>s, representing all
+     * property categories referenced by properties of this component.
+     */
+    protected CategoryDescriptor[] getCategoryDescriptors() {
+        if (categoryDescriptors == null) {
+            categoryDescriptors = new CategoryDescriptor[]{
+#foreach ($categoryInfo in $categoryInfoSet)
+                ${categoryInfo.fieldName},
+#end
+            };
+        }
+        return categoryDescriptors;
+    }
+    
+    private FacetDescriptor[] facetDescriptors;
+    
+    /**
+     * Returns an array of <code>FacetDescriptor</code>s for the component.
+     */
+    public FacetDescriptor[] getFacetDescriptors() {
+        if (facetDescriptors == null)
+            facetDescriptors = new FacetDescriptor[] {};
+        return facetDescriptors;
+    }
+    
+    
+    // The 16x16 color icon.
+    protected String iconFileName_C16 = "${componentInfo.className}_C16";
+    
+    // The 32x32 color icon.
+    private String iconFileName_C32 = "${componentInfo.className}_C32";
+    
+    // The 16x16 monochrome icon.
+    private String iconFileName_M16 = "${componentInfo.className}_M16";
+    
+    // The 32x32 monochrome icon.
+    private String iconFileName_M32 = "${componentInfo.className}_C32";
+    
+    /**
+     * Returns an appropriate image icon (if any) for the component.
+     */
+    public Image getIcon(int kind) {
+        String name;
+        switch (kind) {
+            case ICON_COLOR_16x16:
+                name = iconFileName_C16;
+                break;
+            case ICON_COLOR_32x32:
+                name = iconFileName_C32;
+                break;
+            case ICON_MONO_16x16:
+                name = iconFileName_M16;
+                break;
+            case ICON_MONO_32x32:
+                name = iconFileName_M32;
+                break;
+            default:
+                name = null;
+                break;
+        }
+        if (name == null)
+            return null;
+        Image image = loadImage(name + ".png");
+        if (image == null)
+            image = loadImage(name + ".gif");
+        return image;
+        
+    }
+    
+    
+    private PropertyDescriptor[] propertyDescriptors;
+    
+    /**
+     * Returns the <code>PropertyDescriptor</code>s for this component.
+     */
+    public PropertyDescriptor[] getPropertyDescriptors() {
+
+#if ($propertyInfoSet.size() > 0 || $fetchSuperClassPropertyInfo)
+        if (propertyDescriptors == null) {
+            try {
+                Map<String,PropertyDescriptor> propertyDescriptorMap = new HashMap<String,PropertyDescriptor>();
+                PropertyDescriptor propertyDescriptor;
+                AttributeDescriptor attributeDescriptor;
+                
+#if ($fetchSuperClassPropertyInfo)
+                // Super class is a component in this library, so bring in all property
+                // descriptors from the super class that have not been overridden in this
+                // class now, at run-time. Since property descriptors are mutable, make
+                // defensive copies of them.
+                BeanInfo superBeanInfo = Introspector.getBeanInfo(loadClass("${componentInfo.superClassInfo.qualifiedName}"));
+                for (PropertyDescriptor superPropertyDescriptor : superBeanInfo.getPropertyDescriptors()) {
+                    PropertyDescriptor duplicatePropertyDescriptor = new PropertyDescriptor(
+                            superPropertyDescriptor.getName(), 
+                            superPropertyDescriptor.getReadMethod(), 
+                            superPropertyDescriptor.getWriteMethod());
+                    duplicatePropertyDescriptor.setBound(superPropertyDescriptor.isBound());
+                    duplicatePropertyDescriptor.setConstrained(superPropertyDescriptor.isConstrained());
+                    duplicatePropertyDescriptor.setDisplayName(superPropertyDescriptor.getDisplayName());
+                    duplicatePropertyDescriptor.setExpert(superPropertyDescriptor.isExpert());
+                    duplicatePropertyDescriptor.setHidden(superPropertyDescriptor.isHidden());
+                    duplicatePropertyDescriptor.setPreferred(superPropertyDescriptor.isPreferred());
+                    duplicatePropertyDescriptor.setPropertyEditorClass(superPropertyDescriptor.getPropertyEditorClass());
+                    duplicatePropertyDescriptor.setShortDescription(superPropertyDescriptor.getShortDescription());
+                    Enumeration attributeEnumeration = superPropertyDescriptor.attributeNames();
+                    while (attributeEnumeration.hasMoreElements()) {
+                        String attribute = (String) attributeEnumeration.nextElement();
+                        duplicatePropertyDescriptor.setValue(attribute, superPropertyDescriptor.getValue(attribute));
+                    }
+                    propertyDescriptorMap.put(superPropertyDescriptor.getName(), duplicatePropertyDescriptor);
+                }
+#end
+
+#foreach ($propertyInfo in $propertyInfoSet)
+#if ($propertyInfo.declaringClassInfo.qualifiedName != $componentInfo.qualifiedName)
+                // Property declaration inherited from ${propertyInfo.declaringClassInfo.qualifiedName}
+#end
+#if ($propertyInfo.writeMethodName && $propertyInfo.readMethodName)
+                propertyDescriptor =
+                    new PropertyDescriptor("${propertyInfo.name}", this.beanClass, "${propertyInfo.readMethodName}", "${propertyInfo.writeMethodName}");
+#elseif ($propertyInfo.readMethodName)
+                propertyDescriptor =
+                    new PropertyDescriptor("${propertyInfo.name}", this.beanClass, "${propertyInfo.readMethodName}", null);
+#elseif ($propertyInfo.writeMethodName)
+                propertyDescriptor =
+                    new PropertyDescriptor("${propertyInfo.name}", this.beanClass, null, "${propertyInfo.writeMethodName}");
+#end
+#if ($propertyInfo.isHidden())
+                propertyDescriptor.setHidden(true);
+#end
+#if ($resourceBundle) 
+                propertyDescriptor.setDisplayName(resourceBundle.getString("${propertyInfo.getKey('displayName')}"));
+                propertyDescriptor.setShortDescription(resourceBundle.getString("${propertyInfo.getKey('shortDescription')}"));
+#else
+                propertyDescriptor.setDisplayName("${propertyInfo.displayName}");
+                propertyDescriptor.setShortDescription("${propertyInfo.shortDescription}");
+#end
+#if ($propertyInfo.attributeInfo)
+#set ($isRequired = "false")
+#if ($propertyInfo.attributeInfo.isRequired()) #set ($isRequired = "true") #end
+#set ($isBindable = "false")
+#if ($propertyInfo.attributeInfo.isBindable()) #set ($isBindable = "true") #end
+                attributeDescriptor = new AttributeDescriptor("${propertyInfo.attributeInfo.name}",${isRequired},null,${isBindable});
+                propertyDescriptor.setValue(Constants.PropertyDescriptor.ATTRIBUTE_DESCRIPTOR, attributeDescriptor);
+#end
+#if ($propertyInfo.categoryInfo)
+                propertyDescriptor.setValue(Constants.PropertyDescriptor.CATEGORY, ${propertyInfo.categoryInfo.fieldName});
+#end
+#if ($propertyInfo.editorClassName)
+                propertyDescriptor.setPropertyEditorClass(loadClass("${propertyInfo.editorClassName}"));
+#end
+                propertyDescriptorMap.put(propertyDescriptor.getName(), propertyDescriptor);
+
+#end ##foreach
+  
+                Collection<PropertyDescriptor> propertyDescriptorCollection = 
+                    propertyDescriptorMap.values();
+                propertyDescriptors =
+                    propertyDescriptorCollection.toArray(new PropertyDescriptor[propertyDescriptorCollection.size()]);
+
+            } catch (IntrospectionException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+#end ##if ($propertyInfoSet.size)
+        return propertyDescriptors;
+    }
+
+    private EventSetDescriptor[] eventSetDescriptors;
+
+    public EventSetDescriptor[] getEventSetDescriptors() {
+#if ($eventInfoSet.size() > 0)
+        if (eventSetDescriptors == null) {
+            try {
+                Map<String,EventSetDescriptor> eventSetDescriptorMap = new HashMap<String,EventSetDescriptor>();
+                EventSetDescriptor eventSetDescriptor;
+                PropertyDescriptor eventPropertyDescriptor;
+                
+#if ($fetchSuperClassEventInfo)
+                // Super class is a component in this library, so bring in all event set
+                // descriptors from the super class that have not been overridden in this
+                // class now, at run-time. Since event set descriptors are mutable, make
+                // defensive copies of them.
+                BeanInfo superBeanInfo = Introspector.getBeanInfo(loadClass("${componentInfo.superClassInfo.qualifiedName}"));
+                for (EventSetDescriptor superEventSetDescriptor : superBeanInfo.getEventSetDescriptors()) {
+                    EventSetDescriptor duplicateEventSetDescriptor = new EventSetDescriptor(
+                            superEventSetDescriptor.getName(), 
+                            superEventSetDescriptor.getListenerType(), 
+                            superEventSetDescriptor.getListenerMethods(),
+                            superEventSetDescriptor.getAddListenerMethod(),
+                            superEventSetDescriptor.getRemoveListenerMethod(),
+                            superEventSetDescriptor.getGetListenerMethod());
+                    duplicateEventSetDescriptor.setDisplayName(superEventSetDescriptor.getDisplayName());
+                    duplicateEventSetDescriptor.setExpert(superEventSetDescriptor.isExpert());
+                    duplicateEventSetDescriptor.setHidden(superEventSetDescriptor.isHidden());
+                    duplicateEventSetDescriptor.setInDefaultEventSet(superEventSetDescriptor.isInDefaultEventSet());
+                    duplicateEventSetDescriptor.setUnicast(superEventSetDescriptor.isUnicast());
+                    duplicateEventSetDescriptor.setPreferred(superEventSetDescriptor.isPreferred());
+                    duplicateEventSetDescriptor.setShortDescription(superEventSetDescriptor.getShortDescription());
+                    eventSetDescriptorMap.put(superEventSetDescriptor.getName(), duplicateEventSetDescriptor);
+                }
+#end
+
+#foreach ($eventInfo in $eventInfoSet)
+#if ($eventInfo.declaringClassInfo.qualifiedName != $componentInfo.qualifiedName)
+                // Event set declaration inherited from ${eventInfo.declaringClassInfo.qualifiedName}
+#end
+                eventSetDescriptor = new EventSetDescriptor("${eventInfo.name}",
+                    ${eventInfo.listenerClassName}.class,
+                    new Method[] {
+                        ${eventInfo.listenerClassName}.class.getMethod(
+                            "${eventInfo.listenerMethodName}", 
+                            new Class[] {#foreach ($name in $eventInfo.listenerMethodParameterClassNames)${name}.class, #end})
+                    },
+#if ($eventInfo.addListenerMethodName)
+                    ${componentInfo.className}.class.getMethod("${eventInfo.addListenerMethodName}", new Class[] {${eventInfo.listenerClassName}.class}),
+#else
+                    null,
+#end
+#if ($eventInfo.removeListenerMethodName)
+                    ${componentInfo.className}.class.getMethod("${eventInfo.removeListenerMethodName}", new Class[] {${eventInfo.listenerClassName}.class}));
+#else
+                    null);
+#end
+##TODO Generate event set descriptor with getListeners method name
+#if ($eventInfo.propertyInfo)
+                eventPropertyDescriptor = null;
+                for (PropertyDescriptor propertyDescriptor : this.getPropertyDescriptors()) {
+                    if (propertyDescriptor.getName().equals("${eventInfo.propertyInfo.name}")) {
+                        eventPropertyDescriptor = propertyDescriptor;
+                        break;
+                    }
+                }
+                eventSetDescriptor.setValue(Constants.EventSetDescriptor.BINDING_PROPERTY, eventPropertyDescriptor);
+#end
+                eventSetDescriptorMap.put(eventSetDescriptor.getName(), eventSetDescriptor);
+
+#end
+                Collection<EventSetDescriptor> eventSetDescriptorCollection = 
+                    eventSetDescriptorMap.values();
+                eventSetDescriptors =
+                    eventSetDescriptorCollection.toArray(new EventSetDescriptor[eventSetDescriptorCollection.size()]);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+#end##if ($eventInfoSet.size())
+        return eventSetDescriptors;
+    }
+    
+    /**
+     * Utility method that returns a class loaded by name via the class loader that 
+     * loaded this class.
+     */
+    private Class loadClass(java.lang.String name) {
+        try {
+            return Class.forName(name);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    
+}

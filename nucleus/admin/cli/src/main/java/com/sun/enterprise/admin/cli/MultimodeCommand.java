@@ -528,16 +528,14 @@ public class MultimodeCommand extends CLICommand {
             // XXX - this duplicates code in AsadminMain, refactor it
             switch (resultCode) {
                 case SUCCESS:
-                    if (!programOpts.isTerse()) {
-                        logger.fine(strings.get("CommandSuccessful", command));
-                    }
+                    AsadminOutput.message(programOpts.isTerse(), strings.get("CommandSuccessful", command));
                     break;
 
                 case ERROR:
                 case INVALID_COMMAND_ERROR:
                 case CONNECTION_ERROR:
                 default:
-                    logger.fine(strings.get("CommandUnSuccessful", command));
+                    AsadminOutput.message(programOpts.isTerse(), strings.get("CommandUnSuccessful", command));
                     break;
             }
             CLIUtil.writeCommandToDebugLog(programOpts.getCommandName() + "[multimode]", env, args, resultCode);

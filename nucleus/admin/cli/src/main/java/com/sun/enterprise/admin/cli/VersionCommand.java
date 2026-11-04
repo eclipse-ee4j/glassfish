@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2023, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -68,7 +68,7 @@ public class VersionCommand extends CLICommand {
                 version = cmd.executeAndReturnOutput("version");
             }
             version = version.trim(); // get rid of gratuitous newlines
-            logger.info(terse ? version : strings.get("version.remote", version));
+            AsadminOutput.result(isTerse() ? version : strings.get("version.remote", version));
         } catch (Exception e) {
             // suppress all output and infer that the server is not running
             printRemoteException(e);
@@ -80,18 +80,23 @@ public class VersionCommand extends CLICommand {
     private void invokeLocal() {
         String fv = Version.getProductIdInfo();
 
-        logger.info(terse ? fv : strings.get("version.local", fv));
+        AsadminOutput.result(isTerse() ? fv : strings.get("version.local", fv));
         if (verbose) {
-            logger.info(strings.get("version.local.java", Runtime.version()));
+            AsadminOutput.result(strings.get("version.local.java", Runtime.version()));
         }
     }
 
     private void printRemoteException(Exception e) {
-        logger.info(strings.get("remote.version.failed", programOpts.getHost(), programOpts.getPort() + ""));
+        AsadminOutput.message(isTerse(),
+            strings.get("remote.version.failed", programOpts.getHost(), programOpts.getPort() + ""));
         if (logger.isLoggable(Level.FINER)) {
-            logger.finer(e.getMessage());
+            logger.log(Level.FINER, e.getMessage(), e);
         } else {
-            logger.info(strings.get("remote.version.failed.debug", Environment.getDebugVar()));
+            AsadminOutput.message(isTerse(), strings.get("remote.version.failed.debug", Environment.getDebugVar()));
         }
+    }
+
+    private boolean isTerse() {
+        return terse || programOpts.isTerse();
     }
 }

@@ -144,7 +144,7 @@
                                     </exec>
 
                                     <if>
-                                        <isset property="jacoco.version" />
+                                        <isset property="jacoco.enabled" />
                                         <then>
                                             <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin" failonerror="true">
                                                 <arg value="create-jvm-options" />

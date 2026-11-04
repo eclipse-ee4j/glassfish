@@ -78,6 +78,31 @@
                     <artifactId>cyclonedx-maven-plugin</artifactId>
                     <version>2.9.3</version>
                 </plugin>
+                <plugin>
+                    <!--
+                        This POM doesn't inherit the version rules in nucleus/parent, so repeat the ones
+                        that apply to the plugins used here.
+                    -->
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>2.23.0</version>
+                    <configuration>
+                        <ruleSet>
+                            <rules>
+                                <!-- Maven 4 is only available as alpha/beta/rc, and its plugins need Maven 4 to run -->
+                                <rule>
+                                    <groupId>org.apache.maven</groupId>
+                                    <ignoreVersions>
+                                        <ignoreVersion>
+                                            <type>range</type>
+                                            <version>[4-alpha,)</version>
+                                        </ignoreVersion>
+                                    </ignoreVersions>
+                                </rule>
+                            </rules>
+                        </ruleSet>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

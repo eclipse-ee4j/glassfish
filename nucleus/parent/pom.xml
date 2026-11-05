@@ -160,8 +160,8 @@
         <jakarta.annotation-api.version>3.0.0</jakarta.annotation-api.version>
 
         <!-- Jakarta Faces -->
-        <jakarta.faces-api.version>5.0.0-M11</jakarta.faces-api.version>
-        <mojarra.version>5.0.0-M11</mojarra.version>
+        <jakarta.faces-api.version>5.0.0-M12</jakarta.faces-api.version>
+        <mojarra.version>5.0.0-M12</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <jakarta.websocket-api.version>2.3.0-M2</jakarta.websocket-api.version>
@@ -246,6 +246,8 @@
         <!-- Build plugins -->
         <command.security.maven.plugin.version>1.0.22</command.security.maven.plugin.version>
         <command.security.maven.plugin.isFailureFatal>true</command.security.maven.plugin.isFailureFatal>
+        <!-- Outside the jacoco profile so the versions plugin can resolve it; check jacoco.enabled to see if it's active -->
+        <jacoco.version>0.8.16</jacoco.version>
 
         <!-- 3rd party dependencies -->
         <commons-io.version>2.22.0</commons-io.version>
@@ -261,6 +263,9 @@
         <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
         <ant.version>1.10.18</ant.version>
         <ant-osgi.version>1.10.18</ant-osgi.version>
+        <!-- Since Jackson 2.20, jackson-annotations uses minor-only versions. 
+            Jackson 2.22.x uses jackson-annotations 2.22.
+            See FasterXML jackson-bom for the official version alignment. -->
         <jackson.version>2.22.4</jackson.version>
         <jackson-annotations.version>2.22</jackson-annotations.version>
         <fasterxml.classmate.version>1.8.0</fasterxml.classmate.version>
@@ -630,18 +635,18 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>7.0.5</version>
+                <version>8.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.framework</artifactId>
-                <version>7.0.5</version>
+                <version>8.0.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>5.0.18</version>
+                <version>5.1.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -656,7 +661,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.gogo.runtime</artifactId>
-                <version>1.1.6</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -676,7 +681,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.configadmin</artifactId>
-                <version>1.9.26</version>
+                <version>1.10.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -1227,7 +1232,7 @@
                         <dependency>
                             <groupId>com.puppycrawl.tools</groupId>
                             <artifactId>checkstyle</artifactId>
-                            <version>13.11.0</version>
+                            <version>14.4.0</version>
                         </dependency>
                     </dependencies>
                     <executions>
@@ -1454,7 +1459,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.22.0</version>
+                    <version>2.23.0</version>
                     <executions>
                         <execution>
                             <id>default-cli</id>
@@ -2286,6 +2291,36 @@
                                             </ignoreVersions>
                                         </rule>
 
+                                        <!--
+                                            The 3.0 release candidates were abandoned: Jackson 3 (tools.jackson)
+                                            kept using jackson-annotations 2.x.
+                                        -->
+                                        <rule>
+                                            <groupId>com.fasterxml.jackson.core</groupId>
+                                            <artifactId>jackson-annotations</artifactId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>regex</type>
+                                                    <version>3\.0-rc.*</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
+                                        <!--
+                                            Maven 4 is only available as alpha/beta/rc, and its plugins and APIs need
+                                            Maven 4 to run. The build requires Maven 3 (see the enforcer rule below).
+                                            Also matches subgroups such as org.apache.maven.plugins.
+                                        -->
+                                        <rule>
+                                            <groupId>org.apache.maven</groupId>
+                                            <ignoreVersions>
+                                                <ignoreVersion>
+                                                    <type>range</type>
+                                                    <version>[4-alpha,)</version>
+                                                </ignoreVersion>
+                                            </ignoreVersions>
+                                        </rule>
+
                                     </rules>
                                 </ruleSet>
                             </configuration>
@@ -2576,7 +2611,7 @@
             <id>jacoco</id>
             <properties>
                 <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
-                <jacoco.version>0.8.16</jacoco.version>
+                <jacoco.enabled>true</jacoco.enabled>
                 <maven.test.failure.ignore>true</maven.test.failure.ignore>
                 <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
             </properties>

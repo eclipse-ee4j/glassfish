@@ -79,7 +79,7 @@ public class ListPasswordAlias implements AdminCommand {
     private DomainScopedPasswordAliasStore domainPasswordAliasStore;
 
     /**
-     * Executes the command with the command parameters passed as Properties where the keys are paramter names and the values the
+     * Executes the command with the command parameters passed as Properties where the keys are parameter names and the values the
      * parameter values
      *
      * @param context information

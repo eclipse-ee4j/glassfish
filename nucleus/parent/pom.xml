@@ -146,7 +146,7 @@
 
         <!-- Jakarta Persistence -->
         <jakarta.persistence-api.version>4.0.0-M7</jakarta.persistence-api.version>
-        <eclipselink.version>6.0.0-SNAPSHOT</eclipselink.version>
+        <eclipselink.version>6.0.0-M1</eclipselink.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.2.0-M1</jakarta.mail-api.version>
@@ -263,7 +263,7 @@
         <!-- Keep Ant versions in separated properties to be able to test snapshot while keeping antrun runnable -->
         <ant.version>1.10.18</ant.version>
         <ant-osgi.version>1.10.18</ant-osgi.version>
-        <!-- Since Jackson 2.20, jackson-annotations uses minor-only versions. 
+        <!-- Since Jackson 2.20, jackson-annotations uses minor-only versions.
             Jackson 2.22.x uses jackson-annotations 2.22.
             See FasterXML jackson-bom for the official version alignment. -->
         <jackson.version>2.22.4</jackson.version>

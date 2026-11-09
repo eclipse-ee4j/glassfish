@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,6 +17,7 @@
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
+import com.sun.enterprise.admin.cli.AsadminOutput;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainsManager;
@@ -75,14 +76,14 @@ public final class ListDomainsCommand extends LocalDomainCommand {
                         DomainInfo di = getStatus(dn);
                         cf.addRow(new Object[] { dn, di.getAdminEndpoints(), di.status, di.restartRequired });
                     }
-                    logger.info(cf.toString());
+                    AsadminOutput.result(cf.toString());
                 } else {
                     for (String dn : domainsList) {
-                        logger.info(getStatus(dn).statusMsg);
+                        AsadminOutput.result(getStatus(dn).statusMsg);
                     }
                 }
             } else {
-                logger.fine(strings.get("NoDomainsToList"));
+                AsadminOutput.message(programOpts.isTerse(), strings.get("NoDomainsToList"));
             }
         } catch (Exception e) {
             throw new CommandException(e.getLocalizedMessage(), e);

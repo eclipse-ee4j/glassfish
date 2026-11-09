@@ -82,7 +82,7 @@ public abstract class Endpoint {
     private static class AdapterEndpoint extends Endpoint {
         private final Adapter adapter;
 
-        public AdapterEndpoint(final Adapter adapter) {
+        AdapterEndpoint(final Adapter adapter) {
             this.adapter = adapter;
         }
 

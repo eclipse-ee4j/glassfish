@@ -46,14 +46,14 @@ public interface HttpResponse
      *
      * @param name Header name to look up
      */
-    public String getHeader(String name);
+    String getHeader(String name);
 
 
     /**
      * @return a (possibly empty) <code>Collection</code> of the names
      * of the headers of this response
      */
-    public Collection<String> getHeaderNames();
+    Collection<String> getHeaderNames();
 
 
     /**
@@ -62,7 +62,7 @@ public interface HttpResponse
      * @return a (possibly empty) <code>Collection</code> of the values
      * of the response header with the given name
      */
-    public Collection<String> getHeaders(String name);
+    Collection<String> getHeaders(String name);
 
 
     /**
@@ -70,20 +70,20 @@ public interface HttpResponse
      * any previous
      * @param cookie
      */
-    public void addSessionCookieInternal(final Cookie cookie);
+    void addSessionCookieInternal(Cookie cookie);
 
 
     /**
      * Return the error message that was set with <code>sendError()</code>
      * for this Response.
      */
-    public String getMessage();
+    String getMessage();
 
 
     /**
      * Return the HTTP status code associated with this Response.
      */
-    public int getStatus();
+    int getStatus();
 
 
     /**
@@ -93,14 +93,14 @@ public interface HttpResponse
      * @exception IllegalStateException if this response has already been
      *  committed
      */
-    public void reset(int status, String message);
+    void reset(int status, String message);
 
     /**
      * Alternative to sendError that doesn't suspend the response and doesn't reset the buffer.
      * @param status
      * @param message
      */
-    public void setError(int status, String message);
+    void setError(int status, String message);
 
 
     /**
@@ -110,5 +110,5 @@ public interface HttpResponse
      *
      * @exception java.io.IOException if an input/output error occurs
      */
-    public void sendAcknowledgement() throws IOException;
+    void sendAcknowledgement() throws IOException;
 }

@@ -40,7 +40,7 @@ public class LocaleCharsetInfoNode extends RuntimeDescriptorNode<LocaleCharsetIn
             LocaleCharsetMapNode.class, "addLocaleCharsetMap");
     }
 
-    protected LocaleCharsetInfo descriptor = null;
+    protected LocaleCharsetInfo descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

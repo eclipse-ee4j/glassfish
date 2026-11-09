@@ -32,15 +32,15 @@ public interface JmxMultiLruCacheMBean extends JmxBaseCacheMBean {
     /**
      * Returns the number of entries that have been trimmed
      */
-    public Integer getTrimCount();
+    Integer getTrimCount();
 
     /**
      * Returns the size of each segment
      */
-    public Integer getSegmentSize();
+    Integer getSegmentSize();
 
     /**
      * Returns the legnth of the segment list
      */
-    public Integer[] getSegmentListLength();
+    Integer[] getSegmentListLength();
 }

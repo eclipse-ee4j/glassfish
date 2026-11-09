@@ -241,7 +241,7 @@ public abstract class PayloadFilesManager {
      */
     public static class Temp extends PayloadFilesManager {
 
-        private boolean isCleanedUp = false;
+        private boolean isCleanedUp;
 
         public Temp(final File parentDir, final ActionReport report) throws IOException {
             super(createTempFolder(parentDir), report);
@@ -292,7 +292,7 @@ public abstract class PayloadFilesManager {
         }
     }
 
-    protected abstract void postExtract(final File extractedFile);
+    protected abstract void postExtract(File extractedFile);
 
     protected URI getOutputFileURI(Part part, String name) throws IOException {
         /*
@@ -494,7 +494,7 @@ public abstract class PayloadFilesManager {
     }
 
     public interface ActionReportHandler {
-        void handleReport(final InputStream reportStream) throws Exception;
+        void handleReport(InputStream reportStream) throws Exception;
     }
 
     protected abstract void postProcessParts();
@@ -643,7 +643,7 @@ public abstract class PayloadFilesManager {
          * @throws IOException
          */
         protected abstract File processPart(
-                final PayloadFilesManager pfm, final Part part, final String partName)
+                PayloadFilesManager pfm, Part part, String partName)
                 throws Exception;
 
         /**

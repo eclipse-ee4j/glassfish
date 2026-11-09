@@ -211,7 +211,7 @@ public final class AMXValidator
     {
         private final Class<?> mClass;
 
-        public IllegalClassException(final Class<?> clazz)
+        IllegalClassException(final Class<?> clazz)
         {
             super("Class " + clazz.getName() + " not allowed for AMX MBeans");
             mClass = clazz;
@@ -234,13 +234,13 @@ public final class AMXValidator
     {
         private final ObjectName mObjectName;
 
-        public ValidationFailureException(final ObjectName objectName, final String msg)
+        ValidationFailureException(final ObjectName objectName, final String msg)
         {
             super(msg);
             mObjectName = objectName;
         }
 
-        public ValidationFailureException(final AMXProxy amx, final String msg)
+        ValidationFailureException(final AMXProxy amx, final String msg)
         {
             this(amx.objectName(), msg);
         }
@@ -265,7 +265,7 @@ public final class AMXValidator
 
         private final AtomicInteger mNumTested = new AtomicInteger();
 
-        public Failures()
+        Failures()
         {
         }
 
@@ -930,7 +930,7 @@ public final class AMXValidator
 
         private final ProblemList mProblems;
 
-        public MetadataValidator(final Descriptor d, final ProblemList problems) throws InstanceNotFoundException
+        MetadataValidator(final Descriptor d, final ProblemList problems) throws InstanceNotFoundException
         {
             mDescriptor = d;
             mFieldNames = SetUtil.newSet(d.getFieldNames());

@@ -54,7 +54,7 @@ public interface Pipeline {
      * <p>Return the Valve instance that has been distinguished as the basic
      * Valve for this Pipeline (if any).
      */
-    public GlassFishValve getBasic();
+    GlassFishValve getBasic();
 
 
     /**
@@ -69,14 +69,14 @@ public interface Pipeline {
      *
      * @param valve Valve to be distinguished as the basic Valve
      */
-    public void setBasic(GlassFishValve valve);
+    void setBasic(GlassFishValve valve);
 
 
     /**
      * @return true if this pipeline has any non basic valves, false
      * otherwise
      */
-    public boolean hasNonBasicValves();
+    boolean hasNonBasicValves();
 
 
     // --------------------------------------------------------- Public Methods
@@ -101,7 +101,7 @@ public interface Pipeline {
      * @exception IllegalStateException if the specified Valve is already
      *  associated with a different Container
      */
-    public void addValve(GlassFishValve valve);
+    void addValve(GlassFishValve valve);
 
 
     /**
@@ -109,7 +109,7 @@ public interface Pipeline {
      *
      * @param valve the Tomcat-style valve to be added
      */
-    public void addValve(Valve valve);
+    void addValve(Valve valve);
 
 
     /**
@@ -117,7 +117,7 @@ public interface Pipeline {
      * Container, including the basic Valve (if any).  If there are no
      * such Valves, a zero-length array is returned.
      */
-    public GlassFishValve[] getValves();
+    GlassFishValve[] getValves();
 
 
     /**
@@ -134,7 +134,7 @@ public interface Pipeline {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet exception is thrown
      */
-    public void invoke(Request request, Response response)
+    void invoke(Request request, Response response)
         throws IOException, ServletException;
 
 
@@ -146,7 +146,7 @@ public interface Pipeline {
      *
      * @param valve Valve to be removed
      */
-    public void removeValve(GlassFishValve valve);
+    void removeValve(GlassFishValve valve);
 
 
 }

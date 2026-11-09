@@ -76,7 +76,7 @@ public class DisableMonitoring implements AdminCommand, AdminCommandSecurity.Pre
         new LocalStringManagerImpl(DisableMonitoring.class);
 
     @AccessRequired.To("update")
-    private Config targetConfig = null;
+    private Config targetConfig;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

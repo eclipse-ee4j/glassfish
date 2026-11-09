@@ -35,7 +35,7 @@ public @interface ModelBinding {
      *
      * @return the model type
      */
-    public Class<?> type();
+    Class<?> type();
 
     /**
      * Returns the getter method name defined on the {@link org.glassfish.api.admin.config.ModelBinding#type()} type
@@ -43,5 +43,5 @@ public @interface ModelBinding {
      *
      * @return the type getter method name
      */
-    public String getterMethodName();
+    String getterMethodName();
 }

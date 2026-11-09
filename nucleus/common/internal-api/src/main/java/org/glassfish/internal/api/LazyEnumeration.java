@@ -34,7 +34,7 @@ class LazyEnumeration<T> implements Enumeration<T> {
     private Enumeration<T> currentEnumeration;
     private T nextElement;
 
-    public LazyEnumeration(List<Enumeration<T>> enumerations) {
+    LazyEnumeration(List<Enumeration<T>> enumerations) {
         this.enumerationIterator = enumerations.iterator();
         advance();
     }

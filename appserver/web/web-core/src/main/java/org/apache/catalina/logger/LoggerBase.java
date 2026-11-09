@@ -67,13 +67,13 @@ public class LoggerBase
     /**
      * The Container with which this Logger has been associated.
      */
-    protected Container container = null;
+    protected Container container;
 
 
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**

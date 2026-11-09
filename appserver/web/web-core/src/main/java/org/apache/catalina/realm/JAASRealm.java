@@ -122,7 +122,7 @@ public final class JAASRealm extends RealmBase {
     /**
      * Comma-delimited list of <code>javax.security.Principal</code> classes that represent security roles.
      */
-    protected String roleClassNames = null;
+    protected String roleClassNames;
 
     // ------------------------------------------------------------- Properties
 
@@ -193,7 +193,7 @@ public final class JAASRealm extends RealmBase {
     /**
      * Comma-delimited list of <code>javax.security.Principal</code> classes that represent individual users.
      */
-    protected String userClassNames = null;
+    protected String userClassNames;
 
     public String getUserClassNames() {
         return (this.userClassNames);

@@ -93,17 +93,17 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
     private int localTxStatus;
     private Vector syncs = new Vector();
     private Vector interposedSyncs = new Vector();
-    private boolean commitStarted = false;
+    private boolean commitStarted;
     // START 4662745
     private long startTime;
     // END 4662745
 
     // START: local transaction timeout
-    private boolean timedOut = false;
-    private boolean isTimerTask = false;
-    private int timeout = 0;
+    private boolean timedOut;
+    private boolean isTimerTask;
+    private int timeout;
     // END: local transaction timeout
-    private boolean imported = false;
+    private boolean imported;
 
     /**
      * Maps PoolInfo to resources
@@ -120,15 +120,15 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
 
     // SimpleResource mapping for EMs with EXTENDED persistence context type
     private Map<EntityManagerFactory, SimpleResource> extendedEntityManagerMap;
-    private String componentName = null;
-    private ArrayList<String> resourceNames = null;
+    private String componentName;
+    private ArrayList<String> resourceNames;
 
     // tx-specific ejb container info associated with this tx
-    private Object containerData = null;
+    private Object containerData;
 
-    static private boolean isTimerInitialized = false;
-    static private Timer timer = null;
-    static private long timerTasksScheduled = 0; // Global counter
+    static private boolean isTimerInitialized;
+    static private Timer timer;
+    static private long timerTasksScheduled; // Global counter
 
     static synchronized private void initializeTimer() {
         if (isTimerInitialized) {
@@ -787,7 +787,7 @@ public final class JavaEETransactionImpl extends TimerTask implements JavaEETran
         private byte[] gtrId;
 
         // START IASRI 4662745
-        private String stringForm = null;
+        private String stringForm;
         // END IASRI 4662745
 
         JavaEEXid(long txId) {

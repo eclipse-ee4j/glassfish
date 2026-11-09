@@ -60,7 +60,7 @@ interface Launchable {
 
     String getAnchorDir();
 
-    static class LaunchableUtil {
+    class LaunchableUtil {
 
         private static final LocalStringManager localStrings = new LocalStringManagerImpl(Launchable.LaunchableUtil.class);
         static Launchable newLaunchable(final URI uri,

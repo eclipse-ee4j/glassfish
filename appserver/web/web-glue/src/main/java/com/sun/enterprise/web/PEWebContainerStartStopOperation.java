@@ -35,7 +35,7 @@ public class PEWebContainerStartStopOperation implements WebContainerStartStopOp
     /**
      * The embedded Catalina object.
      */
-    protected EmbeddedWebContainer _embedded = null;
+    protected EmbeddedWebContainer _embedded;
 
     /** Creates a new instance of PEWebContainerStartStopOperation */
     public PEWebContainerStartStopOperation() {

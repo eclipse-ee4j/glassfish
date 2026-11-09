@@ -18,7 +18,7 @@ package org.glassfish.tests.embedded.ejb.remoteejb;
 
 public interface RemoteEJBInf {
 
-  public String sayHi();
+  String sayHi();
 
 }
 

@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class ServletTest extends HttpServlet {
-    private static boolean isRedirected = false;
+    private static boolean isRedirected;
     private ServletContext context;
 
     public void init(ServletConfig config) throws ServletException {

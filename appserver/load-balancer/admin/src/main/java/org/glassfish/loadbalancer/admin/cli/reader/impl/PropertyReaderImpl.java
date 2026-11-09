@@ -181,7 +181,7 @@ public class PropertyReaderImpl implements PropertyReader {
     }
 
     // -- PRIVATE VARS ---
-    private String _value = null;
-    private String _name = null;
-    private String _description = null;
+    private String _value;
+    private String _name;
+    private String _description;
 }

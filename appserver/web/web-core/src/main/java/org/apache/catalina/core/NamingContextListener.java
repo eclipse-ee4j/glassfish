@@ -98,43 +98,43 @@ public class NamingContextListener
     /**
      * Associated container.
      */
-    protected Object container = null;
+    protected Object container;
 
 
     /**
      * Debugging level.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**
      * Initialized flag.
      */
-    protected boolean initialized = false;
+    protected boolean initialized;
 
 
     /**
      * Associated naming resources.
      */
-    protected NamingResources namingResources = null;
+    protected NamingResources namingResources;
 
 
     /**
      * Associated JNDI context.
      */
-    protected NamingContext namingContext = null;
+    protected NamingContext namingContext;
 
 
     /**
      * Comp context.
      */
-    protected javax.naming.Context compCtx = null;
+    protected javax.naming.Context compCtx;
 
 
     /**
      * Env context.
      */
-    protected javax.naming.Context envCtx = null;
+    protected javax.naming.Context envCtx;
 
 
     // ------------------------------------------------------------- Properties

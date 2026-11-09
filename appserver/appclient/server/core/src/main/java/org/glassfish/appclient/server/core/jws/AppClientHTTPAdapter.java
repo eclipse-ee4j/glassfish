@@ -528,7 +528,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     private class ArgQueryParams extends QueryParams {
         private final StringBuilder arguments = new StringBuilder();
 
-        public ArgQueryParams() {
+        ArgQueryParams() {
             super(ARG_QUERY_PARAM_NAME);
         }
 
@@ -566,7 +566,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         private final String targetServerSetting;
 
 
-        public ACCArgQueryParams(final String targetServerSetting) {
+        ACCArgQueryParams(final String targetServerSetting) {
             super (ACC_ARG_QUERY_PARAM_NAME);
             this.targetServerSetting = "arg=-targetserver,arg=" + targetServerSetting;
         }
@@ -632,7 +632,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     private class PropQueryParams extends QueryParams {
         private final StringBuilder properties = new StringBuilder();
 
-        public PropQueryParams() {
+        PropQueryParams() {
             super(PROP_QUERY_PARAM_NAME);
         }
 
@@ -667,7 +667,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
     private class VMArgQueryParams extends QueryParams {
         private final StringBuilder vmArgs = new StringBuilder();
 
-        public VMArgQueryParams() {
+        VMArgQueryParams() {
             super(VMARG_QUERY_PARAM_NAME);
         }
 

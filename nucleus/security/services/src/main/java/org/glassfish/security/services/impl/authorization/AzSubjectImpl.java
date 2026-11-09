@@ -46,7 +46,7 @@ public final class AzSubjectImpl extends AzAttributesImpl implements AzSubject {
      * @return The represented Subject.
      */
     @Override
-    public final Subject getSubject() {
+    public Subject getSubject() {
         return subject;
     }
 

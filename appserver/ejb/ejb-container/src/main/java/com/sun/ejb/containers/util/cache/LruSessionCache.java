@@ -106,9 +106,9 @@ public class LruSessionCache
     protected Object loadCountLock = new Object();
     protected int loadFromBackupCount;
 
-    protected boolean removeIfIdle = false;
+    protected boolean removeIfIdle;
 
-    private int numVictimsAccessed = 0;
+    private int numVictimsAccessed;
 
     protected SFSBContainerCallback     container;
     protected BackingStore<Serializable, SimpleMetadata> backingStore;

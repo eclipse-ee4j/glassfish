@@ -893,7 +893,7 @@ public class DynamicInterceptor implements MBeanServer {
     }
 
     private static class ReplicationInfo {
-        private boolean instanceTarget = false;
+        private boolean instanceTarget;
         private List<String> instances = new ArrayList<>();
 
         boolean isTargetAnInstance() {

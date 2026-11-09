@@ -60,7 +60,7 @@ public class TransactionImpl implements TransactionInternal {
 
     private GlobalTID gtid;
 
-    private TransactionState tranState = null;
+    private TransactionState tranState;
 
     private static TransactionManagerImpl tm = TransactionManagerImpl.getTransactionManagerImpl();
     /*

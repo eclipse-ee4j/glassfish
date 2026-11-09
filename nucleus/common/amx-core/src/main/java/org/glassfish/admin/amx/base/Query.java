@@ -47,18 +47,18 @@ public interface Query extends AMXProxy, Utility, Singleton
 {
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans having any of the specified types")
-    public Set<AMXProxy> queryTypes(@Param(name = "type") Set<String> type);
+    Set<AMXProxy> queryTypes(@Param(name = "type") Set<String> type);
 
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans having the specified type")
-    public Set<AMXProxy> queryType( @Param(name = "type") String type);
+    Set<AMXProxy> queryType( @Param(name = "type") String type);
 
     /**
     Return all {@link AMXProxy} having the specified name.
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans having the specified name")
-    public Set<AMXProxy> queryName(  @Param(name = "name") String name);
+    Set<AMXProxy> queryName(  @Param(name = "name") String name);
 
     /**
     Return all AMX whose type and name matches. Note that the resulting items will necessarily
@@ -66,7 +66,7 @@ public interface Query extends AMXProxy, Utility, Singleton
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans having the specified type and name")
-    public Set<AMXProxy> queryTypeName( @Param(name = "type") String type, @Param(name = "name") String name);
+    Set<AMXProxy> queryTypeName( @Param(name = "type") String type, @Param(name = "name") String name);
 
     /**
     Return all AMX whose ObjectName matches the supplied pattern, as defined by the JMX specification.
@@ -76,7 +76,7 @@ public interface Query extends AMXProxy, Utility, Singleton
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans matching the specfied pattern")
-    public Set<AMXProxy> queryPattern( @Param(name = "pattern") ObjectName pattern);
+    Set<AMXProxy> queryPattern( @Param(name = "pattern") ObjectName pattern);
 
     /**
     Return all AMX MBeans matching the specfied ObjectName properties
@@ -84,7 +84,7 @@ public interface Query extends AMXProxy, Utility, Singleton
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans matching the specfied ObjectName properties")
-    public Set<AMXProxy> queryProps( @Param(name = "props") String props);
+    Set<AMXProxy> queryProps( @Param(name = "props") String props);
 
     /**
     Return all AMX MBeans whose whose ObjectName matches all property
@@ -100,24 +100,24 @@ public interface Query extends AMXProxy, Utility, Singleton
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return all AMX MBeans matching all specified ObjectName properties, wildcarded by key and/or value")
-    public Set<AMXProxy> queryWildAll( @Param(name = "wildKeys") String[] wildKeys, @Param(name = "wildValues") String[] wildValues);
+    Set<AMXProxy> queryWildAll( @Param(name = "wildKeys") String[] wildKeys, @Param(name = "wildValues") String[] wildValues);
 
     /**  Return all AMX MBeans */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public Set<AMXProxy> queryAll();
+    Set<AMXProxy> queryAll();
 
 
     @Description("Return  all MBeans that are global singletons")
     @ManagedAttribute()
-    public AMXProxy[] getGlobalSingletons();
+    AMXProxy[] getGlobalSingletons();
 
     @Description("Return the global singleton of the specified type, or null if not found")
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public AMXProxy getGlobalSingleton( @Param(name="type") String type);
+    AMXProxy getGlobalSingleton( @Param(name="type") String type);
 
     @Description("List the parent followed by all descendants, depth-first traversal")
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public AMXProxy[] queryDescendants( @Param(name="parentObjectName") ObjectName parentObjectName);
+    AMXProxy[] queryDescendants( @Param(name="parentObjectName") ObjectName parentObjectName);
 }
 
 

@@ -348,7 +348,7 @@ public class CallMethodRule extends Rule {
     /**
      * The body text collected from this element.
      */
-    protected String bodyText = null;
+    protected String bodyText;
 
 
     /**
@@ -356,12 +356,12 @@ public class CallMethodRule extends Rule {
      * top of the digester object stack. The default value of zero
      * means the target object is the one on top of the stack.
      */
-    protected int targetOffset = 0;
+    protected int targetOffset;
 
     /**
      * The method name to call on the parent object.
      */
-    protected String methodName = null;
+    protected String methodName;
 
 
     /**
@@ -369,24 +369,24 @@ public class CallMethodRule extends Rule {
      * If this value is zero, a single parameter will be collected from the
      * body of this element.
      */
-    protected int paramCount = 0;
+    protected int paramCount;
 
 
     /**
      * The parameter types of the parameters to be collected.
      */
-    protected Class<?> paramTypes[] = null;
+    protected Class<?>[] paramTypes;
 
     /**
      * The names of the classes of the parameters to be collected.
      * This attribute allows creation of the classes to be postponed until the digester is set.
      */
-    protected String paramClassNames[] = null;
+    protected String[] paramClassNames;
 
     /**
      * Should <code>MethodUtils.invokeExactMethod</code> be used for reflection.
      */
-    protected boolean useExactMatch = false;
+    protected boolean useExactMatch;
 
     // --------------------------------------------------------- Public Methods
 

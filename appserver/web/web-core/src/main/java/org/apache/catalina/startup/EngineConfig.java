@@ -53,13 +53,13 @@ public final class EngineConfig
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
      * The Engine we are associated with.
      */
-    private Engine engine = null;
+    private Engine engine;
 
 
     // ------------------------------------------------------------- Properties

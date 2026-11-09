@@ -31,5 +31,5 @@ public interface JasperAdapter {
     /**
      * Returns the search path of URLs for loading classes and resources.
      */
-    public URL[] getURLs();
+    URL[] getURLs();
 }

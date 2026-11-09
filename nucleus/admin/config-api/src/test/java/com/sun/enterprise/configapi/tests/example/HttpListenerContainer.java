@@ -44,7 +44,7 @@ public class HttpListenerContainer implements ConfigListener {
     @Named("http-listener-1")
     public NetworkListener httpListener;
 
-    public volatile boolean received = false;
+    public volatile boolean received;
 
     @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {

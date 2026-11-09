@@ -23,8 +23,8 @@ import java.lang.reflect.Method;
  */
 public interface ProbeClientAnnotationHandler {
 
-    public boolean canHandle(Method clientMethod);
+    boolean canHandle(Method clientMethod);
 
-    public void handle(Method method);
+    void handle(Method method);
 
 }

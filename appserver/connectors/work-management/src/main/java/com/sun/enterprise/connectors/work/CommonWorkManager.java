@@ -59,8 +59,8 @@ public final class CommonWorkManager implements WorkManager {
 
     private static final Logger logger = LogFacade.getLogger();
 
-    private WorkManagementProbeProvider probeProvider = null;
-    private WorkManagementStatsProvider statsProvider = null;
+    private WorkManagementProbeProvider probeProvider;
+    private WorkManagementStatsProvider statsProvider;
     private String dottedNamesHierarchy;
 
     private ConnectorRuntime runtime;

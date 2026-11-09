@@ -77,7 +77,7 @@ public class ApplicationSignedJARManager {
      * instance for that JAR.  In this map each served JAR is associated with
      * only one alias, even if a JAR is signed by multiple certs.
      */
-    private Map<String,Map<URI,StaticContent>> selectedAliasToContentMapping = null;
+    private Map<String,Map<URI,StaticContent>> selectedAliasToContentMapping;
 
     private final ArchiveFactory archiveFactory;
 

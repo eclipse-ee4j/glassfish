@@ -42,5 +42,5 @@ public interface DataType {
      * @throws org.jvnet.hk2.config.ValidationException if given String does
      * not represent this data type.
      */
-    public void validate(String value) throws ValidationException;
+    void validate(String value) throws ValidationException;
 }

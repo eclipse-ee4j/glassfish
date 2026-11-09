@@ -974,8 +974,8 @@ public final class SerialContext implements Context {
      */
     private static class ThreadLocalIC {
 
-        private Context ctx = null ;
-        private int count = 0;
+        private Context ctx;
+        private int count;
 
         Context getContext() {
             return ctx ;

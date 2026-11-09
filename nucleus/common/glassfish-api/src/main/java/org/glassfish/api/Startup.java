@@ -35,7 +35,7 @@ public interface Startup {
      * and stop running at the end of the server startup. A startup service should indicate if it needs to be running during
      * the START sequence only or during the SERVER lifetime.
      */
-    public enum Lifecycle {
+    enum Lifecycle {
         START, SERVER
     }
 

@@ -168,95 +168,95 @@ public class CMPTemplateFormatter extends JavaClassWriterHelper{
     public final static String signatureDelimiter_ = " ## "; //NOI18N
 
     // Code generator templates.
-    public static Properties helpers = null;
+    public static Properties helpers;
 
     // JDOHelper comments have the concrete impl name.
-    public static MessageFormat hcomformatter = null;
+    public static MessageFormat hcomformatter;
 
     // variables
-    public static MessageFormat privatetransientvformatter = null; // private transient varibales
-    public static MessageFormat privatestaticfinalvformatter = null; // final static variables
-    public static MessageFormat publicstaticfinalvformatter = null; // static final variables
-    public static MessageFormat finderselectorstaticvformatter = null; // finder / selector static variables
-    public static MessageFormat finderselectorstaticfinalvformatter = null; // finder / selector static final variables
-    public static MessageFormat hvformatter = null; // helper class variables
+    public static MessageFormat privatetransientvformatter; // private transient varibales
+    public static MessageFormat privatestaticfinalvformatter; // final static variables
+    public static MessageFormat publicstaticfinalvformatter; // static final variables
+    public static MessageFormat finderselectorstaticvformatter; // finder / selector static variables
+    public static MessageFormat finderselectorstaticfinalvformatter; // finder / selector static final variables
+    public static MessageFormat hvformatter; // helper class variables
 
     // methods
-    public static MessageFormat giformatter = null; // jdoGetInstance
-    public static MessageFormat goidformatter = null; // jdoGetObjectId
-    public static MessageFormat intxformatter = null; // assertInTransaction
-    public static MessageFormat jdolookuppmfformatter = null; // jdoLookupPersistenceManagerFactory
-    public static MessageFormat jdoarraycopyformatter = null; // jdoCopyArray
+    public static MessageFormat giformatter; // jdoGetInstance
+    public static MessageFormat goidformatter; // jdoGetObjectId
+    public static MessageFormat intxformatter; // assertInTransaction
+    public static MessageFormat jdolookuppmfformatter; // jdoLookupPersistenceManagerFactory
+    public static MessageFormat jdoarraycopyformatter; // jdoCopyArray
 
     // finder/selector methods
-    public static MessageFormat finderselectorformatter = null; //common body for selector and finder
-    public static MessageFormat queryexecformatter = null; //body for queryexec without paramconversion
-    public static MessageFormat aggqueryexecformatter = null; //body for aggqueryexec without paramconversion
-    public static MessageFormat queryexecparamconvformatter = null; //body for queryexec with paramconversion
-    public static MessageFormat queryexecparamconvargumentformatter = null; //body for the argument of the queryexec with paramconversion
-    public static MessageFormat aggqueryexecparamconvformatter = null; //body for aggqueryexec with paramconversion
-    public static MessageFormat multifinderformatter = null; // finder body for multi-value-objects
-    public static MessageFormat multifinderenumerationformatter = null; // finder body for multi-value-objects with conversion to Enumeration (CMP11))
-    public static MessageFormat singlefinderformatter = null; // finder body for single-value-objects
+    public static MessageFormat finderselectorformatter; //common body for selector and finder
+    public static MessageFormat queryexecformatter; //body for queryexec without paramconversion
+    public static MessageFormat aggqueryexecformatter; //body for aggqueryexec without paramconversion
+    public static MessageFormat queryexecparamconvformatter; //body for queryexec with paramconversion
+    public static MessageFormat queryexecparamconvargumentformatter; //body for the argument of the queryexec with paramconversion
+    public static MessageFormat aggqueryexecparamconvformatter; //body for aggqueryexec with paramconversion
+    public static MessageFormat multifinderformatter; // finder body for multi-value-objects
+    public static MessageFormat multifinderenumerationformatter; // finder body for multi-value-objects with conversion to Enumeration (CMP11))
+    public static MessageFormat singlefinderformatter; // finder body for single-value-objects
 
     // PK and Oid handling
-    public static MessageFormat pkcformatter = null; // cast PK statement
-    public static MessageFormat oidcformatter = null; // cast Oid statement
-    public static MessageFormat npkformatter = null; // new PK statement
-    public static MessageFormat noidformatter = null; // new Oid statement
-    public static MessageFormat pkformatter = null;
-    public static MessageFormat oidformatter = null;
-    public static MessageFormat oidstringformatter = null; // PK -> Oid for String PK field
-    public static MessageFormat pkcloneformatter = null; // Oid -> PK for mutable PK field
-    public static MessageFormat oidcloneformatter = null; // PK -> Oid for mutable PK field
-    public static MessageFormat pk1formatter = null;
-    public static MessageFormat oid1formatter = null;
-    public static MessageFormat pk1pformatter = null;
-    public static MessageFormat oid1pformatter = null;
-    public static MessageFormat oid1stringformatter = null; // PK -> Oid for String PK class
-    public static MessageFormat pk1cloneformatter = null; // Oid -> PK for mutable PK class
-    public static MessageFormat oid1cloneformatter = null; // PK -> Oid for mutable PK class
-    public static MessageFormat assertpkfieldformatter = null; // for assertPKFieldNotNull_
+    public static MessageFormat pkcformatter; // cast PK statement
+    public static MessageFormat oidcformatter; // cast Oid statement
+    public static MessageFormat npkformatter; // new PK statement
+    public static MessageFormat noidformatter; // new Oid statement
+    public static MessageFormat pkformatter;
+    public static MessageFormat oidformatter;
+    public static MessageFormat oidstringformatter; // PK -> Oid for String PK field
+    public static MessageFormat pkcloneformatter; // Oid -> PK for mutable PK field
+    public static MessageFormat oidcloneformatter; // PK -> Oid for mutable PK field
+    public static MessageFormat pk1formatter;
+    public static MessageFormat oid1formatter;
+    public static MessageFormat pk1pformatter;
+    public static MessageFormat oid1pformatter;
+    public static MessageFormat oid1stringformatter; // PK -> Oid for String PK class
+    public static MessageFormat pk1cloneformatter; // Oid -> PK for mutable PK class
+    public static MessageFormat oid1cloneformatter; // PK -> Oid for mutable PK class
+    public static MessageFormat assertpkfieldformatter; // for assertPKFieldNotNull_
 
     // Other JDOHelper methods.
-    public static MessageFormat pcclassgetterformatter = null;
+    public static MessageFormat pcclassgetterformatter;
 
     // standard templates for the corresponding keys, so that a template "xxxTemplate"
     // corresponds to a "xxx" key.
-    public static String cmpImplCommentsTemplate = null;
-    public static String privateStaticVariablesTemplate = null;
-    public static String otherVariablesTemplate = null;
-    public static String jdoGetJdoInstanceClassTemplate = null;
-    public static String assertPersistenceManagerIsNullTemplate = null;
-    public static String assertInstanceOfRemoteInterfaceImplTemplate = null;
-    public static String getHelperInstanceTemplate = null;
-    public static String catchClauseTemplate = null;
-    public static String signatureTemplate = null;
-    public static String assertPKNotNullTemplate = null;
-    public static String assertOidNotNullTemplate = null;
+    public static String cmpImplCommentsTemplate;
+    public static String privateStaticVariablesTemplate;
+    public static String otherVariablesTemplate;
+    public static String jdoGetJdoInstanceClassTemplate;
+    public static String assertPersistenceManagerIsNullTemplate;
+    public static String assertInstanceOfRemoteInterfaceImplTemplate;
+    public static String getHelperInstanceTemplate;
+    public static String catchClauseTemplate;
+    public static String signatureTemplate;
+    public static String assertPKNotNullTemplate;
+    public static String assertOidNotNullTemplate;
 
     // standard templates that had been converted to String[] to be used
     // in a 'for' loop.
-    public static String[] importsArray = null;
-    public static String[] interfacesArray = null;
-    public static String[] helperImportsArray = null;
-    public static String[] commonPublicMethodsArray = null;
-    public static String[] otherPublicMethodsArray = null;
-    public static String[] commonPrivateMethodsArray = null;
+    public static String[] importsArray;
+    public static String[] interfacesArray;
+    public static String[] helperImportsArray;
+    public static String[] commonPublicMethodsArray;
+    public static String[] otherPublicMethodsArray;
+    public static String[] commonPrivateMethodsArray;
 
 
     // standard method bodies for the corresponding keys, so that a method body with
     // a name "xxxBody" corresponds to a "xxx" key.
-    public static String[] ejbFindByPrimaryKeyBody = null;
-    public static String[] afterCompletionBody = null;
-    public static String[] jdoGetPersistenceManagerBody = null;
-    public static String[] jdoGetPersistenceManager0Body = null;
-    public static String[] assertPersistenceManagerIsNullBody = null;
-    public static String[] jdoClosePersistenceManagerBody = null;
-    public static String[] jdoReleasePersistenceManagerBody = null;
-    public static String[] jdoReleasePersistenceManager0Body = null;
-    public static String[] setEntityContextBody = null;
-    public static String[] getContainerBody = null;
+    public static String[] ejbFindByPrimaryKeyBody;
+    public static String[] afterCompletionBody;
+    public static String[] jdoGetPersistenceManagerBody;
+    public static String[] jdoGetPersistenceManager0Body;
+    public static String[] assertPersistenceManagerIsNullBody;
+    public static String[] jdoClosePersistenceManagerBody;
+    public static String[] jdoReleasePersistenceManagerBody;
+    public static String[] jdoReleasePersistenceManager0Body;
+    public static String[] setEntityContextBody;
+    public static String[] getContainerBody;
 
     /**
      * Constructs a new <code>CMPTemplateFormatter</code> instance.

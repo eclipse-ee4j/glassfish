@@ -32,7 +32,7 @@ import static org.objectweb.asm.Opcodes.ASM9;
 
 public class DocClassVisitor extends ClassVisitor {
 
-    private boolean hasConfiguredAnnotation = false;
+    private boolean hasConfiguredAnnotation;
     private String className;
     private List<String> interfaces;
     private ClassDef classDef;

@@ -26,10 +26,10 @@ public interface LoginDialog {
     /**
      * @return The username of the user.
      */
-    public String getUserName();
+    String getUserName();
 
     /**
      * @return The password of the user in plain text...
      */
-    public char[] getPassword();
+    char[] getPassword();
 }

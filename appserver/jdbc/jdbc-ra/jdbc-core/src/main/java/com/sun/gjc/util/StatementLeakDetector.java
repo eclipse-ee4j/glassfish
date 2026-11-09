@@ -55,7 +55,7 @@ public class StatementLeakDetector {
     private final static Logger _logger = LogDomains.getLogger(StatementLeakDetector.class, LogDomains.RSR_LOGGER);
     private final static StringManager localStrings = StringManager.getManager(StatementLeakDetector.class);
     private final Timer timer;
-    private StatementLeakProbeProvider stmtLeakProbeProvider = null;
+    private StatementLeakProbeProvider stmtLeakProbeProvider;
 
     public StatementLeakDetector(PoolInfo poolInfo, boolean leakTracing, long leakTimeoutInMillis, boolean leakReclaim,
             Timer timer) {

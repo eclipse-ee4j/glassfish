@@ -81,7 +81,7 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
     // private SecurityConfigListener securityListener;
 
     @AccessRequired.To("delete")
-    AuthRealm authRealm = null;
+    AuthRealm authRealm;
 
     private SecurityService securityService;
 

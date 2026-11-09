@@ -21,20 +21,20 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface SFSBVersionManager {
 
-    public long NO_VERSION = -404;
+    long NO_VERSION = -404;
 
-    public long getRequestClientVersion();
+    long getRequestClientVersion();
 
-    public void setRequestClientVersion(long val);
+    void setRequestClientVersion(long val);
 
-    public void clearRequestClientVersion();
+    void clearRequestClientVersion();
 
-    public long getResponseClientVersion();
+    long getResponseClientVersion();
 
-    public void setResponseClientVersion(long val);
+    void setResponseClientVersion(long val);
 
-    public void clearResponseClientVersion();
+    void clearResponseClientVersion();
 
-    public void removeAll(long containerId);
+    void removeAll(long containerId);
 
 }

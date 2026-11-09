@@ -44,28 +44,28 @@ public interface VirtualServer {
      *
      * @param ID id of this <tt>VirtualServer</tt>.
      */
-    public void setID(String ID);
+    void setID(String ID);
 
     /**
      * Gets the id of this <tt>VirtualServer</tt>.
      *
      * @return the id of this <tt>VirtualServer</tt>
      */
-    public String getID();
+    String getID();
 
     /**
      * Sets the docroot of this <tt>VirtualServer</tt>.
      *
      * @param docRoot the docroot of this <tt>VirtualServer</tt>.
      */
-    public void setDocRoot(File docRoot);
+    void setDocRoot(File docRoot);
 
     /**
      * Gets the docroot of this <tt>VirtualServer</tt>.
      *
      * @return the docroot of this <tt>VirtualServer</tt>
      */
-    public File getDocRoot();
+    File getDocRoot();
 
     /**
      * Gets the collection of <tt>WebListener</tt> instances from which
@@ -74,7 +74,7 @@ public interface VirtualServer {
      * @return the collection of <tt>WebListener</tt> instances from which
      * this <tt>VirtualServer</tt> receives requests.
      */
-    public Collection<WebListener> getWebListeners();
+    Collection<WebListener> getWebListeners();
 
     /**
      * Adds the given <tt>Valve</tt> to this <tt>VirtualServer</tt>
@@ -98,7 +98,7 @@ public interface VirtualServer {
      * @throws GlassFishException if the given <tt>context</tt> fails
      * to be started
      */
-    public void addContext(Context context, String contextRoot)
+    void addContext(Context context, String contextRoot)
         throws ConfigException, GlassFishException;
 
     /**
@@ -110,7 +110,7 @@ public interface VirtualServer {
      * @throws GlassFishException if an error occurs during the stopping
      * or removal of the given <tt>context</tt>
      */
-    public void removeContext(Context context)
+    void removeContext(Context context)
             throws GlassFishException;
 
     /**
@@ -122,7 +122,7 @@ public interface VirtualServer {
      * or <tt>null</tt> if no <tt>Context</tt> exists at the given context
      * root
      */
-    public Context getContext(String contextRoot);
+    Context getContext(String contextRoot);
 
     /**
      * Gets the collection of <tt>Context</tt> instances registered with
@@ -131,7 +131,7 @@ public interface VirtualServer {
      * @return the (possibly empty) collection of <tt>Context</tt>
      * instances registered with this <tt>VirtualServer</tt>
      */
-    public Collection<Context> getContexts();
+    Collection<Context> getContexts();
 
     /**
      * Reconfigures this <tt>VirtualServer</tt> with the given
@@ -145,7 +145,7 @@ public interface VirtualServer {
      * @throws ConfigException if the configuration requires a restart,
      * and this <tt>VirtualServer</tt> fails to be restarted
      */
-    public void setConfig(VirtualServerConfig config)
+    void setConfig(VirtualServerConfig config)
         throws ConfigException;
 
     /**
@@ -155,5 +155,5 @@ public interface VirtualServer {
      * or <tt>null</tt> if no special configuration was ever applied to this
      * <tt>VirtualServer</tt>
      */
-    public VirtualServerConfig getConfig();
+    VirtualServerConfig getConfig();
 }

@@ -76,7 +76,7 @@ public final class RuntimeRootImpl extends AMXImplBase
 
 
     @Override
-    protected final void registerChildren()
+    protected void registerChildren()
     {
         super.registerChildren();
 

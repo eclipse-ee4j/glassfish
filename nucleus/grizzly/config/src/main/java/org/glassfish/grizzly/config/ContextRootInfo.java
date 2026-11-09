@@ -27,21 +27,21 @@ public final class ContextRootInfo {
      * The interface, which is responsible for holding <tt>ContextRootInfo</tt>,
      * which makes possible to initialize <tt>ContextRootInfo<tt> lazily.
      */
-    public static interface Holder {
+    public interface Holder {
 
         /**
          * Gets the Grizzly {@link HttpHandler}, associated with the context.
          *
          * @return the Grizzly {@link HttpHandler}, associated with the context.
          */
-        public HttpHandler getHttpHandler();
+        HttpHandler getHttpHandler();
 
         /**
          * Gets the application container, associated with the context.
          *
          * @return the application container, associated with the context.
          */
-        public Object getContainer();
+        Object getContainer();
     }
     private final Holder holder;
 
@@ -90,7 +90,7 @@ public final class ContextRootInfo {
         private final HttpHandler handler;
         private final Object container;
 
-        public SimpleHolder(HttpHandler handler, Object container) {
+        SimpleHolder(HttpHandler handler, Object container) {
             this.handler = handler;
             this.container = container;
         }

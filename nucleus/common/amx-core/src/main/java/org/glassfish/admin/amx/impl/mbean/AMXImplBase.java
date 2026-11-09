@@ -418,7 +418,7 @@ public class AMXImplBase extends MBeanImplBase
     }
 
 
-    private final void rethrowAttributeNotFound(
+    private void rethrowAttributeNotFound(
             final Throwable t,
             final String attrName)
             throws AttributeNotFoundException {

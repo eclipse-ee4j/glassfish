@@ -83,7 +83,7 @@ public final class Tool {
     /**
      * Set <code>ant.home</code> system property?
      */
-    private static boolean ant = false;
+    private static boolean ant;
 
 
     /**
@@ -95,7 +95,7 @@ public final class Tool {
     /**
      * Include common classes in the repositories?
      */
-    private static boolean common = false;
+    private static boolean common;
 
 
     /**
@@ -111,13 +111,13 @@ public final class Tool {
     /**
      * Include server classes in the repositories?
      */
-    private static boolean server = false;
+    private static boolean server;
 
 
     /**
      * Include shared classes in the repositories?
      */
-    private static boolean shared = false;
+    private static boolean shared;
 
 
     // ----------------------------------------------------------- Main Program

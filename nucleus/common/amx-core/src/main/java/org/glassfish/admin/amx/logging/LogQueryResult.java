@@ -37,12 +37,12 @@ public interface LogQueryResult
         The metadata contains most of these fields, but does <b not> contain
         the PRODUCT_NAME or '#' columns.
      */
-    public String[]    getFieldNames();
+    String[]    getFieldNames();
 
     /**
         Return all log entries found by the query <b>not including the field headers</b>.
      */
-    public LogQueryEntry[]  getEntries();
+    LogQueryEntry[]  getEntries();
 }
 
 

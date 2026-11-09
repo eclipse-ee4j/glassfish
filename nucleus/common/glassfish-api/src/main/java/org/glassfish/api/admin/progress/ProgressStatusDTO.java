@@ -53,8 +53,8 @@ public class ProgressStatusDTO {
     protected String name;
     protected String id;
     protected int totalStepCount = -1;
-    protected int currentStepCount = 0;
-    protected boolean completed = false;
+    protected int currentStepCount;
+    protected boolean completed;
     protected Set<ChildProgressStatusDTO> children = new HashSet<>();
 
     public ProgressStatusDTO() {

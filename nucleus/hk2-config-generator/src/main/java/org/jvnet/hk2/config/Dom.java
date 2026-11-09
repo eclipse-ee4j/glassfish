@@ -1466,7 +1466,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         return listeners;
     }
 
-    private boolean isCacheSet = false;
+    private boolean isCacheSet;
     private Object cache;
 
     /*

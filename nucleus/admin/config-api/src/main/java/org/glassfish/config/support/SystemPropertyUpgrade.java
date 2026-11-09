@@ -77,7 +77,7 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
     @Inject
     @Named("gmsupgrade")
     @Optional
-    ConfigurationUpgrade precondition = null;
+    ConfigurationUpgrade precondition;
 
     private String PREFIX = "2";
     private int DEFAULT_ADMIN_PORT = 4848;

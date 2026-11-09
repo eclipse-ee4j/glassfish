@@ -76,11 +76,11 @@ public class FailureInducer {
 
     // static fields
 
-    private static boolean failureInducerIsActive = false;
-    private static boolean crash = false;
-    private static int waitPeriod = 0;
-    private static int waitCount = 0;
-    private static int recoveryWaitDuration = 0;
+    private static boolean failureInducerIsActive;
+    private static boolean crash;
+    private static int waitPeriod;
+    private static int waitCount;
+    private static int recoveryWaitDuration;
     private static Hashtable crashList = new Hashtable();
     private static Hashtable waitList = new Hashtable();
     private static Hashtable waitTime = new Hashtable();

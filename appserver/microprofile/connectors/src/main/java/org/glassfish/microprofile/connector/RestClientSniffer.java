@@ -54,7 +54,7 @@ public class RestClientSniffer extends GenericSniffer {
     @SuppressWarnings("unchecked")
     public Class<? extends Annotation>[] getAnnotationTypes() {
         return new Class[]{
-                RegisterRestClient.class
+                RegisterRestClient.class,
         };
     }
 

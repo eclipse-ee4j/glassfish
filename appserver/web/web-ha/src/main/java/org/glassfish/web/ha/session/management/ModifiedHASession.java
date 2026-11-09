@@ -26,7 +26,7 @@ import org.apache.catalina.Manager;
  */
 public class ModifiedHASession extends BaseHASession {
 
-    private transient boolean dirtyFlag = false;
+    private transient boolean dirtyFlag;
 
 
     /** Creates a new instance of ModifiedHASession */

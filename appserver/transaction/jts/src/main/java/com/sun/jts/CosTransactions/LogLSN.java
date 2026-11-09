@@ -63,8 +63,8 @@ class LogLSN implements Serializable {
 
     /**Internal instance members.
      */
-    int offset = 0;
-    int extent = 0;
+    int offset;
+    int extent;
 
     /**Default LogLSN constructor
      *

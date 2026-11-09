@@ -304,7 +304,7 @@ public class StatusGenerator extends AbstractResource {
 
         private final String className;
 
-        public NOOPClassWriter(String className, String baseClassName, String resourcePath) {
+        NOOPClassWriter(String className, String baseClassName, String resourcePath) {
             this.className = className;
             if (baseClassName.equals("TemplateRestResource")) {
                 resourcesToDeleteCommands.put(className, ""); //init the map with empty values
@@ -405,7 +405,7 @@ public class StatusGenerator extends AbstractResource {
 
     class NOOPResourcesGenerator extends ResourcesGeneratorBase {
 
-        public NOOPResourcesGenerator(ServiceLocator h) {
+        NOOPResourcesGenerator(ServiceLocator h) {
             super(h);
 
         }

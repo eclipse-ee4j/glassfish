@@ -29,11 +29,11 @@ public interface CallbackBinding<C extends Callback> {
 
     void setCallback(C callback);
 
-    public interface GUI<C extends Callback> extends CallbackBinding<C> {
+    interface GUI<C extends Callback> extends CallbackBinding<C> {
         JComponent getComponent();
     }
 
-    public interface Text<C extends Callback> extends CallbackBinding<C> {
+    interface Text<C extends Callback> extends CallbackBinding<C> {
         void run();
     }
 }

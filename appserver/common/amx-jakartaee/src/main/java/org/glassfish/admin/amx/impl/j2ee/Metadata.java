@@ -25,26 +25,26 @@ import javax.management.ObjectName;
  * @author llc
  */
 public interface Metadata {
-    public <T> T getMetadata(final String name, final Class<T> clazz);
+    <T> T getMetadata(String name, Class<T> clazz);
 
-    public void add( final String key, final Object value);
+    void add( String key, Object value);
 
-    public ObjectName getCorrespondingConfig();
-    public ObjectName getCorrespondingRef();
-    public String getDeploymentDescriptor();
+    ObjectName getCorrespondingConfig();
+    ObjectName getCorrespondingRef();
+    String getDeploymentDescriptor();
 
-    public Map<String,Object> getAll();
+    Map<String,Object> getAll();
 
     /** ObjectName of corresponding Config MBean, if any */
-    public static final String CORRESPONDING_CONFIG = "Config";
+    String CORRESPONDING_CONFIG = "Config";
 
     /** ObjectName of corresponding Config reference MBean, if any */
-    public static final String CORRESPONDING_REF = "CorrespondingRef";
+    String CORRESPONDING_REF = "CorrespondingRef";
 
     /** Object reference to parent mbean (the object, not the ObjectName) */
-    public static final String PARENT = "Parent";
+    String PARENT = "Parent";
 
     /** Object reference to parent mbean (the object, not the ObjectName) */
-    public static final String DEPLOYMENT_DESCRIPTOR = "DeploymentDescriptor";
+    String DEPLOYMENT_DESCRIPTOR = "DeploymentDescriptor";
 
 }

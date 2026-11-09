@@ -71,13 +71,13 @@ import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
 public class AdminConsoleAuthModule implements ServerAuthModule {
     // public static final String TOKEN_ADMIN_LISTENER_PORT = "${ADMIN_LISTENER_PORT}";
 
-    private CallbackHandler handler = null;
+    private CallbackHandler handler;
 
-    private String restURL = null;
+    private String restURL;
 
-    private String loginPage = null;
+    private String loginPage;
 
-    private String loginErrorPage = null;
+    private String loginErrorPage;
 
     private static final Class[] SUPPORTED_MESSAGE_TYPES = new Class[] { HttpServletRequest.class, HttpServletResponse.class };
 

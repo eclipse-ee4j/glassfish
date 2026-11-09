@@ -512,7 +512,7 @@ public final class ConfigModel {
     }
 
     static abstract class Leaf extends Property {
-        public Leaf(String xmlName) {
+        Leaf(String xmlName) {
             super(xmlName);
         }
 
@@ -785,7 +785,7 @@ public final class ConfigModel {
     }
 
     static final class ReferenceElementLeaf extends Leaf {
-        public ReferenceElementLeaf(String xmlName) {
+        ReferenceElementLeaf(String xmlName) {
             super(xmlName);
         }
 

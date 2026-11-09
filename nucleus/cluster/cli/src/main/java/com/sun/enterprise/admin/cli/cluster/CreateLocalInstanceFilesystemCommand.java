@@ -58,10 +58,10 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
     String DASProtocol;
     boolean dasIsSecure;
 
-    private File agentConfigDir = null;
-    private File dasPropsFile = null;
+    private File agentConfigDir;
+    private File dasPropsFile;
     private Properties dasProperties;
-    protected boolean setDasDefaultsOnly = false;
+    protected boolean setDasDefaultsOnly;
 
     /**
      */

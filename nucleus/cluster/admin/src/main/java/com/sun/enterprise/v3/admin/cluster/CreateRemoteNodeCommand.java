@@ -71,7 +71,7 @@ public abstract class CreateRemoteNodeCommand implements AdminCommand {
     @Param(optional = true)
     String archive;
     static final String NL = System.getProperty("line.separator");
-    Logger logger = null;
+    Logger logger;
     NodeUtils nodeUtils;
     protected String remotePort;
     protected String remoteUser;

@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface JAXRPCCodeGenFacade {
 
-     public void run(ServiceLocator habitat, DeploymentContext context, String cp, boolean processServiceReferences) throws Exception ;
+     void run(ServiceLocator habitat, DeploymentContext context, String cp, boolean processServiceReferences) throws Exception ;
 
 
 }

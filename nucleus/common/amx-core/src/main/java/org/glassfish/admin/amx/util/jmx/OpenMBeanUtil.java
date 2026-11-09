@@ -50,7 +50,7 @@ public final class OpenMBeanUtil
     {
     }
 
-    private static volatile Map<Class<?>, SimpleType> SIMPLETYPES_MAP = null;
+    private static volatile Map<Class<?>, SimpleType> SIMPLETYPES_MAP;
 
     private static Map<Class<?>, SimpleType> getSimpleTypesMap()
     {

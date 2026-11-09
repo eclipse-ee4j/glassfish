@@ -43,7 +43,7 @@ public interface ResourceManager {
      * @return ResourceStatus indicating the status of resource creation
      * @throws Exception when unable to create the resource
      */
-    ResourceStatus create(Resources resources, ResourceAttributes attributes, final Properties properties,
+    ResourceStatus create(Resources resources, ResourceAttributes attributes, Properties properties,
         String target) throws Exception;
 
     /**

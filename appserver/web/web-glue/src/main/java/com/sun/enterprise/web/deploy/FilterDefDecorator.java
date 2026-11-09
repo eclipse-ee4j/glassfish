@@ -37,7 +37,7 @@ public class FilterDefDecorator extends FilterDef {
      * The set of initialization parameters for this filter, keyed by
      * parameter name.
      */
-    private Map parameters = null;
+    private Map parameters;
 
     private ServletFilter decoree;
 

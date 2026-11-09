@@ -40,13 +40,13 @@ public interface ObjectCreationFactory {
      *
      * @throws Exception any exception thrown will be propagated upwards
      */
-    public Object createObject(Attributes attributes) throws Exception;
+    Object createObject(Attributes attributes) throws Exception;
 
     /**
      * <p>Returns the {@link Digester} that was set by the
      * {@link FactoryCreateRule} upon initialization.
      */
-    public Digester getDigester();
+    Digester getDigester();
 
     /**
      * <p>Set the {@link Digester} to allow the implementation to do logging,
@@ -54,6 +54,6 @@ public interface ObjectCreationFactory {
      *
      * @param digester parent Digester object
      */
-    public void setDigester(Digester digester);
+    void setDigester(Digester digester);
 
 }

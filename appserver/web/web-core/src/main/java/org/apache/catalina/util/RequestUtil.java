@@ -436,7 +436,7 @@ public final class RequestUtil {
      * @return The mappings from context paths to session version numbers
      * that were parsed from the given session version string
      */
-    public static final HashMap<String, String> parseSessionVersionString(
+    public static HashMap<String, String> parseSessionVersionString(
                                                 String sessionVersion) {
         if (sessionVersion == null) {
             return null;

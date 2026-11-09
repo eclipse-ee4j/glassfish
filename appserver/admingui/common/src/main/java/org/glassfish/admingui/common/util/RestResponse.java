@@ -103,9 +103,9 @@ public abstract class RestResponse {
 
 class JerseyRestResponse extends RestResponse {
     protected Response response;
-    private String body = null;
+    private String body;
 
-    public JerseyRestResponse(Response response) {
+    JerseyRestResponse(Response response) {
         this.response = response;
     }
 

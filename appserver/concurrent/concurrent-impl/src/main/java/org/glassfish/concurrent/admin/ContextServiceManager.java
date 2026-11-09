@@ -65,8 +65,8 @@ public class ContextServiceManager implements ResourceManager {
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ContextServiceManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    private String jndiName = null;
-    private String description = null;
+    private String jndiName;
+    private String description;
     private String contextInfoEnabled = Boolean.TRUE.toString();
     private String contextInfo = CONTEXT_INFO_DEFAULT_VALUE;
     private String enabled = Boolean.TRUE.toString();

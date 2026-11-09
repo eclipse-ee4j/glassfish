@@ -59,7 +59,7 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
 
     private SimpleDateFormat rfc1123Format;
     protected long lastModified = -1;
-    private String contentType = null;
+    private String contentType;
 
     /**
      * Our ServletOutputStream

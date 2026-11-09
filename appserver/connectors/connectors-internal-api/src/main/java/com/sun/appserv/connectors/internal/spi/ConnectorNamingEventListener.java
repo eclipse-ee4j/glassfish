@@ -29,5 +29,5 @@ public interface ConnectorNamingEventListener{
      * Listeners interested in the event will override this method and perform their required operations.
      * @param event
      */
-    public void connectorNamingEventPerformed(ConnectorNamingEvent event);
+    void connectorNamingEventPerformed(ConnectorNamingEvent event);
 }

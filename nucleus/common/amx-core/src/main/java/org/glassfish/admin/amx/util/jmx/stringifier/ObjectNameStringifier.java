@@ -39,7 +39,7 @@ public final class ObjectNameStringifier implements Stringifier
 {
     public final static ObjectNameStringifier DEFAULT = new ObjectNameStringifier();
 
-    private static List<String> PROPS = null;
+    private static List<String> PROPS;
 
     private synchronized static List<String> getPROPS()
     {

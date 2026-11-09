@@ -37,7 +37,7 @@ public interface Contained {
      * Return the <code>Container</code> with which this instance is associated
      * (if any); otherwise return <code>null</code>.
      */
-    public Container getContainer();
+    Container getContainer();
 
 
     /**
@@ -47,7 +47,7 @@ public interface Contained {
      *  be associated, or <code>null</code> to disassociate this instance
      *  from any Container
      */
-    public void setContainer(Container container);
+    void setContainer(Container container);
 
 
 }

@@ -145,10 +145,10 @@ public class DeployCommand extends DeployCommandParameters implements AdminComma
     @Inject
     VersioningService versioningService;
 
-    private File safeCopyOfApp = null;
-    private File safeCopyOfDeploymentPlan = null;
-    private File safeCopyOfAltDD = null;
-    private File safeCopyOfRuntimeAltDD = null;
+    private File safeCopyOfApp;
+    private File safeCopyOfDeploymentPlan;
+    private File safeCopyOfAltDD;
+    private File safeCopyOfRuntimeAltDD;
     private File originalPathValue;
     private List<String> previousTargets = new ArrayList<>();
     private final Properties previousVirtualServers = new Properties();

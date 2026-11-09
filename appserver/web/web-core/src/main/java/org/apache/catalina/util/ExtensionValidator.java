@@ -62,7 +62,7 @@ public final class ExtensionValidator {
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
 
-    private static volatile HashMap<String, Extension> containerAvailableExtensions = null;
+    private static volatile HashMap<String, Extension> containerAvailableExtensions;
     private static ArrayList<ManifestResource> containerManifestResources =
         new ArrayList<ManifestResource>();
 

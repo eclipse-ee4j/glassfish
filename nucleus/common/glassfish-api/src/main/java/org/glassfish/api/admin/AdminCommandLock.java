@@ -54,11 +54,11 @@ public class AdminCommandLock {
     /**
      * A thread which can hold a Read/Write lock across command invocations. Once the lock is released the thread will exit.
      */
-    private SuspendCommandsLockThread suspendCommandsLockThread = null;
+    private SuspendCommandsLockThread suspendCommandsLockThread;
 
-    private String lockOwner = null;
-    private String lockMessage = null;
-    private Date lockTimeOfAcquisition = null;
+    private String lockOwner;
+    private String lockMessage;
+    private Date lockTimeOfAcquisition;
 
     /**
      * The status of a suspend command attempt.
@@ -402,7 +402,7 @@ public class AdminCommandLock {
         private String lockOwner;
         private String message;
 
-        public SuspendCommandsLockThread(long timeout, BlockingQueue<SuspendStatus> suspendStatusQ, String lockOwner, String message) {
+        SuspendCommandsLockThread(long timeout, BlockingQueue<SuspendStatus> suspendStatusQ, String lockOwner, String message) {
 
             this.suspendStatusQ = suspendStatusQ;
             this.timeout = timeout;

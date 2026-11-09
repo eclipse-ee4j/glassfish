@@ -130,7 +130,7 @@ public class QueryMgrImpl extends AMXImplBase // implements Query
         return asArray(names);
     }
 
-    private final ObjectName[] asArray(final Set<ObjectName> items) {
+    private ObjectName[] asArray(final Set<ObjectName> items) {
         return CollectionUtil.toArray(items, ObjectName.class);
     }
 

@@ -142,7 +142,7 @@ public interface LogQuery {
         @Param(name = "messageID") String messageID);
 
     /** helper class, in particular to convert results from {@link #queryServerLog} */
-    public final class Helper {
+    final class Helper {
 
         private Helper() {
         }

@@ -43,7 +43,7 @@ public class DatabaseOutputStream extends OutputStream {
 
     /** Connection to the database. */
     // XXX FIXME S/b final; make it so if we can get rid of setConnection.
-    private Connection conn_ = null;
+    private Connection conn_;
 
     // XXX FIXME Assert conn != null and directly set the value of conn;
     // remove setConnection (below)

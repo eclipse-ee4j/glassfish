@@ -22,6 +22,6 @@ package com.sun.enterprise.transaction.api;
 public interface TransactionConstants {
     // LAO_PREPARE_OK is a magic number. Assimung no valid XAResource.prepare returns
     // 123456 as a return value. LAO resource'd prepare method returns this value
-    public static final int LAO_PREPARE_OK = 123456;
+    int LAO_PREPARE_OK = 123456;
 
 }

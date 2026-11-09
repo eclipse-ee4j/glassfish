@@ -37,7 +37,7 @@ public class ContextResource extends ResourceBase {
      * The authorization requirement for this resource
      * (<code>Application</code> or <code>Container</code>).
      */
-    private String auth = null;
+    private String auth;
 
     public String getAuth() {
         return (this.auth);
@@ -51,7 +51,7 @@ public class ContextResource extends ResourceBase {
     /**
      * The description of this resource.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -65,7 +65,7 @@ public class ContextResource extends ResourceBase {
     /**
      * The name of this resource.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -94,7 +94,7 @@ public class ContextResource extends ResourceBase {
     /**
      * The type of this resource.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);

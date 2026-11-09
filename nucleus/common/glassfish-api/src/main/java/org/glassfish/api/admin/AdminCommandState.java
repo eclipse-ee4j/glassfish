@@ -27,7 +27,7 @@ public interface AdminCommandState {
 
     String EVENT_STATE_CHANGED = "AdminCommandState/stateChanged";
 
-    public enum State {
+    enum State {
         /** Created new job, ready to be executed */
         PREPARED,
         /** Started and not completed */

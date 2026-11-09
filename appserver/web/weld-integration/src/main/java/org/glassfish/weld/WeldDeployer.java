@@ -170,7 +170,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
             Filter.class,
             HttpSessionListener.class,
             ServletRequestListener.class,
-            JspTag.class
+            JspTag.class,
             // TODO need to add more classes
     };
 

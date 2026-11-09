@@ -44,7 +44,7 @@ import org.glassfish.api.deployment.archive.ReadableArchive;
 public class NestedAppClientInfo extends AppClientInfo {
 
     /** which of possibly several app clients in the app the user chose */
-    private ApplicationClientDescriptor selectedAppClientDescriptor = null;
+    private ApplicationClientDescriptor selectedAppClientDescriptor;
 
     /** display name specified (if any) on the command line to use in selecting the desired client main class */
     private String displayNameFromCommandLine;

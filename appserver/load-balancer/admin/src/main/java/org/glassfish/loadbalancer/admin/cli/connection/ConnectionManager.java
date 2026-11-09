@@ -134,7 +134,7 @@ public class ConnectionManager {
                     public void checkServerTrusted(
                             java.security.cert.X509Certificate[] certs, String authType) {
                     }
-                }
+                },
             };
 
             // Install the all-trusting trust manager
@@ -160,10 +160,10 @@ public class ConnectionManager {
         }
         return conn;
     }
-    private String _lbHost = null;
-    private String _lbPort = null;
-    private String _lbProxyHost = null;
-    private String _lbProxyPort = null;
-    private String _lbName = null;
+    private String _lbHost;
+    private String _lbPort;
+    private String _lbProxyHost;
+    private String _lbProxyPort;
+    private String _lbName;
     private boolean _isSecure = true;
 }

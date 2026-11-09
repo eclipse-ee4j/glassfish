@@ -465,15 +465,15 @@ public class AdminUtil
 
 
     private static RWLock statisticsLock = new RWLock() ;
-    private static long lSampleStartTime = 0 ;
-    private static long lSampleEndTime = 0 ;
-    static boolean bSampling = false ;
-    private static int iCommits = 0;
-    private static int iAborts = 0;
-    private static int iUAborts=0;
-    private static int iPending = 0;
-    static int iRecCommits = 0;
-    static int iRecAborts = 0;
+    private static long lSampleStartTime;
+    private static long lSampleEndTime;
+    static boolean bSampling;
+    private static int iCommits;
+    private static int iAborts;
+    private static int iUAborts;
+    private static int iPending;
+    static int iRecCommits;
+    static int iRecAborts;
     /*
      * for future use
      *

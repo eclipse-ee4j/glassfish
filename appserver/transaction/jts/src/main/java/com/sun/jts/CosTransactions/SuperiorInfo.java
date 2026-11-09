@@ -62,17 +62,17 @@ class SuperiorInfo {
     /**
      * The local identifier for the transaction.
      */
-    Long localTID = null;
+    Long localTID;
 
     /**
      * The global identifier for the transaction.
      */
-    GlobalTID globalTID = null;
+    GlobalTID globalTID;
 
     /**
      * The reference of the superior Coordinator.
      */
-    Coordinator superior = null;
+    Coordinator superior;
 
     /**
      * The reference of the RecoveryCoordinator returned on the
@@ -80,7 +80,7 @@ class SuperiorInfo {
      * if any.  Note that this member may be directly read,
      *  but must be set using the setRecovery method in this class.
      */
-    RecoveryCoordinator recovery = null;
+    RecoveryCoordinator recovery;
 
     /**
      * The reference of the Resource registered on the
@@ -88,11 +88,11 @@ class SuperiorInfo {
      * Note that this member may be directly
      * read, but must be set using the setResource method in this class.
      */
-    SubtransactionAwareResource resource = null;
+    SubtransactionAwareResource resource;
 
-    private CoordinatorLog   logRecord = null;
-    private java.lang.Object logSection = null;
-    private int              resyncRetries = 0;
+    private CoordinatorLog   logRecord;
+    private java.lang.Object logSection;
+    private int              resyncRetries;
 
     private final static String LOG_SECTION_NAME = "SI"/*#Frozen*/;
 

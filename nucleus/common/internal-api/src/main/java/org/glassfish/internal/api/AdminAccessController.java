@@ -48,7 +48,7 @@ public interface AdminAccessController {
      * be authenticated but there are some places where it just returns.
      * Hence the NONE case.
      */
-    public static enum Access {
+    enum Access {
         FULL,
         READONLY,
         FORBIDDEN,

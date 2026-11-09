@@ -39,15 +39,15 @@ public interface AdminAuthCallback extends Callback {
      * keep inter-module dependencies simpler an implementation will probably
      * check the type of the data and then cast it if appropriate.
      */
-    public interface RequestAccepter extends AdminAuthCallback {
-        public void setRequest(Object data);
+    interface RequestAccepter extends AdminAuthCallback {
+        void setRequest(Object data);
     }
 
-    public interface Validator extends AdminAuthCallback {
-        public boolean isValid();
+    interface Validator extends AdminAuthCallback {
+        boolean isValid();
     }
 
-    public interface Authenticator extends AdminAuthCallback {
-        public Subject getSubject();
+    interface Authenticator extends AdminAuthCallback {
+        Subject getSubject();
     }
 }

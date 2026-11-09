@@ -54,7 +54,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return Info[], one for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getAttributes() for multiple MBeans.
@@ -65,7 +65,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return AttributeInfo[][], one AttributeInfo[] for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanAttributeInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanAttributeInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getOperations() for multiple MBeans.
@@ -76,7 +76,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return OperationInfo[][], one OperationInfo[] for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanOperationInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanOperationInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getAttributes() for multiple MBeans, then extracts the
@@ -89,7 +89,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return Object[][], one String[] for each objectName, null if not found, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttributeNames(ObjectName[] objectNames);
+    Object[] bulkGetAttributeNames(ObjectName[] objectNames);
 
     /**
     Call getAttribute( attributeName ) for multiple MBeans.
@@ -101,8 +101,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which may be the Attribute value, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttribute(final ObjectName[] objectNames,
-                                     final String attributeName);
+    Object[] bulkGetAttribute(ObjectName[] objectNames,
+                                     String attributeName);
 
     /**
     Call setAttribute( attr ) for multiple MBeans.
@@ -114,8 +114,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, each is null or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkSetAttribute(final ObjectName[] objectNames,
-                                     final Attribute attr);
+    Object[] bulkSetAttribute(ObjectName[] objectNames,
+                                     Attribute attr);
 
     /**
     Call getAttributes( attributeNames ) for multiple MBeans.
@@ -125,8 +125,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which may be the AttributeList, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttributes(final ObjectName[] objectNames,
-                                      final String[] attributeNames);
+    Object[] bulkGetAttributes(ObjectName[] objectNames,
+                                      String[] attributeNames);
 
     /**
     Call invoke( ... ) for multiple MBeans.
@@ -144,9 +144,9 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which will be the result of the invoke, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkInvoke(final ObjectName[] objectNames,
-                               final String operationName,
-                               final Object[] args, final String[] types);
+    Object[] bulkInvoke(ObjectName[] objectNames,
+                               String operationName,
+                               Object[] args, String[] types);
 
 }
 

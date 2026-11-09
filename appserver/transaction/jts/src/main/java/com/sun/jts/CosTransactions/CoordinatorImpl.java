@@ -348,8 +348,8 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
      */
     public abstract void doFinalize();
 
-    private static POA poa = null;
-    private Coordinator thisRef = null;
+    private static POA poa;
+    private Coordinator thisRef;
 
     /**Returns a CORBA object which represents the transaction.
      */

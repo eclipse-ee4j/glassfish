@@ -33,9 +33,9 @@ import java.util.StringTokenizer;
 public class MimeHeader extends Hashtable
 {
     private String RequestHeader=new String();
-    private  boolean requestGET=false;
-    private boolean requestPOST=false;
-    private boolean cookieSet=false;
+    private  boolean requestGET;
+    private boolean requestPOST;
+    private boolean cookieSet;
     private String postdata=new String();
 
 

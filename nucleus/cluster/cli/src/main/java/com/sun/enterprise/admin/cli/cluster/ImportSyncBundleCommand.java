@@ -111,7 +111,7 @@ public class ImportSyncBundleCommand extends LocalInstanceCommand {
     private File dasPropsFile;
     private Properties dasProperties;
 
-    private File syncBundleFile = null;
+    private File syncBundleFile;
     private File agentConfigDir;
     private File backupDir;
 

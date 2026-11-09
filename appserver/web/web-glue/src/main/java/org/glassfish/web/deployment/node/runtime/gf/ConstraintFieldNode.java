@@ -34,7 +34,7 @@ import org.xml.sax.Attributes;
 */
 public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> {
 
-    protected ConstraintField descriptor = null;
+    protected ConstraintField descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

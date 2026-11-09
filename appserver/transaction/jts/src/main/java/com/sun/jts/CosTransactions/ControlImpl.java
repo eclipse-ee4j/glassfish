@@ -82,26 +82,26 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
 
 public class ControlImpl extends JControlPOA implements Control {
 
-    private static POA poa = null;
-    private Control thisRef = null;
+    private static POA poa;
+    private Control thisRef;
 
-    protected boolean         temporary = false;
-    protected boolean         inSuspended = false;
+    protected boolean         temporary;
+    protected boolean         inSuspended;
     protected Status          tranState = Status.StatusActive;
-    protected CoordinatorImpl coord = null;
-    protected Coordinator     coordRef = null;
-    protected TerminatorImpl  term = null;
-    protected Terminator      termRef = null;
-    protected ControlImpl     stacked = null;
-    protected GlobalTID       globalTID = null;
-    protected Long            localTID = null;
-    protected boolean         representsRemote = false;
-    protected PropagationContext cachedContext = null;
+    protected CoordinatorImpl coord;
+    protected Coordinator     coordRef;
+    protected TerminatorImpl  term;
+    protected Terminator      termRef;
+    protected ControlImpl     stacked;
+    protected GlobalTID       globalTID;
+    protected Long            localTID;
+    protected boolean         representsRemote;
+    protected PropagationContext cachedContext;
 
     // Transaction checking values
 
-    protected int outgoing = 0;
-    protected int association = 0;
+    protected int outgoing;
+    protected int association;
 
     /**
      * Logger to log transaction messages

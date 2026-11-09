@@ -33,5 +33,5 @@ public interface IRealmManager extends java.rmi.Remote {
      *
      * @param String realmName
      */
-    public void refreshRealms(String realmName) throws java.rmi.RemoteException;
+    void refreshRealms(String realmName) throws java.rmi.RemoteException;
 }

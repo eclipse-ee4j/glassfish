@@ -29,19 +29,19 @@ public interface JVMThreadInfoStats extends Stats {
      * Returns the Id of the thread
      * @return  CountStatistic  Id of the thread
      */
-    public CountStatistic getThreadId();
+    CountStatistic getThreadId();
 
     /**
      * Returns the name of the thread
      * @return  StringStatistic name of the thread
      */
-    public StringStatistic getThreadName();
+    StringStatistic getThreadName();
 
     /**
      * Returns the state of the thread
      * @return StringStatistic  Thread state
      */
-    public StringStatistic getThreadState();
+    StringStatistic getThreadState();
 
     /**
      * Returns the elapsed time (in milliseconds) that the thread associated
@@ -51,7 +51,7 @@ public interface JVMThreadInfoStats extends Stats {
      *                          entered the BLOCKED state. Returns -1 if thread
      *                          contention monitoring is disabled
      */
-     public CountStatistic getBlockedTime();
+     CountStatistic getBlockedTime();
 
      /**
       * Returns the number of times that this thread has been in the blocked
@@ -59,7 +59,7 @@ public interface JVMThreadInfoStats extends Stats {
       * @return CountStatistic  the total number of times that the thread
       *                         entered the BLOCKED state
       */
-     public CountStatistic getBlockedCount();
+     CountStatistic getBlockedCount();
 
      /**
       * Returns the elapsed time(in milliseconds) that the thread has been in
@@ -68,7 +68,7 @@ public interface JVMThreadInfoStats extends Stats {
       *                         been in a WAITING state. Returns -1 if thread
       *                         contention monitoring is disabled.
       */
-     public CountStatistic getWaitedTime();
+     CountStatistic getWaitedTime();
 
      /**
       * Returns the number of times that the thread has been in WAITING or
@@ -76,7 +76,7 @@ public interface JVMThreadInfoStats extends Stats {
       * @return CountStatistic  total number of times that the thread was in
       *                         WAITING or TIMED_WAITING states
       */
-     public CountStatistic getWaitedCount();
+     CountStatistic getWaitedCount();
 
      /**
       * Returns the string representation of the monitor lock that the thread
@@ -84,14 +84,14 @@ public interface JVMThreadInfoStats extends Stats {
       * the Object.wait method
       * @return StringStatistic the string representation of the monitor lock
       */
-     public StringStatistic getLockName();
+     StringStatistic getLockName();
 
      /**
       * Returns the Id of the thread which holds the monitor lock of an
       * object on which this thread is blocking
       * @return CountStatistic Id of the thread holding the lock.
       */
-     public CountStatistic getLockOwnerId();
+     CountStatistic getLockOwnerId();
 
 
      /**
@@ -99,10 +99,10 @@ public interface JVMThreadInfoStats extends Stats {
       * object this thread is blocking on
       * @return StringStatistic name of the thread holding the monitor lock.
       */
-     public StringStatistic getLockOwnerName();
+     StringStatistic getLockOwnerName();
 
      /**
       * Returns the stacktrace associated with this thread
       */
-     public StringStatistic getStackTrace();
+     StringStatistic getStackTrace();
 }

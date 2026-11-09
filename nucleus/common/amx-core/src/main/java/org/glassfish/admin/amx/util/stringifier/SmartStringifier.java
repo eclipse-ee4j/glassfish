@@ -58,7 +58,7 @@ public final class SmartStringifier implements Stringifier {
     private final static Class[] STRINGIFIER_REGISTRY_LOOKUPS = {
         Iterator.class,
         Collection.class,
-        HashMap.class
+        HashMap.class,
     };
 
     private Stringifier getStringifier(final Object target) {

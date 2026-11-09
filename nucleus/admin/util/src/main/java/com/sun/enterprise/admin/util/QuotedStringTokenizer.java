@@ -22,7 +22,7 @@ public class QuotedStringTokenizer {
     private final char[] ca;
     private String delimiters = "\t ";
     private final int numTokens;
-    private int curToken = 0;
+    private int curToken;
     private final CharIterator iterator;
 
     public QuotedStringTokenizer(String s) {
@@ -109,7 +109,7 @@ public class QuotedStringTokenizer {
         static final char EOF = '\uFFFF';
 
         private final char[] carr;
-        private int index = 0;
+        private int index;
 
         private CharIterator(char[] ca) {
             carr = ca;

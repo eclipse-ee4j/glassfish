@@ -87,7 +87,7 @@ public class JdbcRecoveryResourceHandler implements RecoveryResourceHandler {
     @Inject
     private Provider<ConnectorRuntime> connectorRuntimeProvider;
 
-    private ResourcesUtil resourcesUtil = null;
+    private ResourcesUtil resourcesUtil;
 
     private static Logger _logger = LogDomains.getLogger(JdbcRecoveryResourceHandler.class, LogDomains.RSR_LOGGER);
 

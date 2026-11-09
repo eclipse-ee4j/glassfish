@@ -57,7 +57,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
 
     private ReadableArchive appClientArchive;
 
-    private AppClientArchivist appClientArchivist = null;
+    private AppClientArchivist appClientArchivist;
 
     public StandAloneAppClientInfo(
         boolean isJWS, Logger logger, ReadableArchive archive,

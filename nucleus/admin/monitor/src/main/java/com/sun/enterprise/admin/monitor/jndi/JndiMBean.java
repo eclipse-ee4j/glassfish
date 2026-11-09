@@ -40,6 +40,6 @@ public interface JndiMBean extends DynamicMBean {
      * @return An array of serializable NameClassPair objects.
      * @throws MBeanException when an error occurs in retrieving the entries.
      */
-    public java.util.ArrayList getNames(String context) throws NamingException;
+    java.util.ArrayList getNames(String context) throws NamingException;
 
 }

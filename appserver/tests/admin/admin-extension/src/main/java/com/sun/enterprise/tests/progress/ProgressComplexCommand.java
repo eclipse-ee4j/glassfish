@@ -142,7 +142,7 @@ public class ProgressComplexCommand implements AdminCommand {
         private final long interval;
         private final String message;
 
-        public ProgressRunnable(final ProgressStatus ps, final int count, final long interval, final String message) {
+        ProgressRunnable(final ProgressStatus ps, final int count, final long interval, final String message) {
             this.ps = ps;
             this.count = count;
             this.interval = interval;

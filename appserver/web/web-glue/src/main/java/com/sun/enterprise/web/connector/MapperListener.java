@@ -62,7 +62,7 @@ public class MapperListener implements NotificationListener, NotificationFilter{
 
     private String domain="*";
 
-    private transient Engine engine = null;
+    private transient Engine engine;
 
     public transient HttpService httpService;
 
@@ -70,7 +70,7 @@ public class MapperListener implements NotificationListener, NotificationFilter{
 
     protected static final ResourceBundle rb = logger.getResourceBundle();
 
-    protected transient Mapper mapper = null;
+    protected transient Mapper mapper;
 
     // START SJSAS 6313044
     private String myInstance;

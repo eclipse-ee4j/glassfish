@@ -45,7 +45,7 @@ public interface LocalStringManager {
      * @param defaultValue The default return value if not found
      * @return The localized value for the resource
      */
-    public String getLocalString(
+    String getLocalString(
             Class callerClass,
             String key,
             String defaultValue
@@ -60,7 +60,7 @@ public interface LocalStringManager {
      * @param arguments     The set of arguments to provide to the formatter
      * @return A formatted localized string
      */
-    public String getLocalString(
+    String getLocalString(
             Class callerClass,
             String key,
             String defaultFormat,

@@ -37,12 +37,12 @@ public interface NumberType
      * @param value value to be converted
      * @return converted value
      */
-    public Number getValue(Number value);
+    Number getValue(Number value);
 
     /**
      * Returns -value.
      * @param value value to be negated
      * @return -value
      */
-    public Number negate(Number value);
+    Number negate(Number value);
 }

@@ -52,7 +52,7 @@ public class ContextRuleSet extends RuleSetBase {
     /**
      * The matching pattern prefix to use for recognizing our elements.
      */
-    protected String prefix = null;
+    protected String prefix;
 
 
     // ------------------------------------------------------------ Constructor
@@ -245,7 +245,7 @@ public class ContextRuleSet extends RuleSetBase {
 
 final class CreateLoaderRule extends Rule {
 
-    public CreateLoaderRule(Digester digester, String loaderClass,
+    CreateLoaderRule(Digester digester, String loaderClass,
                             String attributeName) {
 
         super(digester);

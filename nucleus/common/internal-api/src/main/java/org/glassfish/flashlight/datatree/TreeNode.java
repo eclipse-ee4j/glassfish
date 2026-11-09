@@ -31,40 +31,40 @@ import java.util.List;
 public interface TreeNode extends TreeElement {
 
 
-    public String getCategory ();
-    public void setCategory (String category);
+    String getCategory ();
+    void setCategory (String category);
 
-    public boolean isEnabled ();
-    public void setEnabled (boolean enabled);
+    boolean isEnabled ();
+    void setEnabled (boolean enabled);
 
-    public void setDescription (String description);
-    public String getDescription ();
+    void setDescription (String description);
+    String getDescription ();
 
     // Children utility methods
-    public TreeNode addChild (TreeNode newChild);
-    public void removeChild(TreeNode oldChild);
-    public void setParent (TreeNode parent);
-    public TreeNode getParent ();
+    TreeNode addChild (TreeNode newChild);
+    void removeChild(TreeNode oldChild);
+    void setParent (TreeNode parent);
+    TreeNode getParent ();
 
     /**
      *
      * @return complete dotted name to this node
      */
-    public String getCompletePathName ();
+    String getCompletePathName ();
 
-    public boolean hasChildNodes ();
-
-    /**
-     *
-     * @return Collection<TreeNode> collection of children
-     */
-    public Collection<TreeNode> getChildNodes ();
+    boolean hasChildNodes ();
 
     /**
      *
      * @return Collection<TreeNode> collection of children
      */
-    public Collection<TreeNode> getEnabledChildNodes ();
+    Collection<TreeNode> getChildNodes ();
+
+    /**
+     *
+     * @return Collection<TreeNode> collection of children
+     */
+    Collection<TreeNode> getEnabledChildNodes ();
 
     /**
      *
@@ -72,7 +72,7 @@ public interface TreeNode extends TreeElement {
      * @return TreeNode uniquely identified tree node. Null if no matching tree node.
      */
 
-    public TreeNode getNode (String completeName);
+    TreeNode getNode (String completeName);
 
     /**
      * Performs a depth first traversal of the tree. Returns all the nodes in the
@@ -81,7 +81,7 @@ public interface TreeNode extends TreeElement {
      * @return List<TreeNode> lists all nodes under the current sub tree.
      */
 
-    public List<TreeNode> traverse (boolean ignoreDisabled);
+    List<TreeNode> traverse (boolean ignoreDisabled);
     /**
      *
      * Returns all nodes that match the given Regex pattern as specified by the
@@ -96,16 +96,16 @@ public interface TreeNode extends TreeElement {
      * The implementation should consider pattern as a v2 pattern.
      * @return
      */
-    public List<TreeNode> getNodes (String pattern, boolean ignoreDisabled, boolean gfv2Compatible);
+    List<TreeNode> getNodes (String pattern, boolean ignoreDisabled, boolean gfv2Compatible);
 
     /**
      * Behaves as {@link #getNodes(String, boolean, boolean)} with ignoreDisabled set to true
      * and gfV2Compatible set to true
      * Pattern is considered to be a GFV2 Compatible Pattern
      */
-    public List<TreeNode> getNodes (String pattern);
+    List<TreeNode> getNodes (String pattern);
 
-    public TreeNode getChild(String childName);
+    TreeNode getChild(String childName);
 
     /**
      * Get the "parent" matching the given pattern.

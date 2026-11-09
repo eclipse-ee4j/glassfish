@@ -41,7 +41,7 @@ public enum AppserverServiceType {
         return stop;
     }
 
-    private AppserverServiceType(String start, String restart, String stop) {
+    AppserverServiceType(String start, String restart, String stop) {
         this.start = start;
         this.restart = restart;
         this.stop = stop;

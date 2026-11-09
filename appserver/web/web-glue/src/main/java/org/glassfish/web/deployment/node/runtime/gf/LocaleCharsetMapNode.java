@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 */
 public class LocaleCharsetMapNode extends RuntimeDescriptorNode<LocaleCharsetMap> {
 
-    protected LocaleCharsetMap descriptor = null;
+    protected LocaleCharsetMap descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

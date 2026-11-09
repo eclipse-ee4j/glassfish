@@ -31,6 +31,6 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface Populator {
 
-    public void run(ConfigParser parser) throws ConfigPopulatorException;
+    void run(ConfigParser parser) throws ConfigPopulatorException;
 
 }

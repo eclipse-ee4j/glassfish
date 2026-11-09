@@ -338,7 +338,7 @@ public class ConnectionManager {
     /**
      * Free non-pooled connection to reduce time for getting a new connection.
      */
-    private transient ConnectionImpl freeConn = null;
+    private transient ConnectionImpl freeConn;
 
 
     /**

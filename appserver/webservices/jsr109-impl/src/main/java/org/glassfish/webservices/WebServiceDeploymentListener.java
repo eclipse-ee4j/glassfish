@@ -25,6 +25,6 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
  * @author Alexey Stashok
  */
 public interface WebServiceDeploymentListener {
-    public void onDeployed(WebServiceEndpoint endpoint);
-    public void onUndeployed(WebServiceEndpoint endpoint);
+    void onDeployed(WebServiceEndpoint endpoint);
+    void onUndeployed(WebServiceEndpoint endpoint);
 }

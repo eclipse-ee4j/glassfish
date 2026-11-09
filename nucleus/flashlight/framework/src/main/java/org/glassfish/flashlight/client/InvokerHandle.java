@@ -21,8 +21,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface InvokerHandle {
 
-    public int getInvokerId();
+    int getInvokerId();
 
-    public ProbeHandle getProbeHandle();
+    ProbeHandle getProbeHandle();
 
 }

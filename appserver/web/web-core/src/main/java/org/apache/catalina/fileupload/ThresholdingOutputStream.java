@@ -76,7 +76,7 @@ abstract class ThresholdingOutputStream
      *
      * @param threshold The number of bytes at which to trigger an event.
      */
-    public ThresholdingOutputStream(int threshold)
+    ThresholdingOutputStream(int threshold)
     {
         this.threshold = threshold;
     }

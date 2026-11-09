@@ -66,13 +66,13 @@ public class GetHostAndPortCommand implements AdminCommand, AdminCommandSecurity
     public String target = "server";
 
     @Param(optional=true)
-    public String virtualServer = null;
+    public String virtualServer;
 
     @Param(optional=true, defaultValue="false")
     public Boolean securityEnabled = false;
 
     @Param(optional=true)
-    public String moduleId = null;
+    public String moduleId;
 
     @Inject
     Configs configs;

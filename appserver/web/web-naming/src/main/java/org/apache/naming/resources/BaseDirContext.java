@@ -72,13 +72,13 @@ public abstract class BaseDirContext implements DirContext {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**
      * The document base path.
      */
-    protected String docBase = null;
+    protected String docBase;
 
 
     /**

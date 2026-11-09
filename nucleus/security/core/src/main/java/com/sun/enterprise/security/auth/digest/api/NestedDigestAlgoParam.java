@@ -27,5 +27,5 @@ public interface NestedDigestAlgoParam extends DigestAlgorithmParameter {
     /**
      * @returns array of parameter values.
      */
-    public AlgorithmParameterSpec[] getNestedParams();
+    AlgorithmParameterSpec[] getNestedParams();
 }

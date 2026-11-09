@@ -36,7 +36,7 @@ import java.util.function.Consumer;
 @ClientEndpoint
 public class WebSocketClient {
 
-    Session userSession = null;
+    Session userSession;
     private Consumer<String> messageHandler;
 
     public WebSocketClient(URI endpointURI) {

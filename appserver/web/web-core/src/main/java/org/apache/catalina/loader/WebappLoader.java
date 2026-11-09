@@ -467,7 +467,7 @@ public class WebappLoader implements Lifecycle, Loader, PropertyChangeListener {
         lifecycle.removeLifecycleListener(listener);
     }
 
-    private boolean initialized = false;
+    private boolean initialized;
 
     public void init() {
         initialized = true;

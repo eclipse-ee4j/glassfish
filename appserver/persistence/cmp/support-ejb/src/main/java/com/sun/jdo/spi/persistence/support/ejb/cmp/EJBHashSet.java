@@ -39,18 +39,18 @@ import static java.lang.System.Logger.Level.TRACE;
 public class EJBHashSet extends HashSet<Object> {
     // Reference to the PersistenceManager and Transaction that were active
     // at the time of this Set creation.
-    private PersistenceManager pm = null;
-    private Transaction tx = null;
+    private PersistenceManager pm;
+    private Transaction tx;
 
     // HashSet of the persistence-capable instances associated with this Set.
-    private HashSet<Object> pcSet = null;
+    private HashSet<Object> pcSet;
 
     // Helper instance for conversion of the persistence-capable instances
     // to the EJBLocalObject type and back.
-    private JDOEJB20Helper helper = null;
+    private JDOEJB20Helper helper;
 
     // Flag that indicates invalid state of this Set.
-    private boolean valid = false;
+    private boolean valid;
 
     private static final Logger LOG = System.getLogger(EJBHashSet.class.getName());
 
@@ -313,7 +313,7 @@ public class EJBHashSet extends HashSet<Object> {
     private class EJBHashIterator implements Iterator<Object> {
 
         Iterator<Object> _iterator;
-        Object lastReturned = null;
+        Object lastReturned;
 
         EJBHashIterator() {
             _iterator = pcSet.iterator();

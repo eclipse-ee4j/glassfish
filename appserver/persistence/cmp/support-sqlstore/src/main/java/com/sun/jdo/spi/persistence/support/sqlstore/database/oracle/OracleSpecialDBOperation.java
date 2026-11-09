@@ -235,8 +235,8 @@ public class OracleSpecialDBOperation extends BaseSpecialDBOperation {
         void defineColumnType(int index, int type) throws SQLException;
         void defineColumnType( int index, int type, int length)
             throws SQLException;
-        public void clearDefines() throws SQLException;
-        public void bindFixedCharColumn(int index, String strVal, int length)
+        void clearDefines() throws SQLException;
+        void bindFixedCharColumn(int index, String strVal, int length)
             throws SQLException;
     }
 

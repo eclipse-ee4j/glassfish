@@ -67,20 +67,20 @@ public class ProbeProviderClassFileTransformer implements ClassFileTransformer {
     ///////////////  instance variables  //////////////////
     // Don't hold a strong ref to the class, it will prevent entries in the weak map from being reclaimed
     private final WeakReference<Class> providerClassRef;
-    private String providerClassName = null;
+    private String providerClassName;
     private final Map<String, FlashlightProbe> probes = new HashMap<>();
     private ClassWriter cw;
-    private volatile boolean enabled = false;
+    private volatile boolean enabled;
     private boolean allProbesTransformed = true;
-    private boolean transformerAdded = false;
-    private int count = 0;  // Only used for debug so we can look at the before/after class dumps for each iteration
+    private boolean transformerAdded;
+    private int count;  // Only used for debug so we can look at the before/after class dumps for each iteration
     ///////////////  static variables  //////////////////
     // weak map here so the classes don't prevent app classloaders from being reclaimed
     private static Map<Class, ProbeProviderClassFileTransformer> instances =
         new WeakHashMap<>();
     private static final Instrumentation instrumentation;
     private static boolean _debug = Boolean.parseBoolean(Utility.getEnvOrProp("AS_DEBUG"));
-    private static boolean emittedAttachUnavailableMessageAlready = false;
+    private static boolean emittedAttachUnavailableMessageAlready;
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
 
     private ProbeProviderClassFileTransformer(Class providerClass) {

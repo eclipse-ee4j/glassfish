@@ -360,16 +360,16 @@ public class AutodeployRetryManager implements PostConstruct {
     private abstract class Info {
 
         /** File recorded in this Info instance */
-        protected File file = null;
+        protected File file;
 
         /** Timestamp after which all retries on this file should stop. */
-        protected long retryExpiration = 0;
+        protected long retryExpiration;
 
         /**
          *Creates a new instance of the Info object for the specified file.
          *@param File to be recorded
          */
-        public Info(File file) {
+        Info(File file) {
             this.file = file;
         }
 
@@ -411,7 +411,7 @@ public class AutodeployRetryManager implements PostConstruct {
          * invalid. */
         private long recordedLength;
 
-        public JarInfo(File f) {
+        JarInfo(File f) {
             super(f);
             recordedLength = f.length();
             update();
@@ -451,7 +451,7 @@ public class AutodeployRetryManager implements PostConstruct {
 
         private long whenScanned;
 
-        public DirectoryInfo(File f) {
+        DirectoryInfo(File f) {
             super(f);
             whenScanned = 0;
             update();

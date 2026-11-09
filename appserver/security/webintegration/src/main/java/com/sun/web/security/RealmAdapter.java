@@ -196,12 +196,12 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      */
     protected volatile WebSecurityManager webSecurityManager;
 
-    protected boolean isCurrentURIincluded = false;
+    protected boolean isCurrentURIincluded;
     /*
      * the following fields are used to implement a bypass of FBL related targets
      */
     protected final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private boolean contextEvaluated = false;
+    private boolean contextEvaluated;
     private String loginPage;
     private String errorPage;
     private final static SecurityConstraint[] emptyConstraints = new SecurityConstraint[] {};
@@ -1676,8 +1676,8 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
 
     private static class HttpMessageInfo implements MessageInfo {
 
-        private Object request = null;
-        private Object response = null;
+        private Object request;
+        private Object response;
         private final Map map = new HashMap();
 
         HttpMessageInfo() {

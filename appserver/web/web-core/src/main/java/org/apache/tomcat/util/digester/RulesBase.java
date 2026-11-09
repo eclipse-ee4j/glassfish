@@ -59,7 +59,7 @@ public class RulesBase implements Rules {
     /**
      * The Digester instance with which this Rules instance is associated.
      */
-    protected Digester digester = null;
+    protected Digester digester;
 
 
     /**
@@ -67,7 +67,7 @@ public class RulesBase implements Rules {
      * objects are relevant, or <code>null</code> for matching independent
      * of namespaces.
      */
-    protected String namespaceURI = null;
+    protected String namespaceURI;
 
 
     /**

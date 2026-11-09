@@ -32,7 +32,7 @@ import org.glassfish.api.BytecodePreprocessor;
  */
 public class PreprocessorUtil {
 
-    private static boolean _preprocessorEnabled = false;
+    private static boolean _preprocessorEnabled;
     private static BytecodePreprocessor[] _preprocessor;
 
     /**

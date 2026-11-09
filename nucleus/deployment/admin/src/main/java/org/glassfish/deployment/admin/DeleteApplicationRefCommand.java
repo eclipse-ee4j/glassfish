@@ -81,7 +81,7 @@ public class DeleteApplicationRefCommand implements AdminCommand, AdminCommandSe
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteApplicationRefCommand.class);
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=true)
     String target = "server";

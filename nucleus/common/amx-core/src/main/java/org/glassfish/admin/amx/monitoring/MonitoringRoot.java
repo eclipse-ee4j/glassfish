@@ -33,5 +33,5 @@ import org.glassfish.admin.amx.core.AMXProxy;
 public interface MonitoringRoot extends AMXProxy, Singleton
 {
     @ManagedAttribute
-    public Map<String,ServerMon> getServerMon();
+    Map<String,ServerMon> getServerMon();
 }

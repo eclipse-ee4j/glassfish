@@ -66,7 +66,7 @@ public final class MBeanInfoSupport {
     private MBeanInfoSupport() {
     }
 
-    private static MBeanInfo amxspiMBeanInfo = null;
+    private static MBeanInfo amxspiMBeanInfo;
 
     public static synchronized MBeanInfo getAMX_SPIMBeanInfo() {
         if (amxspiMBeanInfo == null) {

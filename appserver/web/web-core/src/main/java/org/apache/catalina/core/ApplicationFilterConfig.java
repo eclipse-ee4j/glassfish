@@ -55,7 +55,7 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
      * @exception InstantiationException if an exception occurs while instantiating the filter object
      * @exception ServletException if thrown by the filter's init() method
      */
-    public ApplicationFilterConfig(StandardContext context, FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
+    ApplicationFilterConfig(StandardContext context, FilterDef filterDef) throws ClassCastException, ClassNotFoundException, IllegalAccessException, InstantiationException, ServletException {
         super();
         this.context = context;
         setFilterDef(filterDef);
@@ -76,17 +76,17 @@ final class ApplicationFilterConfig implements FilterConfig, Serializable {
     /**
      * The Context with which we are associated.
      */
-    private transient StandardContext context = null;
+    private transient StandardContext context;
 
     /**
      * The application Filter we are configured for.
      */
-    private transient Filter filter = null;
+    private transient Filter filter;
 
     /**
      * The <code>FilterDef</code> that defines our associated Filter.
      */
-    private FilterDef filterDef = null;
+    private FilterDef filterDef;
 
     /**
      * Does the filter instance need to be initialized?

@@ -101,7 +101,7 @@ public class JAXWSAdapterRegistryTest {
 
         private final int x;
 
-        public A(int x) {
+        A(int x) {
             super(new WSE());
             this.x = x;
         }

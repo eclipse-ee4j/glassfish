@@ -39,7 +39,7 @@ public class FIFOEJBObjectCache<K, V> extends LruEJBCache<K, V> implements EJBOb
     protected EJBObjectCacheListener listener;
 
     protected Object refCountLock = new Object();
-    protected int totalRefCount = 0;
+    protected int totalRefCount;
     protected static final boolean _printRefCount = Boolean.getBoolean("cache.printrefcount");
 
     private static final Logger _logger = LogDomains.getLogger(FIFOEJBObjectCache.class, LogDomains.EJB_LOGGER);

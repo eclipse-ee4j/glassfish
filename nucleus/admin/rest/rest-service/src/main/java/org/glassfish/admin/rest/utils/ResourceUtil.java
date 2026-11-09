@@ -100,7 +100,7 @@ import static org.glassfish.admin.rest.utils.Util.methodNameFromDtdName;
 public class ResourceUtil {
     private static final Logger LOG = System.getLogger(ResourceUtil.class.getName());
     private static final String MESSAGE_PARAMETERS = "messageParameters";
-    private static RestConfig restConfig = null;
+    private static RestConfig restConfig;
     // TODO: this is copied from org.jvnet.hk2.config.Dom. If we are not able to encapsulate the conversion in Dom,
     // need to make sure that the method convertName is refactored into smaller methods such that trimming of prefixes
     // stops. We will need a promotion of HK2 for this.

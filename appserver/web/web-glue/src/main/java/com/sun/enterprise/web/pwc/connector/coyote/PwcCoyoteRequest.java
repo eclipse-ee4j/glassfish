@@ -52,11 +52,11 @@ public class PwcCoyoteRequest extends Request {
     private static final ResourceBundle rb = logger.getResourceBundle();
 
     // Have we already determined request encoding from sun-web.xml?
-    private boolean sunWebXmlChecked = false;
+    private boolean sunWebXmlChecked;
 
     // START SJSAS 6346738
-    private byte[] formData = null;
-    private int formDataLen = 0;
+    private byte[] formData;
+    private int formDataLen;
     // END SJSAS 6346738
 
     @Override

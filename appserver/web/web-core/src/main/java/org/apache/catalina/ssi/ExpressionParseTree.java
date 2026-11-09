@@ -213,10 +213,10 @@ public class ExpressionParseTree {
      */
     private class StringNode extends Node {
         StringBuilder value;
-        String resolved = null;
+        String resolved;
 
 
-        public StringNode(String value) {
+        StringNode(String value) {
             this.value = new StringBuilder(value);
         }
 

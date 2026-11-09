@@ -75,13 +75,13 @@ public class HostConfig
     /**
      * App base.
      */
-    private File appBase = null;
+    private File appBase;
 
 
     /**
      * Config base.
      */
-    private File configBase = null;
+    private File configBase;
 
 
     /**
@@ -99,7 +99,7 @@ public class HostConfig
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**
@@ -112,19 +112,19 @@ public class HostConfig
     /**
      * The Host we are associated with.
      */
-    protected Host host = null;
+    protected Host host;
 
     /**
      * Should we deploy XML Context config files?
      */
-    private boolean deployXML = false;
+    private boolean deployXML;
 
 
     /**
      * Should we unpack WAR files when auto-deploying applications in the
      * <code>appBase</code> directory?
      */
-    private boolean unpackWARs = false;
+    private boolean unpackWARs;
 
 
     /**
@@ -150,13 +150,13 @@ public class HostConfig
     /**
      * Attribute value used to turn on/off XML validation
      */
-    private boolean xmlValidation = false;
+    private boolean xmlValidation;
 
 
     /**
      * Attribute value used to turn on/off XML namespace awarenes.
      */
-    private boolean xmlNamespaceAware = false;
+    private boolean xmlNamespaceAware;
 
 
     /**

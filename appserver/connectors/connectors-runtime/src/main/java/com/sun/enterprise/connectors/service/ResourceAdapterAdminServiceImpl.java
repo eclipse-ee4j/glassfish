@@ -562,7 +562,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     private static class RAShutdownTask implements Runnable {
         private final ActiveResourceAdapter ra;
 
-        public RAShutdownTask(ActiveResourceAdapter ratoBeShutDown) {
+        RAShutdownTask(ActiveResourceAdapter ratoBeShutDown) {
             this.ra = ratoBeShutDown;
         }
 
@@ -578,7 +578,7 @@ public class ResourceAdapterAdminServiceImpl extends ConnectorService {
     private class RAShutdownHandler implements Runnable {
         private final String moduleName;
 
-        public RAShutdownHandler(String moduleName){
+        RAShutdownHandler(String moduleName){
             this.moduleName = moduleName;
         }
         @Override

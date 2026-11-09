@@ -247,7 +247,7 @@ public final class CGIServlet extends HttpServlet {
     /* some vars below copied from Craig R. McClanahan's InvokerServlet */
 
     /** the debugging detail level for this servlet. */
-    private int debug = 0;
+    private int debug;
 
     /**
      *  The CGI search path will start at
@@ -667,37 +667,37 @@ public final class CGIServlet extends HttpServlet {
 
 
         /** context of the enclosing servlet */
-        private ServletContext context = null;
+        private ServletContext context;
 
         /** context path of enclosing servlet */
-        private String contextPath = null;
+        private String contextPath;
 
         /** servlet URI of the enclosing servlet */
-        private String servletPath = null;
+        private String servletPath;
 
         /** pathInfo for the current request */
-        private String pathInfo = null;
+        private String pathInfo;
 
         /** real file system directory of the enclosing servlet's web app */
-        private String webAppRootDir = null;
+        private String webAppRootDir;
 
         /** tempdir for context - used to expand scripts in unexpanded wars */
-        private File tmpDir = null;
+        private File tmpDir;
 
         /** derived cgi environment */
-        private Hashtable<String, String> env = null;
+        private Hashtable<String, String> env;
 
         /** cgi command to be invoked */
-        private String command = null;
+        private String command;
 
         /** cgi command's desired working directory */
-        private File workingDirectory = null;
+        private File workingDirectory;
 
         /** cgi command's command line parameters */
         private ArrayList<String> cmdLineParameters = new ArrayList<String>();
 
         /** whether or not this object is valid or not */
-        private boolean valid = false;
+        private boolean valid;
 
 
         /**
@@ -1440,25 +1440,25 @@ public final class CGIServlet extends HttpServlet {
     protected class CGIRunner {
 
         /** script/command to be executed */
-        private String command = null;
+        private String command;
 
         /** environment used when invoking the cgi script */
-        private Hashtable<String, String> env = null;
+        private Hashtable<String, String> env;
 
         /** working directory used when invoking the cgi script */
-        private File wd = null;
+        private File wd;
 
         /** command line parameters to be passed to the invoked script */
-        private ArrayList<String> params = null;
+        private ArrayList<String> params;
 
         /** stdin to be passed to cgi script */
-        private InputStream stdin = null;
+        private InputStream stdin;
 
         /** response object used to set headers & get output stream */
-        private HttpServletResponse response = null;
+        private HttpServletResponse response;
 
         /** boolean tracking whether this object has enough info to run() */
-        private boolean readyToRun = false;
+        private boolean readyToRun;
 
 
 

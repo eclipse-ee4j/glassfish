@@ -24,7 +24,7 @@ import java.util.Map;
  * Implementation of {@link AttributePreprocessor}
  */
 public class AttributePreprocessorImpl implements AttributePreprocessor {
-    private Map<String, String> _lookUpMap = null;
+    private Map<String, String> _lookUpMap;
     private static final String DELIMITER = "$";
 
     AttributePreprocessorImpl() {

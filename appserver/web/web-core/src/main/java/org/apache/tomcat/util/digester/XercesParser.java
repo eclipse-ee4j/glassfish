@@ -85,7 +85,7 @@ public class XercesParser{
     /**
      * The current Xerces version.
      */
-    static String versionNumber = null;
+    static String versionNumber;
 
 
     /**

@@ -36,10 +36,10 @@ import javax.net.ssl.TrustManager;
 import javax.rmi.ssl.SslRMIClientSocketFactory;
 
 public class MQRMIClientSocketFactory extends SslRMIClientSocketFactory {
-    boolean debug = false;
+    boolean debug;
     boolean isBrokerHostTrusted = true;
-    boolean useSSL = false;
-    String hostname = null;
+    boolean useSSL;
+    String hostname;
 
     public MQRMIClientSocketFactory(String hostname, boolean isBrokerHostTrusted, boolean useSSL) {
         this.isBrokerHostTrusted = isBrokerHostTrusted;

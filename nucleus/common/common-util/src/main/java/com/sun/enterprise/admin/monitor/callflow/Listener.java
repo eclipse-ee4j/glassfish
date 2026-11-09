@@ -61,14 +61,14 @@ public interface Listener {
      *
      * @param callerIPAddress Client host IP address of caller.
      */
-    public void requestStart(
-            final String requestId,  final RequestType requestType,
-            final String callerIPAddress, final String remoteUser);
+    void requestStart(
+            String requestId,  RequestType requestType,
+            String callerIPAddress, String remoteUser);
 
     /**
      * This notification indicates that a request is about to complete.
      */
-    public void requestEnd(final String requestId);
+    void requestEnd(String requestId);
 
     /**
      * This notification indicates that an EJB method is about to be invoked.
@@ -76,18 +76,18 @@ public interface Listener {
      * This parameters provide information such as method name, component
      * name, component type, application name, module name, caller principal.
      */
-    public void ejbMethodStart(
-            final String requestId, final String methodName,
-            final String applicationName, final String moduleName,
-            final String componentName, final ComponentType componentType,
-            final String callerPrincipal, final String transactionId);
+    void ejbMethodStart(
+            String requestId, String methodName,
+            String applicationName, String moduleName,
+            String componentName, ComponentType componentType,
+            String callerPrincipal, String transactionId);
 
     /**
      * This notification indicates that an EJB method has completed. The
      * parameters provide information on the outcome of the invocation
      * such as exception, if any.
      */
-    public void ejbMethodEnd(final String requestId, final Throwable exception);
+    void ejbMethodEnd(String requestId, Throwable exception);
 
     /**
      * This notification indicates that a web method is about to be invoked.
@@ -96,18 +96,18 @@ public interface Listener {
      * name, component type, application name, module name, caller principal,
      * and caller IP address.
      */
-    public void webMethodStart(
-            final String requestId, final String methodName,
-            final String applicationName, final String moduleName,
-            final String componentName, final ComponentType componentType,
-            final String callerPrincipal);
+    void webMethodStart(
+            String requestId, String methodName,
+            String applicationName, String moduleName,
+            String componentName, ComponentType componentType,
+            String callerPrincipal);
 
     /**
      * This notification indicates that a web method has completed. The
      * parameters provide information on the outcome of the invocation
      * such as exception, if any.
      */
-    public void webMethodEnd(final String requestId, final Throwable exception);
+    void webMethodEnd(String requestId, Throwable exception);
 
     /**
      * This notification indicates that an EntityManager method is about to be invoked.
@@ -115,16 +115,16 @@ public interface Listener {
      * This parameters provide information such as method name, component
      * name, component type, application name, module name, caller principal.
      */
-    public void entityManagerMethodStart(
-            final String requestId, final EntityManagerMethod entityManagerMethod,
-            final String applicationName, final String moduleName,
-            final String componentName, final ComponentType componentType,
-            final String callerPrincipal);
+    void entityManagerMethodStart(
+            String requestId, EntityManagerMethod entityManagerMethod,
+            String applicationName, String moduleName,
+            String componentName, ComponentType componentType,
+            String callerPrincipal);
 
     /**
      * This notification indicates that an EntityManager method has completed.
      */
-    public void entityManagerMethodEnd(String requestId);
+    void entityManagerMethodEnd(String requestId);
 
     /**
      * This notification indicates that an EntityManager Query method is about to be invoked.
@@ -132,15 +132,15 @@ public interface Listener {
      * This parameters provide information such as method name, component
      * name, component type, application name, module name, caller principal.
      */
-    public void entityManagerQueryStart(
-            final String requestId, final EntityManagerQueryMethod queryMethod,
-            final String applicationName, final String moduleName,
-            final String componentName, final ComponentType componentType,
-            final String callerPrincipal);
+    void entityManagerQueryStart(
+            String requestId, EntityManagerQueryMethod queryMethod,
+            String applicationName, String moduleName,
+            String componentName, ComponentType componentType,
+            String callerPrincipal);
 
     /**
      * This notification indicates that an EntityManager Query method has completed.
      */
-    public void entityManagerQueryEnd(final String requestId);
+    void entityManagerQueryEnd(String requestId);
 
 }

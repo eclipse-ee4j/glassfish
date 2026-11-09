@@ -27,10 +27,10 @@ import org.glassfish.deployment.common.Descriptor;
  */
 
 public class MultipartConfigDescriptor extends Descriptor implements MultipartConfig {
-    private String location = null;
-    private Long maxFileSize = null;
-    private Long maxRequestSize = null;
-    private Integer fileSizeThreshold = null;
+    private String location;
+    private Long maxFileSize;
+    private Long maxRequestSize;
+    private Integer fileSizeThreshold;
 
     public String getLocation() {
         return location;

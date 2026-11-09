@@ -22,9 +22,9 @@ import java.io.Serializable;
  * @author Shing Wai Chan
  */
 public class HASessionData implements Serializable {
-    private String sessionId = null;
+    private String sessionId;
 
-    private String contextPath = null;
+    private String contextPath;
 
     public HASessionData(String sessionId, String contextPath) {
         this.sessionId = sessionId;

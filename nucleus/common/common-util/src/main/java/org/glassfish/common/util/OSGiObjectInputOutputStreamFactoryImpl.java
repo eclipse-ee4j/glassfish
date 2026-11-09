@@ -117,7 +117,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl implements ObjectInputOutput
 
     private class OSGiObjectInputStream extends ObjectInputStreamWithLoader {
 
-        public OSGiObjectInputStream(InputStream in, ClassLoader loader) throws IOException {
+        OSGiObjectInputStream(InputStream in, ClassLoader loader) throws IOException {
             super(in, loader);
         }
 

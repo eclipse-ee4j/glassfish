@@ -40,7 +40,7 @@ public interface ContextManager
    * data. Therefore the value of this key should not be
    * changed...ever!
    */
-  public static final String WORK_CONTEXT_KEY =
+  String WORK_CONTEXT_KEY =
       "org.glassfish.diagnostics.context.Context";
 
   //
@@ -55,17 +55,17 @@ public interface ContextManager
   // Message ids are to be annotated with @LogMessageInfo
 
   @LogMessagesResourceBundle
-  public static final String LOG_MESSAGE_RESOURCE = "org.glassfish.diagnostics.context.LogMessages";
+  String LOG_MESSAGE_RESOURCE = "org.glassfish.diagnostics.context.LogMessages";
 
   @LoggerInfo(subsystem="DIAG", description="Diagnostcis Context Logger", publish=true)
-  public static final String LOGGER_NAME =
+  String LOGGER_NAME =
       "jakarta.enterprise.diagnostics.context.base";
 
-  public static final Logger LOGGER = Logger.getLogger(LOGGER_NAME, LOG_MESSAGE_RESOURCE);
+  Logger LOGGER = Logger.getLogger(LOGGER_NAME, LOG_MESSAGE_RESOURCE);
 
   /**
    * Get the Context associated with the currently executing task,
    * creating a new Context if required.
    */
-  public Context getContext();
+  Context getContext();
 }

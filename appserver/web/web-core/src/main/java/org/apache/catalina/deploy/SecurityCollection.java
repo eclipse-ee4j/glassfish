@@ -87,7 +87,7 @@ public class SecurityCollection implements Serializable {
     /**
      * Description of this web resource collection.
      */
-    private String description = null;
+    private String description;
 
 
     /**
@@ -105,7 +105,7 @@ public class SecurityCollection implements Serializable {
     /**
      * The name of this web resource collection.
      */
-    private String name = null;
+    private String name;
 
 
     /**

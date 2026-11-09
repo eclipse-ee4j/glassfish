@@ -45,7 +45,7 @@ public class CipherInfo {
 
             // backward compatible with AS 9.0 or earlier
             {"SSL_RSA_WITH_NULL_MD5", "SSL_RSA_WITH_NULL_MD5"},
-            {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"}
+            {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"},
         };
 
     private static Map ciphers = new HashMap();

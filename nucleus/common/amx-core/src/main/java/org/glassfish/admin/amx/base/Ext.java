@@ -31,7 +31,7 @@ and/or have other dependencies than amx-core.
 public interface Ext extends AMXProxy, Singleton, Utility
 {
     @ManagedAttribute
-    public Realms getRealms();
+    Realms getRealms();
 
 }
 

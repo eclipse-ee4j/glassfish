@@ -51,14 +51,14 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "user")
-    public String getObjectType();
+    String getObjectType();
 
     /**
      * Sets the value of the objectType property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setObjectType(String value) throws PropertyVetoException;
+    void setObjectType(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the implClassName property. A String that represents fully qualified class name of MBean
@@ -68,14 +68,14 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
      */
     @Attribute
     @NotNull
-    public String getImplClassName();
+    String getImplClassName();
 
     /**
      * Sets the value of the implClassName property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setImplClassName(String value) throws PropertyVetoException;
+    void setImplClassName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the objectName property.
@@ -85,14 +85,14 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getObjectName();
+    String getObjectName();
 
     /**
      * Sets the value of the objectName property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setObjectName(String value) throws PropertyVetoException;
+    void setObjectName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
@@ -100,14 +100,14 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
-    public String getEnabled();
+    String getEnabled();
 
     /**
      * Sets the value of the enabled property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the description property.
@@ -115,14 +115,14 @@ public interface Mbean extends ConfigBeanProxy, Named, PropertyBag {
      * @return possible object is {@link String }
      */
     @Attribute
-    public String getDescription();
+    String getDescription();
 
     /**
      * Sets the value of the description property.
      *
      * @param value allowed object is {@link String }
      */
-    public void setDescription(String value) throws PropertyVetoException;
+    void setDescription(String value) throws PropertyVetoException;
 
     /**
      * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

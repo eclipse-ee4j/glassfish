@@ -50,8 +50,8 @@ public class ScatteredArchive extends ReadableArchiveAdapter {
     public static class Builder {
 
         final String name;
-        File topDir = null;
-        File resources = null;
+        File topDir;
+        File resources;
         final List<URL> urls = new ArrayList<URL>();
         final Map<String, File> metadata = new HashMap<String, File>();
 

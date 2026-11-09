@@ -79,11 +79,11 @@ public final class Timer {
     }
 
 
-    public final synchronized void push(String name) {
+    public synchronized void push(String name) {
         push(name, name);
     }
 
-    public final synchronized void push(String name, String message) {
+    public synchronized void push(String name, String message) {
         // get time
         final long now = System.currentTimeMillis();
 
@@ -103,7 +103,7 @@ public final class Timer {
     }
 
 
-    public final synchronized void pop() {
+    public synchronized void pop() {
         // get time
         final long now = System.currentTimeMillis();
 
@@ -134,7 +134,7 @@ public final class Timer {
     }
 
 
-    static private final String pad(String s, int i) {
+    static private String pad(String s, int i) {
         StringBuffer b = new StringBuffer();
         for (i -= s.length(); i > 0; i--) {
             b.append(' ');
@@ -144,7 +144,7 @@ public final class Timer {
     }
 
 
-    public final synchronized void print() {
+    public synchronized void print() {
         out.println("Timer : printing accumulated times ...");
         final MethodDescriptor[] calls = methods.values().toArray(MethodDescriptor[]::new);
         Arrays.sort(calls, new Comparator<MethodDescriptor>() {

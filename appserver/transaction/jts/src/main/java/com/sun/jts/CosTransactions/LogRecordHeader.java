@@ -48,11 +48,11 @@ class LogRecordHeader implements Serializable {
      */
     final static int SIZEOF = 3 * LogLSN.SIZEOF + 8;
 
-    int    recordType   = 0;
-    LogLSN currentLSN   = null;
-    LogLSN previousLSN  = null;
-    LogLSN nextLSN      = null;
-    int    recordLength = 0;
+    int    recordType;
+    LogLSN currentLSN;
+    LogLSN previousLSN;
+    LogLSN nextLSN;
+    int    recordLength;
 
     LogRecordHeader() {
         currentLSN = new LogLSN();

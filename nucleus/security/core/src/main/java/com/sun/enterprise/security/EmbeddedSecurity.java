@@ -38,11 +38,11 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface EmbeddedSecurity {
 
-    public void copyConfigFiles(ServiceLocator habitat, File fromInstanceDir, File domainXml) throws IOException, XMLStreamException;
+    void copyConfigFiles(ServiceLocator habitat, File fromInstanceDir, File domainXml) throws IOException, XMLStreamException;
 
-    public String parseFileName(String fullFilePath);
+    String parseFileName(String fullFilePath);
 
-    public boolean isEmbedded(ServerEnvironment se);
+    boolean isEmbedded(ServerEnvironment se);
 
-    public List<String> getKeyFileNames(SecurityService securityService);
+    List<String> getKeyFileNames(SecurityService securityService);
 }

@@ -61,9 +61,9 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     /**
      * Wrapped web module.
      */
-    private VirtualServer vs = null;
+    private VirtualServer vs;
 
-    private List<WebListener> webListeners = null;
+    private List<WebListener> webListeners;
 
     // ----------------------------------------------------- embedded methods
 

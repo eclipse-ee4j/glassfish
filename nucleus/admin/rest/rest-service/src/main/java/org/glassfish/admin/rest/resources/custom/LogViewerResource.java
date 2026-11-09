@@ -335,7 +335,7 @@ public class LogViewerResource {
     private static final class ByteBuf {
 
         private final byte[] buf = new byte[8192];
-        private int size = 0;
+        private int size;
         private ByteBuf next;
 
         private ByteBuf(ByteBuf previous, Session f) throws IOException {

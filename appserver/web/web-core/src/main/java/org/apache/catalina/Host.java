@@ -52,14 +52,14 @@ public interface Host extends Container {
      * The ContainerEvent event type sent when a new alias is added
      * by <code>addAlias()</code>.
      */
-    public static final String ADD_ALIAS_EVENT = "addAlias";
+    String ADD_ALIAS_EVENT = "addAlias";
 
 
     /**
      * The ContainerEvent event type sent when an old alias is removed
      * by <code>removeAlias()</code>.
      */
-    public static final String REMOVE_ALIAS_EVENT = "removeAlias";
+    String REMOVE_ALIAS_EVENT = "removeAlias";
 
 
     // ------------------------------------------------------------- Properties
@@ -69,7 +69,7 @@ public interface Host extends Container {
      * Return the application root for this Host.  This can be an absolute
      * pathname, a relative pathname, or a URL.
      */
-    public String getAppBase();
+    String getAppBase();
 
 
     /**
@@ -78,7 +78,7 @@ public interface Host extends Container {
      *
      * @param appBase The new application root
      */
-    public void setAppBase(String appBase);
+    void setAppBase(String appBase);
 
 
     /**
@@ -86,7 +86,7 @@ public interface Host extends Container {
      * this host's child webapps should be discovered and automatically
      * deployed dynamically.
      */
-    public boolean getAutoDeploy();
+    boolean getAutoDeploy();
 
 
     /**
@@ -94,7 +94,7 @@ public interface Host extends Container {
      *
      * @param autoDeploy The new auto deploy flag
      */
-    public void setAutoDeploy(boolean autoDeploy);
+    void setAutoDeploy(boolean autoDeploy);
 
 
     /**
@@ -102,7 +102,7 @@ public interface Host extends Container {
      * that this host's child webapps should be discovered and automatically
      * deployed.
      */
-    public boolean getDeployOnStartup();
+    boolean getDeployOnStartup();
 
 
     /**
@@ -110,14 +110,14 @@ public interface Host extends Container {
      *
      * @param deployOnStartup The new deploy on startup flag
      */
-    public void setDeployOnStartup(boolean deployOnStartup);
+    void setDeployOnStartup(boolean deployOnStartup);
 
 
     /**
      * Return the canonical, fully qualified, name of the virtual host
      * this Container represents.
      */
-    public String getName();
+    String getName();
 
 
     /**
@@ -128,7 +128,7 @@ public interface Host extends Container {
      *
      * @exception IllegalArgumentException if name is null
      */
-    public void setName(String name);
+    void setName(String name);
 
 
     /**
@@ -136,7 +136,7 @@ public interface Host extends Container {
      * @return true if namespace awareness is enabled.
      *
      */
-    public boolean getXmlNamespaceAware();
+    boolean getXmlNamespaceAware();
 
 
     /**
@@ -144,7 +144,7 @@ public interface Host extends Container {
      * @return true if validation is enabled.
      *
      */
-    public boolean getXmlValidation();
+    boolean getXmlValidation();
 
 
     /**
@@ -152,7 +152,7 @@ public interface Host extends Container {
      * parsing xml instances.
      * @param xmlValidation true to enable xml instance validation
      */
-    public void setXmlValidation(boolean xmlValidation);
+    void setXmlValidation(boolean xmlValidation);
 
 
    /**
@@ -160,7 +160,7 @@ public interface Host extends Container {
      * parsing xml instances.
      * @param xmlNamespaceAware true to enable namespace awareness
      */
-    public void setXmlNamespaceAware(boolean xmlNamespaceAware);
+    void setXmlNamespaceAware(boolean xmlNamespaceAware);
 
 
     // BEGIN S1AS 5000999
@@ -169,7 +169,7 @@ public interface Host extends Container {
      *
      * @param networkListenerNames The network listener names with which to associate this Host
      */
-    public void setNetworkListenerNames(String[] networkListenerNames);
+    void setNetworkListenerNames(String[] networkListenerNames);
 
     /**
      * Gets the network listener names with which this Host is associated.
@@ -177,7 +177,7 @@ public interface Host extends Container {
      * @return The network listener names with which this Host is associated,
      * or null if this Host has not been associated with any network listener
      */
-    public String[] getNetworkListenerNames();
+    String[] getNetworkListenerNames();
     // END S1AS 5000999
 
 
@@ -189,14 +189,14 @@ public interface Host extends Container {
      *
      * @param alias The alias to be added
      */
-    public void addAlias(String alias);
+    void addAlias(String alias);
 
 
     /**
      * Return the set of alias names for this Host.  If none are defined,
      * a zero length array is returned.
      */
-    public String[] findAliases();
+    String[] findAliases();
 
 
     /**
@@ -205,7 +205,7 @@ public interface Host extends Container {
      *
      * @param uri Request URI to be mapped
      */
-    public Context map(String uri);
+    Context map(String uri);
 
 
     /**
@@ -213,7 +213,7 @@ public interface Host extends Container {
      *
      * @param alias Alias name to be removed
      */
-    public void removeAlias(String alias);
+    void removeAlias(String alias);
 
 
 }

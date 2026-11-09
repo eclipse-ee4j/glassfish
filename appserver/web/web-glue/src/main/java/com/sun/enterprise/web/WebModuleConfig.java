@@ -36,44 +36,44 @@ public class WebModuleConfig {
      * The config bean containing the properties specified in the web-module
      * element in server.xml.
      */
-    private Application _wmBean = null;
+    private Application _wmBean;
 
     /**
      * The parent directory under which the work directory for files generated
      * by the web application (i.e compiled JSP class files etc) resides.
      */
-    private String _baseDir = null;
+    private String _baseDir;
 
     /**
      * The work directory
      */
-    private String workDir = null;
+    private String workDir;
 
     /**
      * The directory under which the work directory for files generated
      * by the web application (i.e compiled JSP class files etc) resides.
      */
-    private String _workDir = null;
+    private String _workDir;
 
     /**
      * The source directory for the web application
      */
-    private File _dir = null;
+    private File _dir;
 
     /**
      * The objectType property
      */
-    private String _objectType = null;
+    private String _objectType;
 
     /**
      * The parent classloader for the web application.
      */
-    private ClassLoader _parentLoader = null;
+    private ClassLoader _parentLoader;
 
     /**
      * Deployment descriptor information about the web application.
      */
-    private WebBundleDescriptorImpl _wbd = null;
+    private WebBundleDescriptorImpl _wbd;
 
     /**
      * keep a list of virtual servers that this webmodule is associated with
@@ -84,7 +84,7 @@ public class WebModuleConfig {
     private String stubBaseDir;
     // END S1AS 6178005
 
-    private ClassLoader _appClassLoader = null;
+    private ClassLoader _appClassLoader;
 
     private DeploymentContext deploymentContext;
 

@@ -24,15 +24,15 @@ package com.sun.enterprise.deployment.web;
 
 public interface MultipartConfig {
 
-    public String getLocation();
-    public void setLocation(String location);
+    String getLocation();
+    void setLocation(String location);
 
-    public Long getMaxFileSize();
-    public void setMaxFileSize(Long maxFileSize);
+    Long getMaxFileSize();
+    void setMaxFileSize(Long maxFileSize);
 
-    public Long getMaxRequestSize();
-    public void setMaxRequestSize(Long maxRequestSize);
+    Long getMaxRequestSize();
+    void setMaxRequestSize(Long maxRequestSize);
 
-    public Integer getFileSizeThreshold();
-    public void setFileSizeThreshold(Integer fileSizeThreshold);
+    Integer getFileSizeThreshold();
+    void setFileSizeThreshold(Integer fileSizeThreshold);
 }

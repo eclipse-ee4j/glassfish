@@ -46,8 +46,8 @@ public class DynamicResourceReconfigurator implements InvocationHandler, Dynamic
 
     private Object actualObject;
     private ResourceInfo resourceInfo;
-    private boolean invalid = false;
-    private long resourceInfoVersion = 0;
+    private boolean invalid;
+    private long resourceInfoVersion;
 
     protected final static Logger _logger = LogDomains.getLogger(DynamicResourceReconfigurator.class,LogDomains.RSR_LOGGER);
 

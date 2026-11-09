@@ -24,9 +24,9 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
  * @author Alexey Stashok
  */
 public interface WebServiceDeploymentNotifier {
-    public void addListener(WebServiceDeploymentListener listener);
-    public void removeListener(WebServiceDeploymentListener listener);
+    void addListener(WebServiceDeploymentListener listener);
+    void removeListener(WebServiceDeploymentListener listener);
 
-    public void notifyDeployed(WebServiceEndpoint nextEndpoint);
-    public void notifyUndeployed(WebServiceEndpoint nextEndpoint);
+    void notifyDeployed(WebServiceEndpoint nextEndpoint);
+    void notifyUndeployed(WebServiceEndpoint nextEndpoint);
 }

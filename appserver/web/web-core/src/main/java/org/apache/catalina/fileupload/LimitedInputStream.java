@@ -50,7 +50,7 @@ abstract class LimitedInputStream
      * @param pSizeMax The limit; no more than this number of bytes
      *   shall be returned by the source stream.
      */
-    public LimitedInputStream(InputStream pIn, long pSizeMax) {
+    LimitedInputStream(InputStream pIn, long pSizeMax) {
         super(pIn);
         sizeMax = pSizeMax;
     }

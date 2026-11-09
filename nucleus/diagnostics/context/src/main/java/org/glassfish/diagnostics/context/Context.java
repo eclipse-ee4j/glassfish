@@ -71,7 +71,7 @@ public interface Context
  /**
   * Get the Location of this Context.
   */
-  public Location getLocation();
+  Location getLocation();
 
  /**
   * Put a named value in this Context.
@@ -81,7 +81,7 @@ public interface Context
   * @param propagates If true then the data item will be propagated.
   * @return The previous value associated with this name (if there is one).
   */
-  public <T> T put(String name, String value, boolean propagates);
+  <T> T put(String name, String value, boolean propagates);
 
   /**
    * Put a named value in this Context.
@@ -91,7 +91,7 @@ public interface Context
    * @param propagates If true then the data item will be propagated.
    * @return The previous value associated with this name (if there is one).
    */
-  public <T> T put(String name, Number value, boolean propagates);
+  <T> T put(String name, Number value, boolean propagates);
 
   /**
    * Remove the named value from this Context.
@@ -99,7 +99,7 @@ public interface Context
    * @param  name The name of the item of data.
    * @return The value being removed if there is one, otherwise null.
    */
-  public <T> T remove(String name);
+  <T> T remove(String name);
 
   /**
   * Get a named value from this Context.
@@ -108,5 +108,5 @@ public interface Context
   * @return The value associated with this name if there is one,
   *         otherwise null.
   */
-  public <T> T get(String name);
+  <T> T get(String name);
 }

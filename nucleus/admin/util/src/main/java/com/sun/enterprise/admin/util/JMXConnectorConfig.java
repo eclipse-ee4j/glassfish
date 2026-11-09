@@ -18,11 +18,11 @@ package com.sun.enterprise.admin.util;
 
 public class JMXConnectorConfig {
 
-    private String host = null;
-    private String port = null;
-    private String user = null;
-    private char[] password = null;
-    private String protocol = null;
+    private String host;
+    private String port;
+    private String user;
+    private char[] password;
+    private String protocol;
 
     public JMXConnectorConfig() {
     }

@@ -42,7 +42,7 @@ import org.glassfish.api.admin.Payload.Part;
  */
 public class MultipartProprietaryWriter implements ProprietaryWriter {
 
-    public static interface ContentTypeWriter {
+    public interface ContentTypeWriter {
         void writeContentType(String firstPart, String secondPart, String boundary);
     }
 

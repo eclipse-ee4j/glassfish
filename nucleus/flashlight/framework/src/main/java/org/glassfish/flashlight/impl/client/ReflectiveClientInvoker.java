@@ -36,7 +36,7 @@ public class ReflectiveClientInvoker
     int[] probeIndices;
     boolean useProbeArgs;
     Class[] methodParamTypes;
-    boolean emittedOneMessage = false;
+    boolean emittedOneMessage;
 
     public ReflectiveClientInvoker(int id, Object target, Method method,
             String[] clientParamNames, FlashlightProbe probe) {

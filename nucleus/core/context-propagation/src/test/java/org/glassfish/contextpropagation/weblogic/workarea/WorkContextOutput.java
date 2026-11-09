@@ -37,12 +37,12 @@ public interface WorkContextOutput extends DataOutput {
    * stream. This is analgous to {@link DataOutput#writeBytes} but the
    * length of the string is also encoded.
    */
-  public void writeASCII(String s) throws IOException;
+  void writeASCII(String s) throws IOException;
 
   /**
    * Writes the implementation of {@link WorkContext} to the
    * underlying data stream. The actual class is encoded in the stream
    * so that remote java implementations can decode it.
    */
-  public void writeContext(WorkContext ctx) throws IOException;
+  void writeContext(WorkContext ctx) throws IOException;
 }

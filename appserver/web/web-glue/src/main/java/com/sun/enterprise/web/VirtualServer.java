@@ -2346,7 +2346,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         boolean accessLoggingEnabled;
         NetworkListener listener;
 
-        public HttpProbeImpl(NetworkListener listener, boolean accessLoggingEnabled) {
+        HttpProbeImpl(NetworkListener listener, boolean accessLoggingEnabled) {
             this.listener = listener;
             this.accessLoggingEnabled = accessLoggingEnabled;
         }

@@ -444,10 +444,10 @@ public class WarHandler extends AbstractArchiveHandler {
     protected abstract static class WebXmlParser extends BaseXmlParser {
 
         protected boolean delegate = WebappClassLoader.DELEGATE_DEFAULT;
-        protected boolean ignoreHiddenJarFiles = false;
-        protected boolean useBundledJSF = false;
-        protected String extraClassPath = null;
-        protected String versionIdentifier = null;
+        protected boolean ignoreHiddenJarFiles;
+        protected boolean useBundledJSF;
+        protected String extraClassPath;
+        protected String versionIdentifier;
 
         WebXmlParser(ReadableArchive archive) throws IOException {
             if (archive.exists(getXmlFileName())) {

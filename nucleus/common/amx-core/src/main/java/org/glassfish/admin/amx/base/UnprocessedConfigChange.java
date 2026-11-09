@@ -49,7 +49,7 @@ public final class UnprocessedConfigChange
     {
         return new Object[]
                 {
-                    mName, mOldValue, mNewValue, mSource, mReason
+                    mName, mOldValue, mNewValue, mSource, mReason,
                 };
     }
 

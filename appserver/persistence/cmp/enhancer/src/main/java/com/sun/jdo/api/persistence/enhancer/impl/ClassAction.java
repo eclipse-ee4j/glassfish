@@ -168,11 +168,11 @@ final class ClassAction
 */
 
     /* True if this has already been annotated */
-    private boolean previouslyAnnotated = false;
+    private boolean previouslyAnnotated;
 
     /* If true, this class will directly implement PersistenceCapable
        interface. */
-    private boolean implementsPersistence = false;
+    private boolean implementsPersistence;
 
     /* If true, this class will directly implement PersistenceCapableHooks
        interface if no base class does so. */
@@ -184,26 +184,26 @@ final class ClassAction
 
     /* True if a user-defined jdo member has been seen in this class. */
     //@olsen: added fields
-    private boolean sawImplementsPersistenceCapable = false;
-    private boolean sawImplementsCloneable = false;
-    private boolean sawMethodJDOGetStateManager = false;
-    private boolean sawMethodJDOSetStateManager = false;
-    private boolean sawMethodJDOGetFlags = false;
-    private boolean sawMethodJDOSetFlags = false;
-    private boolean sawMethodJDOMakeDirty = false;
-    private boolean sawMethodJDOIsDirty = false;
-    private boolean sawMethodJDOIsTransactional = false;
-    private boolean sawMethodJDOIsPersistent = false;
-    private boolean sawMethodJDOIsNew = false;
-    private boolean sawMethodJDOIsDeleted = false;
-    private boolean sawMethodJDOGetPersistenceManager = false;
-    private boolean sawMethodJDOGetObjectId = false;
-    private boolean sawMethodJDOConstructor = false;
-    private boolean sawMethodJDONewInstance = false;
-    private boolean sawMethodJDOGetField = false;
-    private boolean sawMethodJDOSetField = false;
-    private boolean sawMethodJDOClear = false;
-    private boolean sawMethodJDOClone = false;
+    private boolean sawImplementsPersistenceCapable;
+    private boolean sawImplementsCloneable;
+    private boolean sawMethodJDOGetStateManager;
+    private boolean sawMethodJDOSetStateManager;
+    private boolean sawMethodJDOGetFlags;
+    private boolean sawMethodJDOSetFlags;
+    private boolean sawMethodJDOMakeDirty;
+    private boolean sawMethodJDOIsDirty;
+    private boolean sawMethodJDOIsTransactional;
+    private boolean sawMethodJDOIsPersistent;
+    private boolean sawMethodJDOIsNew;
+    private boolean sawMethodJDOIsDeleted;
+    private boolean sawMethodJDOGetPersistenceManager;
+    private boolean sawMethodJDOGetObjectId;
+    private boolean sawMethodJDOConstructor;
+    private boolean sawMethodJDONewInstance;
+    private boolean sawMethodJDOGetField;
+    private boolean sawMethodJDOSetField;
+    private boolean sawMethodJDOClear;
+    private boolean sawMethodJDOClone;
 
     /* True if the preDestroyPersistent() method needs to be generated
        for PersistenceCapable. */
@@ -240,7 +240,7 @@ final class ClassAction
      * Constructor
      */
     //@olsen: added parameter 'env' for association
-    public ClassAction(ClassControl control,
+    ClassAction(ClassControl control,
                        Environment env) {
         this.control = control;
         this.env = env;
@@ -625,7 +625,7 @@ final class ClassAction
                     getI18N("enhancer.class_implements_jdo_pc",
                             new Object[]{
                                 userClassName(),
-                                JDOMetaData.JDOPersistenceCapableType
+                                JDOMetaData.JDOPersistenceCapableType,
                             }));
             }
             if(JDOMetaData.javaLangCloneablePath.equals(interfaceNamePath) ) {

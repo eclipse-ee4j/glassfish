@@ -75,13 +75,13 @@ public class EjbRuntimeEndpointInfo {
     protected final Object webServiceEndpointServant;
 
     // the variables below are access in non-thread-safe ways
-    private volatile ServletAdapter adapter = null;
-    private ServletAdapterList adapterList = null;
+    private volatile ServletAdapter adapter;
+    private ServletAdapterList adapterList;
 
-    private WebServiceContextImpl wsCtxt = null;
-    private boolean handlersConfigured = false;
+    private WebServiceContextImpl wsCtxt;
+    private boolean handlersConfigured;
 
-    protected EjbMessageDispatcher messageDispatcher = null;
+    protected EjbMessageDispatcher messageDispatcher;
 
     public EjbRuntimeEndpointInfo(WebServiceEndpoint webServiceEndpoint,
                                   EjbEndpointFacade ejbContainer,

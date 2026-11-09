@@ -95,7 +95,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
      * app client's class path
      */
     private final Set<FullAndPartURIs> clientLevelDownloads = new HashSet<FullAndPartURIs>();
-    private Set<FullAndPartURIs> earLevelDownloads = null;
+    private Set<FullAndPartURIs> earLevelDownloads;
     private final static String EAR_LEVEL_DOWNLOADS_KEY = "earLevelDownloads";
 
     private final ServiceLocator habitat;
@@ -109,7 +109,7 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
 
     private final ClientArtifactsManager clientArtifactsManager;
 
-    private boolean isTopLevelPopulated = false;
+    private boolean isTopLevelPopulated;
 
     NestedAppClientDeployerHelper(
             final DeploymentContext dc,
@@ -801,9 +801,9 @@ public class NestedAppClientDeployerHelper extends AppClientDeployerHelper {
          * @throws IOException
          */
         abstract void processArtifact(
-                final Set<URI> artifactURIsProcessed,
-                final Collection<FullAndPartURIs> downloadsForThisArtifact,
-                final Collection<FullAndPartURIs> downloadsForReferencedArtifacts) throws IOException;
+                Set<URI> artifactURIsProcessed,
+                Collection<FullAndPartURIs> downloadsForThisArtifact,
+                Collection<FullAndPartURIs> downloadsForReferencedArtifacts) throws IOException;
 
         /**
          * Creates a new artifact for the specified URI relative to the URI of

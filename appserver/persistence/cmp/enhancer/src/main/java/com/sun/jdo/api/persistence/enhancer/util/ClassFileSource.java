@@ -40,19 +40,19 @@ public class ClassFileSource
 extends Support {
 
     /* The original expected name of the class */
-    private String theOriginalExpectedClassName = null;
+    private String theOriginalExpectedClassName;
 
     /* The expected name of the class */
-    private String theExpectedClassName = null;
+    private String theExpectedClassName;
 
     /* The file containing the class file */
-    private File classFile = null;
+    private File classFile;
 
     /* The zip file containing the class file */
-    private ZipFile zipFile = null;
+    private ZipFile zipFile;
 
     /* The byte-code input stream from a class file */
-    private InputStream byteCodeStream = null;
+    private InputStream byteCodeStream;
 
     /* The ClassPathElement through which this was located */
     private ClassPathElement sourceElement;

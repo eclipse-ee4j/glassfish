@@ -46,8 +46,8 @@ public class DeploymentElement {
 
     private File element;
     private boolean isEJBModule;
-    private boolean isWebApp = false;
-    private String mname = null;
+    private boolean isWebApp;
+    private String mname;
 
     DeploymentElement (File element, boolean isEJBModule, String mname) {
         this.element  = element;
@@ -251,9 +251,9 @@ public class DeploymentElement {
     }
 
     protected static class ResultApplication {
-        private boolean deleteOnExit = false;
-        private Object app = null;
-        private String appName = null;
+        private boolean deleteOnExit;
+        private Object app;
+        private String appName;
 
         ResultApplication (Object app) {
             this.app = app;

@@ -102,7 +102,7 @@ public class DigestAuthenticator extends AuthenticatorBase {
     /**
      * Private key.
      */
-    protected String key = null;
+    protected String key;
 
     /**
      * How long server nonces are valid for in milliseconds. Defaults to 5 minutes.
@@ -417,18 +417,18 @@ public class DigestAuthenticator extends AuthenticatorBase {
         private String key;
         private boolean validateUri = true;
 
-        private String userName = null;
-        private String uri = null;
-        private String response = null;
-        private String nonce = null;
-        private String nc = null;
-        private String cnonce = null;
-        private String realmName = null;
-        private String qop = null;
+        private String userName;
+        private String uri;
+        private String response;
+        private String nonce;
+        private String nc;
+        private String cnonce;
+        private String realmName;
+        private String qop;
 
-        private boolean nonceStale = false;
+        private boolean nonceStale;
 
-        public DigestInfo(String opaque, long nonceValidity, String key, boolean validateUri) {
+        DigestInfo(String opaque, long nonceValidity, String key, boolean validateUri) {
             this.opaque = opaque;
             this.nonceValidity = nonceValidity;
             this.key = key;

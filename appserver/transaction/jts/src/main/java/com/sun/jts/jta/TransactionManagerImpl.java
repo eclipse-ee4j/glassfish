@@ -77,7 +77,7 @@ public class TransactionManagerImpl implements TransactionManager {
     /**
      * the singleton object
      */
-    static private TransactionManagerImpl tm = null;
+    static private TransactionManagerImpl tm;
 
     /**
      * store the current psuedo object
@@ -102,7 +102,7 @@ public class TransactionManagerImpl implements TransactionManager {
     /**
     * store XAResource Timeout
     */
-    static private int xaTimeOut = 0;
+    static private int xaTimeOut;
       //END IASRI 4706150
 
     static private Status CosTransactionStatus[] =
@@ -116,7 +116,7 @@ public class TransactionManagerImpl implements TransactionManager {
         org.omg.CosTransactions.Status.StatusNoTransaction,
         org.omg.CosTransactions.Status.StatusPreparing,
         org.omg.CosTransactions.Status.StatusCommitting,
-        org.omg.CosTransactions.Status.StatusRollingBack
+        org.omg.CosTransactions.Status.StatusRollingBack,
     };
 
     static private int JTAStatus[] =
@@ -130,7 +130,7 @@ public class TransactionManagerImpl implements TransactionManager {
         jakarta.transaction.Status.STATUS_NO_TRANSACTION,
         jakarta.transaction.Status.STATUS_PREPARING,
         jakarta.transaction.Status.STATUS_COMMITTING,
-        jakarta.transaction.Status.STATUS_ROLLING_BACK
+        jakarta.transaction.Status.STATUS_ROLLING_BACK,
     };
 
     static {

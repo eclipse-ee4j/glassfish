@@ -41,7 +41,7 @@ public class LruCache<K, V> extends BaseCache<K, V> {
     protected long timeout = NO_TIMEOUT;
 
     protected int defaultMaxEntries = Constants.DEFAULT_MAX_ENTRIES;
-    protected boolean isUnbounded = false;
+    protected boolean isUnbounded;
 
     /**
      * default constructor

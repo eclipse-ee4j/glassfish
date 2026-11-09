@@ -41,7 +41,7 @@ public interface AuthenticationService extends SecurityService {
      *
      * @throws LoginException
      */
-    public Subject login(String username, char[] password, Subject subject)
+    Subject login(String username, char[] password, Subject subject)
             throws LoginException;
 
     /**
@@ -56,7 +56,7 @@ public interface AuthenticationService extends SecurityService {
      *
      * @throws LoginException
      */
-    public Subject login(CallbackHandler cbh, Subject subject) throws LoginException;
+    Subject login(CallbackHandler cbh, Subject subject) throws LoginException;
 
     /**
      * Impersonate a user, specifying the user and group principal names that
@@ -79,6 +79,6 @@ public interface AuthenticationService extends SecurityService {
      *
      * @throws LoginException
      */
-    public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
+    Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
             throws LoginException;
 }

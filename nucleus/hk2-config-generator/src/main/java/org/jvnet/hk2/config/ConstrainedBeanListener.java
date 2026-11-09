@@ -26,7 +26,7 @@ import java.beans.VetoableChangeListener;
  */
 public interface ConstrainedBeanListener {
 
-    public void addVetoableChangeListener(VetoableChangeListener listener);
+    void addVetoableChangeListener(VetoableChangeListener listener);
 
-    public void removeVetoableChangeListener(VetoableChangeListener listener);
+    void removeVetoableChangeListener(VetoableChangeListener listener);
 }

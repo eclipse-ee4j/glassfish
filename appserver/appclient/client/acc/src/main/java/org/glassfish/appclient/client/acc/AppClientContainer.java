@@ -588,7 +588,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param msConfig the new MessageSecurityConfig
          * @return the <code>Builder</code> instance
          */
-        Builder addMessageSecurityConfig(final MessageSecurityConfig msConfig);
+        Builder addMessageSecurityConfig(MessageSecurityConfig msConfig);
 
         List<MessageSecurityConfig> getMessageSecurityConfig();
 
@@ -600,7 +600,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param className name of the class which implements the realm
          * @return the <code>Builder</code> instance
          */
-        Builder authRealm(final String className);
+        Builder authRealm(String className);
 
         AuthRealm getAuthRealm();
 
@@ -614,7 +614,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param password password valid in the default realm on the server for the username
          * @return the <code>Builder</code> instance
          */
-        Builder clientCredentials(final String user, final char[] password);
+        Builder clientCredentials(String user, char[] password);
 
         ClientCredential getClientCredential();
 
@@ -629,7 +629,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param realmName name of the realm on the server within which the credentials are valid
          * @return the <code>Builder</code> instance
          */
-        Builder clientCredentials(final String user, final char[] password, final String realm);
+        Builder clientCredentials(String user, char[] password, String realm);
 
         /**
          * Sets the container-level Properties.
@@ -637,7 +637,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param containerProperties
          * @return
          */
-        Builder containerProperties(final Properties containerProperties);
+        Builder containerProperties(Properties containerProperties);
 
         /**
          * Sets the container-level properties.
@@ -647,7 +647,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param containerProperties Property objects to use in setting the properties
          * @return
          */
-        Builder containerProperties(final List<Property> containerProperties);
+        Builder containerProperties(List<Property> containerProperties);
 
         /**
          * Returns the container-level Properties.
@@ -662,7 +662,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param logger
          * @return
          */
-        Builder logger(final Logger logger);
+        Builder logger(Logger logger);
 
         Logger getLogger();
 
@@ -672,7 +672,7 @@ public class AppClientContainer implements ApplicationClientContainer {
          * @param sendPassword
          * @return
          */
-        Builder sendPassword(final boolean sendPassword);
+        Builder sendPassword(boolean sendPassword);
 
         boolean getSendPassword();
     }
@@ -684,14 +684,14 @@ public class AppClientContainer implements ApplicationClientContainer {
      * case clean-up will occur as part of VM shutdown.
      */
     private static class Cleanup implements Runnable {
-        private AppClientInfo appClientInfo = null;
-        private boolean cleanedUp = false;
-        private InjectionManager injectionMgr = null;
-        private ApplicationClientDescriptor appClient = null;
-        private Class cls = null;
+        private AppClientInfo appClientInfo;
+        private boolean cleanedUp;
+        private InjectionManager injectionMgr;
+        private ApplicationClientDescriptor appClient;
+        private Class cls;
         private final Logger logger;
-        private Thread cleanupThread = null;
-        private Collection<EntityManagerFactory> emfs = null;
+        private Thread cleanupThread;
+        private Collection<EntityManagerFactory> emfs;
         private final ServiceLocator habitat;
         private ConnectorRuntime connectorRuntime;
         private ManagedBeanManager managedBeanMgr;

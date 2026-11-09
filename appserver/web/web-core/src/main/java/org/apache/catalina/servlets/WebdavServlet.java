@@ -2673,7 +2673,7 @@ public class WebdavServlet
         /**
          * Constructor.
          */
-        public LockInfo() {
+        LockInfo() {
             // Ignore
         }
 
@@ -2684,10 +2684,10 @@ public class WebdavServlet
         String path = "/";
         String type = "write";
         String scope = "exclusive";
-        int depth = 0;
+        int depth;
         String owner = "";
         Vector<String> tokens = new Vector<String>();
-        long expiresAt = 0;
+        long expiresAt;
         Date creationDate = new Date();
 
 
@@ -2793,7 +2793,7 @@ public class WebdavServlet
     private static class WebdavResolver implements EntityResolver {
         private ServletContext context;
 
-        public WebdavResolver(ServletContext theContext) {
+        WebdavResolver(ServletContext theContext) {
             context = theContext;
         }
 

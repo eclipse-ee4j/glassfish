@@ -149,7 +149,7 @@ public abstract class AppClientInfo {
 
         private final ApplicationClientDescriptor appClient;
 
-        public ApplicationInfoImpl(AppClientInfo outer) {
+        ApplicationInfoImpl(AppClientInfo outer) {
             this.outer = outer;
             appClient = outer.getAppClient();
         }

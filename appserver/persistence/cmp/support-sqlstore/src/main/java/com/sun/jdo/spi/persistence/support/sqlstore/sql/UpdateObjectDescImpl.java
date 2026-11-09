@@ -72,7 +72,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
     private Map<ForeignFieldDesc, HashMap<SQLStateManager, UpdateJoinTableDesc>> updatedJoinTableRelationships;
 
     /** Marker for fast relationship update check. */
-    private boolean relationshipChanged = false;
+    private boolean relationshipChanged;
 
     /** I18N message handler. */
     private final static ResourceBundle messages = I18NHelper.loadBundle(

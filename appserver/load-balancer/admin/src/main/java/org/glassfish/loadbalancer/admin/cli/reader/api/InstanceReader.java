@@ -28,14 +28,14 @@ public interface InstanceReader extends BaseReader {
      *
      * @return String           instance' name
      */
-    public String getName() throws LbReaderException;
+    String getName() throws LbReaderException;
 
     /**
      * Returns if the server is enabled in the load balancer or not.
      *
      * @return boolean          true if enabled in LB; false if disabled
      */
-    public boolean getLbEnabled() throws LbReaderException;
+    boolean getLbEnabled() throws LbReaderException;
 
     /**
      * This is used in quicescing. Timeouts after this interval and disables the
@@ -43,7 +43,7 @@ public interface InstanceReader extends BaseReader {
      *
      * @return String           Disable time out in minutes
      */
-    public String getDisableTimeoutInMinutes() throws LbReaderException;
+    String getDisableTimeoutInMinutes() throws LbReaderException;
 
     /**
      * Enlists both http and https listeners of this server instance
@@ -51,7 +51,7 @@ public interface InstanceReader extends BaseReader {
      *
      * @return String   Listener(s) info.
      */
-    public String getListeners() throws LbReaderException;
+    String getListeners() throws LbReaderException;
 
     /**
      * For weighted round robin gets the weight.
@@ -59,5 +59,5 @@ public interface InstanceReader extends BaseReader {
      *
      * @return String   Weight
      */
-    public String getWeight() throws LbReaderException;
+    String getWeight() throws LbReaderException;
 }

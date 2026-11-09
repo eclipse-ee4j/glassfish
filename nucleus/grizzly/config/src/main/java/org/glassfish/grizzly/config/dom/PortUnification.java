@@ -72,7 +72,7 @@ public interface PortUnification extends ConfigBeanProxy, PropertyBag {
      * but next time for a next data on this connection - protocol finders will
      * be called again to recognize the target protocol.
      */
-    void setStickyProtocolEnabled(final String stickyProtocolEnabled);
+    void setStickyProtocolEnabled(String stickyProtocolEnabled);
 
     default Protocol getParent() {
         return getParent(Protocol.class);

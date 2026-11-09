@@ -29,11 +29,11 @@ public interface DescriptorVisitor {
      * visits a J2EE descriptor
      * @param descriptor descriptor to visit
      */
-    public void accept(Descriptor descriptor);
+    void accept(Descriptor descriptor);
 
     /**
      * get the visitor for its sub descriptor
      * @param sub descriptor to return visitor for
      */
-    public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor);
+    DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor);
 }

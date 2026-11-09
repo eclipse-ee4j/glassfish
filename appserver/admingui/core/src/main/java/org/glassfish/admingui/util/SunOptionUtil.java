@@ -103,8 +103,8 @@ public class SunOptionUtil {
         }
     }
 
-    private static Class SUN_OPTION_CLASS = null;
-    private static Constructor SUN_OPTION_CONSTRUCTOR = null;
+    private static Class SUN_OPTION_CLASS;
+    private static Constructor SUN_OPTION_CONSTRUCTOR;
 
 
     static {

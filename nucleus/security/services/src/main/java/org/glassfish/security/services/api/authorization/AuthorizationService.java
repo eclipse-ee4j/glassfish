@@ -143,7 +143,7 @@ public interface AuthorizationService extends SecurityService {
      * in service.  Upon calling delete(), the context is taken out of service and the policies
      * are deleted from the Authorization Provider.
      */
-    public interface PolicyDeploymentContext {
+    interface PolicyDeploymentContext {
 
         void addRolePolicy(String role, String resource, String action);
 

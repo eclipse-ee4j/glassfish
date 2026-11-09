@@ -90,11 +90,11 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
         }
     }
 
-    private final String getMessage(final Map ports) {
+    private String getMessage(final Map ports) {
         return getLocalizedString("duplicatePorts", getDuplicatePorts(ports));
     }
 
-    private final String getLocalizedString(final String key, final Object o) {
+    private String getLocalizedString(final String key, final Object o) {
         return strMgr.getString(key, o);
     }
 
@@ -107,7 +107,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
      * kays in the output map. Note that the values in the output map must be sets, to allow for many to 1 relations in the
      * input map.
      */
-    private final Map reverseMap(final Map inputMap) {
+    private Map reverseMap(final Map inputMap) {
         final Map outputMap = new TreeMap();
         for (Iterator entries = inputMap.entrySet().iterator(); entries.hasNext();) {
             Map.Entry entry = (Map.Entry) entries.next();
@@ -120,7 +120,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
      * Add the given key/value pair, but reversing it, in the given map. reversal means that the values in the map must be
      * sets.
      */
-    private final void addEntryToMap(final Object key, final Object value, final Map map) {
+    private void addEntryToMap(final Object key, final Object value, final Map map) {
         if (!map.containsKey(value)) {
             map.put(value, new TreeSet());
         }
@@ -132,7 +132,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
      *
      * @param map a map of key to Set of value
      */
-    private final String printDuplicatesFromMap(final Map map) {
+    private String printDuplicatesFromMap(final Map map) {
         final StringBuffer sb = new StringBuffer();
         final Iterator it = map.entrySet().iterator();
         Map.Entry entry = getNextDuplicate(it);
@@ -149,7 +149,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
     /**
      * Get next entry from iterator whose value is a set of cardinality greater than 1
      */
-    private final Map.Entry getNextDuplicate(final Iterator it) {
+    private Map.Entry getNextDuplicate(final Iterator it) {
         while (it.hasNext()) {
             Map.Entry result = (Map.Entry) it.next();
             if (((Set) result.getValue()).size() > 1) {
@@ -159,7 +159,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
         return null;
     }
 
-    private final void printEntry(final StringBuffer sb, final Map.Entry entry) {
+    private void printEntry(final StringBuffer sb, final Map.Entry entry) {
         printEntry(sb, entry.getKey(), (Set) entry.getValue());
     }
 
@@ -167,7 +167,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
      * Print the given key and set onto the given string buffer. Note that the set is considered to contain more than one
      * object
      */
-    private final void printEntry(final StringBuffer sb, final Object key, final Set dups) {
+    private void printEntry(final StringBuffer sb, final Object key, final Set dups) {
         sb.append(key).append(" -> ");
         printSet(sb, dups);
     }
@@ -175,7 +175,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
     /**
      * Print the given set on the given string buffer
      */
-    private final void printSet(final StringBuffer sb, final Set set) {
+    private void printSet(final StringBuffer sb, final Set set) {
         sb.append("{");
         String separator = "";
         for (Iterator it = set.iterator(); it.hasNext();) {

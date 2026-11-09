@@ -39,7 +39,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The description of this destination ref.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -53,7 +53,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The link of this destination ref.
      */
-    private String link = null;
+    private String link;
 
     public String getLink() {
         return (this.link);
@@ -67,7 +67,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The name of this destination ref.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -81,7 +81,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The type of this destination ref.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);
@@ -95,7 +95,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The usage of this destination ref.
      */
-    private String usage = null;
+    private String usage;
 
     public String getUsage() {
         return (this.usage);
@@ -145,7 +145,7 @@ public class MessageDestinationRef implements Serializable {
     /**
      * The NamingResources with which we are associated (if any).
      */
-    protected NamingResources resources = null;
+    protected NamingResources resources;
 
     public NamingResources getNamingResources() {
         return (this.resources);

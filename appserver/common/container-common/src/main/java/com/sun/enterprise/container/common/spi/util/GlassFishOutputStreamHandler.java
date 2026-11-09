@@ -36,6 +36,6 @@ public interface GlassFishOutputStreamHandler {
      *  object
      *
      */
-    public Object replaceObject(Object obj) throws IOException;
+    Object replaceObject(Object obj) throws IOException;
 
 }

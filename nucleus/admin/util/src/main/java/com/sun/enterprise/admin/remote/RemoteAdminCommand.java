@@ -128,8 +128,8 @@ public class RemoteAdminCommand {
     // return output string rather than printing it
     protected String output;
     private Map<String, String> attrs;
-    private boolean doUpload = false;
-    private boolean addedUploadOption = false;
+    private boolean doUpload;
+    private boolean addedUploadOption;
     private Payload.Outbound outboundPayload;
     private String usage;
     private File fileOutputDir;
@@ -145,15 +145,15 @@ public class RemoteAdminCommand {
     protected char[] password;
     protected Logger logger;
     protected String scope;
-    protected String authToken = null;
-    protected boolean prohibitDirectoryUploads = false;
+    protected String authToken;
+    protected boolean prohibitDirectoryUploads;
 
     // executeCommand parameters
     protected ParameterMap options;
     protected List<String> operands;
 
     private CommandModel commandModel;
-    private boolean commandModelFromCache = false;
+    private boolean commandModelFromCache;
     private StringBuilder metadataErrors; // XXX
     private int readTimeout = defaultReadTimeout;
     private int connectTimeout = -1;

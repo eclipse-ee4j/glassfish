@@ -49,13 +49,13 @@ public interface Valve {
     /**
      * Return descriptive information about this Valve implementation.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the next Valve in the pipeline containing this Valve, if any.
      */
-    public Valve getNext();
+    Valve getNext();
 
 
     /**
@@ -63,7 +63,7 @@ public interface Valve {
      *
      * @param valve The new next valve, or <code>null</code> if none
      */
-    public void setNext(Valve valve);
+    void setNext(Valve valve);
 
 
     //---------------------------------------------------------- Public Methods
@@ -74,7 +74,7 @@ public interface Valve {
      * invoked inside the classloading context of this container. Unexpected
      * throwables will be caught and logged.
      */
-    public void backgroundProcess();
+    void backgroundProcess();
 
 
     /**
@@ -124,7 +124,7 @@ public interface Valve {
      * @exception ServletException if a servlet error occurs, or is thrown
      *  by a subsequently invoked Valve, Filter, or Servlet
      */
-    public void invoke(Request request, Response response)
+    void invoke(Request request, Response response)
         throws IOException, ServletException;
 
 
@@ -139,7 +139,7 @@ public interface Valve {
      * @exception ServletException if a servlet error occurs, or is thrown
      *  by a subsequently invoked Valve, Filter, or Servlet
      */
-    public void event(Request request, Response response, CometEvent event)
+    void event(Request request, Response response, CometEvent event)
         throws IOException, ServletException;
 
 

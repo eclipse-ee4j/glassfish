@@ -48,7 +48,7 @@ public abstract class WsCompileInvoker {
      * This Map holds all the options to be used while invoking the wscompile tool; the options are set by the client
      * of this interface using the setter methods available in this interface.
      **/
-    protected HashMap wsCompileOptions = null;
+    protected HashMap wsCompileOptions;
 
     /**
      * This specifies the classpath to be used by the wscompile tool - ideally this should at least be set to

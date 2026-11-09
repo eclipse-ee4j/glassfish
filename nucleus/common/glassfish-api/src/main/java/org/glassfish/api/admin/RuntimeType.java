@@ -77,7 +77,7 @@ public enum RuntimeType {
         return this == SINGLE_INSTANCE;
     }
 
-    public final static RuntimeType getDefault() {
+    public static RuntimeType getDefault() {
         return DAS;
     }
 }

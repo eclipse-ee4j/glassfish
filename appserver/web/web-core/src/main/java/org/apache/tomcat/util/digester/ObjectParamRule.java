@@ -69,17 +69,17 @@ public class ObjectParamRule extends Rule {
     /**
      * The attribute which we are attempting to match
      */
-    protected String attributeName = null;
+    protected String attributeName;
 
     /**
      * The zero-relative index of the parameter we are saving.
      */
-    protected int paramIndex = 0;
+    protected int paramIndex;
 
     /**
      * The parameter we wish to pass to the method call
      */
-    protected Object param = null;
+    protected Object param;
 
 
     // --------------------------------------------------------- Public Methods

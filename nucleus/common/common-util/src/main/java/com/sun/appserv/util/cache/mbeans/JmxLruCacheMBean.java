@@ -31,10 +31,10 @@ public interface JmxLruCacheMBean extends JmxBaseCacheMBean {
     /**
      * Returns the current lenght of the LRU list
      */
-    public Integer getLruListLength();
+    Integer getLruListLength();
 
     /**
      * Returns the number of entries that have been trimmed
      */
-    public Integer getTrimCount();
+    Integer getTrimCount();
 }

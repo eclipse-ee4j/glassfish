@@ -53,7 +53,7 @@ public final class NamingService
     /**
      * Notification sequence number.
      */
-    private long sequenceNumber = 0;
+    private long sequenceNumber;
 
     /**
      * Old URL packages value.

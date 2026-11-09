@@ -105,7 +105,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
     @Inject
     private SecureAdminHelper secureAdminHelper;
 
-    private KeyStore keystore = null;
+    private KeyStore keystore;
 
     @Override
     public void run() throws TransactionFailure, SecureAdminCommandException {

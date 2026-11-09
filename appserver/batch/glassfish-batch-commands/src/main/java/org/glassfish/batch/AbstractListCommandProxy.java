@@ -57,7 +57,7 @@ public abstract class AbstractListCommandProxy
     protected Logger logger;
 
     @Param(name = "terse", optional=true, defaultValue="false", shortName="t")
-    protected boolean isTerse = false;
+    protected boolean isTerse;
 
     @Param(name = "output", shortName = "o", optional = true)
     protected String outputHeaderList;

@@ -27,8 +27,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DomainXmlSAXParser extends DefaultHandler {
     private static final String PROPERTY = "property";
-    private int level = 0;
-    private String domainXmlEventListenerClass = null;
+    private int level;
+    private String domainXmlEventListenerClass;
 
     public String getDomainXmlEventListenerClass() {
         return domainXmlEventListenerClass;

@@ -154,7 +154,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The processor delay for this component.

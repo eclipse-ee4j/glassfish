@@ -42,7 +42,7 @@ public interface ContextMapPropagator {
    * utilized in this call. Only entries that support that propagation mode are propagated.
    * @exception IOException if the data cannot be serialized.
    */
-  public void sendRequest(OutputStream out, PropagationMode propagationMode) throws IOException;
+  void sendRequest(OutputStream out, PropagationMode propagationMode) throws IOException;
 
   /**
    * Transfers the entries with the specified {@link org.glassfish.contextpropagation.PropagationMode}
@@ -58,7 +58,7 @@ public interface ContextMapPropagator {
    * utilized in this call. Only entries that support that propagation mode are propagated.
    * @exception IOException if the data cannot be serialized.
    */
-  public void sendResponse(OutputStream out, PropagationMode propagationMode) throws IOException;
+  void sendResponse(OutputStream out, PropagationMode propagationMode) throws IOException;
 
   /**
    * Deserializes context from an {@link java.io.InputStream} provided by
@@ -78,7 +78,7 @@ public interface ContextMapPropagator {
    * serialized context propagation bytes and no more.
    * @exception IOException if the data cannot be read.
    */
-  public void receiveRequest(InputStream in) throws IOException;
+  void receiveRequest(InputStream in) throws IOException;
 
   /**
    * Deserializes context from an {@link java.io.InputStream} provided by
@@ -97,7 +97,7 @@ public interface ContextMapPropagator {
    * associated to the protocol invoking this method.
    * @exception IOException if the data cannot be read.
    */
-  public void receiveResponse(InputStream in, PropagationMode mode) throws IOException;
+  void receiveResponse(InputStream in, PropagationMode mode) throws IOException;
 
   /**
    * Copies the entries that have the propagation mode THREAD to this thread's
@@ -106,12 +106,12 @@ public interface ContextMapPropagator {
    * @param contexts an {@link ContextMapInterceptor} obtained via
    * {@link #copyThreadContexts}.
    */
-  public void restoreThreadContexts(AccessControlledMap contexts);
+  void restoreThreadContexts(AccessControlledMap contexts);
 
   /**
    * A protocol that propagates context data can choose an alternate
    * WireAdapter, and thus a different encoding format on the wire.
    * @param wireAdapter
    */
-  public void useWireAdapter(WireAdapter wireAdapter);
+  void useWireAdapter(WireAdapter wireAdapter);
 }

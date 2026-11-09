@@ -32,7 +32,7 @@ final class DomProxyCreator<T extends ConfigBeanProxy> implements Creator<T> {
 
     private volatile T proxyInstance;
 
-    public DomProxyCreator(Class<T> type, Dom dom) {
+    DomProxyCreator(Class<T> type, Dom dom) {
         this.type = type;
         this.dom = dom;
     }

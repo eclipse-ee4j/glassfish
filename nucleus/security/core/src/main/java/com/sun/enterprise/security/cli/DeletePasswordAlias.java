@@ -44,8 +44,8 @@ import org.jvnet.hk2.annotations.Service;
  * Usage: delete-password-alias [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
  * [--secure | -s] [--user admin_user] [--passwordfile file_name] aliasname
  *
- * Result of the command is that: The entry of the form: aliasname=<password-encrypted-with-masterpassword> in
- * <domain-dir>/<domain-name>/config/domain-passwords.p12 file is removed
+ * Result of the command is that: The entry of the form: aliasname=&lt;password-encrypted-with-masterpassword> in
+ * &lt;domain-dir>/&lt;domain-name>/config/domain-passwords.p12 file is removed
  *
  * domain.xml example entry is:
  * <pre>{@code

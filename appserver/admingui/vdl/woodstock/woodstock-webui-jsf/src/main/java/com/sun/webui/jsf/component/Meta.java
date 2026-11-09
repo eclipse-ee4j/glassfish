@@ -42,7 +42,7 @@ public final class Meta extends UIComponentBase {
             displayName = "Content",
             category = "Appearance",
             isDefault = true)
-    private String content = null;
+    private String content;
 
     /**
      * The httpEquiv attribute is used to specify a value for the http-equiv
@@ -53,7 +53,7 @@ public final class Meta extends UIComponentBase {
     @Property(name = "httpEquiv",
             displayName = "HTTP header",
             category = "Appearance")
-    private String httpEquiv = null;
+    private String httpEquiv;
 
     /**
      * The identifier that is assigned to a property in the meta element. The
@@ -61,14 +61,14 @@ public final class Meta extends UIComponentBase {
      * identified by the name attribute.
      */
     @Property(name = "name", displayName = "Name", category = "Appearance")
-    private String name = null;
+    private String name;
 
     /**
      * Defines a format to be used to interpret the value of the content
      * attribute.
      */
     @Property(name = "scheme", displayName = "Scheme", category = "Advanced")
-    private String scheme = null;
+    private String scheme;
 
     /**
      * Construct a new {@code Meta}.

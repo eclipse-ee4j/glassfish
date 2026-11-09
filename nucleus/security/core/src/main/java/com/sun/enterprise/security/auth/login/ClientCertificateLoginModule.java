@@ -257,7 +257,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      * Logout the user.
      * <p>
      * This method removes the <code>UserPrincipal</code> that was added by the <code>commit</code> method.
-     * <p>
+     *
      *
      * @throws LoginException if the logout fails.
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.

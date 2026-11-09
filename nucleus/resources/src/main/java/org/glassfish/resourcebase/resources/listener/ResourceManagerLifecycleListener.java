@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface ResourceManagerLifecycleListener {
-    public enum EVENT {STARTUP, SHUTDOWN}
+    enum EVENT {STARTUP, SHUTDOWN}
 
     void resourceManagerLifecycleEvent(EVENT event);
 }

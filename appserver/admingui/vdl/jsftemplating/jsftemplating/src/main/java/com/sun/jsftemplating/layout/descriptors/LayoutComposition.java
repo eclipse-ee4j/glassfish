@@ -367,28 +367,28 @@ public class LayoutComposition extends LayoutElementBase {
      * This Map exists to allow test cases to run w/o an ExternalContext "request map."
      * </p>
      */
-    private static Map _testMap = null;
+    private static Map _testMap;
 
     /**
      * <p>
      * This is a <code>Map</code> of parameters that may be passed from this <code>LayoutComposition</code> to the template.
      * </p>
      */
-    private Map<String, Object> _params = null;
+    private Map<String, Object> _params;
 
     /**
      * <p>
      * Flag to indicate that whether an exception should be thrown if the template is not found.
      * </p>
      */
-    private String required = null;
+    private String required;
 
     /**
      * <p>
      * The filename of the template.
      * </p>
      */
-    private String template = null;
+    private String template;
 
     /**
      * <p>

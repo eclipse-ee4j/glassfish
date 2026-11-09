@@ -76,7 +76,7 @@ public class AutoDeployedFilesManager {
     private List<String> FILE_NAMES_TO_IGNORE_FOR_AUTODEPLOY =
          new ArrayList();
 
-    protected  String statDir = null;
+    protected  String statDir;
 
 
     public AutoDeployedFilesManager() {

@@ -140,9 +140,9 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
     /**
      * Choose the server alias that will be used to select the server certificate for SSL server auth.
      *
-     * @param the keytype
-     * @param the certificate issuers.
-     * @param the socket used for this connection. This parameter can be null, in which case the method will return the most
+     * @param keyType keytype
+     * @param issuers certificate issuers.
+     * @param socket socket used for this connection. This parameter can be null, in which case the method will return the most
      * generic alias to use.
      * @return the alias
      */
@@ -162,7 +162,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
     /**
      * Return the certificate chain for the specified alias.
      *
-     * @param the alias.
+     * @param alias alias.
      * @return the chain of X509 Certificates.
      */
     @Override
@@ -181,8 +181,8 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
     /**
      * Return all the available client aliases for the specified key type.
      *
-     * @param the keytype
-     * @param the certificate issuers.
+     * @param keyType keytype
+     * @param issuers certificate issuers.
      * @return the array of aliases.
      */
     @Override
@@ -194,8 +194,8 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
     /**
      * Return all the available server aliases for the specified key type.
      *
-     * @param the keytype
-     * @param the certificate issuers.
+     * @param keyType keytype
+     * @param issuers certificate issuers.
      * @return the array of aliases.
      */
     @Override
@@ -207,7 +207,7 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
     /**
      * Return the private key for the specified alias.
      *
-     * @param the alias.
+     * @param alias alias.
      * @return the private key.
      */
     @Override
@@ -242,8 +242,8 @@ public final class J2EEKeyManager extends X509ExtendedKeyManager {
      * Perform login on the client side. It just simulates the login on the client side. The method uses the callback
      * handlers and generates correct credential information that will be later sent to the server
      *
-     * @param int type whether it is <i> username_password</i> or <i> certificate </i> based login.
-     * @param CallbackHandler the callback handler to gather user information.
+     * @param type type whether it is <i> username_password</i> or <i> certificate </i> based login.
+     * @param handler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
      */
     public static Subject doClientLogin(int type, CallbackHandler handler) throws LoginException {

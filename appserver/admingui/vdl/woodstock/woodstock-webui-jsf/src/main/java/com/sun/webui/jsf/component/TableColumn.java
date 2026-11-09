@@ -50,11 +50,11 @@ import java.util.List;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.web.ui.component.TableColumn.level = FINE
- * </pre></p><p>
+ * </pre><p>
  * See TLD docs for more information.
  * </p>
  */
@@ -135,22 +135,22 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     /**
      * The Table ancestor enclosing this component.
      */
-    private Table tableAncestor = null;
+    private Table tableAncestor;
 
     /**
      * The TableColumn ancestor enclosing this component.
      */
-    private TableColumn tableColumnAncestor = null;
+    private TableColumn tableColumnAncestor;
 
     /**
      * A List of TableColumn children found for this component.
      */
-    private List<TableColumn> tableColumnChildren = null;
+    private List<TableColumn> tableColumnChildren;
 
     /**
      * The TableRowGroup ancestor enclosing this component.
      */
-    private TableRowGroup tableRowGroupAncestor = null;
+    private TableRowGroup tableRowGroupAncestor;
 
     /**
      * The number of columns to be rendered.
@@ -172,7 +172,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             displayName = "Abbreviation for Header Cell",
             isHidden = true,
             isAttribute = false)
-    private String abbr = null;
+    private String abbr;
 
     /**
      * Use the {@code align} attribute to specify the horizontal alignment
@@ -192,7 +192,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.TableAlignEditor")
             //CHECKSTYLE:ON
-    private String align = null;
+    private String align;
 
     /**
      * Use the {@code alignKey} attribute to specify the FieldKey id or
@@ -212,7 +212,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private Object alignKey = null;
+    private Object alignKey;
 
     /**
      * The AXIS attribute provides a method of categorizing cells. The
@@ -228,7 +228,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String axis = null;
+    private String axis;
 
     /**
      * The BGCOLOR attribute suggests a background color for the cell. The
@@ -244,7 +244,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             displayName = "Cell Background Color",
             isHidden = true,
             isAttribute = false)
-    private String bgColor = null;
+    private String bgColor;
 
     /**
      * Use the {@code char }attribute to specify a character to use for
@@ -259,7 +259,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             displayName = "Alignment Character",
             isHidden = true,
             isAttribute = false)
-    private String charFor = null;
+    private String charFor;
 
     /**
      * Use the {@code charOff }attribute to specify the offset of the first
@@ -276,7 +276,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             displayName = "Alignment Character Offset",
             isHidden = true,
             isAttribute = false)
-    private String charOff = null;
+    private String charOff;
 
     /**
      * The COLSPAN attribute of TD specifies the number of columns that are
@@ -297,7 +297,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     /**
      * colSpan set flag.
      */
-    private boolean colSpanSet = false;
+    private boolean colSpanSet;
 
     /**
      * Use the {@code descending} attribute to specify that the first
@@ -308,12 +308,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "descending",
             displayName = "Is Descending",
             category = "Data")
-    private boolean descending = false;
+    private boolean descending;
 
     /**
      * descending set flag.
      */
-    private boolean descendingSet = false;
+    private boolean descendingSet;
 
     /**
      * Set the {@code embeddedActions} attribute to true when the column
@@ -324,12 +324,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "embeddedActions",
             displayName = "Is Embedded Actions",
             category = "Advanced")
-    private boolean embeddedActions = false;
+    private boolean embeddedActions;
 
     /**
      * embeddedActions set flag.
      */
-    private boolean embeddedActionsSet = false;
+    private boolean embeddedActionsSet;
 
     /**
      * Use the {@code emptyCell} attribute to cause a theme-specific image
@@ -344,12 +344,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "emptyCell",
             displayName = "Empty Cell",
             category = "Appearance")
-    private boolean emptyCell = false;
+    private boolean emptyCell;
 
     /**
      * emptyCell set flag.
      */
-    private boolean emptyCellSet = false;
+    private boolean emptyCellSet;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt;} HTML
@@ -364,7 +364,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraFooterHtml = null;
+    private String extraFooterHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;th&gt;} HTML
@@ -379,7 +379,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraHeaderHtml = null;
+    private String extraHeaderHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt;} HTML
@@ -394,7 +394,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraTableFooterHtml = null;
+    private String extraTableFooterHtml;
 
     /**
      * The text to be displayed in the column footer.
@@ -405,7 +405,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String footerText = null;
+    private String footerText;
 
     /**
      * The text to be displayed in the column header.
@@ -416,7 +416,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String headerText = null;
+    private String headerText;
 
     /**
      * The HEADERS attribute specifies the header cells that apply to the TD.
@@ -432,7 +432,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String headers = null;
+    private String headers;
 
     /**
      * The number of pixels for the cell's height. Styles should be used to
@@ -445,7 +445,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String height = null;
+    private String height;
 
     /**
      * Use the {@code noWrap} attribute to disable word wrapping of this
@@ -457,12 +457,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "noWrap",
             displayName = "Suppress Word Wrap",
             category = "Appearance")
-    private boolean noWrap = false;
+    private boolean noWrap;
 
     /**
      * noWrap set flag.
      */
-    private boolean noWrapSet = false;
+    private boolean noWrapSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -473,7 +473,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -485,7 +485,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -497,7 +497,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -509,7 +509,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -521,7 +521,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -533,7 +533,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
     /**
      * Scripting code executed when the user moves the mouse pointer while over
      * the component.
@@ -544,7 +544,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -556,7 +556,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -568,7 +568,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -580,7 +580,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Use the {@code rowHeader} attribute to specify that the cells of the
@@ -610,12 +610,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "rowHeader",
             displayName = "Row Header",
             category = "Advanced")
-    private boolean rowHeader = false;
+    private boolean rowHeader;
 
     /**
      * rowHeader set flag.
      */
-    private boolean rowHeaderSet = false;
+    private boolean rowHeaderSet;
 
     /**
      * The ROWSPAN attribute of TD specifies the number of rows that are spanned
@@ -636,7 +636,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     /**
      * rowSpan set flag.
      */
-    private boolean rowSpanSet = false;
+    private boolean rowSpanSet;
 
     /**
      * Use the {@code scope} attribute to specify that the data cells of
@@ -660,7 +660,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String scope = null;
+    private String scope;
 
     /**
      * Use the {@code selectId} attribute in select columns, which contain
@@ -681,7 +681,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String selectId = null;
+    private String selectId;
 
     /**
      * Use the {@code severity} attribute when including the
@@ -700,7 +700,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String severity = null;
+    private String severity;
 
     /**
      * Use the {@code sort} attribute to specify a FieldKey id or
@@ -723,7 +723,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private Object sort = null;
+    private Object sort;
 
     /**
      * The theme identifier to use for the sort button that is displayed in the
@@ -735,7 +735,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ThemeIconsEditor")
             //CHECKSTYLE:ON
-    private String sortIcon = null;
+    private String sortIcon;
 
     /**
      * Absolute or relative URL to the image used for the sort button that is
@@ -747,7 +747,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String sortImageURL = null;
+    private String sortImageURL;
 
     /**
      * Use the {@code spacerColumn} attribute to use the column as a blank
@@ -761,12 +761,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
     @Property(name = "spacerColumn",
             displayName = "Spacer Column",
             category = "Layout")
-    private boolean spacerColumn = false;
+    private boolean spacerColumn;
 
     /**
      * spacerColumn set flag.
      */
-    private boolean spacerColumnSet = false;
+    private boolean spacerColumnSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -776,7 +776,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -788,7 +788,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The text to be displayed in the table column footer. The table column
@@ -801,7 +801,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String tableFooterText = null;
+    private String tableFooterText;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -814,7 +814,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the {@code valign} attribute to specify the vertical alignment
@@ -831,7 +831,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlVerticalAlignEditor")
             //CHECKSTYLE:ON
-    private String valign = null;
+    private String valign;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -843,12 +843,12 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible", category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Use the {@code width} attribute to specify the width of the cells of
@@ -863,7 +863,7 @@ public class TableColumn extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String width = null;
+    private String width;
 
     /**
      * Default constructor.

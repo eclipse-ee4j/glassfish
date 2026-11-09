@@ -160,7 +160,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
      * Remove the proxy from our list of proxies by listener.
      *
      * @param listener removes the proxy associated with the specified listener
-     * @return <tt>true</tt>, if proxy removed, <tt>false</tt> if no proxy was associated with the specified listener.
+     * @return <code>true</code>, if proxy removed, <code>false</code> if no proxy was associated with the specified listener.
      */
     public boolean removeNetworkProxy(NetworkListener listener) {
         return removeNetworkProxy(lookupNetworkProxy(listener));
@@ -169,7 +169,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
     /**
      * Remove the proxy from our list of proxies by id.
      *
-     * @return <tt>true</tt>, if proxy on specified port was removed, <tt>false</tt> if no proxy was associated with the
+     * @return <code>true</code>, if proxy on specified port was removed, <code>false</code> if no proxy was associated with the
      * port.
      */
     public boolean removeNetworkProxy(String id) {
@@ -198,7 +198,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
     /**
      * Remove the proxy from our list of proxies.
      *
-     * @return <tt>true</tt>, if proxy on specified port was removed, <tt>false</tt> otherwise.
+     * @return <code>true</code>, if proxy on specified port was removed, <code>false</code> otherwise.
      */
     public boolean removeNetworkProxy(NetworkProxy proxy) {
         if (proxy != null) {
@@ -221,7 +221,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
      * Lookup {@link GrizzlyProxy}, which corresponds to the {@link NetworkListener}.
      *
      * @param listener {@link NetworkListener}.
-     * @return {@link GrizzlyProxy}, or <tt>null</tt>, if correspondent {@link GrizzlyProxy} wasn't found.
+     * @return {@link GrizzlyProxy}, or <code>null</code>, if correspondent {@link GrizzlyProxy} wasn't found.
      */
     public NetworkProxy lookupNetworkProxy(NetworkListener listener) {
         int listenerPort = -1;
@@ -369,7 +369,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
      * Adds {@link MapperUpdateListener} to listeners queue.
      *
      * @param listener the listener to be added.
-     * @return <tt>true</tt>, if listener was successfully added, or <tt>false</tt> otherwise.
+     * @return <code>true</code>, if listener was successfully added, or <code>false</code> otherwise.
      */
     public boolean addMapperUpdateListener(MapperUpdateListener listener) {
         return mapperUpdateListeners.add(listener);
@@ -379,7 +379,7 @@ public class GrizzlyService implements RequestDispatcher, PostConstruct, PreDest
      * Removes {@link MapperUpdateListener} to listeners queue.
      *
      * @param listener the listener to be removed.
-     * @return <tt>true</tt>, if listener was successfully removed, or <tt>false</tt> otherwise.
+     * @return <code>true</code>, if listener was successfully removed, or <code>false</code> otherwise.
      */
     public boolean removeMapperUpdateListener(MapperUpdateListener listener) {
         return mapperUpdateListeners.remove(listener);

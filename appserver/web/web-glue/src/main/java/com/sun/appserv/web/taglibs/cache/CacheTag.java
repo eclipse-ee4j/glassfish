@@ -76,7 +76,7 @@ public class CacheTag extends BodyTagSupport {
      * This boolean specifies whether the cache should be forcibly refreshed
      * after the current request or not.
      */
-    private boolean _refreshCache = false;
+    private boolean _refreshCache;
 
     /**
      * This boolean specifies whether the cached response must be sent

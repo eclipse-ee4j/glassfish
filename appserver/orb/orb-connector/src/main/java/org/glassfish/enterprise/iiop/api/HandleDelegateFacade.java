@@ -23,6 +23,6 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface HandleDelegateFacade {
 
-    public HandleDelegate getHandleDelegate();
+    HandleDelegate getHandleDelegate();
 
 }

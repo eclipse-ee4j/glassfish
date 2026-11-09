@@ -109,7 +109,7 @@ public class ListBatchJobSteps
     @Override
     protected final String[] getAllHeaders() {
         return new String[] {
-                NAME, STEP_ID, START_TIME, END_TIME, BATCH_STATUS, EXIT_STATUS, STEP_METRICS
+                NAME, STEP_ID, START_TIME, END_TIME, BATCH_STATUS, EXIT_STATUS, STEP_METRICS,
         };
     }
 

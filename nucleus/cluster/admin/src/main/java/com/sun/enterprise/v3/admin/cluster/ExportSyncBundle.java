@@ -55,7 +55,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * Usage:
- * export-sync-bundle --target cluster_std-alone-instance [--retrieve <false>]
+ * export-sync-bundle --target cluster_std-alone-instance [--retrieve &lt;false&gt;]
  *[file_name]
  *
  * --target      Cluster or stand alone server instance (required)
@@ -65,9 +65,9 @@ import org.jvnet.hk2.annotations.Service;
  *
  * file_name    Specifies the file name and location of the synchronized content.
  * If file_name is not specified and --retrieve=false, the default value is
- * install-root/domains/domain_name/sync/<target>-sync-bundle.zip.
+ * install-root/domains/domain_name/sync/&lt;target&gt;-sync-bundle.zip.
  * If file_name is not specified and --retrieve=true, the default value is
- * <target>-sync-bundle.zip.  (optional)
+ * &lt;target&gt;-sync-bundle.zip.  (optional)
  *
  * @author Byron Nevins
  * @author Jennifer Chou
@@ -292,14 +292,14 @@ public class ExportSyncBundle implements AdminCommand {
     private ServerSynchronizer serverSynchronizer;
     @Inject
     private ServerEnvironment env;
-    private ActionReport report = null;
+    private ActionReport report;
     private File syncBundleExport;
-    private Logger logger = null;
-    private Payload.Outbound payload = null;
+    private Logger logger;
+    private Payload.Outbound payload;
     private Server instance;
     private Cluster cluster;
     private SyncRequest syncRequest = new SyncRequest();
     private static final String[] ALL_DIRS = new String[]{
-        "config", "applications", "lib", "docroot", "config-specific"
+        "config", "applications", "lib", "docroot", "config-specific",
     };
 }

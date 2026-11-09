@@ -31,7 +31,7 @@ import org.glassfish.embeddable.web.config.WebContainerConfig;
  *
  * WebContainer service can be accessed using GlassFish instance.
  *
- * <p/> Usage example:
+ * <p> Usage example:
  *
  * <pre>
  *      // Create and start GlassFish
@@ -73,115 +73,115 @@ public interface WebContainer {
      *
      * @param config the embedded instance configuration
      */
-    public void setConfiguration(WebContainerConfig config);
+    void setConfiguration(WebContainerConfig config);
 
     /**
-     * Creates a <tt>Context</tt> and configures it with the given
+     * Creates a <code>Context</code> and configures it with the given
      * docroot and classloader.
      *
      * <p>The classloader of the class on which this method is called
      * will be used.
      *
-     * <p>In order to access the new <tt>Context</tt> or any of its
-     * resources, the <tt>Context</tt> must be registered with a
-     * <tt>VirtualServer</tt> that has been started using either
+     * <p>In order to access the new <code>Context</code> or any of its
+     * resources, the <code>Context</code> must be registered with a
+     * <code>VirtualServer</code> that has been started using either
      * WebContainer#addContext or VirtualServer#addContext method.
      *
-     * @param docRoot the docroot of the <tt>Context</tt>
+     * @param docRoot the docroot of the <code>Context</code>
      *
-     * @return the new <tt>Context</tt>
+     * @return the new <code>Context</code>
      *
      * @see VirtualServer#addContext
      */
-    public Context createContext(File docRoot);
+    Context createContext(File docRoot);
 
     /**
-     * Creates a <tt>Context</tt> and configures it with the given
+     * Creates a <code>Context</code> and configures it with the given
      * docroot and classloader.
      *
      * <p>The given classloader will be set as the thread's context
-     * classloader whenever the new <tt>Context</tt> or any of its
+     * classloader whenever the new <code>Context</code> or any of its
      * resources are asked to process a request.
-     * If a <tt>null</tt> classloader is passed, the classloader of the
+     * If a <code>null</code> classloader is passed, the classloader of the
      * class on which this method is called will be used.
      *
-     * <p>In order to access the new <tt>Context</tt> or any of its
-     * resources, the <tt>Context</tt> must be registered with a
-     * <tt>VirtualServer</tt> that has been started using either
+     * <p>In order to access the new <code>Context</code> or any of its
+     * resources, the <code>Context</code> must be registered with a
+     * <code>VirtualServer</code> that has been started using either
      * WebContainer#addContext or VirtualServer#addContext method.
      *
-     * @param docRoot the docroot of the <tt>Context</tt>
-     * @param classLoader the classloader of the <tt>Context</tt>
+     * @param docRoot the docroot of the <code>Context</code>
+     * @param classLoader the classloader of the <code>Context</code>
      *
-     * @return the new <tt>Context</tt>
+     * @return the new <code>Context</code>
      *
      * @see VirtualServer#addContext
      */
-    public Context createContext(File docRoot, ClassLoader classLoader);
+    Context createContext(File docRoot, ClassLoader classLoader);
 
     /**
-     * Creates a <tt>Context</tt>, configures it with the given
+     * Creates a <code>Context</code>, configures it with the given
      * docroot and classloader, and registers it with all
-     * <tt>VirtualServer</tt>.
+     * <code>VirtualServer</code>.
      *
      * <p>The given classloader will be set as the thread's context
-     * classloader whenever the new <tt>Context</tt> or any of its
+     * classloader whenever the new <code>Context</code> or any of its
      * resources are asked to process a request.
-     * If a <tt>null</tt> classloader is passed, the classloader of the
+     * If a <code>null</code> classloader is passed, the classloader of the
      * class on which this method is called will be used.
      *
-     * @param docRoot the docroot of the <tt>Context</tt>
+     * @param docRoot the docroot of the <code>Context</code>
      * @param contextRoot the contextroot at which to register
-     * @param classLoader the classloader of the <tt>Context</tt>
+     * @param classLoader the classloader of the <code>Context</code>
      *
-     * @return the new <tt>Context</tt>
+     * @return the new <code>Context</code>
      */
-    public Context createContext(File docRoot, String contextRoot,
+    Context createContext(File docRoot, String contextRoot,
                                  ClassLoader classLoader);
 
     /**
-     * Registers the given <tt>Context</tt> with all <tt>VirtualServer</tt>
+     * Registers the given <code>Context</code> with all <code>VirtualServer</code>
      * at the given context root.
      *
-     * <p>If <tt>VirtualServer</tt> has already been started, the
-     * given <tt>context</tt> will be started as well.
+     * <p>If <code>VirtualServer</code> has already been started, the
+     * given <code>context</code> will be started as well.
      *
-     * @param context the <tt>Context</tt> to register
+     * @param context the <code>Context</code> to register
      * @param contextRoot the context root at which to register
      *
-     * @throws ConfigException if a <tt>Context</tt> already exists
-     * at the given context root on <tt>VirtualServer</tt>
-     * @throws GlassFishException if the given <tt>context</tt> fails
+     * @throws ConfigException if a <code>Context</code> already exists
+     * at the given context root on <code>VirtualServer</code>
+     * @throws GlassFishException if the given <code>context</code> fails
      * to be started
      */
-    public void addContext(Context context, String contextRoot)
+    void addContext(Context context, String contextRoot)
         throws ConfigException, GlassFishException;
 
     /**
-     * Stops the given <tt>Context</tt> and removes it from all
-     * <tt>VirtualServer</tt>.
+     * Stops the given <code>Context</code> and removes it from all
+     * <code>VirtualServer</code>.
      *
-     * @param context the <tt>Context</tt> to be stopped and removed
+     * @param context the <code>Context</code> to be stopped and removed
      *
      * @throws GlassFishException if an error occurs during the stopping
-     * or removal of the given <tt>context</tt>
+     * or removal of the given <code>context</code>
      */
-    public void removeContext(Context context)
+    void removeContext(Context context)
         throws ConfigException, GlassFishException;
 
     /**
-     * Creates a <tt>WebListener</tt> from the given class type and
+     * Creates a <code>WebListener</code> from the given class type and
      * assigns the given id to it.
      *
-     * @param id the id of the new <tt>WebListener</tt>
+     * @param id the id of the new <code>WebListener</code>
      * @param c the class from which to instantiate the
-     * <tt>WebListener</tt>
+     * <code>WebListener</code>
      *
-     * @return the new <tt>WebListener</tt> instance
+     * @return the new <code>WebListener</code> instance
      *
-     * @throws  IllegalAccessException if the given <tt>Class</tt> or
+     * @throws  IllegalAccessException if the given <code>Class</code> or
      * its nullary constructor is not accessible.
-     * @throws  InstantiationException if the given <tt>Class</tt>
+     * @throws  InstantiationException if the given <code>Class</code>
      * represents an abstract class, an interface, an array class,
      * a primitive type, or void; or if the class has no nullary
      * constructor; or if the instantiation fails for some other reason.
@@ -191,144 +191,143 @@ public interface WebContainer {
      * present and any of the following conditions is met:
      *
      * <ul>
-     * <li> invocation of <tt>{@link SecurityManager#checkMemberAccess
-     * s.checkMemberAccess(this, Member.PUBLIC)}</tt> denies
-     * creation of new instances of the given <tt>Class</tt>
+     * <li> invocation of <code>s.checkMemberAccess(this, Member.PUBLIC)</code> denies
+     * creation of new instances of the given <code>Class</code>
      * <li> the caller's class loader is not the same as or an
      * ancestor of the class loader for the current class and
-     * invocation of <tt>{@link SecurityManager#checkPackageAccess
-     * s.checkPackageAccess()}</tt> denies access to the package
+     * invocation of <code>{@link SecurityManager#checkPackageAccess
+     * s.checkPackageAccess()}</code> denies access to the package
      * of this class
      * </ul>
      */
-    public <T extends WebListener> T createWebListener(String id, Class<T> c)
+    <T extends WebListener> T createWebListener(String id, Class<T> c)
         throws InstantiationException, IllegalAccessException;
 
     /**
-     * Adds the given <tt>WebListener</tt> to this
-     * <tt>WebContainer</tt>.
+     * Adds the given <code>WebListener</code> to this
+     * <code>WebContainer</code>.
      *
-     * <p>If this <tt>WebContainer</tt> has already been started,
-     * the given <tt>webListener</tt> will be started as well.
+     * <p>If this <code>WebContainer</code> has already been started,
+     * the given <code>webListener</code> will be started as well.
      *
-     * @param webListener the <tt>WebListener</tt> to add
+     * @param webListener the <code>WebListener</code> to add
      *
-     * @throws ConfigException if a <tt>WebListener</tt> with the
+     * @throws ConfigException if a <code>WebListener</code> with the
      * same id has already been registered with this
-     * <tt>WebContainer</tt>
-     * @throws GlassFishException if the given <tt>webListener</tt> fails
+     * <code>WebContainer</code>
+     * @throws GlassFishException if the given <code>webListener</code> fails
      * to be started
      */
-    public void addWebListener(WebListener webListener)
+    void addWebListener(WebListener webListener)
         throws ConfigException, GlassFishException;
 
     /**
-     * Finds the <tt>WebListener</tt> with the given id.
+     * Finds the <code>WebListener</code> with the given id.
      *
-     * @param id the id of the <tt>WebListener</tt> to find
+     * @param id the id of the <code>WebListener</code> to find
      *
-     * @return the <tt>WebListener</tt> with the given id, or
-     * <tt>null</tt> if no <tt>WebListener</tt> with that id has been
-     * registered with this <tt>WebContainer</tt>
+     * @return the <code>WebListener</code> with the given id, or
+     * <code>null</code> if no <code>WebListener</code> with that id has been
+     * registered with this <code>WebContainer</code>
      */
-    public WebListener getWebListener(String id);
+    WebListener getWebListener(String id);
 
     /**
-     * Gets the collection of <tt>WebListener</tt> instances registered
-     * with this <tt>WebContainer</tt>.
+     * Gets the collection of <code>WebListener</code> instances registered
+     * with this <code>WebContainer</code>.
      *
-     * @return the (possibly empty) collection of <tt>WebListener</tt>
-     * instances registered with this <tt>WebContainer</tt>
+     * @return the (possibly empty) collection of <code>WebListener</code>
+     * instances registered with this <code>WebContainer</code>
      */
-    public Collection<WebListener> getWebListeners();
+    Collection<WebListener> getWebListeners();
 
     /**
-     * Stops the given <tt>webListener</tt> and removes it from this
-     * <tt>WebContainer</tt>.
+     * Stops the given <code>webListener</code> and removes it from this
+     * <code>WebContainer</code>.
      *
-     * @param webListener the <tt>WebListener</tt> to be stopped
+     * @param webListener the <code>WebListener</code> to be stopped
      * and removed
      *
      * @throws GlassFishException if an error occurs during the stopping
-     * or removal of the given <tt>webListener</tt>
+     * or removal of the given <code>webListener</code>
      */
-    public void removeWebListener(WebListener webListener)
+    void removeWebListener(WebListener webListener)
         throws GlassFishException;
 
     /**
-     * Creates a <tt>VirtualServer</tt> with the given id and docroot, and
-     * maps it to the given <tt>WebListener</tt> instances.
+     * Creates a <code>VirtualServer</code> with the given id and docroot, and
+     * maps it to the given <code>WebListener</code> instances.
      *
-     * @param id the id of the <tt>VirtualServer</tt>
-     * @param docRoot the docroot of the <tt>VirtualServer</tt>
-     * @param webListeners the list of <tt>WebListener</tt> instances from
-     * which the <tt>VirtualServer</tt> will receive requests
+     * @param id the id of the <code>VirtualServer</code>
+     * @param docRoot the docroot of the <code>VirtualServer</code>
+     * @param webListeners the list of <code>WebListener</code> instances from
+     * which the <code>VirtualServer</code> will receive requests
      *
-     * @return the new <tt>VirtualServer</tt> instance
+     * @return the new <code>VirtualServer</code> instance
      */
-    public VirtualServer createVirtualServer(String id,
+    VirtualServer createVirtualServer(String id,
         File docRoot, WebListener...  webListeners);
 
     /**
-     * Creates a <tt>VirtualServer</tt> with the given id and docroot, and
-     * maps it to all <tt>WebListener</tt> instances.
+     * Creates a <code>VirtualServer</code> with the given id and docroot, and
+     * maps it to all <code>WebListener</code> instances.
      *
-     * @param id the id of the <tt>VirtualServer</tt>
-     * @param docRoot the docroot of the <tt>VirtualServer</tt>
+     * @param id the id of the <code>VirtualServer</code>
+     * @param docRoot the docroot of the <code>VirtualServer</code>
      *
-     * @return the new <tt>VirtualServer</tt> instance
+     * @return the new <code>VirtualServer</code> instance
      */
-    public VirtualServer createVirtualServer(String id, File docRoot);
+    VirtualServer createVirtualServer(String id, File docRoot);
 
     /**
-     * Adds the given <tt>VirtualServer</tt> to this
-     * <tt>WebContainer</tt>.
+     * Adds the given <code>VirtualServer</code> to this
+     * <code>WebContainer</code>.
      *
-     * <p>If this <tt>WebContainer</tt> has already been started,
-     * the given <tt>virtualServer</tt> will be started as well.
+     * <p>If this <code>WebContainer</code> has already been started,
+     * the given <code>virtualServer</code> will be started as well.
      *
-     * @param virtualServer the <tt>VirtualServer</tt> to add
+     * @param virtualServer the <code>VirtualServer</code> to add
      *
-     * @throws ConfigException if a <tt>VirtualServer</tt> with the
+     * @throws ConfigException if a <code>VirtualServer</code> with the
      * same id has already been registered with this
-     * <tt>WebContainer</tt>
-     * @throws GlassFishException if the given <tt>virtualServer</tt> fails
+     * <code>WebContainer</code>
+     * @throws GlassFishException if the given <code>virtualServer</code> fails
      * to be started
      */
-    public void addVirtualServer(VirtualServer virtualServer)
+    void addVirtualServer(VirtualServer virtualServer)
         throws ConfigException, GlassFishException;
 
     /**
-     * Finds the <tt>VirtualServer</tt> with the given id.
+     * Finds the <code>VirtualServer</code> with the given id.
      *
-     * @param id the id of the <tt>VirtualServer</tt> to find
+     * @param id the id of the <code>VirtualServer</code> to find
      *
-     * @return the <tt>VirtualServer</tt> with the given id, or
-     * <tt>null</tt> if no <tt>VirtualServer</tt> with that id has been
-     * registered with this <tt>WebContainer</tt>
+     * @return the <code>VirtualServer</code> with the given id, or
+     * <code>null</code> if no <code>VirtualServer</code> with that id has been
+     * registered with this <code>WebContainer</code>
      */
-    public VirtualServer getVirtualServer(String id);
+    VirtualServer getVirtualServer(String id);
 
     /**
-     * Gets the collection of <tt>VirtualServer</tt> instances registered
-     * with this <tt>WebContainer</tt>.
+     * Gets the collection of <code>VirtualServer</code> instances registered
+     * with this <code>WebContainer</code>.
      *
-     * @return the (possibly empty) collection of <tt>VirtualServer</tt>
-     * instances registered with this <tt>WebContainer</tt>
+     * @return the (possibly empty) collection of <code>VirtualServer</code>
+     * instances registered with this <code>WebContainer</code>
      */
-    public Collection<VirtualServer> getVirtualServers();
+    Collection<VirtualServer> getVirtualServers();
 
     /**
-     * Stops the given <tt>virtualServer</tt> and removes it from this
-     * <tt>WebContainer</tt>.
+     * Stops the given <code>virtualServer</code> and removes it from this
+     * <code>WebContainer</code>.
      *
-     * @param virtualServer the <tt>VirtualServer</tt> to be stopped
+     * @param virtualServer the <code>VirtualServer</code> to be stopped
      * and removed
      *
      * @throws GlassFishException if an error occurs during the stopping
-     * or removal of the given <tt>virtualServer</tt>
+     * or removal of the given <code>virtualServer</code>
      */
-    public void removeVirtualServer(VirtualServer virtualServer)
+    void removeVirtualServer(VirtualServer virtualServer)
         throws GlassFishException;
 
     /**
@@ -336,6 +335,6 @@ public interface WebContainer {
      *
      * @param level log level
      */
-    public void setLogLevel(Level level);
+    void setLogLevel(Level level);
 
 }

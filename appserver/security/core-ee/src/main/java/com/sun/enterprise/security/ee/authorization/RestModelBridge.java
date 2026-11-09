@@ -207,8 +207,6 @@ public final class RestModelBridge implements ForcedAutoDiscoverable {
      * for programmatic deployments.
      * @param mappings The URL patterns this application is mounted on, in declaration order, for example {@code [/rest/*]}.
      * Empty when the registration could not be resolved; callers should then fall back to their own mount detection.
-     * @param model The enhanced, deployed resource model, including model processor output such as the WADL resource and
-     * the synthetic OPTIONS methods.
      * @param selector A request-independent matcher over that model.
      */
     public record RestApplication(
@@ -224,7 +222,7 @@ public final class RestModelBridge implements ForcedAutoDiscoverable {
 
         /**
          * The mount points of this application as path prefixes, ready to be prepended to an application-relative template.
-         * Derived from {@link #mappings()} through {@link RestModelBridge#toBase(String)}; mappings that cannot serve as a REST
+         * Derived from {@link #mappings()} through {@code RestModelBridge#toBase(String)}; mappings that cannot serve as a REST
          * base are skipped, so this can be empty even when {@code mappings()} is not.
          */
         public List<String> bases() {

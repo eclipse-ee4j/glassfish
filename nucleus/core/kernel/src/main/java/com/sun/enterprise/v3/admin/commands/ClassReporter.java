@@ -30,7 +30,7 @@ class ClassReporter {
 
     private final MBeanServerConnection mbsc;
     private final StringManager sm = StringManager.getManager(ClassReporter.class);
-    public ClassReporter(final MBeanServerConnection mbsc) {
+    ClassReporter(final MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
     }
     public String getClassReport() throws RuntimeException {

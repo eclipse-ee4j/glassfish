@@ -1075,7 +1075,7 @@ options
     }
 
     /**
-     * Analyses a bitwise/logical operation (&, |, ^)
+     * Analyses a bitwise/logical operation (&amp;, |, ^)
      * @param op the bitwise/logical operator
      * @param leftAST left operand
      * @param rightAST right operand
@@ -1130,7 +1130,7 @@ options
     }
 
     /**
-     * Analyses a boolean conditional operation (&&, ||)
+     * Analyses a boolean conditional operation (&amp;&amp;, ||)
      * @param op the conditional operator
      * @param leftAST left operand
      * @param rightAST right operand
@@ -1162,7 +1162,7 @@ options
     }
 
     /**
-     * Analyses a relational operation (<, <=, >, >=, ==, !=)
+     * Analyses a relational operation (&lt;, &lt;=, &gt;, &gt;=, ==, !=)
      * @param op the relational operator
      * @param leftAST left operand
      * @param rightAST right operand

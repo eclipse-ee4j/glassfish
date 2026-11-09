@@ -59,7 +59,6 @@ import jakarta.ejb.EntityContext;
      *
      * @param info Object with the request information that is application server
      * specific.
-     * @throws JDOFatalInternalException.
      * @return a Container instance as an Object.
      * @see #getEJBObject(Object, Object)
      * @see #getEJBLocalObject(Object, Object)

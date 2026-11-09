@@ -35,14 +35,14 @@ public class ServerInfo {
     /**
      * The server information string used for logging
      */
-    private static String serverInfo = null;
+    private static String serverInfo;
 
     /**
      * The public server information string that is exposed in
      * container-generated error pages and as the value of the "Server"
      * HTTP response header
      */
-    private static String publicServerInfo = null;
+    private static String publicServerInfo;
 
     static {
 

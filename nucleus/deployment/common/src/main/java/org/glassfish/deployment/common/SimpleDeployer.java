@@ -33,7 +33,7 @@ public abstract class SimpleDeployer<T extends Container, U extends ApplicationC
     /**
      * Loads the meta date associated with the application.
      *
-     * @parameters type type of metadata that this deployer has declared providing.
+     * @param type type of metadata that this deployer has declared providing.
      */
     @Override
     public <V> V loadMetaData(Class<V> type, DeploymentContext context) {

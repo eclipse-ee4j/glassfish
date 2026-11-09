@@ -43,7 +43,7 @@ public class ClassPathBuilder implements Iterable<File> {
     }
 
     /**
-     * Allows one to write {@code add(f,"lib","a.jar")} instead of <tt>add(new File(new File(f,"lib"),"a.jar")</tt>
+     * Allows one to write {@code add(f,"lib","a.jar")} instead of <code>add(new File(new File(f,"lib"),"a.jar")</code>
      */
     public ClassPathBuilder add(File f, String... pathFragments) {
         for (String p : pathFragments)

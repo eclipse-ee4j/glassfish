@@ -25,7 +25,7 @@ import java.util.EnumSet;
  * contexts.
  */
 public interface ContextViewFactory {
-  public ViewCapable createInstance(View view);
-  public EnumSet<PropagationMode> getPropagationModes();
+  ViewCapable createInstance(View view);
+  EnumSet<PropagationMode> getPropagationModes();
 
 }

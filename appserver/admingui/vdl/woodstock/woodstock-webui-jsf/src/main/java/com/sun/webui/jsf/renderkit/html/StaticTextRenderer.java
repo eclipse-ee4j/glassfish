@@ -49,7 +49,7 @@ public final class StaticTextRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseMove",
         "onMouseOut",
-        "onMouseOver"
+        "onMouseOver",
     };
 
     @Override

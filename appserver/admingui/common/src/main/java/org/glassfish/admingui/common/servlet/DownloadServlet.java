@@ -344,7 +344,7 @@ public class DownloadServlet extends HttpServlet {
      *     variables, therefore, should not be used; you may use the context
      *     to store local information.</p>
      */
-    public static interface ContentSource {
+    public interface ContentSource {
 
         /**
          *  <p>This method should return a unique string used to identify this
@@ -352,7 +352,7 @@ public class DownloadServlet extends HttpServlet {
          * order to select the appropriate <code>ContentSource</code> when
          * using the <code>DownloadServlet</code>.</p>
          */
-        public String getId();
+        String getId();
 
         /**
          *  <p>This method is responsible for generating the content and
@@ -361,21 +361,21 @@ public class DownloadServlet extends HttpServlet {
          * {@link Context}, such as {@link #EXTENSION} or
          * {@link #CONTENT_TYPE}.</p>
          */
-        public InputStream getInputStream(DownloadServlet.Context ctx);
+        InputStream getInputStream(DownloadServlet.Context ctx);
 
         /**
          *  <p>This method may be used to clean up any temporary resources.
          * It will be invoked after the <code>InputStream</code> has
          * been completely read.</p>
          */
-        public void cleanUp(DownloadServlet.Context ctx);
+        void cleanUp(DownloadServlet.Context ctx);
 
         /**
          *  <p>This method is responsible for returning the last modified date
          * of the content, or -1 if not applicable.  This information will
          * be used for caching.</p>
          */
-        public long getLastModified(DownloadServlet.Context context);
+        long getLastModified(DownloadServlet.Context context);
     }
 
 
@@ -504,10 +504,10 @@ public class DownloadServlet extends HttpServlet {
         }
 
 
-        private        Servlet                _servlet        = null;
-        private        ServletConfig        _servletConfig  = null;
-        private        ServletRequest        _request        = null;
-        private        ServletResponse        _response        = null;
+        private        Servlet                _servlet;
+        private        ServletConfig        _servletConfig;
+        private        ServletRequest        _request;
+        private        ServletResponse        _response;
         private        Map<String, Object> _att        = new HashMap<String, Object>();
     }
 

@@ -142,10 +142,10 @@ public class ApplicationLoaderService implements org.glassfish.hk2.api.PreDestro
     @Inject
     ServiceLocator habitat;
 
-    private String deploymentTracingEnabled = null;
+    private String deploymentTracingEnabled;
 
     private final Map<String,Integer> appOrderInfoMap = new HashMap<>();
-    private int appOrder = 0;
+    private int appOrder;
 
     /**
      * Starts the application loader service.

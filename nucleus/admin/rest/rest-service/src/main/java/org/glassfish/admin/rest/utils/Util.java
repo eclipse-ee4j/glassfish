@@ -497,7 +497,7 @@ public class Util {
     }
 
     /**
-     * This method takes a Type argument that represents a generic class (e.g., <code>List&lt;String&gt;) and returns the
+     * This method takes a Type argument that represents a generic class (e.g., <code>List&lt;String&gt;</code>) and returns the
      * <code>Class</code> for the first generic type. If the <code>Class</code> is not a generic type, <code>null</code> is
      * returned. The primary intended usage for this is in the <code>MessageBodyReader</code>s to help return a more
      * accurate result from <code>isReadable</code>, though it may also be helpful in other, more general situations.

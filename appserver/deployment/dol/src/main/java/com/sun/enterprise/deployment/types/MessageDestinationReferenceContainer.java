@@ -33,14 +33,14 @@ public interface MessageDestinationReferenceContainer {
     /**
      * Add a message destination reference to myself
      *
-     * @param the new message destination ref
+     * @param msgDestReference new message destination ref
      */
     void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
 
     /**
      * Return a message destination reference by the same name or throw an IllegalArgumentException.
      *
-     * @param the message destination reference name
+     * @param name message destination reference name
      */
     MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
 
@@ -52,7 +52,7 @@ public interface MessageDestinationReferenceContainer {
     /**
      * Removes the specified message destination reference from the receiver.
      *
-     * @param ref MessageDestinationReferenceDescriptor to remove.
+     * @param msgDestRef MessageDestinationReferenceDescriptor to remove.
      */
     void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
 }

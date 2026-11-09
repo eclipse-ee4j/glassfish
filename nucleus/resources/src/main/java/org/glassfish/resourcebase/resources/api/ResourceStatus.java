@@ -32,7 +32,7 @@ public class ResourceStatus {
     int status = SUCCESS;
     String message;
     Throwable exception;
-    boolean alreadyExists = false;
+    boolean alreadyExists;
 
     public ResourceStatus(int status, String message) {
         this.status = status;

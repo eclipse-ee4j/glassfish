@@ -49,8 +49,8 @@ public class IdempotentUrlPatternVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    WebModule _m = null;
-    int _i = 0;
+    WebModule _m;
+    int _i;
     private static final String URL_PATTERN = "UrlPattern";    //NOI18N
     private static final String RETRIES = "NoOfRetries";     //NOI18N
 }

@@ -69,7 +69,7 @@ public class DropDownRenderer extends ListRendererBase {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                DropDown.class.getName()
+                DropDown.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

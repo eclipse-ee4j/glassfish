@@ -50,10 +50,10 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles mail resource events in the server instance.
- * <p/>
+ * <p>
  * The mail resource events from the admin instance are propagated
  * to this object.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
  *

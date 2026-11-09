@@ -120,8 +120,8 @@ public class CoyoteConnectorLauncher implements ProtocolHandler {
 
     // socket factory attributes ( XXX replace with normal setters )
     protected Map<String, Object> attributes = new HashMap<>();
-    protected String socketFactoryName = null;
-    protected String sslImplementationName = null;
+    protected String socketFactoryName;
+    protected String sslImplementationName;
 
     private int maxKeepAliveRequests = 100; // as in Apache HTTPD server
     protected int timeout = 300000; // 5 minutes as in Apache HTTPD server

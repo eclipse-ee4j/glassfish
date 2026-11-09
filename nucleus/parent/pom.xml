@@ -1101,6 +1101,8 @@
                     <version>3.12.0</version>
                     <configuration>
                         <detectOfflineLinks>false</detectOfflineLinks>
+                        <!-- Don't report missing comments, @param, @return etc. Still report actual errors. -->
+                        <doclint>all,-missing</doclint>
                         <notimestamp>false</notimestamp>
                         <skip>${javadoc.skip}</skip>
                     </configuration>

@@ -40,11 +40,11 @@ public interface WorkContext {
    * Writes the implementation of <code>WorkContext</code> to the
    * {@link WorkContextOutput} data stream.
    */
-  public void writeContext(WorkContextOutput out) throws IOException;
+  void writeContext(WorkContextOutput out) throws IOException;
 
   /**
    * Reads the implementation of <code>WorkContext</code> from the
    * {@link WorkContextInput} data stream.
    */
-  public void readContext(WorkContextInput in) throws IOException;
+  void readContext(WorkContextInput in) throws IOException;
 }

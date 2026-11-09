@@ -80,15 +80,15 @@ public final class Main extends Assertion {
     /**
      * Java Writer Class
      */
-    private JavaFileWriter fWriter = null;
-    private JavaClassWriter writer = null;
+    private JavaFileWriter fWriter;
+    private JavaClassWriter writer;
 
     /**
      * The MetaData for generating classes.
      */
-    private ExtendedJDOMetaData meta = null;
+    private ExtendedJDOMetaData meta;
 
-    private File destinationDir = null;
+    private File destinationDir;
 
 
     /**
@@ -110,7 +110,7 @@ public final class Main extends Assertion {
     /**
      *
      */
-    public static final void main(String[] argv) {
+    public static void main(String[] argv) {
         final Main gen = new Main();
         try {
             gen.opts.processArgs(argv);
@@ -127,8 +127,8 @@ public final class Main extends Assertion {
      */
     private class CmdLineOptions {
         // final Collection inputFileNames = new ArrayList();
-        String destinationDirectory = null;
-        String jdoPropertiesFileName = null;
+        String destinationDirectory;
+        String jdoPropertiesFileName;
 
         /**
          * Print a usage message to System.err
@@ -436,7 +436,7 @@ public final class Main extends Assertion {
         final String[] comments = new String[]{
             dotLine,
             "Augmentation for Persistence-Capable Root Classes (added by enhancer):",
-            dotLine
+            dotLine,
         };
 
         // write constructor with parameter StateManager
@@ -573,7 +573,7 @@ public final class Main extends Assertion {
         final String[] comments = new String[] {
             dotLine,
             "Augmentation for Persistence-Capable Classes (added by enhancer):",
-            dotLine
+            dotLine,
         };
 
         final String[] managedFieldNames = meta.getManagedFields(className);
@@ -634,7 +634,7 @@ public final class Main extends Assertion {
         final String[] comments = new String[]{
             dotLine,
             "Key Class:",
-            dotLine
+            dotLine,
         };
 
         final String superOidClassName = ImplHelper.normalizeClassName(meta.getSuperKeyClass(className));

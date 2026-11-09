@@ -73,7 +73,7 @@ public final class Label extends UIOutput implements NamingContainer {
     /**
      * Editable value.
      */
-    private EditableValueHolder labeledComponent = null;
+    private EditableValueHolder labeledComponent;
 
     /**
      * HTML element.
@@ -99,7 +99,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.InputComponentIdsEditor")
             //CHECKSTYLE:ON
-    private String forComp = null;
+    private String forComp;
 
     /**
      * Use the hideIndicators attribute to prevent display of the required and
@@ -113,12 +113,12 @@ public final class Label extends UIOutput implements NamingContainer {
     @Property(name = "hideIndicators",
             displayName = "Hide the Required and Invalid icons",
             category = "Advanced")
-    private boolean hideIndicators = false;
+    private boolean hideIndicators;
 
     /**
      * hideIndicateors set flag.
      */
-    private boolean hideIndicatorsSet = false;
+    private boolean hideIndicatorsSet;
 
     /**
      * Style level for this label, where lower values typically specify
@@ -137,7 +137,7 @@ public final class Label extends UIOutput implements NamingContainer {
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -149,7 +149,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -161,7 +161,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -173,7 +173,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -185,7 +185,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -197,7 +197,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -209,7 +209,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Flag indicating that the labeled component should be marked as required.
@@ -220,12 +220,12 @@ public final class Label extends UIOutput implements NamingContainer {
     @Property(name = "requiredIndicator",
             displayName = "Required Field Indicator",
             category = "Appearance")
-    private boolean requiredIndicator = false;
+    private boolean requiredIndicator;
 
     /**
      * requiredIndicator set flag.
      */
-    private boolean requiredIndicatorSet = false;
+    private boolean requiredIndicatorSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -235,7 +235,7 @@ public final class Label extends UIOutput implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -247,7 +247,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -260,7 +260,7 @@ public final class Label extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -274,12 +274,12 @@ public final class Label extends UIOutput implements NamingContainer {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

@@ -54,7 +54,7 @@ public class GetMessageListenerTypes implements AdminCommand {
     private String rarName;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

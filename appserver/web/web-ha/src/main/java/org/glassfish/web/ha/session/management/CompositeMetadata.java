@@ -59,7 +59,7 @@ public final class CompositeMetadata implements Storeable {
     private transient Set<String> _dirtyAttributeNames = new HashSet<String>();
 
     private transient static String[] _attributeNames = new String[]{
-            "trunkState", "stringExtraParam", "sessionAttributes"
+            "trunkState", "stringExtraParam", "sessionAttributes",
     };
 
     private transient static Set<String> saveALL = new HashSet<String>();

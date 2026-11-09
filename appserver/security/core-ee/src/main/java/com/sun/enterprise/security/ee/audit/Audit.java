@@ -73,7 +73,7 @@ public class Audit extends AuditModule {
     /**
      * Check auditing state.
      *
-     * @returns True if auditing is active currently.
+     * @return True if auditing is active currently.
      *
      */
     public static boolean isActive() {

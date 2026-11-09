@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class BucketizedHashtable<K, V> implements Cloneable, Map<K, V>, Serializable {
     private int bucketSize;
-    private Hashtable<K, V>[] hashtables = null;
+    private Hashtable<K, V>[] hashtables;
 
     /**
      * Constructs a new, empty BucketizedHashtable with the specified
@@ -114,7 +114,7 @@ public class BucketizedHashtable<K, V> implements Cloneable, Map<K, V>, Serializ
     /**
      * Maps the specified <code>key</code> to the specified
      * <code>value</code> in this hashtable. Neither the key nor the
-     * value can be <code>null</code>. <p>
+     * value can be <code>null</code>.
      * @param key   the hashtable key
      * @param value the value
      * @return      the previous value of the specified key in hashtables,

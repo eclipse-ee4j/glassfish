@@ -74,9 +74,9 @@ public abstract class MBeanRegistrationListener extends NotificationListenerBase
         this(name, conn, (ObjectName) null);
     }
 
-    protected abstract void mbeanRegistered(final ObjectName objectName);
+    protected abstract void mbeanRegistered(ObjectName objectName);
 
-    protected abstract void mbeanUnregistered(final ObjectName objectName);
+    protected abstract void mbeanUnregistered(ObjectName objectName);
 
     public void handleNotification(final Notification notifIn, final Object handback)
     {

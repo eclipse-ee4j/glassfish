@@ -76,8 +76,8 @@ public class SqlTime
     }
 
     /**
-     * Sets the <tt>SqlTime</tt> object to represent a point in time that is
-     * <tt>time</tt> milliseconds after January 1, 1970 00:00:00 GMT.
+     * Sets the <code>SqlTime</code> object to represent a point in time that is
+     * <code>time</code> milliseconds after January 1, 1970 00:00:00 GMT.
      *
      * @param   time   the number of milliseconds.
      * @see     java.sql.Time
@@ -108,7 +108,7 @@ public class SqlTime
     /** -----------Depricated Methods------------------*/
 
     /**
-     * Sets the hour of this <tt>SqlTime</tt> object to the specified value.
+     * Sets the hour of this <code>SqlTime</code> object to the specified value.
      *
      * @param   hours   the hour value.
      * @see     java.util.Calendar
@@ -122,7 +122,7 @@ public class SqlTime
     }
 
     /**
-     * Sets the minutes of this <tt>SqlTime</tt> object to the specified value.
+     * Sets the minutes of this <code>SqlTime</code> object to the specified value.
      *
      * @param   minutes   the value of the minutes.
      * @see     java.util.Calendar
@@ -136,7 +136,7 @@ public class SqlTime
     }
 
     /**
-     * Sets the seconds of this <tt>SqlTime</tt> to the specified value.
+     * Sets the seconds of this <code>SqlTime</code> to the specified value.
      *
      * @param   seconds   the seconds value.
      * @see     java.util.Calendar
@@ -161,7 +161,7 @@ public class SqlTime
     }
 
     /**
-     * Sets the <tt>SqlTime</tt> object without notification of the Owner
+     * Sets the <code>SqlTime</code> object without notification of the Owner
      * field. Used internaly to populate date from DB
      *
      * @param   time   the number of milliseconds.
@@ -253,7 +253,7 @@ public class SqlTime
      * this object to the stream.
      *
      * @return java.sql.Time that represents the same value.
-     * @throws ObjectStreamException.
+     * @throws ObjectStreamException
      */
     Object writeReplace() throws ObjectStreamException
     {

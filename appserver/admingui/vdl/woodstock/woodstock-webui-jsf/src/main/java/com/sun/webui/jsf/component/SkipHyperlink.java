@@ -46,7 +46,7 @@ public final class SkipHyperlink extends WebuiCommand {
     @Property(name = "description",
             displayName = "Description",
             category = "Appearance")
-    private String description = null;
+    private String description;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -56,7 +56,7 @@ public final class SkipHyperlink extends WebuiCommand {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -68,7 +68,7 @@ public final class SkipHyperlink extends WebuiCommand {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -87,7 +87,7 @@ public final class SkipHyperlink extends WebuiCommand {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
 
     /**

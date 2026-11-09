@@ -100,7 +100,7 @@ public class SunTransactionHelper extends TransactionHelperImpl implements Conne
         static private final String AS_TM_NAME = "java:appserver/TransactionManager"; //NOI18N
 
         // TransactionManager instance used for managing local transactions.
-        static TransactionManager appserverTM = null;
+        static TransactionManager appserverTM;
 
         static {
             try {

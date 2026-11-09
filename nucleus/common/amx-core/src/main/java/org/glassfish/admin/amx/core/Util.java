@@ -184,7 +184,7 @@ public final class Util {
 
 
     /**
-     * Extract all properties other than type=<type>,name=<name>.
+     * Extract all properties other than type=&lt;type&gt;,name=&lt;name&gt;.
      *
      * @param objectName
      */
@@ -333,7 +333,7 @@ public final class Util {
 
 
     /**
-     * Use of generic type form taking Class<T> is preferred.
+     * Use of generic type form taking Class&lt;T&gt; is preferred.
      */
     public static Serializable getAMXNotificationValue(final Notification notif, final String key) {
         final Map<String, Serializable> data =

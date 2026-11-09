@@ -24,16 +24,16 @@ public interface MessageTrace {
      * @param includeHeaders the soap headers.
      * @return the soap message
      */
-    public String getMessage(boolean includeHeaders);
+    String getMessage(boolean includeHeaders);
 
     /**
      * Returns the endpoint this message originated from
      */
-    public Endpoint getEndpoint();
+    Endpoint getEndpoint();
 
     /**
      * Returns the transport dependent information
      */
-    public TransportInfo getTransportInfo();
+    TransportInfo getTransportInfo();
 
 }

@@ -255,10 +255,10 @@ public class WLSWireAdapter extends AbstractWireAdapter {
   }
 
   interface ClassNames {
-    static final byte[] ASCII = "weblogic.workarea.AsciiWorkContext".getBytes();
-    static final byte[] STRING = "weblogic.workarea.StringWorkContext".getBytes();
-    static final byte[] LONG = "weblogic.workarea.LongWorkContext".getBytes();
-    static /* WARNING Deencapsulation has a problem with final*/ byte[] SERIALIZABLE = "weblogic.workarea.SerializableWorkContext".getBytes();
+    byte[] ASCII = "weblogic.workarea.AsciiWorkContext".getBytes();
+    byte[] STRING = "weblogic.workarea.StringWorkContext".getBytes();
+    byte[] LONG = "weblogic.workarea.LongWorkContext".getBytes();
+    /* WARNING Deencapsulation has a problem with final*/ byte[] SERIALIZABLE = "weblogic.workarea.SerializableWorkContext".getBytes();
   }
 
   private static class Carrier implements Serializable {
@@ -267,15 +267,15 @@ public class WLSWireAdapter extends AbstractWireAdapter {
     private static final int VERSION = 1; //for interop
     private static final long serialVersionUID = -197593099539117489L;
     private Serializable serializable;
-    private boolean mutable = false;
+    private boolean mutable;
 
     @SuppressWarnings("unused")
-    public Carrier() {} // Fulfills Serializable Contract
+    Carrier() {} // Fulfills Serializable Contract
 
     byte[] toBytes() throws IOException {
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ObjectOutputStream oos = new ObjectOutputStream(baos) {
-        private boolean isIntercepting = false;
+        private boolean isIntercepting;
         @Override public void writeUTF(String className) throws IOException {
           String wireClassName = className;
           if (isIntercepting && className.equals(Carrier.class.getName())) {
@@ -302,7 +302,7 @@ public class WLSWireAdapter extends AbstractWireAdapter {
       ContextBootstrap.debug(MessageID.READING_SERIALIZED, bytes.length, Utils.toString(bytes));
       ByteArrayInputStream bin = new ByteArrayInputStream(bytes);
       ObjectInputStream in = new ObjectInputStream(bin) {
-        private boolean isIntercepting = false;
+        private boolean isIntercepting;
         @Override
         protected ObjectStreamClass readClassDescriptor() throws IOException,
         ClassNotFoundException {

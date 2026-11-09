@@ -140,6 +140,6 @@ public abstract class Command implements Serializable {
 
     private static final long serialVersionUID = 6945415932011238909L;
 
-    private List<Command> childCommands = null;
-    private Command elseCommand = null;
+    private List<Command> childCommands;
+    private Command elseCommand;
 }

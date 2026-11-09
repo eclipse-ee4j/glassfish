@@ -67,7 +67,7 @@ public class WebResourceCollectionImpl extends Descriptor
 
     /**
      * Add a URL pattern to this collection.
-     * @param the url pattern to be added.
+     * @param urlPattern url pattern to be added.
      */
     public void addUrlPattern(String urlPattern) {
         this.getUrlPatterns().add(urlPattern);
@@ -75,7 +75,7 @@ public class WebResourceCollectionImpl extends Descriptor
 
     /**
      * Remove the specified url pattern from the collection.
-     * @param the url pattern to be removed.
+     * @param urlPattern url pattern to be removed.
      */
     public void removeUrlPattern(String urlPattern) {
         this.getUrlPatterns().remove(urlPattern);
@@ -84,7 +84,7 @@ public class WebResourceCollectionImpl extends Descriptor
     /**
      * Clean out the collection of URL pattern and replace
      * it with the given Set of (String) url patterns.
-     * @param the url patterns to replace the current set.
+     * @param urlPatterns url patterns to replace the current set.
      */
     public void setUrlPatterns(Set<String> urlPatterns) {
         this.urlPatterns = urlPatterns;
@@ -115,7 +115,7 @@ public class WebResourceCollectionImpl extends Descriptor
 
     /**
      * Sets the set of HTTP methods this collection has.
-     * @param the set of HTTP methods.
+     * @param httpMethods set of HTTP methods.
      */
     public void setHttpMethods(Set<String> httpMethods) {
         this.httpMethods = httpMethods;
@@ -124,7 +124,7 @@ public class WebResourceCollectionImpl extends Descriptor
     /**
      * Adds the given HTTP method to the collection of http methods this
      * collection has.
-     * @param the HTTP method to be added.
+     * @param httpMethod HTTP method to be added.
      */
     public void addHttpMethod(String httpMethod) {
         this.getHttpMethods().add(httpMethod);
@@ -132,7 +132,7 @@ public class WebResourceCollectionImpl extends Descriptor
 
     /**
      * Removes the given HTTP method from the collection of http methods.
-     * @param the HTTP method to be removed.
+     * @param httpMethod HTTP method to be removed.
      */
     public void removeHttpMethod(String httpMethod) {
         this.getHttpMethods().remove(httpMethod);
@@ -162,7 +162,7 @@ public class WebResourceCollectionImpl extends Descriptor
     }
     /**
      * Sets the set of HTTP method omissions this collection has.
-     * @param the set of HTTP method omissions.
+     * @param httpMethodOmissions set of HTTP method omissions.
      */
     public void setHttpMethodOmissions(Set<String> httpMethodOmissions) {
         this.httpMethodOmissions = httpMethodOmissions;
@@ -171,7 +171,7 @@ public class WebResourceCollectionImpl extends Descriptor
     /**
      * Adds the given HTTP method omission to the collection of http methods this
      * collection has.
-     * @param the HTTP method to be added.
+     * @param httpMethodOmission HTTP method to be added.
      */
     public void addHttpMethodOmission(String httpMethodOmission) {
         this.getHttpMethodOmissions().add(httpMethodOmission);
@@ -179,7 +179,7 @@ public class WebResourceCollectionImpl extends Descriptor
 
     /**
      * Removes the given HTTP method omission from the collection of http methods.
-     * @param the HTTP method to be removed.
+     * @param httpMethodOmission HTTP method to be removed.
      */
     public void removeHttpMethodOmission(String httpMethodOmission) {
         this.getHttpMethodOmissions().remove(httpMethodOmission);

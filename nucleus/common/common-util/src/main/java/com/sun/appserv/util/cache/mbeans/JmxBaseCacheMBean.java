@@ -32,56 +32,56 @@ public interface JmxBaseCacheMBean {
     /**
      * Returns a unique identifier for this MBean inside the domain
      */
-    public String getName();
+    String getName();
 
     /**
      * Returns maximum possible number of entries
      */
-    public Integer getMaxEntries();
+    Integer getMaxEntries();
 
     /**
      * Returns threshold. This when reached, an overflow will occur
      */
-    public Integer getThreshold();
+    Integer getThreshold();
 
     /**
      * Returns current number of buckets
      */
-    public Integer getTableSize();
+    Integer getTableSize();
 
     /**
      * Returns current number of Entries
      */
-    public Integer getEntryCount();
+    Integer getEntryCount();
 
     /**
      * Return the number of cache hits
      */
-    public Integer getHitCount();
+    Integer getHitCount();
 
     /**
      * Returns the number of cache misses
      */
-    public Integer getMissCount();
+    Integer getMissCount();
 
     /**
      * Returns the number of entries that have been removed
      */
-    public Integer getRemovalCount();
+    Integer getRemovalCount();
 
     /**
      * Returns the number of values that have been refreshed
      * (replaced with a new value in an existing extry)
      */
-    public Integer getRefreshCount();
+    Integer getRefreshCount();
 
     /**
      * Returns the number of times that an overflow has occurred
      */
-    public Integer getOverflowCount();
+    Integer getOverflowCount();
 
     /**
      * Returns the number of times new entries have been added
      */
-    public Integer getAddCount();
+    Integer getAddCount();
 }

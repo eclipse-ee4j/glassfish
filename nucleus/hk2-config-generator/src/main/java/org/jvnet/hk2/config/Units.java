@@ -34,19 +34,19 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target({METHOD})
 public @interface Units {
-    public final String MILLISECONDS = "milliseconds";
-    public final String SECONDS = "seconds";
-    public final String MINUTES = "minutes";
-    public final String HOURS = "hours";
-    public final String DAYS = "days";
+    String MILLISECONDS = "milliseconds";
+    String SECONDS = "seconds";
+    String MINUTES = "minutes";
+    String HOURS = "hours";
+    String DAYS = "days";
 
-    public final String BYTES = "bytes";
-    public final String KILOBYTES = "kilobytes";
-    public final String MEGABYTES = "megabytes";
-    public final String GIGABYTES = "gigabytes";
+    String BYTES = "bytes";
+    String KILOBYTES = "kilobytes";
+    String MEGABYTES = "megabytes";
+    String GIGABYTES = "gigabytes";
 
     /** value is an arbitrary count */
-    public final String COUNT = "count";
+    String COUNT = "count";
 
     /**
     Units should always be lower-case and appropriate for human viewing.  Suggested units:
@@ -57,7 +57,7 @@ public @interface Units {
     </ul>
     */
     @DescriptorKey("units")
-    public String units();
+    String units();
 }
 
 

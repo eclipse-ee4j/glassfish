@@ -27,9 +27,9 @@ import org.jvnet.hk2.annotations.Contract;
  * expensive operation. For example, there has been no new archive types introduced in Jakarta EE since RAR type.
  * Adding a new archive type involves writing an ArchiveHandler which involves writing logic to create class loaders.
  * Now, that's not same as adding adding a technology type like jersey or jpa.
- * <p/>
+ * <p>
  * This is only a contract. Actual types are made available as services by appropriate containers.
- * <p/>
+ * <p>
  * GlassFish deployment framework uses the word container to refer to services. Containers are actually defined in
  * Jakarta EE platform spec. ArchiveType maps to the way containers are defined in the Jakarta EE platform spec.
  *

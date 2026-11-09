@@ -81,13 +81,13 @@ import org.jvnet.hk2.annotations.Service;
 public class ListSubComponentsCommand implements AdminCommand {
 
     @Param(primary=true)
-    private String modulename = null;
+    private String modulename;
 
     @Param(optional=true)
-    private String appname = null;
+    private String appname;
 
     @Param(optional=true)
-    private String type = null;
+    private String type;
 
     @Inject
     public ApplicationRegistry appRegistry;

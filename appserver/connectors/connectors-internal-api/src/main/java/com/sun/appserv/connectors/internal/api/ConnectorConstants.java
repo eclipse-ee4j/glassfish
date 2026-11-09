@@ -279,7 +279,7 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     int JMS_POOL_MAXSIZE = 250;
 
-    public enum PoolType {
+    enum PoolType {
 
         ASSOCIATE_WITH_THREAD_POOL, STANDARD_POOL, PARTITIONED_POOL, POOLING_DISABLED
     }

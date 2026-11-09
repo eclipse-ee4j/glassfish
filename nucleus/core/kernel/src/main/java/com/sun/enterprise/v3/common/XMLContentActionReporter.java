@@ -54,7 +54,7 @@ import org.w3c.dom.Element;
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;...
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/<i>child-type</i>>
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/message-part>
- * <br>&nbsp;&nbsp;&lt/message-part>
+ * <br>&nbsp;&nbsp;&lt;/message-part>
  * <br>&lt;/action-report>
  * </code>
  *

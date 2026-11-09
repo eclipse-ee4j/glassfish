@@ -122,7 +122,7 @@ public final class SampleImpl extends AMXImplBase {
         private final int mNumNotifs;
         private final long mIntervalMillis;
 
-        public EmitterThread(final Serializable data, final int numNotifs, final long intervalMillis) {
+        EmitterThread(final Serializable data, final int numNotifs, final long intervalMillis) {
             mData = data;
             mNumNotifs = numNotifs;
             mIntervalMillis = intervalMillis;

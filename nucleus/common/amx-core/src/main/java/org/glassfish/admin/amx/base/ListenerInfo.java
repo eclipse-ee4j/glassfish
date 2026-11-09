@@ -34,13 +34,13 @@ public interface ListenerInfo
     @param notificationType  any Notification type, should usually be one advertised via MBeanInfo
     @return count of listeners
      */
-    public int getNotificationTypeListenerCount(final String notificationType);
+    int getNotificationTypeListenerCount(String notificationType);
 
     /**
     Get the total number of listeners listening for anything.
 
     @return count of listeners
      */
-    public int getListenerCount();
+    int getListenerCount();
 
 }

@@ -51,9 +51,9 @@ abstract class NativeRemoteCommandsBase extends CLICommand {
     @Param(optional = false, primary = true, multiple = true)
     String[] hosts;
     String sshpassword;
-    String sshkeypassphrase = null;
-    boolean promptPass = false;
-    TokenResolver resolver = null;
+    String sshkeypassphrase;
+    boolean promptPass;
+    TokenResolver resolver;
     private String remoteUser;
     private int remotePort;
 

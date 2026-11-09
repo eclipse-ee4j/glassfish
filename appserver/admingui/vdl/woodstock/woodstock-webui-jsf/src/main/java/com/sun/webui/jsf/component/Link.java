@@ -45,7 +45,7 @@ public final class Link extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.CharacterSetsEditor")
             //CHECKSTYLE:ON
-    private String charset = null;
+    private String charset;
 
     /**
      * Specifies the type of display device for which the referenced document is
@@ -58,7 +58,7 @@ public final class Link extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String media = null;
+    private String media;
 
     /**
      * Defines the relationship between the current document and the targeted
@@ -71,7 +71,7 @@ public final class Link extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlLinkTypesEditor")
             //CHECKSTYLE:ON
-    private String rel = null;
+    private String rel;
 
     /**
      * Specifies the MIME type of the target URL. Default is: {@code "text/css"}
@@ -79,7 +79,7 @@ public final class Link extends UIComponentBase {
     @Property(name = "type",
             displayName = "Mime type",
             category = "Appearance")
-    private String type = null;
+    private String type;
 
     /**
      * The absolute or relative target URL of the resource.
@@ -91,7 +91,7 @@ public final class Link extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:OFF
-    private String url = null;
+    private String url;
 
     /**
      * Defines the ISO language code of the human language used in the target
@@ -103,7 +103,7 @@ public final class Link extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.LanguagesEditor")
             //CHECKSTYLE:ON
-    private String urlLang = null;
+    private String urlLang;
 
     /**
      * Construct a new {@code Link}.

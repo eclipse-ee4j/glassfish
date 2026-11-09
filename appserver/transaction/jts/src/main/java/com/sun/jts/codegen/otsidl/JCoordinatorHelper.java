@@ -43,7 +43,7 @@ abstract public class JCoordinatorHelper
     return read (a.create_input_stream ());
   }
 
-  private static org.omg.CORBA.TypeCode __typeCode = null;
+  private static org.omg.CORBA.TypeCode __typeCode;
   synchronized public static org.omg.CORBA.TypeCode type ()
   {
     if (__typeCode == null)

@@ -43,7 +43,7 @@ public class CatalinaProperties {
 
     private static final Logger log = LogFacade.getLogger();
 
-    private static Properties properties = null;
+    private static Properties properties;
 
     static {
         loadProperties();

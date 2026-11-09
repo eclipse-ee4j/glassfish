@@ -27,7 +27,7 @@ import java.io.IOException;
 import static com.sun.webui.jsf.util.RenderingUtilities.isPortlet;
 
 /**
- * Renderer for a {@link Html} component.
+ * Renderer for a {@code Html} component.
  */
 @Renderer(@Renderer.Renders(componentFamily = "com.sun.webui.jsf.Html"))
 public final class HtmlRenderer extends AbstractRenderer {
@@ -37,7 +37,7 @@ public final class HtmlRenderer extends AbstractRenderer {
      */
     private static final String[] STRING_ATTRIBUTES = {
         "xmlns",
-        "lang"
+        "lang",
     };
 
     @Override

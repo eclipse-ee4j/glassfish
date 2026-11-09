@@ -248,7 +248,7 @@ public final class NetUtils {
 
     /**
      * Calls {@link #isRunning(String, int, int)}
-     * with {@value #IS_LISTENING_DEFAULT_TIMEOUT} ms timeout.
+     * with the default timeout (3000 ms, can be overridden by the {@code AS_IS_LISTENING_DEFAULT_TIMEOUT} environment variable).
      *
      * @param host
      * @param port port to check.
@@ -571,7 +571,7 @@ public final class NetUtils {
     }
 
     @FunctionalInterface
-    private static interface ThrowingPredicate<T> extends Predicate<T> {
+    private interface ThrowingPredicate<T> extends Predicate<T> {
 
         boolean throwing(T object) throws Exception;
 

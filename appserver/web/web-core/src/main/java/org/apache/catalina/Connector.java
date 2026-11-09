@@ -296,13 +296,13 @@ public interface Connector {
 
     // START CR 6309511
     /**
-     * Get the encoding to be used for byte<-->char conversion for
+     * Get the encoding to be used for byte&lt;-->char conversion for
      * data sent/received via this Connector
      */
     String getURIEncoding();
 
     /**
-     * Set the encoding to be used for byte<-->char conversion for
+     * Set the encoding to be used for byte&lt;-->char conversion for
      * data sent/received via this Connector
      */
     void setURIEncoding(String encoding);

@@ -72,14 +72,14 @@ class TimeoutManager {
     /**
      * this attribute indicates whether initialisation has been started.
      */
-    private static boolean initialised = false;
+    private static boolean initialised;
 
     private static Hashtable     pendingTimeouts = new Hashtable();
     private static Hashtable     indoubtTimeouts = new Hashtable();
-    private static TimeoutThread timeoutThread = null;
-    private static boolean       timeoutActive = false;
-    private static boolean       quiescing = false;
-    private static boolean       isSetTimeout = false;
+    private static TimeoutThread timeoutThread;
+    private static boolean       timeoutActive;
+    private static boolean       quiescing;
+    private static boolean       isSetTimeout;
 
     /*
         Logger to log transaction messages
@@ -565,8 +565,8 @@ class TimeoutManager {
 //----------------------------------------------------------------------------
 
 class TimeoutInfo extends Object {
-    Long localTID = null;
-    long expireTime = 0;
+    Long localTID;
+    long expireTime;
     int  timeoutType = TimeoutManager.NO_TIMEOUT;
 }
 

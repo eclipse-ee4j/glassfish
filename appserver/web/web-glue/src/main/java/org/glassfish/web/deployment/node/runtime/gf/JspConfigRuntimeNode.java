@@ -36,7 +36,7 @@ public class JspConfigRuntimeNode extends RuntimeDescriptorNode {
                 WebPropertyNode.class, "addWebProperty");
     }
 
-    protected JspConfig descriptor = null;
+    protected JspConfig descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

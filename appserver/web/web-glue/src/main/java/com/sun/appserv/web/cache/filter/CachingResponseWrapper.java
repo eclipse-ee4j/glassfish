@@ -68,7 +68,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
      * doesn't get the OutpuStream or the Writer.
      */
     // IT 12891
-    boolean error = false;
+    boolean error;
 
     /**
      * OutputStream and PrintWriter objects for this response.

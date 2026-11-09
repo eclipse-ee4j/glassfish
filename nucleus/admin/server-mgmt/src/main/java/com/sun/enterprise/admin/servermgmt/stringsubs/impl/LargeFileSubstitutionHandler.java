@@ -40,7 +40,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * <p>
  * To perform substitution it take helps of temporary file to write output, after substitution, temporary file renamed
  * to input file.
- * <p>
+ *
  */
 public class LargeFileSubstitutionHandler extends FileSubstitutionHandler {
     private static final Logger LOG = System.getLogger(LargeFileSubstitutionHandler.class.getName());

@@ -21,7 +21,7 @@ import org.xml.sax.Attributes;
 
 /**
  * <p>Rule implementation that saves a parameter for use by a surrounding
- * <code>CallMethodRule<code>.</p>
+ * <code>CallMethodRule</code>.</p>
  *
  * <p>This parameter may be:
  * <ul>
@@ -30,7 +30,7 @@ import org.xml.sax.Attributes;
  * <li>an arbitrary Object defined programatically, assigned if the element pattern AND specified attribute name are matched
  * See {@link #ObjectParamRule(int paramIndex, String attributeName, Object param)}
  * </ul>
- * </p>
+ *
  *
  * @since 1.4
  */
@@ -69,17 +69,17 @@ public class ObjectParamRule extends Rule {
     /**
      * The attribute which we are attempting to match
      */
-    protected String attributeName = null;
+    protected String attributeName;
 
     /**
      * The zero-relative index of the parameter we are saving.
      */
-    protected int paramIndex = 0;
+    protected int paramIndex;
 
     /**
      * The parameter we wish to pass to the method call
      */
-    protected Object param = null;
+    protected Object param;
 
 
     // --------------------------------------------------------- Public Methods

@@ -44,7 +44,7 @@ public final class PasswordFieldRenderer extends FieldRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                PasswordField.class.getName()
+                PasswordField.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

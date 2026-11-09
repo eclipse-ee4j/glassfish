@@ -24,10 +24,10 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 /**
  * Represents the jnlp-doc node under java-web-start-access.
- * We need this node in order to support the <jnlp-doc href="path-to-custom-JNLP-doc"/>
+ * We need this node in order to support the &lt;jnlp-doc href="path-to-custom-JNLP-doc"/>
  * notation.  The DTD file describes the href attribute although the doc has not
  * historically mentioned it.  Instead the doc has said to place the path to
- * the custom JNLP as the text value of the <jnlp-doc> element.
+ * the custom JNLP as the text value of the &lt;jnlp-doc> element.
  *
  * @author tjquinn
  */

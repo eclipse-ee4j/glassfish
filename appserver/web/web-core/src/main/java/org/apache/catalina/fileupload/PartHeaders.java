@@ -44,7 +44,7 @@ class PartHeaders implements Serializable {
     private final Map<String, List<String>> headerMap =
         new LinkedHashMap<String, List<String>>();
 
-    private Set<String> headerNames = null;
+    private Set<String> headerNames;
 
     public String getHeader(String name) {
         String nameLower = name.toLowerCase(Locale.ENGLISH);

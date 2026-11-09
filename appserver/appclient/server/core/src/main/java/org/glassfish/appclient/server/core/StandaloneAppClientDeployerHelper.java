@@ -68,7 +68,7 @@ public class StandaloneAppClientDeployerHelper extends AppClientDeployerHelper {
     private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
-    private Set<FullAndPartURIs> clientLevelDownloads = null;
+    private Set<FullAndPartURIs> clientLevelDownloads;
 
     StandaloneAppClientDeployerHelper(final DeploymentContext dc,
             final ApplicationClientDescriptor bundleDesc,

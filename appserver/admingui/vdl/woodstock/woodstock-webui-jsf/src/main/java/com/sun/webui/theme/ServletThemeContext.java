@@ -32,7 +32,7 @@ import java.util.Set;
  * A {@code ServletThemeContext} instance is created based on the
  * context-param values, defined as {@code ThemeContext} constants.
  * </p>
- * <p>
+ *
  * <ul>
  * <li>{@code ThemeContext.DEFAULT_LOCALE} - defines the
  * default locale for this application.(optional)</li>
@@ -50,7 +50,7 @@ import java.util.Set;
  * the url-pattern element of the theme servlet's servlet-mapping, less the
  * terminating "/*".</li>
  * </ul>
- * </p>
+ *
  */
 public class ServletThemeContext extends ThemeContext {
 

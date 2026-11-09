@@ -100,7 +100,7 @@ public final class DefaultTableDataProvider extends ObjectArrayDataProvider {
         /**
          * Columns.
          */
-        private String[] columns = null;
+        private String[] columns;
 
         /**
          * Create a new instance.

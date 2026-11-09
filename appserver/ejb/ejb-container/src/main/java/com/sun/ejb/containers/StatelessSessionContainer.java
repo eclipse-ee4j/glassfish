@@ -698,7 +698,7 @@ public class StatelessSessionContainer extends BaseContainer {
         int poolResizeQuantity;
         int steadyPoolSize;
 
-        public PoolProperties(EjbContainer ejbContainer, BeanPoolDescriptor beanPoolDes) {
+        PoolProperties(EjbContainer ejbContainer, BeanPoolDescriptor beanPoolDes) {
             maxPoolSize = Integer.parseInt(ejbContainer.getMaxPoolSize());
             poolIdleTimeoutInSeconds = Integer.parseInt(ejbContainer.getPoolIdleTimeoutInSeconds());
             poolResizeQuantity = Integer.parseInt(ejbContainer.getPoolResizeQuantity());

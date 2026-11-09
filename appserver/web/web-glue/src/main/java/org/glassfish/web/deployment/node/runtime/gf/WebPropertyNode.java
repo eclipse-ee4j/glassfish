@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
 */
 public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
 
-    protected WebProperty descriptor = null;
+    protected WebProperty descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -94,8 +94,8 @@ public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the array of descriptors to write
+     * @param nodeName name for the descriptor
+     * @param properties array of descriptors to write
      */
     public void writeDescriptor(Node parent, String nodeName, WebProperty[] properties) {
         if (properties == null) {

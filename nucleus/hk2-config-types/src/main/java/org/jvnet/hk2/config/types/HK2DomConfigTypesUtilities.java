@@ -60,7 +60,6 @@ public class HK2DomConfigTypesUtilities {
      *
      * @param locator The non-null locator to add the hk2 dom based
      * configuration services to
-     * @param loader The loader to use to classload the services added
      */
     public static void enableHK2DomConfigurationConfigTypes(ServiceLocator locator) {
         enableHK2DomConfigurationConfigTypes(locator, null);

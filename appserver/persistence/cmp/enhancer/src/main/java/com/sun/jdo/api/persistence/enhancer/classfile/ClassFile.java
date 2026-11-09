@@ -49,14 +49,14 @@ final public class ClassFile implements VMConstants {
     public static final List<Integer> jdkVersions = convertMajorMinorVersions(jdkMajorMinorVersions);
     public static final String supportedVersions = printSupportedVersions();
 
-    private int majorVersion = 0;
-    private int minorVersion = 0;
+    private int majorVersion;
+    private int minorVersion;
 
     /* The constant pool for the class file */
     private ConstantPool constantPool = new ConstantPool();
 
     /* access flag bit mask - see VMConstants */
-    private int accessFlags = 0;
+    private int accessFlags;
 
     /* The name of the class */
     private ConstClass thisClassName;
@@ -105,28 +105,28 @@ final public class ClassFile implements VMConstants {
     /**
      * Is the class final?
      */
-    final public boolean isFinal() {
+    public boolean isFinal() {
         return (accessFlags & ACCFinal) != 0;
     }
 
     /**
      * Is the class an interface?
      */
-    final public boolean isInterface() {
+    public boolean isInterface() {
         return (accessFlags & ACCInterface) != 0;
     }
 
     /**
      * Is the class public?
      */
-    final public boolean isPublic() {
+    public boolean isPublic() {
         return (accessFlags & ACCPublic) != 0;
     }
 
     /**
      * Is the class abstract?
      */
-    final public boolean isAbstract() {
+    public boolean isAbstract() {
         return (accessFlags & ACCAbstract) != 0;
     }
 
@@ -474,7 +474,7 @@ final public class ClassFile implements VMConstants {
         return  Integer.valueOf(major * 65536 + minor);
     }
 
-    public static final String printSupportedVersions() {
+    public static String printSupportedVersions() {
         StringBuffer buf = new StringBuffer("{");
         int length = jdkMajorMinorVersions.length;
         for (int i = 0; i < length; i++) {

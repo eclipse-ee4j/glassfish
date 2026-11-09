@@ -70,7 +70,7 @@ public @interface Renderer {
      * value of {@code componentFamily} must corresponds to a component family
      * declared in the current compilation unit (see {@link Component#family}).
      *
-     * <p>
+     *
      */
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.ANNOTATION_TYPE)

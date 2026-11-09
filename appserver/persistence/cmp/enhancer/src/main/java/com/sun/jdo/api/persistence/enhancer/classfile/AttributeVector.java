@@ -60,7 +60,7 @@ public class AttributeVector {
     public Enumeration<ClassAttribute> elements() {
         class AttributeVectorEnumeration implements Enumeration<ClassAttribute> {
             private ClassAttribute[] attributes;
-            private int current = 0;
+            private int current;
 
             AttributeVectorEnumeration(ClassAttribute attrs[]) {
                 attributes = attrs;

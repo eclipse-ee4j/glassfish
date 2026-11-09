@@ -84,7 +84,7 @@ public class UpdateNodeConfigCommand implements AdminCommand  {
 
     private static final String NL = System.getProperty("line.separator");
 
-    private Logger logger = null;
+    private Logger logger;
 
     @Override
     public void execute(AdminCommandContext context) {

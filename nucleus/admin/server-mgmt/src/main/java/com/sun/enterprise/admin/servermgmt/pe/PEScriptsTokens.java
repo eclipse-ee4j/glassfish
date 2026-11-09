@@ -21,7 +21,7 @@ import com.sun.enterprise.admin.util.TokenValue;
 import com.sun.enterprise.admin.util.TokenValueSet;
 
 /**
- * This class defines the tokens required by the startserv & stopserv scripts.
+ * This class defines the tokens required by the startserv &amp; stopserv scripts.
  */
 public final class PEScriptsTokens {
     public static final String CONFIG_HOME = "CONFIG_HOME";
@@ -30,7 +30,7 @@ public final class PEScriptsTokens {
     public static final String DOMAIN_NAME = "DOMAIN_NAME";
 
     /**
-     * @return Returns the TokenValueSet that has the (token, value) pairs for startserv & stopserv scripts.
+     * @return Returns the TokenValueSet that has the (token, value) pairs for startserv &amp; stopserv scripts.
      * @param domainConfig
      */
     public static TokenValueSet getTokenValueSet(DomainConfig domainConfig) {

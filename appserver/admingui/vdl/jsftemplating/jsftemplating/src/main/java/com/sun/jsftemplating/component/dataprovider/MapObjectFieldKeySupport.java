@@ -209,5 +209,5 @@ public class MapObjectFieldKeySupport extends ObjectFieldKeySupport {
         }
     }
 
-    private Map _inst = null;
+    private Map _inst;
 }

@@ -94,7 +94,7 @@ public class CommandProgressImpl extends ProgressStatusImpl implements CommandPr
     private Date endTime;
     //TODO: Set after resurrection
     private transient AdminCommandEventBroker eventBroker;
-    private boolean spinner = false;
+    private boolean spinner;
 
     public CommandProgressImpl(String name, String id) {
         super(name, -1, null, id);

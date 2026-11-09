@@ -30,7 +30,7 @@ final class UsualLatency {
     private static final Logger LOG = System.getLogger(UsualLatency.class.getName());
     private static Long latency;
 
-    static final synchronized long getMeasuredLatency() {
+    static synchronized long getMeasuredLatency() {
         if (latency == null) {
             final long start = System.currentTimeMillis();
             final AsadminResult result = getAsadmin().exec("progress-custom", generateIntervals(0L));

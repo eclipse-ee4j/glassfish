@@ -23,7 +23,7 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
  * This ia a FIXED size cache implementation.
- * <p/>
+ * <p>
  * If the cache is full the statement is not added to the cache.
  *
  * @author Shalini M

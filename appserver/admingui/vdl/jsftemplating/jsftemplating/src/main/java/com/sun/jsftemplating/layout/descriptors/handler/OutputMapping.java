@@ -42,7 +42,6 @@ public class OutputMapping implements java.io.Serializable {
      *
      * @see OutputTypeManager
      *
-     * @throws IllegalArumentException If outputName / targetOutputType is null
      */
     public OutputMapping(String outputName, String targetOutputType) {
         this(outputName, null, targetOutputType);
@@ -106,7 +105,7 @@ public class OutputMapping implements java.io.Serializable {
         return _targetOutputType;
     }
 
-    private String _outputName = null;
-    private String _targetKey = null;
-    private String _targetOutputType = null;
+    private String _outputName;
+    private String _targetKey;
+    private String _targetOutputType;
 }

@@ -43,12 +43,12 @@ import java.util.Iterator;
  * the table that can be used for titles, row group headers, and placement of
  * pre-defined and user defined actions.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableColumnRenderer.level = FINE
  * </pre>
- * </p>
+ *
  * <p>
  * See TLD docs for more information.
  * </p>
@@ -87,7 +87,7 @@ public final class TableColumnRenderer extends jakarta.faces.render.Renderer {
         "onMouseOver",
         "style",
         "valign",
-        "width"
+        "width",
     };
 
     @Override

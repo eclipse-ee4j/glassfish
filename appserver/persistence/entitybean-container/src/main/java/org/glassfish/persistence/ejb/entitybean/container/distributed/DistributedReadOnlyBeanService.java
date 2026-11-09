@@ -36,7 +36,7 @@ public interface DistributedReadOnlyBeanService {
      * @param notifier the notifier who is responsible for notifying refresh
      *  event(s) to other instances
      */
-    public void setDistributedReadOnlyBeanNotifier(
+    void setDistributedReadOnlyBeanNotifier(
             DistributedReadOnlyBeanNotifier notifier);
 
     /**
@@ -49,7 +49,7 @@ public interface DistributedReadOnlyBeanService {
      * @param handler The handler that is responsible for
      *  correctly refresing the state of a RO bean
      */
-    public void addReadOnlyBeanRefreshEventHandler(
+    void addReadOnlyBeanRefreshEventHandler(
             long ejbID, ClassLoader loader,
             ReadOnlyBeanRefreshEventHandler handler);
 
@@ -59,7 +59,7 @@ public interface DistributedReadOnlyBeanService {
      *
      * @param ejbID
      */
-    public void removeReadOnlyBeanRefreshEventHandler(long ejbID);
+    void removeReadOnlyBeanRefreshEventHandler(long ejbID);
 
     /**
      * Called by the container after it has refreshed the RO bean
@@ -67,23 +67,23 @@ public interface DistributedReadOnlyBeanService {
      * @param ejbID the ejbID that uniquely identifies the container
      * @param pk the primary key to be refreshed
      */
-    public void notifyRefresh(long ejbID, Object pk);
+    void notifyRefresh(long ejbID, Object pk);
 
     /**
      * Called by the container after it has refreshed all RO beans
      *
      * @param ejbID the ejbID that uniquely identifies the container
      */
-    public void notifyRefreshAll(long ejbID);
+    void notifyRefreshAll(long ejbID);
 
     /**
      * Called from the DistributedReadOnlyBeanNotifier when it receives a (remote)
      *  request to refresh a RO bean
      *
      * @param ejbID the ejbID that uniquely identifies the container
-     * @param pk the primary key to be refreshed
+     * @param pkData the primary key to be refreshed
      */
-    public void handleRefreshRequest(long ejbID, byte[] pkData);
+    void handleRefreshRequest(long ejbID, byte[] pkData);
 
     /**
      * Called from the DistributedReadOnlyBeanNotifier when it receives a (remote)
@@ -91,6 +91,6 @@ public interface DistributedReadOnlyBeanService {
      *
      * @param ejbID the ejbID that uniquely identifies the container
      */
-    public void handleRefreshAllRequest(long ejbID);
+    void handleRefreshAllRequest(long ejbID);
 
 }

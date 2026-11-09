@@ -114,7 +114,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
 
     /**
      * Sets the designated parameter to SQL <code>NULL</code>.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> You must specify the parameter's SQL type.
      *
@@ -319,7 +319,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * <code>java.io.InputStream</code>. Data will be read from the stream as needed
      * until end-of-file is reached. The JDBC driver will do any necessary
      * conversion from ASCII to the database char format.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -338,13 +338,13 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * Sets the designated parameter to the given input stream, which will have the
      * specified number of bytes. A Unicode character has two bytes, with the first
      * byte being the high byte, and the second being the low byte.
-     * <p/>
+     * <p>
      * When a very large Unicode value is input to a <code>LONGVARCHAR</code>
      * parameter, it may be more practical to send it via a
      * <code>java.io.InputStream</code> object. The data will be read from the
      * stream as needed until end-of-file is reached. The JDBC driver will do any
      * necessary conversion from Unicode to the database char format.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -368,7 +368,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * <code>LONGVARBINARY</code> parameter, it may be more practical to send it via
      * a <code>java.io.InputStream</code> object. The data will be read from the
      * stream as needed until end-of-file is reached.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -404,11 +404,11 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * Sets the value of the designated parameter with the given object. The second
      * argument must be an object type; for integral values, the
      * <code>java.lang</code> equivalent objects should be used.
-     * <p/>
+     *
      * <p>
      * The given Java object will be converted to the given targetSqlType before
      * being sent to the database.
-     * <p/>
+     * <p>
      * If the object has a custom mapping (is of a class implementing the interface
      * <code>SQLData</code>), the JDBC driver should call the method
      * <code>SQLData.writeSQL</code> to write it to the SQL data stream. If, on the
@@ -416,7 +416,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * <code>Blob</code>, <code>Clob</code>, <code>Struct</code>, or
      * <code>Array</code>, the driver should pass it to the database as a value of
      * the corresponding SQL type.
-     * <p/>
+     *
      * <p>
      * Note that this method may be used to pass database-specific abstract data
      * types.
@@ -457,23 +457,23 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * Sets the value of the designated parameter using the given object. The second
      * parameter must be of type <code>Object</code>; therefore, the
      * <code>java.lang</code> equivalent objects should be used for built-in types.
-     * <p/>
+     *
      * <p>
      * The JDBC specification specifies a standard mapping from Java
      * <code>Object</code> types to SQL types. The given argument will be converted
      * to the corresponding SQL type before being sent to the database.
-     * <p/>
+     *
      * <p>
      * Note that this method may be used to pass datatabase- specific abstract data
      * types, by using a driver-specific Java type.
-     * <p/>
+     * <p>
      * If the object is of a class implementing the interface <code>SQLData</code>,
      * the JDBC driver should call the method <code>SQLData.writeSQL</code> to write
      * it to the SQL data stream. If, on the other hand, the object is of a class
      * implementing <code>Ref</code>, <code>Blob</code>, <code>Clob</code>,
      * <code>Struct</code>, or <code>Array</code>, the driver should pass it to the
      * database as a value of the corresponding SQL type.
-     * <p/>
+     * <p>
      * This method throws an exception if there is an ambiguity, for example, if the
      * object is of a class implementing more than one of the interfaces named
      * above.
@@ -494,7 +494,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * multiple results; the <code>execute</code> method handles these complex
      * statements as well as the simpler form of statements handled by the methods
      * <code>executeQuery</code> and <code>executeUpdate</code>.
-     * <p/>
+     * <p>
      * The <code>execute</code> method returns a <code>boolean</code> to indicate
      * the form of the first result. You must call either the method
      * <code>getResultSet</code> or <code>getUpdateCount</code> to retrieve the
@@ -536,7 +536,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * send it via a <code>java.io.Reader</code> object. The data will be read from
      * the stream as needed until end-of-file is reached. The JDBC driver will do
      * any necessary conversion from UNICODE to the database char format.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -618,7 +618,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * Retrieves a <code>ResultSetMetaData</code> object that contains information
      * about the columns of the <code>ResultSet</code> object that will be returned
      * when this <code>PreparedStatement</code> object is executed.
-     * <p/>
+     * <p>
      * Because a <code>PreparedStatement</code> object is precompiled, it is
      * possible to know about the <code>ResultSet</code> object that it will return
      * without having to execute it. Consequently, it is possible to invoke the
@@ -626,7 +626,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * rather than waiting to execute it and then invoking the
      * <code>ResultSet.getMetaData</code> method on the <code>ResultSet</code>
      * object that is returned.
-     * <p/>
+     * <p>
      * <B>NOTE:</B> Using this method may be expensive for some drivers due to the
      * lack of underlying DBMS support.
      *
@@ -712,7 +712,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * method <code>setNull</code> should be used for user-defined types and REF
      * type parameters. Examples of user-defined types include: STRUCT, DISTINCT,
      * JAVA_OBJECT, and named array types.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> To be portable, applications must give the SQL type code and the
      * fully-qualified SQL type name when specifying a NULL user-defined or REF
@@ -720,7 +720,7 @@ public abstract class PreparedStatementWrapper extends StatementWrapper implemen
      * the parameter itself. For a REF parameter, the name is the type name of the
      * referenced type. If a JDBC driver does not need the type code or type name
      * information, it may ignore it.
-     * <p/>
+     * <p>
      * Although it is intended for user-defined and Ref parameters, this method may
      * be used to set a null parameter of any JDBC type. If the parameter does not
      * have a user-defined or REF type, the given typeName is ignored.

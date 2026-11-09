@@ -31,33 +31,33 @@ public interface Endpoint {
      * @return the endpoint selector as a string. For Http transport endpoing,
      * this is the URL web service clients use to invoke the endpoint.
      */
-    public String getEndpointSelector();
+    String getEndpointSelector();
 
     /**
      * @return the endpoint type
      */
-    public EndpointType getEndpointType();
+    EndpointType getEndpointType();
 
     /**
      * Returns the transport
      */
-    public TransportType getTransport();
+    TransportType getTransport();
 
     /**
      * Returns the Deployment Descriptors associated with this endpoint
      */
-    public WebServiceEndpoint getDescriptor();
+    WebServiceEndpoint getDescriptor();
 
     /**
      * registers a new SOAPMessageListener for this endpoint
      * @param newListener the listener instance to register.
      */
-    public void addListener(MessageListener newListener);
+    void addListener(MessageListener newListener);
 
     /**
      * unregiters a SOAPMessageListener for this endpoint
      * @param listener the listener instance to unregister.
      */
-    public void removeListener(MessageListener listener);
+    void removeListener(MessageListener listener);
 }
 

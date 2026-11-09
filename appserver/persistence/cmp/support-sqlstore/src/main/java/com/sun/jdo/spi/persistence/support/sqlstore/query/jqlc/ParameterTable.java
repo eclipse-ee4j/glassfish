@@ -50,13 +50,13 @@ import org.glassfish.persistence.common.I18NHelper;
 public class ParameterTable
 {
     /** Query parameter names */
-    List<String> names = null;
+    List<String> names;
 
     /** Query parameter types */
-    List<Type> types = null;
+    List<Type> types;
 
     /** Query Parameter values */
-    transient List<Object> values = null;
+    transient List<Object> values;
 
     /** null key */
     private static final String NULL_ = "null";

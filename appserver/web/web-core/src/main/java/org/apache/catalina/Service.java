@@ -43,7 +43,7 @@ public interface Service {
      * Return the <code>Container</code> that handles requests for all
      * <code>Connectors</code> associated with this Service.
      */
-    public Container getContainer();
+    Container getContainer();
 
 
     /**
@@ -52,7 +52,7 @@ public interface Service {
      *
      * @param container The new Container
      */
-    public void setContainer(Container container);
+    void setContainer(Container container);
 
 
     /**
@@ -60,13 +60,13 @@ public interface Service {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the name of this Service.
      */
-    public String getName();
+    String getName();
 
 
     /**
@@ -74,13 +74,13 @@ public interface Service {
      *
      * @param name The new service name
      */
-    public void setName(String name);
+    void setName(String name);
 
 
     /**
      * Return the <code>Server</code> with which we are associated (if any).
      */
-    public Server getServer();
+    Server getServer();
 
 
     /**
@@ -88,13 +88,13 @@ public interface Service {
      *
      * @param server The server that owns this Service
      */
-    public void setServer(Server server);
+    void setServer(Server server);
 
 
     /**
      * Return the <code>NotificationBroadcasterSupport</code> that sends notification for this Service.
      */
-    public NotificationBroadcasterSupport getBroadcaster();
+    NotificationBroadcasterSupport getBroadcaster();
 
 
     /**
@@ -102,7 +102,7 @@ public interface Service {
      *
      * @param broadcaster The new NotificationBroadcasterSupport
      */
-    public void setBroadcaster(NotificationBroadcasterSupport broadcaster);
+    void setBroadcaster(NotificationBroadcasterSupport broadcaster);
 
 
     // --------------------------------------------------------- Public Methods
@@ -114,13 +114,13 @@ public interface Service {
      *
      * @param connector The Connector to be added
      */
-    public void addConnector(Connector connector);
+    void addConnector(Connector connector);
 
 
     /**
      * Find and return the set of Connectors associated with this Service.
      */
-    public Connector[] findConnectors();
+    Connector[] findConnectors();
 
 
     /**
@@ -132,7 +132,7 @@ public interface Service {
      */
     // START SJSAS 6231069
     //public void removeConnector(Connector connector);
-    public void removeConnector(Connector connector) throws LifecycleException;
+    void removeConnector(Connector connector) throws LifecycleException;
      // END SJSAS 6231069
 
     /**
@@ -141,7 +141,7 @@ public interface Service {
      *
      * @exception LifecycleException If this server was already initialized.
      */
-    public void initialize()
+    void initialize()
     throws LifecycleException;
 
 }

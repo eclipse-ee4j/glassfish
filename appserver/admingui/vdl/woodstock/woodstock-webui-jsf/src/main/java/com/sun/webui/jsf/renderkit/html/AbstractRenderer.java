@@ -71,7 +71,7 @@ public abstract class AbstractRenderer extends Renderer {
      */
     public static final String[] I18N_ATTRIBUTES = {
         "dir",
-        "lang"
+        "lang",
     };
 
     /**
@@ -79,7 +79,7 @@ public abstract class AbstractRenderer extends Renderer {
      */
     private static final String[] CORE_ATTRIBUTES = {
         "style",
-        "title"
+        "title",
     };
 
     /**

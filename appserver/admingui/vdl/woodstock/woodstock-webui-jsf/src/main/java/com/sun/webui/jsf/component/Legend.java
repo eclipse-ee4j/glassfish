@@ -51,28 +51,28 @@ public final class Legend extends UIOutput implements NamingContainer {
      * default) and "left".
      */
     @Property(name = "position", displayName = "Legend Position")
-    private String position = null;
+    private String position;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "styleClass", displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The explanatory text that is displayed in the legend. If not specified,
      * the required field legend text is displayed.
      */
     @Property(name = "text", displayName = "Legend Text")
-    private String text = null;
+    private String text;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -84,12 +84,12 @@ public final class Legend extends UIOutput implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

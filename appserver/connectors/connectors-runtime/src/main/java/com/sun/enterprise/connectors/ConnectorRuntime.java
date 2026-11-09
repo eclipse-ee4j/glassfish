@@ -407,7 +407,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     }
 
     /**
-     * {@inheritDoc}
+     * Creates an active resource adapter for the given connector descriptor.
      */
     public void createActiveResourceAdapter(ConnectorDescriptor connectorDescriptor, String moduleName, String moduleDir, ClassLoader loader) throws ConnectorRuntimeException {
         resourceAdapterAdmService.createActiveResourceAdapter(connectorDescriptor, moduleName, moduleDir, loader);
@@ -628,7 +628,7 @@ public class ConnectorRuntime implements com.sun.appserv.connectors.internal.api
     /**
      * Provides the list of built in custom resources by resource-type and factory-class-name pair.
      *
-     * @return map of resource-type & factory-class-name
+     * @return map of resource-type &amp; factory-class-name
      */
     @Override
     public Map<String, String> getBuiltInCustomResources() {

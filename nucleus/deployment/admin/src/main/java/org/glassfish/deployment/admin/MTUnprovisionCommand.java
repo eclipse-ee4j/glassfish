@@ -59,10 +59,10 @@ import org.jvnet.hk2.annotations.Service;
 public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    public String appname = null;
+    public String appname;
 
     @Param
-    public String tenant = null;
+    public String tenant;
 
     @Inject
     Applications applications;
@@ -74,7 +74,7 @@ public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.
     ArchiveFactory archiveFactory;
 
     private Application app;
-    private AppTenant appTenant = null;
+    private AppTenant appTenant;
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {

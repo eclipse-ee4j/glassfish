@@ -393,7 +393,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * the string that can be used to escape '_' or '%' in the catalog search
      * parameters that are a pattern (and therefore use one of the wildcard
      * characters).
-     * <p/>
+     *
      * <P>
      * The '_' character represents any single character; the '%' character
      * represents any sequence of zero or more characters.
@@ -440,7 +440,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
 
     /**
      * Retrieves whether this database supports column aliasing.
-     * <p/>
+     *
      * <P>
      * If so, the SQL AS clause can be used to provide names for computed columns or
      * to provide alias names for columns as required.
@@ -1376,11 +1376,11 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the stored procedures available in the given
      * catalog.
-     * <p/>
+     * <p>
      * Only procedure descriptions matching the schema and procedure name criteria
      * are returned. They are ordered by <code>PROCEDURE_SCHEM</code> and
      * <code>PROCEDURE_NAME</code>.
-     * <p/>
+     *
      * <P>
      * Each procedure description has the the following columns:
      * <OL>
@@ -1422,13 +1422,13 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the given catalog's stored procedure parameter and
      * result columns.
-     * <p/>
+     *
      * <P>
      * Only descriptions matching the schema, procedure and parameter name criteria
      * are returned. They are ordered by PROCEDURE_SCHEM and PROCEDURE_NAME. Within
      * this, the return value, if any, is first. Next are the parameter descriptions
      * in call order. The column descriptions follow in column number order.
-     * <p/>
+     *
      * <P>
      * Each row in the <code>ResultSet</code> is a parameter description or column
      * description with the following fields:
@@ -1463,7 +1463,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * </UL>
      * <LI><B>REMARKS</B> String => comment describing parameter/column
      * </OL>
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> Some databases may not return the column descriptions for a
      * procedure. Additional columns beyond REMARKS can be defined by the database.
@@ -1493,7 +1493,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of the tables available in the given catalog. Only
      * table descriptions matching the catalog, schema, table name and type criteria
      * are returned. They are ordered by TABLE_TYPE, TABLE_SCHEM and TABLE_NAME.
-     * <p/>
+     * <p>
      * Each table description has the following columns:
      * <OL>
      * <LI><B>TABLE_CAT</B> String => table catalog (may be <code>null</code>)
@@ -1512,7 +1512,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * SELF_REFERENCING_COL_NAME are created. Values are "SYSTEM", "USER",
      * "DERIVED". (may be <code>null</code>)
      * </OL>
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> Some databases may not return information for all tables.
      *
@@ -1539,7 +1539,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves the schema names available in this database. The results are
      * ordered by schema name.
-     * <p/>
+     *
      * <P>
      * The schema column is:
      * <OL>
@@ -1558,7 +1558,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves the catalog names available in this database. The results are
      * ordered by catalog name.
-     * <p/>
+     *
      * <P>
      * The catalog column is:
      * <OL>
@@ -1576,7 +1576,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves the table types available in this database. The results are ordered
      * by table type.
-     * <p/>
+     *
      * <P>
      * The table type is:
      * <OL>
@@ -1595,12 +1595,12 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
 
     /**
      * Retrieves a description of table columns available in the specified catalog.
-     * <p/>
+     *
      * <P>
      * Only column descriptions matching the catalog, schema, table and column name
      * criteria are returned. They are ordered by <code>TABLE_SCHEM</code>,
      * <code>TABLE_NAME</code>, and <code>ORDINAL_POSITION</code>.
-     * <p/>
+     *
      * <P>
      * Each column description has the following columns:
      * <OL>
@@ -1666,11 +1666,11 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
 
     /**
      * Retrieves a description of the access rights for a table's columns.
-     * <p/>
+     *
      * <P>
      * Only privileges matching the column name criteria are returned. They are
      * ordered by COLUMN_NAME and PRIVILEGE.
-     * <p/>
+     *
      * <P>
      * Each privilige description has the following columns:
      * <OL>
@@ -1710,11 +1710,11 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * catalog. Note that a table privilege applies to one or more columns in the
      * table. It would be wrong to assume that this privilege applies to all columns
      * (this may be true for some systems but is not true for all.)
-     * <p/>
+     *
      * <P>
      * Only privileges matching the schema and table name criteria are returned.
      * They are ordered by TABLE_SCHEM, TABLE_NAME, and PRIVILEGE.
-     * <p/>
+     *
      * <P>
      * Each privilige description has the following columns:
      * <OL>
@@ -1750,7 +1750,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of a table's optimal set of columns that uniquely
      * identifies a row. They are ordered by SCOPE.
-     * <p/>
+     *
      * <P>
      * Each column description has the following columns:
      * <OL>
@@ -1797,7 +1797,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of a table's columns that are automatically updated
      * when any value in a row is updated. They are unordered.
-     * <p/>
+     *
      * <P>
      * Each column description has the following columns:
      * <OL>
@@ -1836,7 +1836,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the given table's primary key columns. They are
      * ordered by COLUMN_NAME.
-     * <p/>
+     *
      * <P>
      * Each primary key column description has the following columns:
      * <OL>
@@ -1867,7 +1867,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of the primary key columns that are referenced by a
      * table's foreign key columns (the primary keys imported by a table). They are
      * ordered by PKTABLE_CAT, PKTABLE_SCHEM, PKTABLE_NAME, and KEY_SEQ.
-     * <p/>
+     *
      * <P>
      * Each primary key column description has the following columns:
      * <OL>
@@ -1941,7 +1941,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of the foreign key columns that reference the given
      * table's primary key columns (the foreign keys exported by a table). They are
      * ordered by FKTABLE_CAT, FKTABLE_SCHEM, FKTABLE_NAME, and KEY_SEQ.
-     * <p/>
+     *
      * <P>
      * Each foreign key column description has the following columns:
      * <OL>
@@ -2019,7 +2019,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * single foreign key/primary key pair because most tables import a foreign key
      * from a table only once. They are ordered by FKTABLE_CAT, FKTABLE_SCHEM,
      * FKTABLE_NAME, and KEY_SEQ.
-     * <p/>
+     *
      * <P>
      * Each foreign key column description has the following columns:
      * <OL>
@@ -2103,7 +2103,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of all the standard SQL types supported by this
      * database. They are ordered by DATA_TYPE and then by how closely the data type
      * maps to the corresponding JDBC SQL type.
-     * <p/>
+     *
      * <P>
      * Each type description has the following columns:
      * <OL>
@@ -2154,7 +2154,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the given table's indices and statistics. They are
      * ordered by NON_UNIQUE, TYPE, INDEX_NAME, and ORDINAL_POSITION.
-     * <p/>
+     *
      * <P>
      * Each index column description has the following columns:
      * <OL>
@@ -2406,13 +2406,13 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of the user-defined types (UDTs) defined in a
      * particular schema. Schema-specific UDTs may have type
      * <code>JAVA_OBJECT</code>, <code>STRUCT</code>, or <code>DISTINCT</code>.
-     * <p/>
+     *
      * <P>
      * Only types matching the catalog, schema, type name and type criteria are
      * returned. They are ordered by DATA_TYPE, TYPE_SCHEM and TYPE_NAME. The type
      * name parameter may be a fully-qualified name. In this case, the catalog and
      * schemaPattern parameters are ignored.
-     * <p/>
+     *
      * <P>
      * Each type description has the following columns:
      * <OL>
@@ -2429,7 +2429,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * (<code>null</code> if DATA_TYPE is not DISTINCT or not STRUCT with
      * REFERENCE_GENERATION = USER_DEFINED)
      * </OL>
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> If the driver does not support UDTs, an empty result set is
      * returned.
@@ -2456,7 +2456,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
 
     /**
      * Retrieves the connection that produced this metadata object.
-     * <p/>
+     *
      *
      * @return the connection that produced this metadata object
      * @throws java.sql.SQLException if a database access error occurs
@@ -2532,12 +2532,12 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * Retrieves a description of the user-defined type (UDT) hierarchies defined in
      * a particular schema in this database. Only the immediate super type/ sub type
      * relationship is modeled.
-     * <p/>
+     * <p>
      * Only supertype information for UDTs matching the catalog, schema, and type
      * name is returned. The type name parameter may be a fully-qualified name. When
      * the UDT name supplied is a fully-qualified name, the catalog and
      * schemaPattern parameters are ignored.
-     * <p/>
+     * <p>
      * If a UDT does not have a direct super type, it is not listed here. A row of
      * the <code>ResultSet</code> object returned by this method describes the
      * designated UDT and a direct supertype. A row has the following columns:
@@ -2551,7 +2551,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <code>null</code>)
      * <LI><B>SUPERTYPE_NAME</B> String => the direct super type's name
      * </OL>
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> If the driver does not support type hierarchies, an empty result
      * set is returned.
@@ -2573,7 +2573,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the table hierarchies defined in a particular
      * schema in this database.
-     * <p/>
+     *
      * <P>
      * Only supertable information for tables matching the catalog, schema and table
      * name are returned. The table name parameter may be a fully- qualified name,
@@ -2582,7 +2582,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * be defined in the same catalog and schema as the sub tables. Therefore, the
      * type description does not need to include this information for the
      * supertable.
-     * <p/>
+     *
      * <P>
      * Each type description has the following columns:
      * <OL>
@@ -2591,7 +2591,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      * <LI><B>TABLE_NAME</B> String => type name
      * <LI><B>SUPERTABLE_NAME</B> String => the direct super type's name
      * </OL>
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> If the driver does not support type hierarchies, an empty result
      * set is returned.
@@ -2613,12 +2613,12 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
     /**
      * Retrieves a description of the given attribute of the given type for a
      * user-defined type (UDT) that is available in the given schema and catalog.
-     * <p/>
+     * <p>
      * Descriptions are returned only for attributes of UDTs matching the catalog,
      * schema, type, and attribute name criteria. They are ordered by TYPE_SCHEM,
      * TYPE_NAME and ORDINAL_POSITION. This description does not contain inherited
      * attributes.
-     * <p/>
+     * <p>
      * The <code>ResultSet</code> object that is returned has the following columns:
      * <OL>
      * <LI><B>TYPE_CAT</B> String => type catalog (may be <code>null</code>)
@@ -2687,7 +2687,7 @@ public abstract class DatabaseMetaDataWrapper implements DatabaseMetaData {
      *
      * @param holdability one of the following constants:
      * <code>ResultSet.HOLD_CURSORS_OVER_COMMIT</code> or
-     * <code>ResultSet.CLOSE_CURSORS_AT_COMMIT<code>
+     * <code>ResultSet.CLOSE_CURSORS_AT_COMMIT</code>
      * &#64;return <code>true</code> if so; <code>false</code> otherwise
      * @throws java.sql.SQLException if a database access error occurs
      * @see java.sql.Connection

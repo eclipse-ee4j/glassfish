@@ -130,7 +130,7 @@ public interface DeploymentContext extends ApplicationContext, ExecutionContext 
      * Add a new ClassFileTransformer to the context. Once all the deployers potentially invalidating the application class
      * loader (as indicated by the
      *
-     * @link {MetaData.invalidatesClassLoader()}) the deployment backend will recreate the application's class loader
+     * See {@code MetaData.invalidatesClassLoader()}) the deployment backend will recreate the application's class loader
      * registering all the ClassTransformers added by the deployers to this context.
      *
      * @param transformer the new class file transformer to register to the new application class loader

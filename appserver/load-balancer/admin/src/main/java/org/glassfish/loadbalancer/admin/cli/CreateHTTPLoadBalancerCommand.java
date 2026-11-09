@@ -60,19 +60,6 @@ import static org.glassfish.config.support.Constants.NAME_REGEX;
 /**
   * This method supports the create-http-lb CLI command. It creates a lb-config, cluster-ref, health-checker by using
   * the given parameters.
-  * @param loadbalancername the name for the load-balancer element that will be created
-  * @param target cluster-ref or server-ref parameter of lb-config
-  * @param options Map of option name and option value. The valid options are
-  *          responsetimeout response-timeout-in-seconds attribute of lb-config
-  *          httpsrouting https-routing parameter of lb-config
-  *          reloadinterval reload-poll-interval-in-seconds parameter of lb-config
-  *          monitor monitoring-enabled parameter of lb-config
-  *          routecookie route-cookie-enabled parameter of lb-config
-  *          lb-policy load balancing policy to be used for the cluster target
-  *          lb-policy-module specifies the path to the shared library implementing the user-defined policy
-  *          healthcheckerurl url attribute of health-checker
-  *          healthcheckerinterval interval-in-seconds parameter of health-checker
-  *          healthcheckertimeout timeout-in-seconds parameter of health-checker
   * @author Yamini K B
   */
 @Service(name = "create-http-lb")

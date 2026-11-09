@@ -54,7 +54,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Creates given JVM options in server's configuration.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @author Kin-man Chung
  * @since GlassFish V3
  */

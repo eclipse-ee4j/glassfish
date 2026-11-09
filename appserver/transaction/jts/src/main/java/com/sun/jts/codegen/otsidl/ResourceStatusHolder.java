@@ -25,7 +25,7 @@ package com.sun.jts.codegen.otsidl;
 
 public final class ResourceStatusHolder implements org.omg.CORBA.portable.Streamable
 {
-  public com.sun.jts.codegen.otsidl.ResourceStatus value = null;
+  public com.sun.jts.codegen.otsidl.ResourceStatus value;
 
   public ResourceStatusHolder ()
   {

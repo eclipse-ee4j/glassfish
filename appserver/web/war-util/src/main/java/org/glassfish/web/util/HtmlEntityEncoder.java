@@ -32,7 +32,7 @@ public class HtmlEntityEncoder {
         null, null, null, null, null,
         null, null, null, null, null,
         null, null, null, "&#59;", "&lt;",
-        null, "&gt;"
+        null, "&gt;",
     };
 
     private static final int START = 34;
@@ -49,9 +49,9 @@ public class HtmlEntityEncoder {
     /**
      * Encode
      * a) the following visible characters:
-     *     " => 34, % => 37, & => 38, ' => 39, ( => 40,
+     *     " => 34, % => 37, &amp; => 38, ' => 39, ( => 40,
      *     ) => 41, + => 43,
-     *     ; => 59, < => 60,
+     *     ; => 59, &lt; => 60,
      *     > => 62,
      * b) ignore control characters
      * c) ignore undefined characters

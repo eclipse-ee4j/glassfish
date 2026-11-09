@@ -30,11 +30,11 @@ import javax.naming.spi.ObjectFactory;
 public class UserTransactionFactory implements ObjectFactory {
 
     /**
-     * @param obj Reference information that can be used in creating an object.
+     * @param refObj Reference information that can be used in creating an object.
      * @param name of this object relative to nameCtx (optional).
      * @param nameCtx context relative to which the name parameter specified.
      *     If null, name is relative to the default initial context.
-     * @param environment possibly null environment used in creating the object.
+     * @param env possibly null environment used in creating the object.
      *
      * @return object created; null if an object cannot be created.
      *

@@ -158,7 +158,7 @@ public class ListComponentsCommandTest {
         public void setName(String value) throws PropertyVetoException {
         }
 
-        private List<Engine> engineList = null;
+        private List<Engine> engineList;
 
         @Override
         public List<Engine> getEngines() {
@@ -221,7 +221,7 @@ public class ListComponentsCommandTest {
     /** mock-up Application object */
     public class ApplicationTest extends RandomConfig implements Application {
 
-        private List<Module> modules = null;
+        private List<Module> modules;
 
         @Override
         public String getName() {

@@ -22,7 +22,7 @@ import org.jvnet.hk2.annotations.Contract;
  * A @link {Contract} that satisfies credential information requirements of server. All the sub-systems should look up a service
  * that implements this contract. The name of the service implies the functionality.
  *
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  */
 @Contract
 public interface IdentityManagement {

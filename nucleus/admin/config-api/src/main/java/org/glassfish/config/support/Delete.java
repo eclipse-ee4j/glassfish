@@ -33,7 +33,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * A method annotated with the Delete annotation will generate a generic implementation of a delete administrative
  * command responsible for delete instances of the type as referenced by the annotated method.
  *
- * The deleted type is determine by the annotated method which must follow one of the two following patterns : List<X>
+ * The deleted type is determine by the annotated method which must follow one of the two following patterns : List&lt;X&gt;
  * getXs(); or void setX(X x);
  *
  * X is the type of instance that will be deleted, the name of the method is actually immaterial. So for example, the
@@ -42,13 +42,13 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * <pre>
  * <code>
  * &#64;Delete
- * public List<Foo> getAllMyFoos();
+ * public List&lt;Foo&gt; getAllMyFoos();
  * &#64;Delete
  * public void setMySuperFoo(Foo foo);
  * &#64;Delete
- * public List<Foo> getFoos();
+ * public List&lt;Foo&gt; getFoos();
  * &#64;Delete
- * public List<Foo> getFoo();
+ * public List&lt;Foo&gt; getFoo();
  * </code>
  * </pre>
  *

@@ -318,25 +318,25 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     class Decorator implements CreationDecorator<Node> {
 
         @Param(name = "nodedir", optional = true)
-        String nodedir = null;
+        String nodedir;
 
         @Param(name = "nodehost", optional = true)
-        String nodehost = null;
+        String nodehost;
 
         @Param(name = "installdir", optional = true)
-        String installdir = null;
+        String installdir;
 
         @Param(name = "type")
-        String type = null;
+        String type;
 
         @Param(name = "sshport", optional = true)
-        String sshPort = null;
+        String sshPort;
 
         @Param(name = "sshnodehost", optional = true)
-        String sshHost = null;
+        String sshHost;
 
         @Param(name = "sshuser", optional = true)
-        String sshuser = null;
+        String sshuser;
 
         @Param(name = "sshkeyfile", optional = true)
         String sshkeyfile;
@@ -367,9 +367,10 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
          *
          * <p>Tasks :
          * <ul>
-         * <li>ensures that it references an existing configuration</li>,
-         * <li>creates a new config from the default-config if no config-ref was provided.</li>,
-         * <li>>check for deprecated parameters</p>.
+         * <li>ensures that it references an existing configuration</li>
+         * <li>creates a new config from the default-config if no config-ref was provided.</li>
+         * <li>check for deprecated parameters.</li>
+         * </ul>
          *
          * @param context administration command context
          * @param instance newly created configuration element

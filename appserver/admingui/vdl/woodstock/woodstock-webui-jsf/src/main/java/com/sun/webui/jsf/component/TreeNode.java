@@ -119,7 +119,7 @@ public class TreeNode extends UIComponentBase
             isHidden = true,
             isAttribute = true)
     @Property.Method(signature = "java.lang.String action()")
-    private jakarta.el.MethodExpression actionExpression = null;
+    private jakarta.el.MethodExpression actionExpression;
 
     /**
      * The actionListenerExpression attribute is used to specify a method to
@@ -153,12 +153,12 @@ public class TreeNode extends UIComponentBase
     @Property(name = "expanded",
             displayName = "Expanded",
             category = "Appearance")
-    private boolean expanded = false;
+    private boolean expanded;
 
     /**
      * expanded set flag.
      */
-    private boolean expandedSet = false;
+    private boolean expandedSet;
 
     /**
      * <p>
@@ -179,7 +179,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageURL = null;
+    private String imageURL;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -189,7 +189,7 @@ public class TreeNode extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -201,7 +201,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The resource at the specified URL is displayed in the frame that is
@@ -217,7 +217,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FrameTargetsEditor")
             //CHECKSTYLE:ON
-    private String target = null;
+    private String target;
 
     /**
      * Specifies the text for this component. If the URL or action attributes
@@ -233,7 +233,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String text = null;
+    private String text;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -246,7 +246,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Indicates that the text that is specified with the text attribute should
@@ -260,7 +260,7 @@ public class TreeNode extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String url = null;
+    private String url;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -274,12 +274,12 @@ public class TreeNode extends UIComponentBase
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Constructor.

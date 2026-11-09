@@ -20,7 +20,6 @@ package com.sun.enterprise.security.auth.login.common;
 /**
  * LoginException is thrown by the LoginContext class if the client is unable to authenticate successfully.
  *
- * @see jakarta.security.enterprise.AuthenticationStatus
  * @author Harish Prabandham
  * @author Harpreet Singh
  */

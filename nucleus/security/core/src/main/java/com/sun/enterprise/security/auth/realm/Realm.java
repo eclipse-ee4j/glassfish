@@ -70,7 +70,7 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
      * @param name Name of the new realm.
      * @param className Java Class name of the realm to create.
      * @param props Properties containing values of the Property element from server.xml
-     * @returns Reference to the new Realm. The Realm class keeps an internal list of all instantiated realms.
+     * @return Reference to the new Realm. The Realm class keeps an internal list of all instantiated realms.
      * @throws BadRealmException If the requested realm cannot be instantiated.
      *
      */
@@ -95,7 +95,7 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
      * @param className Java Class name of the realm to create.
      * @param props Properties containing values of the Property element from server.xml
      * @param configName the config to which this realm belongs
-     * @returns Reference to the new Realm. The Realm class keeps an internal list of all instantiated realms.
+     * @return Reference to the new Realm. The Realm class keeps an internal list of all instantiated realms.
      * @throws BadRealmException If the requested realm cannot be instantiated.
      *
      */
@@ -130,7 +130,6 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
      * @param name identifies the realm
      * @return the requested realm
      * @exception NoSuchRealmException if the realm is invalid
-     * @exception BadRealmException if realm data structures are bad
      */
     public static synchronized Realm getInstance(String name) throws NoSuchRealmException {
         Realm instance = _getInstance(name);
@@ -149,7 +148,6 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
      * @param name identifies the realm
      * @return the requested realm
      * @exception NoSuchRealmException if the realm is invalid
-     * @exception BadRealmException if realm data structures are bad
      */
     public static synchronized Realm getInstance(String configName, String name) throws NoSuchRealmException {
         Realm instance = _getInstance(configName, name);
@@ -184,7 +182,7 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
     /**
      * Checks if the given realm name is loaded/valid.
      *
-     * @param String name of the realm to check.
+     * @param name name of the realm to check.
      * @return true if realm present, false otherwise.
      */
     public static boolean isValidRealm(String name) {
@@ -194,7 +192,6 @@ public abstract class Realm extends AbstractGlassFishRealmState implements Glass
     /**
      * Checks if the given realm name is loaded/valid.
      *
-     * @param String name of the realm to check.
      * @return true if realm present, false otherwise.
      */
     public static boolean isValidRealm(String configName, String name) {

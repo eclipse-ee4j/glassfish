@@ -52,22 +52,22 @@ public class SendRequest {
 
     private static String CRLF="\r\n";
 
-    int status,OK=0;
-    int notOK=0;
+    int status,OK;
+    int notOK;
     int url_size;
     double start,end;
-    boolean ifdone=false;
-    boolean setCookie=false;
-    boolean serverCookieSet=false;
-    FileOutputStream errout=null;
+    boolean ifdone;
+    boolean setCookie;
+    boolean serverCookieSet;
+    FileOutputStream errout;
     //int port=8000;
     private int m_port=80;
     int port;
     private String m_host="local";
-    boolean serverSet=false;
+    boolean serverSet;
     private static int buffer_size=8192;
     private final String ws_root;
-    Reporter reporter=null;
+    Reporter reporter;
 
 
     public SendRequest(String ws_root,String testsuite_id)

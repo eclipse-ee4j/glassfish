@@ -61,7 +61,7 @@ public class FieldRenderer extends jakarta.faces.render.Renderer {
         "onKeyDown",
         "onKeyPress",
         "onKeyUp",
-        "onSelect"
+        "onSelect",
     };
 
     /**
@@ -88,7 +88,7 @@ public class FieldRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Field.class.getName()
+                Field.class.getName(),
             };
             String message = MessageUtil
                     .getMessage("com.sun.webui.jsf.resources.LogMessages",

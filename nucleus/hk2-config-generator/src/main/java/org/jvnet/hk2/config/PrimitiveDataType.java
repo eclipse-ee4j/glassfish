@@ -21,7 +21,7 @@ package org.jvnet.hk2.config;
  *  are relevant from a configuration standpoint.
  * @see DataType
  * @see DomDocument#PRIMS
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since hk2 0.3.10
  */
 public final class PrimitiveDataType implements DataType {

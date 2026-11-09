@@ -114,18 +114,18 @@ public class SetRootRule extends Rule {
     /**
      * The method name to call on the parent object.
      */
-    protected String methodName = null;
+    protected String methodName;
 
 
     /**
      * The Java class name of the parameter type expected by the method.
      */
-    protected String paramType = null;
+    protected String paramType;
 
     /**
      * Should we use exact matching. Default is no.
      */
-    protected boolean useExactMatch = false;
+    protected boolean useExactMatch;
 
 
     // --------------------------------------------------------- Public Methods

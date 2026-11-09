@@ -19,7 +19,6 @@ package com.sun.enterprise.security.auth.realm.ldap;
 
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
-import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 
@@ -304,8 +303,6 @@ public final class LDAPRealm extends Realm {
      *
      * @param username Name of the user in this realm whose group listing is needed.
      * @return Enumeration of group names (strings).
-     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
-     * does not support this operation.
      */
     @Override
     public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {

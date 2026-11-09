@@ -38,7 +38,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
     <p>
     The proxy method to which the annotation is applied must be of one of the following forms,
     where the interface FooBar is a sub-interface of {@link org.glassfish.admin.amx.core.AMXProxy}.
-    <code>
     <ul>
     <li>FooBar           getFooBar();        // gets a singleton child </li>
     <li>Set&lt;FooBar>   getFooBar();        // gets all FooBar </li>
@@ -46,7 +45,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
     <li>Map&lt;String,FooBar>  getFooBar();  // gets all FooBar </li>
     <li>FooBar[]         getFooBar();        // gets all FooBar </li>
     </ul>
-    </code>
     The child type is derived from the method name, but if the standard derivation would result
     in the incorrect type then the annotation must include <code>type="child-type"></code>, where
     "child-type" is the appropriate type.

@@ -27,8 +27,8 @@ import javax.naming.InitialContext;
 @Stateless
 public class TimerEjb {
 
-    private static volatile boolean timeoutWasCalled = false;
-    private static volatile boolean autotimeoutWasCalled = false;
+    private static volatile boolean timeoutWasCalled;
+    private static volatile boolean autotimeoutWasCalled;
 
     public void createTimer() throws Exception {
         System.err.println("In SimpleEjb:createTimer()");

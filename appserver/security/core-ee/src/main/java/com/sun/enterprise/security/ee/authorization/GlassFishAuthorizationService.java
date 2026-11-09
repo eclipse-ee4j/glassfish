@@ -300,8 +300,7 @@ public class GlassFishAuthorizationService {
      * Return <code>true</code> if the specified servletName has the specified security role, within the context of the
      * WebRoleRefPermission; otherwise return <code>false</code>.
      *
-     * @param principal servletName the resource's name.
-     * @param principal Principal for whom the role is to be checked
+     * @param servletName servletName the resource's name.
      * @param role Security role to be checked
      *
      * @return true is the resource is granted, false if denied

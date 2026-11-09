@@ -42,7 +42,7 @@ public @interface Progress {
      * Optional: Context of the progress. Generally this is the command name. The name will be included in the command's
      * progress output. Default: command name or the server instance name for replicated commands.
      */
-    public String name() default "";
+    String name() default "";
 
     /**
      * Number of steps necessary to complete the operation. Value is used to determine percentage of work completed and can
@@ -51,6 +51,6 @@ public @interface Progress {
      *
      * @see org.glassfish.api.admin.ProgressStatus
      */
-    public int totalStepCount() default -1;
+    int totalStepCount() default -1;
 
 }

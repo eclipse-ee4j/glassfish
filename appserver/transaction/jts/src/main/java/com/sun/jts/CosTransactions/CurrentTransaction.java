@@ -80,10 +80,10 @@ public class CurrentTransaction {
     private static Vector suspended = new Vector(Configuration.EXPECTED_CONCURRENT_TRANSACTIONS);
 
     //store the suspended and associated transactions support only if stats are required
-    static boolean statsOn=false;
+    static boolean statsOn;
 
     private static Hashtable importedTransactions = new Hashtable();
-    private static RegisteredStatics statics = null;
+    private static RegisteredStatics statics;
     //private static ORB orb = null;
     //private static TransactionFactory localFactory = null;
 

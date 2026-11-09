@@ -36,7 +36,7 @@ public interface FieldElementHolder
      * @param field the field to be added
      * @exception ModelException if impossible
      */
-    public void addField (PersistenceFieldElement field)
+    void addField (PersistenceFieldElement field)
         throws ModelException;
 
     /** Add the supplied fields to the collection of fields maintained by this
@@ -44,7 +44,7 @@ public interface FieldElementHolder
      * @param fields the array of fields to be added
      * @exception ModelException if impossible
      */
-    public void addFields (PersistenceFieldElement[] fields)
+    void addFields (PersistenceFieldElement[] fields)
         throws ModelException;
 
     /** Remove the supplied field from the collection of fields maintained by
@@ -52,7 +52,7 @@ public interface FieldElementHolder
      * @param field the field to be removed
      * @exception ModelException if impossible
      */
-    public void removeField (PersistenceFieldElement field)
+    void removeField (PersistenceFieldElement field)
         throws ModelException;
 
     /** Removed the supplied fields from the collection of fields maintained
@@ -60,21 +60,21 @@ public interface FieldElementHolder
      * @param fields the array of fields to be removed
      * @exception ModelException if impossible
      */
-    public void removeFields (PersistenceFieldElement[] fields)
+    void removeFields (PersistenceFieldElement[] fields)
         throws ModelException;
 
     /** Returns the collection of fields maintained by this holder in the form
      * of an array.
      * @return the fields maintained by this holder
      */
-    public PersistenceFieldElement[] getFields ();
+    PersistenceFieldElement[] getFields ();
 
     /** Sets the collection of fields maintained by this holder to the contents
      * of the supplied array.
      * @param fields the fields maintained by this holder
      * @exception ModelException if impossible
      */
-    public void setFields (PersistenceFieldElement[] fields)
+    void setFields (PersistenceFieldElement[] fields)
         throws ModelException;
 
     /** Returns the field with the supplied name from the collection of fields
@@ -82,11 +82,11 @@ public interface FieldElementHolder
      * @param name the name to match
      * @return the field with the supplied name, <code>null</code> if none exists
      */
-    public PersistenceFieldElement getField (String name);
+    PersistenceFieldElement getField (String name);
 
     /** Tests whether the supplied field is in the collection of fields
      * maintained by this holder.
      * @param field the field to be tested
      */
-    public boolean containsField (PersistenceFieldElement field);
+    boolean containsField (PersistenceFieldElement field);
 }

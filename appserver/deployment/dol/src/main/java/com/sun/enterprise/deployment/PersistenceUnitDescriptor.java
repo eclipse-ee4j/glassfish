@@ -30,8 +30,8 @@ import org.glassfish.api.naming.SimpleJndiName;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
- * A persistence.xml file can contain one or more <persistence-unit>s
- * This class represents information about a <persistence-unit>.
+ * A persistence.xml file can contain one or more &lt;persistence-unit>s
+ * This class represents information about a &lt;persistence-unit>.
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class PersistenceUnitDescriptor extends Descriptor {

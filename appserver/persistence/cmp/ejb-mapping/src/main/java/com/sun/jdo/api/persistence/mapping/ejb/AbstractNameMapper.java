@@ -299,7 +299,7 @@ abstract public class AbstractNameMapper {
      * the specified ejb name and field name pair.
      * @param name the name of the ejb
      * @param fieldName the name of the field in the ejb
-     * @return a String array of the form {<ejb name>, <field name>} which
+     * @return a String array of the form {&lt;ejb name&gt;, &lt;field name&gt;} which
      * represents the generated field for the ejb field
      */
     public String[] getGeneratedFieldForEjbField(String name,
@@ -315,7 +315,7 @@ abstract public class AbstractNameMapper {
      * generated ejb name and field name pair.
      * @param name the name of the ejb
      * @param fieldName the name of the field in the ejb
-     * @return a String array of the form {<ejb name>, <field name>} which
+     * @return a String array of the form {&lt;ejb name&gt;, &lt;field name&gt;} which
      * represents the inverse field for the generated field
      */
     public String[] getEjbFieldForGeneratedField(String name, String fieldName)

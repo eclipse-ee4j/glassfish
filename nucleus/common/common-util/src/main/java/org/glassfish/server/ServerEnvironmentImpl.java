@@ -230,7 +230,7 @@ public class ServerEnvironmentImpl implements ServerEnvironment {
     }
 
     /**
-     * Gets the <tt>init.conf</tt> file.
+     * Gets the <code>init.conf</code> file.
      */
     public File getInitFilePath() {
         return new File(getConfigDirPath(), kInitFileName);

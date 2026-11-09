@@ -40,7 +40,7 @@ public class FormInfo {
      * the following fields are used to implement a bypass of FBL related targets
      */
     protected final ReadWriteLock rwLock = new ReentrantReadWriteLock();
-    private boolean contextEvaluated = false;
+    private boolean contextEvaluated;
     private String loginPage;
     private String errorPage;
 

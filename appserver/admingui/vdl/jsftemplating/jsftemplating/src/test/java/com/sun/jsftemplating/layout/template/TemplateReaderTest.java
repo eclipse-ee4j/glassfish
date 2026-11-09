@@ -129,12 +129,12 @@ System.out.println("Template performance " + fileName + " (" + iterations + "), 
             "single1", "single2", "single3",
             "single4", "single5", "Template.jsf",
             "\"single7\"", "single11", "single12",
-            "single13", null, null, "mult2"
+            "single13", null, null, "mult2",
         };
         int[] resultChildSizes = {
             0, 0, 0, 0,
             0, 0, 0, 0, 0,
-            0, 0, 1, 2
+            0, 0, 1, 2,
         };
         int idx = 0;
         for (LayoutElement child : children) {

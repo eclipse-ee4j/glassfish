@@ -52,7 +52,7 @@ public class IORInterceptorImpl extends LocalObject implements IORInterceptor {
 
     // Instance attributes
 
-    private Codec codec = null;
+    private Codec codec;
 
     public IORInterceptorImpl(Codec codec) {
         this.codec = codec;

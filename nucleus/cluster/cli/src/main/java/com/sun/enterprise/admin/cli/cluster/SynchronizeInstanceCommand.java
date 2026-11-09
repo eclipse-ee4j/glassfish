@@ -56,7 +56,7 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
         acceptableValues = "none, normal, full")
     protected String sync="normal";
 
-    private RemoteCLICommand syncCmd = null;
+    private RemoteCLICommand syncCmd;
 
     private enum SyncLevel { TOP, FILES, DIRECTORY, RECURSIVE }
 

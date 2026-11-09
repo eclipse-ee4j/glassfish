@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  * <p> One StringManagerBase per resource bundle name can be created and accessed by the
  * getManager method call.
  *
- * <xmp>
+ * <pre>
  * Example:
  *
  * [LocalStrings.properties]
@@ -57,7 +57,7 @@ import java.util.logging.Logger;
  *   At 2:27:41 PM on Jul 8, 2002, there was a disturbance in the Force
  *   on planet 7
  *
- * </xmp>
+ * </pre>
  *
  * @author  Nazrul Islam
  * @since   JDK1.4

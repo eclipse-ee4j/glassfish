@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Service;
 public class HASSOFactory implements SSOFactory {
     private static final String STORE_NAME = "SSOStore";
 
-    private static BackingStore<String, HASingleSignOnEntryMetadata> ssoEntryMetadataBackingStore = null;
+    private static BackingStore<String, HASingleSignOnEntryMetadata> ssoEntryMetadataBackingStore;
 
     @Inject
     private ServiceLocator services;

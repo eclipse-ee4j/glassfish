@@ -32,9 +32,9 @@ import org.xml.sax.SAXException;
 /**
  * Provides access to schemas and DTDs to Java Web Start-launched app clients
  * that do not have an app server product installation at hand.
- * <p/>
+ * <p>
  * The DTDs and schemas are assumed to be in the classpath so that
- * schemas are at /schemas/<schema-name> and DTDs at /dtds/<dtd-name>
+ * schemas are at /schemas/&lt;schema-name> and DTDs at /dtds/&lt;dtd-name>
  *
  * This ParserHandler is used by Embedded GlassFish as well.
  *
@@ -59,7 +59,7 @@ public class SaxParserHandlerBundled extends SaxParserHandler {
 
     /**
      * Returns an InputSource for the requested DTD or schema.
-     * <p/>
+     * <p>
      * This implementation returns an InputSource that wraps the result
      * of getResourceAsStream, having
      * located the requested schema in the classpath.

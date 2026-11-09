@@ -23,7 +23,7 @@ import javax.management.AttributeList;
  * back to the Admin Tool LogViewer Front end. It contains the metadata
  * describing the structure of the results.
  *
- * @AUTHOR: Hemanth Puttaswamy
+ * @author Hemanth Puttaswamy
  *
  */
 public class LogRecordTemplate {

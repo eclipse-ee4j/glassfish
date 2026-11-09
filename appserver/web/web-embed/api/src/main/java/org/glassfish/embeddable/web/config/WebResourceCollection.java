@@ -24,13 +24,13 @@ import org.glassfish.embeddable.GlassFishException;
  * This class represents a list of URL patterns and HTTP
  * methods that describe a set of Web resources to be protected.
  *
- * <p/> Usage example:
+ * <p> Usage example:
  *
  * <pre>
  *      WebResourceCollection webResource = new WebResourceCollection();
  *      webResource.setName("protected");
  *      webResource.setUrlPatterns("/*");
- *      Set<String> httpMethods = new HashSet<String>();
+ *      Set&lt;String&gt; httpMethods = new HashSet&lt;String&gt;();
  *      httpMethods.add("GET");
  *      httpMethods.add("POST");
  *      webResource.setHttpMethods(httpMethods);

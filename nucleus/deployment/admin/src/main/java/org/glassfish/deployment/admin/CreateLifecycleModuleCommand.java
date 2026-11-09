@@ -81,16 +81,16 @@ import org.jvnet.hk2.config.Transaction;
 public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=false)
-    public String classname = null;
+    public String classname;
 
     @Param(optional=true)
-    public String classpath = null;
+    public String classpath;
 
     @Param(optional=true)
-    public String loadorder = null;
+    public String loadorder;
 
     @Param(optional=true, defaultValue="false")
     public Boolean failurefatal = false;
@@ -99,13 +99,13 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
     public Boolean enabled = true;
 
     @Param(optional=true)
-    public String description = null;
+    public String description;
 
     @Param(optional=true)
     public String target = "server";
 
     @Param(optional=true, separator=':')
-    public Properties property = null;
+    public Properties property;
 
     @Inject
     Deployment deployment;

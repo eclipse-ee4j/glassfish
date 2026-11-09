@@ -34,7 +34,7 @@ import org.xml.sax.Attributes;
 */
 public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> {
 
-    protected ConstraintField descriptor = null;
+    protected ConstraintField descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -105,9 +105,8 @@ public class ConstraintFieldNode extends RuntimeDescriptorNode<ConstraintField> 
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name
-     * @param the array of descriptor to write
-     * @return the DOM tree top node
+     * @param nodeName name
+     * @param descriptors array of descriptor to write
      */
     public void writeDescriptor(Node parent, String nodeName, ConstraintField[] descriptors) {
         for (int i=0;i<descriptors.length;i++) {

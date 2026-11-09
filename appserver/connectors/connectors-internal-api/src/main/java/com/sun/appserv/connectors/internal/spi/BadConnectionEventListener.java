@@ -29,20 +29,20 @@ public interface BadConnectionEventListener {
      * Error code used to indicate that the pool is reconfigured
      * and the client can retry to do operations based on
      * based on new configuration.
-     * Used for <i>dynamic-resource-reconfiguration<i>
+     * Used for <i>dynamic-resource-reconfiguration</i>
      */
-    public static final String POOL_RECONFIGURED_ERROR_CODE = "POOL-RECONFIGURED-1";
+    String POOL_RECONFIGURED_ERROR_CODE = "POOL-RECONFIGURED-1";
 
     /**
      * Resource adapters will signal that the connection being closed is bad.
      * <i>Custom api</i>
      * @param evt ConnectionEvent
      */
-    public void badConnectionClosed(ConnectionEvent evt);
+    void badConnectionClosed(ConnectionEvent evt);
 
     /**
      * Resource adapters will signal that the connection is being aborted.
      * @param evt ConnectionEvent
      */
-    public void connectionAbortOccurred(ConnectionEvent evt);
+    void connectionAbortOccurred(ConnectionEvent evt);
 }

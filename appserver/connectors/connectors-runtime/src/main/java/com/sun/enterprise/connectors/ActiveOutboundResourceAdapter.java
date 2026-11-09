@@ -57,7 +57,7 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * This class represents a live outbound resource adapter (1.5 compliant) i.e.
- * <p/>
+ * <p>
  * A resource adapter is considered active after start()
  * and before stop() is called.
  *
@@ -84,7 +84,7 @@ public class ActiveOutboundResourceAdapter extends ActiveResourceAdapterImpl {
      * Creates an active inbound resource adapter. Sets all RA java bean
      * properties and issues a start.
      *
-     * @param ra         <code>ResourceAdapter<code> java bean.
+     * @param ra         <code>ResourceAdapter</code> java bean.
      * @param desc       <code>ConnectorDescriptor</code> object.
      * @param moduleName Resource adapter module name.
      * @param jcl        <code>ClassLoader</code> instance.

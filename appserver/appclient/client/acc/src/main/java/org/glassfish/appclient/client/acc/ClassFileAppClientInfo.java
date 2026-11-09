@@ -39,8 +39,6 @@ public class ClassFileAppClientInfo extends AppClientInfo {
      *Creates a new instance of the class file app client info.
      *@param isJWS whether Java Web Start was used to launch the app client
      *@param logger the Logger available for writing log messages
-     *@param archive the archive containing the app client (and perhaps other files as well)
-     *@param archivist the archivist appropriate to the type of archive being processed
      *@param mainClassFromCommandLine the main class command-line argument value
      *@param classFileFromCommandLine the class file name from the command line arguments
      */

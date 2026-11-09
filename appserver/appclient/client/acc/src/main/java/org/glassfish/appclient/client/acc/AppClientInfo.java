@@ -149,7 +149,7 @@ public abstract class AppClientInfo {
 
         private final ApplicationClientDescriptor appClient;
 
-        public ApplicationInfoImpl(AppClientInfo outer) {
+        ApplicationInfoImpl(AppClientInfo outer) {
             this.outer = outer;
             appClient = outer.getAppClient();
         }
@@ -199,7 +199,7 @@ public abstract class AppClientInfo {
      *Reports whether the app client's descriptor shows a dependence on a
      *persistence unit.
      *@param descr the descriptor for the app client in question
-     *@returns true if the descriptor shows such a dependency
+     *@return true if the descriptor shows such a dependency
      */
     protected  boolean descriptorContainsPURefcs(
         ApplicationClientDescriptor descr) {

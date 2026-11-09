@@ -57,7 +57,7 @@ class CoordinatorLogPool {
      * constructor
      *
      */
-    public CoordinatorLogPool() {
+    CoordinatorLogPool() {
         pool = new Stack();
     }
 

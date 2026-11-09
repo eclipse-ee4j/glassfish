@@ -41,12 +41,12 @@ import java.util.Map;
  * A class that is interested in receiving such events registers itself with the
  * source TableColumn of interest, by calling addActionListener().
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.event.TableSortActionListener.level = FINE
  * </pre>
- * </p>
+ *
  */
 public final class TableSortActionListener implements ActionListener {
 

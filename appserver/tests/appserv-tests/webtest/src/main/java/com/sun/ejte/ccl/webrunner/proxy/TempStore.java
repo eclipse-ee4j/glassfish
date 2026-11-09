@@ -29,7 +29,7 @@ public class TempStore
         String url;
         MimeHeader mh;
         byte data[];
-        int length=0;
+        int length;
 
         /**
         * Constructor that Takes two Stringa as parameter

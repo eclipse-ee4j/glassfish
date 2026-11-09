@@ -80,7 +80,7 @@ public class RoleReference extends EnvironmentProperty implements SecurityRoleRe
     /**
      * Sets the rolename.
      *
-     * @param the rolename.
+     * @param securityRole rolename.
      */
     @Override
     public void setSecurityRoleLink(SecurityRole securityRole) {
@@ -100,7 +100,7 @@ public class RoleReference extends EnvironmentProperty implements SecurityRoleRe
     /**
      * Sets the coded name.
      *
-     * @param the role name used in the bean code.
+     * @param rolename role name used in the bean code.
      */
     @Override
     public void setRoleName(String rolename) {

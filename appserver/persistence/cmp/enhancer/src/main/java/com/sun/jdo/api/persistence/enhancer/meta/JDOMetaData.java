@@ -102,7 +102,7 @@ public interface JDOMetaData {
      * The following invariant holds:
      *   isPersistenceCapableClass(classPath)
      *       => !isTransientClass(classPath)
-     *          && !isSecondClassObjectType(classPath)
+     *          &amp;&amp; !isSecondClassObjectType(classPath)
      * @param classPath the JVM-qualified name of the class
      * @return true if this class is persistence-capable; otherwise false
      */
@@ -111,7 +111,7 @@ public interface JDOMetaData {
 
     /**
      * Tests whether a class is known as a persistence-capable root class.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @return true if this class is persistence-capable and does not
      *         derive from another persistence-capable class; otherwise false
@@ -121,7 +121,7 @@ public interface JDOMetaData {
 
     /**
      * Returns the name of the persistence-capable root class of a class.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @return the name of the least-derived persistence-capable class that
      *         is equal to or a super class of the argument class; if the
@@ -132,7 +132,7 @@ public interface JDOMetaData {
 
     /**
      * Returns the name of the superclass of a class.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @return the name of the superclass.
      */
@@ -154,7 +154,7 @@ public interface JDOMetaData {
 
     /**
      * Tests whether a class is known as type for Mutable Second Class Objects.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the type
      * @return true if this type is known for mutable second class objects;
      *         otherwise false
@@ -164,7 +164,7 @@ public interface JDOMetaData {
 
     /**
      * Tests whether a field of a class is known to be persistent.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @param fieldName the name of the field
      * @return true if this field is known to be persistent; otherwise false
@@ -174,7 +174,7 @@ public interface JDOMetaData {
 
     /**
      * Tests whether a field of a class is known to be transactional.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @param fieldName the name of the field
      * @return true if this field is known to be transactional; otherwise false
@@ -184,7 +184,7 @@ public interface JDOMetaData {
 
     /**
      * Tests whether a field of a class is known to be Primary Key.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @param fieldName the name of the field
      * @return true if this field is known to be primary key; otherwise false
@@ -195,7 +195,7 @@ public interface JDOMetaData {
     /**
      * Tests whether a field of a class is known to be part of the
      * Default Fetch Group.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @param fieldName the name of the field
      * @return true if this field is known to be part of the
@@ -207,7 +207,7 @@ public interface JDOMetaData {
     /**
      * Returns the unique field index of a declared, persistent field of a
      * class.
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @param fieldName the name of the field
      * @return the non-negative, unique field index
@@ -224,7 +224,7 @@ public interface JDOMetaData {
      * these equations holds:
      * <P> getFieldNo(getManagedFields(classPath)[i]) == i
      * <P> getManagedFields(classPath)[getFieldNo(fieldName)] == fieldName
-     * <P>
+     *
      * @param classPath the JVM-qualified name of the class
      * @return an array of all declared persistent and transactional
      *         fields of a class

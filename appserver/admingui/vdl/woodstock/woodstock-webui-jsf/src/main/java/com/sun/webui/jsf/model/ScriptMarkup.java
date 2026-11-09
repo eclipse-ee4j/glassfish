@@ -26,7 +26,7 @@ public final class ScriptMarkup extends Markup {
     /**
      * The CDATA wrapping flag for this markup.
      */
-    private boolean cdata = false;
+    private boolean cdata;
 
     /**
      * Return the current state of CDATA wrapping for this markup.

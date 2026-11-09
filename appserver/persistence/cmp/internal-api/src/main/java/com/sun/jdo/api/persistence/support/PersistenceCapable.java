@@ -57,7 +57,7 @@ public interface PersistenceCapable
    * PersistenceManager.
    *
    * <P>Transient non-transactional instances return null.
-     *<P>
+     *
    * @return the PersistenceManager associated with this instance.
    */
     PersistenceManager jdoGetPersistenceManager();
@@ -70,7 +70,7 @@ public interface PersistenceCapable
      * application to notify the instance that a change was made to a field.
      *
      * <P>Transient instances ignore this method.
-     *<P>
+     *
      * @param fieldName the name of the field to be marked dirty.
      */
     void jdoMakeDirty(String fieldName);
@@ -94,7 +94,7 @@ public interface PersistenceCapable
      *
      * <P>If the JDO identity is not managed by the application or the data store,
      * then the ObjectId returned is only valid within the current transaction.
-     *<P>
+     *
      * @see PersistenceManager#getObjectId(Object pc)
      * @see PersistenceManager#getObjectById(Object oid)
      * @return a copy of the ObjectId of this instance.
@@ -107,7 +107,7 @@ public interface PersistenceCapable
      * made persistent in the current transaction return true.
      *
      *<P>Transient instances return false.
-     *<P>
+     *
      * @see #jdoMakeDirty(String fieldName)
      * @return true if this instance has been modified in the current transaction.
      */
@@ -122,7 +122,7 @@ public interface PersistenceCapable
      * transactions; and persistent instances modified in optimistic transactions.
      *
      *<P>Transient instances return false.
-     *<P>
+     *
      * @return true if this instance is transactional.
      */
     boolean jdoIsTransactional();
@@ -132,7 +132,7 @@ public interface PersistenceCapable
      * Instances whose state is stored in the data store return true.
      *
      *<P>Transient instances return false.
-     *<P>
+     *
      * @see PersistenceManager#makePersistent(Object pc)
      * @return true if this instance is persistent.
      */
@@ -144,7 +144,7 @@ public interface PersistenceCapable
      * return true.
      *
      *<P>Transient instances return false.
-     *<P>
+     *
      * @see PersistenceManager#makePersistent(Object pc)
      * @return true if this instance was made persistent
      * in the current transaction.
@@ -156,7 +156,7 @@ public interface PersistenceCapable
      * Instances that have been deleted in the current transaction return true.
      *
      *<P>Transient instances return false.
-     *<P>
+     *
      * @see PersistenceManager#deletePersistent(Object pc)
      * @return true if this instance was deleted
      * in the current transaction.

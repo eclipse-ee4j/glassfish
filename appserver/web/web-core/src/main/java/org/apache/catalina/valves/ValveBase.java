@@ -74,20 +74,20 @@ public abstract class ValveBase
     /**
      * The Container whose pipeline this Valve is a component of.
      */
-    protected Container container = null;
+    protected Container container;
 
 
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     // START CR 6411114
     /**
      * Has this component been started yet?
      */
-    protected boolean started = false;
+    protected boolean started;
 
 
     /**
@@ -108,7 +108,7 @@ public abstract class ValveBase
     /**
      * The next Valve in the pipeline this Valve is a component of.
      */
-    protected Valve next = null;
+    protected Valve next;
 
 
 

@@ -700,7 +700,7 @@ public class WebServiceEndpoint extends Descriptor implements HandlerChainContai
     }
 
     /**
-     * Given the root portion of a URL representing the <protocol>:<host>:<port>
+     * Given the root portion of a URL representing the &lt;protocol&gt;:&lt;host&gt;:&lt;port&gt;
      * of the webserver, return the endpoint address used to make web
      * service invocations on this endpoint.
      */

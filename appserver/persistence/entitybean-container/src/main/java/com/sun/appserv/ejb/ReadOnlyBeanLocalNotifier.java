@@ -29,14 +29,14 @@ public interface ReadOnlyBeanLocalNotifier {
      *  the next access to the bean, identified by the primary key, will
      *  cause a ejbLoad() to be called on the bean
      *
-     * @param The primary of the local bean to be refreshed
+     * @param primaryKey primary of the local bean to be refreshed
      */
-    public void refresh(Object primaryKey);
+    void refresh(Object primaryKey);
 
     /**
      * This method forces *all* primary keys for a read-only bean
      * to be marked as needing a refresh.
      */
-    public void refreshAll();
+    void refreshAll();
 
 }

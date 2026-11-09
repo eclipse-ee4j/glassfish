@@ -38,7 +38,7 @@ public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
         registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), WebPropertyNode.class, "addWebProperty");
     }
 
-    protected DefaultHelper descriptor = null;
+    protected DefaultHelper descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

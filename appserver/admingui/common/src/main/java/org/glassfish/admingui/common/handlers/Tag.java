@@ -27,10 +27,10 @@ import java.util.List;
 public class Tag implements java.io.Serializable {
 
     private static final long serialVersionUID = 7437635853139196986L;
-    private String tagViewId = null;
-    private String tagName = null;
-    private String displayName = null;
-    private List<String> users = null;
+    private String tagViewId;
+    private String tagName;
+    private String displayName;
+    private List<String> users;
 
     /**
      * <p> Default constructor.</p>

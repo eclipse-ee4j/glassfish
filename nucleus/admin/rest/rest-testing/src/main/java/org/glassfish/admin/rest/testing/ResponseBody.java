@@ -18,7 +18,7 @@ package org.glassfish.admin.rest.testing;
 
 public class ResponseBody {
 
-    private boolean ignoreExtra = false;
+    private boolean ignoreExtra;
 
     private boolean isIgnoreExtra() {
         return this.ignoreExtra;

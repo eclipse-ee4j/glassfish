@@ -51,7 +51,7 @@ public final class InstanceInfo {
     private final int port;
     private final String name;
     private long uptime = -1;
-    private String state = null;
+    private String state;
     private InstanceState.StateType ssState;
     private final String cluster;
     private final Logger logger;
@@ -92,7 +92,7 @@ public final class InstanceInfo {
     }
 
     @Override
-    public final String toString() {
+    public String toString() {
         String cl = "";
 
         if (cluster != null) {
@@ -108,41 +108,41 @@ public final class InstanceInfo {
 
     }
 
-    public final String getDisplayCluster() {
+    public String getDisplayCluster() {
         return cluster == null ? NO_CLUSTER : cluster;
     }
 
-    public final String getCluster() {
+    public String getCluster() {
         return cluster;
     }
 
-    public final String getHost() {
+    public String getHost() {
         return host;
     }
 
-    public final int getPort() {
+    public int getPort() {
         return port;
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final long getUptime() {
+    public long getUptime() {
         if (uptime == -1) {
             getFutureResult();
         }
         return uptime;
     }
 
-    public final int getPid() {
+    public int getPid() {
         if (pid < 0) {
             getFutureResult();
         }
         return pid;
     }
 
-    public final String getDisplayState() {
+    public String getDisplayState() {
         StringBuilder display = new StringBuilder();
         display.append(isRunning() ?
             InstanceState.StateType.RUNNING.getDisplayString() :
@@ -164,14 +164,14 @@ public final class InstanceInfo {
         return display.toString();
     }
 
-    public final String getState() {
+    public String getState() {
         if (state == null) {
             getFutureResult();
         }
         return state;
     }
 
-    public final boolean isRunning() {
+    public boolean isRunning() {
         if (state == null) {
             getFutureResult();
         }
@@ -239,7 +239,7 @@ public final class InstanceInfo {
                         info.getPort(),
                         formatPid(info),
                         info.getDisplayCluster(),
-                        info.getDisplayState()
+                        info.getDisplayState(),
                     });
         }
         return cf.toString();
@@ -250,7 +250,7 @@ public final class InstanceInfo {
         for (InstanceInfo info : infos) {
             cf.addRow(new Object[]{
                         info.getName(),
-                        info.getDisplayState()
+                        info.getDisplayState(),
                     });
         }
         return cf.toString();

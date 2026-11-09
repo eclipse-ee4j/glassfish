@@ -33,7 +33,7 @@ import javax.sql.DataSource;
 import static java.lang.reflect.Modifier.isAbstract;
 
 /**
- * Factory to create jdbc40 connection & datasource
+ * Factory to create jdbc40 connection &amp; datasource
  */
 public class Jdbc40ObjectsFactory extends JdbcObjectsFactory {
 

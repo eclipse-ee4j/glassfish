@@ -39,7 +39,7 @@ public final class FrameSetRenderer extends AbstractRenderer {
     private static final String[] STRING_ATTRIBUTES = {
         "rows",
         "cols",
-        "borderColor"
+        "borderColor",
     };
 
     /**
@@ -47,14 +47,14 @@ public final class FrameSetRenderer extends AbstractRenderer {
      */
     private static final String[] INTEGER_ATTRIBUTES = {
         "border",
-        "frameSpacing"
+        "frameSpacing",
     };
 
     /**
      * The set of {@code boolean} attributes to be rendered.
      */
     private static final String[] BOOLEAN_ATTRIBUTES = {
-        "frameBorder"
+        "frameBorder",
     };
 
     @Override

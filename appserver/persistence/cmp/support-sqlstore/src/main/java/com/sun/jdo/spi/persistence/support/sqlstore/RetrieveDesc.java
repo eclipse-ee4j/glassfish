@@ -46,10 +46,10 @@ public interface RetrieveDesc extends ActionDesc {
     * RetrieveDesc describing fields and constraints for a referenced object.
     * @param projection Specifies, if this is a projection.
     */
-   public void addResult(String name, RetrieveDesc foreignConstraint, boolean projection);
+   void addResult(String name, RetrieveDesc foreignConstraint, boolean projection);
 
     /**
-     * The addResult method can be used to specify <it>global</it>
+     * The addResult method can be used to specify &lt;it&gt;global&lt;/it&gt;
      * query attributes that don't end up in the where clause.
      * Aggregate functions and the distinct op code are examples for
      * those query options. The result type defines the object to be
@@ -67,7 +67,7 @@ public interface RetrieveDesc extends ActionDesc {
      * @param resultType The object type returned by aggregate queries.
      * @see com.sun.jdo.spi.persistence.utility.FieldTypeEnumeration
      */
-    public void addResult(int opCode, int resultType);
+    void addResult(int opCode, int resultType);
 
     /**
      * <P>Adds a constraint on the persistent field specified by
@@ -90,7 +90,7 @@ public interface RetrieveDesc extends ActionDesc {
      * (field1 == "field1Value") OR (field2 == "field2Value")
      * </PRE>
      */
-    public void addConstraint(String name, int operation, Object value);
+    void addConstraint(String name, int operation, Object value);
 
     /**
      * <P>Adds a constraint on the foreign field specified by

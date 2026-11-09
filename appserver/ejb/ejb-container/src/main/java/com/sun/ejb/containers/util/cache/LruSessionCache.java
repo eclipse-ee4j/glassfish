@@ -106,9 +106,9 @@ public class LruSessionCache
     protected Object loadCountLock = new Object();
     protected int loadFromBackupCount;
 
-    protected boolean removeIfIdle = false;
+    protected boolean removeIfIdle;
 
-    private int numVictimsAccessed = 0;
+    private int numVictimsAccessed;
 
     protected SFSBContainerCallback     container;
     protected BackingStore<Serializable, SimpleMetadata> backingStore;
@@ -575,7 +575,7 @@ public class LruSessionCache
 
     /**
      * get an Iterator for the values stored in the cache
-     * @returns an Iterator
+     * @return an Iterator
      */
     public Iterator values() {
         ArrayList valueList = new ArrayList();

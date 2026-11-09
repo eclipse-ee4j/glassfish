@@ -332,7 +332,7 @@ public class JDOMetaDataPropertyImpl extends Support implements ExtendedJDOMetaD
      *
      *********************************************************************/
 
-    private final JDOClass getJDOClass(String classname) throws JDOMetaDataUserException {
+    private JDOClass getJDOClass(String classname) throws JDOMetaDataUserException {
         return this.properties.getJDOClass(classname);
 
     } // JDOMetaDataPropertyImpl.getJDOClass()
@@ -342,7 +342,7 @@ public class JDOMetaDataPropertyImpl extends Support implements ExtendedJDOMetaD
      *
      *********************************************************************/
 
-    private final void readProperties() {
+    private void readProperties() {
         // read all classes
         String[] classnames = this.properties.getKnownClassNames();
         for (int i = classnames.length - 1; i >= 0; i--) {
@@ -362,7 +362,7 @@ public class JDOMetaDataPropertyImpl extends Support implements ExtendedJDOMetaD
      *
      *********************************************************************/
 
-    private final JDOField getJDOField(String classname, String fieldname) {
+    private JDOField getJDOField(String classname, String fieldname) {
         JDOClass clazz = getJDOClass(classname);
         return (clazz != null ? clazz.getField(fieldname) : null);
 

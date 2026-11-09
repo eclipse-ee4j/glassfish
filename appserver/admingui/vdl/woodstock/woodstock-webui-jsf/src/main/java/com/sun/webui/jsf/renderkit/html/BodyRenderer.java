@@ -57,14 +57,14 @@ public final class BodyRenderer extends AbstractRenderer {
         "onKeyDown",
         "onKeyUp",
         "onFocus",
-        "onBlur"
+        "onBlur",
     };
 
     /**
      * The set of integer pass-through attributes to be rendered.
      */
     private static final String[] INT_ATTRIBUTES = {
-        "tabIndex"
+        "tabIndex",
     };
 
     @Override
@@ -109,7 +109,7 @@ public final class BodyRenderer extends AbstractRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Body.class.getName()
+                Body.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

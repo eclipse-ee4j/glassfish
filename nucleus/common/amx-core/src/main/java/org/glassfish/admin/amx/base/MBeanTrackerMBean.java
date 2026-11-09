@@ -32,23 +32,23 @@ import org.glassfish.external.amx.AMXGlassfish;
 @AMXMBeanMetadata(type="mbean-tracker",singleton=true, globalSingleton=true, leaf=true)
 public interface MBeanTrackerMBean
 {
-    public static final ObjectName MBEAN_TRACKER_OBJECT_NAME = JMXUtil.newObjectName(AMXGlassfish.DEFAULT.amxSupportDomain(), "type=mbean-tracker");
+    ObjectName MBEAN_TRACKER_OBJECT_NAME = JMXUtil.newObjectName(AMXGlassfish.DEFAULT.amxSupportDomain(), "type=mbean-tracker");
 
     /**
         Get all children of the specified MBean.  An empty set is returned
         if no children are found.
     */
     @ManagedOperation
-    public Set<ObjectName> getChildrenOf(final ObjectName parent);
+    Set<ObjectName> getChildrenOf(ObjectName parent);
 
     @ManagedOperation
-    public ObjectName getParentOf(final ObjectName child);
+    ObjectName getParentOf(ObjectName child);
 
     @ManagedAttribute
-    public boolean getEmitMBeanStatus();
+    boolean getEmitMBeanStatus();
 
     @ManagedAttribute
-    public void setEmitMBeanStatus(boolean emit);
+    void setEmitMBeanStatus(boolean emit);
 }
 
 

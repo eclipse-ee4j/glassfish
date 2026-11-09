@@ -276,6 +276,6 @@ public abstract class ComponentFactoryBase implements ComponentFactory {
      * Extra information associated with this ComponentFactory.
      * </p>
      */
-    private Serializable _extraInfo = null;
+    private Serializable _extraInfo;
 
 }

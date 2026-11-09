@@ -40,7 +40,7 @@ public class ServerFactory {
     /**
      * The singleton <code>Server</code> instance for this JVM.
      */
-    private static Server server = null;
+    private static Server server;
 
 
     // --------------------------------------------------------- Public Methods

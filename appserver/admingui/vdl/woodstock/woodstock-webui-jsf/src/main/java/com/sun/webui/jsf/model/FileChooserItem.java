@@ -31,17 +31,17 @@ public final class FileChooserItem implements ResourceItem, Serializable {
     /**
      * File item.
      */
-    private File item = null;
+    private File item;
 
     /**
      * Item key.
      */
-    private String itemKey = null;
+    private String itemKey;
 
     /**
      * Item label.
      */
-    private String itemLabel = null;
+    private String itemLabel;
 
     /**
      * Item disabled.

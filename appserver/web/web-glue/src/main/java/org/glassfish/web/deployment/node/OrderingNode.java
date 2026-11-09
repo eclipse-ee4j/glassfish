@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 public class OrderingNode extends DeploymentDescriptorNode {
     public final static XMLElement tag = new XMLElement(WebTagNames.ORDERING);
 
-    protected OrderingDescriptor descriptor = null;
+    protected OrderingDescriptor descriptor;
 
     public OrderingNode() {
         super();
@@ -55,8 +55,8 @@ public class OrderingNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName name for the root element of this xml fragment
+     * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, OrderingDescriptor descriptor) {

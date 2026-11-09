@@ -201,7 +201,7 @@ public class StandardClassLoader
     /**
      * The debugging detail level of this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**
@@ -212,7 +212,7 @@ public class StandardClassLoader
      * delegate to the parent only if the class or resource is not
      * found locally.
      */
-    protected boolean delegate = false;
+    protected boolean delegate;
 
 
     /**
@@ -240,24 +240,24 @@ public class StandardClassLoader
     /**
      * Flag that the security policy has been refreshed from file.
      */
-    private boolean policy_refresh = false;
+    private boolean policy_refresh;
 
     /**
      * The parent class loader.
      */
-    private ClassLoader parent = null;
+    private ClassLoader parent;
 
 
     /**
      * The system class loader.
      */
-    private ClassLoader system = null;
+    private ClassLoader system;
 
 
     /**
      * URL stream handler for additional protocols.
      */
-    protected URLStreamHandlerFactory factory = null;
+    protected URLStreamHandlerFactory factory;
 
 
     // ------------------------------------------------------------- Properties

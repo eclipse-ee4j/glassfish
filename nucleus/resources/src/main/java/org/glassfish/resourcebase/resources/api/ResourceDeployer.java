@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Interface to be implemented by different resource types (eg. jms-resource)
  * to deploy/undeploy a resource to the server's runtime naming context.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to do synchronization if necessary.
  *

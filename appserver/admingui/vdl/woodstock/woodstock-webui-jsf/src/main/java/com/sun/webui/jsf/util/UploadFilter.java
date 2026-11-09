@@ -377,7 +377,7 @@ public final class UploadFilter implements Filter {
             List<DiskFileItem> valueList = fileItemsMap.get(id);
             if (valueList.size() == 1) {
                 parameters.put(id, new String[]{
-                    valueList.get(0).getString()
+                    valueList.get(0).getString(),
                 });
                 if (DEBUG) {
                     log("\t\t " + id + ":"

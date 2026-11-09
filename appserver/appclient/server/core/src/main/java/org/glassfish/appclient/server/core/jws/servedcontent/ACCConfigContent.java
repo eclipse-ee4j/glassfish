@@ -74,7 +74,7 @@ public class ACCConfigContent {
 
         private String currentContent;
 
-        private long lastModified = 0;
+        private long lastModified;
 
         private static PairedFiles newPairedFiles(final File normalFile, final File jwsFile) throws FileNotFoundException, IOException {
             final PairedFiles result = new PairedFiles(normalFile, jwsFile);
@@ -136,11 +136,11 @@ public class ACCConfigContent {
 
     private static class SunACCPairedFiles extends PairedFiles {
 
-        private String configFilePath = null;
+        private String configFilePath;
 
-        private File securityConfigFile = null;
+        private File securityConfigFile;
 
-        private String securityConfigContent = null;
+        private String securityConfigContent;
 
         private static SunACCPairedFiles newSunACCPairedFiles(
                 final File normalFile, final File jwsFile) throws FileNotFoundException, IOException {
@@ -149,7 +149,7 @@ public class ACCConfigContent {
             return result;
         }
 
-        public SunACCPairedFiles(File normalFile, File jwsFile) throws FileNotFoundException, IOException {
+        SunACCPairedFiles(File normalFile, File jwsFile) throws FileNotFoundException, IOException {
             super(normalFile, jwsFile);
         }
 

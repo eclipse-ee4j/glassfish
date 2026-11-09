@@ -45,7 +45,7 @@ public final class TableDataProviderDataModel extends DataModel {
      * The set of {@link FieldKey}s for the currently wrapped
      * {@link TableDataProvider}.
      */
-    private FieldKey[] fieldKeys = null;
+    private FieldKey[] fieldKeys;
 
     /**
      * The row index to which this {@code DataModel} is positioned.
@@ -55,7 +55,7 @@ public final class TableDataProviderDataModel extends DataModel {
     /**
      * The {@link TableDataProvider} that we are wrapping.
      */
-    private TableDataProvider tdp = null;
+    private TableDataProvider tdp;
 
     /**
      * Construct an uninitialized {@link TableDataProviderDataModel}.
@@ -378,7 +378,7 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Create a new instance.
@@ -464,12 +464,12 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Map keys.
          */
-        private Iterator keys = null;
+        private Iterator keys;
 
         /**
          * Create a new instance.
@@ -507,12 +507,12 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Value.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Key.
          */
-        private Object key = null;
+        private Object key;
 
         /**
          * Create a new instance.
@@ -596,7 +596,7 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Create a new instance.
@@ -666,12 +666,12 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Keys.
          */
-        private Iterator keys = null;
+        private Iterator keys;
 
         /**
          * Create a new instance.
@@ -709,7 +709,7 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Create a new instance.
@@ -775,12 +775,12 @@ public final class TableDataProviderDataModel extends DataModel {
         /**
          * Underlying map.
          */
-        private TableDataProviderMap map = null;
+        private TableDataProviderMap map;
 
         /**
          * Keys.
          */
-        private Iterator keys = null;
+        private Iterator keys;
 
         /**
          * Create a new instance.

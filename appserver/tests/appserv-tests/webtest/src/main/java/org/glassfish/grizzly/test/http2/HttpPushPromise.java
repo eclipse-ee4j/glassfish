@@ -27,7 +27,7 @@ import org.glassfish.grizzly.http.HttpResponsePacket;
  */
 public class HttpPushPromise {
     private HttpRequestPacket request;
-    private boolean push = false;
+    private boolean push;
 
     HttpPushPromise(HttpContent httpContent) {
         this.request = ((HttpResponsePacket)httpContent.getHttpHeader()).getRequest();

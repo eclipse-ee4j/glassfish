@@ -48,7 +48,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
  * The latter one refers to the domain directory - this is a directory containing
  * configuration information and deployed applications, etc.
  * If instance root is not set, it defaults to $installRoot/domains/domain1/.
- * <p/>
+ * <p>
  * Depending on the two context, it either builds a new GlassFishRuntime from scratch (i.e., by installing
  * necessary GlassFish bundles) or it just makes a new GlassFishRuntime and registers it in service registry.
  * Former is the case when user installs and starts just this bundle, where as latter is the case when this
@@ -66,7 +66,7 @@ public class GlassFishMainActivator implements BundleActivator {
     private static final String[] DEFAULT_INSTALLATION_LOCATIONS_RELATIVE = new String[]{
         // Order is important.
         "modules/",
-        "modules/autostart/"
+        "modules/autostart/",
     };
 
     private static final String[] DEFAULT_START_LOCATIONS_RELATIVE = new String[]{
@@ -74,7 +74,7 @@ public class GlassFishMainActivator implements BundleActivator {
         // osgi-resource-locator must come ahead of osgi-adapter
         "modules/osgi-resource-locator.jar",
         "modules/osgi-adapter.jar",
-        "modules/autostart/"
+        "modules/autostart/",
     };
 
 

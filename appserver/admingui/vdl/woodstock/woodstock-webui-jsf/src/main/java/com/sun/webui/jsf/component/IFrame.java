@@ -42,7 +42,7 @@ public final class IFrame extends Frame {
     @Property(name = "align",
             displayName = "Align",
             category = "Appearance")
-    private String align = null;
+    private String align;
 
     /**
      * Defines the height of the iframe in pixels or as a percentage of it's
@@ -51,7 +51,7 @@ public final class IFrame extends Frame {
     @Property(name = "height",
             displayName = "Height",
             category = "Appearance")
-    private String height = null;
+    private String height;
 
     /**
      * Set the value of the noResize attribute to "true" when user is not
@@ -62,12 +62,12 @@ public final class IFrame extends Frame {
             category = "Appearance",
             isHidden = true,
             isAttribute = false)
-    private boolean noResize = false;
+    private boolean noResize;
 
     /**
      * noResize set flag.
      */
-    private boolean noResizeSet = false;
+    private boolean noResizeSet;
 
     /**
      * Defines the width of the iframe in pixels or as a percentage of it's
@@ -76,7 +76,7 @@ public final class IFrame extends Frame {
     @Property(name = "width",
             displayName = "Width",
             category = "Appearance")
-    private String width = null;
+    private String width;
 
     /**
      * Construct a new {@code IFrame}.

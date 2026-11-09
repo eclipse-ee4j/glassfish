@@ -26,7 +26,7 @@ public class ConcurrentMethodDescriptor extends Descriptor {
 
     private MethodDescriptor method;
 
-    private Boolean writeLock = null;
+    private Boolean writeLock;
 
     private TimeoutValueDescriptor accessTimeout;
 

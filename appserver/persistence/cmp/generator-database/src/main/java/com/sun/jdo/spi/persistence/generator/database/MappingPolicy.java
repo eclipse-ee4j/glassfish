@@ -316,7 +316,7 @@ public class MappingPolicy implements Cloneable {
      * Global counter for creating unique names in each of the namespaces.
      * <em>Note that a single counter is used across all namespaces.</em>
      */
-    private int counter = 0;
+    private int counter;
 
     /**
      * Map from namespaces to Set of names defined in each namespace.  Used
@@ -328,7 +328,7 @@ public class MappingPolicy implements Cloneable {
      * Indicates whether or not generated table names should include a
      * unique value as part of their names.
      */
-    private boolean uniqueTableName = false;
+    private boolean uniqueTableName;
 
     /**
      * Set of reserved words for a particular policy.

@@ -410,7 +410,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     /**
      * The current application dispatch depth.
      */
-    private int dispatchDepth = 0;
+    private int dispatchDepth;
 
     /**
      * The maximum allowed application dispatch depth.
@@ -953,7 +953,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     /**
      * URI byte to char converter (not recycled).
      */
-    protected B2CConverter URIConverter = null;
+    protected B2CConverter URIConverter;
 
     /**
      * Return the URI converter.
@@ -2688,7 +2688,7 @@ public class Request implements HttpRequest, HttpServletRequest {
      * @return an instance of the <code>HttpUpgradeHandler</code>
      *
      * @exception IOException if an I/O error occurred during the upgrade
-     * @exception ServletException if the given <tt>clazz</tt> fails to be instantiated
+     * @exception ServletException if the given <code>clazz</code> fails to be instantiated
      *
      * @see jakarta.servlet.http.HttpUpgradeHandler
      * @see jakarta.servlet.http.WebConnection
@@ -3483,7 +3483,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     }
 
     /*
-     * Invokes any registered AsyncListener instances at their <tt>onComplete</tt> method
+     * Invokes any registered AsyncListener instances at their <code>onComplete</code> method
      */
     void asyncComplete() {
         asyncStarted.set(false);
@@ -3503,7 +3503,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     }
 
     /*
-     * Invokes all registered AsyncListener instances at their <tt>onTimeout</tt> method.
+     * Invokes all registered AsyncListener instances at their <code>onTimeout</code> method.
      *
      * This method also performs an error dispatch and completes the response if none of the listeners have done so.
      */

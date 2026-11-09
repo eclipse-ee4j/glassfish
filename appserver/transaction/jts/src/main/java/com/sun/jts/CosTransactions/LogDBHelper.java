@@ -46,8 +46,8 @@ class LogDBHelper {
 
     final private String instanceName;
 
-    private DataSource ds = null;
-    private Method getNonTxConnectionMethod = null;
+    private DataSource ds;
+    private Method getNonTxConnectionMethod;
     private static final String insertStatement =
              System.getProperty("com.sun.jts.dblogging.insertquery",
                  "insert into  txn_log_table values ( ? , ? , ? , ? )");

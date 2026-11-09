@@ -101,7 +101,7 @@ public class StandardHost
      /**
       * The broadcaster that sends j2ee notifications.
       */
-     private NotificationBroadcasterSupport broadcaster = null;
+     private NotificationBroadcasterSupport broadcaster;
 
 
     /**
@@ -133,7 +133,7 @@ public class StandardHost
      * The <code>Deployer</code> to whom we delegate application
      * deployment requests.
      */
-    private Deployer deployer = null;
+    private Deployer deployer;
 
 
     /**
@@ -171,19 +171,19 @@ public class StandardHost
     /**
      * Work Directory base for applications.
      */
-    private String workDir = null;
+    private String workDir;
 
 
     /**
      * Attribute value used to turn on/off XML validation
      */
-     private boolean xmlValidation = false;
+     private boolean xmlValidation;
 
 
     /**
      * Attribute value used to turn on/off XML namespace awareness.
      */
-     private boolean xmlNamespaceAware = false;
+     private boolean xmlNamespaceAware;
 
 
     // START SJSAS 6324911
@@ -219,7 +219,7 @@ public class StandardHost
      /**
       * The notification sequence number.
       */
-     private long sequenceNumber = 0;
+     private long sequenceNumber;
 
 
     // ------------------------------------------------------------- Properties
@@ -478,7 +478,7 @@ public class StandardHost
     }
 
     /**
-     * Get the server.xml <host> attribute's xmlValidation.
+     * Get the server.xml &lt;host&gt; attribute's xmlValidation.
      * @return true if validation is enabled.
      *
      */
@@ -487,7 +487,7 @@ public class StandardHost
     }
 
     /**
-     * Get the server.xml <host> attribute's xmlNamespaceAware.
+     * Get the server.xml &lt;host&gt; attribute's xmlNamespaceAware.
      * @return true if namespace awareness is enabled.
      *
      */

@@ -114,7 +114,7 @@ final class RegistrationSupport {
 
     private final Logger mLogger = AMXEELoggerInfo.getLogger();
 
-    public RegistrationSupport(final J2EEServer server) {
+    RegistrationSupport(final J2EEServer server) {
         mJ2EEServer = server;
         mMBeanServer = (MBeanServer) server.extra().mbeanServerConnection();
 
@@ -592,7 +592,7 @@ final class RegistrationSupport {
      */
     private final class RefListener implements NotificationListener
     {
-        public RefListener()
+        RefListener()
         {
         }
 

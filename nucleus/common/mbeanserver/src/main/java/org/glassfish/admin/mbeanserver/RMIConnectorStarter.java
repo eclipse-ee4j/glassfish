@@ -93,7 +93,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
     private final MyRMIServerSocketFactory mServerSocketFactory;
     private final SecureRMIServerSocketFactory sslServerSocketFactory;
     private final SslRMIClientSocketFactory sslCsf;
-    private String masterPassword = null;
+    private String masterPassword;
 
     private final static Logger JMX_LOGGER = Util.JMX_LOGGER;
 
@@ -112,7 +112,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
     @LogMessageInfo(message = "MyRMIJRMPServerImpl: makeClient on address = {0}")
     private final static String MAKE_CLIENT = Util.LOG_PREFIX + "00013";
 
-    public RMIConnectorStarter(
+    RMIConnectorStarter(
             final MBeanServer mbeanServer,
             final String address,
             final int port,
@@ -431,7 +431,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
 
         private final InetAddress mAddress;
 
-        public MyRMIServerSocketFactory(final InetAddress addr) {
+        MyRMIServerSocketFactory(final InetAddress addr) {
             mAddress = addr;
         }
 
@@ -462,7 +462,7 @@ final class RMIConnectorStarter extends ConnectorStarter {
 
         private final String mBindToAddr;
 
-        public MyRMIJRMPServerImpl(final int port, final Map<String, ?> env,
+        MyRMIJRMPServerImpl(final int port, final Map<String, ?> env,
                                    final RMIServerSocketFactory serverSocketFactory,
                                    final String bindToAddr) throws IOException {
             super(port,

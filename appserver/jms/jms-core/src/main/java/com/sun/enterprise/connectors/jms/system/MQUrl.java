@@ -22,11 +22,11 @@ package com.sun.enterprise.connectors.jms.system;
  * @author Binod P.G
  */
 public class MQUrl {
-    private String host = null;
-    private String port = null;
+    private String host;
+    private String port;
     private String scheme = "mq";
     private String service = "";
-    private String id = null;
+    private String id;
 
     /**
      * Constructs the MQUrl with the id. Id is actually

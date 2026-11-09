@@ -50,7 +50,7 @@ import static com.sun.appserv.connectors.internal.api.ConnectorsUtil.getValidSuf
  * Handles Jdbc resource events in the server instance. When user adds a jdbc
  * resource, the admin instance emits resource event. The jdbc resource events
  * are propagated to this object.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
  *

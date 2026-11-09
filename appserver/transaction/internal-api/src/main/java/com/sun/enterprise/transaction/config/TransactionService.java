@@ -50,7 +50,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *         {@link String }
      */
     @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getAutomaticRecovery();
+    String getAutomaticRecovery();
 
     /**
      * Sets the value of the automaticRecovery property.
@@ -58,7 +58,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setAutomaticRecovery(String value) throws PropertyVetoException;
+    void setAutomaticRecovery(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the timeoutInSeconds property.
@@ -71,7 +71,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *         {@link String }
      */
     @Attribute (defaultValue="0",dataType=Integer.class)
-    public String getTimeoutInSeconds();
+    String getTimeoutInSeconds();
 
     /**
      * Sets the value of the timeoutInSeconds property.
@@ -79,7 +79,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setTimeoutInSeconds(String value) throws PropertyVetoException;
+    void setTimeoutInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the txLogDir property.
@@ -87,14 +87,14 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * Transaction service creates a sub directory 'tx' under tx-log-dir to
      * store the transaction logs. The default value of the tx-log-dir is
      * $INSTANCE-ROOT/logs. If this attribute is not explicitly specified in the
-     * <transaction-service> element, 'tx' sub directory will be created under
-     * the path specified in log-root attribute of <domain> element.
+     * &lt;transaction-service> element, 'tx' sub directory will be created under
+     * the path specified in log-root attribute of &lt;domain&gt; element.
      *
      * @return possible object is
      *         {@link String }
      */
     @Attribute
-    public String getTxLogDir();
+    String getTxLogDir();
 
     /**
      * Sets the value of the txLogDir property.
@@ -102,7 +102,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setTxLogDir(String value) throws PropertyVetoException;
+    void setTxLogDir(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the heuristicDecision property.
@@ -114,7 +114,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *         {@link String }
      */
     @Attribute (defaultValue="rollback")
-    public String getHeuristicDecision();
+    String getHeuristicDecision();
 
     /**
      * Sets the value of the heuristicDecision property.
@@ -122,7 +122,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setHeuristicDecision(String value) throws PropertyVetoException;
+    void setHeuristicDecision(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the retryTimeoutInSeconds property.
@@ -143,7 +143,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *         {@link String }
      */
     @Attribute (defaultValue="600",dataType=Integer.class)
-    public String getRetryTimeoutInSeconds();
+    String getRetryTimeoutInSeconds();
 
     /**
      * Sets the value of the retryTimeoutInSeconds property.
@@ -151,7 +151,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setRetryTimeoutInSeconds(String value) throws PropertyVetoException;
+    void setRetryTimeoutInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the keypointInterval property.
@@ -169,7 +169,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      *         {@link String }
      */
     @Attribute (defaultValue="65536")
-    public String getKeypointInterval();
+    String getKeypointInterval();
 
     /**
      * Sets the value of the keypointInterval property.
@@ -177,7 +177,7 @@ public interface TransactionService extends ConfigBeanProxy, PropertyBag, Config
      * @param value allowed object is
      *              {@link String }
      */
-    public void setKeypointInterval(String value) throws PropertyVetoException;
+    void setKeypointInterval(String value) throws PropertyVetoException;
 
 
 

@@ -288,7 +288,7 @@ public final class Scheduler extends WebuiInput
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.DateFormatPatternsEditor",
             shortDescription = "The date format pattern to use (e.g., {@code yyyy-MM-dd}).")
             //CHECKSTYLE:ON
-    private String dateFormatPattern = null;
+    private String dateFormatPattern;
 
     /**
      * A message below the text field for the date, indicating the string format
@@ -316,7 +316,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String dateFormatPatternHelp = null;
+    private String dateFormatPatternHelp;
 
         /**
      * This text replaces the "Start Date" label.
@@ -327,7 +327,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String dateLabel = null;
+    private String dateLabel;
 
     /**
      * Standard HTML attribute which determines whether the web application user
@@ -337,12 +337,12 @@ public final class Scheduler extends WebuiInput
             displayName = "Disabled",
             isHidden = true,
             isAttribute = false)
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Flag indicating that an input field for the end time should be shown. The
@@ -351,12 +351,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "endTime",
             displayName = "Show End Time",
             category = "Appearance")
-    private boolean endTime = false;
+    private boolean endTime;
 
     /**
      * endTime set flag.
      */
-    private boolean endTimeSet = false;
+    private boolean endTimeSet;
 
     /**
      * This text replaces the "End Time" label.
@@ -367,7 +367,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String endTimeLabel = null;
+    private String endTimeLabel;
 
     /**
      * Flag indicating that a control for setting a limit for repeating events
@@ -376,12 +376,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "limitRepeating",
             displayName = "Limit Repeating Events",
             category = "Appearance")
-    private boolean limitRepeating = false;
+    private boolean limitRepeating;
 
     /**
      * limit repeating set flag.
      */
-    private boolean limitRepeatingSet = false;
+    private boolean limitRepeatingSet;
 
     /**
      * A {@code java.util.Date} object representing the last selectable day. The
@@ -401,7 +401,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private java.util.Date maxDate = null;
+    private java.util.Date maxDate;
 
     /**
      * A {@code java.util.Date} object representing the first selectable day.
@@ -420,7 +420,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private java.util.Date minDate = null;
+    private java.util.Date minDate;
 
     /**
      * Flag indicating that the "Preview in Browser" button should be displayed
@@ -429,12 +429,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "previewButton",
             displayName = "Preview Button",
             category = "Appearance")
-    private boolean previewButton = false;
+    private boolean previewButton;
 
     /**
      * previewButton set flag.
      */
-    private boolean previewButtonSet = false;
+    private boolean previewButtonSet;
 
     /**
      * If this attribute is set to true, the value of the component is rendered
@@ -443,12 +443,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "readOnly",
             displayName = "Read-only",
             category = "Behavior")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * Override the items that appear on the repeat interval menu. The value
@@ -468,7 +468,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.RepeatIntervalEditor")
             //CHECKSTYLE:ON
-    private Object repeatIntervalItems = null;
+    private Object repeatIntervalItems;
 
     /**
      * Override the default value of the label for the repeat interval menu.
@@ -479,7 +479,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String repeatIntervalLabel = null;
+    private String repeatIntervalLabel;
 
     /**
      * Override the default value of the label for the repeat limit menu.
@@ -490,7 +490,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String repeatLimitLabel = null;
+    private String repeatLimitLabel;
 
     /**
      * Override the items that appear on the repeat limit unit menu. The value
@@ -506,7 +506,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.RepeatUnitEditor")
             //CHECKSTYLE:ON
-    private Object repeatUnitItems = null;
+    private Object repeatUnitItems;
 
     /**
      * Flag indicating that a control for scheduling a repeated event should be
@@ -515,12 +515,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "repeating",
             displayName = "Repeating Events",
             category = "Appearance")
-    private boolean repeating = false;
+    private boolean repeating;
 
     /**
      * repeating set flag.
      */
-    private boolean repeatingSet = false;
+    private boolean repeatingSet;
 
     /**
      * Flag indicating that the user must enter a value for this Scheduler.
@@ -530,12 +530,12 @@ public final class Scheduler extends WebuiInput
             displayName = "Required",
             isHidden = true,
             isAttribute = false)
-    private boolean required = false;
+    private boolean required;
 
     /**
      * required set flag.
      */
-    private boolean requiredSet = false;
+    private boolean requiredSet;
 
     /**
      * Flag indicating if the "* indicates required field" message should be
@@ -544,12 +544,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "requiredLegend",
             displayName = "Required Legend",
             category = "Appearance")
-    private boolean requiredLegend = false;
+    private boolean requiredLegend;
 
     /**
      * requireLegend set flag.
      */
-    private boolean requiredLegendSet = false;
+    private boolean requiredLegendSet;
 
     /**
      * Flag indicating that an input field for the start time should be shown.
@@ -558,12 +558,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "startTime",
             displayName = "Show Start Time",
             category = "Appearance")
-    private boolean startTime = false;
+    private boolean startTime;
 
     /**
      * startTime set flag.
      */
-    private boolean startTimeSet = false;
+    private boolean startTimeSet;
 
     /**
      * This text replaces the "Start Time" label.
@@ -574,7 +574,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String startTimeLabel = null;
+    private String startTimeLabel;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -584,7 +584,7 @@ public final class Scheduler extends WebuiInput
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -596,7 +596,7 @@ public final class Scheduler extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -615,7 +615,7 @@ public final class Scheduler extends WebuiInput
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The {@code java.util.TimeZone} used with this component. Unless set, the
@@ -625,7 +625,7 @@ public final class Scheduler extends WebuiInput
     @Property(name = "timeZone",
             displayName = "Time Zone",
             isHidden = true)
-    private java.util.TimeZone timeZone = null;
+    private java.util.TimeZone timeZone;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -639,12 +639,12 @@ public final class Scheduler extends WebuiInput
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.
@@ -1292,7 +1292,7 @@ public final class Scheduler extends WebuiInput
      * If the developer has not provided repeat interval items, return an
      * {@code Options} array of {@code RepeatIntervalOption} elements
      * representing the following intervals.
-     * <p>
+     *
      * <ul>
      * <li>one time</li>
      * <li>hourly</li>
@@ -1300,7 +1300,7 @@ public final class Scheduler extends WebuiInput
      * <li>weekly</li>
      * <li>monthly</li>
      * </ul>
-     * </p>
+     *
      * @return Object
      */
     @SuppressWarnings("checkstyle:magicnumber")
@@ -1332,14 +1332,14 @@ public final class Scheduler extends WebuiInput
      * If the developer has not provided repeat unit items, return an
      * {@code Options} array of {@code RepeatUnitOption} elements
      * representing the following units.
-     * <p>
+     *
      * <ul>
      * <li>hours</li>
      * <li>days</li>
      * <li>weeks</li>
      * <li>months</li>
      * </ul>
-     * </p>
+     *
      * @return Object
      */
     @SuppressWarnings("checkstyle:magicnumber")
@@ -1382,8 +1382,7 @@ public final class Scheduler extends WebuiInput
     /**
      * Specialized decode behavior on top of that provided by the superclass. In
      * addition to the standard {@code processDecodes} behavior inherited
-     * from {@link
-     * UIComponentBase}, calls {@code validate()} if the the
+     * from {@code UIComponentBase}, calls {@code validate()} if the the
      * {@code immediate} property is true; if the component is invalid
      * afterwards or a {@code RuntimeException} is thrown, calls
      * {@link FacesContext#renderResponse}.
@@ -1455,7 +1454,7 @@ public final class Scheduler extends WebuiInput
 
     /**
      * Perform the following algorithm to validate the local value of this
-     * {@link UIInput}.<ul>
+     * {@code UIInput}.<ul>
      * <li>Retrieve the submitted value with {@code getSubmittedValue()}.If this
      * returns null, exit without further processing. (This indicates that no
      * value was submitted for this component.)</li>
@@ -1470,12 +1469,12 @@ public final class Scheduler extends WebuiInput
      * {@code getValue()}), store the new local value using {@code setValue()},
      * and reset the submitted value to null. If the local value is different
      * from the previous value of this component, fire a
-     * {@link ValueChangeEvent} to be broadcast to all interested
+     * {@code ValueChangeEvent} to be broadcast to all interested
      * listeners.</li>
      * </ul>
      *
      * <p>
-     * Application components implementing {@link UIInput} that wish to perform
+     * Application components implementing {@code UIInput} that wish to perform
      * validation with logic embedded in the component should perform their own
      * correctness checks, and then call the {@code super.validate()} method to
      * perform the standard processing described above.</p>

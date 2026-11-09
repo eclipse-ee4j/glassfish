@@ -220,8 +220,10 @@ public interface PersistenceManager
      * make those properties available to applications (for troubleshooting).
      *
      * <P>Standard properties include:
+     * <ul>
      * <li>VendorName</li>
      * <li>VersionNumber</li>
+     * </ul>
      * @return the Properties of this PersistenceManager
      */
     Properties getProperties();

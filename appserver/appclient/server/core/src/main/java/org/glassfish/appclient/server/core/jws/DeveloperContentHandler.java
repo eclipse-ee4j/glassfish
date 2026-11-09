@@ -72,8 +72,8 @@ public class DeveloperContentHandler {
     private TokenHelper tHelper;
     private URI appRootURI;
 
-    private LSSerializer lsSerializer = null;
-    private LSOutput lsOutput = null;
+    private LSSerializer lsSerializer;
+    private LSOutput lsOutput;
 
     private static DocumentBuilderFactory dbf = documentBuilderFactory();
     private static DocumentBuilder db = documentBuilder();

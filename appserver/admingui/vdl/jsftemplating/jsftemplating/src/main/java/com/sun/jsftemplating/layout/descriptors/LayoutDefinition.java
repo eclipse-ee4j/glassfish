@@ -116,7 +116,7 @@ public class LayoutDefinition extends LayoutElementBase {
     /**
      * <p>
      * This method adds a {@link Resource}. These resources should be added to the request scope when this component is
-     * used. This is mainly used for <code>ResourceBundle<code>s (at this time).</p>
+     * used. This is mainly used for <code>ResourceBundle</code>s (at this time).</p>
      *
      *    @param    res The {@link Resource} to associate with the
      *            <code>LayoutDefinition</code>.
@@ -416,7 +416,7 @@ public class LayoutDefinition extends LayoutElementBase {
      * Map of types. This information is needed to instantiate UIComponents.
      * </p>
      */
-    private Map<String, ComponentType> _types = null;
+    private Map<String, ComponentType> _types;
 
     /**
      * <p>

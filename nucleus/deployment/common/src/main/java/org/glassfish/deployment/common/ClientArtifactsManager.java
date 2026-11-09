@@ -88,7 +88,7 @@ public class ClientArtifactsManager implements Closeable {
             action = "This is an internal server error.  Please file a bug report.")
     private static final String CLIENT_ARTIFACT_COLLISION = "NCLS-DEPLOYMENT-00027";
 
-    private boolean isArtifactSetConsumed = false;
+    private boolean isArtifactSetConsumed;
 
     private static final String CLIENT_ARTIFACTS_KEY = "ClientArtifacts";
 

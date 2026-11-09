@@ -24,7 +24,7 @@ import jakarta.faces.context.FacesContext;
 import java.util.Objects;
 
 /**
- * {@inheritDoc}
+ * A {@link StateManagerWrapper} used by JSFTemplating.
  */
 public class LayoutStateManager extends StateManagerWrapper {
 

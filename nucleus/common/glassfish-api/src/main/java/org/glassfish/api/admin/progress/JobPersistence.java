@@ -32,7 +32,6 @@ public interface JobPersistence {
      * If it is already containers, throws runtime exception.
      *
      * @param job
-     * @param jobsFile
      * @return new root element
      */
     JobInfos add(JobInfo job);
@@ -42,7 +41,6 @@ public interface JobPersistence {
      * If it is not found, has no effect.
      *
      * @param job
-     * @param jobsFile
      * @return new root element
      */
     JobInfos remove(JobInfo job);

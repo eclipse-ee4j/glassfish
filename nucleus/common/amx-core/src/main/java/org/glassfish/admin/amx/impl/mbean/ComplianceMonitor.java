@@ -43,10 +43,10 @@ Validates AMX MBeans as they are registered.  Problems are emitted as WARNING to
  */
 public final class ComplianceMonitor implements NotificationListener {
 
-    private static ComplianceMonitor INSTANCE = null;
+    private static ComplianceMonitor INSTANCE;
     private final DomainRoot mDomainRoot;
     private final MBeanServer mServer;
-    private volatile boolean mStarted = false;
+    private volatile boolean mStarted;
     private volatile String mValidationLevel;
     private volatile boolean mUnregisterNonCompliant;
     private volatile boolean mLogInaccessibleAttributes;

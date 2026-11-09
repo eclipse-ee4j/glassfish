@@ -80,7 +80,6 @@ public class JdbcConnPoolProbeProvider extends ConnectionPoolProbeProvider {
      * <code>poolName</code>has got a decrement free connections size event.
      *
      * @param poolName for which decrement numConnFree is got
-     * @param steadyPoolSize
      */
     @Probe(name = "decrementNumConnFreeEvent")
     @Override

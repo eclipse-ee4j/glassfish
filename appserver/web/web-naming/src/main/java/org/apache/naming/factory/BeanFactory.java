@@ -82,7 +82,7 @@ import org.apache.naming.ResourceRef;
  * &lt;/ResourceParams&gt;
  * </pre>
  *
- * @author <a href="mailto:aner at ncstech.com">Aner Perez</a>
+ * @author <a href="mailto:aner@ncstech.com">Aner Perez</a>
  */
 public class BeanFactory
     implements ObjectFactory {

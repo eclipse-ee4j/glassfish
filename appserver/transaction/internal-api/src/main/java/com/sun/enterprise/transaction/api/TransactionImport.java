@@ -35,7 +35,7 @@ public interface TransactionImport {
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void recreate(Xid xid, long timeout);
+    void recreate(Xid xid, long timeout);
 
     /**
      * Release a transaction. This call causes the calling thread to be
@@ -46,7 +46,7 @@ public interface TransactionImport {
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void release(Xid xid);
+    void release(Xid xid);
 
     /**
      * Provides a handle to a <code>XATerminator</code> instance.
@@ -55,7 +55,7 @@ public interface TransactionImport {
      *
      * @return a <code>XATerminator</code> instance.
      */
-    public XATerminator getXATerminator();
+    XATerminator getXATerminator();
 
     /**
      * Return duration before current transaction would timeout.
@@ -71,12 +71,12 @@ public interface TransactionImport {
      * @exception SystemException Thrown if the transaction manager
      *    encounters an unexpected error condition.
      */
-    public int getTransactionRemainingTimeout() throws SystemException;
+    int getTransactionRemainingTimeout() throws SystemException;
 
     /**
      * Allows an arbitrary XAResource to register for recovery
      *
      * @param xaResource XAResource to register for recovery
      */
-    public void registerRecoveryResourceHandler(XAResource xaResource);
+    void registerRecoveryResourceHandler(XAResource xaResource);
 }

@@ -25,13 +25,13 @@ import org.glassfish.embeddable.web.config.VirtualServerConfig;
 /**
  * Representation of a virtual server.
  *
- * <p>Instances of <tt>VirtualServer</tt> may be in one of two states:
+ * <p>Instances of <code>VirtualServer</code> may be in one of two states:
  * <i>stopped</i> or <i>started</i>. Any requests mapped to a
- * <tt>VirtualServer</tt> that was stopped will result in a response with
+ * <code>VirtualServer</code> that was stopped will result in a response with
  * a status code equal to
  * jakarta.servlet.http.HttpServletResponse#SC_NOT_FOUND.
  *
- * <p/>See {@link WebContainer} for usage example.
+ * <p>See {@link WebContainer} for usage example.
  *
  * @author Rajiv Mordani
  * @author Jan Luehe
@@ -40,120 +40,120 @@ public interface VirtualServer {
 
 
     /**
-     * Sets the id of this <tt>VirtualServer</tt>.
+     * Sets the id of this <code>VirtualServer</code>.
      *
-     * @param ID id of this <tt>VirtualServer</tt>.
+     * @param ID id of this <code>VirtualServer</code>.
      */
-    public void setID(String ID);
+    void setID(String ID);
 
     /**
-     * Gets the id of this <tt>VirtualServer</tt>.
+     * Gets the id of this <code>VirtualServer</code>.
      *
-     * @return the id of this <tt>VirtualServer</tt>
+     * @return the id of this <code>VirtualServer</code>
      */
-    public String getID();
+    String getID();
 
     /**
-     * Sets the docroot of this <tt>VirtualServer</tt>.
+     * Sets the docroot of this <code>VirtualServer</code>.
      *
-     * @param docRoot the docroot of this <tt>VirtualServer</tt>.
+     * @param docRoot the docroot of this <code>VirtualServer</code>.
      */
-    public void setDocRoot(File docRoot);
+    void setDocRoot(File docRoot);
 
     /**
-     * Gets the docroot of this <tt>VirtualServer</tt>.
+     * Gets the docroot of this <code>VirtualServer</code>.
      *
-     * @return the docroot of this <tt>VirtualServer</tt>
+     * @return the docroot of this <code>VirtualServer</code>
      */
-    public File getDocRoot();
+    File getDocRoot();
 
     /**
-     * Gets the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * Gets the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      *
-     * @return the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * @return the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      */
-    public Collection<WebListener> getWebListeners();
+    Collection<WebListener> getWebListeners();
 
     /**
-     * Adds the given <tt>Valve</tt> to this <tt>VirtualServer</tt>
+     * Adds the given <code>Valve</code> to this <code>VirtualServer</code>
      *
-     * @param valve the <tt>Valve</tt> to be added
+     * @param valve the <code>Valve</code> to be added
      */
     //public void addValve(Valve valve);
 
     /**
-     * Registers the given <tt>Context</tt> with this <tt>VirtualServer</tt>
+     * Registers the given <code>Context</code> with this <code>VirtualServer</code>
      * at the given context root.
      *
-     * <p>If this <tt>VirtualServer</tt> has already been started, the
-     * given <tt>context</tt> will be started as well.
+     * <p>If this <code>VirtualServer</code> has already been started, the
+     * given <code>context</code> will be started as well.
      *
-     * @param context the <tt>Context</tt> to register
+     * @param context the <code>Context</code> to register
      * @param contextRoot the context root at which to register
      *
-     * @throws ConfigException if a <tt>Context</tt> already exists
-     * at the given context root on this <tt>VirtualServer</tt>
-     * @throws GlassFishException if the given <tt>context</tt> fails
+     * @throws ConfigException if a <code>Context</code> already exists
+     * at the given context root on this <code>VirtualServer</code>
+     * @throws GlassFishException if the given <code>context</code> fails
      * to be started
      */
-    public void addContext(Context context, String contextRoot)
+    void addContext(Context context, String contextRoot)
         throws ConfigException, GlassFishException;
 
     /**
-     * Stops the given <tt>context</tt> and removes it from this
-     * <tt>VirtualServer</tt>.
+     * Stops the given <code>context</code> and removes it from this
+     * <code>VirtualServer</code>.
      *
-     * @param context the <tt>Context</tt> to be stopped and removed
+     * @param context the <code>Context</code> to be stopped and removed
      *
      * @throws GlassFishException if an error occurs during the stopping
-     * or removal of the given <tt>context</tt>
+     * or removal of the given <code>context</code>
      */
-    public void removeContext(Context context)
+    void removeContext(Context context)
             throws GlassFishException;
 
     /**
-     * Finds the <tt>Context</tt> registered at the given context root.
+     * Finds the <code>Context</code> registered at the given context root.
      *
-     * @param contextRoot the context root whose <tt>Context</tt> to get
+     * @param contextRoot the context root whose <code>Context</code> to get
      *
-     * @return the <tt>Context</tt> registered at the given context root,
-     * or <tt>null</tt> if no <tt>Context</tt> exists at the given context
+     * @return the <code>Context</code> registered at the given context root,
+     * or <code>null</code> if no <code>Context</code> exists at the given context
      * root
      */
-    public Context getContext(String contextRoot);
+    Context getContext(String contextRoot);
 
     /**
-     * Gets the collection of <tt>Context</tt> instances registered with
-     * this <tt>VirtualServer</tt>.
+     * Gets the collection of <code>Context</code> instances registered with
+     * this <code>VirtualServer</code>.
      *
-     * @return the (possibly empty) collection of <tt>Context</tt>
-     * instances registered with this <tt>VirtualServer</tt>
+     * @return the (possibly empty) collection of <code>Context</code>
+     * instances registered with this <code>VirtualServer</code>
      */
-    public Collection<Context> getContexts();
+    Collection<Context> getContexts();
 
     /**
-     * Reconfigures this <tt>VirtualServer</tt> with the given
+     * Reconfigures this <code>VirtualServer</code> with the given
      * configuration.
      *
      * <p>In order for the given configuration to take effect, this
-     * <tt>VirtualServer</tt> may be stopped and restarted.
+     * <code>VirtualServer</code> may be stopped and restarted.
      *
      * @param config the configuration to be applied
      *
      * @throws ConfigException if the configuration requires a restart,
-     * and this <tt>VirtualServer</tt> fails to be restarted
+     * and this <code>VirtualServer</code> fails to be restarted
      */
-    public void setConfig(VirtualServerConfig config)
+    void setConfig(VirtualServerConfig config)
         throws ConfigException;
 
     /**
-     * Gets the current configuration of this <tt>VirtualServer</tt>.
+     * Gets the current configuration of this <code>VirtualServer</code>.
      *
-     * @return the current configuration of this <tt>VirtualServer</tt>,
-     * or <tt>null</tt> if no special configuration was ever applied to this
-     * <tt>VirtualServer</tt>
+     * @return the current configuration of this <code>VirtualServer</code>,
+     * or <code>null</code> if no special configuration was ever applied to this
+     * <code>VirtualServer</code>
      */
-    public VirtualServerConfig getConfig();
+    VirtualServerConfig getConfig();
 }

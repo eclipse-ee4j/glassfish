@@ -263,7 +263,7 @@ public class UtilHandlers {
      * This method creates a <code>Map</code> (<code>HashMap</code>). The output value from this handler is "result".
      * </p>
      *
-     * @param context The <code>HandlerContext<code>
+     * @param context The <code>HandlerContext</code>
      */
     @Handler(id = "createMap", output = { @HandlerOutput(name = "result", type = Map.class) })
     public static void createMap(HandlerContext context) {
@@ -277,7 +277,7 @@ public class UtilHandlers {
      * <code>key</code> and <code>value</code> to add.
      * </p>
      *
-     * @param context The <code>HandlerContext<code>
+     * @param context The <code>HandlerContext</code>
      */
     @Handler(id = "mapPut", input = { @HandlerInput(name = "map", type = Map.class, required = true),
             @HandlerInput(name = "key", type = Object.class, required = true),

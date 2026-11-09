@@ -36,7 +36,7 @@ import org.glassfish.gmbal.ManagedObject;
 public class JVMGCStatsProvider {
 
     private List<GarbageCollectorMXBean> gcBeanList = ManagementFactory.getGarbageCollectorMXBeans();
-    private String gcName = null;
+    private String gcName;
 
     private CountStatisticImpl collectionCount = new CountStatisticImpl("CollectionCount", CountStatisticImpl.UNIT_COUNT,
             "Total number of collections that have occurred");

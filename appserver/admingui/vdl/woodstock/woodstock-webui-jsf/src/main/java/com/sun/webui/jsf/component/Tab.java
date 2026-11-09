@@ -54,7 +54,7 @@ public final class Tab extends Hyperlink implements NamingContainer {
      * selected.
      */
     @Property(isHidden = true)
-    private String selectedChildId = null;
+    private String selectedChildId;
 
     /**
      * Create a new instance of Tab.

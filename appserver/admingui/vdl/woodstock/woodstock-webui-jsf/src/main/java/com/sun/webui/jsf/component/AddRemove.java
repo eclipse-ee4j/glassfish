@@ -339,17 +339,17 @@ public class AddRemove extends ListSelector implements ListManager {
     /**
      * The available items.
      */
-    private TreeMap<String, ListItem> availableItems = null;
+    private TreeMap<String, ListItem> availableItems;
 
     /**
      * The selected items.
      */
-    private TreeMap<String, ListItem> selectedItems = null;
+    private TreeMap<String, ListItem> selectedItems;
 
     /**
      * Text collator.
      */
-    private Collator collator = null;
+    private Collator collator;
 
     /**
      * All values.
@@ -376,7 +376,7 @@ public class AddRemove extends ListSelector implements ListManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String availableItemsLabel = null;
+    private String availableItemsLabel;
 
     /**
      * If duplicateSelections is set to true, items in the available list are
@@ -388,12 +388,12 @@ public class AddRemove extends ListSelector implements ListManager {
     @Property(name = "duplicateSelections",
             displayName = "Allow Duplicate Selections",
             category = "Data")
-    private boolean duplicateSelections = false;
+    private boolean duplicateSelections;
 
     /**
      * DuplicateSelections set flag.
      */
-    private boolean duplicateSelectionsSet = false;
+    private boolean duplicateSelectionsSet;
 
     /**
      * Show the Move Up and Move Down buttons.
@@ -401,12 +401,12 @@ public class AddRemove extends ListSelector implements ListManager {
     @Property(name = "moveButtons",
             displayName = "Move Buttons",
             category = "Appearance")
-    private boolean moveButtons = false;
+    private boolean moveButtons;
 
     /**
      * moveButtons set flag.
      */
-    private boolean moveButtonsSet = false;
+    private boolean moveButtonsSet;
 
     /**
      * Show the Add All and Remove All buttons.
@@ -414,12 +414,12 @@ public class AddRemove extends ListSelector implements ListManager {
     @Property(name = "selectAll",
             displayName = "Select All Buttons",
             category = "Appearance")
-    private boolean selectAll = false;
+    private boolean selectAll;
 
     /**
      * selectAll set flag.
      */
-    private boolean selectAllSet = false;
+    private boolean selectAllSet;
 
     /**
      * The label for the list of selected items.
@@ -430,7 +430,7 @@ public class AddRemove extends ListSelector implements ListManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String selectedItemsLabel = null;
+    private String selectedItemsLabel;
 
     /**
      * If sorted is set to true, the items on the available list are shown in
@@ -441,12 +441,12 @@ public class AddRemove extends ListSelector implements ListManager {
     @Property(name = "sorted",
             displayName = "Sorted",
             category = "Data")
-    private boolean sorted = false;
+    private boolean sorted;
 
     /**
      * sorted set flag.
      */
-    private boolean sortedSet = false;
+    private boolean sortedSet;
 
     /**
      * Use the vertical layout instead of the default horizontal layout. The
@@ -456,12 +456,12 @@ public class AddRemove extends ListSelector implements ListManager {
     @Property(name = "vertical",
             displayName = "Vertical layout",
             category = "Appearance")
-    private boolean vertical = false;
+    private boolean vertical;
 
     /**
      * vertical set flag.
      */
-    private boolean verticalSet = false;
+    private boolean verticalSet;
 
     /**
      * Constructor for the AddRemove component.

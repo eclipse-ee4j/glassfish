@@ -24,7 +24,7 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-<em>Note: this API is highly volatile and subject to change<em>.
+<em>Note: this API is highly volatile and subject to change</em>.
 <p>
 Class representing a change to a configuration attribute.
 A PropertyChangeEvent is unsuitable, as its 'source' is transient.
@@ -49,7 +49,7 @@ public final class UnprocessedConfigChange
     {
         return new Object[]
                 {
-                    mName, mOldValue, mNewValue, mSource, mReason
+                    mName, mOldValue, mNewValue, mSource, mReason,
                 };
     }
 

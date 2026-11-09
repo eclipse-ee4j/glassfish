@@ -30,13 +30,13 @@ public interface DomainsManager {
      *
      * @return flags toggling SE/EE specific behavior.
      */
-    public BitSet getDomainFlags();
+    BitSet getDomainFlags();
 
     /**
      * SE/EE supports NSS as its native SSL database. NSS is capable of supporting multiple slots (e.g. for different SSL
      * hardware devices, smartcards, etc). Each device needs a specific password which the CLI must prompt for.
      */
-    public String[] getExtraPasswordOptions(DomainConfig config) throws DomainException;
+    String[] getExtraPasswordOptions(DomainConfig config) throws DomainException;
 
     /**
      * Deletes a domain identified by the given name. (Should we stop the DAS and instances administered by this domain
@@ -45,10 +45,11 @@ public interface DomainsManager {
      * @param domainConfig
      * @throws DomainException This exception is thrown if
      * <ul>
-     * - the domain doesnot exist. - an exception occurred while deleting the domain.
+     * <li>the domain doesnot exist.</li>
+     * <li>an exception occurred while deleting the domain.</li>
      * </ul>
      */
-    public void deleteDomain(DomainConfig domainConfig) throws DomainException;
+    void deleteDomain(DomainConfig domainConfig) throws DomainException;
 
     /**
      * Starts the Domain Administration Server (DAS) that administers the given domain.
@@ -74,7 +75,7 @@ public interface DomainsManager {
     /**
      * Lists all the domains.
      */
-    public String[] listDomains(DomainConfig domainConfig) throws DomainException;
+    String[] listDomains(DomainConfig domainConfig) throws DomainException;
 
     /**
      * Lists all the domains and their status
@@ -90,9 +91,9 @@ public interface DomainsManager {
     public void changeMasterPassword(DomainConfig domainConfig)
         throws DomainException;
     */
-    public void validateDomain(DomainConfig domainConfig, boolean domainExists) throws DomainException;
+    void validateDomain(DomainConfig domainConfig, boolean domainExists) throws DomainException;
 
-    public void validateMasterPassword(DomainConfig config) throws DomainException;
+    void validateMasterPassword(DomainConfig config) throws DomainException;
 
     //public void validateAdminUserAndPassword(DomainConfig domainConfig) throws DomainException;
 

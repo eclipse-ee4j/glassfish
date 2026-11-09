@@ -53,7 +53,7 @@ public class EJBQLC
     /** Meta data access. */
     protected Model model;
 
-    /** Name mapping EJB <-> JDO. */
+    /** Name mapping EJB &lt;-> JDO. */
     protected NameMapper nameMapper;
 
     /** The intermediate form of the EJBQL query string. */
@@ -75,7 +75,7 @@ public class EJBQLC
      * Constructor.
      *
      * @param model meta data access.
-     * @param nameMapper name mapping EJB <-> JDO.
+     * @param nameMapper name mapping EJB &lt;-> JDO.
      */
     public EJBQLC(Model model, NameMapper nameMapper)
     {

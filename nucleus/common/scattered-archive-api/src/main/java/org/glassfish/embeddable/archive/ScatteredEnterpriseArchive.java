@@ -81,12 +81,15 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a module or a library to this scattered enterprise archive.
-     * <p/>
+     * <p>
      * The addArchive(archiveURI) method has the same effect as:
      * <pre>
      *      addMetadata(archiveURI, null)
      * </pre>
      * Follows the same semantics as {@link #addArchive(URI, String)} method.
+     *
+     * @param archiveURI location of module or library archive.
+     * @throws IOException if the archive file is not found
      */
     public void addArchive(URI archiveURI) throws IOException {
         addArchive(archiveURI, null);
@@ -94,7 +97,7 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a module or a library to this scattered enterprise archive.
-     * <p/>
+     * <p>
      * The specified archiveURI must be one of the following:
      * <pre>
      *      ScatteredArchive URI obtained via {@link ScatteredArchive#toURI()}.
@@ -115,12 +118,15 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a module or a library to this scattered enterprise archive.
-     * <p/>
+     * <p>
      * The addArchive(archive) method has the same effect as:
      * <pre>
      *      addArchive(archive, null)
      * </pre>
      * Follows the same semantics as {@link #addArchive(File, String)} method.
+     *
+     * @param archive location of module or library archive.
+     * @throws IOException if the archive file is not found
      */
     public void addArchive(File archive) throws IOException {
         addArchive(archive, null);
@@ -128,7 +134,7 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a module or a library to this scattered enterprise archive.
-     * <p/>
+     * <p>
      * The specified archive location should be one of the following:
      * <pre>
      *      Location of a library JAR file.
@@ -138,8 +144,9 @@ public class ScatteredEnterpriseArchive {
      *
      * @param archive Location of module or library archive.
      * @param name    name of the module/library as specified in META-INF/application.xml
-     * @throws NullPointerException if archive is null
-     * @throws IOException          if the archive file is not found
+     * @throws NullPointerException  if archive is null
+     * @throws FileNotFoundException if the archive file is not found
+     * @throws IOException           if the archive cannot be read
      */
     public void addArchive(File archive, String name) throws IOException {
         if (archive == null) {
@@ -172,12 +179,15 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a new metadata to this scattered enterprise archive.
-     * <p/>
+     * <p>
      * The addMetadata(metadata) method has the same effect as:
      * <pre>
      *      addMetadata(metadata, null)
      * </pre>
      * Follows the same semantics as {@link #addMetadata(File, String)} method.
+     *
+     * @param metadata location of the metadata
+     * @throws IOException if metadata does not exist.
      */
     public void addMetadata(File metadata) throws IOException {
         addMetadata(metadata, null);
@@ -195,11 +205,11 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Add a new metadata to this enterprise archive.
-     * <p/>
+     * <p>
      * A metadata is identified by its name (e.g., META-INF/application.xml)
      * If the specified name is null, then the name is computed as
      * "META-INF/" + metadata.getName()
-     * <p/>
+     * <p>
      * If the scattered enterprise archive already contains the metadata with
      * the same name, the old value is replaced.
      *
@@ -228,7 +238,7 @@ public class ScatteredEnterpriseArchive {
 
     /**
      * Get the deployable URI for this scattered enterprise archive.
-     * <p/>
+     * <p>
      * <i>Note : java.io.tmpdir is used while building the URI.</i>
      *
      * @return Deployable scattered enterprise Archive URI.

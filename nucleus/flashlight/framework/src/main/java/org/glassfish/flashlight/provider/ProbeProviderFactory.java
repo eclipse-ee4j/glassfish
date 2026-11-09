@@ -28,20 +28,20 @@ public interface ProbeProviderFactory {
 
     void monitoringEnabledChanged(boolean newValue);
 
-    public <T> T getProbeProvider(Class<T> providerClazz)
+    <T> T getProbeProvider(Class<T> providerClazz)
             throws InstantiationException, IllegalAccessException;
 
-    public <T> T getProbeProvider(Class<T> providerClazz, String invokerId)
+    <T> T getProbeProvider(Class<T> providerClazz, String invokerId)
             throws InstantiationException, IllegalAccessException;
 
-    public <T> T getProbeProvider(String moduleName, String providerName, String appName, Class<T> clazz)
+    <T> T getProbeProvider(String moduleName, String providerName, String appName, Class<T> clazz)
             throws InstantiationException, IllegalAccessException;
 
-    public void unregisterProbeProvider(Object probeProvider);
+    void unregisterProbeProvider(Object probeProvider);
 
-    public void processXMLProbeProviders(ClassLoader cl, String xml, boolean inBundle);
+    void processXMLProbeProviders(ClassLoader cl, String xml, boolean inBundle);
 
-    public void addProbeProviderEventListener(ProbeProviderEventListener listener);
+    void addProbeProviderEventListener(ProbeProviderEventListener listener);
 
-    public void removeProbeProviderEventListener(ProbeProviderEventListener listener);
+    void removeProbeProviderEventListener(ProbeProviderEventListener listener);
 }

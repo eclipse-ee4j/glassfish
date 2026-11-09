@@ -23,7 +23,7 @@ public interface DebugState
     /**
     Convenience class when a simple implement is desired.
      */
-    public static final class Impl implements DebugState
+    final class Impl implements DebugState
     {
         private final boolean mStatus;
 
@@ -42,7 +42,7 @@ public interface DebugState
     /**
     Return true if debugging is on.
      */
-    public boolean getDebug();
+    boolean getDebug();
 
 }
 

@@ -36,7 +36,7 @@ public final class MethodExprValueChangeListener
     /**
      * Method expression.
      */
-    private MethodExpression methodExpression = null;
+    private MethodExpression methodExpression;
 
     /**
      * Transient flag.

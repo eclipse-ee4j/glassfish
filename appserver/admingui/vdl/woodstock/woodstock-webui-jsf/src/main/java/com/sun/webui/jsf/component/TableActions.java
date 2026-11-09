@@ -44,12 +44,12 @@ import static com.sun.webui.jsf.theme.ThemeImages.TABLE_ACTIONS_SEPARATOR;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.component.TableActions.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Component(type = "com.sun.webui.jsf.TableActions",
         family = "com.sun.webui.jsf.TableActions",
@@ -284,7 +284,7 @@ public final class TableActions extends UIComponentBase
     /**
      * The Table ancestor enclosing this component.
      */
-    private Table table = null;
+    private Table table;
 
     /**
      * ABBR gives an abbreviated version of the cell's content. This allows
@@ -293,7 +293,7 @@ public final class TableActions extends UIComponentBase
      * before rendering each cell.
      */
     @Property(name = "abbr", displayName = "Abbreviation for Header Cell")
-    private String abbr = null;
+    private String abbr;
 
     /**
      * Flag indicating this component should render actions at the bottom of the
@@ -302,12 +302,12 @@ public final class TableActions extends UIComponentBase
     @Property(name = "actionsBottom",
             displayName = "Is Actions Bottom",
             isAttribute = false)
-    private boolean actionsBottom = false;
+    private boolean actionsBottom;
 
     /**
      * actionsBottom set flag.
      */
-    private boolean actionsBottomSet = false;
+    private boolean actionsBottomSet;
 
     /**
      * Use the {@code align} attribute to specify the horizontal alignment for
@@ -320,7 +320,7 @@ public final class TableActions extends UIComponentBase
      * }Some browsers do not support aligning on the character.
      */
     @Property(name = "align", displayName = "Horizontal Alignment")
-    private String align = null;
+    private String align;
 
     /**
      * The AXIS attribute provides a method of categorizing cells. The
@@ -329,7 +329,7 @@ public final class TableActions extends UIComponentBase
      * application of AXIS.
      */
     @Property(name = "axis", displayName = "Category of Header Cell")
-    private String axis = null;
+    private String axis;
 
     /**
      * The BGCOLOR attribute suggests a background color for the cell. The
@@ -342,7 +342,7 @@ public final class TableActions extends UIComponentBase
      * deprecated (in HTML 4.0) in favor of style sheets.
      */
     @Property(name = "bgColor", displayName = "Cell Background Color")
-    private String bgColor = null;
+    private String bgColor;
 
     /**
      * Use the {@code char }attribute to specify a character to use for
@@ -353,7 +353,7 @@ public final class TableActions extends UIComponentBase
      * {@code char} HTML property is not supported by all browsers.
      */
     @Property(name = "char", displayName = "Alignment Character")
-    private String charFor = null;
+    private String charFor;
 
     /**
      * Use the {@code charOff }attribute to specify the offset of the first
@@ -366,7 +366,7 @@ public final class TableActions extends UIComponentBase
      * the alignment character is placed at one fourth of the width of the cell.
      */
     @Property(name = "charOff", displayName = "Alignment Character Offset")
-    private String charOff = null;
+    private String charOff;
 
     /**
      * The COLSPAN attribute of TD specifies the number of columns that are
@@ -381,13 +381,13 @@ public final class TableActions extends UIComponentBase
     /**
      * colSpan set flag.
      */
-    private boolean colSpanSet = false;
+    private boolean colSpanSet;
 
     /**
      * Extra HTML to be appended to the tag output by this renderer.
      */
     @Property(name = "extraHtml", displayName = "Extra HTML")
-    private String extraHtml = null;
+    private String extraHtml;
 
     /**
      * The HEADERS attribute specifies the header cells that apply to the TD.
@@ -397,7 +397,7 @@ public final class TableActions extends UIComponentBase
      */
     @Property(name = "headers",
             displayName = "List of Header Cells for Current Cell")
-    private String headers = null;
+    private String headers;
 
     /**
      * The number of pixels for the cell's height. Styles should be used to
@@ -405,7 +405,7 @@ public final class TableActions extends UIComponentBase
      * deprecated in HTML 4.0.
      */
     @Property(name = "height", displayName = "Height")
-    private String height = null;
+    private String height;
 
     /**
      * Use the {@code noWrap} attribute to disable word wrapping of this
@@ -415,81 +415,81 @@ public final class TableActions extends UIComponentBase
      * because the nowrap attribute is deprecated in HTML 4.0.
      */
     @Property(name = "noWrap", displayName = "Suppress Word Wrap")
-    private boolean noWrap = false;
+    private boolean noWrap;
 
     /**
      * noWrap set flag.
      */
-    private boolean noWrapSet = false;
+    private boolean noWrapSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
      */
     @Property(name = "onClick", displayName = "Click Script")
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
      * component.
      */
     @Property(name = "onDblClick", displayName = "Double Click Script")
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
      * component has focus.
      */
     @Property(name = "onKeyDown", displayName = "Key Down Script")
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
      * the component has focus.
      */
     @Property(name = "onKeyPress", displayName = "Key Press Script")
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
      * has focus.
      */
     @Property(name = "onKeyUp", displayName = "Key Up Script")
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
      * mouse pointer is on the component.
      */
     @Property(name = "onMouseDown", displayName = "Mouse Down Script")
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
      * the component.
      */
     @Property(name = "onMouseMove", displayName = "Mouse Move Script")
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
      * component.
      */
     @Property(name = "onMouseOut", displayName = "Mouse Out Script")
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
      * boundary of this component.
      */
     @Property(name = "onMouseOver", displayName = "Mouse In Script")
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
      * mouse pointer is on the component.
      */
     @Property(name = "onMouseUp", displayName = "Mouse Up Script")
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * The ROWSPAN attribute of TD specifies the number of rows that are spanned
@@ -504,7 +504,7 @@ public final class TableActions extends UIComponentBase
     /**
      * rowSpan set flag.
      */
-    private boolean rowSpanSet = false;
+    private boolean rowSpanSet;
 
     /**
      * Use the {@code scope} attribute to specify that the data cells of the
@@ -523,21 +523,21 @@ public final class TableActions extends UIComponentBase
      * </ul>
      */
     @Property(name = "scope", displayName = "Cells Covered By Header Cell")
-    private String scope = null;
+    private String scope;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "styleClass", displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -545,7 +545,7 @@ public final class TableActions extends UIComponentBase
      * element.
      */
     @Property(name = "toolTip", displayName = "Tool Tip")
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the {@code valign} attribute to specify the vertical alignment for
@@ -557,7 +557,7 @@ public final class TableActions extends UIComponentBase
      * text characters rest.
      */
     @Property(name = "valign", displayName = "Vertical Position")
-    private String valign = null;
+    private String valign;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -569,12 +569,12 @@ public final class TableActions extends UIComponentBase
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Use the {@code width} attribute to specify the width of the cells of the
@@ -584,7 +584,7 @@ public final class TableActions extends UIComponentBase
      * sheets.
      */
     @Property(name = "width", displayName = "Width")
-    private String width = null;
+    private String width;
 
     /**
      * Default constructor.
@@ -890,7 +890,7 @@ public final class TableActions extends UIComponentBase
         if (tableAncestor != null) {
             child.setText(theme.getMessage("table.pagination.pages",
                     new String[]{
-                        Integer.toString(tableAncestor.getPageCount())
+                        Integer.toString(tableAncestor.getPageCount()),
                     }));
         } else {
             log("getPaginationPagesText", "Pages text not set, Table is null");

@@ -34,7 +34,7 @@ public interface ApplicationLifecycleInterceptor {
      * @param context the deployment context
      *
      */
-    public void before(ExtendedDeploymentContext.Phase phase,
+    void before(ExtendedDeploymentContext.Phase phase,
             ExtendedDeploymentContext context);
 
     /**
@@ -45,6 +45,6 @@ public interface ApplicationLifecycleInterceptor {
      * @param context the deployment context
      *
      */
-    public void after(ExtendedDeploymentContext.Phase phase,
+    void after(ExtendedDeploymentContext.Phase phase,
             ExtendedDeploymentContext context);
 }

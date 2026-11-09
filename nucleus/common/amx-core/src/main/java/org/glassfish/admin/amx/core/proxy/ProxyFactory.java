@@ -266,7 +266,7 @@ public final class ProxyFactory implements NotificationListener {
      * previously-instantiated ones. Such usage is discouraged, as it duplicates
      * proxies. Pass 'true' unless there is an excellent reason to pass 'false'.
      *
-     * @param connSource        the ConnectionSource
+     * @param conn        the ConnectionSource
      * @param useMBeanServerID        use the MBeanServerID to determine if it's the
      * same server
      */

@@ -30,7 +30,7 @@ public interface QueryParser {
      * the Iterator's next method returns Strings.
      *
      * @param parameterDeclarations parameter declaration string.
-     * @returns an iterator over parameter types.
+     * @return an iterator over parameter types.
      */
     Iterator<String> parameterTypeIterator(String parameterDeclarations);
 }

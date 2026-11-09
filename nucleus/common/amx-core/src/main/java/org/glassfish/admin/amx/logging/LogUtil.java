@@ -35,7 +35,7 @@ public final class LogUtil
         using a CompositeData as returned from
         {@link LogQuery#queryServerLog}.
      */
-        public static final LogQueryResult
+        public static LogQueryResult
     createLogQueryResult( final CompositeData data )
     {
         return null;

@@ -37,7 +37,7 @@ import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * AMX Realms implementation. Note that realms don't load until {@link #loadRealms} is called.
+ * AMX Realms implementation. Note that realms don't load until {@code loadRealms} is called.
  *
  * @author ludovic champenosi
  */

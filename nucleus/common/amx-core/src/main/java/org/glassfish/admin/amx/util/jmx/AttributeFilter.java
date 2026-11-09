@@ -25,7 +25,7 @@ public interface AttributeFilter
     /**
     @return true to include the Attribute, false otherwise
      */
-    public boolean filterAttribute(final MBeanAttributeInfo info);
+    boolean filterAttribute(MBeanAttributeInfo info);
 
 }
 

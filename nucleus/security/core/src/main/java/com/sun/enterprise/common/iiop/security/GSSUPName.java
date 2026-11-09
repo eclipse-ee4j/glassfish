@@ -29,7 +29,7 @@ import java.util.logging.Level;
  */
 
 public class GSSUPName {
-    private static java.util.logging.Logger _logger = null;
+    private static java.util.logging.Logger _logger;
     static {
         _logger = SecurityLoggerInfo.getLogger();
     }

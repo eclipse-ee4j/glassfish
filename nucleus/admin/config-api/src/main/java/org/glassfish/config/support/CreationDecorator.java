@@ -40,15 +40,15 @@ public interface CreationDecorator<T extends ConfigBeanProxy> {
      * @param context administration command context
      * @param instance newly created configuration element
      * @throws TransactionFailure if the transaction should be rollbacked
-     * @throws PropertyVetoException if one of the listener of <T> is throwing a veto exception
+     * @throws PropertyVetoException if one of the listener of &lt;T&gt; is throwing a veto exception
      */
-    public void decorate(AdminCommandContext context, T instance) throws TransactionFailure, PropertyVetoException;
+    void decorate(AdminCommandContext context, T instance) throws TransactionFailure, PropertyVetoException;
 
     /**
      * Default implementation of a decorator that does nothing.
      */
     @Service
-    public class NoDecoration implements CreationDecorator<ConfigBeanProxy> {
+    class NoDecoration implements CreationDecorator<ConfigBeanProxy> {
         @Override
         public void decorate(AdminCommandContext context, ConfigBeanProxy instance) throws TransactionFailure, PropertyVetoException {
             // do nothing

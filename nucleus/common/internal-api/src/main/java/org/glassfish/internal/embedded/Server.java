@@ -302,7 +302,7 @@ public class Server {
      *
      * @param configType the type of the embedded container configuration
      * @param <T> type of the embedded container
-     * @return the configuration to configure a container of type <T>
+     * @return the configuration to configure a container of type &lt;T&gt;
      */
     public <T extends ContainerBuilder<?>> T createConfig(Class<T> configType) {
         return habitat.getService(configType);
@@ -418,13 +418,13 @@ public class Server {
     /**
      * Adds a container to this server.
      *
-     * Using the configuration instance for the container of type <T>,
+     * Using the configuration instance for the container of type &lt;T&gt;,
      * creating the container from that configuration and finally adding the
      * container instance to the list of managed containers
      *
      * @param info the configuration for the container. Must not be null.
      * @param <T> type of the container
-     * @return instance of the container <T>
+     * @return instance of the container &lt;T&gt;
      * @throws IllegalStateException if the container is already started.
      */
     public synchronized <T extends EmbeddedContainer> T addContainer(ContainerBuilder<T> info) {

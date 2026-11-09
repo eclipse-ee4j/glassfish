@@ -60,9 +60,9 @@ public interface Logging extends AMXProxy, LogQuery
     @Description("Sets the log level of the Logger for the specified module")
     void setModuleLogLevel(
         @Param(name = "moduleName")
-        final String moduleName,
+        String moduleName,
         @Param(name = "level")
-        final String level
+        String level
     );
 
     /**
@@ -75,7 +75,7 @@ public interface Logging extends AMXProxy, LogQuery
     @Description("Gets the log level of the Logger for the specified module")
     String getModuleLogLevel(
         @Param(name = "moduleName")
-        final String moduleName
+        String moduleName
     );
 
     /**
@@ -86,7 +86,7 @@ public interface Logging extends AMXProxy, LogQuery
     @Description("Sets the value of one or more logging properties")
     void updateLoggingProperties(
         @Param(name = "properties")
-        final Map<String, String> properties
+        Map<String, String> properties
     );
 
 
@@ -113,7 +113,7 @@ public interface Logging extends AMXProxy, LogQuery
     @Description("Set value of the value of one or more of the logging configuration properties.")
     void updateLoggingAttributes(
         @Param(name = "properties")
-        final Map<String, String> properties
+        Map<String, String> properties
     );
 
 
@@ -126,8 +126,8 @@ public interface Logging extends AMXProxy, LogQuery
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     void testEmitLogMessage(
         @Param(name = "level")
-        final String level,
+        String level,
         @Param(name = "message")
-        final String message
+        String message
     );
 }

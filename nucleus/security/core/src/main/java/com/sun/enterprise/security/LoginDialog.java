@@ -18,7 +18,7 @@ package com.sun.enterprise.security;
 
 /**
  * LoginManager needs implementations of this class for accessing the username and passwords. Implementations of LoginDialog can
- * use either character based terminal, GUI, or any other form of querying to get hold of the username & password from the user.
+ * use either character based terminal, GUI, or any other form of querying to get hold of the username &amp; password from the user.
  *
  * @author Harish Prabandham
  */
@@ -26,10 +26,10 @@ public interface LoginDialog {
     /**
      * @return The username of the user.
      */
-    public String getUserName();
+    String getUserName();
 
     /**
      * @return The password of the user in plain text...
      */
-    public char[] getPassword();
+    char[] getPassword();
 }

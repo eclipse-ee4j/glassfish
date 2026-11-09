@@ -96,7 +96,7 @@ public class MCFConfigParserImpl implements MCFConfigParser {
      *
      *  @param  desc ConnectorDescriptor pertaining to rar.
      *  @param  connectionDefName connection definition name which is unique
-     *          across all the <connection-definition> elements in a given rar.
+     *          across all the &lt;connection-definition> elements in a given rar.
      *  @return Javabean properties with the propety names and values
      *          of propeties. The property values will be the values
      *          mentioned in ra.xml if present. Otherwise it will be the

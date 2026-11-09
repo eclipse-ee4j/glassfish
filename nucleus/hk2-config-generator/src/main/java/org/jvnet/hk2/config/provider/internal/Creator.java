@@ -23,18 +23,17 @@ import org.glassfish.hk2.api.MultiException;
  * Encapsulates how to create an object.
  *
  * <p>
- * Signature-wise it's the same as {@link Inhabitant}
+ * Signature-wise it's the same as {@code Inhabitant}
  * but it carries an additional meaning.
  *
  * @author Kohsuke Kawaguchi
- * @see Creators
  */
 public interface Creator<T> {
 
     /**
      * Creates a new instance.
      *
-     * The caller is supposed to call the {@link Creator#initialize(Object, Inhabitant)}
+     * The caller is supposed to call the Inhabitant)
      * right away. This 2-phase initialization allows us to handle
      * cycle references correctly
      */

@@ -319,7 +319,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
     /**
      * Gets the value of the sessionStore property.
      *
-     * specifies the directory where passivated beans & persisted HTTP sessions
+     * specifies the directory where passivated beans &amp; persisted HTTP sessions
      * are stored on the file system. Defaults to $INSTANCE-ROOT/session-store
      *
      * @return possible object is

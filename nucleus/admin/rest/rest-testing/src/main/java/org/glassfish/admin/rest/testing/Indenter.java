@@ -20,7 +20,7 @@ class Indenter {
 
     public static final int INDENT = 2;
     private String indentPerLevel;
-    private int level = 0;
+    private int level;
     private String indent;
 
     Indenter() {

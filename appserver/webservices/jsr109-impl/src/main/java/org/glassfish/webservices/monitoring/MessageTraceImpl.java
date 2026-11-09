@@ -41,8 +41,8 @@ import org.glassfish.webservices.SOAPMessageContext;
 public class MessageTraceImpl implements MessageTrace {
 
     private Endpoint source;
-    private String soapMessage=null;
-    private TransportInfo transportInfo=null;
+    private String soapMessage;
+    private TransportInfo transportInfo;
 
     /** Creates a new instance of InvocationTrace */
     public MessageTraceImpl() {

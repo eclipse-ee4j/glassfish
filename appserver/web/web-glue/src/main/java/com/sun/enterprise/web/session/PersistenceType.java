@@ -99,7 +99,7 @@ public final class PersistenceType {
     /**
      * The persistence type specifier.
      */
-    private String _type = null;
+    private String _type;
 
     // ------------------------------------------------------------- Properties
 

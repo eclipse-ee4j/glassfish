@@ -168,7 +168,7 @@ final class FileLister {
         private String _pattern;
         private boolean _endsWithWc;
 
-        public WildCardFilenameFilter(String pattern) {
+        WildCardFilenameFilter(String pattern) {
             _pattern = pattern;
             _endsWithWc = _pattern.endsWith(ASTERISK);
         }

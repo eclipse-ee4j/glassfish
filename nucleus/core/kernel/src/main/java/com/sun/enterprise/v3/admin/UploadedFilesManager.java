@@ -52,7 +52,7 @@ class UploadedFilesManager {
      * PFM needs to be a field so it is not gc-ed before the
      * UploadedFilesManager is closed.
      */
-    private PayloadFilesManager.Temp payloadFilesMgr = null;
+    private PayloadFilesManager.Temp payloadFilesMgr;
 
     UploadedFilesManager(final ActionReport report, final Payload.Inbound inboundPayload, String applicationRoot)
         throws IOException, Exception {

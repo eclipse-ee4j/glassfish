@@ -36,12 +36,12 @@ public final class DropDownMethodExpression extends MethodExpression
     /**
      * The value.
      */
-    private transient String value = null;
+    private transient String value;
 
     /**
      * Transient flat.
      */
-    private boolean transientFlag = false;
+    private boolean transientFlag;
 
     /**
      * Creates a new instance.

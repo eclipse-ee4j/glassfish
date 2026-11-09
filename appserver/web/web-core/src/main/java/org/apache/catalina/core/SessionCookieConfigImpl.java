@@ -62,7 +62,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     /**
      * @param name the cookie name to use
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -74,7 +74,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return the cookie name set via {@link #setName}, or <tt>JSESSIONID</tt> if {@link #setName} was never called
+     * @return the cookie name set via {@link #setName}, or <code>JSESSIONID</code> if {@link #setName} was never called
      */
     @Override
     public String getName() {
@@ -84,7 +84,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     /**
      * @param domain the cookie domain to use
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -94,7 +94,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return the cookie domain set via {@link #setDomain}, or <tt>null</tt> if {@link #setDomain} was never called
+     * @return the cookie domain set via {@link #setDomain}, or <code>null</code> if {@link #setDomain} was never called
      */
     @Override
     public String getDomain() {
@@ -104,7 +104,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     /**
      * @param path the cookie path to use
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -114,8 +114,8 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return the cookie path set via {@link #setPath}, or the context path of the <tt>ServletContext</tt> from which this
-     * <tt>SessionCookieConfig</tt> was acquired if {@link #setPath} was never called
+     * @return the cookie path set via {@link #setPath}, or the context path of the <code>ServletContext</code> from which this
+     * <code>SessionCookieConfig</code> was acquired if {@link #setPath} was never called
      */
     @Override
     public String getPath() {
@@ -125,7 +125,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     /**
      * @param comment the cookie comment to use
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -135,7 +135,7 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return the cookie comment set via {@link #setComment}, or <tt>null</tt> if {@link #setComment} was never called
+     * @return the cookie comment set via {@link #setComment}, or <code>null</code> if {@link #setComment} was never called
      */
     @Override
     public String getComment() {
@@ -143,10 +143,10 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @param httpOnly true if the session tracking cookies created on behalf of the <tt>ServletContext</tt> from which this
-     * <tt>SessionCookieConfig</tt> was acquired shall be marked as <i>HttpOnly</i>, false otherwise
+     * @param httpOnly true if the session tracking cookies created on behalf of the <code>ServletContext</code> from which this
+     * <code>SessionCookieConfig</code> was acquired shall be marked as <i>HttpOnly</i>, false otherwise
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -156,8 +156,8 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return true if the session tracking cookies created on behalf of the <tt>ServletContext</tt> from which this
-     * <tt>SessionCookieConfig</tt> was acquired will be marked as <i>HttpOnly</i>, false otherwise
+     * @return true if the session tracking cookies created on behalf of the <code>ServletContext</code> from which this
+     * <code>SessionCookieConfig</code> was acquired will be marked as <i>HttpOnly</i>, false otherwise
      */
     @Override
     public boolean isHttpOnly() {
@@ -166,12 +166,12 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @param secure true if the session tracking cookies created on behalf of the <tt>ServletContext</tt> from which this
-     * <tt>SessionCookieConfig</tt> was acquired shall be marked as <i>secure</i> even if the request that initiated the
+     * @param secure true if the session tracking cookies created on behalf of the <code>ServletContext</code> from which this
+     * <code>SessionCookieConfig</code> was acquired shall be marked as <i>secure</i> even if the request that initiated the
      * corresponding session is using plain HTTP instead of HTTPS, and false if they shall be marked as <i>secure</i> only
      * if the request that initiated the corresponding session was also secure
      *
-     * @throws IllegalStateException if the <tt>ServletContext</tt> from which this <tt>SessionCookieConfig</tt> was
+     * @throws IllegalStateException if the <code>ServletContext</code> from which this <code>SessionCookieConfig</code> was
      * acquired has already been initialized
      */
     @Override
@@ -181,8 +181,8 @@ public class SessionCookieConfigImpl implements SessionCookieConfig {
     }
 
     /**
-     * @return true if the session tracking cookies created on behalf of the <tt>ServletContext</tt> from which this
-     * <tt>SessionCookieConfig</tt> was acquired will be marked as <i>secure</i> even if the request that initiated the
+     * @return true if the session tracking cookies created on behalf of the <code>ServletContext</code> from which this
+     * <code>SessionCookieConfig</code> was acquired will be marked as <i>secure</i> even if the request that initiated the
      * corresponding session is using plain HTTP instead of HTTPS, and false if they will be marked as <i>secure</i> only if
      * the request that initiated the corresponding session was also secure
      */

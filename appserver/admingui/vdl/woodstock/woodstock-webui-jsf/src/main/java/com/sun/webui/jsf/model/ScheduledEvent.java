@@ -39,27 +39,27 @@ public final class ScheduledEvent implements Serializable {
     /**
      * The start time, as a {@link java.util.Date}.
      */
-    private Date startTime = null;
+    private Date startTime;
 
     /**
      * The end time, as a {@link java.util.Date}.
      */
-    private Date endTime = null;
+    private Date endTime;
 
     /**
      * Date list.
      */
-    private ArrayList<Object> dateList = null;
+    private ArrayList<Object> dateList;
 
     /**
      * Whether the event is repeating or not.
      */
-    private boolean repeatingEvent = false;
+    private boolean repeatingEvent;
 
     /**
      * Holds value of property frequency.
      */
-    private RepeatInterval frequency = null;
+    private RepeatInterval frequency;
 
     /**
      * The repeat frequency. The value must be the Integer value of a calendar
@@ -68,12 +68,12 @@ public final class ScheduledEvent implements Serializable {
      * <p>
      * To specify that the event repeats for three months... </p>
      */
-    private RepeatUnit durationUnit = null;
+    private RepeatUnit durationUnit;
 
     /**
      * Holds value of property duration.
      */
-    private Integer duration = null;
+    private Integer duration;
 
     /**
      * Debug flag.

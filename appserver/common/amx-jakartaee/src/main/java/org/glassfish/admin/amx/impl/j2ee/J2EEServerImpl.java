@@ -43,7 +43,7 @@ public class J2EEServerImpl extends J2EELogicalServerImplBase
 {
     public static final Class<J2EEServer> INTF = J2EEServer.class;
 
-    private volatile RegistrationSupport mRegistrationSupport = null;
+    private volatile RegistrationSupport mRegistrationSupport;
 
     public J2EEServerImpl(final ObjectName parentObjectName, final Metadata meta)
     {
@@ -59,7 +59,7 @@ public class J2EEServerImpl extends J2EELogicalServerImplBase
 
         return child == null ? new String[0] : new String[]
                 {
-                    child.toString()
+                    child.toString(),
                 };
     }
 

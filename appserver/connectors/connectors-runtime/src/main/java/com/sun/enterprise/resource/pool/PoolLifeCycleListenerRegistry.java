@@ -67,7 +67,7 @@ public class PoolLifeCycleListenerRegistry implements PoolLifeCycleListener {
      * Clear the list of pool lifecycle listeners maintained by the registry. This happens when a pool is destroyed so the
      * information about its listeners need not be stored.
      *
-     * @param poolName
+     * @param poolInfo
      */
     public void unRegisterPoolLifeCycleListener(PoolInfo poolInfo) {
         // To make sure the registry is for the given pool name

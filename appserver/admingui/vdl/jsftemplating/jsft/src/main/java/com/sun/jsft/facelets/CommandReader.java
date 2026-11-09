@@ -289,5 +289,5 @@ public class CommandReader {
     private static final String OPEN_CDATA = "<![CDATA[";
     private static final String CLOSE_CDATA = "]]>";
 
-    private CommandParser _parser = null;
+    private CommandParser _parser;
 }

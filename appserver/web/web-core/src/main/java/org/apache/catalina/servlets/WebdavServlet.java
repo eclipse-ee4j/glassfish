@@ -89,7 +89,7 @@ import org.xml.sax.SAXException;
  *    &lt;url-pattern&gt;/*&lt;/url-pattern&gt;<br/>
  *  &lt;/servlet-mapping&gt;
  * </code>
- * <p/>
+ * <p>
  * This will enable read only access. To enable read-write access add:<br/>
  * <code>
  *    &lt;init-param&gt;<br/>
@@ -97,7 +97,7 @@ import org.xml.sax.SAXException;
  *      &lt;param-value&gt;false&lt;/param-value&gt;<br/>
  *    &lt;/init-param&gt;<br/>
  * </code>
- * <p/>
+ * <p>
  * To make the content editable via a different URL, using the following
  * mapping:<br/>
  * <code>
@@ -106,7 +106,7 @@ import org.xml.sax.SAXException;
  *    &lt;url-pattern&gt;/webdavedit/*&lt;/url-pattern&gt;<br/>
  *  &lt;/servlet-mapping&gt;
  * </code>
- * <p/>
+ * <p>
  * Don't forget to secure access appropriately to the editing URLs. With this
  * configuration the context will be accessible to normal users as before. Those
  * users with the necessary access will be able to edit content available via
@@ -2673,7 +2673,7 @@ public class WebdavServlet
         /**
          * Constructor.
          */
-        public LockInfo() {
+        LockInfo() {
             // Ignore
         }
 
@@ -2684,10 +2684,10 @@ public class WebdavServlet
         String path = "/";
         String type = "write";
         String scope = "exclusive";
-        int depth = 0;
+        int depth;
         String owner = "";
         Vector<String> tokens = new Vector<String>();
-        long expiresAt = 0;
+        long expiresAt;
         Date creationDate = new Date();
 
 
@@ -2793,7 +2793,7 @@ public class WebdavServlet
     private static class WebdavResolver implements EntityResolver {
         private ServletContext context;
 
-        public WebdavResolver(ServletContext theContext) {
+        WebdavResolver(ServletContext theContext) {
             context = theContext;
         }
 

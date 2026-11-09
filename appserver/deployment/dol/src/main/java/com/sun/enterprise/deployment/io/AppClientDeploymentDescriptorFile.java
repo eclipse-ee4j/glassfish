@@ -45,7 +45,7 @@ public class AppClientDeploymentDescriptorFile extends DeploymentDescriptorFile 
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
      *
-     * @param the descriptor for which we need the node
+     * @param descriptor descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
         return new AppClientNode();

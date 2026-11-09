@@ -35,7 +35,7 @@ public class ConstraintField extends Field {
     private static final String[] SCOPE_NAMES = {
         "", "context.attribute", "request.header", "request.parameter",
         "request.cookie", "request.attribute", "session.attribute",
-        "session.id"
+        "session.id",
     };
 
     private static final Logger _logger = LogFacade.getLogger();
@@ -43,7 +43,7 @@ public class ConstraintField extends Field {
     // whether to cache if there was a match
     boolean cacheOnMatch = true;
     // whether to cache if there was a failure to match
-    boolean cacheOnMatchFailure = false;
+    boolean cacheOnMatchFailure;
 
     // field value constraints
     ValueConstraint constraints[] = new ValueConstraint[0];

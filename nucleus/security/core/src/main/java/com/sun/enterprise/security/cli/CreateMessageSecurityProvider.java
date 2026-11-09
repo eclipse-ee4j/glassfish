@@ -67,12 +67,12 @@ import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
  *
  * domain.xml element example
  *
- * <message-security-config auth-layer="SOAP"> <!-- turned off by default -->
- * <provider-config class-name="com.sun.wss.provider.ClientSecAuthModule" provider-id="XWS_ClientProvider" provider-type=
- * "client"> <request-policy auth-source="content"/> <response-policy auth-source="content"/>
- * <property name="encryption.key.alias" value="s1as"/> <property name="signature.key.alias" value="s1as"/>
- * <property name="dynamic.username.password" value="false"/> <property name="debug" value="false"/> </provider-config>
- * </message-security-config>
+ * &lt;message-security-config auth-layer="SOAP"> <!-- turned off by default -->
+ * &lt;provider-config class-name="com.sun.wss.provider.ClientSecAuthModule" provider-id="XWS_ClientProvider" provider-type=
+ * "client"> &lt;request-policy auth-source="content"/> &lt;response-policy auth-source="content"/>
+ * &lt;property name="encryption.key.alias" value="s1as"/&gt; &lt;property name="signature.key.alias" value="s1as"/&gt;
+ * &lt;property name="dynamic.username.password" value="false"/&gt; &lt;property name="debug" value="false"/&gt; &lt;/provider-config>
+ * &lt;/message-security-config>
  *
  * @author Nandini Ektare
  */

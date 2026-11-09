@@ -923,7 +923,7 @@ public final class MessageBeanContainer extends BaseContainer implements Message
     }
 
     private static class ASyncClientShutdownTask implements Runnable {
-        private boolean done = false;
+        private boolean done;
 
         String appName;
         MessageBeanClient messageBeanClient;

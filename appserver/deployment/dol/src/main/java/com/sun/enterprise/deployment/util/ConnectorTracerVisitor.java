@@ -33,7 +33,7 @@ public class ConnectorTracerVisitor extends DefaultDOLVisitor implements Connect
 
     /**
      * visits an connector descriptor
-     * @param connector descriptor
+     * @param conDesc descriptor
      */
     public void accept(ConnectorDescriptor conDesc) {
         DOLUtils.getDefaultLogger().info("==================");

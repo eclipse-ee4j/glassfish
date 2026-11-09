@@ -60,8 +60,8 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * AdminCommand to list all instances and their states
  *
- * This is so clumsy & hard to remember I leave it here as a comment:
- * @Inject(name = ServerEnvironment.DEFAULT_INSTANCE_NAME)
+ * This is so clumsy &amp; hard to remember I leave it here as a comment:
+ * &#64;Inject(name = ServerEnvironment.DEFAULT_INSTANCE_NAME)
  * @author Byron Nevins
  */
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
@@ -114,7 +114,7 @@ public class ListInstancesCommand implements AdminCommand {
     private List<InstanceInfo> infos = new LinkedList<InstanceInfo>();
     private List<Server> serverList;
     private ActionReport report;
-    private ActionReport.MessagePart top = null;
+    private ActionReport.MessagePart top;
     private static final String EOL = "\n";
 
     @Override

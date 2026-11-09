@@ -78,39 +78,40 @@ import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
  * properties. In addition, it fires the following <code>ContainerEvent</code> events to listeners who register
  * themselves with <code>addContainerListener()</code>:
  * <table border=1>
+ * <caption>Container events</caption>
  * <tr>
  * <th>Type</th>
  * <th>Data</th>
  * <th>Description</th>
  * </tr>
  * <tr>
- * <td align=center><code>addChild</code></td>
- * <td align=center><code>Container</code></td>
+ * <td><code>addChild</code></td>
+ * <td><code>Container</code></td>
  * <td>Child container added to this Container.</td>
  * </tr>
  * <tr>
- * <td align=center><code>addValve</code></td>
- * <td align=center><code>Valve</code></td>
+ * <td><code>addValve</code></td>
+ * <td><code>Valve</code></td>
  * <td>Valve added to this Container.</td>
  * </tr>
  * <tr>
- * <td align=center><code>removeChild</code></td>
- * <td align=center><code>Container</code></td>
+ * <td><code>removeChild</code></td>
+ * <td><code>Container</code></td>
  * <td>Child container removed from this Container.</td>
  * </tr>
  * <tr>
- * <td align=center><code>removeValve</code></td>
- * <td align=center><code>Valve</code></td>
+ * <td><code>removeValve</code></td>
+ * <td><code>Valve</code></td>
  * <td>Valve removed from this Container.</td>
  * </tr>
  * <tr>
- * <td align=center><code>start</code></td>
- * <td align=center><code>null</code></td>
+ * <td><code>start</code></td>
+ * <td><code>null</code></td>
  * <td>Container was started.</td>
  * </tr>
  * <tr>
- * <td align=center><code>stop</code></td>
- * <td align=center><code>null</code></td>
+ * <td><code>stop</code></td>
+ * <td><code>null</code></td>
  * <td>Container was stopped.</td>
  * </tr>
  * </table>
@@ -154,7 +155,7 @@ public abstract class ContainerBase implements Container, Lifecycle, Pipeline {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The processor delay for this component.

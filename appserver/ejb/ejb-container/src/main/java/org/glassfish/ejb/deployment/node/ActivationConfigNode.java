@@ -37,7 +37,7 @@ import org.w3c.dom.Node;
 public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationConfigDescriptor> {
 
     private ActivationConfigDescriptor descriptor;
-    private String propertyName = null;
+    private String propertyName;
 
     public ActivationConfigNode() {
         super();

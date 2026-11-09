@@ -154,7 +154,6 @@ public class WebServiceEjbEndpointRegistry implements WSEjbEndpointRegistry {
     /**
      * Creates a new EjbRuntimeEndpointInfo instance depending on the type
      * and version of the web service implementation.
-     * @param
      */
     public EjbRuntimeEndpointInfo createEjbEndpointInfo(WebServiceEndpoint webServiceEndpoint,
                                   EjbEndpointFacade ejbContainer,

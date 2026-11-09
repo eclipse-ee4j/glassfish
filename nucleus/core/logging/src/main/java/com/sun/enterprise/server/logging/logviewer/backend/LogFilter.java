@@ -54,13 +54,13 @@ import org.jvnet.hk2.annotations.Service;
 import static org.glassfish.embeddable.GlassFishVariable.INSTANCE_ROOT;
 
 /**
- * <p/>
+ * <p>
  * LogFilter will be used by Admin Too Log Viewer Front End to filter the
  * records. LogMBean delegates the getLogRecordsUsingQuery method to this
  * class static method.
  *
- * @AUTHOR: Hemanth Puttaswamy and Ken Paulsen
- * @AUTHOR: Carla Mott, Naman Mehta
+ * @author Hemanth Puttaswamy and Ken Paulsen
+ * @author Carla Mott, Naman Mehta
  */
 @Service
 public class LogFilter {
@@ -109,7 +109,7 @@ public class LogFilter {
      * not be used for the query.  If the user is interested in viewing only
      * records whose Log Level is SEVERE and WARNING, then the query would
      * look like:
-     * <p/>
+     * <p>
      * fromDate = null, toDate = null, logLevel = WARNING, onlyLevel = false,
      * listOfModules = null, nameValueMap = null.
      *
@@ -597,7 +597,7 @@ public class LogFilter {
 
     /**
      * This fetches or updates logFileCache entries.
-     * <p/>
+     * <p>
      * _REVISIT_: We may want to limit the entries here as each logFile
      * takes up so much of memory to maintain indexes
      */

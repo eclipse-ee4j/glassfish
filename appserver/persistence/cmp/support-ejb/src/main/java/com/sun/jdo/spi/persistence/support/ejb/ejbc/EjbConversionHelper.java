@@ -44,8 +44,8 @@ import org.glassfish.ejb.deployment.descriptor.RelationshipDescriptor;
  */
 public class EjbConversionHelper implements ConversionHelper {
 
-    private NameMapper nameMapper = null;
-    private EjbBundleDescriptorImpl bundle = null;
+    private NameMapper nameMapper;
+    private EjbBundleDescriptorImpl bundle;
     private HashMap<String, IASEjbCMPEntityDescriptor> ejbDescMap = new HashMap<>();
     private HashMap<String, HashMap<String, String>> ejbFieldMap = new HashMap<>();
     private HashMap<String, HashMap<String, String>> ejbKeyMap = new HashMap<>();

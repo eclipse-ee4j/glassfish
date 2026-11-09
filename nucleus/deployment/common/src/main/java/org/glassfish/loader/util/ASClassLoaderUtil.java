@@ -226,9 +226,9 @@ public class ASClassLoaderUtil {
      * </pre>
      *
      * @param dirs array of directory path names
-     * @param jarDirs array of path name to directories that contains JAR & ZIP files.
+     * @param jarDirs array of path name to directories that contains JAR &amp; ZIP files.
      * @param ignoreZip whether to ignore zip files
-     * @return an array of urls that contains all the valid dirs, *.jar & *.zip
+     * @return an array of urls that contains all the valid dirs, *.jar &amp; *.zip
      *
      * @throws IOException if an i/o error while constructing the urls
      */
@@ -247,9 +247,9 @@ public class ASClassLoaderUtil {
      * </pre>
      *
      * @param dirs array of directory path names
-     * @param jarDirs array of path name to directories that contains JAR & ZIP files.
+     * @param jarDirs array of path name to directories that contains JAR &amp; ZIP files.
      * @param ignoreZip whether to ignore zip files
-     * @return an array of urls that contains all the valid dirs, *.jar & *.zip
+     * @return an array of urls that contains all the valid dirs, *.jar &amp; *.zip
      *
      * @throws IOException if an i/o error while constructing the urls
      */
@@ -353,8 +353,15 @@ public class ASClassLoaderUtil {
     /**
      * Returns the manifest file for the given root path.
      *
-     * <xmp> Example: |--repository/ | |--applications/ | |--converter/ | |--ejb-jar-ic_jar/ <---- rootPath | |--META-INF/ |
-     * |--MANIFEST.MF </xmp>
+     * <pre>
+     * Example:
+     * |--repository/
+     * |  |--applications/
+     * |     |--converter/
+     * |        |--ejb-jar-ic_jar/  &lt;---- rootPath
+     * |           |--META-INF/
+     * |              |--MANIFEST.MF
+     * </pre>
      *
      * @param rootPath absolute path to the module
      *

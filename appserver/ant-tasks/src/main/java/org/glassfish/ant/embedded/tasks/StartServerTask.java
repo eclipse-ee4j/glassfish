@@ -22,7 +22,7 @@ public class StartServerTask extends TaskBase {
 
     String serverID = Constants.DEFAULT_SERVER_ID;
     int port = Constants.DEFAULT_HTTP_PORT;
-    String installRoot = null, instanceRoot = null, configFile = null;
+    String installRoot = null, instanceRoot = null, configFile;
     Boolean configFileReadOnly = true;
 
     public void setServerID(String serverID) {

@@ -98,7 +98,7 @@ public final class GUILoginDialog implements LoginDialog {
      * @return The password of the user in plain text...
      */
     @Override
-    public final char[] getPassword() {
+    public char[] getPassword() {
         char[] temp = passphraseDialog.passphrase;
         return (temp == null) ? null : Arrays.copyOf(temp, temp.length);
     }
@@ -108,9 +108,9 @@ public final class GUILoginDialog implements LoginDialog {
  * Create a popup dialog box to ask for the passphrase.
  */
 class PassphraseDialog extends JDialog {
-    private NameCallback nameCallback = null;;
-    private PasswordCallback passwordCallback = null;
-    private ChoiceCallback choiceCallback = null;
+    private NameCallback nameCallback;
+    private PasswordCallback passwordCallback;
+    private ChoiceCallback choiceCallback;
     private JTextField userField;
     private JPasswordField passField;
     private JList choiceList;
@@ -123,7 +123,7 @@ class PassphraseDialog extends JDialog {
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(PassphraseDialog.class);
     String username = "";
-    char[] passphrase = null;
+    char[] passphrase;
 
     private JPasswordField keystorePassword;
     private JLabel lbl;

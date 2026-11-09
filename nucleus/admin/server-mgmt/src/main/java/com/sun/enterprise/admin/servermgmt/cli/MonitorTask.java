@@ -36,15 +36,15 @@ public class MonitorTask extends TimerTask {
     private static final Logger LOG = System.getLogger(MonitorTask.class.getName());
     private static final LocalStringsImpl strings = new LocalStringsImpl(MonitorTask.class);
 
-    private String type = null;
-    private String filter = null;
-    private Timer timer = null;
+    private String type;
+    private String filter;
+    private Timer timer;
     private String[] remoteArgs;
-    private String exceptionMessage = null;
+    private String exceptionMessage;
     private RemoteCLICommand cmd;
     private static final int NUM_ROWS = 25;
-    private int counter = 0;
-    volatile Boolean allOK = null;
+    private int counter;
+    volatile Boolean allOK;
 
     public MonitorTask(final Timer timer, final String[] remoteArgs, ProgramOptions programOpts, Environment env, final String type,
             final String filter, final File fileName) throws CommandException, CommandValidationException {

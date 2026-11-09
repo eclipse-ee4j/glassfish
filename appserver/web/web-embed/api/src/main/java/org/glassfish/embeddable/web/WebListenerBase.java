@@ -46,21 +46,21 @@ public class WebListenerBase implements WebListener  {
     }
 
     /**
-     * Sets the id for this <tt>WebListener</tt>.
+     * Sets the id for this <code>WebListener</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Gets the id of this <tt>WebListener</tt>.
+     * Gets the id of this <code>WebListener</code>.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Reconfigures this <tt>WebListener</tt> with the given
+     * Reconfigures this <code>WebListener</code> with the given
      * configuration.
      */
     public void setConfig(WebListenerConfig config)
@@ -76,49 +76,49 @@ public class WebListenerBase implements WebListener  {
     }
 
     /**
-     * Gets the current configuration of this <tt>WebListener</tt>.
+     * Gets the current configuration of this <code>WebListener</code>.
      */
     public WebListenerConfig getConfig() {
         return config;
     }
 
     /**
-     * Sets the port number for this <tt>WebListener</tt>.
+     * Sets the port number for this <code>WebListener</code>.
      */
     public void setPort(int port) {
         this.port = port;
     }
 
     /**
-     * Gets the port number of this <tt>WebListener</tt>.
+     * Gets the port number of this <code>WebListener</code>.
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * Sets the protocol which will be used by this <tt>WebListener</tt>.
+     * Sets the protocol which will be used by this <code>WebListener</code>.
      */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
 
     /**
-     * Gets the protocol used by this <tt>WebListener</tt>.
+     * Gets the protocol used by this <code>WebListener</code>.
      */
     public String getProtocol() {
         return protocol;
     }
 
     /**
-     * Sets the <tt>WebContainer</tt> which will be used by this <tt>WebListener</tt>.
+     * Sets the <code>WebContainer</code> which will be used by this <code>WebListener</code>.
      */
     public void setWebContainer(WebContainer webContainer) {
         this.webContainer = webContainer;
     }
 
     /**
-     * Gets the <tt>WebContainer</tt> used by this <tt>WebListener</tt>.
+     * Gets the <code>WebContainer</code> used by this <code>WebListener</code>.
      */
     public WebContainer getWebContainer() {
         return webContainer;

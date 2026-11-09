@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class JAXWSAdapterRegistry {
 
-    private static JAXWSAdapterRegistry registry = null;
+    private static JAXWSAdapterRegistry registry;
     private final Map<String, ContextAdapter> store;
 
     private static final Logger logger = LogUtils.getLogger();

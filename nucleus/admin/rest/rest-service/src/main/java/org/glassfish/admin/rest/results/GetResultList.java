@@ -45,7 +45,7 @@ public class GetResultList extends Result {
     }
 
     /**
-     * Returns the List<Dom> object associated with the list resource.
+     * Returns the List&lt;Dom&gt; object associated with the list resource.
      */
     public List<Dom> getDomList() {
         return domList;

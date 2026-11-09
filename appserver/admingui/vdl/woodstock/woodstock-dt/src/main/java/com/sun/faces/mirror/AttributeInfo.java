@@ -17,7 +17,7 @@ package com.sun.faces.mirror;
 
 /**
  * Defines the basic metadata available for the JSP tag attribute that
- * corresponds to a property. See {@link PropertyInfo#getAttribute}.
+ * corresponds to a property. See {@code PropertyInfo#getAttribute}.
  */
 public interface AttributeInfo {
 

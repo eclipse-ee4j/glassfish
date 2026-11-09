@@ -141,7 +141,7 @@ public final class AMXDebug
     "com.sun.aas.instanceRoot". If that system property
     is not found, then "user.home" is used.  The result of this is
     the "parent dir".  The resulting output
-    directory is then <parent-dir>/{@link #AMX_DEBUG_SUBDIR}.
+    directory is then &lt;parent-dir>/{@link #AMX_DEBUG_SUBDIR}.
      */
     public static final String AMX_DEBUG_DIR_SPROP = "AMX-DEBUG.dir";
 
@@ -491,7 +491,7 @@ public final class AMXDebug
     /**
     ID is typically a classname, but may be
     anything which can be used for a filename.  The
-    id will be used to create file <id>.debug in the
+    id will be used to create file &lt;id&gt;.debug in the
     {@link #AMX_DEBUG_SUBDIR} directory.
      */
     public Output getOutput(final String id)

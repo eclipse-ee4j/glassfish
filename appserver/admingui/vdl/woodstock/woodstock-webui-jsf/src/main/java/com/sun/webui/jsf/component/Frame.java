@@ -41,12 +41,12 @@ public class Frame extends UIComponentBase {
     @Property(name = "frameBorder",
             displayName = "Frame Border",
             category = "Appearance")
-    private boolean frameBorder = false;
+    private boolean frameBorder;
 
     /**
      * frameBorder set flag.
      */
-    private boolean frameBorderSet = false;
+    private boolean frameBorderSet;
 
     /**
      * A URL to a long description of the frame contents. Use it for browsers
@@ -55,7 +55,7 @@ public class Frame extends UIComponentBase {
     @Property(name = "longDesc",
             displayName = "Long Description",
             category = "Appearance")
-    private String longDesc = null;
+    private String longDesc;
 
     /**
      * Defines the top and bottom margins in the frame.
@@ -71,7 +71,7 @@ public class Frame extends UIComponentBase {
     /**
      * maginHeight set flag.
      */
-    private boolean marginHeightSet = false;
+    private boolean marginHeightSet;
 
     /**
      * Defines the left and right margins in the frame.
@@ -87,7 +87,7 @@ public class Frame extends UIComponentBase {
     /**
      * maginWidth set flag.
      */
-    private boolean marginWidthSet = false;
+    private boolean marginWidthSet;
 
     /**
      * Defines a unique name for the frame (to use in scripts).
@@ -96,7 +96,7 @@ public class Frame extends UIComponentBase {
             displayName = "Name",
             category = "Appearance",
             isDefault = true)
-    private String name = null;
+    private String name;
 
     /**
      * Set the value of the noResize attribute to "true" when user is not
@@ -107,12 +107,12 @@ public class Frame extends UIComponentBase {
             category = "Appearance",
             isHidden = true,
             isAttribute = true)
-    private boolean noResize = false;
+    private boolean noResize;
 
     /**
      * noResize set flag.
      */
-    private boolean noResizeSet = false;
+    private boolean noResizeSet;
 
     /**
      * Determines scroll bar action (valid values are: yes, no, auto).
@@ -120,7 +120,7 @@ public class Frame extends UIComponentBase {
     @Property(name = "scrolling",
             displayName = "Scrolling",
             category = "Appearance")
-    private String scrolling = null;
+    private String scrolling;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -130,7 +130,7 @@ public class Frame extends UIComponentBase {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -142,7 +142,7 @@ public class Frame extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -155,7 +155,7 @@ public class Frame extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Defines the URL of the file to show in the frame.
@@ -163,7 +163,7 @@ public class Frame extends UIComponentBase {
     @Property(name = "url",
             displayName = "URL",
             category = "Appearance")
-    private String url = null;
+    private String url;
 
     /**
      * Construct a new {@code Frame}.

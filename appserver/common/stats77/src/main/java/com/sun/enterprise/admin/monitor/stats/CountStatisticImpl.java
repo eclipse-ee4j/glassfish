@@ -24,7 +24,7 @@ import org.glassfish.j2ee.statistics.CountStatistic;
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
- * @verison 1.0
+ * @version 1.0
  */
 
 public class CountStatisticImpl extends StatisticImpl implements CountStatistic {
@@ -91,7 +91,7 @@ public class CountStatisticImpl extends StatisticImpl implements CountStatistic 
     }
 
     /** Constructs an immutable instance of CountStatistic with given parameters.
-     * @param curVal    The current value of this statistic
+     * @param countVal    The current value of this statistic
      * @param name      The name of the statistic
      * @param unit      The unit of measurement for this statistic
      * @param desc      A brief description of the statistic

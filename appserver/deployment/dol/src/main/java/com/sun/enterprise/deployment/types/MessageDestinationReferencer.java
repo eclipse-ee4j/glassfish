@@ -45,7 +45,7 @@ public interface MessageDestinationReferencer {
      * message destination within the J2EE application. Can be NULL
      * if link is not set.
      *
-     * @param the link name.
+     * @param linkName link name.
      */
     void setMessageDestinationLinkName(String linkName);
 

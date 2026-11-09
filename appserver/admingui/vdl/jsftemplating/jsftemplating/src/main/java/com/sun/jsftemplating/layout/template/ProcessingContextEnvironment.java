@@ -85,9 +85,9 @@ public class ProcessingContextEnvironment {
         return _finished;
     }
 
-    boolean _finished = false;
-    boolean _special = false;
-    boolean _nested = false;
-    LayoutElement _parent = null;
-    TemplateReader _reader = null;
+    boolean _finished;
+    boolean _special;
+    boolean _nested;
+    LayoutElement _parent;
+    TemplateReader _reader;
 }

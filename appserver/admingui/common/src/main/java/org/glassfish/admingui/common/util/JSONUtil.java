@@ -588,7 +588,7 @@ public class JSONUtil {
     static class JsonChars {
         private final String string;
         private final int len;
-        private int loc = 0;
+        private int loc;
         private final Stack<Character> endContext = new Stack<>();
 
         /**

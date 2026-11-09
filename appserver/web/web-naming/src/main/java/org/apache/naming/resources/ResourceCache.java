@@ -87,19 +87,19 @@ public class ResourceCache {
     /**
      * Current cache size in KB.
      */
-    protected int cacheSize = 0;
+    protected int cacheSize;
 
 
     /**
      * Number of accesses to the cache.
      */
-    protected long accessCount = 0;
+    protected long accessCount;
 
 
     /**
      * Number of cache hits.
      */
-    protected long hitsCount = 0;
+    protected long hitsCount;
 
 
     // ------------------------------------------------------------- Properties
@@ -344,7 +344,7 @@ public class ResourceCache {
      * This will return the index for the closest inferior or equal item in the
      * given array.
      */
-    private static final int find(CacheEntry[] map, String name) {
+    private static int find(CacheEntry[] map, String name) {
 
         int a = 0;
         int b = map.length - 1;
@@ -388,7 +388,7 @@ public class ResourceCache {
      * Insert into the right place in a sorted MapElement array, and prevent
      * duplicates.
      */
-    private final boolean insertCache(CacheEntry newElement) {
+    private boolean insertCache(CacheEntry newElement) {
         CacheEntry[] oldCache = cache;
         int pos = find(oldCache, newElement.name);
         if ((pos != -1) && (newElement.name.equals(oldCache[pos].name))) {
@@ -407,7 +407,7 @@ public class ResourceCache {
     /**
      * Insert into the right place in a sorted MapElement array.
      */
-    private final CacheEntry removeCache(String name) {
+    private CacheEntry removeCache(String name) {
         CacheEntry[] oldCache = cache;
         int pos = find(oldCache, name);
         if ((pos != -1) && (name.equals(oldCache[pos].name))) {

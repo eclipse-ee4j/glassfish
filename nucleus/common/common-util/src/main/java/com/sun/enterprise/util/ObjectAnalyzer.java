@@ -348,7 +348,7 @@ class FieldInfo {
 ////////////////////////////////////////////////////////////////////////////
 class FieldInfoVector // { extends Vector
 {
-    Vector v = null;
+    Vector v;
 
     FieldInfoVector() {
         v = new Vector();
@@ -423,7 +423,7 @@ class FieldInfoVector // { extends Vector
         modifiersLength += 2;
     }
     ////////////////////////////////////////////////////////////////////////////
-    private int classNameLength = 0;
-    private int fieldNameLength = 0;
-    private int modifiersLength = 0;
+    private int classNameLength;
+    private int fieldNameLength;
+    private int modifiersLength;
 }

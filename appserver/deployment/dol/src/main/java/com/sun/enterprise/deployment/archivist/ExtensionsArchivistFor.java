@@ -36,7 +36,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Qualifier
 public @interface ExtensionsArchivistFor {
     /**
-     * see {@link org.glassfish.api.container.Sniffer.getModuleType} and its
+     * see {@code org.glassfish.api.container.Sniffer.getModuleType} and its
      * implementation classes for valid string values.
      */
     @Metadata(ArchivistFactory.EXTENSION_ARCHIVE_TYPE)

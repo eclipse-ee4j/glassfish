@@ -25,14 +25,14 @@ public interface DebugSink
 
     @param o        the Object to output
      */
-    public void print(Object o);
+    void print(Object o);
 
     /**
     Output a message with a newline.
 
     @param o        the Object to output
      */
-    public void println(Object o);
+    void println(Object o);
 
 }
 

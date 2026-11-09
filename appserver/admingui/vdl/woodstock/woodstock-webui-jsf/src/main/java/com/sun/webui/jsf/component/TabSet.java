@@ -117,12 +117,12 @@ public final class TabSet extends WebuiInput implements NamingContainer {
     @Property(name = "lite",
             displayName = "Lightweight Tab Set",
             category = "Appearance")
-    private boolean lite = false;
+    private boolean lite;
 
     /**
      * lite set flag.
      */
-    private boolean liteSet = false;
+    private boolean liteSet;
 
     /**
      * Set this attribute to true in a first level tab set, to create tabs that
@@ -130,12 +130,12 @@ public final class TabSet extends WebuiInput implements NamingContainer {
      * display properly if more than one level of tabs are specified.
      */
     @Property(name = "mini", displayName = "Mini", category = "Appearance")
-    private boolean mini = false;
+    private boolean mini;
 
     /**
      * mini set flag.
      */
-    private boolean miniSet = false;
+    private boolean miniSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -147,7 +147,7 @@ public final class TabSet extends WebuiInput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -159,7 +159,7 @@ public final class TabSet extends WebuiInput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -173,12 +173,12 @@ public final class TabSet extends WebuiInput implements NamingContainer {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Create a new TabSet.

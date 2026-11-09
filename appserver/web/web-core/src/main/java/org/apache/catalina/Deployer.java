@@ -44,21 +44,21 @@ public interface Deployer  {
      * being installed by <code>install()</code>, before it has been
      * started.
      */
-    public static final String PRE_INSTALL_EVENT = "pre-install";
+    String PRE_INSTALL_EVENT = "pre-install";
 
 
     /**
      * The ContainerEvent event type sent when a new application is
      * installed by <code>install()</code>, after it has been started.
      */
-    public static final String INSTALL_EVENT = "install";
+    String INSTALL_EVENT = "install";
 
 
     /**
      * The ContainerEvent event type sent when an existing application is
      * removed by <code>remove()</code>.
      */
-    public static final String REMOVE_EVENT = "remove";
+    String REMOVE_EVENT = "remove";
 
 
     // --------------------------------------------------------- Public Methods
@@ -67,7 +67,7 @@ public interface Deployer  {
     /**
      * Return the name of the Container with which this Deployer is associated.
      */
-    public String getName();
+    String getName();
 
 
     /**
@@ -94,7 +94,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error was encountered
      *  during installation
      */
-    public void install(String contextPath, URL war) throws IOException;
+    void install(String contextPath, URL war) throws IOException;
 
 
     /**
@@ -121,7 +121,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error was encountered
      *  during installation
      */
-    public void install(URL config, URL war) throws IOException;
+    void install(URL config, URL war) throws IOException;
 
 
     /**
@@ -131,7 +131,7 @@ public interface Deployer  {
      *
      * @param contextPath The context path of the requested web application
      */
-    public Context findDeployedApp(String contextPath);
+    Context findDeployedApp(String contextPath);
 
 
     /**
@@ -139,7 +139,7 @@ public interface Deployer  {
      * Container.  If there are no deployed applications, a zero-length
      * array is returned.
      */
-    public String[] findDeployedApps();
+    String[] findDeployedApps();
 
 
     /**
@@ -158,7 +158,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error occurs during
      *  removal
      */
-    public void remove(String contextPath) throws IOException;
+    void remove(String contextPath) throws IOException;
 
 
     /**
@@ -179,7 +179,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error occurs during
      *  removal
      */
-    public void remove(String contextPath, boolean undeploy) throws IOException;
+    void remove(String contextPath, boolean undeploy) throws IOException;
 
 
     /**
@@ -195,7 +195,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error occurs during
      *  startup
      */
-    public void start(String contextPath) throws IOException;
+    void start(String contextPath) throws IOException;
 
 
     /**
@@ -211,7 +211,7 @@ public interface Deployer  {
      * @exception IOException if an input/output error occurs while stopping
      *  the web application
      */
-    public void stop(String contextPath) throws IOException;
+    void stop(String contextPath) throws IOException;
 
 
 }

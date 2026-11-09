@@ -36,12 +36,12 @@ import java.util.Iterator;
  * A class that is interested in receiving such events registers itself with the
  * source {@link Table} of interest, by calling addActionListener().
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.event.TablePaginationActionListener.level = FINE
  * </pre>
- * </p>
+ *
  */
 public final class TablePaginationActionListener implements ActionListener {
 

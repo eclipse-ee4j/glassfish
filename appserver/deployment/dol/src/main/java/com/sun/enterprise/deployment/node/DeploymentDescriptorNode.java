@@ -728,7 +728,6 @@ public abstract class DeploymentDescriptorNode<T extends Descriptor> implements 
      * @param parent for the new child element
      * @param elementName is the new element tag name
      * @param text the text for the new element
-     * @result the newly create child node
      */
     public static void setAttribute(Element parent, String elementName, String text) {
         if (text == null || text.length()==0) {

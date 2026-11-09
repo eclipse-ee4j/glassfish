@@ -167,7 +167,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
          * @param apiModuleLoader ClassLoader corresponding to the APIModule
          * @param parent ClassLoader that's consulted for all java.* classes and for classes not found via apiModuleLoader
          */
-        public APIClassLoader(ClassLoader apiModuleLoader, ClassLoader parent) {
+        APIClassLoader(ClassLoader apiModuleLoader, ClassLoader parent) {
             super(parent);
             this.apiModuleLoader = apiModuleLoader;
             blacklist = new HashSet<>();

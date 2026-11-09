@@ -165,7 +165,7 @@ abstract public class TransactionHelperImpl
     *
     * @param jta the Transaction instance for the calling thread.
     * @param sync the internal Synchronization instance to register.
-    * @throws jakarta.transaction.RollbackException.
+    * @throws jakarta.transaction.RollbackException
     * @throws jakarta.transaction.SystemException
     */
     public void registerSynchronization(Transaction jta, Synchronization sync)
@@ -185,7 +185,7 @@ abstract public class TransactionHelperImpl
      * without username and password validation.
      * @param password the password for the resource username.
      * @return a Connection.
-     * @throws java.sql.SQLException.
+     * @throws java.sql.SQLException
      */
     public java.sql.Connection getConnection(Object resource, String username,
                 char[] password) throws java.sql.SQLException {
@@ -209,7 +209,7 @@ abstract public class TransactionHelperImpl
      * without username and password validation.
      * @param password the password for the resource username.
      * @return a Connection.
-     * @throws java.sql.SQLException.
+     * @throws java.sql.SQLException
      */
     abstract public java.sql.Connection getNonTransactionalConnection(
         Object resource, String username, char[] password)
@@ -255,7 +255,7 @@ abstract public class TransactionHelperImpl
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void registerApplicationLifeCycleEventListener(
             ApplicationLifeCycleEventListener listener) {
@@ -263,7 +263,7 @@ abstract public class TransactionHelperImpl
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void notifyApplicationUnloaded(ClassLoader cl) {
 

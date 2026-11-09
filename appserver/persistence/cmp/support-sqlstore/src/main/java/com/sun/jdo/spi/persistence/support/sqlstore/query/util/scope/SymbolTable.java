@@ -32,7 +32,7 @@ public class SymbolTable
     /**
      * The actual scope level.
      */
-    protected int actualScope = 0;
+    protected int actualScope;
 
     /**
      * Stack of old definitions.

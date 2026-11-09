@@ -131,7 +131,7 @@ public class HelpTreeAdaptor extends TreeAdaptorBase {
      *     node model object.</p>
      *
      * <p> Some useful options for the standard <code>TreeNode</code>
-     *     component include:<p>
+     *     component include:
      *
      * <ul><li>text</li>
      *     <li>url</li>
@@ -296,7 +296,7 @@ public class HelpTreeAdaptor extends TreeAdaptorBase {
     }
 
     /**
-     * <p> Comparator class for {@link TOCItems}.  Uses "text" for comparison,
+     * <p> Comparator class for {@code TOCItems}.  Uses "text" for comparison,
      *     ignoring case.</p>
      */
     private static class TOCItemComparator implements Comparator<TOCItem>, Serializable{

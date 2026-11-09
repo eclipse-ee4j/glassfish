@@ -40,6 +40,6 @@ public @interface I18n {
      *
      * @return a string identifying the resource in the bundle
      */
-    public String value();
+    String value();
 
 }

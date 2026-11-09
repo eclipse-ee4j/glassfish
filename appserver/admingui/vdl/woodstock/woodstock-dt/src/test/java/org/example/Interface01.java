@@ -20,18 +20,18 @@ import com.sun.faces.annotation.Property;
 public interface Interface01 {
 
     @Property(displayName = "The First")
-    public String getOne();
+    String getOne();
 
-    public void setOne(String one);
+    void setOne(String one);
 
     @Property(displayName = "The Second")
-    public String getTwo();
+    String getTwo();
 
-    public void setTwo(String two);
+    void setTwo(String two);
 
     @Property(displayName = "The Third")
-    public String getThree();
+    String getThree();
 
-    public void setThree(String three);
+    void setThree(String three);
 
 }

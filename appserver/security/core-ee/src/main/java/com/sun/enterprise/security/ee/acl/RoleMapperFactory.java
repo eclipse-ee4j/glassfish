@@ -40,7 +40,7 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
     /**
      * Returns a RoleMapper corresponding to the AppName.
      *
-     * @param The Application Name of this RoleMapper.
+     * @param appName Application Name of this RoleMapper.
      *
      */
     @Override

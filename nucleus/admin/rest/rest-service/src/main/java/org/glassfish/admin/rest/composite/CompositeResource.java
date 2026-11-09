@@ -453,10 +453,10 @@ public abstract class CompositeResource extends AbstractResource implements Rest
 
     private class CommandInvoker {
 
-        public CommandInvoker() {
+        CommandInvoker() {
         }
 
-        public CommandInvoker(String command, ParameterMap params, String successMessage) {
+        CommandInvoker(String command, ParameterMap params, String successMessage) {
             setCommand(command);
             setParams(params);
             setSuccessMessage(successMessage);

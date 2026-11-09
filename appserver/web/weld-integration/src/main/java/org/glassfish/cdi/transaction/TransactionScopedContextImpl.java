@@ -46,14 +46,14 @@ import static org.glassfish.api.naming.SimpleJndiName.JNDI_CTX_JAVA_COMPONENT;
 /**
  * The Context implementation for obtaining contextual instances of {@link TransactionScoped} beans.
  *
- * <p/>
+ * <p>
  * The contextual instances are destroyed when the transaction completes.
  *
- * <p/>
+ * <p>
  * Any attempt to call a method on a {@link TransactionScoped} bean when a transaction is not active will result in a
- * {@Link jakarta.enterprise.context.ContextNotActiveException}.
+ * {@link jakarta.enterprise.context.ContextNotActiveException}.
  *
- * <p/>
+ * <p>
  * A CDI Event: @Initialized(TransactionScoped.class) is fired with {@link TransactionScopedCDIEventPayload}, when the
  * context is initialized for the first time and @Destroyed(TransactionScoped.class) is fired with
  * {@link TransactionScopedCDIEventPayload}, when the context is destroyed at the end. Currently this payload is empty
@@ -104,7 +104,7 @@ public class TransactionScopedContextImpl implements Context {
      * Determines if this context object is active.
      *
      * @return true if there is a current global transaction and its status is
-     * {@Link jakarta.transaction.Status.STATUS_ACTIVE} false otherwise
+     * {@code jakarta.transaction.Status.STATUS_ACTIVE} false otherwise
      */
     @Override
     public boolean isActive() {

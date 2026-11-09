@@ -37,8 +37,6 @@ public interface SelfAuthorizer {
      * Note that the command framework will have injected parameter values into fields annotated with @Param before invoking
      * this method, so the logic in isAuthorized can use those parameters in making its decision.
      *
-     * @param ctx the AdminCommandContext for the current command execution
-     * @return true if the Subject (recorded in the command context) can run the command; false otherwise.
      */
     void authorize(Subject s, Map<String, Object> env);
 

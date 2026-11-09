@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 /**
  * This class contains the utility methods for dealing with service contexts.
  *
- * @author: Sekhar Vajjhala
+ * @author Sekhar Vajjhala
  *
  */
 public class SvcContextUtils {

@@ -22,7 +22,7 @@ package com.sun.webui.jsf.renderkit.html;
 import com.sun.faces.annotation.Renderer;
 
 /**
- * Renderer for TextFieldRenderer {@link TextField} component.
+ * Renderer for TextFieldRenderer {@code TextField} component.
  */
 @Renderer(@Renderer.Renders(componentFamily = "com.sun.webui.jsf.TextField"))
 public final class TextFieldRenderer extends FieldRenderer {

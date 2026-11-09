@@ -40,7 +40,6 @@ import java.util.Properties;
  * your own version for a particular web application.
  *
  * @author Craig R. McClanahan
- * @revision $Date: 2005/12/08 01:28:14 $ $Version$
  */
 
 /* SJSAS 6292972

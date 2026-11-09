@@ -39,7 +39,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
      */
     @Property(name = "style",
             displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -47,7 +47,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
      */
     @Property(name = "styleClass",
             displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The URL to the image file to use for the Corporate Image. Use this
@@ -59,7 +59,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String corporateImageURL = null;
+    private String corporateImageURL;
 
     /**
      * The description for the Corporate Image, used as alt text for the image.
@@ -70,7 +70,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String corporateImageDescription = null;
+    private String corporateImageDescription;
 
     /**
      * The height to use for the Corporate Image, in pixels. Use this attribute
@@ -89,7 +89,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
     /**
      * corporateImageHeight set flag.
      */
-    private boolean corporateImageHeightSet = false;
+    private boolean corporateImageHeightSet;
 
     /**
      * The width to use for the Corporate Image URL, in pixels. Use this
@@ -107,7 +107,7 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
     /**
      * corporateImageWidth set flag.
      */
-    private boolean corporateImageWidthSet = false;
+    private boolean corporateImageWidthSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -120,12 +120,12 @@ public final class MastFooter extends jakarta.faces.component.UIComponentBase
      */
     @Property(name = "visible",
             displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of MastFooter.

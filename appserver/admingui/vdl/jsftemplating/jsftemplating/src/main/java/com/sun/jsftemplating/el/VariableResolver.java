@@ -49,9 +49,7 @@ import java.util.StringTokenizer;
  * VariableResolver is used to parse expressions of the format.
  * </p>
  *
- * <p>
- * <dd>$&lt;type&gt;{&lt;key&gt;}</dd>
- * </p>
+ * <blockquote>$&lt;type&gt;{&lt;key&gt;}</blockquote>
  *
  * <p>
  * &lt;type&gt; refers to a registerd {@link VariableResolver.DataSource}, custom {@link VariableResolver.DataSource}s

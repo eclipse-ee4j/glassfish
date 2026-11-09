@@ -42,7 +42,7 @@ public final class FormRenderer extends AbstractRenderer {
         "accessKey",
         "onReset",
         "onSubmit",
-        "target"
+        "target",
     };
 
     /**

@@ -86,8 +86,8 @@ public class VirtualServerConfig {
      * Gets the location of the default web.xml configuration file.
      *
      * @return the location of the default web.xml configuration file, or
-     * <tt>null</tt> if <tt>setDefaultWebXml</tt> was never called on this
-     * <tt>VirtualServerConfig</tt>
+     * <code>null</code> if <code>setDefaultWebXml</code> was never called on this
+     * <code>VirtualServerConfig</code>
      */
     public String getDefaultWebXml() {
         return defaultWebXml;
@@ -107,8 +107,8 @@ public class VirtualServerConfig {
      * Gets the location of the default context.xml configuration file.
      *
      * @return the location of the default context.xml configuration file,
-     * or <tt>null</tt> if <tt>setContextXmlDefault</tt> was never called
-     * on this <tt>VirtualServerConfig</tt>
+     * or <code>null</code> if <code>setContextXmlDefault</code> was never called
+     * on this <code>VirtualServerConfig</code>
      */
     public String getContextXmlDefault() {
         return contextXmlDefault;
@@ -141,7 +141,7 @@ public class VirtualServerConfig {
      * <p>If this property is specified, the remote address must match for
      * this request to be accepted. If this property is not specified,
      * all requests are accepted unless the remote address matches a
-     * <tt>denyRemoteAddress</tt> pattern.
+     * <code>denyRemoteAddress</code> pattern.
      *
      * @param allowRemoteAddress the comma-separated list of regular
      * expression patterns that the remote client's IP address is compared
@@ -156,9 +156,9 @@ public class VirtualServerConfig {
      * the remote client's IP address is compared to.
      *
      * @return the comma-separated list of regular expression patterns that
-     * the remote client's IP address is compared to, or <tt>null</tt>
-     * if <tt>setAllowRemoteAddress</tt> was never called on this
-     * <tt>VirtualServerConfig</tt>
+     * the remote client's IP address is compared to, or <code>null</code>
+     * if <code>setAllowRemoteAddress</code> was never called on this
+     * <code>VirtualServerConfig</code>
      */
     public String getAllowRemoteAddress() {
         return allowRemoteAddress;
@@ -186,9 +186,9 @@ public class VirtualServerConfig {
      * the remote client's IP address is compared to.
      *
      * @return the comma-separated list of regular expression patterns that
-     * the remote client's IP address is compared to, or <tt>null</tt>
-     * if <tt>setDenyRemoteAddress</tt> was never called on this
-     * <tt>VirtualServerConfig</tt>
+     * the remote client's IP address is compared to, or <code>null</code>
+     * if <code>setDenyRemoteAddress</code> was never called on this
+     * <code>VirtualServerConfig</code>
      */
     public String getDenyRemoteAddress() {
         return denyRemoteAddress;
@@ -202,7 +202,7 @@ public class VirtualServerConfig {
      * <p>If this property is specified, the remote hostname must match
      * for this request to be accepted. If this property is not specified,
      * all requests are accepted unless the remote hostname matches a
-     * <tt>denyRemoteHost</tt> pattern.
+     * <code>denyRemoteHost</code> pattern.
      *
      * @param allowRemoteHost the comma-separated list of regular
      * expression patterns that the remote client's hostname (as returned
@@ -220,8 +220,8 @@ public class VirtualServerConfig {
      * @return the comma-separated list of regular expression patterns
      * that the remote client's hostname (as returned by
      * java.net.Socket.getInetAddress().getHostName()) is compared to,
-     * or <tt>null</tt> if <tt>setAllowRemoteHost</tt> was never called
-     * on this <tt>VirtualServerConfig</tt>
+     * or <code>null</code> if <code>setAllowRemoteHost</code> was never called
+     * on this <code>VirtualServerConfig</code>
      */
     public String getAllowRemoteHost() {
         return allowRemoteHost;
@@ -235,7 +235,7 @@ public class VirtualServerConfig {
      * <p>If this property is specified, the remote hostname must not
      * match for this request to be accepted. If this property is not
      * specified, request acceptance is governed solely by the
-     * <tt>allowRemoteHost</tt> property.
+     * <code>allowRemoteHost</code> property.
      *
      * @param denyRemoteHost the comma-separated list of regular
      * expression patterns that the remote client's hostname
@@ -254,8 +254,8 @@ public class VirtualServerConfig {
      * @return the comma-separated list of regular expression patterns that
      * the remote client's hostname (as returned by
      * java.net.Socket.getInetAddress().getHostName()) is compared to,
-     * or <tt>null</tt> if <tt>setDenyRemoteHost</tt> was never called
-     * on this <tt>VirtualServerConfig</tt>
+     * or <code>null</code> if <code>setDenyRemoteHost</code> was never called
+     * on this <code>VirtualServerConfig</code>
      */
     public String getDenyRemoteHost() {
         return denyRemoteHost;
@@ -263,8 +263,8 @@ public class VirtualServerConfig {
 
     /**
      * Sets the host names that will be assigned to any
-     * <tt>VirtualServer</tt> configured via this
-     * <tt>VirtualServerConfig</tt> separated by commas.
+     * <code>VirtualServer</code> configured via this
+     * <code>VirtualServerConfig</code> separated by commas.
      *
      * @param hostNames the host names
      */
@@ -273,8 +273,8 @@ public class VirtualServerConfig {
     }
 
     /**
-     * Gets the host names assigned to any <tt>VirtualServer</tt> configured
-     * via this <tt>VirtualServerConfig</tt>.
+     * Gets the host names assigned to any <code>VirtualServer</code> configured
+     * via this <code>VirtualServerConfig</code>.
      *
      * @return the host names
      */

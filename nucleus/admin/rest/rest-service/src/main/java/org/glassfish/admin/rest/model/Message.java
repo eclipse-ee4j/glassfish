@@ -20,7 +20,7 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class Message {
-    public static enum Severity {
+    public enum Severity {
         SUCCESS, WARNING, FAILURE
     };
 

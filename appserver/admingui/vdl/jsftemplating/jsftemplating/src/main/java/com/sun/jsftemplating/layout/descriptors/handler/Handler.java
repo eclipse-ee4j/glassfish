@@ -46,11 +46,11 @@ import java.util.Map;
  * The <strong>handler method</strong> to be invoked must have the following method signature:
  * </p>
  *
- * <p>
+ *
  * <BLOCKQUOTE> <CODE>
  *        public void doSomething(HandlerContext handlerCtx)
  *        </CODE> </BLOCKQUOTE>
- * </p>
+ *
  *
  * <p>
  * <code>void</code> be replaced with any type. Depending on the type of event, return values may be handled
@@ -62,7 +62,7 @@ import java.util.Map;
  * in the <code>com.sun.jsftemplating.handlers package</code>. Here is an example:
  * </p>
  *
- * <p>
+ *
  * <BLOCKQUOTE> <CODE>
  *        &#64;Handler(id="abc:doSomething",<br />
  *            input={<br />
@@ -74,7 +74,7 @@ import java.util.Map;
  *            })<br />
  *        public void doSomething(HandlerContext handlerCtx)
  *        </CODE> </BLOCKQUOTE>
- * </p>
+ *
  *
  * @author Ken Paulsen (ken.paulsen@sun.com)
  */
@@ -496,9 +496,9 @@ public class Handler implements java.io.Serializable {
         return checker.hasPermission();
     }
 
-    private HandlerDefinition _handlerDef = null;
+    private HandlerDefinition _handlerDef;
 
-    private String _condition = null;
+    private String _condition;
 
     private List<Handler> _childHandlers = _emptyList;
 

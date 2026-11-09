@@ -35,7 +35,7 @@ import static org.glassfish.weld.WeldDeployer.WELD_EXTENSION;
 
 /**
  * This is a decorator which calls Weld implementation to do necessary injection of a web component. It is called by
- * {@link com.sun.web.server.J2EEInstanceListener} before a web component is put into service.
+ * {@code com.sun.web.server.J2EEInstanceListener} before a web component is put into service.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
  * @author Roger.Kitain@Sun.COM

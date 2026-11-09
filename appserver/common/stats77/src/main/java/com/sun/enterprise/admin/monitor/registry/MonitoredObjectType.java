@@ -27,7 +27,6 @@ import java.util.HashMap;
  * various types. This object facilitates use of same GenericMonitorMBean as
  * MBean for both of them, but still distinguishes them.
  *
- * @see com.iplanet.ias.admin.monitor.GenericMonitorMBean
  * @author Originally authored by Abhijit Kumar
  * @author Copied from S1AS 7.0 source and modified by Shreedhar Ganapathy
  */

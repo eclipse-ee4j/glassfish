@@ -65,7 +65,7 @@ public class Selector extends WebuiInput implements SelectorManager {
     /**
      * Holds the ValueType of this component.
      */
-    private ValueTypeEvaluator valueTypeEvaluator = null;
+    private ValueTypeEvaluator valueTypeEvaluator;
 
     /**
      * If set, a label is rendered adjacent to the component with the value of
@@ -77,7 +77,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String label = null;
+    private String label;
 
     /**
      * Sets the style level for the generated label, provided the label
@@ -95,7 +95,7 @@ public class Selector extends WebuiInput implements SelectorManager {
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -106,7 +106,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when the element value of this component is
@@ -118,7 +118,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onChange = null;
+    private String onChange;
 
     /**
      * Specifies the options that the web application user can choose from. The
@@ -131,7 +131,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private Object items = null;
+    private Object items;
 
     /**
      * Flag indicating that the user is not permitted to activate this
@@ -141,12 +141,12 @@ public class Selector extends WebuiInput implements SelectorManager {
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * Disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -157,7 +157,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -169,7 +169,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -182,7 +182,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -194,7 +194,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -206,7 +206,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -218,7 +218,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -230,7 +230,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -242,7 +242,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -254,7 +254,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -266,7 +266,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -278,7 +278,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Scripting code executed when some text in this component value is
@@ -290,7 +290,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onSelect = null;
+    private String onSelect;
 
     /**
      * If this attribute is set to true, the value of the component is rendered
@@ -299,12 +299,12 @@ public class Selector extends WebuiInput implements SelectorManager {
     @Property(name = "readOnly",
             displayName = "Read-only",
             category = "Behavior")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -314,7 +314,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -326,7 +326,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -345,7 +345,7 @@ public class Selector extends WebuiInput implements SelectorManager {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -358,7 +358,7 @@ public class Selector extends WebuiInput implements SelectorManager {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -372,12 +372,12 @@ public class Selector extends WebuiInput implements SelectorManager {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * Visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Create a new instance.
@@ -426,7 +426,7 @@ public class Selector extends WebuiInput implements SelectorManager {
 
     /**
      * This implementation uses
-     * {@link ConversionUtilities.convertValueToObject}.
+     * {@code ConversionUtilities.convertValueToObject}.
      * @param context faces context
      * @param submittedValue raw value
      * @return Object
@@ -466,7 +466,7 @@ public class Selector extends WebuiInput implements SelectorManager {
 
         if (!(submittedValue instanceof String[])) {
             Object[] args = {
-                component.getClass().getName()
+                component.getClass().getName(),
             };
             String msg = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

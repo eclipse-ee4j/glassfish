@@ -49,7 +49,7 @@ public final class TimeStampRenderer extends AbstractRenderer {
      */
     private static final String[] CORE_ATTRIBUTES = {
         "style",
-        "title"
+        "title",
     };
 
     @Override

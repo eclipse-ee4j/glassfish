@@ -136,7 +136,7 @@ public class V2ToV3ConfigUpgrade implements ConfigurationUpgrade, PostConstruct 
         return s != null && s.length() > 0;
     }
 
-    private List<String> oldJvmOptions = null;
+    private List<String> oldJvmOptions;
     private final List<String> newJvmOptions = new ArrayList<String>();
     private static final String[] BASE_REMOVAL_LIST = new String[] { "-Djavax.management.builder.initial",
             "-Dsun.rmi.dgc.server.gcInterval", "-Dsun.rmi.dgc.client.gcInterval", "-Dcom.sun.enterprise.taglibs",

@@ -60,7 +60,7 @@ import static org.glassfish.exousia.permissions.RolesToPermissionsTransformer.cr
  * This class is used by the Enterprise Beans server to manage security. All the container object only call into this object for managing
  * security. This class cannot be subclassed.
  *
- * <p/>
+ * <p>
  * An instance of this class should be created per deployment unit.
  *
  * @author Harpreet Singh, monzillo

@@ -54,10 +54,8 @@ public interface WebProgrammaticLogin {
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse.
      * This is not used currently.
      * @param realm the realm name to be authenticated to. If the realm is null, authentication takes place in default realm
-     * @returns A Boolean object; true if login succeeded, false otherwise.
+     * @return A Boolean object; true if login succeeded, false otherwise.
      * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
-     * @throws Exception on login failure.
-     *
      */
     Boolean login(String user, char[] password, String realm, HttpServletRequest request, HttpServletResponse response);
 
@@ -67,7 +65,7 @@ public interface WebProgrammaticLogin {
      * @param request HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse.
      * This is not used currently.
-     * @returns A Boolean object; true if login succeeded, false otherwise.
+     * @return A Boolean object; true if login succeeded, false otherwise.
      * @see com.sun.enterprise.security.ee.authentication.ProgrammaticLogin
      * @throws Exception any exception encountered during logout operation
      */

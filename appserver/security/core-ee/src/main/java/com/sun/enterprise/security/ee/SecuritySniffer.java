@@ -99,7 +99,7 @@ public class SecuritySniffer extends GenericSniffer {
     /**
      * Sets up the container libraries so that any imported bundle from the connector jar file will now be known to the
      * module subsystem
-     * <p/>
+     * <p>
      * This method returns a {@link com.sun.enterprise.module.ModuleDefinition} for the module containing the core
      * implementation of the container. That means that this module will be locked as long as there is at least one module
      * loaded in the associated container.
@@ -128,7 +128,7 @@ public class SecuritySniffer extends GenericSniffer {
 
     /**
      * Returns the list of Containers that this Sniffer enables.
-     * <p/>
+     * <p>
      * The runtime will look up each container implementing using the names provided in the habitat.
      *
      * @return list of container names known to the habitat for this sniffer

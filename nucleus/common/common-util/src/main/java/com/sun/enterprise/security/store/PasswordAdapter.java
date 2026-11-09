@@ -60,7 +60,7 @@ public final class PasswordAdapter {
     /**
      * Construct a PasswordAdapter with given Shared Master Password, SMP using the default keyfile (domain-passwords.jceks)
      *
-     * @param smp master password
+     * @param masterPassword master password
      * @throws CertificateException
      * @throws IOException
      * @throws KeyStoreException
@@ -73,8 +73,8 @@ public final class PasswordAdapter {
     /**
      * Construct a PasswordAdapter with given Shared Master Password, SMP.
      *
-     * @param keyfileName the key file name
-     * @param smp master password
+     * @param keyStoreFileName the key file name
+     * @param masterPassword master password
      * @throws CertificateException
      * @throws IOException
      * @throws KeyStoreException
@@ -315,7 +315,7 @@ public final class PasswordAdapter {
      * </ul>
      * For these reasons, make a new KeyStore and write it, then swap it with the old one.
      *
-     * @param newpassword the new keystore password
+     * @param newMasterPassword the new keystore password
      * @throws KeyStoreException
      * @throws IOException
      * @throws NoSuchAlgorithmException

@@ -26,5 +26,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Target(METHOD)
 public @interface ConfigExtensionMethod {
-    public String value() default "basic-config-extension-handler";
+    String value() default "basic-config-extension-handler";
 }

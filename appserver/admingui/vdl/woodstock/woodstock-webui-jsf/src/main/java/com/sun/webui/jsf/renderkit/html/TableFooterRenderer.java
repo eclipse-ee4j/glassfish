@@ -34,12 +34,12 @@ import java.io.IOException;
 
 /**
  * This class renders TableFooter components.
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableFooterRenderer.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Renderer(
         @Renderer.Renders(componentFamily = "com.sun.webui.jsf.TableFooter"))

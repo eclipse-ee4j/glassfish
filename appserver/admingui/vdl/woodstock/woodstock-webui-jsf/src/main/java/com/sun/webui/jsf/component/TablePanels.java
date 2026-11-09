@@ -41,12 +41,12 @@ import java.util.List;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.component.TablePanels.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Component(type = "com.sun.webui.jsf.TablePanels",
         family = "com.sun.webui.jsf.TablePanels",
@@ -206,7 +206,7 @@ public final class TablePanels extends UIComponentBase
     /**
      * The Table ancestor enclosing this component.
      */
-    private Table table = null;
+    private Table table;
 
     /**
      * ABBR gives an abbreviated version of the cell's content. This allows
@@ -216,7 +216,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "abbr",
             displayName = "Abbreviation for Header Cell")
-    private String abbr = null;
+    private String abbr;
 
     /**
      * Use the {@code align} attribute to specify the horizontal alignment
@@ -232,7 +232,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "align",
             displayName = "Horizontal Alignment")
-    private String align = null;
+    private String align;
 
     /**
      * The AXIS attribute provides a method of categorizing cells. The
@@ -242,7 +242,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "axis",
             displayName = "Category of Header Cell")
-    private String axis = null;
+    private String axis;
 
     /**
      * The BGCOLOR attribute suggests a background color for the cell. The
@@ -256,7 +256,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "bgColor",
             displayName = "Cell Background Color")
-    private String bgColor = null;
+    private String bgColor;
 
     /**
      * Use the {@code char }attribute to specify a character to use for
@@ -269,7 +269,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "char",
             displayName = "Alignment Character")
-    private String charFor = null;
+    private String charFor;
 
     /**
      * Use the {@code charOff }attribute to specify the offset of the first
@@ -284,7 +284,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "charOff",
             displayName = "Alignment Character Offset")
-    private String charOff = null;
+    private String charOff;
 
     /**
      * The COLSPAN attribute of TD specifies the number of columns that are
@@ -300,14 +300,14 @@ public final class TablePanels extends UIComponentBase
     /**
      * colSpan set flag.
      */
-    private boolean colSpanSet = false;
+    private boolean colSpanSet;
 
     /**
      * Extra HTML to be appended to the tag output by this renderer.
      */
     @Property(name = "extraHtml",
             displayName = "Extra HTML")
-    private String extraHtml = null;
+    private String extraHtml;
 
     /**
      * Flag indicating this component should also render a filter panel, in
@@ -317,12 +317,12 @@ public final class TablePanels extends UIComponentBase
     @Property(name = "filterPanel",
             displayName = "Is Filter Panel",
             isAttribute = false)
-    private boolean filterPanel = false;
+    private boolean filterPanel;
 
     /**
      * filterPanel set flag.
      */
-    private boolean filterPanelSet = false;
+    private boolean filterPanelSet;
 
     /**
      * The HEADERS attribute specifies the header cells that apply to the TD.
@@ -332,7 +332,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "headers",
             displayName = "List of Header Cells for Current Cell")
-    private String headers = null;
+    private String headers;
 
     /**
      * The number of pixels for the cell's height. Styles should be used to
@@ -341,7 +341,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "height",
             displayName = "Height")
-    private String height = null;
+    private String height;
 
     /**
      * Use the {@code noWrap} attribute to disable word wrapping of this
@@ -352,19 +352,19 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "noWrap",
             displayName = "Suppress Word Wrap")
-    private boolean noWrap = false;
+    private boolean noWrap;
 
     /**
      * noWrap set flag.
      */
-    private boolean noWrapSet = false;
+    private boolean noWrapSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
      */
     @Property(name = "onClick",
             category = "Javascript")
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -372,7 +372,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onDblClick",
             displayName = "Double Click Script")
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -380,7 +380,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onKeyDown",
             displayName = "Key Down Script")
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -388,7 +388,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onKeyPress",
             displayName = "Key Press Script")
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -396,7 +396,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onKeyUp",
             displayName = "Key Up Script")
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -404,7 +404,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onMouseDown",
             displayName = "Mouse Down Script")
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -412,7 +412,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onMouseMove",
             displayName = "Mouse Move Script")
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -421,14 +421,14 @@ public final class TablePanels extends UIComponentBase
     @Property(name = "onMouseOut",
             displayName = "Mouse Out Script")
 
-    private String onMouseOut = null;
+    private String onMouseOut;
     /**
      * Scripting code executed when the user moves the mouse pointer into the
      * boundary of this component.
      */
     @Property(name = "onMouseOver",
             displayName = "Mouse In Script")
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -436,7 +436,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "onMouseUp",
             displayName = "Mouse Up Script")
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Flag indicating this component should also render a preferences panel, in
@@ -445,12 +445,12 @@ public final class TablePanels extends UIComponentBase
     @Property(name = "preferencesPanel",
             displayName = "Is Preferences Panel",
             isAttribute = false)
-    private boolean preferencesPanel = false;
+    private boolean preferencesPanel;
 
     /**
      * preferencesPanel set flag.
      */
-    private boolean preferencesPanelSet = false;
+    private boolean preferencesPanelSet;
 
     /**
      * The ROWSPAN attribute of TD specifies the number of rows that are spanned
@@ -466,7 +466,7 @@ public final class TablePanels extends UIComponentBase
     /**
      * rowSpan set flag.
      */
-    private boolean rowSpanSet = false;
+    private boolean rowSpanSet;
 
     /**
      * Use the {@code scope} attribute to specify that the data cells of
@@ -486,7 +486,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "scope",
             displayName = "Cells Covered By Header Cell")
-    private String scope = null;
+    private String scope;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -494,7 +494,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "style",
             displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -502,7 +502,7 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "styleClass",
             displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -512,7 +512,7 @@ public final class TablePanels extends UIComponentBase
     @Property(name = "toolTip",
             displayName = "Tool Tip",
             category = "Behavior")
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the {@code valign} attribute to specify the vertical alignment
@@ -525,19 +525,19 @@ public final class TablePanels extends UIComponentBase
      */
     @Property(name = "valign",
             displayName = "Vertical Position")
-    private String valign = null;
+    private String valign;
 
     /**
      * Use the visible attribute to indicate whether the component should be
      * viewable by the user in the rendered HTML page.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Use the {@code width} attribute to specify the width of the cells of
@@ -547,7 +547,7 @@ public final class TablePanels extends UIComponentBase
      * sheets.
      */
     @Property(name = "width", displayName = "Width")
-    private String width = null;
+    private String width;
 
     /**
      * Default constructor.
@@ -671,7 +671,7 @@ public final class TablePanels extends UIComponentBase
         // actual tooltip is set dynamically, when the embedded panel is open.
         child.setToolTip(theme.getMessage("table.panel.primarySortOrder",
                 new String[]{
-                    theme.getMessage("table.sort.augment.undeterminedAscending")
+                    theme.getMessage("table.sort.augment.undeterminedAscending"),
                 }));
 
         // Save facet and return child.
@@ -769,7 +769,7 @@ public final class TablePanels extends UIComponentBase
         // actual tooltip is set dynamically, when the embedded panel is open.
         child.setToolTip(theme.getMessage("table.panel.secondarySortOrder",
                 new String[]{
-                    theme.getMessage("table.sort.augment.undeterminedAscending")
+                    theme.getMessage("table.sort.augment.undeterminedAscending"),
                 }));
 
         // Save facet and return child.
@@ -942,7 +942,7 @@ public final class TablePanels extends UIComponentBase
         // actual tooltip is set dynamically, when the embedded panel is open.
         child.setToolTip(theme.getMessage("table.panel.tertiarySortOrder",
                 new String[]{
-                    theme.getMessage("table.sort.augment.undeterminedAscending")
+                    theme.getMessage("table.sort.augment.undeterminedAscending"),
                 }));
 
         // Save facet and return child.

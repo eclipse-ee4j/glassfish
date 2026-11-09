@@ -104,9 +104,9 @@ public class LoginContextDriver {
      * This method is just a convenience wrapper for <i>login(Subject, Class)</i> method. It will construct a PasswordCredential
      * class.
      *
-     * @param String username
-     * @param String password
-     * @param String realmName the name of the realm to login into, if realmName is null, we login into the default realm
+     * @param username username
+     * @param password password
+     * @param realmName realmName the name of the realm to login into, if realmName is null, we login into the default realm
      */
 
     public static void login(String username, char[] password, String realmName) {
@@ -143,8 +143,8 @@ public class LoginContextDriver {
      * <LI>X500Principal - Retrieve user and realm and set security context.
      * </ul>
      *
-     * @param Subject the subject of the client
-     * @param Class the class of the credential packaged in the subject.
+     * @param subject the subject of the client
+     * @param credentialClass the class of the credential packaged in the subject.
      *
      */
     public static void login(Subject subject, Class<?> credentialClass) throws LoginException {
@@ -308,7 +308,7 @@ public class LoginContextDriver {
      * @param username
      * @param password
      * @param realmName the realm to authenticate under
-     * @returns Subject on successful authentication
+     * @return Subject on successful authentication
      * @throws LoginException
      */
     public static Subject jmacLogin(Subject subject, String username, char[] password, String realmName) throws LoginException {
@@ -607,8 +607,8 @@ public class LoginContextDriver {
      * Perform login on the client side. It just simulates the login on the client side. The method uses the callback handlers and
      * generates correct credential information that will be later sent to the server
      *
-     * @param int type whether it is <i> username_password</i> or <i> certificate </i> based login.
-     * @param CallbackHandler the callback handler to gather user information.
+     * @param type type whether it is <i> username_password</i> or <i> certificate </i> based login.
+     * @param jaasHandler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
      */
     public static Subject doClientLogin(int type, javax.security.auth.callback.CallbackHandler jaasHandler) throws LoginException {

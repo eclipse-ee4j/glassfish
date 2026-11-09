@@ -19,8 +19,8 @@ package com.sun.enterprise.universal;
 /**
  * This class is needed so often in so many places.  It is centralized once and
  * for all here.
- * @param K key type
- * @param V value type
+ * @param <K> key type
+ * @param <V> value type
  * @author bnevins
  */
 public class NameValue<K, V> {

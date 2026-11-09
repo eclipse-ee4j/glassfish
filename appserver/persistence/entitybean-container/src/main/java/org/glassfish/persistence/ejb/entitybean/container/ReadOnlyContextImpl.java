@@ -32,7 +32,7 @@ public final class ReadOnlyContextImpl
 {
     private int pkLevelSequenceNum;
     private long lastRefreshedAt;
-    private boolean removed = false;
+    private boolean removed;
 
     // only non-null when associated with a primary-key
     transient private ReadOnlyBeanInfo robInfo;

@@ -85,7 +85,7 @@ public class ApplicationResponse extends ServletResponseWrapper {
      * Is this wrapped response the subject of an <code>include()</code>
      * call?
      */
-    protected boolean included = false;
+    protected boolean included;
 
 
     // ------------------------------------------------ ServletResponse Methods

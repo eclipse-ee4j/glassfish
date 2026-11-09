@@ -21,7 +21,7 @@ import jakarta.faces.event.ComponentSystemEvent;
 
 /**
  * <p>
- * This event is used for dispatching {@link Task} related events.
+ * This event is used for dispatching {@code Task} related events.
  * </p>
  */
 public class FragmentReadyEvent extends ComponentSystemEvent {

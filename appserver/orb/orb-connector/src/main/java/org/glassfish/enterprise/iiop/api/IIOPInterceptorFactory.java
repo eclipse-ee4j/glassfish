@@ -29,7 +29,7 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
 @Contract
 public interface IIOPInterceptorFactory {
 
-    public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec);
+    ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec);
 
-    public ServerRequestInterceptor createServerRequestInterceptor(ORBInitInfo info, Codec codec);
+    ServerRequestInterceptor createServerRequestInterceptor(ORBInitInfo info, Codec codec);
 }

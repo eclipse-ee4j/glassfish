@@ -32,12 +32,12 @@ public interface NativeXAResource extends XAResource {
     /**
      *  Opens the RM for the calling thread (xa_open).
      */
-     public void open() throws XAException;
+     void open() throws XAException;
 
     /**
      *  Closes the RM for the calling thread (xa_close).
      */
-    public void close() throws XAException;
+    void close() throws XAException;
 
     /**
      * checks if the thread has opened (xa_open) the RM atleast once.
@@ -46,11 +46,11 @@ public interface NativeXAResource extends XAResource {
      *
      * @return true if the thread has opened the resource (RM) atleast once.
      */
-    public boolean isInitialized(Thread thread);
+    boolean isInitialized(Thread thread);
 
     /**
      * enlist the JDBC connection in XA (needed to support MSSQLServer)
      * this should be called once per connection per transaction
      */
-    public void enlistConnectionInXA();
+    void enlistConnectionInXA();
 }

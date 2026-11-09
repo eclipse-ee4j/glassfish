@@ -83,7 +83,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     // The XML tag associated with this Node
     private static final XMLElement tag = new XMLElement(ApplicationTagNames.APPLICATION);
 
-    private final static List<String> initSystemIDs() {
+    private static List<String> initSystemIDs() {
         List<String> systemIDs = new ArrayList<>();
         systemIDs.add(SCHEMA_ID);
         systemIDs.add(SCHEMA_ID_14);

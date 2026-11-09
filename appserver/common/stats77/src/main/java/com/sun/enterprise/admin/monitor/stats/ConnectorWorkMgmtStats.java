@@ -30,7 +30,7 @@ import org.glassfish.j2ee.statistics.Stats;
 public interface ConnectorWorkMgmtStats extends Stats {
 
     /**
-     * returns the current, low & high counts of the work objects executed for
+     * returns the current, low &amp; high counts of the work objects executed for
      * a connector module since the last reset. This is an aggregate of all the
      * doWork, doSchedule, and doStart work objects initiated by the connector
      * module
@@ -39,7 +39,7 @@ public interface ConnectorWorkMgmtStats extends Stats {
     RangeStatistic getActiveWorkCount();
 
     /**
-     * indicates the current, high & low of the number of work objects waiting
+     * indicates the current, high &amp; low of the number of work objects waiting
      * in the work queue before executing, since the last reset
      * @return RangeStatistic
      */

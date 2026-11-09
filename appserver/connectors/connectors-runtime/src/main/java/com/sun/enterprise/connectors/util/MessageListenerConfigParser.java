@@ -54,7 +54,7 @@ public interface MessageListenerConfigParser extends ConnectorConfigParser {
      * and the datatype as the value
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @param  messageListenerType message listener type.It is uniqie
-     *          across all <messagelistener> sub-elements in <messageadapter>
+     *          across all &lt;messagelistener&gt; sub-elements in &lt;messageadapter&gt;
      *          element in a given rar.
      *  @return properties object with the property names(key) and datatype
      *          of property(as value).

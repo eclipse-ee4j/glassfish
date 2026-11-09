@@ -35,7 +35,7 @@ import static java.util.regex.Pattern.DOTALL;
  * <p>
  * The agent arguments are a comma-separated sequence of <code>[keyword=]quoted-or-unquoted-string</code>. The
  * "keyword=" part is optional. A given keyword can appear multiple times, so after analysis each keyword can map to
- * potentially multiple values (as a List<String>).
+ * potentially multiple values (as a List&lt;String&gt;).
  *
  * <p>
  * This class organizes the agent arguments into named and anonymous values.

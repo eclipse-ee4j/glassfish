@@ -64,37 +64,37 @@ public final class RepeatUnit implements Serializable {
     /**
      * Hours repeat unit.
      */
-    private static RepeatUnit hoursRi = null;
+    private static RepeatUnit hoursRi;
 
     /**
      * Days repeat unit.
      */
-    private static RepeatUnit daysRi = null;
+    private static RepeatUnit daysRi;
 
     /**
      * Weeks repeat unit.
      */
-    private static RepeatUnit weeksRi = null;
+    private static RepeatUnit weeksRi;
 
     /**
      * Months repeat unit.
      */
-    private static RepeatUnit monthsRi = null;
+    private static RepeatUnit monthsRi;
 
     /**
      * Calendar field.
      */
-    private Integer calField = null;
+    private Integer calField;
 
     /**
      * Calendar key.
      */
-    private String key = null;
+    private String key;
 
     /**
      * Calendar representation.
      */
-    private String representation = null;
+    private String representation;
 
     /**
      * Create a new instance.

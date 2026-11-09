@@ -62,7 +62,7 @@ public class TransactionServiceStatsProvider {
 
     private StringStatisticImpl state = new StringStatisticImpl("State", "String", "Indicates if the transaction service has been frozen.");
 
-    private boolean isFrozen = false;
+    private boolean isFrozen;
 
     private JavaEETransactionManager txMgr;
 

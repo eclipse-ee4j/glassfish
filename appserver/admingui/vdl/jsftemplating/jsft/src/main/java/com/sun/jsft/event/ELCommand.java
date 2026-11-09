@@ -142,8 +142,8 @@ public class ELCommand extends Command {
         return hash;
     }
 
-    private String resultVar = null;
-    private String el = null;
+    private String resultVar;
+    private String el;
     private transient int hash = -1;
     private static final long serialVersionUID = 6201115935174238909L;
 }

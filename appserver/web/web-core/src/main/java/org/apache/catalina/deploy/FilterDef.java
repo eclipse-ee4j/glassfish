@@ -42,17 +42,17 @@ public class FilterDef implements Serializable {
     /**
      * The description of this filter.
      */
-    private String description = null;
+    private String description;
 
     /**
      * The display name of this filter.
      */
-    private String displayName = null;
+    private String displayName;
 
     /**
      * The fully qualified name of the Java class that implements this filter.
      */
-    private String filterClassName = null;
+    private String filterClassName;
 
     /*
      * The class from which this filter will be instantiated
@@ -68,17 +68,17 @@ public class FilterDef implements Serializable {
      * The name of this filter, which must be unique among the filters
      * defined for a particular web application.
      */
-    private String filterName = null;
+    private String filterName;
 
     /**
      * The large icon associated with this filter.
      */
-    private String largeIcon = null;
+    private String largeIcon;
 
     /**
      * The small icon associated with this filter.
      */
-    private String smallIcon = null;
+    private String smallIcon;
 
     /**
      * The set of initialization parameters for this filter, keyed by
@@ -89,7 +89,7 @@ public class FilterDef implements Serializable {
     /**
      * True if this filter supports async operations, false otherwise
      */
-    private boolean isAsyncSupported = false;
+    private boolean isAsyncSupported;
 
 
     // ------------------------------------------------------------- Properties

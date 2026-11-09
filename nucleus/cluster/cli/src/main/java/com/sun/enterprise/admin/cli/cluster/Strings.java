@@ -36,7 +36,7 @@ final class Strings {
         return strings.get(indexString);
     }
 
-    final static String get(String indexString, Object... objects) {
+    static String get(String indexString, Object... objects) {
         return strings.get(indexString, objects);
     }
 

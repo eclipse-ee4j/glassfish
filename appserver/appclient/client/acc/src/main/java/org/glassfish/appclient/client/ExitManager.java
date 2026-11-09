@@ -44,7 +44,7 @@ class ExitManager implements Runnable {
 
     private PrintWriter reportWriter;
     private CommentWriter commentWriter;
-    private Throwable reportedFailure = null;
+    private Throwable reportedFailure;
     private AtomicInteger reportedStatus = new AtomicInteger(0);
 
     private static final Logger logger = Logger.getLogger(ExitManager.class.getName());

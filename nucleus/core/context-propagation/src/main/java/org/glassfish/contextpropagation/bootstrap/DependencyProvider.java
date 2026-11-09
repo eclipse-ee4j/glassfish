@@ -25,9 +25,9 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface DependencyProvider {
-  public LoggerAdapter getLoggerAdapter();
-  public ThreadLocalAccessor getThreadLocalAccessor();
-  public ContextAccessController getContextAccessController();
-  public WireAdapter getDefaultWireAdapter();
-  public String getGuid();
+  LoggerAdapter getLoggerAdapter();
+  ThreadLocalAccessor getThreadLocalAccessor();
+  ContextAccessController getContextAccessController();
+  WireAdapter getDefaultWireAdapter();
+  String getGuid();
 }

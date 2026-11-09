@@ -24,12 +24,12 @@
 package com.sun.enterprise.admin.monitor.callflow;
 
 public interface CallFlowInfo {
-    public String getApplicationName();
-    public String getModuleName();
-    public String getComponentName();
-    public ComponentType getComponentType();
-    public java.lang.reflect.Method getMethod();
-    public String getTransactionId();
-    public String getCallerPrincipal();
-    public Throwable getException();
+    String getApplicationName();
+    String getModuleName();
+    String getComponentName();
+    ComponentType getComponentType();
+    java.lang.reflect.Method getMethod();
+    String getTransactionId();
+    String getCallerPrincipal();
+    Throwable getException();
 }

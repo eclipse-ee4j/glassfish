@@ -61,7 +61,7 @@ public final class CommonTaskRenderer extends AbstractRenderer {
      * The set of integer pass-through attributes to be rendered.
      */
     private static final String[] INT_ATTRIBUTES = {
-        "tabIndex"
+        "tabIndex",
     };
 
     /**
@@ -96,7 +96,7 @@ public final class CommonTaskRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseMove",
         "onMouseOut",
-        "onMouseOver"
+        "onMouseOver",
     };
 
     /**

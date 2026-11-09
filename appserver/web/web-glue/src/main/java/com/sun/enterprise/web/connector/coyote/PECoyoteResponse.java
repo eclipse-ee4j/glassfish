@@ -55,7 +55,7 @@ public class PECoyoteResponse extends Response {
                     extends org.apache.catalina.connector.CoyoteWriter
                     implements org.glassfish.jsp.api.ByteWriter {
 
-        public PECoyoteWriter(OutputBuffer ob) {
+        PECoyoteWriter(OutputBuffer ob) {
             super(ob);
         }
     }

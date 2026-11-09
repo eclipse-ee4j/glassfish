@@ -185,7 +185,7 @@ public abstract class TreeAdaptorBase implements TreeAdaptor {
         return null;
     }
 
-    private Object _topNodeObject = null;
-    private LayoutComponent _layoutComponent = null;
-    private UIComponent _parent = null;
+    private Object _topNodeObject;
+    private LayoutComponent _layoutComponent;
+    private UIComponent _parent;
 }

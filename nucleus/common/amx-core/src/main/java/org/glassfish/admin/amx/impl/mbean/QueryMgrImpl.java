@@ -75,7 +75,7 @@ public class QueryMgrImpl extends AMXImplBase // implements Query
     }
 
     /**
-    @return Set<ObjectName> containing all items that have the matching type and name
+    @return Set&lt;ObjectName&gt; containing all items that have the matching type and name
      */
     public ObjectName[] queryTypeName(
             final String type,
@@ -130,7 +130,7 @@ public class QueryMgrImpl extends AMXImplBase // implements Query
         return asArray(names);
     }
 
-    private final ObjectName[] asArray(final Set<ObjectName> items) {
+    private ObjectName[] asArray(final Set<ObjectName> items) {
         return CollectionUtil.toArray(items, ObjectName.class);
     }
 

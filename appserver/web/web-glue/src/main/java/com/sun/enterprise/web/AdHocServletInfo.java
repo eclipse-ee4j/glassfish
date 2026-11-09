@@ -34,7 +34,7 @@ public interface AdHocServletInfo {
      *
      * @return The servlet class
      */
-    public Class getServletClass();
+    Class getServletClass();
 
     /**
      * Returns the name of the servlet that the container should assign when it
@@ -42,7 +42,7 @@ public interface AdHocServletInfo {
      *
      * @return The servlet name
      */
-    public String getServletName();
+    String getServletName();
 
     /**
      * Returns a Map containing name and value pairs to be used in preparing
@@ -50,6 +50,6 @@ public interface AdHocServletInfo {
      *
      * @return Map containing the servlet init parameters
      */
-    public Map<String,String> getServletInitParams();
+    Map<String,String> getServletInitParams();
 
 }

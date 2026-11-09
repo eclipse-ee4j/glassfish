@@ -49,7 +49,7 @@ public final class TextAreaRenderer extends FieldRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                TextArea.class.getName()
+                TextArea.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

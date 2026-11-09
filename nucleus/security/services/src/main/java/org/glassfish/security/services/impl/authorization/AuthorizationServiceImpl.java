@@ -56,7 +56,7 @@ import static org.glassfish.security.services.impl.ServiceLogging.SHARED_LOGMESS
 /**
  * <code>AuthorizationServiceImpl</code> implements
  * <code>{@link org.glassfish.security.services.api.authorization.AuthorizationService}</code> by delegating
- * authorization decisions to configured <code>{@link org.glassfish.security.services.spi.AuthorizationProvider}</code>
+ * authorization decisions to configured <code>{@code org.glassfish.security.services.spi.AuthorizationProvider}</code>
  * instances.
  */
 @Service
@@ -350,7 +350,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
     /**
      * Appends the given <code>{@link org.glassfish.security.services.api.authorization.AzAttributeResolver}</code> instance
      * to the internal ordered list of <code>AzAttributeResolver</code> instances, if not currently in the list based on
-     * <code>{@link org.glassfish.security.services.api.authorization.AzAttributeResolver#equals}</code>.
+     * <code>{@code org.glassfish.security.services.api.authorization.AzAttributeResolver#equals}</code>.
      *
      * @param resolver The <code>AzAttributeResolver</code> instance to append.
      * @return true if the <code>AzAttributeResolver</code> was added, false if the <code>AzAttributeResolver</code> was
@@ -435,7 +435,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      *
      * @return The initialization state
      */
-    final InitializationState getInitializationState() {
+    InitializationState getInitializationState() {
         return initialized;
     }
 
@@ -445,7 +445,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      * @return The reason why the service failed to initialize, null if initialization was successful or the failure reason
      * was unknown.
      */
-    final String getReasonInitializationFailed() {
+    String getReasonInitializationFailed() {
         return reasonInitFailed;
     }
 
@@ -454,7 +454,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      *
      * @throws IllegalStateException This service is not available.
      */
-    final void checkServiceAvailability() {
+    void checkServiceAvailability() {
         if (InitializationState.SUCCESS_INIT != getInitializationState()) {
             throw new IllegalStateException(
                     localStrings.getLocalString("service.atz.not_avail", "The Authorization service is not available.")

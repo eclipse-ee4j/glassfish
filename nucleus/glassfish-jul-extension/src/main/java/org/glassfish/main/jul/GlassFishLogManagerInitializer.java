@@ -71,6 +71,7 @@ public final class GlassFishLogManagerInitializer {
      * @param configuration - logging.properties file content, if null, {@link GlassFishLogManager}
      *            will try to resolve it, the solution depends on JVM options.
      * @return true if the operation was successful
+     * @throws IllegalStateException if the {@link GlassFishLogManager} class could not be loaded
      */
     public static synchronized boolean tryToSetAsDefault(final Properties configuration) {
         stacktrace(GlassFishLogManagerInitializer.class, "tryToSetAsDefault(" + configuration + ")");

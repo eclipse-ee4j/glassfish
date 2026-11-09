@@ -67,6 +67,6 @@ interface CompletionHandler {
      *
      *
      */
-    abstract void setCompleted( boolean aborted,
+    void setCompleted( boolean aborted,
                                 boolean heuristicDamage );
 }

@@ -50,11 +50,11 @@ import static java.lang.System.Logger.Level.WARNING;
  * <p>
  * Callers can process the entire payload
  * at once, treating each Part as a file, using the {@link #processParts}
- * method.  Or, the caller can invoke the {@link #processPart}
+ * method.  Or, the caller can invoke the {@code processPart}
  * method to work with a single Part as a file.
  * <p>
  * If the caller wants to extract the payload's content as temporary files it should
- * instantiate {@link Temp} which exposes a {@link PayLoadFilesManager.Temp#cleanup}
+ * instantiate {@link Temp} which exposes a {@code PayLoadFilesManager.Temp#cleanup}
  * method.  The caller should invoke this method once it has finished with
  * the transferred files, although the finalizer will invoke cleanup just in case.
  * <p>
@@ -64,7 +64,7 @@ import static java.lang.System.Logger.Level.WARNING;
  * <code>Temp</code> uses a unique temporary directory, then creates one
  * temp file for each part it is asked to deal with, either from an entire payload
  * ({@link #processParts(org.glassfish.api.admin.Payload.Inbound)}) or a
- * single part ({@link #processPart(org.glassfish.api.admin.Payload.Part)}).  Recall that each part in the
+ * single part ({@code processPart(org.glassfish.api.admin.Payload.Part)}).  Recall that each part in the
  * payload has a name which is a relative or absolute URI.
  *
  * @author tjquinn
@@ -144,7 +144,7 @@ public abstract class PayloadFilesManager {
      * against the targetDir).
      * <p>
      * Finally, the "output name" is either the
-     * name from the Payload.Part for the {@link #extractFile(org.glassfish.api.admin.Payload.Part) }
+     * name from the Payload.Part for the {@code extractFile(org.glassfish.api.admin.Payload.Part)}
      * method or the caller-provided argument in the {@link #extractFile(org.glassfish.api.admin.Payload.Part, java.lang.String) }
      * method.
      * <p>
@@ -241,7 +241,7 @@ public abstract class PayloadFilesManager {
      */
     public static class Temp extends PayloadFilesManager {
 
-        private boolean isCleanedUp = false;
+        private boolean isCleanedUp;
 
         public Temp(final File parentDir, final ActionReport report) throws IOException {
             super(createTempFolder(parentDir), report);
@@ -292,7 +292,7 @@ public abstract class PayloadFilesManager {
         }
     }
 
-    protected abstract void postExtract(final File extractedFile);
+    protected abstract void postExtract(File extractedFile);
 
     protected URI getOutputFileURI(Part part, String name) throws IOException {
         /*
@@ -483,7 +483,6 @@ public abstract class PayloadFilesManager {
      * Returns all Files extracted from the Payload, treating each Part as a
      * separate file.
      * @param inboundPayload Payload containing file data to be extracted
-     * @parma reportHandler invoked for each ActionReport Part in the payload
      * @return the Files corresponding to the content of each extracted file
      * @throws java.io.IOException
      */
@@ -494,7 +493,7 @@ public abstract class PayloadFilesManager {
     }
 
     public interface ActionReportHandler {
-        void handleReport(final InputStream reportStream) throws Exception;
+        void handleReport(InputStream reportStream) throws Exception;
     }
 
     protected abstract void postProcessParts();
@@ -643,7 +642,7 @@ public abstract class PayloadFilesManager {
          * @throws IOException
          */
         protected abstract File processPart(
-                final PayloadFilesManager pfm, final Part part, final String partName)
+                PayloadFilesManager pfm, Part part, String partName)
                 throws Exception;
 
         /**

@@ -31,14 +31,14 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface DataProvider {
 
-    public boolean accept(Class clazz);
+    boolean accept(Class clazz);
 
     //    public byte[] toByteArray(Object o);
 
-    public void writeToStream(Object o, OutputStream stream) throws IOException;
+    void writeToStream(Object o, OutputStream stream) throws IOException;
 
     //    public Object toInstance(byte[] data, Class clazz);
 
-    public Object toInstance(InputStream stream, Class clazz) throws IOException;
+    Object toInstance(InputStream stream, Class clazz) throws IOException;
 
 }

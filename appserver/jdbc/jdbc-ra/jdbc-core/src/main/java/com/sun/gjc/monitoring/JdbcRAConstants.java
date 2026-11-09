@@ -30,63 +30,63 @@ public interface JdbcRAConstants {
     /**
      * Represents the statement cache hit monitoring event.
      */
-    public static final String STATEMENT_CACHE_HIT = "statementCacheHitEvent";
+    String STATEMENT_CACHE_HIT = "statementCacheHitEvent";
 
     /**
      * Represents the statement cache miss monitoring event.
      */
-    public static final String STATEMENT_CACHE_MISS = "statementCacheMissEvent";
+    String STATEMENT_CACHE_MISS = "statementCacheMissEvent";
 
     /**
      * Represents caching of sql query event.
      */
-    public static final String TRACE_SQL = "traceSQLEvent";
+    String TRACE_SQL = "traceSQLEvent";
 
-    public static final String POTENTIAL_STATEMENT_LEAK = "potentialStatementLeakEvent";
+    String POTENTIAL_STATEMENT_LEAK = "potentialStatementLeakEvent";
 
     /**
      * Represents module provider name.
      */
-    public static final String GLASSFISH = "glassfish";
+    String GLASSFISH = "glassfish";
 
     /**
      * Represents the module name
      */
-    public static final String JDBCRA = "jdbcra";
+    String JDBCRA = "jdbcra";
 
     /**
      * Represents probe provider name
      */
-    public static final String STATEMENT_CACHE_PROBE = "statementcache";
+    String STATEMENT_CACHE_PROBE = "statementcache";
 
     /**
      * Represents probe provider name for sql tracing.
      */
-    public static final String SQL_TRACING_PROBE = "sqltracing";
+    String SQL_TRACING_PROBE = "sqltracing";
 
-    public static final String STATEMENT_LEAK_PROBE = "statementleak";
+    String STATEMENT_LEAK_PROBE = "statementleak";
 
     /**
      * Dotted name used in monitoring for Statement caching.
      */
-    public static final String STATEMENT_CACHE_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_CACHE_PROBE
+    String STATEMENT_CACHE_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_CACHE_PROBE
             + ":";
 
     /**
      * Dotted name used in monitoring for Sql Tracing.
      */
-    public static final String SQL_TRACING_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + SQL_TRACING_PROBE + ":";
+    String SQL_TRACING_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + SQL_TRACING_PROBE + ":";
 
-    public static final String STATEMENT_LEAK_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_LEAK_PROBE + ":";
+    String STATEMENT_LEAK_DOTTED_NAME = GLASSFISH + ":" + JDBCRA + ":" + STATEMENT_LEAK_PROBE + ":";
 
     /**
      * Represents top queries to report.
      */
-    public static final String REPORT_QUERIES = "reportQueriesEvent";
+    String REPORT_QUERIES = "reportQueriesEvent";
 
     /**
      * List of valid method names that can be used for sql trace monitoring.
      */
-    public static final List<String> validSqlTracingMethodNames = Collections.unmodifiableList(Arrays.asList(
+    List<String> validSqlTracingMethodNames = Collections.unmodifiableList(Arrays.asList(
             "nativeSQL", "prepareCall", "prepareStatement", "addBatch", "execute", "executeQuery", "executeUpdate"));
 }

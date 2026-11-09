@@ -41,7 +41,7 @@ public class LruCache<K, V> extends BaseCache<K, V> {
     protected long timeout = NO_TIMEOUT;
 
     protected int defaultMaxEntries = Constants.DEFAULT_MAX_ENTRIES;
-    protected boolean isUnbounded = false;
+    protected boolean isUnbounded;
 
     /**
      * default constructor
@@ -51,7 +51,7 @@ public class LruCache<K, V> extends BaseCache<K, V> {
     /**
      * constructor with specified max entries.
      * @param defaultMaxEntries specifies the default max entries
-     *        to use when the maxEntries is <= 0.
+     *        to use when the maxEntries is &lt;= 0.
      */
     public LruCache(int defaultMaxEntries) {
         this.defaultMaxEntries = defaultMaxEntries;
@@ -63,7 +63,6 @@ public class LruCache<K, V> extends BaseCache<K, V> {
      * @param loadFactor the load factor
      * @param timeout to be used to trim the expired entries
      * @param props opaque list of properties for a given cache implementation
-     * @throws a generic Exception if the initialization failed
      */
     public void init(int maxEntries, long timeout, float loadFactor, Properties props) {
 

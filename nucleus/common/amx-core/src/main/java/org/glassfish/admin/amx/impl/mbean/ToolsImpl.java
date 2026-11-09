@@ -182,7 +182,7 @@ public class ToolsImpl extends AMXImplBase // implements Tools
 
     public String validate(final ObjectName objectName) {
         return validate(new ObjectName[]{
-                    objectName
+                    objectName,
                 });
     }
 

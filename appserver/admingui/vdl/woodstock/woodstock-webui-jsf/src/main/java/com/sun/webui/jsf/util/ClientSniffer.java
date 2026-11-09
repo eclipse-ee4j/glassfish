@@ -30,7 +30,7 @@ import java.util.StringTokenizer;
  * http://www.mozilla.org/docs/web-developer/sniffer/browser_type.html
  * </p><p>
  * Usage Example:
- * </p><p>
+ * </p>
  * <pre>
  * FacesContext context = FacesContext.getCurrentInstance();
  * ClientSniffer cs = new ClientSniffer(context);
@@ -43,12 +43,12 @@ import java.util.StringTokenizer;
  *     stylesheet = CCStyle.IE5_UP_CSS;
  * } else if (isNav6up()) {
  *     stylesheet = CCStyle.NS6_UP_CSS;
- * } else if (isNav4up() && isWin()) {
+ * } else if (isNav4up() &amp;&amp; isWin()) {
  *     stylesheet = CCStyle.NS4_WIN_CSS;
- * } else if (isNav4up() && isSun()) {
+ * } else if (isNav4up() &amp;&amp; isSun()) {
  *     stylesheet = CCStyle.NS4_SOL_CSS;
  * }
- * </pre></p><p>
+ * </pre>
  *
  */
 @SuppressWarnings("checkstyle:magicnumber")
@@ -88,7 +88,7 @@ public final class ClientSniffer {
     /**
      * User agent.
      */
-    private String agent = null;
+    private String agent;
 
     /**
      * User agent major version number.

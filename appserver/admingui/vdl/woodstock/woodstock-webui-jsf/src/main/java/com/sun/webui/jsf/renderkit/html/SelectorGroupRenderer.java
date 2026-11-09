@@ -153,7 +153,7 @@ abstract class SelectorGroupRenderer extends RowColumnRenderer {
      */
     private static final int[] ROW_COL_STYLE = {
         GRP, GRP_CAPTION, GRP_ROW_EVEN, GRP_ROW_ODD,
-        GRP_CELL_EVEN, GRP_CELL_ODD
+        GRP_CELL_EVEN, GRP_CELL_ODD,
     };
 
     /**

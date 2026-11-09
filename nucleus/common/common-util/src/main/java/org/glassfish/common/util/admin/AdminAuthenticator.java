@@ -31,10 +31,10 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface AdminAuthenticator {
 
-    public static final String REST_TOKEN_NAME = "REST_TOKEN";
-    public static final String REMOTE_ADDR_NAME = "REMOTE_ADDR";
+    String REST_TOKEN_NAME = "REST_TOKEN";
+    String REMOTE_ADDR_NAME = "REMOTE_ADDR";
 
-    static enum AuthenticatorType {
+    enum AuthenticatorType {
             PRINCIPAL,
             REST_TOKEN,
             ADMIN_TOKEN,

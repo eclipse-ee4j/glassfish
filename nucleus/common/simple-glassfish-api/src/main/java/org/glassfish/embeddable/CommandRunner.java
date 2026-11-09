@@ -20,15 +20,15 @@ package org.glassfish.embeddable;
  * GlassFish has a very sophisticated command line interface (CLI) viz.,
  * 'asadmin' to executive administrative commands.
  *
- * <p/>This is a programmatic interface equivalent to 'asadmin'.
+ * <p>This is a programmatic interface equivalent to 'asadmin'.
  *
- * <p/>This interface allows the execution of the adminstrative commands
+ * <p>This interface allows the execution of the adminstrative commands
  * from an application which embeds GlassFish.
  *
- * <p/>A command runner is obtained by calling
+ * <p>A command runner is obtained by calling
  * {@link org.glassfish.embeddable.GlassFish#getCommandRunner()}.
  *
- * <p/>A command runner is a per-lookup type object, which means each time
+ * <p>A command runner is a per-lookup type object, which means each time
  * {@link GlassFish#getCommandRunner()} is called, it returns a new instance of command runner.
  *
  * Command specific options are passed in the var-args argument of {@link #run(String, String...)} method.
@@ -42,7 +42,7 @@ public interface CommandRunner {
      * command arguments. Refer to GlassFish Administration Guide to know about the commands supported
      * in GlassFish and their usage.
      *
-     * <p/>Example: To add an additional http listener 9090 :
+     * <p>Example: To add an additional http listener 9090 :
      *
      * <pre>
      *      commandRunner.run("create-http-listener", "--listenerport", "9090",

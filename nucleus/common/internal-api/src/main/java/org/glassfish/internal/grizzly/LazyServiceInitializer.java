@@ -42,7 +42,7 @@ public interface LazyServiceInitializer {
      * @return Return true if service initialization went through fine; false
      *         otherwise
      */
-    public boolean initializeService();
+    boolean initializeService();
 
     /**
      * Upon successful ACCEPT of every request on this port, the service
@@ -54,5 +54,5 @@ public interface LazyServiceInitializer {
      *
      * @param channel where the incoming request was accepted.
      */
-    public void handleRequest(SelectableChannel channel);
+    void handleRequest(SelectableChannel channel);
 }

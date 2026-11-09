@@ -99,12 +99,12 @@ public final class Property extends UIComponentBase
     @com.sun.faces.annotation.Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * The text specified with this attribute is displayed below the content of
@@ -118,7 +118,7 @@ public final class Property extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String helpText = null;
+    private String helpText;
 
     /**
      * Use this attribute to specify the text of the label of this property. The
@@ -134,7 +134,7 @@ public final class Property extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String label = null;
+    private String label;
 
     /**
      * Specifies the alignment for the property label. The label occupies a cell
@@ -150,7 +150,7 @@ public final class Property extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlHorizontalAlignEditor")
             //CHECKSTYLE:ON
-    private String labelAlign = null;
+    private String labelAlign;
 
     /**
      * Specifies that the label should not wrap around to another line, if set
@@ -162,12 +162,12 @@ public final class Property extends UIComponentBase
     @com.sun.faces.annotation.Property(name = "noWrap",
             displayName = "Label No-Wrap",
             category = "Appearance")
-    private boolean noWrap = false;
+    private boolean noWrap;
 
     /**
      * noWrap set flag.
      */
-    private boolean noWrapSet = false;
+    private boolean noWrapSet;
 
     /**
      * Specifies that the content of the property should occupy the label area
@@ -178,12 +178,12 @@ public final class Property extends UIComponentBase
     @com.sun.faces.annotation.Property(name = "overlapLabel",
             displayName = "Overlap Label",
             category = "Appearance")
-    private boolean overlapLabel = false;
+    private boolean overlapLabel;
 
     /**
      * overlapLabel set flag.
      */
-    private boolean overlapLabelSet = false;
+    private boolean overlapLabelSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -195,7 +195,7 @@ public final class Property extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -207,7 +207,7 @@ public final class Property extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -221,7 +221,7 @@ public final class Property extends UIComponentBase
     @com.sun.faces.annotation.Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * Constructor.
@@ -785,7 +785,7 @@ public final class Property extends UIComponentBase
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be

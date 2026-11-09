@@ -52,7 +52,7 @@ public class DeploymentOrder {
   public final static DeploymentType[] APPLICATION_DEPLOYMENT_ORDER = {
     DeploymentType.INTERNAL_APP,
     DeploymentType.CONNECTOR,
-    DeploymentType.DEFAULT_APP
+    DeploymentType.DEFAULT_APP,
   };
 
   /**

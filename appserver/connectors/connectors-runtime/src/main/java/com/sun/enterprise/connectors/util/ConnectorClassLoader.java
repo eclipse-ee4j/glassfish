@@ -208,7 +208,7 @@ public class ConnectorClassLoader extends ASURLClassLoader {
     /**
      * Returns all the resources of the connector classloaders in the chain,
      * concatenated to a classpath string.
-     * <p/>
+     * <p>
      * Notice that this method is called by the setClassPath() method of
      * org.apache.catalina.loader.WebappLoader, since the ConnectorClassLoader does
      * not extend off of URLClassLoader.

@@ -196,7 +196,7 @@ public class ResourceAttributes implements Attributes {
     /**
      * Collection flag.
      */
-    protected boolean collection = false;
+    protected boolean collection;
 
 
     /**
@@ -214,7 +214,7 @@ public class ResourceAttributes implements Attributes {
     /**
      * Creation date.
      */
-    protected Date creationDate = null;
+    protected Date creationDate;
 
 
     /**
@@ -226,49 +226,49 @@ public class ResourceAttributes implements Attributes {
     /**
      * Last modified date.
      */
-    protected Date lastModifiedDate = null;
+    protected Date lastModifiedDate;
 
 
     /**
      * Last modified date in HTTP format.
      */
-    protected String lastModifiedHttp = null;
+    protected String lastModifiedHttp;
 
 
     /**
      * MIME type.
      */
-    protected String mimeType = null;
+    protected String mimeType;
 
     /**
      * MIME type set flag.
      * To distinguish between init to null or not initialized
      */
-    private boolean mimeTypeInitialized = false;
+    private boolean mimeTypeInitialized;
 
 
     /**
      * Name.
      */
-    protected String name = null;
+    protected String name;
 
 
     /**
      * Weak ETag.
      */
-    protected String weakETag = null;
+    protected String weakETag;
 
 
     /**
      * Strong ETag.
      */
-    protected String strongETag = null;
+    protected String strongETag;
 
 
     /**
      * External attributes.
      */
-    protected Attributes attributes = null;
+    protected Attributes attributes;
 
 
     // ------------------------------------------------------------- Properties

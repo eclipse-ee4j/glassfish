@@ -45,7 +45,7 @@ public final class Script extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String charset = null;
+    private String charset;
 
     /**
      * Indicates the MIME type of the script. Default is
@@ -57,7 +57,7 @@ public final class Script extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Defines the absolute or relative URL to a file that contains the script.
@@ -71,7 +71,7 @@ public final class Script extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String url = null;
+    private String url;
 
     /**
      * Default constructor.

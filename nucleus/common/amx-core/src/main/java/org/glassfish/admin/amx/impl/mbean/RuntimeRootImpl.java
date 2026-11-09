@@ -56,7 +56,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
 AMX RealmsMgr implementation.
-Note that realms don't load until {@link #loadRealms} is called.
+Note that realms don't load until {@code loadRealms} is called.
  */
 public final class RuntimeRootImpl extends AMXImplBase
 {
@@ -76,7 +76,7 @@ public final class RuntimeRootImpl extends AMXImplBase
 
 
     @Override
-    protected final void registerChildren()
+    protected void registerChildren()
     {
         super.registerChildren();
 

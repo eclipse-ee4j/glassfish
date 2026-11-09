@@ -71,7 +71,7 @@ public abstract class ListRendererBase extends Renderer {
         "onKeyPress",
         "onKeyDown",
         "onKeyUp",
-        "onSelect"
+        "onSelect",
     };
 
     /**
@@ -92,7 +92,7 @@ public abstract class ListRendererBase extends Renderer {
      * </ul>
      * <p>If there is a label, the component will be laid out using a
      * HTML table. If not, the component will be rendered as a
-     * standalone HTML <tt>select</tt> element.</p>
+     * standalone HTML <code>select</code> element.</p>
      * @param component The component associated with the
      * renderer. Must be a subclass of ListSelector.
      * @param context The FacesContext of the request

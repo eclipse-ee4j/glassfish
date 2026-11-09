@@ -36,7 +36,7 @@ public class ContextResourceLink extends ResourceBase {
     /**
      * The name of this resource.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -50,7 +50,7 @@ public class ContextResourceLink extends ResourceBase {
     /**
      * The type of this resource.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);
@@ -64,7 +64,7 @@ public class ContextResourceLink extends ResourceBase {
     /**
      * The global name of this resource.
      */
-    private String global = null;
+    private String global;
 
     public String getGlobal() {
         return (this.global);

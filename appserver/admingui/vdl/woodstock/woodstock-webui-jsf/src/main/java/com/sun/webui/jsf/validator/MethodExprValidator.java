@@ -35,7 +35,7 @@ public final class MethodExprValidator implements Validator, StateHolder {
     /**
      * Method expression.
      */
-    private MethodExpression methodExpression = null;
+    private MethodExpression methodExpression;
 
     /**
      * Create a new instance.
@@ -47,7 +47,7 @@ public final class MethodExprValidator implements Validator, StateHolder {
     /**
      * Transient flag.
      */
-    private boolean transientValue = false;
+    private boolean transientValue;
 
     /**
      * Construct a {@link Validator} that contains a {@link MethodExpression}.
@@ -73,7 +73,7 @@ public final class MethodExprValidator implements Validator, StateHolder {
                 methodExpression.invoke(elContext, new Object[]{
                     context,
                     component,
-                    value
+                    value,
                 });
             } catch (ELException ee) {
                 Throwable e = ee.getCause();

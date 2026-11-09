@@ -31,17 +31,17 @@ import org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput;
  */
 public interface WorkContextEntry
 {
-  public static final WorkContextEntry
+  WorkContextEntry
     NULL_CONTEXT = new WorkContextEntryImpl(null, null, 1);
 
-  public WorkContext getWorkContext();
-  public String getName();
-  public int getPropagationMode();
-  public boolean isOriginator();
+  WorkContext getWorkContext();
+  String getName();
+  int getPropagationMode();
+  boolean isOriginator();
 
   /**
    * Writes the implementation of {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContext} to the
    * {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput} data stream.
    */
-  public void write(WorkContextOutput out) throws IOException;
+  void write(WorkContextOutput out) throws IOException;
 }

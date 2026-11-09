@@ -24,7 +24,9 @@ import java.io.File;
 /**
  * This class performs the file related validations such as
  * <ul>
- * existence of the file read, write & execute permissions, whether the file is a directory or a file
+ * <li>existence of the file</li>
+ * <li>read, write &amp; execute permissions</li>
+ * <li>whether the file is a directory or a file</li>
  * </ul>
  * <b>NOT THREAD SAFE</b>
  */

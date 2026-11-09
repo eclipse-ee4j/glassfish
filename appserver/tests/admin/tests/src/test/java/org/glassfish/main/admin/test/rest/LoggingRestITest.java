@@ -144,7 +144,7 @@ public class LoggingRestITest extends RestTestBase {
 
     private static final class ViewLogClient extends DomainAdminRestClient {
 
-        public ViewLogClient() {
+        ViewLogClient() {
             super("", TEXT_PLAIN);
         }
 

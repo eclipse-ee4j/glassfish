@@ -35,7 +35,7 @@ public abstract class EJBLocalRemoteObject
 
     transient protected BaseContainer container;
     transient protected Object primaryKey;
-    transient private boolean removed=false;
+    transient private boolean removed;
 
     // Only used for stateful SessionBeans
     transient private SessionContextImpl context;

@@ -59,7 +59,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(key=true)
     @NotNull
-    public String getName();
+    String getName();
 
     /**
      * Sets the value of the name property.
@@ -68,7 +68,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      *              {@link String }
      */
     @Param(name="name", primary = true)
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the lbConfigName property.
@@ -80,7 +80,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute
     @NotNull
-    public String getLbConfigName();
+    String getLbConfigName();
 
     /**
      * Sets the value of the lbConfigName property.
@@ -88,7 +88,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setLbConfigName(String value) throws PropertyVetoException;
+    void setLbConfigName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the device host property.
@@ -98,7 +98,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute
     @NotNull
-    public String getDeviceHost();
+    String getDeviceHost();
 
     /**
      * Sets the value of the device host property.
@@ -107,7 +107,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      *              {@link String }
      */
 
-    public void setDeviceHost(String value) throws PropertyVetoException;
+    void setDeviceHost(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the device port property.
@@ -117,7 +117,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute
     @NotNull
-    public String getDevicePort();
+    String getDevicePort();
 
     /**
      * Sets the value of the device port property.
@@ -125,7 +125,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setDevicePort(String value) throws PropertyVetoException;
+    void setDevicePort(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the auto apply enabled property.
@@ -135,7 +135,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(dataType=Boolean.class)
     @Deprecated
-    public String getAutoApplyEnabled();
+    String getAutoApplyEnabled();
 
     /**
      * Sets the value of the auto apply enabled property.
@@ -144,7 +144,7 @@ public interface LoadBalancer extends ConfigBeanProxy, PropertyBag {
      *              {@link String }
      */
     @Deprecated
-    public void setAutoApplyEnabled(String value) throws PropertyVetoException;
+    void setAutoApplyEnabled(String value) throws PropertyVetoException;
 
     /**
      *Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

@@ -157,7 +157,7 @@ public final class HelpUtils implements SearchListener {
     /**
      * Current request scheme.
      */
-    private String currentRequestScheme = null;
+    private String currentRequestScheme;
 
     /**
      * The application name (context name).

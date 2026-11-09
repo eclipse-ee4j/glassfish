@@ -49,20 +49,20 @@ public class ConnectionFactoryImpl implements ConnectionFactory, java.io.Seriali
 
     // Delegate all connection variables to ConnectionManager:
 
-        private String URL = null;
-        private String userName = null;
-        private char[] password = null;
-        private String driverName = null;
-        private int maxPool = 0;
-        private int minPool = 0;
-        private int msInterval = 0;
-        private int loginTimeout = 0;
-        private int msWait = 0;
+        private String URL;
+        private String userName;
+        private char[] password;
+        private String driverName;
+        private int maxPool;
+        private int minPool;
+        private int msInterval;
+        private int loginTimeout;
+        private int msWait;
         private int _txIsolation = -1;
-        private transient PrintWriter logWriter = null;
+        private transient PrintWriter logWriter;
 
-    private transient boolean _configured = false;
-    private transient ConnectionManager connectionManager = null;
+    private transient boolean _configured;
+    private transient ConnectionManager connectionManager;
 
         /**
          * I18N message handler

@@ -23,10 +23,10 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface JavaEEContainerManager {
 
-    public void registerContainer(String componentId, JavaEEContainer container);
+    void registerContainer(String componentId, JavaEEContainer container);
 
-    public void unregisterContainer(String componentId);
+    void unregisterContainer(String componentId);
 
-    public JavaEEContainer getContainerFor(String componentId);
+    JavaEEContainer getContainerFor(String componentId);
 
 }

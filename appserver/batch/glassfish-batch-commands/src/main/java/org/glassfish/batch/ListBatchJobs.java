@@ -123,7 +123,7 @@ public class ListBatchJobs
     protected final String[] getAllHeaders() {
         return new String[]{
                 JOB_NAME, APP_NAME, INSTANCE_COUNT, INSTANCE_ID, EXECUTION_ID, BATCH_STATUS,
-                START_TIME, END_TIME, EXIT_STATUS
+                START_TIME, END_TIME, EXIT_STATUS,
         };
     }
 

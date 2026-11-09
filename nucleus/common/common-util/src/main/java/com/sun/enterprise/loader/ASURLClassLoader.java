@@ -823,7 +823,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
          * @param file File
          * @throws IOException from parent
          */
-        public ProtectedJarFile(File file) throws IOException {
+        ProtectedJarFile(File file) throws IOException {
             super(file, true, OPEN_READ, Runtime.version());
         }
 
@@ -887,22 +887,22 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
          * file of the url,
          * ensure thread visibility by making it 'volatile'
          */
-        volatile File file = null;
+        volatile File file;
 
         /**
          * jar file if url is a jar else null,
          * ensure thread visibility by making it 'volatile'
          */
-        volatile ProtectedJarFile zip = null;
+        volatile ProtectedJarFile zip;
 
         /**
          * true if url is a jar,
          * ensure thread visibility by making it 'volatile'
          */
-        volatile boolean isJar = false;
+        volatile boolean isJar;
 
         /** ensure thread visibility by making it 'volatile' */
-        volatile HashMap<String, String> table = null;
+        volatile HashMap<String, String> table;
 
         /**
          * true if {@link #table} is a complete listing of a directory url, so a lookup
@@ -914,7 +914,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
          * ProtectionDomain with signers if jar is signed,
          * ensure thread visibility by making it 'volatile'
          */
-        volatile ProtectionDomain pd = null;
+        volatile ProtectionDomain pd;
 
         URLEntry(URL url, boolean indexContent) throws IOException {
             source = url;
@@ -1123,7 +1123,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
          * @param name String
          * @throws MalformedURLException from super class
          */
-        public InternalJarURLConnection(URL url, URLEntry res, String name)
+        InternalJarURLConnection(URL url, URLEntry res, String name)
             throws MalformedURLException {
             super(url);
             mRes = res;
@@ -1184,7 +1184,7 @@ public class ASURLClassLoader extends GlassfishUrlClassLoader implements JasperA
          * @param res URLEntry
          * @param name String
          */
-        public InternalURLStreamHandler(URLEntry res, String name) {
+        InternalURLStreamHandler(URLEntry res, String name) {
             mRes = res;
         }
 

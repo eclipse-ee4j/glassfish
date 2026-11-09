@@ -52,7 +52,7 @@ public class GrizzlyConfig implements MonitoringLevelListener{
     /**
      * Is monitoring already started.
      */
-    private boolean isMonitoringEnabled = false;
+    private boolean isMonitoringEnabled;
 
     /**
      * The JMX domain
@@ -76,7 +76,7 @@ public class GrizzlyConfig implements MonitoringLevelListener{
     /**
      * This server context's default services.
      */
-    private ServiceLocator services = null;
+    private ServiceLocator services;
 
 
     // --------------------------------------------------------------- //

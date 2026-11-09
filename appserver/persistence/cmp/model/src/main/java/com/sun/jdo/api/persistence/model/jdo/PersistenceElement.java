@@ -226,11 +226,11 @@ public abstract class PersistenceElement extends Object
     public interface Impl
     {
         /** Add some items. */
-        public static final int ADD = 1;
+        int ADD = 1;
         /** Remove some items. */
-        public static final int REMOVE = -1;
+        int REMOVE = -1;
         /** Set some items, replacing the old ones. */
-        public static final int SET = 0;
+        int SET = 0;
 
         /** Called to attach the implementation to a specific
          * element. Will be called in the element's constructor.
@@ -239,37 +239,37 @@ public abstract class PersistenceElement extends Object
          *
          * @param element the element to attach to
          */
-        public void attachToElement (PersistenceElement element);
+        void attachToElement (PersistenceElement element);
 
         /** Add a property change listener.
          * @param l the listener to add
          */
-        public void addPropertyChangeListener (PropertyChangeListener l);
+        void addPropertyChangeListener (PropertyChangeListener l);
 
         /** Remove a property change listener.
          * @param l the listener to remove
          */
-        public void removePropertyChangeListener (PropertyChangeListener l);
+        void removePropertyChangeListener (PropertyChangeListener l);
 
         /** Add a vetoable change listener.
          * @param l the listener to add
          */
-        public void addVetoableChangeListener (VetoableChangeListener l);
+        void addVetoableChangeListener (VetoableChangeListener l);
 
         /** Remove a vetoable change listener.
          * @param l the listener to remove
          */
-        public void removeVetoableChangeListener (VetoableChangeListener l);
+        void removeVetoableChangeListener (VetoableChangeListener l);
 
         /** Get the name of this persistence element.
          * @return the name
          */
-        public String getName ();
+        String getName ();
 
         /** Set the name of this persistence element.
          * @param name the name
          * @exception ModelException if impossible
          */
-        public void setName (String name) throws ModelException;
+        void setName (String name) throws ModelException;
     }
 }

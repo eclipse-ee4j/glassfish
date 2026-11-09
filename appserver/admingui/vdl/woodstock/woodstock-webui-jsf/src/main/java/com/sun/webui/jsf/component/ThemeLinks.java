@@ -43,12 +43,12 @@ public final class ThemeLinks extends UIComponentBase {
     @Property(name = "debug",
             displayName = "Enable Dojo Debugging",
             category = "Advanced")
-    private boolean debug = false;
+    private boolean debug;
 
     /**
      * debug set flag.
      */
-    private boolean debugSet = false;
+    private boolean debugSet;
 
     /**
      * Flag (true or false) indicating that component JavaScript should be
@@ -62,7 +62,7 @@ public final class ThemeLinks extends UIComponentBase {
     /**
      * javaScript set flag.
      */
-    private boolean javaScriptSet = false;
+    private boolean javaScriptSet;
 
     /**
      * Flag (true or false) indicating that DOJO should search for dojoType
@@ -72,12 +72,12 @@ public final class ThemeLinks extends UIComponentBase {
     @Property(name = "parseWidgets",
             displayName = "Parse Dojo Widgets",
             category = "Advanced")
-    private boolean parseWidgets = false;
+    private boolean parseWidgets;
 
     /**
      * parseWidgets set flag.
      */
-    private boolean parseWidgetsSet = false;
+    private boolean parseWidgetsSet;
 
     /**
      * If set to true, a link element with a reference to the theme style-sheet
@@ -86,12 +86,12 @@ public final class ThemeLinks extends UIComponentBase {
     @Property(name = "styleSheet",
             displayName = "Include StyleSheet Link",
             category = "Advanced")
-    private boolean styleSheet = false;
+    private boolean styleSheet;
 
     /**
      * styleSheet set flag.
      */
-    private boolean styleSheetSet = false;
+    private boolean styleSheetSet;
 
     /**
      * If set to true, the theme style-sheet contents will be rendered inline
@@ -100,12 +100,12 @@ public final class ThemeLinks extends UIComponentBase {
     @Property(name = "styleSheetInline",
             displayName = "Include StyleSheet Definitions Inline",
             category = "Advanced")
-    private boolean styleSheetInline = false;
+    private boolean styleSheetInline;
 
     /**
      * styleSheetInline set flag.
      */
-    private boolean styleSheetInlineSet = false;
+    private boolean styleSheetInlineSet;
 
     /**
      * Holds value of property styleSheetLink.

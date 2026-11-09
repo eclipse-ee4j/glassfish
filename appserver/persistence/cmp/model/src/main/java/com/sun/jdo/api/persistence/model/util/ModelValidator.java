@@ -2446,7 +2446,7 @@ public class ModelValidator {
         /**
          * Constructs a new ValidationComponent
          */
-        public ValidationComponent() {
+        ValidationComponent() {
         }
 
         /**

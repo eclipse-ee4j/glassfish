@@ -44,12 +44,12 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -60,7 +60,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when a mouse click occurs over this component. If
@@ -79,7 +79,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -93,7 +93,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -106,7 +106,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -118,7 +118,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -130,7 +130,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -142,7 +142,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -154,7 +154,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -166,7 +166,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -178,7 +178,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -190,7 +190,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -202,7 +202,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * The shape of the hot spot on the screen (for use in client-side image
@@ -214,7 +214,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             category = "Advanced",
             isHidden = true,
             isAttribute = false)
-    private String shape = null;
+    private String shape;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -224,7 +224,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -236,7 +236,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -255,7 +255,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The resource at the specified URL is displayed in the frame that is
@@ -269,7 +269,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FrameTargetsEditor")
             //CHECKSTYLE:ON
-    private String target = null;
+    private String target;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -281,7 +281,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * The MIME content type of the resource specified by this component.
@@ -292,7 +292,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.MimeTypesEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Absolute, relative, or context relative (starting with "/") URL to the
@@ -307,7 +307,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String url = null;
+    private String url;
 
     /**
      * The language code of the resource designated by this hyperlink.
@@ -318,7 +318,7 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.LanguagesEditor")
             //CHECKSTYLE:ON
-    private String urlLang = null;
+    private String urlLang;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -332,12 +332,12 @@ public class Hyperlink extends WebuiCommand implements ComplexComponent {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

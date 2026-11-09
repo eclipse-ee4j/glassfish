@@ -120,7 +120,6 @@ public abstract class StaxParser {
      * This is useful for skipping past the root element
      * @param name The START_ELEMENT to skip past
      * @throws XMLStreamException if any errors
-     * @throws xml.StaxParser.EndDocumentException if end of document reached first
      */
     protected void skipPast(String name) throws XMLStreamException, EndDocumentException {
         // Move to the first 'top-level' element under name
@@ -132,7 +131,6 @@ public abstract class StaxParser {
     /**
      * Skip to the next START_ELEMENT
      * @throws XMLStreamException
-     * @throws xml.StaxParser.EndDocumentException
      */
     protected void nextStart() throws XMLStreamException, EndDocumentException {
         while (next() != START_ELEMENT) {

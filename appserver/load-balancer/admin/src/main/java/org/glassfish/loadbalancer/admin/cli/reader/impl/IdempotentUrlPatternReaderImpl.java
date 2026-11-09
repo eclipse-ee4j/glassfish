@@ -68,7 +68,7 @@ public class IdempotentUrlPatternReaderImpl
         }
     }
     //---- PRIVATE VARS ------
-    int _idx = 0;
-    SunWebApp _bean = null;
+    int _idx;
+    SunWebApp _bean;
     IdempotentUrlPattern _pattern;
 }

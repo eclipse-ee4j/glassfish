@@ -123,7 +123,7 @@ public class InstanceReaderImpl implements InstanceReader {
 
     /**
      * Enlists both http and https listeners of this server instance
-     * It will be form "http:<hostname>:<port> https:<hostname>:<port>"
+     * It will be form "http:&lt;hostname&gt;:&lt;port&gt; https:&lt;hostname&gt;:&lt;port&gt;"
      *
      * @return String   Listener(s) info.
      */

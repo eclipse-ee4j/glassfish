@@ -130,5 +130,5 @@ public interface CommandRunner<T extends Job> {
     CommandInvocation<T> getCommandInvocation(String scope, String commandName, ActionReport report, Subject subject,
         boolean notify, boolean detach);
 
-    void doCommand(CommandInvocation<T> ctx, AdminCommand command, final Subject subject, final T job);
+    void doCommand(CommandInvocation<T> ctx, AdminCommand command, Subject subject, T job);
 }

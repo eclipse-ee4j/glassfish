@@ -54,7 +54,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
 
 
     /**
-     * Returns the number of key-value mappings in this map.<p>
+     * Returns the number of key-value mappings in this map.
      * @return the number of key-value mappings in this map.
      */
     @Override
@@ -64,8 +64,8 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Returns <tt>true</tt> if this map contains no key-value mappings.<p>
-     * @return <tt>true</tt> if this map contains no key-value mappings.
+     * Returns <code>true</code> if this map contains no key-value mappings.
+     * @return <code>true</code> if this map contains no key-value mappings.
      */
     @Override
     public boolean isEmpty() {
@@ -73,10 +73,10 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Returns <tt>true</tt> if this map contains a mapping for the specified
-     * key.<p>
+     * Returns <code>true</code> if this map contains a mapping for the specified
+     * key.
      * @param key key whose presence in this map is to be tested
-     * @return <tt>true</tt> if this map contains a mapping for the specified
+     * @return <code>true</code> if this map contains a mapping for the specified
      * key.
      */
     @Override
@@ -87,10 +87,10 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
    /**
-     * Returns <tt>true</tt> if this map maps one or more keys to the
-     * specified value.<p>
+     * Returns <code>true</code> if this map maps one or more keys to the
+     * specified value.
      * @param value value whose presence in this map is to be tested
-     * @return <tt>true</tt> if this map maps one or more keys to this value.
+     * @return <code>true</code> if this map maps one or more keys to this value.
      */
     @Override
     public boolean containsValue(Object value) {
@@ -98,7 +98,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Gets the value for the given key.<p>
+     * Gets the value for the given key.
      * @param key key whose associated value, if any, is to be returned
      * @return the value to which this map maps the specified key.
      */
@@ -112,7 +112,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Puts a new (key,value) into the map.<p>
+     * Puts a new (key,value) into the map.
      * @param key key with which the specified value is to be associated.
      * @param value value to be associated with the specified key.
      * @return previous value associated with specified key, or null
@@ -137,7 +137,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     }
 
     /**
-     * Removes key and value for the given key.<p>
+     * Removes key and value for the given key.
      * @param key key whose mapping is to be removed from the map.
      * @return previous value associated with specified key, or null
      * if there was no mapping for key or the value has been garbage
@@ -152,7 +152,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final V getReferenceObject(WeakReference<V> ref) {
+    private V getReferenceObject(WeakReference<V> ref) {
         return (ref == null) ? null : ref.get();
     }
 
@@ -427,7 +427,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
     private EntrySet entrySet;
 
     /**
-     * Returns a <code>Set</code> view of the mappings in this map.<p>
+     * Returns a <code>Set</code> view of the mappings in this map.
      * @return a <code>Set</code> view of the mappings in this map.
      */
     @Override
@@ -441,7 +441,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
 
     /**
      * Returns a <code>Collection</code> view of the values contained
-     * in this map.<p>
+     * in this map.
      * @return a <code>Collection</code> view of the values contained
      * in this map.
      */

@@ -48,12 +48,12 @@ public final class ThemeManager {
     /**
      * Default theme.
      */
-    private static String defaultTheme = null;
+    private static String defaultTheme;
 
     /**
      * Default locale.
      */
-    private Locale defaultLocale = null;
+    private Locale defaultLocale;
 
     /**
      * Loaded themes.

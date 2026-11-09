@@ -50,7 +50,7 @@ abstract class LoggingPumpThread extends Thread {
      * @param record null or record to log
      * @return false if the record was null, so the buffer is empty or waiting was interrupted
      */
-    protected abstract boolean logRecord(final GlassFishLogRecord record);
+    protected abstract boolean logRecord(GlassFishLogRecord record);
 
     /**
      * Unconditionally flushes the output

@@ -1419,10 +1419,10 @@ public class XMLLayoutDefinitionReader {
      */
 //    public static final String VALUE_OPTION    =   "value";
 
-    private URL _url = null;
-    private EntityResolver _entityResolver = null;
-    private ErrorHandler _errorHandler = null;
-    private String _baseURI = null;
+    private URL _url;
+    private EntityResolver _entityResolver;
+    private ErrorHandler _errorHandler;
+    private String _baseURI;
 
     private Map<String, HandlerDefinition> _handlerDefs = new HashMap<>();
     private int _markupCount = 1;

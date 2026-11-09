@@ -153,6 +153,6 @@ public class LayoutMarkup extends LayoutElementBase implements LayoutElement {
      */
     public static final String TYPE_OPEN = "open";
 
-    private String _tag = null;
-    private String _type = null;
+    private String _tag;
+    private String _type;
 }

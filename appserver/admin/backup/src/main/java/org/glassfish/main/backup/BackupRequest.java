@@ -123,10 +123,10 @@ public class BackupRequest {
     File    domainsDir;
     String  domainName;
     String  description;
-    int     recycleLimit = 0;
-    File    backupDir = null;
-    String  backupConfig = null;
-    boolean configOnly = false;
+    int     recycleLimit;
+    File    backupDir;
+    String  backupConfig;
+    boolean configOnly;
 
     // VARIABLES POSSIBLY SET AT RUNTIME
     File    backupFile;
@@ -135,7 +135,7 @@ public class BackupRequest {
     File    domainDir;
     long    timestamp;
 
-    boolean terse = false;
-    boolean verbose = false;
-    boolean force = false;
+    boolean terse;
+    boolean verbose;
+    boolean force;
 }

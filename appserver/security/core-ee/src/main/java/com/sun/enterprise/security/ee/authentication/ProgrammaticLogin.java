@@ -195,7 +195,7 @@ public class ProgrammaticLogin {
      * In addition, the principal stored in the request is set to the user name. If a session is available, its principal is
      * also set to the user provided.
      *
-     * @returns Boolean containing true or false to indicate success or failure of login.
+     * @return Boolean containing true or false to indicate success or failure of login.
      * @param realm
      * @param errors
      * @param user User name.
@@ -203,7 +203,6 @@ public class ProgrammaticLogin {
      * @param request HTTP request object provided by caller application. It should be an instance of HttpRequestFacade.
      * @param response HTTP response object provided by called application. It should be an instance of HttpServletResponse.
      * @throws Exception any exceptions encountered during login
-     * @return Boolean indicating true for successful login and false otherwise
      */
     public Boolean login(final String user, final char[] password, final String realm, final HttpServletRequest request,
             final HttpServletResponse response, boolean errors) throws Exception {
@@ -259,7 +258,7 @@ public class ProgrammaticLogin {
     /**
      * Attempt to logout.
      *
-     * @returns Boolean containing true or false to indicate success or failure of logout.
+     * @return Boolean containing true or false to indicate success or failure of logout.
      *
      */
     public Boolean logout() {
@@ -313,7 +312,7 @@ public class ProgrammaticLogin {
     /**
      * Attempt to logout. Also removes principal from request (and session if available).
      *
-     * @returns Boolean containing true or false to indicate success or failure of logout.
+     * @return Boolean containing true or false to indicate success or failure of logout.
      *
      */
     public Boolean logout(final HttpServletRequest request, final HttpServletResponse response) {
@@ -334,7 +333,7 @@ public class ProgrammaticLogin {
      * will return a Boolean value of false indicating failure of logout
      *
      * @return Boolean containing true or false to indicate success or failure of logout.
-     * @throws Exception, exception encountered while logging out and if errors == true
+     * @throws Exception exception encountered while logging out and if errors == true
      */
     public Boolean logout(final HttpServletRequest request, final HttpServletResponse response, boolean errors) throws Exception {
         Boolean loggedout = null;

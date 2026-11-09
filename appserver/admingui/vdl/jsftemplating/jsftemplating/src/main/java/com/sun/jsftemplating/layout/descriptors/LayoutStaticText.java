@@ -94,5 +94,5 @@ public class LayoutStaticText extends LayoutComponent {
         return false;
     }
 
-    private String _value = null;
+    private String _value;
 }

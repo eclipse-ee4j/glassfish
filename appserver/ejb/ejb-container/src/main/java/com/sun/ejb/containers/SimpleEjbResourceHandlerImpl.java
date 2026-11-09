@@ -38,9 +38,9 @@ public class SimpleEjbResourceHandlerImpl
     private static Map<Transaction, SimpleEjbResourceHandlerImpl> _resourceHandlers =
             new ConcurrentHashMap<Transaction, SimpleEjbResourceHandlerImpl>();
 
-    private List l = null;
-    private Transaction tx = null;
-    private TransactionManager tm = null;
+    private List l;
+    private Transaction tx;
+    private TransactionManager tm;
 
     private SimpleEjbResourceHandlerImpl(TransactionManager tm) {
         this.tm = tm;

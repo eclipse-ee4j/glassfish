@@ -35,11 +35,11 @@ public class PersistenceWrapper {
     // in use for this primary key object, how many copies
     // of the instance exist (inUse > 0), and if any one of
     // them has been deleted (state == DELETED)
-    private int state = 0;
-    private int inUse = 0;
+    private int state;
+    private int inUse;
 
     // Persistent object itself
-    private Object persistent = null;
+    private Object persistent;
 
     public void setState(int newstate) {
         this.state = newstate;

@@ -48,7 +48,7 @@ public class GadgetModule {
         this.userPrefs = userPrefs;
     }
 
-    private List<GadgetUserPref> userPrefs = null;
+    private List<GadgetUserPref> userPrefs;
 
     /**
      * <p> Accessor for the {@link GadgetModulePrefs}.</p>
@@ -65,7 +65,7 @@ public class GadgetModule {
         this.prefs = prefs;
     }
 
-    private GadgetModulePrefs prefs = null;
+    private GadgetModulePrefs prefs;
 
     /**
      * <p> A unique identifier for the content.</p>

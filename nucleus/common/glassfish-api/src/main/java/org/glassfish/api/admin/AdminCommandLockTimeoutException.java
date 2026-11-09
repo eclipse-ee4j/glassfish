@@ -30,8 +30,8 @@ public class AdminCommandLockTimeoutException extends RuntimeException {
      *
      */
     private static final long serialVersionUID = 1L;
-    private Date timeOfAcquisition = null;
-    private String lockOwner = null;
+    private Date timeOfAcquisition;
+    private String lockOwner;
 
     public AdminCommandLockTimeoutException(String message, Date timeOfAcquisition, String lockOwner) {
         super(message);

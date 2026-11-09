@@ -22,7 +22,7 @@ import com.sun.jdo.api.persistence.mapping.ejb.CaptureSchema;
 /**
  * This class is used to set the required infrastructure
  * for DataDirect drivers support and delegate the actual implementation
- * to the <code>CaptureSchema<\code>
+ * to the <code>CaptureSchema</code>
  * @see CaptureSchema
  *
  * @author  Marina Vatkina 2004

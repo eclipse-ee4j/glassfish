@@ -90,7 +90,7 @@ public class SQLStoreManager implements PersistenceStore {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public ConfigCache getConfigCache() {

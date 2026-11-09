@@ -84,7 +84,7 @@ public class Field extends HiddenField
     /**
      * columnsSet flag.
      */
-    private boolean columnsSet = false;
+    private boolean columnsSet;
 
     /**
      * Flag indicating that the user is not permitted to activate this
@@ -94,12 +94,12 @@ public class Field extends HiddenField
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * If set, a label is rendered adjacent to the component with the value of
@@ -111,7 +111,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String label = null;
+    private String label;
 
     /**
      * Sets the style level for the generated label, provided the label
@@ -129,7 +129,7 @@ public class Field extends HiddenField
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * The maximum number of characters that can be entered for this field.
@@ -145,7 +145,7 @@ public class Field extends HiddenField
     /**
      * maxLength set flag.
      */
-    private boolean maxLengthSet = false;
+    private boolean maxLengthSet;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -156,7 +156,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when the element value of this component is
@@ -168,7 +168,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onChange = null;
+    private String onChange;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -180,7 +180,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -192,7 +192,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -205,7 +205,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -217,7 +217,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -229,7 +229,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -241,7 +241,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -253,7 +253,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -265,7 +265,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -277,7 +277,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -289,7 +289,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -301,7 +301,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Scripting code executed when some text in this component value is
@@ -313,7 +313,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onSelect = null;
+    private String onSelect;
 
     /**
      * Flag indicating that modification of this component by the user is not
@@ -323,12 +323,12 @@ public class Field extends HiddenField
     @Property(name = "readOnly",
             displayName = "Read Only",
             category = "Behavior")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -340,7 +340,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -352,7 +352,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -371,7 +371,7 @@ public class Field extends HiddenField
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -384,7 +384,7 @@ public class Field extends HiddenField
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Flag indicating that any leading and trailing blanks will be trimmed
@@ -393,12 +393,12 @@ public class Field extends HiddenField
     @Property(name = "trim",
             displayName = "Trim",
             category = "Behavior")
-    private boolean trim = false;
+    private boolean trim;
 
     /**
      * trim set flag.
      */
-    private boolean trimSet = false;
+    private boolean trimSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -407,12 +407,12 @@ public class Field extends HiddenField
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of FieldBase.
@@ -483,14 +483,14 @@ public class Field extends HiddenField
      * is not found a {@code Label} component instance is created and returned
      * with the id {@code getId() + "_label"}. The {@code Label} instance is
      * initialized with the following values
-     * <p>
+     *
      * <ul>
      * <li>{@code getLabelLevel()}</li>
      * <li>{@code style} parameter</li>
      * <li>{@code getLabel()}</li>
      * <li>{@code setLabeledComponent(this)}</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * If a facet is not defined then the returned {@code Label} component is
      * created every time this method is called.

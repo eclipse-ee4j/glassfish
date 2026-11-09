@@ -36,5 +36,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Inherited
 @RunLevel(1)
 public @interface InitRunLevel {
-    public static final int VAL = 1;
+    int VAL = 1;
 }

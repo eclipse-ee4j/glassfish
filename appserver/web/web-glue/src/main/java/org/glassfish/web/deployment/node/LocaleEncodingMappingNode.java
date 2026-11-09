@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
  */
 public class LocaleEncodingMappingNode extends DeploymentDescriptorNode<LocaleEncodingMappingDescriptor> {
 
-    protected LocaleEncodingMappingDescriptor descriptor = null;
+    protected LocaleEncodingMappingDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

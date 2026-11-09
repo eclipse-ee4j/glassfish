@@ -38,7 +38,7 @@ public interface AdminObjectConfigParser extends ConnectorConfigParser {
                       throws ConnectorRuntimeException;
 
     /**
-     * gets the adminObjectClassNames pertaining to a rar & a specific
+     * gets the adminObjectClassNames pertaining to a rar &amp; a specific
      * adminObjectInterfaceName
      *
      * @param desc ConnectorDescriptor pertaining to rar.

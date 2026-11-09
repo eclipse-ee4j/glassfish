@@ -57,14 +57,14 @@ public class HyperlinkRenderer extends AbstractRenderer {
      * hyperlink is disabled then you must fix the renderer to work properly!
      */
     private static final String[] BOOLEAN_ATTRIBUTES = {
-        "disabled"
+        "disabled",
     };
 
     /**
      * The set of integer pass-through attributes to be rendered.
      */
     private static final String[] INT_ATTRIBUTES = {
-        "tabIndex"
+        "tabIndex",
     };
 
     /**
@@ -81,7 +81,7 @@ public class HyperlinkRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseMove",
         "onMouseOut",
-        "onMouseOver"
+        "onMouseOver",
     };
 
     /**

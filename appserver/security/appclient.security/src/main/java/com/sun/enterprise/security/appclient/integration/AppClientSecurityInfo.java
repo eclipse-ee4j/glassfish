@@ -34,7 +34,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface AppClientSecurityInfo {
 
-    public enum CredentialType {
+    enum CredentialType {
         USERNAME_PASSWORD, CERTIFICATE, ALL
     }
 
@@ -45,8 +45,8 @@ public interface AppClientSecurityInfo {
      * @param handler the CallbackHandler
      * @param username the static username if any was configured
      * @param password the static password if any was configured
-     * @Param isJWS set to true if it is Java WebStart client
-     * @Param useGUIAuth flag when set to true indicates the use of GUI Authentication
+     * @param isJWS set to true if it is Java WebStart client
+     * @param useGUIAuth flag when set to true indicates the use of GUI Authentication
      */
     void initializeSecurity(List<TargetServer> tServers, List<MessageSecurityConfig> msgSecConfigs, CallbackHandler handler, String username, char[] password, boolean isJWS, boolean useGUIAuth);
 

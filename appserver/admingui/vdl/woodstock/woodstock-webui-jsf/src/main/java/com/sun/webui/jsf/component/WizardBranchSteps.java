@@ -55,12 +55,12 @@ public final class WizardBranchSteps extends WizardStep
      * rendered.
      */
     @Property(name = "taken")
-    private boolean taken = false;
+    private boolean taken;
 
     /**
      * Take set flag.
      */
-    private boolean takenSet = false;
+    private boolean takenSet;
 
     /**
      * Construct a new {@code WizardBranchSteps}.

@@ -62,7 +62,7 @@ public class TableHandlers {
      * <p>
      * This method only works for the table where each row consists of one single map since it only looks at the
      * <p>
-     * first element that is returned by the getObject() method of <code>MultipleListDataProvider<code>.
+     * first element that is returned by the getObject() method of <code>MultipleListDataProvider</code>.
      *
      * <p> Input  value: "TableRowGroup" -- Type: <code> com.sun.webui.jsf.component.TableRowGroup</code>
      * </p>

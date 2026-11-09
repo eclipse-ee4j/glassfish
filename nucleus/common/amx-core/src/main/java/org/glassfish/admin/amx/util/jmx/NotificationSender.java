@@ -22,7 +22,7 @@ import javax.management.Notification;
  */
 public interface NotificationSender
 {
-    public void sendNotification(final Notification notif);
+    void sendNotification(Notification notif);
 
 }
 

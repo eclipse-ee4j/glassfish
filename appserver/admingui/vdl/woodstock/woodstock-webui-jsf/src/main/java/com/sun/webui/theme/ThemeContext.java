@@ -24,7 +24,7 @@ import java.util.Set;
  * run-time environment and dictates how information, required to locate theme
  * resources, and make those resources available to an application, is obtained.
  * For example:
- * <p>
+ *
  * <ul>
  * <li>In a {@code jakarta.servlet.Servlet} application environment information
  * about a theme and its resources is specified by the application in its
@@ -41,7 +41,7 @@ import java.util.Set;
  * {@code FacesContext} which encapsulates servlet and portlet contexts.
  * </li>
  * </ul>
- * </p>
+ *
  */
 public abstract class ThemeContext {
 
@@ -160,7 +160,7 @@ public abstract class ThemeContext {
      * environment like a system property but not only as a compile time
      * constant.
      */
-    private String defaultTheme = null;
+    private String defaultTheme;
 
     /**
      * If more than one version of the default theme exists, the theme instance
@@ -171,7 +171,7 @@ public abstract class ThemeContext {
      * Should also be configurable from the runtime environment as system
      * property, versus just a compiled default.
      */
-    private String defaultThemeVersion = null;
+    private String defaultThemeVersion;
 
     /**
      * The absolute portion of the theme servlet's servlet-mapping url-pattern

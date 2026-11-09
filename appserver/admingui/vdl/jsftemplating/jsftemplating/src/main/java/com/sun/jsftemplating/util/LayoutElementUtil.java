@@ -277,7 +277,7 @@ public class LayoutElementUtil {
     private static final String ID_IDX_MAP = "__jsft_ID_Index_Map";
 
     // May need to make this application-scoped...
-    private static int _highId = 0;
+    private static int _highId;
 
     public static final String DEFAULT_ID_BASE = "id";
 }

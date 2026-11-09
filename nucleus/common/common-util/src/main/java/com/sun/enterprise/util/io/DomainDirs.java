@@ -80,8 +80,6 @@ public final class DomainDirs {
 
     /**
      * This constructor is used when the path of the domain-directory is known.
-     * @param domainsDir
-     * @param domainName
      * @throws IOException
      */
     public DomainDirs(File domainDir) throws IOException {
@@ -92,7 +90,7 @@ public final class DomainDirs {
      * Create a DomainDir from the more general ServerDirs instance.
      * along with getServerDirs() you can convert freely back and forth
      *
-     * @param aServerDir
+     * @param sd
      */
     public DomainDirs(ServerDirs sd) {
         dirs = sd;

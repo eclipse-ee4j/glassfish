@@ -43,12 +43,12 @@ public final class Head extends UIComponentBase {
     @Property(name = "debug",
             displayName = "Enable Dojo Debugging",
             category = "Advanced")
-    private boolean debug = false;
+    private boolean debug;
 
     /**
      * debug set flag.
      */
-    private boolean debugSet = false;
+    private boolean debugSet;
 
     /**
      * Flag (true or false) indicating that component JavaScript should be
@@ -62,7 +62,7 @@ public final class Head extends UIComponentBase {
     /**
      * javaScript set flag.
      */
-    private boolean javaScriptSet = false;
+    private boolean javaScriptSet;
 
     /**
      * Flag (true or false) indicating that DODO should search for dojoType
@@ -72,12 +72,12 @@ public final class Head extends UIComponentBase {
     @Property(name = "parseWidgets",
             displayName = "Parse Dojo Widgets",
             category = "Advanced")
-    private boolean parseWidgets = false;
+    private boolean parseWidgets;
 
     /**
      * parseWidgets set flag.
      */
-    private boolean parseWidgetsSet = false;
+    private boolean parseWidgetsSet;
 
     /**
      * Flag (true or false) indicating if meta data should be rendered. The
@@ -86,12 +86,12 @@ public final class Head extends UIComponentBase {
     @Property(name = "meta",
             displayName = "Render Meta Data",
             category = "Advanced")
-    private boolean meta = false;
+    private boolean meta;
 
     /**
      * meta set flag.
      */
-    private boolean metaSet = false;
+    private boolean metaSet;
 
     /**
      * Flag (true or false) indicating that a default HTML base tag should be
@@ -101,12 +101,12 @@ public final class Head extends UIComponentBase {
     @Property(name = "defaultBase",
             displayName = "Default Base",
             category = "Appearance")
-    private boolean defaultBase = false;
+    private boolean defaultBase;
 
     /**
      * defaultBase set flag.
      */
-    private boolean defaultBaseSet = false;
+    private boolean defaultBaseSet;
 
     /**
      * A space separated list of URL's that contains meta data information about
@@ -115,7 +115,7 @@ public final class Head extends UIComponentBase {
     @Property(name = "profile",
             displayName = "Profile",
             category = "Advanced")
-    private String profile = null;
+    private String profile;
 
     /**
      * Title of the document to be displayed in the browser title bar.
@@ -124,7 +124,7 @@ public final class Head extends UIComponentBase {
             displayName = "title",
             category = "Appearance",
             isDefault = true)
-    private String title = null;
+    private String title;
 
     /**
      * Construct a new {@code Head}.

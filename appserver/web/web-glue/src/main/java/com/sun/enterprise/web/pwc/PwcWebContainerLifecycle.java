@@ -22,7 +22,7 @@ import org.apache.catalina.Logger;
 
 public interface PwcWebContainerLifecycle {
 
-  public void onInitialization(String rootDir, String instanceName,
+  void onInitialization(String rootDir, String instanceName,
                                  boolean useNaming, Logger logger,
                                String embeddedClassName)
                         throws Exception;
@@ -33,7 +33,7 @@ public interface PwcWebContainerLifecycle {
      * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onStartup()
+    void onStartup()
                         throws Exception;
 
     /**
@@ -42,7 +42,7 @@ public interface PwcWebContainerLifecycle {
      * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onReady() throws Exception;
+    void onReady() throws Exception;
 
     /**
      * Server is shutting down applications
@@ -50,7 +50,7 @@ public interface PwcWebContainerLifecycle {
      * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onShutdown()
+    void onShutdown()
                         throws Exception;
 
     /**
@@ -62,6 +62,6 @@ public interface PwcWebContainerLifecycle {
      * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onTermination()
+    void onTermination()
                         throws Exception;
 }

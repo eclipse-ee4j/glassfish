@@ -34,7 +34,7 @@ public class SslConfig {
     private String certNickname;
 
     /**
-     * Create an instance of <tt>SslConfig</tt>.
+     * Create an instance of <code>SslConfig</code>.
      *
      * @param key the location of the keystore file
      * @param trust the location of the truststore file

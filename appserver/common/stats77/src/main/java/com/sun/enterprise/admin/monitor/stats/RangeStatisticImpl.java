@@ -24,7 +24,7 @@ import org.glassfish.j2ee.statistics.RangeStatistic;
  * @author Muralidhar Vempaty
  * @author Kedar Mhaswade
  * @since S1AS8.0
- * @verison 1.0
+ * @version 1.0
  */
 
 public final class RangeStatisticImpl extends StatisticImpl implements RangeStatistic {

@@ -118,12 +118,12 @@ public final class WizardStepListBase implements WizardStepList {
             /**
              * Step number.
              */
-            private int stepNumber = 0;
+            private int stepNumber;
 
             /**
              * Sub step number.
              */
-            private int substep = 0;
+            private int substep;
 
             /**
              * Step number as a {@code String}.

@@ -2619,7 +2619,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
      *
      * @param originalIntf Leaf interface for the given view. Not set for methodIntf == bean.
      */
-    private final InvocationInfo createInvocationInfo(Method method, int txAttr, boolean flushEnabled, String methodIntf,
+    private InvocationInfo createInvocationInfo(Method method, int txAttr, boolean flushEnabled, String methodIntf,
             Class originalIntf) throws EJBException {
 
         InvocationInfo invInfo = new InvocationInfo(method);

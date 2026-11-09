@@ -54,8 +54,8 @@ public abstract class StatisticImpl implements Statistic,Serializable {
      * @param name      The name of the statistic
      * @param unit      The unit of measurement for this statistic
      * @param desc      A brief description of the statistic
-     * @param startTime Time in milliseconds at which the measurement was started
-     * @param sampleTime Time at which the last measurement was done.
+     * @param start_time Time in milliseconds at which the measurement was started
+     * @param sample_time Time at which the last measurement was done.
      **/
     protected StatisticImpl(String name, String unit, String desc,
                           long start_time, long sample_time) {

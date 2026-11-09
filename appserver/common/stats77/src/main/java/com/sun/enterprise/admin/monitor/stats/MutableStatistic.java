@@ -40,7 +40,7 @@ public interface MutableStatistic extends Serializable {
     /**
      * Returns a read-only view of this Statistic. An implementing class has
      * to return the instances of Statistic interfaces defined in
-     * {@link javax.management.j2ee.statistic}
+     * {@code javax.management.j2ee.statistic}
      * and {@link com.sun.enterprise.admin.monitor.stats} packages.
      *
      * @return an instance of a specific Statistic interface

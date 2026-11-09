@@ -51,7 +51,7 @@ public final class FrameSet extends UIComponentBase {
     /**
      * border set flag.
      */
-    private boolean borderSet = false;
+    private boolean borderSet;
 
     /**
      * The {@code bordercolor} attribute allows you to set the color of the
@@ -60,7 +60,7 @@ public final class FrameSet extends UIComponentBase {
     @Property(name = "borderColor",
             displayName = "Border Color",
             category = "Appearance")
-    private String borderColor = null;
+    private String borderColor;
 
     /**
      * Defines the number and size of columns in a frame set. The size can be
@@ -72,7 +72,7 @@ public final class FrameSet extends UIComponentBase {
             displayName = "Number of Columns",
             category = "Appearance",
             isDefault = true)
-    private String cols = null;
+    private String cols;
 
     /**
      * Flag indicating whether frames should have borders or not. If frameBorder
@@ -84,12 +84,12 @@ public final class FrameSet extends UIComponentBase {
     @Property(name = "frameBorder",
             displayName = "Frame Border",
             category = "Appearance")
-    private boolean frameBorder = false;
+    private boolean frameBorder;
 
     /**
      * frameBorder set flag.
      */
-    private boolean frameBorderSet = false;
+    private boolean frameBorderSet;
 
     /**
      * The width, in pixels, of the space around frames. The frameSpacing
@@ -107,7 +107,7 @@ public final class FrameSet extends UIComponentBase {
     /**
      * frameSpacing set flag.
      */
-    private boolean frameSpacingSet = false;
+    private boolean frameSpacingSet;
 
     /**
      * Defines the number and size of rows in a frame set. The size can be
@@ -118,7 +118,7 @@ public final class FrameSet extends UIComponentBase {
     @Property(name = "rows",
             displayName = "Number of Rows",
             category = "Appearance")
-    private String rows = null;
+    private String rows;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -128,7 +128,7 @@ public final class FrameSet extends UIComponentBase {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -140,7 +140,7 @@ public final class FrameSet extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -153,7 +153,7 @@ public final class FrameSet extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Construct a new {@code FrameSet}.

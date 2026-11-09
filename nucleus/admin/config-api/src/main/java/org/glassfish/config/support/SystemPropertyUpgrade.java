@@ -49,9 +49,9 @@ import static com.sun.enterprise.config.util.PortConstants.OSGI;
 
 /**
  * Upgrade service to add the new 3.1 system properties to the config elements (except DAS config, server-config) in
- * existing domain.xml: <system-property name="ASADMIN_LISTENER_PORT" value="24848"></system-property>
- * <system-property name="OSGI_SHELL_TELNET_PORT" value="26666"></system-property>
- * <system-property name="JAVA_DEBUGGER_PORT" value="29009"></system-property>
+ * existing domain.xml: &lt;system-property name="ASADMIN_LISTENER_PORT" value="24848">&lt;/system-property>
+ * &lt;system-property name="OSGI_SHELL_TELNET_PORT" value="26666">&lt;/system-property>
+ * &lt;system-property name="JAVA_DEBUGGER_PORT" value="29009">&lt;/system-property>
  *
  * Use the same prefix as the config's system property HTTP_LISTENER_PORT if it exists.
  *
@@ -77,7 +77,7 @@ public class SystemPropertyUpgrade implements ConfigurationUpgrade, PostConstruc
     @Inject
     @Named("gmsupgrade")
     @Optional
-    ConfigurationUpgrade precondition = null;
+    ConfigurationUpgrade precondition;
 
     private String PREFIX = "2";
     private int DEFAULT_ADMIN_PORT = 4848;

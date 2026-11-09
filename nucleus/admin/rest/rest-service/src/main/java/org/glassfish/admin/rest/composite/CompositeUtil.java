@@ -100,7 +100,7 @@ public class CompositeUtil {
     private static final Map<String, Class<?>> generatedClasses = new HashMap<>();
     private static final Map<String, List<String>> modelExtensions = new HashMap<>();
     private final boolean extensionsLoaded = false;
-    private static volatile Validator beanValidator = null;
+    private static volatile Validator beanValidator;
     private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CompositeUtil.class);
 
     private CompositeUtil() {
@@ -120,8 +120,6 @@ public class CompositeUtil {
      *
      * @param modelIface The base interface for the desired data model
      * @return An instance of a concrete class implementing the requested interfaces
-     * @throws Exception @RestModelExtension, and must be compiled with rest-annotation-processor library on the compile
-     * classpath for metadata generation.
      */
     public synchronized <T> T getModel(Class<T> modelIface) {
         String className = modelIface.getName() + "Impl";

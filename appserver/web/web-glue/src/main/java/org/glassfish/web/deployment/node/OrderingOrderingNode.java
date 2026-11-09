@@ -35,7 +35,7 @@ import org.xml.sax.Attributes;
  */
 public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrderingDescriptor> {
 
-    protected OrderingOrderingDescriptor descriptor = null;
+    protected OrderingOrderingDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -77,8 +77,8 @@ public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrder
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName name for the root element of this xml fragment
+     * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
     @Override

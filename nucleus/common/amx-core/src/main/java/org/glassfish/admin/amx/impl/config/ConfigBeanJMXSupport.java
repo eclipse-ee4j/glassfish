@@ -431,7 +431,7 @@ class ConfigBeanJMXSupport
                 Date.class,
                 ObjectName.class,
                 CompositeType.class,
-                CompositeDataSupport.class
+                CompositeDataSupport.class,
             });
 
     /**
@@ -1030,28 +1030,28 @@ class ConfigBeanJMXSupport
 
         long[] mm = new long[]
         {
-            Byte.MIN_VALUE, Byte.MAX_VALUE
+            Byte.MIN_VALUE, Byte.MAX_VALUE,
         };
         m.put(byte.class, mm);
         m.put(Byte.class, mm);
 
         mm = new long[]
                 {
-                    Short.MIN_VALUE, Short.MAX_VALUE
+                    Short.MIN_VALUE, Short.MAX_VALUE,
                 };
         m.put(short.class, mm);
         m.put(Short.class, mm);
 
         mm = new long[]
                 {
-                    Integer.MIN_VALUE, Integer.MAX_VALUE
+                    Integer.MIN_VALUE, Integer.MAX_VALUE,
                 };
         m.put(int.class, mm);
         m.put(Integer.class, mm);
 
         mm = new long[]
                 {
-                    Long.MIN_VALUE, Long.MAX_VALUE
+                    Long.MIN_VALUE, Long.MAX_VALUE,
                 };
         m.put(long.class, mm);
         m.put(Long.class, mm);
@@ -1527,13 +1527,13 @@ class ConfigBeanJMXSupport
 
         private final boolean mIsElement;
 
-        public NameHint(final String hint, final boolean isElement)
+        NameHint(final String hint, final boolean isElement)
         {
             mHint = toXMLName(hint);
             mIsElement = isElement;
         }
 
-        public NameHint(final String hint)
+        NameHint(final String hint)
         {
             this(hint, false);
         }

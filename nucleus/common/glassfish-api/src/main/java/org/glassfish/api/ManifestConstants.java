@@ -20,7 +20,7 @@ package org.glassfish.api;
  * Authorized manifest entries to hook up to the module management subsystem. These are extensions to the OSGi
  * specifications and therefore not portable.
  *
- * @Author Jerome Dochez
+ * @author Jerome Dochez
  */
 public class ManifestConstants {
 

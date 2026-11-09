@@ -180,9 +180,9 @@ public class LoadbalancerReaderImpl implements LoadbalancerReader {
     }
 
     // --- PRIVATE VARS -----
-    private LbConfig _lbConfig = null;
-    private Domain _domain = null;
-    private ApplicationRegistry _appRegistry = null;
-    private Set<String> _clusters = null;
-    private Properties _properties = null;
+    private LbConfig _lbConfig;
+    private Domain _domain;
+    private ApplicationRegistry _appRegistry;
+    private Set<String> _clusters;
+    private Properties _properties;
 }

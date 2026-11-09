@@ -24,7 +24,7 @@ For now, only one implementation instance is allowed.
  */
 public final class SystemInfoFactory {
 
-    static SystemInfoImpl INSTANCE = null;
+    static SystemInfoImpl INSTANCE;
 
     /**
     Return the actual implementation class, because some method(s) are needed internal to the

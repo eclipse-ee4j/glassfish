@@ -66,7 +66,7 @@ public interface GlassFishUserManagement {
      * Update data for an existing user. User must exist.
      *
      */
-    public default void updateUser(String name, String newName, String password, String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException {
+    default void updateUser(String name, String newName, String password, String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException {
         updateUser(name, newName, (password == null) ? null : password.toCharArray(), groups);
 
     }
@@ -79,7 +79,7 @@ public interface GlassFishUserManagement {
      * does not already exist as a user.
      * @param password Cleartext password for the user. If non-null the user password is changed to this value. If null, the original
      * password is retained.
-     * @param groupList List of groups to which user belongs.
+     * @param groups List of groups to which user belongs.
      * @throws BadRealmException If there are problems adding user.
      * @throws NoSuchUserException If user does not exist.
      *

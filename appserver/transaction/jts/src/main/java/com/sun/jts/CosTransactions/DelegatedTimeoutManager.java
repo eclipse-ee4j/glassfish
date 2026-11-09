@@ -53,15 +53,15 @@ class DelegatedTimeoutManager {
     /**
      * this attribute indicates whether initialisation has been started.
      */
-    private static boolean initialised = false;
+    private static boolean initialised;
 
     private Hashtable     pendingTimeouts = new Hashtable();
     private Hashtable     indoubtTimeouts = new Hashtable();
-    private DelegatedTimeoutThread timeoutThread = null;
-    private boolean       timeoutActive = false;
-    private boolean       quiescing = false;
-    private boolean       isSetTimeout = false;
-    private String        logPath = null;
+    private DelegatedTimeoutThread timeoutThread;
+    private boolean       timeoutActive;
+    private boolean       quiescing;
+    private boolean       isSetTimeout;
+    private String        logPath;
 
         /*
                 Logger to log transaction messages
@@ -508,8 +508,8 @@ class DelegatedTimeoutManager {
 //----------------------------------------------------------------------------
 
 class DelegatedTimeoutInfo extends Object {
-    Long localTID = null;
-    long expireTime = 0;
+    Long localTID;
+    long expireTime;
     int  timeoutType = TimeoutManager.NO_TIMEOUT;
 }
 
@@ -526,7 +526,7 @@ class DelegatedTimeoutInfo extends Object {
 class DelegatedTimeoutThread extends Thread {
 
     private int TIMEOUT_INTERVAL ;
-    private DelegatedTimeoutManager tmoutMgr = null;
+    private DelegatedTimeoutManager tmoutMgr;
 
     static Logger _logger = LogDomains.getLogger(DelegatedTimeoutThread.class, LogDomains.TRANSACTION_LOGGER);
     /**

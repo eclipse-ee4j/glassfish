@@ -38,7 +38,7 @@ public class ResourceBase implements Serializable {
     /**
      * The description of this Context Element.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -53,7 +53,7 @@ public class ResourceBase implements Serializable {
     /**
      * The name of this context Element.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -67,7 +67,7 @@ public class ResourceBase implements Serializable {
     /**
      * The name of the EJB bean implementation class.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);
@@ -119,7 +119,7 @@ public class ResourceBase implements Serializable {
     /**
      * The NamingResources with which we are associated (if any).
      */
-    protected NamingResources resources = null;
+    protected NamingResources resources;
 
     public NamingResources getNamingResources() {
         return (this.resources);

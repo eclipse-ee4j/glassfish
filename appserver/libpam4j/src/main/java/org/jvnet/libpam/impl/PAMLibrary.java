@@ -38,18 +38,18 @@ import static org.jvnet.libpam.impl.CLibrary.libc;
  */
 public interface PAMLibrary extends Library {
 
-    final int PAM_USER = 2;
+    int PAM_USER = 2;
 
     // error code
-    final int PAM_SUCCESS = 0;
-    final int PAM_CONV_ERR = 6;
+    int PAM_SUCCESS = 0;
+    int PAM_CONV_ERR = 6;
 
-    final int PAM_PROMPT_ECHO_OFF = 1; /* Echo off when getting response */
-    final int PAM_PROMPT_ECHO_ON = 2; /* Echo on when getting response */
-    final int PAM_ERROR_MSG = 3; /* Error message */
-    final int PAM_TEXT_INFO = 4; /* Textual information */
+    int PAM_PROMPT_ECHO_OFF = 1; /* Echo off when getting response */
+    int PAM_PROMPT_ECHO_ON = 2; /* Echo on when getting response */
+    int PAM_ERROR_MSG = 3; /* Error message */
+    int PAM_TEXT_INFO = 4; /* Textual information */
 
-    public static final PAMLibrary libpam = Native.loadLibrary("pam", PAMLibrary.class);
+    PAMLibrary libpam = Native.loadLibrary("pam", PAMLibrary.class);
 
 
     class pam_handle_t extends PointerType {

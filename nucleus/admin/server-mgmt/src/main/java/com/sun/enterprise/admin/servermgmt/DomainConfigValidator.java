@@ -81,7 +81,9 @@ public abstract class DomainConfigValidator extends Validator {
      *
      * @param domainConfig The domainConfig object that needs to be validated. A domainConfig object is valid if it
      * <ul>
-     * is of type DomainConfig contains the required set of DomainConfig keys the value for each required key is valid.
+     * <li>is of type DomainConfig</li>
+     * <li>contains the required set of DomainConfig keys</li>
+     * <li>the value for each required key is valid.</li>
      * </ul>
      * @throws InvalidConfigException If invalid domainConfig is supplied.
      */

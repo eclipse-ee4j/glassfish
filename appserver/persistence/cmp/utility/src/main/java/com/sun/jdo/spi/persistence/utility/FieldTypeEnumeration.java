@@ -29,36 +29,36 @@ public interface FieldTypeEnumeration
 {
 
     //Not Enumerated
-    public static final int NOT_ENUMERATED        = 0;
+    int NOT_ENUMERATED        = 0;
 
     //Primitive
-    public static final int BOOLEAN_PRIMITIVE     = 1;
-    public static final int CHARACTER_PRIMITIVE   = 2;
-    public static final int BYTE_PRIMITIVE        = 3;
-    public static final int SHORT_PRIMITIVE       = 4;
-    public static final int INTEGER_PRIMITIVE     = 5;
-    public static final int LONG_PRIMITIVE        = 6;
-    public static final int FLOAT_PRIMITIVE       = 7;
-    public static final int DOUBLE_PRIMITIVE      = 8;
+    int BOOLEAN_PRIMITIVE     = 1;
+    int CHARACTER_PRIMITIVE   = 2;
+    int BYTE_PRIMITIVE        = 3;
+    int SHORT_PRIMITIVE       = 4;
+    int INTEGER_PRIMITIVE     = 5;
+    int LONG_PRIMITIVE        = 6;
+    int FLOAT_PRIMITIVE       = 7;
+    int DOUBLE_PRIMITIVE      = 8;
     //Number
-    public static final int BOOLEAN               = 11;
-    public static final int CHARACTER             = 12;
-    public static final int BYTE                  = 13;
-    public static final int SHORT                 = 14;
-    public static final int INTEGER               = 15;
-    public static final int LONG                  = 16;
-    public static final int FLOAT                 = 17;
-    public static final int DOUBLE                = 18;
-    public static final int BIGDECIMAL            = 19;
-    public static final int BIGINTEGER            = 20;
+    int BOOLEAN               = 11;
+    int CHARACTER             = 12;
+    int BYTE                  = 13;
+    int SHORT                 = 14;
+    int INTEGER               = 15;
+    int LONG                  = 16;
+    int FLOAT                 = 17;
+    int DOUBLE                = 18;
+    int BIGDECIMAL            = 19;
+    int BIGINTEGER            = 20;
     //String
-    public static final int STRING                = 21;
+    int STRING                = 21;
     //Dates
-    public static final int UTIL_DATE             = 22;
-    public static final int SQL_DATE              = 23;
-    public static final int SQL_TIME              = 24;
-    public static final int SQL_TIMESTAMP         = 25;
+    int UTIL_DATE             = 22;
+    int SQL_DATE              = 23;
+    int SQL_TIME              = 24;
+    int SQL_TIMESTAMP         = 25;
     //Arrays
-    public static final int ARRAY_BYTE_PRIMITIVE  = 51;
+    int ARRAY_BYTE_PRIMITIVE  = 51;
 
 }

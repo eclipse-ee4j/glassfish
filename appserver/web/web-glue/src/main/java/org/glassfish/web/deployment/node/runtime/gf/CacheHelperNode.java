@@ -38,7 +38,7 @@ public class CacheHelperNode extends RuntimeDescriptorNode<CacheHelper> {
         registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), WebPropertyNode.class, "addWebProperty");
     }
 
-    protected CacheHelper descriptor = null;
+    protected CacheHelper descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

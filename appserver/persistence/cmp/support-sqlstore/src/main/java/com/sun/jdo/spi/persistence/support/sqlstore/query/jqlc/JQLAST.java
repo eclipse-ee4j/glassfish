@@ -53,8 +53,8 @@ public class JQLAST
     /** */
     private static String INDENT = "  "; //NOI18N
 
-    protected int line = 0;
-    protected int column = 0;
+    protected int line;
+    protected int column;
     protected Type jqlType;
     protected RetrieveDesc rd;
     protected Object value;

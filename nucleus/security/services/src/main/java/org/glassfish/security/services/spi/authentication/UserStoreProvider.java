@@ -32,7 +32,7 @@ public interface UserStoreProvider {
     /*
      * Represents a user entry in the store
      */
-    public interface UserEntry {
+    interface UserEntry {
         String getName();
         String getDN();
         String getUid();
@@ -44,7 +44,7 @@ public interface UserStoreProvider {
     /*
      * Represents a group entry in the store
      */
-    public interface GroupEntry {
+    interface GroupEntry {
         String getName();
         String getDN();
         String getUid();
@@ -55,7 +55,7 @@ public interface UserStoreProvider {
     /*
      * Page-able Result Set
      */
-    public interface ResultSet<T> {
+    interface ResultSet<T> {
         boolean hasNext();
         T getNext();
         void close();

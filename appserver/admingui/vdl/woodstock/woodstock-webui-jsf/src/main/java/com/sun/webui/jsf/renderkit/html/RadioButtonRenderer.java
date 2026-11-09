@@ -35,7 +35,7 @@ import java.util.Map;
  * The {@code RadioButtonRenderer} renders a
  * {@link com.sun.webui.jsf.component.RadioButton} component.
  * </p>
- * <h3>Encoding</h3>
+ * <h2>Encoding</h2>
  * <p>
  * The {@code RadioButtonRenderer} renders a {@code RadioButton} as:
  * <ul>
@@ -48,7 +48,7 @@ import java.util.Map;
  * from a call to {@code getLabelComponent()} on the component being
  * rendered. </li>
  * </ul>
- * </p>
+ *
  * <p>
  * The CSS selectors for the elements and components that comprise a radio
  * button are identified by java constants defined in the {@link ThemeStyles}
@@ -73,8 +73,8 @@ import java.util.Map;
  * For more details on the encoding the {@code RadioButton} component see
  * the super class {@link com.sun.webui.jsf.renderkit.html.RbCbRendererBase}
  * </p>
- * <p>
- * <h3>Decoding</h3>
+ *
+ * <h2>Decoding</h2>
  * <p>
  * If the INPUT element representing a radio button is selected on the the
  * client, the submitted request will contain a request parameter whose name is

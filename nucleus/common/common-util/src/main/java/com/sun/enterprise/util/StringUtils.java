@@ -338,7 +338,7 @@ public class StringUtils {
             "abc\n\n",
             "q",
             "\n\nk\n\nz\n\n",
-            "sd.adj;ld"
+            "sd.adj;ld",
         };
 
         for (int k = 0; k < ss.length; k++) {
@@ -586,13 +586,14 @@ public class StringUtils {
     }
 
     /** Escape characters to use result in html.
-     * <table border='1' cellpadding='3' cellspacing='0'>
+     * <table border='1'>
+     * <caption>Escaped characters</caption>
      * <tr><th> Chars </th><th>Escape sequence</th></tr>
-     * <tr><td> < </td><td> &lt; </td></tr>
-     * <tr><td> > </td><td> &gt; </td></tr>
-     * <tr><td> & </td><td> &amp; </td></tr>
-     * <tr><td> " </td><td> &quot;</td></tr>
-     * <tr><td> \t </td><td> &#009;</td></tr>
+     * <tr><td> &lt; </td><td> &amp;lt; </td></tr>
+     * <tr><td> &gt; </td><td> &amp;gt; </td></tr>
+     * <tr><td> &amp; </td><td> &amp;amp; </td></tr>
+     * <tr><td> " </td><td> &amp;quot;</td></tr>
+     * <tr><td> \t </td><td> &amp;#009;</td></tr>
      * </table>
      */
     public static String escapeForHtml(String str) {

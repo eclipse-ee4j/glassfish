@@ -87,7 +87,7 @@ public class SecurityCollection implements Serializable {
     /**
      * Description of this web resource collection.
      */
-    private String description = null;
+    private String description;
 
 
     /**
@@ -105,7 +105,7 @@ public class SecurityCollection implements Serializable {
     /**
      * The name of this web resource collection.
      */
-    private String name = null;
+    private String name;
 
 
     /**
@@ -248,7 +248,7 @@ public class SecurityCollection implements Serializable {
      * Return <code>true</code> if the specified HTTP request method omission is
      * part of this web resource collection.
      *
-     * @param method Request method to check
+     * @param methodOmission Request method to check
      */
     public boolean findMethodOmission(String methodOmission) {
 
@@ -336,7 +336,7 @@ public class SecurityCollection implements Serializable {
      * Remove the specified HTTP request method omission from those that are part
      * of this web resource collection.
      *
-     * @param method Request method to be removed
+     * @param methodOmission Request method to be removed
      */
     public void removeMethodOmission(String methodOmission) {
 

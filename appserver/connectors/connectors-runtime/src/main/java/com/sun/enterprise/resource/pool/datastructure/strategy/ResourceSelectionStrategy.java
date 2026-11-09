@@ -27,5 +27,5 @@ public interface ResourceSelectionStrategy {
     /**
      * To retrieve resource from datastructure.
      */
-    public ResourceHandle retrieveResource();
+    ResourceHandle retrieveResource();
 }

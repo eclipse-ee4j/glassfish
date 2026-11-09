@@ -64,21 +64,21 @@ import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
  * If you add a method or change whether it is final -- move it to the right section.
  *
  * Default instance file structure.
- * ||---- <GlassFish Install Root>
+ * ||---- &lt;GlassFish Install Root&gt;
  *          ||---- nodes (nodeDirRoot, --nodedir)
- *                  ||---- <node-1> (nodeDirChild, --node)
+ *                  ||---- &lt;node-1> (nodeDirChild, --node)
  *                          || ---- agent
  *                                  || ---- config
  *                                          | ---- das.properties
- *                          || ---- <instance-1> (instanceDir)
+ *                          || ---- &lt;instance-1> (instanceDir)
  *                                  ||---- config
  *                                  ||---- applications
  *                                  ||---- java-web-start
  *                                  ||---- generated
  *                                  ||---- lib
  *                                  ||---- docroot
- *                          || ---- <instance-2> (instanceDir)
- *                  ||---- <node-2> (nodeDirChild)
+ *                          || ---- &lt;instance-2> (instanceDir)
+ *                  ||---- &lt;node-2> (nodeDirChild)
  *
  * @author Byron Nevins
  */
@@ -97,7 +97,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
     protected File nodeDirChild;        // the specific node dir
     protected File instanceDir;         // the specific instance dir
     protected String domainName;
-    protected boolean isCreateInstanceFilesystem = false;
+    protected boolean isCreateInstanceFilesystem;
     private InstanceDirs instanceDirs;
 
     // This is especially used for change-master-password command for a node.

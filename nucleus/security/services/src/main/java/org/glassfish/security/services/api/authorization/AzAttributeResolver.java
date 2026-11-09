@@ -42,7 +42,7 @@ public interface AzAttributeResolver {
      * @param environment The read-only operational context
      * @return The resolved attribute, null if unresolvable.
      */
-    public Attribute resolve(
+    Attribute resolve(
         String attributeName,
         AzAttributes collection,
         AzEnvironment environment );

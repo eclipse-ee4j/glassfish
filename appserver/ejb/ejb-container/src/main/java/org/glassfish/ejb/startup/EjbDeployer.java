@@ -103,7 +103,7 @@ public class EjbDeployer extends JavaEEDeployer<EjbContainerStarter, EjbApplicat
     StartupContext startupContext;
 
     private final Object lock = new Object();
-    private volatile CMPDeployer cmpDeployer = null;
+    private volatile CMPDeployer cmpDeployer;
 
     private static SecureRandom random = new SecureRandom();
 

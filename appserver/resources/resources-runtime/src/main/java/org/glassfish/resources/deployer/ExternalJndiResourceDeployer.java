@@ -56,9 +56,9 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles external-jndi resource events in the server instance.
- * <p/>
+ * <p>
  * The external-jndi resource events from the admin instance are propagated to this object.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
  *
@@ -240,7 +240,7 @@ public class ExternalJndiResourceDeployer implements ResourceDeployer<ExternalJn
     /**
      * Returns a new instance of j2ee external jndi resource from the given
      * config bean.
-     * <p/>
+     * <p>
      * This method gets called from the external resource
      * deployer to convert external-jndi-resource config bean into
      * external-jndi j2ee resource.

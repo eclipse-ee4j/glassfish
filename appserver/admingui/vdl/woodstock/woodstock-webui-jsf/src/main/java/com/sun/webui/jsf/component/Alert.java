@@ -62,7 +62,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Optional detailed message text for the alert. This message might include
@@ -75,7 +75,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String detail = null;
+    private String detail;
 
     /**
      * The linkActionExpression attribute is used to specify the action to take
@@ -99,7 +99,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             displayName = "Link Action Method Expression",
             category = "Navigation")
     @Property.Method(signature = "java.lang.String action()")
-    private jakarta.el.MethodExpression linkActionExpression = null;
+    private jakarta.el.MethodExpression linkActionExpression;
 
     /**
      * The window (target) in which to load the link that is specified with
@@ -111,7 +111,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FrameTargetsEditor")
             //CHECKSTYLE:ON
-    private String linkTarget = null;
+    private String linkTarget;
 
     /**
      * The text for an optional link that is appended to the detail message.
@@ -122,7 +122,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String linkText = null;
+    private String linkText;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -135,7 +135,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String linkToolTip = null;
+    private String linkToolTip;
 
     /**
      * Absolute, relative, or context relative (starting with "/") URL to the
@@ -148,7 +148,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String linkURL = null;
+    private String linkURL;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -158,7 +158,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -170,7 +170,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Summary message text for the alert. This brief message is prominently
@@ -183,7 +183,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String summary = null;
+    private String summary;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -202,7 +202,7 @@ public final class Alert extends UIOutput implements NamingContainer {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The type or category of alert. This type can be set to "information",
@@ -215,7 +215,7 @@ public final class Alert extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.AlertTypesEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -227,12 +227,12 @@ public final class Alert extends UIOutput implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible", category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default Constructor.

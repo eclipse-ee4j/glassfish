@@ -36,7 +36,7 @@ public class MapElement extends RuntimeDescriptor {
     static public final String PRINCIPAL = "Principal"; // NOI18N
     static public final String BACKEND_PRINCIPAL = "BackendPrincipal"; // NOI18N
 
-    Principal backendPrincipal = null;
+    Principal backendPrincipal;
 
     // copy constructor
     public MapElement(MapElement other) {

@@ -23,7 +23,7 @@ import org.glassfish.grizzly.http.server.HttpHandler;
  * Abstract the protocol implementation, including threading, etc.
  * Processor is single threaded and specific to stream-based protocols,
  * will not fit Jk protocols like JNI.
- * <p/>
+ * <p>
  * This is the main interface to be implemented by a coyote connector.
  * (In contrast, Adapter is the main interface to be implemented by a
  * coyote servlet container.)

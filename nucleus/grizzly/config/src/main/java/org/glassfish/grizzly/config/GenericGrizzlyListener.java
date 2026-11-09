@@ -213,40 +213,40 @@ public class GenericGrizzlyListener implements GrizzlyListener {
     }
 
     /**
-     * @return <tt>true</tt> if AJP (or JK) is enabled for this listener, or
-     * <tt>false</tt> otherwise.
+     * @return <code>true</code> if AJP (or JK) is enabled for this listener, or
+     * <code>false</code> otherwise.
      */
     public boolean isAjpEnabled() {
         return isAjpEnabled;
     }
 
     /**
-     * @return <tt>true</tt> if SPDY is enabled for this listener, or
-     * <tt>false</tt> otherwise.
+     * @return <code>true</code> if SPDY is enabled for this listener, or
+     * <code>false</code> otherwise.
      */
     public boolean isSpdyEnabled() {
         return isSpdyEnabled;
     }
 
     /**
-     * @return <tt>true</tt> if HTTP2 is enabled for this listener, or
-     * <tt>false</tt> otherwise.
+     * @return <code>true</code> if HTTP2 is enabled for this listener, or
+     * <code>false</code> otherwise.
      */
     public boolean isHttp2Enabled() {
         return isHttp2Enabled;
     }
 
     /**
-     * @return <tt>true</tt> if WebSocket is enabled for this listener, or
-     * <tt>false</tt> otherwise.
+     * @return <code>true</code> if WebSocket is enabled for this listener, or
+     * <code>false</code> otherwise.
      */
     public boolean isWebSocketEnabled() {
         return isWebSocketEnabled;
     }
 
     /**
-     * @return <tt>true</tt> if Comet is enabled for this listener, or
-     * <tt>false</tt> otherwise.
+     * @return <code>true</code> if Comet is enabled for this listener, or
+     * <code>false</code> otherwise.
      */
     public boolean isCometEnabled() {
         return isCometEnabled;

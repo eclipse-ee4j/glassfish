@@ -67,7 +67,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.EventClientIdsEditor")
             //CHECKSTYLE:ON
-    private String focus = null;
+    private String focus;
 
     /**
      * The path to an image to be used as a background for the page.
@@ -78,7 +78,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageURL = null;
+    private String imageURL;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -89,7 +89,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -101,7 +101,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -113,7 +113,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -126,7 +126,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -138,7 +138,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -150,7 +150,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -162,7 +162,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when when this page is loaded in a browser.
@@ -173,7 +173,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onLoad = null;
+    private String onLoad;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -185,7 +185,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -197,7 +197,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -209,7 +209,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -221,7 +221,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -233,7 +233,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Scripting code executed when this page is unloaded from a browser as a
@@ -245,7 +245,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onUnload = null;
+    private String onUnload;
 
     /**
      * Use the preserveFocus attribute to indicate whether the last element to
@@ -263,7 +263,7 @@ public final class Body extends UIComponentBase {
     /**
      * preserveFocus set flag.
      */
-    private boolean preserveFocusSet = false;
+    private boolean preserveFocusSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -275,7 +275,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:OFF
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -287,7 +287,7 @@ public final class Body extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -301,12 +301,12 @@ public final class Body extends UIComponentBase {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

@@ -63,9 +63,9 @@ import static org.glassfish.config.support.CommandTarget.STANDALONE_INSTANCE;
  *
  *
  * domain.xml element example
- * <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default"
+ * &lt;jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default"
  * policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
- * <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" /> </jacc-provider>
+ * &lt;property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" /&gt; &lt;/jacc-provider>
  *
  */
 @Service(name = "create-jacc-provider")

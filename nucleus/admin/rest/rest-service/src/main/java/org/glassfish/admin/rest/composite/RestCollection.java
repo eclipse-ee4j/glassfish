@@ -171,7 +171,7 @@ public class RestCollection<T> {
         private RestModelMetadata key;
         private T value;
 
-        public RestCollectionEntry(RestModelMetadata key, T value) {
+        RestCollectionEntry(RestModelMetadata key, T value) {
             this.key = key;
             this.value = value;
         }

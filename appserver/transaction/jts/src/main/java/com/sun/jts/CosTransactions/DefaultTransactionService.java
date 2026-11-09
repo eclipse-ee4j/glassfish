@@ -58,13 +58,13 @@ public class DefaultTransactionService implements ProxyChecker {
 
     private static final Logger LOG = System.getLogger(DefaultTransactionService.class.getName());
 
-    private static CurrentImpl currentInstance = null;
-    private static TransactionFactoryImpl factoryInstance = null;
+    private static CurrentImpl currentInstance;
+    private static TransactionFactoryImpl factoryInstance;
     //private static AdministrationImpl adminInstance = null;
-    private static NamingContext namingContext = null;
-    private static boolean recoverable = false;
-    private static boolean poasCreated = false;
-    private static boolean active = false;
+    private static NamingContext namingContext;
+    private static boolean recoverable;
+    private static boolean poasCreated;
+    private static boolean active;
     private static boolean orbEnabled;
 
 
@@ -407,7 +407,7 @@ public class DefaultTransactionService implements ProxyChecker {
 //------------------------------------------------------------------------------
 
 class RecoveryCoordinatorServantActivator extends LocalObject implements ServantActivator {
-    private ORB orb = null;
+    private ORB orb;
 
     /*
      * COMMENT(Ram J) The _ids() method needs to be removed/modified
@@ -488,7 +488,7 @@ class RecoveryCoordinatorServantActivator extends LocalObject implements Servant
 //------------------------------------------------------------------------------
 
 class CoordinatorResourceServantActivator extends LocalObject implements ServantActivator {
-    private ORB orb = null;
+    private ORB orb;
 
     /*
      * COMMENT(Ram J) The _ids() method needs to be removed/modified

@@ -181,9 +181,9 @@ public class HandlerContextImpl implements HandlerContext {
         getHandler().setOutputValue(this, name, value);
     }
 
-    private String _eventType = null;
-    private FacesContext _facesContext = null;
-    private LayoutElement _layoutDesc = null;
-    private EventObject _event = null;
-    private Handler _handler = null;
+    private String _eventType;
+    private FacesContext _facesContext;
+    private LayoutElement _layoutDesc;
+    private EventObject _event;
+    private Handler _handler;
 }

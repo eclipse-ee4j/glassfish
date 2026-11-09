@@ -73,7 +73,7 @@ public class RuntimeTimerState {
     private Serializable info_;
     private EJBTimerSchedule schedule_;
 
-    private boolean expired_ = false;
+    private boolean expired_;
 
     //
     private BaseContainer container_;

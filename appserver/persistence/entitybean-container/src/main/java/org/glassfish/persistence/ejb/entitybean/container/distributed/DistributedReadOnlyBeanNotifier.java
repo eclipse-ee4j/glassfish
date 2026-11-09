@@ -33,14 +33,13 @@ public interface DistributedReadOnlyBeanNotifier {
      * @param ejbID the ejbID that uniquely identifies the container
      * @param pk The primary key of the bean(s) that is to be refreshed
      */
-    public void notifyRefresh(long ejbID, byte[] pk);
+    void notifyRefresh(long ejbID, byte[] pk);
 
     /**
      * This is called by the container after it has called refresh
      *
      * @param ejbID the ejbID that uniquely identifies the container
-     * @param pk The primary key of the bean(s) that is to be refreshed
      */
-    public void notifyRefreshAll(long ejbID);
+    void notifyRefreshAll(long ejbID);
 
 }

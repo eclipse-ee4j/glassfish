@@ -719,10 +719,8 @@ public class ReplicationAttributeStore extends ReplicationStore {
     *   The session (header info only) having its attributes loaded
     *
     * @param attributeList
-    *   The List<AttributeMetadata> list of loaded attributes
+    *   The List&lt;AttributeMetadata&gt; list of loaded attributes
     *
-    * @return
-    *   A newly created object for the given session attribute data
     */
     protected void loadAttributes(ModifiedAttributeHASession modifiedAttributeSession,
             Collection attributeList) {

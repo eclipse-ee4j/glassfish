@@ -64,7 +64,7 @@ public class Vector extends java.util.Vector<Object> implements SCOCollection {
 
     /**
      * Constructs an empty vector so that its internal data array
-     * has size <tt>10</tt> and its standard capacity increment is
+     * has size <code>10</code> and its standard capacity increment is
      * zero.  Assigns owning object and field name
      * @param owner the owning object
      * @param fieldName the owning field name
@@ -108,7 +108,7 @@ public class Vector extends java.util.Vector<Object> implements SCOCollection {
     /**
      * Sets the component at the specified <code>index</code> of this
      * vector to be the specified object. The previous component at that
-     * position is discarded.<p>
+     * position is discarded.
      *
      * @param      obj     what the component is to be set to.
      * @param      index   the specified index.
@@ -279,7 +279,7 @@ public class Vector extends java.util.Vector<Object> implements SCOCollection {
     }
 
     /**
-     * Removes all components from this vector and sets its size to zero.<p>
+     * Removes all components from this vector and sets its size to zero.
      *
      * @see java.util.Vector
      */
@@ -706,7 +706,7 @@ public class Vector extends java.util.Vector<Object> implements SCOCollection {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public void addToBaseCollection(Object o)

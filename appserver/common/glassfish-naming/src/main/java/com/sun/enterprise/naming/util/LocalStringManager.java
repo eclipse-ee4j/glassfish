@@ -30,12 +30,12 @@ public interface LocalStringManager {
      * LocalStrings[_locale].properties. Starting from the class of the
      * caller, we walk up the class hierarchy until we find a package
      * resource bundle that provides a value for the requested key.
-     * <p/>
+     *
      * <p>This simplifies access to resources, at the cost of checking for
      * the resource bundle of several classes upon each call. However, due
-     * to the caching performed by <tt>ResourceBundle</tt> this seems
+     * to the caching performed by <code>ResourceBundle</code> this seems
      * reasonable.
-     * <p/>
+     *
      * <p>Due to that, sub-classes <strong>must</strong> make sure they don't
      * have conflicting resource naming.
      *
@@ -45,7 +45,7 @@ public interface LocalStringManager {
      * @param defaultValue The default return value if not found
      * @return The localized value for the resource
      */
-    public String getLocalString(
+    String getLocalString(
             Class callerClass,
             String key,
             String defaultValue
@@ -60,7 +60,7 @@ public interface LocalStringManager {
      * @param arguments     The set of arguments to provide to the formatter
      * @return A formatted localized string
      */
-    public String getLocalString(
+    String getLocalString(
             Class callerClass,
             String key,
             String defaultFormat,

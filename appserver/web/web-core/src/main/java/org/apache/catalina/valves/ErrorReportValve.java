@@ -76,7 +76,7 @@ public class ErrorReportValve
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
 
     // ------------------------------------------------------------- Properties

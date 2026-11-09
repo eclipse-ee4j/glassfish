@@ -29,21 +29,21 @@ import org.jvnet.hk2.annotations.Contract;
 public interface JavaEETransaction
     extends Transaction {
 
-    public SimpleResource getExtendedEntityManagerResource(EntityManagerFactory factory);
+    SimpleResource getExtendedEntityManagerResource(EntityManagerFactory factory);
 
-    public SimpleResource getTxEntityManagerResource(EntityManagerFactory factory);
+    SimpleResource getTxEntityManagerResource(EntityManagerFactory factory);
 
-    public void addTxEntityManagerMapping(EntityManagerFactory factory, SimpleResource em);
+    void addTxEntityManagerMapping(EntityManagerFactory factory, SimpleResource em);
 
-    public void addExtendedEntityManagerMapping(EntityManagerFactory factory, SimpleResource em);
+    void addExtendedEntityManagerMapping(EntityManagerFactory factory, SimpleResource em);
 
-    public void removeExtendedEntityManagerMapping(EntityManagerFactory factory);
+    void removeExtendedEntityManagerMapping(EntityManagerFactory factory);
 
-    public <T> void setContainerData(T data);
+    <T> void setContainerData(T data);
 
-    public <T> T getContainerData();
+    <T> T getContainerData();
 
-    public Set getAllParticipatingPools();
+    Set getAllParticipatingPools();
 
     /**
      * Returns the resources enlisted in this transaction.<br>
@@ -52,17 +52,17 @@ public interface JavaEETransaction
      * @param poolInfo the pool identifier for which the resources need to be returned
      * @return a Set of resources associated to this transaction.
      */
-    public Set getResources(Object poolInfo);
+    Set getResources(Object poolInfo);
 
-    public TransactionalResource getLAOResource();
+    TransactionalResource getLAOResource();
 
-    public void setLAOResource(TransactionalResource h);
+    void setLAOResource(TransactionalResource h);
 
-    public TransactionalResource getNonXAResource();
+    TransactionalResource getNonXAResource();
 
-    public void setResources(Set resources, Object poolInfo);
+    void setResources(Set resources, Object poolInfo);
 
-    public boolean isLocalTx();
+    boolean isLocalTx();
 
-    public boolean isTimedOut();
+    boolean isTimedOut();
 }

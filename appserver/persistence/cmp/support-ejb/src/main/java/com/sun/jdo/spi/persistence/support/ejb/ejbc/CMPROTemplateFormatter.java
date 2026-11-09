@@ -49,32 +49,32 @@ public class CMPROTemplateFormatter {
     public final static String jdoGetPersistenceManagerByPK_ = "jdoGetPersistenceManagerByPK"; // NOI18N
 
     // Code generator templates.
-    public static Properties helpers = null;
+    public static Properties helpers;
 
     // variables
-    public static MessageFormat privatetransientvformatter = null; // privateTransientVariables
+    public static MessageFormat privatetransientvformatter; // privateTransientVariables
 
     // methods
-    public static MessageFormat giformatter = null; // jdoGetInstance
-    public static MessageFormat jdolookuppmfformatter = null; // jdoLookupPersistenceManagerFactory
-    public static MessageFormat ejb__refreshformatter = null; // ejb__refresh
-    public static MessageFormat loadNonDFGformatter       = null; // loadNonDFG
+    public static MessageFormat giformatter; // jdoGetInstance
+    public static MessageFormat jdolookuppmfformatter; // jdoLookupPersistenceManagerFactory
+    public static MessageFormat ejb__refreshformatter; // ejb__refresh
+    public static MessageFormat loadNonDFGformatter; // loadNonDFG
 
     // standard templates for the corresponding keys, so that a template "xxxTemplate"
     // corresponds to a "xxx" key.
-    public static String privateStaticFinalVariablesTemplate = null;
-    public static String signatureTemplate = null;
-    public static String updateNotAllowedTemplate = null;
-    public static String accessNotAllowedTemplate = null;
-    public static String jdoCleanAllRefsTemplate = null;
+    public static String privateStaticFinalVariablesTemplate;
+    public static String signatureTemplate;
+    public static String updateNotAllowedTemplate;
+    public static String accessNotAllowedTemplate;
+    public static String jdoCleanAllRefsTemplate;
 
     // standard method bodies for the corresponding keys, so that a method body with
     // a name "xxxBody" corresponds to a "xxx" key.
-    public static String[] jdoGetPersistenceManagerBody      = null;
-    public static String[] jdoGetPersistenceManager0Body     = null;
-    public static String[] jdoReleasePersistenceManager0Body = null;
-    public static String[] jdoGetPersistenceManagerByPKBody  = null;
-    public static String[] jdoClosePersistenceManagerBody    = null;
+    public static String[] jdoGetPersistenceManagerBody;
+    public static String[] jdoGetPersistenceManager0Body;
+    public static String[] jdoReleasePersistenceManager0Body;
+    public static String[] jdoGetPersistenceManagerByPKBody;
+    public static String[] jdoClosePersistenceManagerBody;
 
     /**
      * Constructs a new <code>CMPROTemplateFormatter</code> instance.

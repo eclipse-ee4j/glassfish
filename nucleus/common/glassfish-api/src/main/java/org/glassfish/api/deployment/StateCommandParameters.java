@@ -24,7 +24,7 @@ import org.glassfish.api.Param;
 public class StateCommandParameters extends OpsParams {
 
     @Param(primary = true)
-    public String component = null;
+    public String component;
 
     @Param(optional = true)
     public String target;

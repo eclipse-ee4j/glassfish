@@ -28,11 +28,11 @@ import com.sun.enterprise.util.SystemPropertyConstants;
  */
 final class TargetInfo {
 
-    private boolean isDas = false;
+    private boolean isDas;
 
-    private String configName = null;
+    private String configName;
 
-    public TargetInfo(Domain domain, String target) {
+    TargetInfo(Domain domain, String target) {
 
         Server dasServer = domain.getServerNamed(
                 SystemPropertyConstants.DAS_SERVER_NAME);

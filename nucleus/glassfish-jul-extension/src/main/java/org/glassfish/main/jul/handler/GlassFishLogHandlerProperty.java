@@ -66,9 +66,14 @@ public enum GlassFishLogHandlerProperty implements LogProperty {
     /** Maximal count of archived files */
     ROTATION_MAX_HISTORY("rotation.maxArchiveFiles"),
     ;
+
+    /** Minimal accepted value of {@link #ROTATION_LIMIT_SIZE}; lower values are replaced by the default. */
     public static final int MINIMUM_ROTATION_LIMIT_MB = 1;
+    /** Default value of {@link #ROTATION_LIMIT_SIZE} in megabytes. */
     public static final int DEFAULT_ROTATION_LIMIT_MB = 100;
+    /** Default value of {@link #BUFFER_CAPACITY}. */
     public static final int DEFAULT_BUFFER_CAPACITY = 10_000;
+    /** Default value of {@link #BUFFER_TIMEOUT} in seconds; 0 means wait forever. */
     public static final int DEFAULT_BUFFER_TIMEOUT = 0;
 
     private final String propertyName;

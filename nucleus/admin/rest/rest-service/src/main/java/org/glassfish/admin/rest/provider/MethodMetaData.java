@@ -60,5 +60,5 @@ public class MethodMetaData {
     }
 
     Map<String, ParameterMetaData> __parameterMetaData;
-    boolean __isFileUploadOperation = false;
+    boolean __isFileUploadOperation;
 }

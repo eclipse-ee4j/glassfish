@@ -162,10 +162,10 @@ public class StandardSession implements HttpSession, Session, Serializable {
     /**
      * The session identifier of the parent SipApplicationSession, if any
      */
-    private String sipAppSessionId = null;
+    private String sipAppSessionId;
 
     /**
-     * The BEKEY of this session, or <tt>null</tt>.
+     * The BEKEY of this session, or <code>null</code>.
      *
      * <p>
      * The BEKEY is used by the Converged Loadbalancer (CLB) in DCR mode for loadbalancing purposes, and supplied to the web
@@ -185,7 +185,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
      * The authentication type used to authenticate our cached Principal, if any. NOTE: This value is not included in the
      * serialized version of this object.
      */
-    protected transient String authType = null;
+    protected transient String authType;
 
     /**
      * The <code>java.lang.Method</code> for the <code>fireContainerEvent()</code> method of the
@@ -193,34 +193,34 @@ public class StandardSession implements HttpSession, Session, Serializable {
      * value is computed dynamically the first time it is needed, or after a session reload (since it is declared
      * transient).
      */
-    protected transient Method containerEventMethod = null;
+    protected transient Method containerEventMethod;
 
     /**
      * The time this session was created, in milliseconds since midnight, January 1, 1970 GMT.
      */
-    protected long creationTime = 0L;
+    protected long creationTime;
 
     /**
      * The debugging detail level for this component. NOTE: This value is not included in the serialized version of this
      * object.
      */
-    protected transient int debug = 0;
+    protected transient int debug;
 
     /**
      * We are currently processing a session expiration, so bypass certain IllegalStateException tests. NOTE: This value is
      * not included in the serialized version of this object.
      */
-    protected transient boolean expiring = false;
+    protected transient boolean expiring;
 
     /**
      * The facade associated with this session. NOTE: This value is not included in the serialized version of this object.
      */
-    protected transient StandardSessionFacade facade = null;
+    protected transient StandardSessionFacade facade;
 
     /**
      * The session identifier of this Session.
      */
-    protected String id = null;
+    protected String id;
 
     /**
      * The last accessed time for this Session.
@@ -235,12 +235,12 @@ public class StandardSession implements HttpSession, Session, Serializable {
     /**
      * The Manager with which this Session is associated.
      */
-    protected transient Manager manager = null;
+    protected transient Manager manager;
 
     /**
      * The context with which this Session is associated.
      */
-    protected transient StandardContext context = null;
+    protected transient StandardContext context;
 
     /**
      * The maximum time interval, in seconds, between client requests before the servlet container may invalidate this
@@ -251,12 +251,12 @@ public class StandardSession implements HttpSession, Session, Serializable {
     /**
      * Flag indicating whether this session is new or not.
      */
-    protected boolean isNew = false;
+    protected boolean isNew;
 
     /**
      * Flag indicating whether this session is valid or not.
      */
-    protected boolean isValid = false;
+    protected boolean isValid;
 
     /**
      * Internal notes associated with this session by Catalina components and event listeners. <b>IMPLEMENTATION NOTE:</b>
@@ -268,7 +268,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
      * The authenticated Principal associated with this session, if any. // START SJSWS 6371339 // * <b>IMPLEMENTATION
      * NOTE:</b> This object is <i>not</i> saved and // * restored across session serializations! // END SJSWS 6371339
      */
-    protected transient Principal principal = null;
+    protected transient Principal principal;
 
     /**
      * The current accessed time for this session.
@@ -290,12 +290,12 @@ public class StandardSession implements HttpSession, Session, Serializable {
     /**
      * single sign on id. It is null if there is no SSO.
      */
-    protected String ssoId = null;
+    protected String ssoId;
 
     /**
      * single sign on version.
      */
-    protected volatile long ssoVersion = 0L;
+    protected volatile long ssoVersion;
 
     // ----------------------------------------------------- Session Properties
 
@@ -415,7 +415,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
      * The BEKEY is used by the Converged Loadbalancer (CLB) in DCR mode for loadbalancing purposes, and supplied to the web
      * container in the form of a request header.
      *
-     * @param beKey the BEKEY for this session, or <tt>null</tt> if not present
+     * @param beKey the BEKEY for this session, or <code>null</code> if not present
      */
     public void setBeKey(String beKey) {
         this.beKey = beKey;
@@ -424,7 +424,7 @@ public class StandardSession implements HttpSession, Session, Serializable {
     /**
      * Gets the BEKEY of this session
      *
-     * @return the BEKEY of this session, or <tt>null</tt> if not present
+     * @return the BEKEY of this session, or <code>null</code> if not present
      */
     public String getBeKey() {
         return beKey;

@@ -34,9 +34,9 @@ import java.util.List;
  */
 public class SecurityRoleAssignment extends RuntimeDescriptor {
 
-    private String roleName = null; //mandatory element
+    private String roleName; //mandatory element
     private List<String> principals = new ArrayList<String>();
-    private boolean externallyDefined = false;
+    private boolean externallyDefined;
 
     public boolean isExternallyDefined() {
         return externallyDefined;

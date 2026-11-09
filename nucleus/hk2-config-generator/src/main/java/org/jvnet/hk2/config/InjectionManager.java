@@ -44,9 +44,7 @@ public class InjectionManager {
      * Initializes the component by performing injection.
      *
      * @param component component instance to inject
-     * @param onBehalfOf the inhabitant to do injection on behalf of
      * @param targets the injection resolvers to resolve all injection points
-     * @throws ComponentException if injection failed for some reason.
      */
     public void inject(Object component, InjectionResolver... targets) {
         syncDoInject(component, component.getClass(), targets);
@@ -56,10 +54,8 @@ public class InjectionManager {
      * Initializes the component by performing injection.
      *
      * @param component component instance to inject
-     * @param onBehalfOf the inhabitant to do injection on behalf of
      * @param es the ExecutorService to use in order to handle the work load
      * @param targets the injection resolvers to resolve all injection points
-     * @throws ComponentException if injection failed for some reason.
      */
     public void inject(Object component, ExecutorService es, InjectionResolver... targets) {
         try {
@@ -93,7 +89,6 @@ public class InjectionManager {
      * @param component component instance to inject
      * @param type component class
      * @param targets the injection resolvers to resolve all injection points
-     * @throws ComponentException if injection failed for some reason.
      */
     public void inject(Object component, Class<?> type, InjectionResolver... targets) {
         syncDoInject(component, type, targets);
@@ -103,10 +98,8 @@ public class InjectionManager {
      * Initializes the component by performing injection.
      *
      * @param component component instance to inject
-     * @param onBehalfOf the inhabitant to do injection on behalf of
      * @param type component class
      * @param targets the injection resolvers to resolve all injection points
-     * @throws ComponentException if injection failed for some reason.
      */
     protected void syncDoInject(Object component, Class<?> type, InjectionResolver... targets) {
 

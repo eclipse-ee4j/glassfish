@@ -103,7 +103,7 @@ public class NodeCreateRule extends Rule {
          * @throws SAXException if the XMLReader could not be instantiated by
          *   Digester (should not happen)
          */
-        public NodeBuilder(Document doc, Node root)
+        NodeBuilder(Document doc, Node root)
             throws ParserConfigurationException, SAXException {
 
             this.doc = doc;
@@ -122,32 +122,32 @@ public class NodeCreateRule extends Rule {
          * The content handler used by Digester before it was set to this
          * content handler.
          */
-        protected ContentHandler oldContentHandler = null;
+        protected ContentHandler oldContentHandler;
 
 
         /**
          * Depth of the current node, relative to the element where the content
          * handler was put into action.
          */
-        protected int depth = 0;
+        protected int depth;
 
 
         /**
          * A DOM Document used to create the various Node instances.
          */
-        protected Document doc = null;
+        protected Document doc;
 
 
         /**
          * The DOM node that will be pushed on Digester's stack.
          */
-        protected Node root = null;
+        protected Node root;
 
 
         /**
          * The current top DOM mode.
          */
-        protected Node top = null;
+        protected Node top;
 
 
         // --------------------------------------------- ContentHandler Methods
@@ -354,7 +354,7 @@ public class NodeCreateRule extends Rule {
     /**
      * The JAXP <code>DocumentBuilder</code> to use.
      */
-    private DocumentBuilder documentBuilder = null;
+    private DocumentBuilder documentBuilder;
 
 
     /**

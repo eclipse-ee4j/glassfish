@@ -70,7 +70,7 @@ public class Utils {
   };
   protected static final Long DUMMY_VALUE = 1L;
 
-  private static interface OriginatorFinder {
+  private interface OriginatorFinder {
     boolean isOriginator(String key);
   }
 
@@ -388,7 +388,7 @@ public class Utils {
     }
 
     public interface StringFilter {
-      public boolean accept(String s);
+      boolean accept(String s);
     }
 
     public Iterator<String>names(final StringFilter stringFilter) {
@@ -507,16 +507,16 @@ public class Utils {
      */
     <T> T putAscii(String name, String context, EnumSet<PropagationMode> propagationModes) throws InsufficientCredentialException;
 
-    public <T> T putNotAscii(String key, String value,
+    <T> T putNotAscii(String key, String value,
         EnumSet<PropagationMode> propagationModes) throws InsufficientCredentialException;
 
-    public <T> T putSerializable(String key, Serializable value,
+    <T> T putSerializable(String key, Serializable value,
         EnumSet<PropagationMode> propagationModes) throws InsufficientCredentialException;
   }
 
   public interface PrivilegedWireAdapterAccessor {
-    public <T extends ViewCapable> T createViewCapable(String prefix, boolean isOriginator) throws InsufficientCredentialException;
-    public AccessControlledMap getAccessControlledMap(boolean create);
+    <T extends ViewCapable> T createViewCapable(String prefix, boolean isOriginator) throws InsufficientCredentialException;
+    AccessControlledMap getAccessControlledMap(boolean create);
   }
 
   public static boolean isAsciiString(String s) {

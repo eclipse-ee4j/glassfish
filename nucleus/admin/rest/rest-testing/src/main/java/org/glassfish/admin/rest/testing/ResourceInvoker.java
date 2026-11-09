@@ -36,15 +36,15 @@ public abstract class ResourceInvoker {
     public static final String METHOD_PUT = "put";
     public static final String METHOD_DELETE = "delete";
     private final Environment env;
-    private String password = null;
+    private String password;
     private String uri;
     private Map<String, String> queryParams = new HashMap<String, String>();
-    private String url = null;
-    private String baseUrl = null;
-    private String protocol = null;
-    private String host = null;
-    private String port = null;
-    private String username = null;
+    private String url;
+    private String baseUrl;
+    private String protocol;
+    private String host;
+    private String port;
+    private String username;
     private JSONObject body = new JSONObject();
 
     protected ResourceInvoker(Environment env) {

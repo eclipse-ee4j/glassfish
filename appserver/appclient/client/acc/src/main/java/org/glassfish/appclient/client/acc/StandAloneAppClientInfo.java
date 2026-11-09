@@ -57,7 +57,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
 
     private ReadableArchive appClientArchive;
 
-    private AppClientArchivist appClientArchivist = null;
+    private AppClientArchivist appClientArchivist;
 
     public StandAloneAppClientInfo(
         boolean isJWS, Logger logger, ReadableArchive archive,
@@ -172,7 +172,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
     /**
      *Reports whether the selected app client depends on a persistence unit
      *or not.
-     *@returns true if the app client depends on a persistence unit
+     *@return true if the app client depends on a persistence unit
      */
     protected boolean appClientDependsOnPersistenceUnit(
         ApplicationClientDescriptor acDescr)

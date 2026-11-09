@@ -104,13 +104,13 @@ public class APIClassLoaderServiceImplTest {
     }
 
     class FakeModulesRegistry extends SingleModulesRegistry {
-        public FakeModulesRegistry(ClassLoader cl) {
+        FakeModulesRegistry(ClassLoader cl) {
             super(cl);
         }
     }
 
     class FakeClassLoader extends ClassLoader {
-        public FakeClassLoader(ClassLoader parent) {
+        FakeClassLoader(ClassLoader parent) {
             super(parent);
         }
 

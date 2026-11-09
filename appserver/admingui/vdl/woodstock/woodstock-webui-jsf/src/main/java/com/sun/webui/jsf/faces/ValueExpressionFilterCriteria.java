@@ -35,11 +35,10 @@ import java.util.Map;
  * {@link FilterCriteria} that compares the value of a {@link String}
  * (created with the specified value expression) with a predefined
  * <code>compareValue</code>.  A user may specify matches to include less than
- * (<), equal to (==), or greater than (>) the <code>compareValue</code> Object,
+ * (&lt;), equal to (==), or greater than (>) the <code>compareValue</code> Object,
  * or any combination of the above.</p>
  *
  * @see TableDataProvider
- * @see TableDataFilter
  */
 @Component(isTag = false)
 public final class ValueExpressionFilterCriteria extends FilterCriteria {
@@ -57,12 +56,12 @@ public final class ValueExpressionFilterCriteria extends FilterCriteria {
     /**
      * Is the value less than.
      */
-    private boolean matchLessThan = false;
+    private boolean matchLessThan;
 
     /**
      * Is the value greater than.
      */
-    private boolean matchGreaterThan = false;
+    private boolean matchGreaterThan;
 
     /**
      * Is the value equal to.

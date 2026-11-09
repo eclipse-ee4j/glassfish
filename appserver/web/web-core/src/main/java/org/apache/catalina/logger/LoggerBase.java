@@ -67,13 +67,13 @@ public class LoggerBase
     /**
      * The Container with which this Logger has been associated.
      */
-    protected Container container = null;
+    protected Container container;
 
 
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
 
     /**
@@ -190,7 +190,7 @@ public class LoggerBase
      * Set the verbosity level of this logger.  Messages logged with a
      * higher verbosity than this level will be silently ignored.
      *
-     * @param verbosityLevel The new verbosity level, as a string
+     * @param verbosity The new verbosity level, as a string
      */
     public void setVerbosityLevel(String verbosity) {
 
@@ -212,7 +212,7 @@ public class LoggerBase
      * Set the verbosity level of this logger.  Messages logged with a
      * higher verbosity than this level will be silently ignored.
      *
-     * @param verbosityLevel The new verbosity level, as a string
+     * @param logLevel The new verbosity level, as a string
      */
     public void setLevel(String logLevel) {
 

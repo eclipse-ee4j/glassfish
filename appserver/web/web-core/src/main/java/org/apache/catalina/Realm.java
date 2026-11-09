@@ -243,11 +243,11 @@ public interface Realm {
      * user-data-constraint with a transport-guarantee of CONFIDENTIAL,
      * and whether any such constraint is already satisfied.
      *
-     * If <tt>uri</tt> and <tt>method</tt> are null, then the URI and method
-     * of the given <tt>request</tt> are checked.
+     * If <code>uri</code> and <code>method</code> are null, then the URI and method
+     * of the given <code>request</code> are checked.
      *
      * If a user-data-constraint exists that is not satisfied, then the
-     * given <tt>request</tt> will be redirected to HTTPS.
+     * given <code>request</code> will be redirected to HTTPS.
      *
      * @param request the request that may be redirected
      * @param response the response that may be redirected

@@ -22,7 +22,7 @@ import org.glassfish.deployment.common.Descriptor;
 /**
  * This class contains information about one of the partners in
  * a relationship between EJB2.0 CMP EntityBeans.
- * It represents information in the <ejb-relation-role> XML element.
+ * It represents information in the &lt;ejb-relation-role> XML element.
  *
  * @author Sanjeev Krishnan
  */

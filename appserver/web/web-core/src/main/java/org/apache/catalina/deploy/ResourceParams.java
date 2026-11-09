@@ -38,7 +38,7 @@ public class ResourceParams implements Serializable {
      * The name of this resource parameters. Must be the name of the resource
      * in the java: namespace.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -83,7 +83,7 @@ public class ResourceParams implements Serializable {
     /**
      * The NamingResources with which we are associated (if any).
      */
-    protected NamingResources resources = null;
+    protected NamingResources resources;
 
     public NamingResources getNamingResources() {
         return (this.resources);

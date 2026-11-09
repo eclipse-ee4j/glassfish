@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
  * Implementations should provide functional implementation of the #validate method
  * and must have a public parameterless constructor (except possibly for primitives).
  *
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @see PrimitiveDataType
  * @see WriteableView
  * @since hk2 0.3.10
@@ -42,5 +42,5 @@ public interface DataType {
      * @throws org.jvnet.hk2.config.ValidationException if given String does
      * not represent this data type.
      */
-    public void validate(String value) throws ValidationException;
+    void validate(String value) throws ValidationException;
 }

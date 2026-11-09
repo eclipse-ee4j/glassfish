@@ -70,7 +70,7 @@ import org.jvnet.hk2.annotations.Service;
 public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    private String appname = null;
+    private String appname;
 
     @Inject
     Domain domain;

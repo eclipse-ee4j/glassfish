@@ -79,7 +79,7 @@ public class NameValuePair {
         }
     }
 
-    private String _name = null;
-    private Object _value = null;
-    private String _target = null;
+    private String _name;
+    private Object _value;
+    private String _target;
 }

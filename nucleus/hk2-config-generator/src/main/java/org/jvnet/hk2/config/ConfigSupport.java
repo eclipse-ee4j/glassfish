@@ -61,7 +61,7 @@ import org.jvnet.hk2.config.tiger.Types;
   *     httpListener.setPort("8989"); // will generate a PropertyVetoException
   *
   *     // instead he needs to use a transaction and can use the helper services
-  *     ConfigSupport.apply(new SingleConfigCode<HttpListener>() {
+  *     ConfigSupport.apply(new SingleConfigCode&lt;HttpListener&gt;() {
   *         public Object run(HttpListener okToChange) throws PropertyException {
   *             okToChange.setPort("8989"); // good...
   *             httpListener.setPort("7878"); // not good, exceptions still raised...
@@ -256,7 +256,6 @@ public class ConfigSupport implements ConfigurationUtilities {
      *
      * @param events of events that resulted of a successful configuration transaction
      * @param target the intended receiver of the changes notification
-     * @param logger to log any issues.
      */
     public static UnprocessedChangeEvents sortAndDispatch(PropertyChangeEvent[] events, Changed target) {
         return sortAndDispatch(events, target, Logger.getAnonymousLogger());
@@ -757,7 +756,7 @@ public class ConfigSupport implements ConfigurationUtilities {
 
     /**
      * Unwrap HK2 proxy to ConfigBeanProxy.
-     * @param ConfigBeanProxy probably proxied by HK2.
+     * @param proxy probably proxied by HK2.
      * @return actual ConfigBeanProxy.
      * @throws MultiException If there was an error resolving the proxy.
      */

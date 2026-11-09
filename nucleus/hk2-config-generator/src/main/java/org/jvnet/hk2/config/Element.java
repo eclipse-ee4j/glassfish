@@ -80,10 +80,10 @@ public @interface Element {
      * }
      * </pre>
      *
-     * <pre><xmp>
-     * <virtual-host name="foo" />
-     * <http-listener host="foo" />
-     * </xmp></pre>
+     * <pre>
+     * &lt;virtual-host name="foo" />
+     * &lt;http-listener host="foo" />
+     * </pre>
      */
     boolean reference() default false;
 

@@ -208,5 +208,5 @@ public class LayoutForEach extends LayoutComponent {
      *
      * See LayoutIf also.
      */
-    private boolean _doubleEval = false;
+    private boolean _doubleEval;
 }

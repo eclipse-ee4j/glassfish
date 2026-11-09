@@ -33,16 +33,16 @@ public interface LogQueryResult
     /**
         Get field names for each field of a {@link LogQueryEntry}.
         Log entries in the server <i>log file</i> are of the form:<br>
-        <code><pre>[#|DATE|LEVEL|PRODUCT_NAME|MODULE|NAME_VALUE_PAIRS|MESSAGE|#]</pre></code><br>
-        The metadata contains most of these fields, but does <b not> contain
+        <pre>[#|DATE|LEVEL|PRODUCT_NAME|MODULE|NAME_VALUE_PAIRS|MESSAGE|#]</pre>
+        The metadata contains most of these fields, but does <b>not</b> contain
         the PRODUCT_NAME or '#' columns.
      */
-    public String[]    getFieldNames();
+    String[]    getFieldNames();
 
     /**
         Return all log entries found by the query <b>not including the field headers</b>.
      */
-    public LogQueryEntry[]  getEntries();
+    LogQueryEntry[]  getEntries();
 }
 
 

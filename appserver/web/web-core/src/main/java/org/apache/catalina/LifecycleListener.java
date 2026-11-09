@@ -33,6 +33,6 @@ public interface LifecycleListener {
      *
      * @param event LifecycleEvent that has occurred
      */
-    public void lifecycleEvent(LifecycleEvent event)
+    void lifecycleEvent(LifecycleEvent event)
         throws LifecycleException;
 }

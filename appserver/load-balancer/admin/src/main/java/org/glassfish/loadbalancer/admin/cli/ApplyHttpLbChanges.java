@@ -124,7 +124,6 @@ public class ApplyHttpLbChanges implements AdminCommand {
     /**
      * publishes the loadbalancer.xml to the physical loadbalancer.
      * @throws java.io.IOException
-     * @throws com.sun.enterprise.config.ConfigException
      * @throws org.netbeans.modules.schema2beans.Schema2BeansException
      */
     public void publish(ConnectionManager _connectionManager, Domain domain, String lbConfigName) throws IOException,

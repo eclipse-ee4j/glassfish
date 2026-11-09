@@ -534,7 +534,7 @@ public class SSLClientConfigurator {
 
                 // backward compatible with AS 9.0 or earlier
                 {"SSL_RSA_WITH_NULL_MD5", "SSL_RSA_WITH_NULL_MD5"},
-                {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"}
+                {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"},
         };
 
         private static final Map<String,CipherInfo> ciphers =

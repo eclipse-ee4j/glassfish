@@ -327,7 +327,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
         throw new ConstraintViolationException(sb.toString(), violations);
     }
 
-    /** remove @ or <> eg "@foo" => "foo" or "<foo>" => "foo" */
+    /** remove @ or &lt;> eg "@foo" => "foo" or "&lt;foo&gt;" => "foo" */
     public static String stripMarkers(final String s) {
         if (s.startsWith("@")) {
             return s.substring(1);
@@ -669,8 +669,8 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
 
         /**
          * Returns the number of elements in this collection.  If the collection
-         * contains more than <tt>Integer.MAX_VALUE</tt> elements, returns
-         * <tt>Integer.MAX_VALUE</tt>.
+         * contains more than <code>Integer.MAX_VALUE</code> elements, returns
+         * <code>Integer.MAX_VALUE</code>.
          *
          * @return the number of elements in this collection.
          */
@@ -685,7 +685,7 @@ public class WriteableView implements InvocationHandler, Transactor, ConfigView 
          * @param index index of element to return.
          * @return the element at the specified position in this list.
          * @throws IndexOutOfBoundsException if the given index is out of range
-         *                                   (<tt>index &lt; 0 || index &gt;= size()</tt>).
+         *                                   (<code>index &lt; 0 || index &gt;= size()</code>).
          */
         @Override
         public Object get(int index) {

@@ -30,7 +30,7 @@ import org.jvnet.hk2.config.Configured;
  * <ul>
  * <li>failure-detection enables its members to periodically monitor other group members
  * to determine their availability in the group.</li>
- * <li>group-discovery is used for discovery of group & its members.</li>
+ * <li>group-discovery is used for discovery of group &amp; its members.</li>
  * <li>failure-detection.verify-failure-timeout-in-millis verifies suspect instances
  * by adding a verification layer to mark failure suspicion as a confirmed failure.</li>
  * </ul>

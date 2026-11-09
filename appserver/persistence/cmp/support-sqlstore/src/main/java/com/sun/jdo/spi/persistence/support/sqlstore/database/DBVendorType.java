@@ -139,7 +139,7 @@ public class DBVendorType  {
             MAP_EMPTY_STRING_TO_NULL, SPECIAL_DB_OPERATION,
             SUPPORTS_LIKE_ESCAPE, LEFT_LIKE_ESCAPE, RIGHT_LIKE_ESCAPE,
             NULL_COMPARISON_FUNCTION_NAME, MOD_FUNCTION_NAME,
-            CONCAT_CAST, PARAMETER_CAST, INLINE_NUMERIC, NOT_EQUAL
+            CONCAT_CAST, PARAMETER_CAST, INLINE_NUMERIC, NOT_EQUAL,
     };
 
 
@@ -899,7 +899,7 @@ public class DBVendorType  {
      * Returns the string that represents the not-equal-to operator
      * for this database. This has been added for Symfoware database
      * which does not support "!=" for NOT EQUAL, and will have to use
-     * "<>".
+     * "&lt;>".
      */
     public String getNotEqual() {
         String s = dbMap.get(NOT_EQUAL);

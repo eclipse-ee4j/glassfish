@@ -33,6 +33,6 @@ public interface ConfigBeanListener {
      *
      * @param bean the new config bean
      */
-    public void onEntered(ActiveDescriptor<ConfigBean> bean);
+    void onEntered(ActiveDescriptor<ConfigBean> bean);
 
 }

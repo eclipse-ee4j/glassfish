@@ -194,14 +194,12 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
 
     /**OMG Coordinator operation required of all subclasses.
      *
-     * @exception Inactive  The Coordinator is completing the transaction.
      */
     public abstract PropagationContext get_txcontext()
         throws Unavailable;
 
     /**IDL JCoordinator operation required of all subclasses.
      *
-     * @exception Unavailable  The global transaction identifier is not available.
      */
     public abstract otid_t getGlobalTID();
 
@@ -348,8 +346,8 @@ abstract class CoordinatorImpl extends JCoordinatorPOA implements JCoordinator {
      */
     public abstract void doFinalize();
 
-    private static POA poa = null;
-    private Coordinator thisRef = null;
+    private static POA poa;
+    private Coordinator thisRef;
 
     /**Returns a CORBA object which represents the transaction.
      */

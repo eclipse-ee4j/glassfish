@@ -22,8 +22,8 @@
 package org.glassfish.flashlight.xml;
 
 public class XmlProbeParam {
-    String name = null;
-    String type = null;
+    String name;
+    String type;
 
     public String getName() {
         return name;

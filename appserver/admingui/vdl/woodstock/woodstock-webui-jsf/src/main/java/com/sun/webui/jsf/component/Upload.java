@@ -118,7 +118,7 @@ public final class Upload extends Field implements Serializable {
     /**
      * columns set flag.
      */
-    private boolean columnsSet = false;
+    private boolean columnsSet;
 
     /**
      * Default constructor.
@@ -501,7 +501,7 @@ public final class Upload extends Field implements Serializable {
         /**
          * File item object.
          */
-        private transient FileItem<?> fileItemObject = null;
+        private transient FileItem<?> fileItemObject;
 
         /**
          * Creates a new instance of UploadedFileImpl.

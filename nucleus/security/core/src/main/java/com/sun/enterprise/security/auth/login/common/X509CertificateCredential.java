@@ -32,9 +32,9 @@ public class X509CertificateCredential {
     /**
      * Construct a credential with the specified X509Certificate certificate chain, realm name and alias.
      *
-     * @param the X509Certificate.
-     * @param the alias for the certificate
-     * @param the realm name. The only value supported for now is "certificate".
+     * @param certChain X509Certificate.
+     * @param alias alias for the certificate
+     * @param realm realm name. The only value supported for now is "certificate".
      */
 
     public X509CertificateCredential(X509Certificate[] certChain, String alias, String realm) {

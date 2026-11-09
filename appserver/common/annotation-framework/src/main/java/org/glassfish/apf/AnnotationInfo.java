@@ -27,12 +27,12 @@ import java.text.MessageFormat;
  * to process an annotation. In particular, instances of this class provide
  * access to :
  *
- * <p>
+ * <ul>
  * <li> the Annotation instance
  * <li> the ProcessingContext of the tool
  * <li> the AnnotatedElement which is a reference to the annotation element
  * (Type, Method...).
- * </p>
+ * </ul>
  *
  * @see java.lang.annotation.Annotation
  * @see java.lang.reflect.AnnotatedElement

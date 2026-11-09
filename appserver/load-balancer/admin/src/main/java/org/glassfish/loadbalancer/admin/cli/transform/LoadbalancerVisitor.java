@@ -69,5 +69,5 @@ public class LoadbalancerVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    Loadbalancer _lb = null;
+    Loadbalancer _lb;
 }

@@ -134,6 +134,6 @@ public class TemplatingException extends RuntimeException {
         return _elt;
     }
 
-    private UIComponent _comp = null;
-    private LayoutElement _elt = null;
+    private UIComponent _comp;
+    private LayoutElement _elt;
 }

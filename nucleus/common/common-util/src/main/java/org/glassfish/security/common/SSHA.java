@@ -146,7 +146,7 @@ public class SSHA
      *
      * @param encoded Encoded SSHA value (e.g. output of computeAndEncode())
      * @param password Password bytes of the password to verify.
-     * @returns True if given password matches encoded SSHA.
+     * @return True if given password matches encoded SSHA.
      * @throws IllegalArgumentException Thrown if there is an error.
      *
      */
@@ -172,7 +172,7 @@ public class SSHA
      * @param salt Salt bytes used in the hash result.
      * @param hash Hash result to compare against.
      * @param password Password bytes of the password to verify.
-     * @returns True if given password matches encoded SSHA.
+     * @return True if given password matches encoded SSHA.
      * @throws IllegalArgumentException Thrown if there is an error.
      *
      */
@@ -192,7 +192,7 @@ public class SSHA
      *      succesful return from method, it will be filled by the hash
      *      value decoded from the given SSHA string. Existing values are
      *      not used and will be overwritten.
-     * @returns Byte array containing the salt obtained from the encoded SSHA
+     * @return Byte array containing the salt obtained from the encoded SSHA
      *      string.
      * @throws IllegalArgumentException Thrown if there is an error.
      *

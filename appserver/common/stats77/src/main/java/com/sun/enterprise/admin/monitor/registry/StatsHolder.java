@@ -36,7 +36,6 @@ import org.glassfish.j2ee.statistics.Stats;
 public interface StatsHolder {
     /**
      * Add a child node or leaf to this node.
-     * @param statsHolder
      */
     StatsHolder addChild(String name, MonitoredObjectType type);
 

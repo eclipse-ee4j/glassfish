@@ -77,31 +77,31 @@ public final class Time extends WebuiInput implements NamingContainer {
      * can change the the value of this component.
      */
     @Property(name = "disabled", displayName = "Disabled")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * If this attribute is set to true, the value of the component is rendered
      * as text, preceded by the label if one was defined.
      */
     @Property(name = "readOnly", displayName = "Read-only")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -109,7 +109,7 @@ public final class Time extends WebuiInput implements NamingContainer {
      */
     @Property(name = "styleClass",
             displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -123,7 +123,7 @@ public final class Time extends WebuiInput implements NamingContainer {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * A binding to a Time Zone instance to use for this Scheduler. If none is
@@ -131,7 +131,7 @@ public final class Time extends WebuiInput implements NamingContainer {
      * locale.
      */
     @Property(name = "timeZone", displayName = "Time Zone")
-    private java.util.TimeZone timeZone = null;
+    private java.util.TimeZone timeZone;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -145,12 +145,12 @@ public final class Time extends WebuiInput implements NamingContainer {
      * @return {@code boolean}
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Holds value of property hourTooltipKey.

@@ -976,7 +976,7 @@ public final class JMXUtil
     boolean
     sameInterface( MBeanInfo info1, MBeanInfo info2 )
     {
-    return( sameAttributes( info1.getAttributes(), info2.getAttributes() ) &&
+    return( sameAttributes( info1.getAttributes(), info2.getAttributes() ) &amp;&amp;
     sameOperations( info1.getOperations(), info2.getOperations() ) );
     }
      */

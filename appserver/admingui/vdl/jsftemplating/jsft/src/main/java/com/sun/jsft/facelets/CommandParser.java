@@ -302,12 +302,12 @@ public class CommandParser {
      * It skips comments of the following types:
      * </p>
      *
-     * <code>
+     *
      *        <ul><li>//        -   Comment extends to the rest of the line.</li>
      *        <li>#        -   Comment extends to the rest of the line.</li>
      *        <li>/*        -   Comment extends until closing '*' and '/'.</li>
      *        <li>&lt;!-- -   Comment extends until closing --&gt;.</li></ul>
-     *    </code>
+     *
      *
      * @param skipChars The white space characters to skip
      *
@@ -459,15 +459,15 @@ public class CommandParser {
      * this is:
      * </p>
      *
-     * <p>
+     *
      * <ul>
      * <li><code>" \t\r\n"</code></li>
      * </ul>
-     * </p>
+     *
      */
     public static final String SIMPLE_WHITE_SPACE = " \t\r\n";
 
-    private InputStream _inputStream = null;
-    private transient BufferedReader _reader = null;
-    private transient Stack<Character> _stack = null;
+    private InputStream _inputStream;
+    private transient BufferedReader _reader;
+    private transient Stack<Character> _stack;
 }

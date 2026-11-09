@@ -46,12 +46,11 @@ public class ResourceAdapterConfigParserImpl implements ConnectorConfigParser {
      * Parses the ra.xml for the Resource Adapter javabean properties.
      * Here the second parameter connectionDefName is not used and can
      * be null or any value.
-     * <p/>
+     * <p>
      * It throws ConnectorRuntimeException if module dir is null or
      * corresponing rar is not deployed i.e invalid moduleDir parameter.
      *
      * @param desc ConnectorDescriptor pertaining to rar.
-     * @param Not  used. Can be null or any value,
      * @return Javabean properties with the propety names and values
      *         of propeties. The property values will be the values
      *         mentioned in ra.xml if present. Otherwise it will be the

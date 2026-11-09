@@ -524,7 +524,7 @@ public final class Utility {
      *
      * @param className the class name
      * @return the loaded class
-     * @exception if the class is not found.
+     * @exception ClassNotFoundException if the class is not found.
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
         return getClassLoader().loadClass(className);
@@ -549,7 +549,6 @@ public final class Utility {
 
     /**
      * Run an action with a specific classloader as the context classloader. Sets the context classloader, calls the method, resets the context classloader to the previous classloader.
-     * @param Type of a value returned from the supplied action and from this method
      * @param contextClassLoader Classloader to be used as the context classloader during thi method call
      * @param action A mathod to call with the classloader as the context classloader.
      * @return Value returned by the action method

@@ -42,7 +42,7 @@ import java.util.List;
  */
 public class AugmentationTest
 {
-    static boolean debug = false;
+    static boolean debug;
     static final PrintStream out = System.out;
 
     static final void affirm(boolean cond)

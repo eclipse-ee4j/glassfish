@@ -17,9 +17,9 @@
 package org.glassfish.web.admin.monitor;
 
 class TimeStatData {
-    private long entryTime = 0L;
-    private long exitTime = 0L;
-    private long totalTime = 0L;
+    private long entryTime;
+    private long exitTime;
+    private long totalTime;
 
     public long getEntryTime() {
         return entryTime;

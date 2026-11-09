@@ -122,14 +122,14 @@ public class SelectStatement extends Statement {
          return (plan.options & RetrieveDescImpl.OPT_COUNT_PC ) == 0;
      }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override
     public QueryPlan getQueryPlan() {
         return plan;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void generateStatementText() {

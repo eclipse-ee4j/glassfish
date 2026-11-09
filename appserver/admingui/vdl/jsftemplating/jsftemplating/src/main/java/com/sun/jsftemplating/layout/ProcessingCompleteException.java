@@ -63,5 +63,5 @@ public class ProcessingCompleteException extends RuntimeException {
      * This hold the {@link LayoutDefinition} which should be used as the result of processing the file.
      * </p>
      */
-    private LayoutDefinition _layoutDef = null;
+    private LayoutDefinition _layoutDef;
 }

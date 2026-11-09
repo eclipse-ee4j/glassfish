@@ -43,7 +43,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      */
     @Attribute(key=true)
     @NotNull
-    public String getName();
+    String getName();
 
     /**
      * Sets the value of the name property.
@@ -51,7 +51,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setName(String value) throws PropertyVetoException;
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the enabled property.
@@ -62,7 +62,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      *         {@link String }
      */
     @Attribute (defaultValue="true",dataType=Boolean.class)
-    public String getEnabled();
+    String getEnabled();
 
     /**
      * Sets the value of the enabled property.
@@ -70,7 +70,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setEnabled(String value) throws PropertyVetoException;
+    void setEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the applyTo property.
@@ -86,7 +86,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      *         {@link String }
      */
     @Attribute (defaultValue="request")
-    public String getApplyTo();
+    String getApplyTo();
 
     /**
      * Sets the value of the applyTo property.
@@ -94,14 +94,14 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setApplyTo(String value) throws PropertyVetoException;
+    void setApplyTo(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the ruleFileLocation property.
      *
      * Location of rule file to do transformation. Only XSLT files are allowed.
      * Default is:
-     * ${com.sun.aas.instanceRoot}/generated/xml/<appOrModule>/<xslt-ilename>/
+     * ${com.sun.aas.instanceRoot}/generated/xml/&lt;appOrModule&gt;/&lt;xslt-ilename>/
      * Absolute paths can also be specified
      *
      * @return possible object is
@@ -109,7 +109,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      */
     @Attribute
     @NotNull
-    public String getRuleFileLocation();
+    String getRuleFileLocation();
 
     /**
      * Sets the value of the ruleFileLocation property.
@@ -117,6 +117,6 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setRuleFileLocation(String value) throws PropertyVetoException;
+    void setRuleFileLocation(String value) throws PropertyVetoException;
 
 }

@@ -77,7 +77,7 @@ class LogFile {
 
     /**The handle of the log file.
      */
-    LogHandle handle = null;
+    LogHandle handle;
 
     /**LogFile constructor.
      *

@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
 public @interface ManagedOperation {
-    public int impact() default MBeanOperationInfo.UNKNOWN;
+    int impact() default MBeanOperationInfo.UNKNOWN;
 }
 
 

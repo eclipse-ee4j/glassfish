@@ -268,7 +268,7 @@ abstract class RowColumnRenderer extends AbstractRenderer {
     /**
      * Get the style class for a structural element of the table.
      * {@code styleCode} is one of.
-     * <p>
+     *
      * <ul>
      * <li>{@code TABLE_STYLE}</li>
      * <li>{@code CAPTION_STYLE}</li>
@@ -277,7 +277,7 @@ abstract class RowColumnRenderer extends AbstractRenderer {
      * <li>{@code CELLEVEN_STYLE}</li>
      * <li>{@code CELLODD_STYLE}</li>
      * </ul>
-     * </p>
+     *
      *
      * @param theme the current theme
      * @param styleCode one the predefined constants.

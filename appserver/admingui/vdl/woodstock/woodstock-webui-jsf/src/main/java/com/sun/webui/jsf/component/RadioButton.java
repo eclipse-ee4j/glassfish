@@ -35,7 +35,7 @@ import java.util.Objects;
  * or none selected. A radio button can represent a {@code Boolean} value, a
  * {@code String} value, or a developer defined {@code Object} value.
  * </p>
- * <h3>Detecting a selected radio button</h3>
+ * <h2>Detecting a selected radio button</h2>
  * <p>
  * The {@code RadioButton} uses both the {@code selected} and
  * {@code selectedValue} properties to pass information about the radio button's
@@ -77,7 +77,7 @@ import java.util.Objects;
  * least one radio button must be selected. The application should ensure that
  * this requirement is met.
  * </em></p>
- * <h3>Using a {@code radio button} tag as a boolean control</h3>
+ * <h2>Using a {@code radio button} tag as a boolean control</h2>
  * <p>
  * If the {@code selectedValue} property is not specified or its value is
  * {@code null} then the radio button behaves like a boolean control.
@@ -94,7 +94,7 @@ import java.util.Objects;
  * request property for the selected radio button is not useful, since the value
  * of the request property will be an indistinguishable {@code true} value.</em>
  * </p>
- * <h3>Using a {@code RadioButton} to represent a developer defined value</h3>
+ * <h2>Using a {@code RadioButton} to represent a developer defined value</h2>
  * <p>
  * The {@code selectedValue} property can be assigned a developer defined object
  * value to represent the value of a selected radio button. If the radio button
@@ -110,7 +110,7 @@ import java.util.Objects;
  * to the {@code selected} property value in order to detect a selected radio
  * button.
  * </p>
- * <h3>Using a {@code RadioButton} as one control in a group</h3>
+ * <h2>Using a {@code RadioButton} as one control in a group</h2>
  * <p>
  * The {@code name} property determines whether a radio button is part of a
  * group. A radio button is treated as part of a group of radio buttons if the
@@ -121,7 +121,7 @@ import java.util.Objects;
  * can be selected. The value of the name property must be unique within the
  * scope of the Form parent containing the radio buttons.
  * </p>
- * <h3>Facets</h3>
+ * <h2>Facets</h2>
  * <p>
  * The following facets are supported:
  * </p>
@@ -150,7 +150,7 @@ import java.util.Objects;
  * {@link com.sun.webui.jsf.component.ImageComponent} for the image facet or
  * {@link com.sun.webui.jsf.component.Label} for the label facet.</em>
  * </p>
- * <h3>ImageComponent and Label sub-components</h3>
+ * <h2>ImageComponent and Label sub-components</h2>
  * <p>
  * An image and a label may be associated with the {@code RadioButton}. If the
  * {@code imageURL} property is not null and an image facet does not exist then
@@ -170,7 +170,7 @@ import java.util.Objects;
  * <li>this.isVisible() is assigned to the {@code visible} property.</li>
  * <li>this.isRendered() is assigned to the {@code renderer} property.</li>
  * </ul>
- * </p>
+ *
  * <p>
  * For the {@link com.sun.webui.jsf.component.Label} sub-component
  * <ul>
@@ -182,7 +182,7 @@ import java.util.Objects;
  * <li>this.isVisible is assigned to the {@code visible} property.</li>
  * <li>this.isRendered is assigned to the {@code renderer} property.</li>
  * </ul>
- * </p>
+ *
  * <em>Note that if a value binding exists for one of the {@code RadioButton}
  * properties mentioned above, the value binding is set on the sub-component for
  * that property.</em>
@@ -213,7 +213,7 @@ public final class RadioButton extends RbCbSelector {
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * Default constructor.

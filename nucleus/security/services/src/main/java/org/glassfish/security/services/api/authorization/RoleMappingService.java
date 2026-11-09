@@ -85,7 +85,7 @@ public interface RoleMappingService extends SecurityService {
      * in service.  Upon calling delete(), the context is taken out of service and the policies
      * are deleted from the Role Mapping Provider.
      */
-    public interface RoleDeploymentContext {
+    interface RoleDeploymentContext {
 
         void addMapping(String role, String[] users, String[] groups);
 

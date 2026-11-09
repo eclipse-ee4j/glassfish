@@ -30,7 +30,7 @@ public class SimpleDynamicContentImpl extends Content.Adapter implements Dynamic
     private final String mimeType;
     private final boolean isMain;
 
-    private Instance instance = null;
+    private Instance instance;
 
     public SimpleDynamicContentImpl(final String template, final String mimeType) {
         this(template, mimeType, false);

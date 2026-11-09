@@ -40,7 +40,7 @@ public class TraceUtil {
     private static int m_currentTraceLevel = TraceLevel.IAS_JTS_TRACE_TRIVIAL ;
     private static char m_fieldDelimiter = ':';
     private static String m_traceRecordTag = "iAS_JTS_Trace> ";
-    private static PrintWriter m_traceWriter = null ;
+    private static PrintWriter m_traceWriter;
 
     static
     {

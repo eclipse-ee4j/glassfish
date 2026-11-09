@@ -152,7 +152,7 @@ public class WeblogicApplicationNode extends RuntimeBundleNode<Application> {
      *
      * @param parent node for the DOM tree
      * @param nodeName the node name
-     * @param descriptor the descriptor to write
+     * @param application the descriptor to write
      * @return the DOM tree top node
      */
     @Override

@@ -35,7 +35,7 @@ public interface ContainerListener {
      *
      * @param event ContainerEvent that has occurred
      */
-    public void containerEvent(ContainerEvent event);
+    void containerEvent(ContainerEvent event);
 
 
 }

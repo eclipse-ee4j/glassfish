@@ -34,13 +34,13 @@ public interface GFJTAStats extends JTAStats {
      * @see org.glassfish.j2ee.statistics.JTAStats#getActiveCount
      * @return        a comma separated String of IDs
      */
-    public StringStatistic getActiveIds();
+    StringStatistic getActiveIds();
 
     /** Returns the current state of the transaction service as a StringStatistic.
      *
      * @return        String representing the current state of the transaction service.
      */
-    public StringStatistic getState();
+    StringStatistic getState();
 
     /** Freezes the transaction subsystem. This operation is advised before
      * an attempt is made to rollback any transactions to avoid the possibility of
@@ -48,20 +48,20 @@ public interface GFJTAStats extends JTAStats {
      * is expected be active before it can be frozen. Calling this methd on
      * an already frozen transaction subsystem has no effect.
      */
-    public void freeze();
+    void freeze();
 
     /** Unfreezes the transaction subsystem. It is required to unfreeze the
      * transaction subsystem after it is frozen earlier.
      * Calling this method when system is not active, has no effect.
      */
-    public void unfreeze();
+    void unfreeze();
 
     /**
      * Rolls back a given transaction. It is advisable to call this method
          * when the transaction subsystem is in a frozen state so that transactions
          * won't be completed before this request. It is left to implementation how
      * the transactions are rolled back.
-     * @param    String representing the unique id of the transaction that
+     * @param    txnId representing the unique id of the transaction that
      * needs to be rolled-back. Every transaction that can be rolled back
      * has to be an in flight transaction.
          * @return String contains the status of the rollback operation for the given txnId.
@@ -70,7 +70,7 @@ public interface GFJTAStats extends JTAStats {
          * "Rollback unsuccessful. Thread is not allowed to rollback the transaction",
          * "Rollback unsuccessful. Unexpected error condition encountered by Transaction Manager".
      */
-    public String rollback(String txnId);
+    String rollback(String txnId);
 
 
     /**
@@ -78,9 +78,6 @@ public interface GFJTAStats extends JTAStats {
          * when the transaction subsystem is in a frozen state so that transactions
          * won't be completed before this request. It is left to implementation how
      * the transactions are rolled back.
-     * @param    String array representing the unique ids of the transactions that
-     * need to be frozen. Every transaction that can be rolled back has to be an
-     * in flight transaction.
      * @return    String[] containing the status for the given transaction ids.
          * status contains "Successful","Invalid transaction Id or Transaction is over",
          * "Rollback unsuccessful. Current Thread is not associated with the transaction",
@@ -90,12 +87,12 @@ public interface GFJTAStats extends JTAStats {
      */
 
         // To be used for GUI ...
-        public List<Map<String, String>> listActiveTransactions();
+        List<Map<String, String>> listActiveTransactions();
 
     /**
      * Utility method to find out if in place recovery is required.
      * @return true if the recovery is required, else false
      */
-    public Boolean isRecoveryRequired();
+    Boolean isRecoveryRequired();
 }
 

@@ -81,8 +81,8 @@ import org.omg.PortableServer.POA;
 
 class TransactionFactoryImpl extends TransactionFactoryPOA implements TransactionFactory {
 
-    private static POA poa = null;
-    private TransactionFactory thisRef = null;
+    private static POA poa;
+    private TransactionFactory thisRef;
 
     static boolean active = true;
 

@@ -139,6 +139,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <!-- XJC generates "@throws JAXBException" for methods that don't throw it -->
+                    <doclint>all,-missing,-reference</doclint>
+                </configuration>
+            </plugin>
 
             <!-- Generates JAXB classes based on the ACC configuration file
                 DTD. -->

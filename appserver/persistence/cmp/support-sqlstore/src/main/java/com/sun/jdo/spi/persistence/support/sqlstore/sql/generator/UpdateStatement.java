@@ -55,7 +55,7 @@ public class UpdateStatement extends Statement implements Cloneable {
     private List<ColumnElement> versionColumns;
 
     /** Flag indicating whether we use batch. */
-    private boolean batch = false;
+    private boolean batch;
 
     /** Insert values for INSERT statements. */
     private StringBuffer values;
@@ -118,14 +118,14 @@ public class UpdateStatement extends Statement implements Cloneable {
         isConstraintAdded = true;
     }
 
-    /** @inheritDoc */
+    /** {@inheritDoc} */
     @Override
     public QueryPlan getQueryPlan() {
          return plan;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     protected void generateStatementText() {

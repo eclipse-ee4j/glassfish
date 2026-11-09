@@ -34,7 +34,7 @@ public final class CookieUtils {
      */
     private static final char[] BAD_COOKIE_CHARS = {
         '(', ')', '<', '>', '@', ',', ';', ':', '\\',
-        '\'', '/', '[', ']', '?', '=', '{', '}', ' ', '\t'
+        '\'', '/', '[', ']', '?', '=', '{', '}', ' ', '\t',
     };
 
     /**

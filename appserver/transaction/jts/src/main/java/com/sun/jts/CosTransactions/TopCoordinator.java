@@ -107,33 +107,33 @@ import org.omg.CosTransactions.otid_t;
 //-----------------------------------------------------------------------------
 
 public class TopCoordinator extends CoordinatorImpl {
-    String              name = null;
-    RegisteredResources participants = null;
-    RegisteredSyncs     synchronizations = null;
-    SuperiorInfo        superInfo = null;
-    NestingInfo         nestingInfo = null;
-    TransactionState    tranState = null;
-    CoordinatorLog      logRecord = null;
-    CompletionHandler   terminator = null;
-    boolean             registered = false;
-    boolean             registeredSync = false;
+    String              name;
+    RegisteredResources participants;
+    RegisteredSyncs     synchronizations;
+    SuperiorInfo        superInfo;
+    NestingInfo         nestingInfo;
+    TransactionState    tranState;
+    CoordinatorLog      logRecord;
+    CompletionHandler   terminator;
+    boolean             registered;
+    boolean             registeredSync;
     boolean             root = true;
-    boolean             rollbackOnly = false;
-    boolean             dying = false;
-    boolean             temporary = false;
-    int                 hash = 0;
+    boolean             rollbackOnly;
+    boolean             dying;
+    boolean             temporary;
+    int                 hash;
 
     /**
      *  Logger to log transaction messages
      */
     static Logger _logger = LogDomains.getLogger(TopCoordinator.class,LogDomains.TRANSACTION_LOGGER);
     // added (Ram J) for memory Leak fix.
-    Vector recoveryCoordinatorList = null;
-    CoordinatorSynchronizationImpl coordSyncImpl = null;
+    Vector recoveryCoordinatorList;
+    CoordinatorSynchronizationImpl coordSyncImpl;
 
     // added (sankar) for delegated recovery support
-    boolean delegated = false;
-    String logPath = null;
+    boolean delegated;
+    String logPath;
 
     /**
      * Default TopCoordinator constructor.
@@ -2604,7 +2604,7 @@ public class TopCoordinator extends CoordinatorImpl {
 
     }
 
-    private static Any emptyData = null;
+    private static Any emptyData;
 
     /**
      * Creates a PropagationContext which contains the information which would
@@ -2612,9 +2612,6 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      *
      * @return  The transaction context.
-     *
-     * @exception Inactive  The Coordinator is in the process of completing the
-     *   transaction and cannot return the information.
      *
      */
     synchronized public PropagationContext get_txcontext() throws Unavailable {

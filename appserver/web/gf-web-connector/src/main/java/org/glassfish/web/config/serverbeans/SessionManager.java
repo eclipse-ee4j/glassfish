@@ -45,7 +45,7 @@ public interface SessionManager extends ConfigBeanProxy  {
      */
     @Element
     @NotNull
-    public ManagerProperties getManagerProperties();
+    ManagerProperties getManagerProperties();
 
     /**
      * Sets the value of the managerProperties property.
@@ -53,7 +53,7 @@ public interface SessionManager extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link ManagerProperties }
      */
-    public void setManagerProperties(ManagerProperties value) throws PropertyVetoException;
+    void setManagerProperties(ManagerProperties value) throws PropertyVetoException;
 
     /**
      * Gets the value of the storeProperties property.
@@ -63,7 +63,7 @@ public interface SessionManager extends ConfigBeanProxy  {
      */
     @Element
     @NotNull
-    public StoreProperties getStoreProperties();
+    StoreProperties getStoreProperties();
 
     /**
      * Sets the value of the storeProperties property.
@@ -71,7 +71,7 @@ public interface SessionManager extends ConfigBeanProxy  {
      * @param value allowed object is
      *              {@link StoreProperties }
      */
-    public void setStoreProperties(StoreProperties value) throws PropertyVetoException;
+    void setStoreProperties(StoreProperties value) throws PropertyVetoException;
 
 
 

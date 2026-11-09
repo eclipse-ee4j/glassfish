@@ -48,7 +48,7 @@ public interface UserWorkArea extends Serializable
    * with the current thread then the new WorkArea will overlay
    * contexts within the already-existing WorkArea,
    */
-  public void begin(String name);
+  void begin(String name);
 
   /**
    * Begin a new WorkArea, with propagation mode set to
@@ -77,7 +77,7 @@ public interface UserWorkArea extends Serializable
    *
    * @see org.glassfish.contextpropagation.weblogic.workarea.PropagationMode
    */
-  public void begin(String name, int propagationMode);
+  void begin(String name, int propagationMode);
 
   /**
    * Complete the current, active WorkArea. Any nested values created
@@ -85,7 +85,7 @@ public interface UserWorkArea extends Serializable
    * then that will become the new default WorkArea. Nested WorkAreas
    * are not terminated by parent WorkAreas.
    */
-  public void complete() throws NoWorkContextException;
+  void complete() throws NoWorkContextException;
 
   /**
    * Complete the active WorkArea named name. Any nested values
@@ -97,14 +97,14 @@ public interface UserWorkArea extends Serializable
    * <p> It is generally preferrable to end named work areas to avoid
    * conflicts with other code using the WorkArea service.
    */
-  public void complete(String name) throws NoWorkContextException;
+  void complete(String name) throws NoWorkContextException;
 
   /**
    * Returns the current WorkArea's name. Returns null if there is no
    * active WorkArea. This method can be used to determine whether
    * there is a current WorkArea.
    */
-  public String getName();
+  String getName();
 
   /**
    * Returns an array of all of the keys associated with the stack of
@@ -112,14 +112,14 @@ public interface UserWorkArea extends Serializable
    * ordering of the returned keys. The set of keys includes all those
    * of all enclosing WorkAreas.
    */
-  public String[] getKeys();
+  String[] getKeys();
 
   /**
    * Adds context data to the current WorkArea. This context data is
    * propagated according to the policyOptions that the context was
    * started with. Any existing value for key will be overlaid.
    */
-  public void setProperty(String key, WorkContext ctx)
+  void setProperty(String key, WorkContext ctx)
     throws NoWorkContextException, PropertyReadOnlyException;
 
   /**
@@ -128,7 +128,7 @@ public interface UserWorkArea extends Serializable
    * for key will be overlaid. It is legal for multiple context data
    * items to be propagated as long as their keys differ.
    */
-  public void setProperty(String key, WorkContext ctx,
+  void setProperty(String key, WorkContext ctx,
                           int propertyModeType) throws NoWorkContextException,
                                                        PropertyReadOnlyException;
 
@@ -137,7 +137,7 @@ public interface UserWorkArea extends Serializable
    * has no value for key then all parent WorkArea's are searched. If
    * no WorkArea has a value for key then null is returned.
    */
-  public WorkContext getProperty(String key);
+  WorkContext getProperty(String key);
 
   /**
    * Get the current WorkArea's PropertyModeType value for key. If the
@@ -145,11 +145,11 @@ public interface UserWorkArea extends Serializable
    * are searched. If no WorkArea has a value for key then null is
    * PropertyModeType.NORMAL is returned.
    */
-  public int getMode(String key);
+  int getMode(String key);
 
   /**
    * Remove the property for key from the current WorkArea. This does
    * not affect parent WorkAreas that have property values for key.
    */
-  public void removeProperty(String key) throws NoWorkContextException;
+  void removeProperty(String key) throws NoWorkContextException;
 }

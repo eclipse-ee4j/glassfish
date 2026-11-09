@@ -47,7 +47,7 @@ import org.jvnet.hk2.config.InjectionResolver;
 public class MapInjectionResolver extends InjectionResolver<Param> {
     private final CommandModel model;
     private final ParameterMap parameters;
-    private ExecutionContext context = null;
+    private ExecutionContext context;
 
     private final MultiMap<String,File> optionNameToUploadedFileMap;
 
@@ -361,7 +361,7 @@ public class MapInjectionResolver extends InjectionResolver<Param> {
     }
 
     /**
-     * Convert the List<String> parameter to the specified type.
+     * Convert the List&lt;String&gt; parameter to the specified type.
      *
      * @param target the target field
      * @param type the type of class to convert

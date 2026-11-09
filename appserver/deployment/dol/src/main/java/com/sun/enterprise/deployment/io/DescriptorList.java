@@ -33,31 +33,31 @@ public class DescriptorList {
 
     private final static String [] earList = {
         DescriptorConstants.APPLICATION_DD_ENTRY,
-        DescriptorConstants.S1AS_APPLICATION_DD_ENTRY
+        DescriptorConstants.S1AS_APPLICATION_DD_ENTRY,
     };
 
     private final static String [] ejbList = {
         DescriptorConstants.EJB_DD_ENTRY,
         DescriptorConstants.S1AS_EJB_DD_ENTRY,
         DescriptorConstants.S1AS_CMP_MAPPING_DD_ENTRY,
-        DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY
+        DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY,
     };
 
     private final static String [] warList = {
         DescriptorConstants.WEB_DD_ENTRY,
         DescriptorConstants.S1AS_WEB_DD_ENTRY,
         DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY,
-        DescriptorConstants.JAXRPC_JAR_ENTRY
+        DescriptorConstants.JAXRPC_JAR_ENTRY,
     };
 
     private final static String [] rarList = {
         DescriptorConstants.RAR_DD_ENTRY,
-        DescriptorConstants.S1AS_RAR_DD_ENTRY
+        DescriptorConstants.S1AS_RAR_DD_ENTRY,
     };
 
     private final static String [] carList = {
         DescriptorConstants.APP_CLIENT_DD_ENTRY,
-        DescriptorConstants.S1AS_APP_CLIENT_DD_ENTRY
+        DescriptorConstants.S1AS_APP_CLIENT_DD_ENTRY,
     };
 
     public final static String [] getDescriptorsList (ArchiveType moduleType) {

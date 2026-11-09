@@ -75,7 +75,7 @@ public class TemplateExecCommand extends AbstractResource implements OptionsCapa
     protected String commandDisplayName;
     protected String commandMethod;
     protected String commandAction;
-    protected boolean isLinkedToParent = false;
+    protected boolean isLinkedToParent;
 
     public TemplateExecCommand(String resourceName, String commandName, String commandMethod, String commandAction,
             String commandDisplayName, boolean isLinkedToParent) {

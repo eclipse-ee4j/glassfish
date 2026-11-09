@@ -24,7 +24,7 @@ public enum HttpListenerType {
     protected String variableName;
     protected int defaultPort;
 
-    private HttpListenerType(String variableName, int defaultPort) {
+    HttpListenerType(String variableName, int defaultPort) {
         this.variableName = variableName;
         this.defaultPort = defaultPort;
     }

@@ -350,7 +350,7 @@ public class XID implements Xid {
     /**
      * Set the format identifier part of the XID.
      *
-     * @param Format identifier. -1 indicates a null Xid.
+     * @param formatID identifier. -1 indicates a null Xid.
      */
     public void setFormatID(int formatID) {
         this.formatID = formatID;

@@ -195,7 +195,7 @@ public class RetrieveDescImpl extends Object implements RetrieveDesc, Cloneable 
     }
 
     /**
-     * The addResult method can be used to specify <it>global</it>
+     * The addResult method can be used to specify &lt;it&gt;global&lt;/it&gt;
      * query attributes that don't end up in the where clause.
      * Aggregate functions and the distinct op code are examples for
      * those query options. The result type defines the object to be

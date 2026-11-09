@@ -202,12 +202,12 @@ public class WebArchivist extends Archivist<WebBundleDescriptorImpl> {
     }
 
     /**
-     * Obtains the location of <tt>default-web.xml</tt>.
+     * Obtains the location of <code>default-web.xml</code>.
      * This allows subclasses to load the file from elsewhere.
      *
      * @return
      *      null if not found, in which case the default web.xml will not be read
-     *      and <tt>web.xml</tt> in the applications need to have everything.
+     *      and <code>web.xml</code> in the applications need to have everything.
      */
     protected URL getDefaultWebXML() throws IOException {
         File file = new File(env.getConfigDirPath(), DEFAULT_WEB_XML);

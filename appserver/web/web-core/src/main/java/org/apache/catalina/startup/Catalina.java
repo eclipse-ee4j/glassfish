@@ -82,19 +82,19 @@ public class Catalina extends Embedded {
     /**
      * The server component we are starting or stopping
      */
-    protected Server server = null;
+    protected Server server;
 
 
     /**
      * Are we starting a new server?
      */
-    protected boolean starting = false;
+    protected boolean starting;
 
 
     /**
      * Are we stopping an existing server?
      */
-    protected boolean stopping = false;
+    protected boolean stopping;
 
     /**
      * Shutdown hook.
@@ -696,7 +696,7 @@ public class Catalina extends Embedded {
 
 final class SetParentClassLoaderRule extends Rule {
 
-    public SetParentClassLoaderRule(Digester digester,
+    SetParentClassLoaderRule(Digester digester,
                                     ClassLoader parentClassLoader) {
 
         super(digester);
@@ -704,7 +704,7 @@ final class SetParentClassLoaderRule extends Rule {
 
     }
 
-    ClassLoader parentClassLoader = null;
+    ClassLoader parentClassLoader;
 
     @Override
     public void begin(Attributes attributes) throws Exception {

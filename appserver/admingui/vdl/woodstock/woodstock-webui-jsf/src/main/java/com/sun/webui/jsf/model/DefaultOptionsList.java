@@ -37,7 +37,7 @@ public class DefaultOptionsList extends OptionsList {
         Option[] options = new Option[]{
             new Option("item1", MessageUtil.getMessage(bundle, "item1")),
             new Option("item2", MessageUtil.getMessage(bundle, "item2")),
-            new Option("item3", MessageUtil.getMessage(bundle, "item3"))
+            new Option("item3", MessageUtil.getMessage(bundle, "item3")),
         };
         this.setOptions(options);
     }

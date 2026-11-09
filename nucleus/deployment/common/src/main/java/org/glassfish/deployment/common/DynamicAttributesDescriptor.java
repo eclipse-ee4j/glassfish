@@ -87,32 +87,6 @@ public class DynamicAttributesDescriptor extends Observable implements Serializa
     }
 
     /**
-     * @return a meaningfull string about ourself
-     * This method is invoked by toString() method.  This method can be overwritten by any descriptor which inherits this class
-     * to self describe. This pattern is adopted to imporve the performance of S1AS 8.0 which avoids creation of several String objects
-     * in toString() method.
-     * When toString() method is called on a Descriptor object, the toString method of this class is called.
-     * The toString method of this class invokes print(StringBuffer) method.  If the Descriptor object overrides print method, its method
-     * will be invoked.
-     * For better performance, care should be taken to use print method on all descriptors instead of printing object itself (which calls to toString).
-     * For example
-     * Iterator itr = getDeploymentExtensions();
-            if (itr!=null && itr.hasNext()) {
-               do {
-                   sb.append("\n Deployment Extension : ").append(itr.next());
-               } while (itr.hasNext());
-           }
-
-
-            should probably read as below.
-
-           Iterator itr = getDeploymentExtensions();
-           if (itr!=null && itr.hasNext()) {
-               do {
-                   sb.append("\n Deployment Extension : ");
-            ((Descriptor) itr.next()).print(sb);
-               } while (itr.hasNext());
-           }
      */
     public void print(StringBuffer toStringBuffer) {
         if (dynamicAttributes == null) {

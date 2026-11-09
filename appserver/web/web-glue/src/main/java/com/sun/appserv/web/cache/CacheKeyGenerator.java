@@ -30,6 +30,6 @@ public interface CacheKeyGenerator {
      *  @return key string used to access the cache entry.
      *  if the return value is null, a default key is used.
      */
-    public String getCacheKey(ServletContext context,
+    String getCacheKey(ServletContext context,
                                 HttpServletRequest request);
 }

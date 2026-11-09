@@ -55,14 +55,14 @@ public class NotificationListenerTracking
         return mInfos.size();
     }
 
-    private final boolean listenersEqual(
+    private boolean listenersEqual(
             final NotificationListener listener1,
             final NotificationListener listener2)
     {
         return (listener1 == listener2);
     }
 
-    private final boolean handbacksEqual(
+    private boolean handbacksEqual(
             final Object handback1,
             final Object handback2)
     {

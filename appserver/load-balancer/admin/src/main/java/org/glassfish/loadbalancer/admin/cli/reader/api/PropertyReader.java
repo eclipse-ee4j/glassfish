@@ -28,19 +28,19 @@ public interface PropertyReader extends BaseReader {
      *
      * @return String           name of the property
      */
-    public String getName() throws LbReaderException;
+    String getName() throws LbReaderException;
 
     /**
      * Returns value of the property
      *
      * @return String           name of the value
      */
-    public String getValue() throws LbReaderException;
+    String getValue() throws LbReaderException;
 
     /**
      * Returns description of the property
      *
      * @return String           description of the property
      */
-    public String getDescription() throws LbReaderException;
+    String getDescription() throws LbReaderException;
 }

@@ -95,7 +95,7 @@ public abstract class PwcWebModule extends StandardContext {
     }
 
     /**
-     * Gets the session tracking cookie configuration of this <tt>ServletContext</tt>.
+     * Gets the session tracking cookie configuration of this <code>ServletContext</code>.
      */
     @Override
     public synchronized jakarta.servlet.SessionCookieConfig getSessionCookieConfig() {

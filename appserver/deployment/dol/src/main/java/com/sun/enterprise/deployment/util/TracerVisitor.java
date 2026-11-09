@@ -72,7 +72,7 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
     /**
      * visit an application object
      *
-     * @param the application descriptor
+     * @param application application descriptor
      */
     @Override
     public void accept(Application application) {
@@ -85,7 +85,7 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
     /**
      * visits an ejb reference for the last J2EE component visited
      *
-     * @param the ejb reference
+     * @param ejbRef ejb reference
      */
     @Override
     protected void accept(EjbReference ejbRef) {

@@ -167,7 +167,7 @@ public class RealmsManager {
     /**
      * Returns names of predefined AuthRealms' classes supported by security service.
      *
-     * @returns array of predefind AuthRealms' classes
+     * @return array of predefind AuthRealms' classes
      *
      */
     public List<String> getPredefinedAuthRealmClassNames() {

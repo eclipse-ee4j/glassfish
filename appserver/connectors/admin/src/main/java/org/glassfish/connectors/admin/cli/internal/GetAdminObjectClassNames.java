@@ -62,7 +62,7 @@ public class GetAdminObjectClassNames implements AdminCommand {
     private String adminObjectInterface;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

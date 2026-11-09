@@ -42,7 +42,7 @@ public final class LinkRenderer extends AbstractRenderer {
         "charset",
         "media",
         "rel",
-        "type"
+        "type",
     };
 
     @Override

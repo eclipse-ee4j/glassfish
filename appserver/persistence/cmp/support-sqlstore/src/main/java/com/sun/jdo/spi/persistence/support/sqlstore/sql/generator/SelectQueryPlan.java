@@ -1423,7 +1423,7 @@ public class SelectQueryPlan extends QueryPlan {
      * The constraints are ordered such that any "order by" constraint
      * with position N is placed before any "order by" constraint with
      * position N+m, where m > 0.  Also any "order by" constraint with
-     * no position (i.e. position < 0) are placed immediately
+     * no position (i.e. position &lt; 0) are placed immediately
      * following the previous "order by" constraint with a position.
      * The order of the "order by" constraints on the constraint stack
      * is changed to effect this ordering.

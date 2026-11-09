@@ -76,7 +76,7 @@ public final class FileChooserModel implements ResourceModel, Serializable {
     /**
      * File system root.
      */
-    private String root = null;
+    private String root;
 
     /**
      * File separator character.
@@ -86,7 +86,7 @@ public final class FileChooserModel implements ResourceModel, Serializable {
     /**
      * Current directory.
      */
-    private String currentDir = null;
+    private String currentDir;
 
     /**
      * Filter value.
@@ -96,27 +96,27 @@ public final class FileChooserModel implements ResourceModel, Serializable {
     /**
      * Sort value.
      */
-    private String sortValue = null;
+    private String sortValue;
 
     /**
      * Folder chooser flag.
      */
-    private boolean folderChooser = false;
+    private boolean folderChooser;
 
     /**
      * Type set flag.
      */
-    private boolean typeSet = false;
+    private boolean typeSet;
 
     /**
      * Server name.
      */
-    private String serverName = null;
+    private String serverName;
 
     /**
      * Collator.
      */
-    private transient Collator collator = null;
+    private transient Collator collator;
 
     /**
      * Creates a new instance of FileChooserModel.

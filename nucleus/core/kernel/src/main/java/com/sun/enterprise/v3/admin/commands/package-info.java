@@ -19,7 +19,7 @@
  * Since the server is modular now, the commands are likely to reside with
  * modules, but the there are some commands that are of generic nature and
  * this is the place for them.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  */
 

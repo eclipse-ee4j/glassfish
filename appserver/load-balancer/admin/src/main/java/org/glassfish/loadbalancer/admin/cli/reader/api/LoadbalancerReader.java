@@ -32,53 +32,53 @@ public interface LoadbalancerReader extends BaseReader {
      *
      * @return PropertyReader[]     array of properties
      */
-    public PropertyReader[] getProperties() throws LbReaderException;
+    PropertyReader[] getProperties() throws LbReaderException;
 
     /**
      * Returns the cluster info that are load balanced by this LB.
      *
      * @return ClusterReader        array of cluster readers
      */
-    public ClusterReader[] getClusters() throws LbReaderException;
+    ClusterReader[] getClusters() throws LbReaderException;
 
     /**
      * Returns the name of the load balancer
      *
      * @return String               name of the LB
      */
-    public String getName() throws LbReaderException;
+    String getName() throws LbReaderException;
 
     /**
      * Returns the lbconfig associated with the load balancer
      *
      * @return LbConfig               lbconfig of the LB
      */
-    public LbConfig getLbConfig();
+    LbConfig getLbConfig();
 
     /*** Supported Attribute names for Load balancer **/
-    public static final String RESP_TIMEOUT = "response-timeout-in-seconds";
-    public static final String RESP_TIMEOUT_VALUE = "60";
-    public static final String RELOAD_INTERVAL =
+    String RESP_TIMEOUT = "response-timeout-in-seconds";
+    String RESP_TIMEOUT_VALUE = "60";
+    String RELOAD_INTERVAL =
             "reload-poll-interval-in-seconds";
-    public static final String RELOAD_INTERVAL_VALUE = "60";
-    public static final String HTTPS_ROUTING = "https-routing";
-    public static final String HTTPS_ROUTING_VALUE = "false";
-    public static final String REQ_MONITOR_DATA = "require-monitor-data";
-    public static final String REQ_MONITOR_DATA_VALUE = "false";
-    public static final String ROUTE_COOKIE = "route-cookie-enabled";
-    public static final String LAST_EXPORTED = "last-exported";
-    public static final String ACTIVE_HEALTH_CHECK_VALUE = "false";
-    public static final String NUM_HEALTH_CHECK_VALUE = "3";
-    public static final String REWRITE_LOCATION_VALUE = "true";
-    public static final String ACTIVE_HEALTH_CHECK = "active-healthcheck-enabled";
-    public static final String NUM_HEALTH_CHECK = "number-healthcheck-retries";
-    public static final String REWRITE_LOCATION = "rewrite-location";
-    public static final String REWRITE_COOKIES = "rewrite-cookies";
-    public static final String REWRITE_COOKIES_VALUE = "false";
-    public static final String PREFERRED_FAILOVER_INSTANCE = "preferred-failover-instance";
-    public static final String PREFERRED_FAILOVER_INSTANCE_VALUE = "true";
+    String RELOAD_INTERVAL_VALUE = "60";
+    String HTTPS_ROUTING = "https-routing";
+    String HTTPS_ROUTING_VALUE = "false";
+    String REQ_MONITOR_DATA = "require-monitor-data";
+    String REQ_MONITOR_DATA_VALUE = "false";
+    String ROUTE_COOKIE = "route-cookie-enabled";
+    String LAST_EXPORTED = "last-exported";
+    String ACTIVE_HEALTH_CHECK_VALUE = "false";
+    String NUM_HEALTH_CHECK_VALUE = "3";
+    String REWRITE_LOCATION_VALUE = "true";
+    String ACTIVE_HEALTH_CHECK = "active-healthcheck-enabled";
+    String NUM_HEALTH_CHECK = "number-healthcheck-retries";
+    String REWRITE_LOCATION = "rewrite-location";
+    String REWRITE_COOKIES = "rewrite-cookies";
+    String REWRITE_COOKIES_VALUE = "false";
+    String PREFERRED_FAILOVER_INSTANCE = "preferred-failover-instance";
+    String PREFERRED_FAILOVER_INSTANCE_VALUE = "true";
 
     //server ref attributes default values
-    public static final boolean LBENABLED_VALUE = true;
-    public static final String DISABLE_TIMEOUT_IN_MINUTES_VALUE = "30";
+    boolean LBENABLED_VALUE = true;
+    String DISABLE_TIMEOUT_IN_MINUTES_VALUE = "30";
 }

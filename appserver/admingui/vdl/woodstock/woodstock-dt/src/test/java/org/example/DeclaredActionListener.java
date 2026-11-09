@@ -17,5 +17,5 @@
 package org.example;
 
 public interface DeclaredActionListener {
-    public void declaredActionHappened(DeclaredActionEvent event);
+    void declaredActionHappened(DeclaredActionEvent event);
 }

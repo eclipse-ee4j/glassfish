@@ -1004,7 +1004,7 @@ public class PermissionChecker {
             return _value ? "true" : "false";
         }
 
-        private boolean _value = false;
+        private boolean _value;
     }
 
     /**

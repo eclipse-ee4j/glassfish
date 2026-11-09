@@ -48,7 +48,7 @@ public final class ValueMatchesOptionsValidator
     /**
      * Error message used if the value is not in the option.
      */
-    private String message = null;
+    private String message;
 
     /**
      * Debug flag.

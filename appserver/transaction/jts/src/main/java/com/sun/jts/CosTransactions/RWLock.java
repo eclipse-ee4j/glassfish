@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * thread could take significant amount of time (binary search etc.)
  * <p>
  * The usage of Lock can be see as under:
- *  <p><hr><blockquote><pre>
+ *  <hr><blockquote><pre>
  *    public class MyBTree {
  *      private RWLock lock = new Lock();
  *      .....
@@ -59,7 +59,7 @@ import java.util.logging.Logger;
  *      }
  *    }
  * </pre></blockquote><hr>
- * <p>
+ *
  * @author Dhiru Pandey 8/7/2000
  */
 public class RWLock {
@@ -173,7 +173,7 @@ public class RWLock {
 
     class Queue extends LinkedList {
 
-        public Queue() {
+        Queue() {
             super();
         }
 

@@ -174,8 +174,6 @@ public class ZipFile {
      * @param jarFile locaton of the jar file where the jar entry will be
      * extracted
      *
-     * @return the named jar file from the ear
-     *
      * @exception ZipFileException if an error while extracting the jar
      */
     public static void extractJar(String jarEntryName, JarFile earFile,
@@ -334,12 +332,12 @@ public class ZipFile {
     }
     /////////////////////////////////////////////////////////////////////////////////////////
     private static final int BUFFER_SIZE = 0x10000; //64k
-    private File explodeDir = null;
-    private ArrayList<String> files = null;
+    private File explodeDir;
+    private ArrayList<String> files;
     private final byte[] buffer = new byte[BUFFER_SIZE];
-    private ZipInputStream zipStream = null;
+    private ZipInputStream zipStream;
     private static final Logger _utillogger = CULoggerInfo.getLogger();
-    private File zipFile = null;
+    private File zipFile;
 }
 
 ////////////////

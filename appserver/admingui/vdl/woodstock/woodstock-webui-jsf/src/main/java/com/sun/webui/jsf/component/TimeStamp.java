@@ -43,14 +43,14 @@ public final class TimeStamp extends UIOutput {
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "styleClass", displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The text to display for this time stamp. A default string of "Last
@@ -58,7 +58,7 @@ public final class TimeStamp extends UIOutput {
      * property.
      */
     @Property(name = "text", displayName = "Text")
-    private String text = null;
+    private String text;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -70,12 +70,12 @@ public final class TimeStamp extends UIOutput {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

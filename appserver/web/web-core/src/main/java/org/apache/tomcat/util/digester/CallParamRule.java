@@ -25,7 +25,7 @@ import org.xml.sax.Attributes;
 
 /**
  * <p>Rule implementation that saves a parameter for use by a surrounding
- * <code>CallMethodRule<code>.</p>
+ * <code>CallMethodRule</code>.</p>
  *
  * <p>This parameter may be:
  * <ul>
@@ -38,7 +38,7 @@ import org.xml.sax.Attributes;
  * <li>the current path being processed (separate <code>Rule</code>).
  * See {@link PathCallParamRule}
  * </ul>
- * </p>
+ *
  */
 
 public class CallParamRule extends Rule {
@@ -144,24 +144,24 @@ public class CallParamRule extends Rule {
     /**
      * The attribute from which to save the parameter value
      */
-    protected String attributeName = null;
+    protected String attributeName;
 
 
     /**
      * The zero-relative index of the parameter we are saving.
      */
-    protected int paramIndex = 0;
+    protected int paramIndex;
 
 
     /**
      * Is the parameter to be set from the stack?
      */
-    protected boolean fromStack = false;
+    protected boolean fromStack;
 
     /**
      * The position of the object from the top of the stack
      */
-    protected int stackIndex = 0;
+    protected int stackIndex;
 
     /**
      * Stack is used to allow nested body text to be processed.

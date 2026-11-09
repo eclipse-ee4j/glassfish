@@ -91,7 +91,7 @@ class PartItem
     /**
      * Counter used in unique identifier generation.
      */
-    private static int counter = 0;
+    private static int counter;
 
 
     /**
@@ -192,7 +192,7 @@ class PartItem
      * @param requestCharEncoding
      *                      The request character encoding.
      */
-    public PartItem(Multipart multipart, PartHeaders headers,
+    PartItem(Multipart multipart, PartHeaders headers,
                     String fieldName, String contentType,
                     boolean isFormField, String fileName,
                     String requestCharEncoding) {

@@ -56,7 +56,7 @@ public class GetValidationClassNames implements AdminCommand {
     private String className;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

@@ -94,8 +94,8 @@ public class ManPageFinder {
             final String cmdClass, final Locale locale, final Logger logger) {
         return new Iterator() {
             final String[] locales = getLocaleLocations(locale);
-            private int i = 0;
-            private int j = 0;
+            private int i;
+            private int j;
             private final String helpdir = getHelpDir(cmdClass);
             private final String commandName = cmdName;
 

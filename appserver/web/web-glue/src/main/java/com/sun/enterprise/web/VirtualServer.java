@@ -1741,9 +1741,9 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
 
 
     /**
-     * Sets the docroot of this <tt>VirtualServer</tt>.
+     * Sets the docroot of this <code>VirtualServer</code>.
      *
-     * @param docRoot the docroot of this <tt>VirtualServer</tt>.
+     * @param docRoot the docroot of this <code>VirtualServer</code>.
      */
     @Override
     public void setDocRoot(File docRoot) {
@@ -1756,9 +1756,9 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Sets the collection of <tt>WebListener</tt> instances from which this <tt>VirtualServer</tt> receives requests.
+     * Sets the collection of <code>WebListener</code> instances from which this <code>VirtualServer</code> receives requests.
      *
-     * @param webListeners the collection of <tt>WebListener</tt> instances from which this <tt>VirtualServer</tt> receives
+     * @param webListeners the collection of <code>WebListener</code> instances from which this <code>VirtualServer</code> receives
      * requests.
      */
     public void setWebListeners(WebListener... webListeners) {
@@ -1774,10 +1774,10 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Registers the given <tt>Context</tt> with this <tt>VirtualServer</tt> at the given context root.
+     * Registers the given <code>Context</code> with this <code>VirtualServer</code> at the given context root.
      *
      * <p>
-     * If this <tt>VirtualServer</tt> has already been started, the given <tt>context</tt> will be started as well.
+     * If this <code>VirtualServer</code> has already been started, the given <code>context</code> will be started as well.
      */
     @Override
     public void addContext(Context context, String contextRoot) throws ConfigException, GlassFishException {
@@ -1971,7 +1971,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Stops the given <tt>context</tt> and removes it from this <tt>VirtualServer</tt>.
+     * Stops the given <code>context</code> and removes it from this <code>VirtualServer</code>.
      */
     @Override
     public void removeContext(Context context) throws GlassFishException {
@@ -2026,7 +2026,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Finds the <tt>Context</tt> registered at the given context root.
+     * Finds the <code>Context</code> registered at the given context root.
      */
     @Override
     public Context getContext(String contextRoot) {
@@ -2049,10 +2049,10 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
     }
 
     /**
-     * Reconfigures this <tt>VirtualServer</tt> with the given configuration.
+     * Reconfigures this <code>VirtualServer</code> with the given configuration.
      *
      * <p>
-     * In order for the given configuration to take effect, this <tt>VirtualServer</tt> may be stopped and restarted.
+     * In order for the given configuration to take effect, this <code>VirtualServer</code> may be stopped and restarted.
      */
     @Override
     public void setConfig(VirtualServerConfig config) throws ConfigException {
@@ -2344,7 +2344,7 @@ public class VirtualServer extends StandardHost implements org.glassfish.embedda
         boolean accessLoggingEnabled;
         NetworkListener listener;
 
-        public HttpProbeImpl(NetworkListener listener, boolean accessLoggingEnabled) {
+        HttpProbeImpl(NetworkListener listener, boolean accessLoggingEnabled) {
             this.listener = listener;
             this.accessLoggingEnabled = accessLoggingEnabled;
         }

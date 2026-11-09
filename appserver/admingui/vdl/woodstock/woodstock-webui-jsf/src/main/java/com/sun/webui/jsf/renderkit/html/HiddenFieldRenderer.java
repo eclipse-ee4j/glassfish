@@ -57,7 +57,7 @@ public final class HiddenFieldRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                HiddenField.class.getName()
+                HiddenField.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

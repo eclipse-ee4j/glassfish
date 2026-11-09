@@ -20,5 +20,5 @@ public interface PrimitiveWorkContext extends WorkContext {
   /**
    * Returns the data associated with this <code>PrimitiveWorkContext</code>.
    */
-  public Object get();
+  Object get();
 }

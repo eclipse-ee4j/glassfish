@@ -35,7 +35,7 @@ public interface EmbeddedAdminContainer extends EmbeddedContainer {
      * @param params command parameters
      * @return an command excecution to follow command's execution
      */
-    public CommandExecution execute(String commandName, CommandParameters params);
+    CommandExecution execute(String commandName, CommandParameters params);
 
     /**
      * Make the server listen to administrative requests (CLI, REST) on
@@ -43,6 +43,6 @@ public interface EmbeddedAdminContainer extends EmbeddedContainer {
      *
      * @param port an initialized port
      */
-    public void bind(Port port);
+    void bind(Port port);
 
 }

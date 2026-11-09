@@ -67,7 +67,7 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
     private String name;
 
     CommandModel model;
-    Delete delete = null;
+    Delete delete;
 
     @Override
     public CommandModel getModel() {

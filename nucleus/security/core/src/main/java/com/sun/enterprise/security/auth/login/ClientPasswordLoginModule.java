@@ -74,17 +74,17 @@ public class ClientPasswordLoginModule implements LoginModule {
     /**
      * Initialize this <code>LoginModule</code>.
      *
-     * <p>
+     *
      *
      * @param subject the <code>Subject</code> to be authenticated.
-     * <p>
+     *
      *
      * @param callbackHandler a <code>CallbackHandler</code> for communicating with the end user (prompting for usernames
      * and passwords, for example).
-     * <p>
+     *
      *
      * @param sharedState shared <code>LoginModule</code> state.
-     * <p>
+     *
      *
      * @param options options specified in the login <code>Configuration</code> for this particular
      * <code>LoginModule</code>.
@@ -98,12 +98,12 @@ public class ClientPasswordLoginModule implements LoginModule {
     /**
      * Authenticate the user by prompting for a username and password.
      *
-     * <p>
+     *
      *
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
      *
      * @exception FailedLoginException if the authentication fails.
-     * <p>
+     *
      *
      * @exception LoginException if this <code>LoginModule</code> is unable to perform the authentication.
      */

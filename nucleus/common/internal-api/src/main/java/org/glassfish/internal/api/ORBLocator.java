@@ -77,7 +77,7 @@ public interface ORBLocator {
      * @param hostOrAny
      * @return host name to use for ORB initialization
      */
-    public static String toConcreteHost(String hostOrAny) {
+    static String toConcreteHost(String hostOrAny) {
         if (hostOrAny == null || ANY_ADDRS.contains(hostOrAny)) {
             return DEFAULT_ORB_INIT_HOST;
         }

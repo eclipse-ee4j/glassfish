@@ -127,7 +127,7 @@ public class Target {
     }
 
     /**
-     * Given a list instance names, get List<Server>
+     * Given a list instance names, get List&lt;Server&gt;
      */
     public List<Server> getInstances(List<String> names) {
         List<Server> instances = new ArrayList<Server>();

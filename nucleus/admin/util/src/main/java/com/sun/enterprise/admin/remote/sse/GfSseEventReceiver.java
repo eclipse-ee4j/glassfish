@@ -154,7 +154,7 @@ public final class GfSseEventReceiver implements Closeable {
     /**
      * Get object state.
      *
-     * @return true if no new {@link InboundEvent} can be received, false otherwise.
+     * @return true if no new {@code InboundEvent} can be received, false otherwise.
      */
     public boolean isClosed() {
         return closed;

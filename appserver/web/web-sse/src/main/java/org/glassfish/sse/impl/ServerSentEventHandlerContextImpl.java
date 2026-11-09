@@ -31,7 +31,7 @@ final class ServerSentEventHandlerContextImpl implements ServerSentEventHandlerC
     private final Set<ServerSentEventHandler> handlers;
     private final String path;
 
-    public ServerSentEventHandlerContextImpl(String path, Set<ServerSentEventHandler> handlers) {
+    ServerSentEventHandlerContextImpl(String path, Set<ServerSentEventHandler> handlers) {
         this.path = path;
         this.handlers = handlers;
     }

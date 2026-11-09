@@ -718,7 +718,7 @@ public abstract class EjbBeanDescriptor extends CommonResourceDescriptor impleme
 
 
     /**
-     * @eturn the set of roles to which have been assigned method permissions.
+     * @return the set of roles to which have been assigned method permissions.
      */
     @Override
     public Set<Role> getPermissionedRoles() {

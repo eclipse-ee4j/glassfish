@@ -58,7 +58,7 @@ import static java.lang.System.Logger.Level.TRACE;
 import static java.lang.System.Logger.Level.WARNING;
 
 /**
- * Connection Pool for Connector & JDBC resources<br>
+ * Connection Pool for Connector &amp; JDBC resources<br>
  *
  * @author Jagadish Ramu
  */

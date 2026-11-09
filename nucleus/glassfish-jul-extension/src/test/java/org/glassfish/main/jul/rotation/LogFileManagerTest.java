@@ -161,6 +161,8 @@ public class LogFileManagerTest {
      * <li>to use null as the streamCloser parameter
      * <li>to use an output file without parent (just a file name)
      * </ul>
+     *
+     * @throws Exception if the test fails
      */
     @Test
     public void nullChecks() throws Exception {

@@ -54,12 +54,12 @@ public final class PanelGroup extends UIComponentBase
     @Property(name = "block",
             displayName = "Block",
             category = "Appearance")
-    private boolean block = false;
+    private boolean block;
 
     /**
      * block set flag.
      */
-    private boolean blockSet = false;
+    private boolean blockSet;
 
     /**
      * The string of characters or HTML element that should be inserted between
@@ -76,7 +76,7 @@ public final class PanelGroup extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String separator = null;
+    private String separator;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -86,7 +86,7 @@ public final class PanelGroup extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -98,7 +98,7 @@ public final class PanelGroup extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -112,12 +112,12 @@ public final class PanelGroup extends UIComponentBase
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

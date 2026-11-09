@@ -111,8 +111,6 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
      *
      * @param ejbID
      *            the ejbID that uniquely identifies the container
-     * @param pk
-     *            The primary key of the bean(s) that is to be refreshed
      */
     public void notifyRefreshAll(long ejbID) {
         byte[] payload = new byte[8];

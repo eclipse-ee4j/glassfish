@@ -877,7 +877,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
         void flush();
 
-        public class Util {
+        class Util {
 
             private final static String MARKER_FILE_PATH = ".glassfishStaleFiles";
 
@@ -902,7 +902,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
             /**
              * Creates a marker file in the archive directory - if it still exists and contains any stale files.
              *
-             * @param archive the File for the archive to mark
+             * @param archiveFile the File for the archive to mark
              */
             public static void markDeletedArchive(final File archiveFile) {
                 if (!archiveFile.exists()) {

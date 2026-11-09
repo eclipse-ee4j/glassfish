@@ -100,7 +100,7 @@ public class LayoutAttribute extends LayoutElementBase implements LayoutElement 
         return false;
     }
 
-    private String _name = null;
-    private String _value = null;
-    private String _property = null;
+    private String _name;
+    private String _value;
+    private String _property;
 }

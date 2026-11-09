@@ -88,7 +88,7 @@ class DeferredFileOutputStream
     /**
      * True when close() has been called successfully.
      */
-    private boolean closed = false;
+    private boolean closed;
 
     // ----------------------------------------------------------- Constructors
 
@@ -100,7 +100,7 @@ class DeferredFileOutputStream
      * @param threshold  The number of bytes at which to trigger an event.
      * @param outputFile The file to which data is saved beyond the threshold.
      */
-    public DeferredFileOutputStream(int threshold, File outputFile)
+    DeferredFileOutputStream(int threshold, File outputFile)
     {
         super(threshold);
         this.outputFile = outputFile;
@@ -121,7 +121,7 @@ class DeferredFileOutputStream
      *
      * @since Commons IO 1.4
      */
-    public DeferredFileOutputStream(int threshold, String prefix, String suffix, File directory)
+    DeferredFileOutputStream(int threshold, String prefix, String suffix, File directory)
     {
         this(threshold, (File)null);
         if (prefix == null) {

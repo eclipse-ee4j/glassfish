@@ -57,7 +57,7 @@ public class GetMessageListenerConfigPropertyTypes implements AdminCommand {
     private String messageListenerType;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

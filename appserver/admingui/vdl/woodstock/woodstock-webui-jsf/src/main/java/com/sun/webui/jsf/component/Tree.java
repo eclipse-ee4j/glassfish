@@ -103,18 +103,18 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     /**
      * Converter.
      */
-    private Converter converter = null;
+    private Converter converter;
 
     /**
      * The set of {@link Validator}s associated with this
      * {@code UIComponent}.
      */
-    private List<Validator> validators = null;
+    private List<Validator> validators;
 
     /**
      * The submittedValue value of this component.
      */
-    private Object submittedValue = null;
+    private Object submittedValue;
 
     /**
      * Toggle indicating validity of this component.
@@ -130,7 +130,7 @@ public final class Tree extends TreeNode implements EditableValueHolder {
      * The value of the {@code Tree}. This should be a String representing
      * the client id of the selected {@code TreeNode}.
      */
-    private Object value = null;
+    private Object value;
 
     /**
      * Set the clientSide attribute to true to specify that the Tree component
@@ -145,12 +145,12 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     @Property(name = "clientSide",
             displayName = "ClientSide",
             category = "Behavior")
-    private boolean clientSide = false;
+    private boolean clientSide;
 
     /**
      * clientSide set flag.
      */
-    private boolean clientSideSet = false;
+    private boolean clientSideSet;
 
     /**
      * Flag indicating that folder / container nodes will automatically expand
@@ -161,12 +161,12 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     @Property(name = "expandOnSelect",
             displayName = "Expand On Select",
             category = "Behavior")
-    private boolean expandOnSelect = false;
+    private boolean expandOnSelect;
 
     /**
      * expandOnSelect set.
      */
-    private boolean expandOnSelectSet = false;
+    private boolean expandOnSelectSet;
 
     /**
      * Flag indicating that event handling for this component should be handled
@@ -177,12 +177,12 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     @Property(name = "immediate",
             displayName = "Immediate",
             category = "Advanced")
-    private boolean immediate = false;
+    private boolean immediate;
 
     /**
      * immediate set.
      */
-    private boolean immediateSet = false;
+    private boolean immediateSet;
 
     /**
      * Flag indicating that the user must select a value for this tree. Default
@@ -191,12 +191,12 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     @Property(name = "required",
             displayName = "Required",
             category = "Behavior")
-    private boolean required = false;
+    private boolean required;
 
     /**
      * requiredSet flag.
      */
-    private boolean requiredSet = false;
+    private boolean requiredSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -206,7 +206,7 @@ public final class Tree extends TreeNode implements EditableValueHolder {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -218,7 +218,7 @@ public final class Tree extends TreeNode implements EditableValueHolder {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -232,12 +232,12 @@ public final class Tree extends TreeNode implements EditableValueHolder {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Create a new instance.

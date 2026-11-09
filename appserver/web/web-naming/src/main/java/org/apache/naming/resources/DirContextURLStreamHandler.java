@@ -73,7 +73,7 @@ public class DirContextURLStreamHandler
     /**
      * Directory context.
      */
-    protected DirContext context = null;
+    protected DirContext context;
 
 
     // ------------------------------------------------------------- Properties

@@ -37,9 +37,9 @@ public class LogFilesContentSource  implements DownloadServlet.ContentSource {
 
      /**
      *  <p> This method returns a unique string used to identify this
-     *      {@link DownloadServlet#ContentSource}.  This string must be
+     *      {@code DownloadServlet#ContentSource}.  This string must be
      *      specified in order to select the appropriate
-     *      {@link DownloadServlet#ContentSource} when using the
+     *      {@code DownloadServlet#ContentSource} when using the
      *      {@link DownloadServlet}.</p>
      */
     public String getId() {
@@ -50,7 +50,7 @@ public class LogFilesContentSource  implements DownloadServlet.ContentSource {
      *  <p> This method is responsible for generating the content and
      *      returning an InputStream to that content.  It is also
      *      responsible for setting any attribute values in the
-     *      {@link DownloadServlet#Context}, such as {@link DownloadServlet#EXTENSION} or
+     *      {@code DownloadServlet#Context}, such as {@link DownloadServlet#EXTENSION} or
      *      {@link DownloadServlet#CONTENT_TYPE}.</p>
      */
     public InputStream getInputStream(DownloadServlet.Context ctx) {

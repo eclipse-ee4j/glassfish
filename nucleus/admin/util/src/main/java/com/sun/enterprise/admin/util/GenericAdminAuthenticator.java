@@ -74,7 +74,7 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author Kedar Mhaswade (km@dev.java.net) This is still being developed. This particular implementation both
  * authenticates and authorizes the users directly or indirectly.
- * <p>
+ *
  * <ul>
  * <li>Authentication works by either calling FileRealm.authenticate() or by calling LoginContextDriver.login</li>
  * <li>The admin users in case of administration file realm are always in a fixed group called "asadmin". In case of

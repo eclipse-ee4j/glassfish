@@ -27,5 +27,5 @@ public interface CacheListener {
      * @param key lookup key
      * @param value value of the cached entity
      */
-    public void trimEvent(Object key, Object value);
+    void trimEvent(Object key, Object value);
 }

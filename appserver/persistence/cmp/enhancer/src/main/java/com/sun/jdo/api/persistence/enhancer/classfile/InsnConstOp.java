@@ -281,7 +281,7 @@ public class InsnConstOp extends Insn {
         }
     }
 
-    private final String descriptorTypeOfObject(ConstBasicMemberRef memRef) {
+    private String descriptorTypeOfObject(ConstBasicMemberRef memRef) {
         String cname = memRef.className().className().asString();
         return "L" + cname + ";";//NOI18N
     }

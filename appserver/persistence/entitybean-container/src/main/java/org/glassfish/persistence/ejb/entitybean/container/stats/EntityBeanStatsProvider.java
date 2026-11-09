@@ -35,8 +35,8 @@ import org.glassfish.persistence.ejb.entitybean.container.EntityContainer;
 @ManagedObject
 public class EntityBeanStatsProvider extends EjbMonitoringStatsProvider {
 
-    private BoundedRangeStatisticImpl pooledCount = null;
-    private BoundedRangeStatisticImpl readyCount = null;
+    private BoundedRangeStatisticImpl pooledCount;
+    private BoundedRangeStatisticImpl readyCount;
 
     private EntityContainer delegate;
 

@@ -37,21 +37,21 @@ import org.glassfish.contextpropagation.internal.Utils;
  *    decoding of subsequent entries to fail.
  */
 public interface WireAdapter {
-  static interface WireAdapterHelper {
+  interface WireAdapterHelper {
     SerializableContextFactory findContextFactory(String contextName, String wireClassName);
-    public void registerContextFactoryForContextNamed(String contextName,
+    void registerContextFactoryForContextNamed(String contextName,
         String wireClassName, SerializableContextFactory factory);
-    public void registerContextFactoryForClass(Class<?> contextClass,
+    void registerContextFactoryForClass(Class<?> contextClass,
         String wireClassName, SerializableContextFactory factory);
   }
-  public void prepareToWriteTo(OutputStream out) throws IOException;
-  public <T> void write(String key, Entry entry) throws IOException;
-  public void flush() throws IOException;
-  public void prepareToReadFrom(InputStream is) throws IOException;
-  public String readKey() throws IOException;
-  public Entry readEntry() throws IOException, ClassNotFoundException;
+  void prepareToWriteTo(OutputStream out) throws IOException;
+  <T> void write(String key, Entry entry) throws IOException;
+  void flush() throws IOException;
+  void prepareToReadFrom(InputStream is) throws IOException;
+  String readKey() throws IOException;
+  Entry readEntry() throws IOException, ClassNotFoundException;
 
-  public static final WireAdapterHelper HELPER = new WireAdapterHelper() {
+  WireAdapterHelper HELPER = new WireAdapterHelper() {
     Map<String, SerializableContextFactory> contextFactoriesByContextName = new HashMap<String, SerializableContextFactory>();
     Map<String, String> wireClassNameByContextName = new HashMap<String, String>();
     public void registerContextFactoryForContextNamed(String contextName,

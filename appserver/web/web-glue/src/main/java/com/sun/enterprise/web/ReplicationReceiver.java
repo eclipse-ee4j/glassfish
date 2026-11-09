@@ -31,8 +31,8 @@ import org.apache.catalina.LifecycleException;
  */
 public interface ReplicationReceiver {
 
-    public void init();
+    void init();
 
-    public void stop() throws LifecycleException;
+    void stop() throws LifecycleException;
 
 }

@@ -148,7 +148,7 @@ public abstract class ProxyImpl implements Proxy {
     private static class BasicHostnameVerifier implements HostnameVerifier {
         private final String host;
 
-        public BasicHostnameVerifier(String host) {
+        BasicHostnameVerifier(String host) {
             if (host == null) {
                 throw new IllegalArgumentException("null host");
             }

@@ -68,10 +68,10 @@ public class MQAddressList {
 
     private final List<MQUrl> urlList = new ArrayList<>();
 
-    private JmsService jmsService = null;
+    private JmsService jmsService;
     //private AppserverClusterViewFromCacheRepository rep = null;
-    private static String nodeHost = null;
-    private String targetName = null;
+    private static String nodeHost;
+    private String targetName;
 
     /**
      * Create an empty address list
@@ -201,7 +201,7 @@ public class MQAddressList {
         return null;
     }
 
-    String dasPropertiesHostName = null;
+    String dasPropertiesHostName;
 
     public String getHostNameFromDasProperties() {
         if (dasPropertiesHostName != null) {
@@ -242,7 +242,7 @@ public class MQAddressList {
         return null;
     }
 
-    Map<String,String> systemProps = null;
+    Map<String,String> systemProps;
 
     protected String getSystemProperty(String propertyName) {
         if (systemProps == null) {

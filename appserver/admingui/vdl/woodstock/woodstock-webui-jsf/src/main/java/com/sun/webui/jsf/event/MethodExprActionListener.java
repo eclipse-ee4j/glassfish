@@ -46,7 +46,7 @@ public final class MethodExprActionListener
     /**
      * Method expression.
      */
-    private MethodExpression methodExpression = null;
+    private MethodExpression methodExpression;
 
     /**
      * Transient flag.
@@ -60,7 +60,7 @@ public final class MethodExprActionListener
     }
 
     /**
-     * Construct a {@link ValueChangeListener} that contains a
+     * Construct a {@code ValueChangeListener} that contains a
      * {@link MethodExpression}.
      * @param newMethodExpression method expression
      */
@@ -91,7 +91,7 @@ public final class MethodExprActionListener
                         new Object[]{
                             ee.getCause().getClass().getName(),
                             methodExpression.getExpressionString(),
-                            actionEvent.getComponent().getId()
+                            actionEvent.getComponent().getId(),
                         });
                 LOGGER.log(Level.SEVERE, null, ee);
             }

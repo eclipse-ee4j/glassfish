@@ -31,12 +31,12 @@ public interface TargetValidator {
      * @param target the target identifier to check
      * @return true if target is a valid identifier of a target instance
      */
-    public boolean isValid(ServiceLocator habitat, String target);
+    boolean isValid(ServiceLocator habitat, String target);
 
     /**
      * Returns a internalized aware string describing the target type
      *
      * @return a type description
      */
-    public String getDescription();
+    String getDescription();
 }

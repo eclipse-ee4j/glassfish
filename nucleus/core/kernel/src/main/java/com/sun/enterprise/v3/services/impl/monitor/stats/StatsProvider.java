@@ -17,24 +17,24 @@
 package com.sun.enterprise.v3.services.impl.monitor.stats;
 
 /**
- * General <tt>StatsProvider</tt> interface.
+ * General <code>StatsProvider</code> interface.
  *
  * @author Alexey Stashok
  */
 public interface StatsProvider {
     /**
-     * Get object, from which <tt>StatsProvider</tt> can get statistics directly
+     * Get object, from which <code>StatsProvider</code> can get statistics directly
      * without listening emitting events.
      *
      * @return statistics
      */
-    public Object getStatsObject();
+    Object getStatsObject();
 
     /**
-     * Set object, from which <tt>StatsProvider</tt> can get statistics directly
+     * Set object, from which <code>StatsProvider</code> can get statistics directly
      * without listening emitting events.
      *
      * @param object statistics
      */
-    public void setStatsObject(Object object);
+    void setStatsObject(Object object);
 }

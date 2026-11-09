@@ -192,19 +192,19 @@ public final class ContainerEvent extends EventObject {
     /**
      * The Container on which this event occurred.
      */
-    private transient Container container = null;
+    private transient Container container;
 
 
     /**
      * The event data associated with this event.
      */
-    private Object data = null;
+    private Object data;
 
 
     /**
      * The event type this instance represents.
      */
-    private String type = null;
+    private String type;
 
 
     /**

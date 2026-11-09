@@ -38,7 +38,7 @@ import org.w3c.dom.Node;
  */
 public class LoginConfigNode extends DeploymentDescriptorNode<LoginConfigurationImpl> {
 
-    protected LoginConfigurationImpl descriptor = null;
+    protected LoginConfigurationImpl descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

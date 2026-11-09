@@ -19,7 +19,7 @@ package com.sun.webui.jsf.component;
  * Widget is an interface that must be implemented by any UIComponent that wants
  * to be a client-side widget. A Widget does not necessarily need to implement
  * all methods, but the interface still affects the behavior of the
- * {@link RendererBase#encodeBegin} and {@link RendererBase#encodEnd} methods;
+ * {@code RendererBase#encodeBegin} and {@code RendererBase#encodEnd} methods;
  * see those methods for more information.
  */
 public interface Widget {

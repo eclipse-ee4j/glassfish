@@ -21,7 +21,7 @@ package org.glassfish.embeddable.web.config;
  * authentication method, form login configuration, if authentication method
  * is form based authentication, the realm name and the realm type.
  *
- * <p/> Usage example:
+ * <p> Usage example:
  *
  * <pre>
  *      FormLoginConfig form = new FormLoginConfig("login.html", "error.html");
@@ -56,7 +56,7 @@ public class LoginConfig {
      * context
      *
      * @param authMethod one of the supported auth methods as
-     * defined in <tt>AuthMethod</tt> enumeration
+     * defined in <code>AuthMethod</code> enumeration
      */
     public void setAuthMethod(AuthMethod authMethod) {
         this.authMethod = authMethod;
@@ -101,7 +101,7 @@ public class LoginConfig {
     }
 
     /**
-     * Gets the form login config, or <tt>null</tt> if
+     * Gets the form login config, or <code>null</code> if
      * the authentication scheme is not form based login.
      *
      * @see FormLoginConfig

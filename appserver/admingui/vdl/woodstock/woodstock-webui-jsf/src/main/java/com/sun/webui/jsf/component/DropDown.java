@@ -63,7 +63,7 @@ public final class DropDown extends ListSelector implements ActionSource {
     /**
      * fireAction flag.
      */
-    private boolean fireAction = false;
+    private boolean fireAction;
 
     /**
      * action expression.
@@ -103,12 +103,12 @@ public final class DropDown extends ListSelector implements ActionSource {
     @Property(name = "forgetValue",
             displayName = "Do not display selected value",
             category = "Advanced", isHidden = true)
-    private boolean forgetValue = false;
+    private boolean forgetValue;
 
     /**
      * forgetValue set flag.
      */
-    private boolean forgetValueSet = false;
+    private boolean forgetValueSet;
 
     /**
      * When this attribute is set to true, the value of the menu selection is
@@ -121,12 +121,12 @@ public final class DropDown extends ListSelector implements ActionSource {
             displayName = "Navigate to Component Value",
             category = "Advanced",
             isHidden = true)
-    private boolean navigateToValue = false;
+    private boolean navigateToValue;
 
     /**
      * navigateToValue set flag.
      */
-    private boolean navigateToValueSet = false;
+    private boolean navigateToValueSet;
 
     /**
      * When the submitForm attribute is set to true, the form is immediately
@@ -135,12 +135,12 @@ public final class DropDown extends ListSelector implements ActionSource {
     @Property(name = "submitForm",
             displayName = "Submit the Page on Change",
             isHidden = true)
-    private boolean submitForm = false;
+    private boolean submitForm;
 
     /**
      * submitForm set flag.
      */
-    private boolean submitFormSet = false;
+    private boolean submitFormSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -150,7 +150,7 @@ public final class DropDown extends ListSelector implements ActionSource {
     @Property(name = "toolTip",
             displayName = "Tool Tip",
             category = "Behavior")
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Default constructor.

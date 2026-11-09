@@ -43,7 +43,7 @@ public final class MessageEndpointInvocationHandler
         implements InvocationHandler {
 
     private MessageBeanListener listener_;
-    private boolean beforeDeliveryCalled = false;
+    private boolean beforeDeliveryCalled;
 
     private boolean throwTransactedExceptions_ = true;
     private MessageBeanProtocolManager messageBeanPM_;
@@ -86,7 +86,7 @@ public final class MessageEndpointInvocationHandler
      * @param proxy  Object
      * @param method <code>Method</code> to be executed.
      * @param args   Arguments
-     * @throws Throwable.
+     * @throws Throwable
      */
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {

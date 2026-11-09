@@ -65,7 +65,7 @@ public final class PropertySheet extends UIComponentBase
     /**
      * Used to cache the visible sections.
      */
-    private transient List visibleSections = null;
+    private transient List visibleSections;
 
     /**
      * child count.
@@ -81,12 +81,12 @@ public final class PropertySheet extends UIComponentBase
     @Property(name = "jumpLinks",
             displayName = "Show Jump Links",
             category = "Appearance")
-    private boolean jumpLinks = false;
+    private boolean jumpLinks;
 
     /**
      * jumpLinks set flag.
      */
-    private boolean jumpLinksSet = false;
+    private boolean jumpLinksSet;
 
     /**
      * Specifies whether to display a required field legend in the upper right
@@ -99,7 +99,7 @@ public final class PropertySheet extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.RequiredFieldsPropertyEditor")
             //CHECKSTYLE:ON
-    private String requiredFields = null;
+    private String requiredFields;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -109,7 +109,7 @@ public final class PropertySheet extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -121,7 +121,7 @@ public final class PropertySheet extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -135,12 +135,12 @@ public final class PropertySheet extends UIComponentBase
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Constructor.

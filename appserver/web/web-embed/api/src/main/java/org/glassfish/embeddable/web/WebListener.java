@@ -22,7 +22,7 @@ import org.glassfish.embeddable.web.config.WebListenerConfig;
 /**
  * Representation of a network listener for web requests.
  *
- * <p/>See {@link WebContainer} for usage example.
+ * <p>See {@link WebContainer} for usage example.
  *
  * @author Rajiv Mordani
  * @author Amy Roh
@@ -30,79 +30,79 @@ import org.glassfish.embeddable.web.config.WebListenerConfig;
 public interface WebListener  {
 
     /**
-     * Sets the id for this <tt>WebListener</tt>.
+     * Sets the id for this <code>WebListener</code>.
      *
-     * @param id for this <tt>WebListener</tt>
+     * @param id for this <code>WebListener</code>
      */
     void setId(String id);
 
     /**
-     * Gets the id of this <tt>WebListener</tt>.
+     * Gets the id of this <code>WebListener</code>.
      *
-     * @return id of this <tt>WebListener</tt>
+     * @return id of this <code>WebListener</code>
      */
     String getId();
 
     /**
-     * Sets the port number for this <tt>WebListener</tt>.
+     * Sets the port number for this <code>WebListener</code>.
      *
-     * @param port the port number for this <tt>WebListener</tt>
+     * @param port the port number for this <code>WebListener</code>
      */
     void setPort(int port);
 
     /**
-     * Gets the port number of this <tt>WebListener</tt>.
+     * Gets the port number of this <code>WebListener</code>.
      *
-     * @return the port number of this <tt>WebListener</tt>
+     * @return the port number of this <code>WebListener</code>
      */
     int getPort();
 
     /**
-     * Sets the protocol for this <tt>WebListener</tt>.
+     * Sets the protocol for this <code>WebListener</code>.
      *
-     * @param protocol the protocol for this <tt>WebListener</tt>
+     * @param protocol the protocol for this <code>WebListener</code>
      */
     void setProtocol(String protocol);
 
     /**
-     * Gets the protocol of this <tt>WebListener</tt>.
+     * Gets the protocol of this <code>WebListener</code>.
      *
-     * @return the protocol of this <tt>WebListener</tt>
+     * @return the protocol of this <code>WebListener</code>
      */
     String getProtocol();
 
     /**
-     * Reconfigures this <tt>WebListener</tt> with the given
+     * Reconfigures this <code>WebListener</code> with the given
      * configuration.
      *
      * <p>In order for the given configuration to take effect, this
-     * <tt>WebListener</tt> will be stopped and restarted.
+     * <code>WebListener</code> will be stopped and restarted.
      *
      * @param config the configuration to be applied
      *
      * @throws ConfigException if the configuration requires a restart,
-     * and this <tt>WebListener</tt> fails to be restarted
+     * and this <code>WebListener</code> fails to be restarted
      * @throws GlassFishException if an error occurs,
-     * and this <tt>WebListener</tt> fails to be restarted
+     * and this <code>WebListener</code> fails to be restarted
      */
     void setConfig(WebListenerConfig config) throws ConfigException, GlassFishException;
 
     /**
-     * Gets the current configuration of this <tt>WebListener</tt>.
+     * Gets the current configuration of this <code>WebListener</code>.
      *
-     * @return the current configuration of this <tt>WebListener</tt>,
-     * or <tt>null</tt> if no special configuration was ever applied to this
-     * <tt>WebListener</tt>
+     * @return the current configuration of this <code>WebListener</code>,
+     * or <code>null</code> if no special configuration was ever applied to this
+     * <code>WebListener</code>
      */
     WebListenerConfig getConfig();
 
     /**
-     * Sets the <tt>WebContainer</tt> which will be used by this <tt>WebListener</tt>.
+     * Sets the <code>WebContainer</code> which will be used by this <code>WebListener</code>.
      */
     void setWebContainer(WebContainer webContainer);
 
     /**
-     * Gets the <tt>WebContainer</tt> used by this <tt>WebListener</tt>.
+     * Gets the <code>WebContainer</code> used by this <code>WebListener</code>.
      */
     WebContainer getWebContainer();
 

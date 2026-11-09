@@ -104,7 +104,7 @@ public class SetLogAttributes implements AdminCommand {
         Arrays.stream(GlassFishLogManagerProperty.values()).forEach(p -> properties.add(p.getPropertyName()));
 
         final Class<?>[] formatters = new Class<?>[] {
-            UniformLogFormatter.class, ODLLogFormatter.class, OneLineFormatter.class
+            UniformLogFormatter.class, ODLLogFormatter.class, OneLineFormatter.class,
         };
 
         // all handlers with their own properties
@@ -129,7 +129,7 @@ public class SetLogAttributes implements AdminCommand {
 
         // and finally all formatters used with handlers
         final Class<?>[] handlersWithFormatter = new Class<?>[] {
-            GlassFishLogHandler.class, SimpleLogHandler.class
+            GlassFishLogHandler.class, SimpleLogHandler.class,
         };
         final Set<LogProperty> formatterParameters = new HashSet<>();
         Arrays.stream(UniformFormatterProperty.values()).forEach(formatterParameters::add);

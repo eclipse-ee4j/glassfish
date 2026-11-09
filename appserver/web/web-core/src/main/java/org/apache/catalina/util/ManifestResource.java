@@ -41,10 +41,10 @@ public class ManifestResource {
     public static final int WAR = 2;
     public static final int APPLICATION = 3;
 
-    private HashMap<String, Extension> availableExtensions = null;
-    private ArrayList<Extension> requiredExtensions = null;
+    private HashMap<String, Extension> availableExtensions;
+    private ArrayList<Extension> requiredExtensions;
 
-    private String resourceName = null;
+    private String resourceName;
     private int resourceType = -1;
 
     public ManifestResource(String resourceName, Manifest manifest,

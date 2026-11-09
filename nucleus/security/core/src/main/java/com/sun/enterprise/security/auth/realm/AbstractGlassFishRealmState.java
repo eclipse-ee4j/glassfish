@@ -182,8 +182,6 @@ public abstract class AbstractGlassFishRealmState implements Comparable<Realm>  
      *
      * @param name property name.
      * @return
-     * @returns value.
-     *
      */
     public synchronized String getProperty(String name) {
         return contextProperties.getProperty(name);

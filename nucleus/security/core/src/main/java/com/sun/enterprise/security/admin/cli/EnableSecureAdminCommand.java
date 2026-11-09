@@ -80,6 +80,7 @@ import org.jvnet.hk2.config.TransactionFailure;
         ###
         asadmin set configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.protocol=pu-protocol
  * }
+ * </pre>
  *
  *
  * @author Tim Quinn
@@ -105,7 +106,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
     @Inject
     private SecureAdminHelper secureAdminHelper;
 
-    private KeyStore keystore = null;
+    private KeyStore keystore;
 
     @Override
     public void run() throws TransactionFailure, SecureAdminCommandException {

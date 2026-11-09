@@ -33,170 +33,168 @@ public interface Cache<K, V> {
      * @param maxEntries maximum number of entries expected in the cache
      * @param loadFactor the load factor
      * @param props opaque list of properties for a given cache implementation
-     * @throws a generic Exception if the initialization failed
      */
-    public void init(int maxEntries,
+    void init(int maxEntries,
                          float loadFactor, Properties props) throws Exception;
 
     /**
      * initialize the cache with the default load factor (0.75)
      * @param maxEntries maximum number of entries expected in the cache
      * @param props opaque list of properties for a given cache implementation
-     * @throws a generic Exception if the initialization failed
      */
-    public void init(int maxEntries, Properties props) throws Exception;
+    void init(int maxEntries, Properties props) throws Exception;
 
     /**
      * add the cache module listener
      * @param listener <code>CacheListener</code> implementation
      */
-    public void addCacheListener(CacheListener listener);
+    void addCacheListener(CacheListener listener);
 
     /**
      * get the index of the item given a key
      * @param key of the entry
      * @return the index to be used in the cache
      */
-    public int getIndex(K key);
+    int getIndex(K key);
 
     /**
      * get the item stored at the key.
      * @param key lookup key
-     * @returns the item stored at the key; null if not found.
+     * @return the item stored at the key; null if not found.
      *
      * This function returns first value, for a multi-valued key.
      */
-    public V get(K key);
+    V get(K key);
 
     /**
      * get all the items with the given key.
      * @param key lookup key
-     * @returns an Iterator over the items with the given key
+     * @return an Iterator over the items with the given key
      */
-    public Iterator<V> getAll(K key);
+    Iterator<V> getAll(K key);
 
     /**
      * check if the cache contains the item at the key
      * @param key lookup key
-     * @returns true if there is an item stored at the key; false if not.
+     * @return true if there is an item stored at the key; false if not.
      */
-    public boolean contains(K key);
+    boolean contains(K key);
 
     /**
      * get an Iterator for the keys stored in the cache
-     * @returns an Iterator
+     * @return an Iterator
      */
-    public Iterator<K> keys();
+    Iterator<K> keys();
 
     /**
      * get an Enumeration for the keys stored in the cache
-     * @returns an Enumeration
+     * @return an Enumeration
      * XXX: should use Iterator which is based on Collections
      */
-    public Enumeration<K> elements();
+    Enumeration<K> elements();
 
     /**
      * get an Iterator for the values stored in the cache
-     * @returns an Iterator
+     * @return an Iterator
      */
-    public Iterator<V> values();
+    Iterator<V> values();
 
     /**
      * cache the given value at the specified key and return previous value
      * @param key lookup key
-     * @param object item value to be stored
-     * @returns the previous item stored at the key; null if not found.
+     * @param value item value to be stored
+     * @return the previous item stored at the key; null if not found.
      *
      * This function replaces first value, for a multi-valued key.
      */
-    public V put(K key, V value);
+    V put(K key, V value);
 
     /**
      * cache the given value at the specified key and return previous value
      * @param key lookup key
-     * @param object item value to be stored
+     * @param value item value to be stored
      * @param size in bytes of the value being cached
-     * @returns the previous item stored at the key; null if not found.
+     * @return the previous item stored at the key; null if not found.
      *
      * This function replaces first value, for a multi-valued key.
      */
-    public V put(K key, V value, int size);
+    V put(K key, V value, int size);
 
     /**
      * add the given value to the cache at the specified key
      * @param key lookup key
-     * @param object item value to be stored
+     * @param value item value to be stored
      *
      * This function is suitable for multi-valued keys.
      */
-    public void add(K key, V value);
+    void add(K key, V value);
 
     /**
      * add the given value with specified size to the cache at specified key
      * @param key lookup key
-     * @param object item value to be stored
+     * @param value item value to be stored
      * @param size in bytes of the value being added
      *
      * This function is suitable for multi-valued keys.
      */
-    public void add(K key, V value, int size);
+    void add(K key, V value, int size);
 
     /**
      * remove the item with the given key.
      * @param key lookup key
-     * @returns the item stored at the key; null if not found.
+     * @return the item stored at the key; null if not found.
      *
      * This function removes first value, for a multi-valued key.
      */
-    public V remove(K key);
+    V remove(K key);
 
     /**
      * remove the given value stored at the key.
      * @param key lookup key
      * @param value to match (for multi-valued keys)
-     * @returns the item stored at the key; null if not found.
+     * @return the item stored at the key; null if not found.
      */
-    public V remove(K key, V value);
+    V remove(K key, V value);
 
     /**
      * remove all the item with the given key.
      * @param key lookup key
      */
-    public void removeAll(K key);
+    void removeAll(K key);
 
     /**
      * wait for a refresh on the object associated with the key
      * @param index index of the entry. The index must be obtained via
      * one of the <code>getIndex()</code> methods.
-     * @returns <code>true</code> on successful notification, or
+     * @return <code>true</code> on successful notification, or
      * <code>false</code> if there is no thread refreshing this entry.
      */
-    public boolean waitRefresh(int index);
+    boolean waitRefresh(int index);
 
     /**
      * notify threads waiting for a refresh on the object associated with the key
      * @param index index of the entry. The index must be obtained via
      * one of the <code>getIndex()</code> methods.
      */
-    public void notifyRefresh(int index);
+    void notifyRefresh(int index);
 
     /**
      * clear all the entries from the cache.
-     * @returns the number of entries cleared from the cache
+     * @return the number of entries cleared from the cache
      */
-    public int clear();
+    int clear();
 
     /**
      * is this cache empty?
-     * @returns true if the cache is empty; false otherwise.
+     * @return true if the cache is empty; false otherwise.
      */
-    public boolean isEmpty();
+    boolean isEmpty();
 
     /**
      * get the number of entries in the cache
      * @return the number of entries the cache currently holds
      */
-    public int getEntryCount();
+    int getEntryCount();
 
     /**
      * get the stats map
@@ -207,19 +205,19 @@ public interface Cache<K, V> {
      * @return an Object corresponding to the stat
      * See also: Constant.java for the key
      */
-    public Object getStatByName(String key);
+    Object getStatByName(String key);
 
     /**
      * get the stats snapshot
      * @return a Map of stats
      * See also: Constant.java for the keys
      */
-    public Map<String, Object> getStats();
+    Map<String, Object> getStats();
 
     /**
      * clear all stats
      */
-    public void clearStats();
+    void clearStats();
 
     /**
      * trim the expired entries from the cache.
@@ -228,10 +226,10 @@ public interface Cache<K, V> {
      *
      * This call is to be scheduled by a thread managed by the container.
      */
-    public void trimExpiredEntries(int maxCount);
+    void trimExpiredEntries(int maxCount);
 
     /**
      * Destroys this cache. This method should perform final clean ups.
      */
-    public void destroy();
+    void destroy();
 }

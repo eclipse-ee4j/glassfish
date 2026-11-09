@@ -167,17 +167,6 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     /**
      * Call the service method, and notify all listeners
      *
-     * @exception Exception if an error happens during handling of
-     *   the request. Common errors are:
-     *   <ul><li>IOException if an input/output error occurs and we are
-     *   processing an included servlet (otherwise it is swallowed and
-     *   handled by the top level error handler mechanism)
-     *       <li>ServletException if a servlet throws an exception and
-     *  we are processing an included servlet (otherwise it is swallowed
-     *  and handled by the top level error handler mechanism)
-     *  </ul>
-     *  Tomcat should be able to handle and log any other exception ( including
-     *  runtime exceptions )
      */
     @Override
     public void onMissingResource(Request req, Response res) {
@@ -576,7 +565,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      * decode the parameters that were passed in the X-Passwords header
      *
      * @params requestString value of the X-Passwords header
-     * @returns a decoded requestString
+     * @return a decoded requestString
      */
     void decodePasswords(ParameterMap pmap, final String requestString) {
         StringTokenizer stoken = new StringTokenizer(requestString == null ? "" : requestString, QUERY_STRING_SEPARATOR);
@@ -604,7 +593,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      *
      *  @params requestString string URI to extract
      *
-     *  @returns ParameterMap
+     *  @return ParameterMap
      */
     ParameterMap extractParameters(final String requestString) {
         // extract parameters...

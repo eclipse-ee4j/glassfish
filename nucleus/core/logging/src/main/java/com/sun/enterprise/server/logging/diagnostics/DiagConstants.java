@@ -20,7 +20,7 @@ package com.sun.enterprise.server.logging.diagnostics;
  * Constants for all Diagnostics Related stuff.
  *
  * @author Hemanth Puttaswamy
- * @AUTHOR Carla Mott
+ * @author Carla Mott
  */
 public class DiagConstants{
      public static final int MAX_CAUSES_AND_CHECKS = 5;

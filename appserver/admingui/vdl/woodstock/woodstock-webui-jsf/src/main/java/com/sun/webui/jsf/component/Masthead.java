@@ -54,7 +54,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private int[] alarmCounts = null;
+    private int[] alarmCounts;
 
     /**
      * The description to use for the Brand Image, used as alt text for the
@@ -66,7 +66,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String brandImageDescription = null;
+    private String brandImageDescription;
 
     /**
      * The height to use for the Brand Image, in pixels. Use this attribute
@@ -84,7 +84,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
     /**
      * brandImageHeight set flag.
      */
-    private boolean brandImageHeightSet = false;
+    private boolean brandImageHeightSet;
 
     /**
      * The URL to the image file to use as the Brand Image. Use this attribute
@@ -96,7 +96,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String brandImageURL = null;
+    private String brandImageURL;
 
     /**
      * The width to use for the Brand Image, in pixels. Use this attribute when
@@ -114,7 +114,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
     /**
      * brandImageWidth set flag.
      */
-    private boolean brandImageWidthSet = false;
+    private boolean brandImageWidthSet;
 
     /**
      * Set to true to display a date and time stamp in the status area.
@@ -122,12 +122,12 @@ public final class Masthead extends UIOutput implements NamingContainer {
     @Property(name = "dateTime",
             displayName = "Date Time",
             category = "Advanced")
-    private boolean dateTime = false;
+    private boolean dateTime;
 
     /**
      * dateTime set flag.
      */
-    private boolean dateTimeSet = false;
+    private boolean dateTimeSet;
 
     /**
      * The number of currently executing jobs or tasks. A JavaServer Faces EL
@@ -145,7 +145,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
     /**
      * jobCount set flag.
      */
-    private boolean jobCountSet = false;
+    private boolean jobCountSet;
 
     /**
      * Text to display for the notification info in the status area.
@@ -156,7 +156,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String notificationMsg = null;
+    private String notificationMsg;
 
     /**
      * The description for the product name image, used as alt text for the
@@ -168,7 +168,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String productImageDescription = null;
+    private String productImageDescription;
 
     /**
      * The height to use for the Product Name Image, in pixels. For mastheads
@@ -187,7 +187,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
     /**
      * productImageHeight set flag.
      */
-    private boolean productImageHeightSet = false;
+    private boolean productImageHeightSet;
 
     /**
      * The URL to the image file to use for the Product Name Image.
@@ -198,7 +198,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String productImageURL = null;
+    private String productImageURL;
 
     /**
      * The width to use for the Product Name Image, in pixels. For mastheads
@@ -217,7 +217,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
     /**
      * productImageWidth set flag.
      */
-    private boolean productImageWidthSet = false;
+    private boolean productImageWidthSet;
 
     /**
      * Set to true to indicate that the masthead is to be used in a
@@ -226,12 +226,12 @@ public final class Masthead extends UIOutput implements NamingContainer {
     @Property(name = "secondary",
             displayName = "Is Secondary",
             category = "Advanced")
-    private boolean secondary = false;
+    private boolean secondary;
 
     /**
      * secondary set flag.
      */
-    private boolean secondarySet = false;
+    private boolean secondarySet;
 
     /**
      * Text to display for the current Server information, such as the name of
@@ -243,7 +243,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String serverInfo = null;
+    private String serverInfo;
 
     /**
      * The label text to display for the current Server information.
@@ -254,7 +254,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String serverInfoLabel = null;
+    private String serverInfoLabel;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -264,7 +264,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -276,7 +276,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Text to display for the current User information, such as the name of the
@@ -288,7 +288,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String userInfo = null;
+    private String userInfo;
 
     /**
      * The label text to display for the current User information.
@@ -299,7 +299,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String userInfoLabel = null;
+    private String userInfoLabel;
 
     /**
      * Text to display for the current Role information, such as the name of the
@@ -311,7 +311,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String roleInfo = null;
+    private String roleInfo;
 
     /**
      * The label text to display for the current User information.
@@ -322,7 +322,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String roleInfoLabel = null;
+    private String roleInfoLabel;
 
     /**
      * A JavaServer Faces EL expression that resolves to a backing bean or a
@@ -336,7 +336,7 @@ public final class Masthead extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private com.sun.webui.jsf.component.Hyperlink[] utilities = null;
+    private com.sun.webui.jsf.component.Hyperlink[] utilities;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -348,12 +348,12 @@ public final class Masthead extends UIOutput implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

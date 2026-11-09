@@ -25,7 +25,7 @@ import org.glassfish.embeddable.web.config.SecurityConfig;
 /**
  * Representation of a web application.
  *
- * <p/>See {@link WebContainer} for usage example.
+ * <p>See {@link WebContainer} for usage example.
  *
  * @author Rajiv Mordani
  * @author Jan Luehe
@@ -34,49 +34,49 @@ import org.glassfish.embeddable.web.config.SecurityConfig;
 public interface Context extends ServletContext {
 
     /**
-     * Adds the given <tt>Valve</tt> to this <tt>Context</tt>.
+     * Adds the given <code>Valve</code> to this <code>Context</code>.
      *
-     * @param valve the <tt>Valve</tt> to be added
+     * @param valve the <code>Valve</code> to be added
      */
     //public void addValve(Valve valve);
 
     /**
-     * Registers the given listener with this <tt>Context</tt>.
+     * Registers the given listener with this <code>Context</code>.
      *
      * <p>The given listener must be an instance of one or more of the
      * following interfaces:
      * <ul>
-     * <li><tt>jakarta.servlet.ServletContextAttributeListener</tt>
-     * <li><tt>jakarta.servlet.ServletRequestAttributeListener</tt>
-     * <li><tt>jakarta.servlet.ServletRequestListener</tt>
-     * <li><tt>jakarta.servlet.ServletContextListener</tt>
-     * <li><tt>jakarta.servlet.http.HttpSessionAttributeListener</tt>
-     * <li><tt>jakarta.servlet.http.HttpSessionIdListener</tt>
-     * <li><tt>jakarta.servlet.http.HttpSessionListener</tt>
+     * <li><code>jakarta.servlet.ServletContextAttributeListener</code>
+     * <li><code>jakarta.servlet.ServletRequestAttributeListener</code>
+     * <li><code>jakarta.servlet.ServletRequestListener</code>
+     * <li><code>jakarta.servlet.ServletContextListener</code>
+     * <li><code>jakarta.servlet.http.HttpSessionAttributeListener</code>
+     * <li><code>jakarta.servlet.http.HttpSessionIdListener</code>
+     * <li><code>jakarta.servlet.http.HttpSessionListener</code>
      * </ul>
      *
-     * @param t the listener to be registered with this <tt>Context</tt>
+     * @param t the listener to be registered with this <code>Context</code>
      *
      * @throws IllegalArgumentException if the given listener is not
      * an instance of any of the above interfaces
      * @throws IllegalStateException if this context has already been
      * initialized and started
      */
-    public <T extends EventListener> void addListener(T t);
+    <T extends EventListener> void addListener(T t);
 
     /**
      * Instantiates a listener from the given class and registers it with
-     * this <tt>Context</tt>.
+     * this <code>Context</code>.
      *
      * <p>The given listener must be an instance of one or more of the
      * following interfaces:
      * <ul>
-     * <li><tt>jakarta.servlet.ServletContextAttributeListener</tt>
-     * <li><tt>jakarta.servlet.ServletRequestAttributeListener</tt>
-     * <li><tt>jakarta.servlet.ServletRequestListener</tt>
-     * <li><tt>jakarta.servlet.ServletContextListener</tt>
-     * <li><tt>jakarta.servlet.http.HttpSessionAttributeListener</tt>
-     * <li><tt>jakarta.servlet.http.HttpSessionListener</tt>
+     * <li><code>jakarta.servlet.ServletContextAttributeListener</code>
+     * <li><code>jakarta.servlet.ServletRequestAttributeListener</code>
+     * <li><code>jakarta.servlet.ServletRequestListener</code>
+     * <li><code>jakarta.servlet.ServletContextListener</code>
+     * <li><code>jakarta.servlet.http.HttpSessionAttributeListener</code>
+     * <li><code>jakarta.servlet.http.HttpSessionListener</code>
      * </ul>
      *
      * @param c the class from which to instantiate of the listener
@@ -86,24 +86,24 @@ public interface Context extends ServletContext {
      * @throws IllegalStateException if this context has already been
      * initialized and started
      */
-    public void addListener(Class <? extends EventListener> c);
+    void addListener(Class <? extends EventListener> c);
 
     /**
-     * Enables or disables directory listings on this <tt>Context</tt>.
+     * Enables or disables directory listings on this <code>Context</code>.
      *
      * @param directoryListing true if directory listings are to be
-     * enabled on this <tt>Context</tt>, false otherwise
+     * enabled on this <code>Context</code>, false otherwise
      */
-    public void setDirectoryListing(boolean directoryListing);
+    void setDirectoryListing(boolean directoryListing);
 
     /**
      * Checks whether directory listings are enabled or disabled on this
-     * <tt>Context</tt>.
+     * <code>Context</code>.
      *
      * @return true if directory listings are enabled on this
-     * <tt>Context</tt>, false otherwise
+     * <code>Context</code>, false otherwise
      */
-    public boolean isDirectoryListing();
+    boolean isDirectoryListing();
 
     /**
      * Set the security related configuration for this context
@@ -112,7 +112,7 @@ public interface Context extends ServletContext {
      *
      * @param config the security configuration for this context
      */
-    public void setSecurityConfig(SecurityConfig config);
+    void setSecurityConfig(SecurityConfig config);
 
     /**
      * Gets the security related configuration for this context
@@ -121,23 +121,23 @@ public interface Context extends ServletContext {
      *
      * @return the security configuration for this context
      */
-    public SecurityConfig getSecurityConfig();
+    SecurityConfig getSecurityConfig();
 
     /**
      * Set the location of the default web xml that will be used.
      *
      * @param defaultWebXml the defaultWebXml path to be used
      */
-    public void setDefaultWebXml(String defaultWebXml);
+    void setDefaultWebXml(String defaultWebXml);
 
     /**
      * Return the context path for this Context.
      */
-    public String getPath();
+    String getPath();
 
     /**
      * Set the context path for this Context.
      */
-    public void setPath(String path);
+    void setPath(String path);
 
 }

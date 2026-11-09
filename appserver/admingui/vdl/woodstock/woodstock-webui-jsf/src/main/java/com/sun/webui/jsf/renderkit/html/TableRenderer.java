@@ -63,12 +63,12 @@ import static com.sun.webui.jsf.util.RenderingUtilities.writeStringAttributes;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableRenderer.level = FINE
  * </pre>
- * </p>
+ *
  * <p>
  * See TLD docs for more information.
  * </p>
@@ -107,7 +107,7 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
         "onMouseOver",
         "onMouseUp",
         "rules",
-        "summary"
+        "summary",
     };
 
     @Override
@@ -373,7 +373,7 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
         if (component.getFilterText() != null) {
             filter = theme.getMessage("table.title.filterApplied",
                         new String[]{
-                            component.getFilterText()
+                            component.getFilterText(),
                         });
         } else {
             filter = "";
@@ -412,7 +412,7 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
                                 first,
                                 last,
                                 Integer.toString(totalRows),
-                                component.getItemsText(), filter
+                                component.getItemsText(), filter,
                             });
                 } else {
                     title = theme.getMessage("table.title.paginated",
@@ -421,7 +421,7 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
                                 first,
                                 last,
                                 Integer.toString(totalRows),
-                                filter
+                                filter,
                             });
                 }
             } else {
@@ -431,14 +431,14 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
                                 component.getTitle(),
                                 Integer.toString(totalRows),
                                 component.getItemsText(),
-                                filter
+                                filter,
                             });
                 } else {
                     title = theme.getMessage("table.title.scroll",
                             new String[]{
                                 component.getTitle(),
                                 Integer.toString(totalRows),
-                                filter
+                                filter,
                             });
                 }
             }
@@ -464,7 +464,7 @@ public final class TableRenderer extends jakarta.faces.render.Renderer {
                     null);
             writer.writeText(theme.getMessage("table.hiddenSelections",
                     new String[]{
-                        Integer.toString(component.getHiddenSelectedRowsCount())
+                        Integer.toString(component.getHiddenSelectedRowsCount()),
                     }), null);
             writer.endElement("span");
         } else {

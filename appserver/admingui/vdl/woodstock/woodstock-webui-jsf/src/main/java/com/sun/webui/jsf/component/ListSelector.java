@@ -59,7 +59,7 @@ public class ListSelector extends Selector implements ListManager,
     /**
      * Holds the options for this component.
      */
-    private ArrayList<Object> listItems = null;
+    private ArrayList<Object> listItems;
 
     /**
      * ReadOnly facet.
@@ -89,7 +89,7 @@ public class ListSelector extends Selector implements ListManager,
     /**
      * separator length.
      */
-    private int separatorLength = 0;
+    private int separatorLength;
 
     /**
      * If this attribute is true, the label is rendered above the component. If
@@ -99,12 +99,12 @@ public class ListSelector extends Selector implements ListManager,
     @Property(name = "labelOnTop",
             displayName = "Label on Top",
             category = "Appearance")
-    private boolean labelOnTop = false;
+    private boolean labelOnTop;
 
     /**
      * labelOnTop set flag.
      */
-    private boolean labelOnTopSet = false;
+    private boolean labelOnTopSet;
 
     /**
      * The number of items to display. The default value is 12.
@@ -120,7 +120,7 @@ public class ListSelector extends Selector implements ListManager,
     /**
      * rows set flag.
      */
-    private boolean rowsSet = false;
+    private boolean rowsSet;
 
     /**
      * Flag indicating that items corresponding to
@@ -136,12 +136,12 @@ public class ListSelector extends Selector implements ListManager,
     @Property(name = "separators",
             displayName = "Separators",
             category = "Appearance")
-    private boolean separators = false;
+    private boolean separators;
 
     /**
      * separators set.
      */
-    private boolean separatorsSet = false;
+    private boolean separatorsSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -155,12 +155,12 @@ public class ListSelector extends Selector implements ListManager,
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of ListSelector.
@@ -200,7 +200,7 @@ public class ListSelector extends Selector implements ListManager,
                 log("\tMultiple selection enabled for non-array value");
             }
             Object[] params = new Object[]{
-                this.toString()
+                this.toString(),
             };
             String msg = MessageUtil
                     .getMessage("com.sun.webui.jsf.resources.LogMessages",
@@ -520,7 +520,7 @@ public class ListSelector extends Selector implements ListManager,
                     "com.sun.webui.jsf.resources.LogMessages",
                     "List.badValue",
                     new Object[]{
-                        getClientId(FacesContext.getCurrentInstance())
+                        getClientId(FacesContext.getCurrentInstance()),
                     });
             log(msg);
         }

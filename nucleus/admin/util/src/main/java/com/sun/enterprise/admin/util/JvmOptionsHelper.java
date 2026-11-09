@@ -67,7 +67,7 @@ final public class JvmOptionsHelper {
      * String comparision of the options. Hence an option "a=b c=d" will be added even if individual options already exist.
      *
      * @param options
-     * @return Returns an array of options that <bold>could not</bold> be added. The array will be atleast of 0 length. An
+     * @return Returns an array of options that <b>could not</b> be added. The array will be atleast of 0 length. An
      * array of length > 0 indicates that some options haven't been added successfully.
      * @throws InvalidJvmOptionException If any option is invalid. For example, an option that does not start with '-'.
      * @throws IllegalArgumentException If options param is null.
@@ -105,7 +105,7 @@ final public class JvmOptionsHelper {
      * Deletes the options from its current set.
      *
      * @param options
-     * @return Returns an array of options that <bold>could not</bold> be deleted. The array will be atleast of 0 length. An
+     * @return Returns an array of options that <b>could not</b> be deleted. The array will be atleast of 0 length. An
      * array of length > 0 indicates that some options haven't been deleted successfully.
      * @throws IllegalArgumentException If options param is null.
      */

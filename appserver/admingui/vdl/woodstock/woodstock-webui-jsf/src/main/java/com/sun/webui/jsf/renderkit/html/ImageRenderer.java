@@ -47,7 +47,7 @@ public class ImageRenderer extends AbstractRenderer {
     private static final String[] INTEGER_ATTRIBUTES = {
         "border",
         "hspace",
-        "vspace"
+        "vspace",
     };
 
     /**
@@ -60,7 +60,7 @@ public class ImageRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseMove",
         "onMouseOut",
-        "onMouseOver"
+        "onMouseOver",
     };
 
     /**
@@ -176,7 +176,7 @@ public class ImageRenderer extends AbstractRenderer {
                     LogUtil.fine(ImageRenderer.class, mf.format(
                             new String[]{
                                 "width",
-                                imgWidth
+                                imgWidth,
                             }));
                 }
             }
@@ -188,7 +188,7 @@ public class ImageRenderer extends AbstractRenderer {
                 if (LogUtil.fineEnabled(ImageRenderer.class)) {
                     LogUtil.fine(ImageRenderer.class, mf.format(
                             new String[]{
-                                "height", imgHeight
+                                "height", imgHeight,
                             }));
                 }
             }
@@ -196,7 +196,7 @@ public class ImageRenderer extends AbstractRenderer {
                     new String[]{
                         imgWidth,
                         imgHeight,
-                        url
+                        url,
                     });
             url = theme.getImagePath(ThemeImages.DOT);
             if (style == null) {

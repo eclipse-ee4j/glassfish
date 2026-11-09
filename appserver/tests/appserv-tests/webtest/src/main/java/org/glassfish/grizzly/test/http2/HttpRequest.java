@@ -38,7 +38,7 @@ public class HttpRequest {
     private HttpRequestPacket httpRequestPacket;
     private Connection connection;
     private Buffer contentBuffer = Buffers.EMPTY_BUFFER;
-    private Map<String, String> trailerFields = null;
+    private Map<String, String> trailerFields;
 
     private HttpRequest(HttpRequestPacket httpRequestPacket,
             String charEncoding, String content,
@@ -91,11 +91,11 @@ public class HttpRequest {
     // ----- inner class -----
     public static class Builder {
         private HttpRequestPacket.Builder reqPacketBuilder = new  HttpRequestPacket.Builder();
-        private Boolean chunked = null;
-        private String charEncoding = null;
-        private String content = null;
-        private Map<String, String> trailerFields = null;
-        private Connection connection = null;
+        private Boolean chunked;
+        private String charEncoding;
+        private String content;
+        private Map<String, String> trailerFields;
+        private Connection connection;
 
         Builder(String host, int port, Connection connection) {
             reqPacketBuilder.method("GET").protocol(Protocol.HTTP_2_0)

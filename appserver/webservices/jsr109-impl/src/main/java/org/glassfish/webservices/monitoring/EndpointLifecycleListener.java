@@ -31,12 +31,12 @@ public interface EndpointLifecycleListener {
      * appserver.
      * @param endpoint endpoint to register SOAPMessageListener if needed.
      */
-    public void endpointAdded(Endpoint endpoint);
+    void endpointAdded(Endpoint endpoint);
 
     /**
      * Notification of a Web Service endpoint removal from the appserver
      * @param endpoint handler to register SOAPMessageListener if needed.
      */
-    public void endpointRemoved(Endpoint endpoint);
+    void endpointRemoved(Endpoint endpoint);
 
 }

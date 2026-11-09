@@ -55,7 +55,7 @@ public final class ServerHelper {
      * @return admin port, can be null.
      * @throws RuntimeException if the admin port is not a valid integer
      */
-    public final Integer getAdminPort() {
+    public Integer getAdminPort() {
         final String adminPortString = getAdminPortString(server, config);
         if (adminPortString == null) {
             return null;
@@ -76,7 +76,7 @@ public final class ServerHelper {
      * @return admin host name, never null.
      * @throws RuntimeException
      */
-    public final String getAdminHost() throws RuntimeException {
+    public String getAdminHost() throws RuntimeException {
         // Look at the address for the admin-listener first
         String addr = translateAddressAndPort(config.getAdminListener(), server, config)[0];
         if (addr != null && !addr.equals("0.0.0.0")) {
@@ -118,7 +118,7 @@ public final class ServerHelper {
     }
 
     // very simple generic check
-    public final boolean isListeningOnAdminPort() {
+    public boolean isListeningOnAdminPort() {
         try {
             return NetUtils.isRunning(getAdminHost(), getAdminPort());
         } catch (Exception e) {

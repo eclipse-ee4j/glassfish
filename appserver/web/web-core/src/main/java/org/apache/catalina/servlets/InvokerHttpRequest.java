@@ -43,7 +43,7 @@ class InvokerHttpRequest extends HttpServletRequestWrapper {
      *
      * @param request The servlet request being wrapped
      */
-    public InvokerHttpRequest(HttpServletRequest request) {
+    InvokerHttpRequest(HttpServletRequest request) {
 
         super(request);
         this.pathInfo = request.getPathInfo();
@@ -67,25 +67,25 @@ class InvokerHttpRequest extends HttpServletRequestWrapper {
     /**
      * The path information for this request.
      */
-    protected String pathInfo = null;
+    protected String pathInfo;
 
 
     /**
      * The translated path information for this request.
      */
-    protected String pathTranslated = null;
+    protected String pathTranslated;
 
 
     /**
      * The request URI for this request.
      */
-    protected String requestURI = null;
+    protected String requestURI;
 
 
     /**
      * The servlet path for this request.
      */
-    protected String servletPath = null;
+    protected String servletPath;
 
 
     // --------------------------------------------- HttpServletRequest Methods

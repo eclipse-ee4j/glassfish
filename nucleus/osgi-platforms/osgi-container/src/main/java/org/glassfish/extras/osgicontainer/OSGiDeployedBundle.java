@@ -112,7 +112,7 @@ class BundleClassLoader extends ClassLoader
 {
     private Bundle bundle;
 
-    public BundleClassLoader(Bundle b)
+    BundleClassLoader(Bundle b)
     {
         super(Bundle.class.getClassLoader());
         this.bundle = b;

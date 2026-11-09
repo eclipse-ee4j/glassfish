@@ -161,7 +161,7 @@ public class ByteCodeEnhancerHelper
      *  @exception  IOException  If the stream access failed.
      *********************************************************************/
 
-    private static final void copyZipEntry (InputStream  in,
+    private static void copyZipEntry (InputStream  in,
                                             OutputStream out)
                               throws IOException
     {
@@ -188,7 +188,7 @@ public class ByteCodeEnhancerHelper
      *  @exception  IOException  If an I/O operation failed.
      *********************************************************************/
 
-    private static final InputStream openZipEntry (ZipInputStream in)
+    private static InputStream openZipEntry (ZipInputStream in)
                                      throws IOException
     {
 
@@ -211,7 +211,7 @@ public class ByteCodeEnhancerHelper
      *  @param  crc32  The checksum evaluator.
      *********************************************************************/
 
-    private static final void modifyZipEntry (ZipEntry entry,
+    private static void modifyZipEntry (ZipEntry entry,
                                               byte []  bytes,
                                               CRC32    crc32)
     {
@@ -234,7 +234,7 @@ public class ByteCodeEnhancerHelper
      *  @return  Does the given entry represent a classfile?
      *********************************************************************/
 
-    private static final boolean isClassFileEntry (ZipEntry entry)
+    private static boolean isClassFileEntry (ZipEntry entry)
     {
 
         return entry.getName ().endsWith (".class");

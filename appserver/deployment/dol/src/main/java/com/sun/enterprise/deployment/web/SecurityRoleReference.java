@@ -23,12 +23,12 @@ package com.sun.enterprise.deployment.web;
 public interface SecurityRoleReference {
 
     /** The one in the dd. */
-    public SecurityRole getSecurityRoleLink();
-    public void setSecurityRoleLink(SecurityRole securityRole);
-    public String getDescription();
-    public void setDescription(String description);
+    SecurityRole getSecurityRoleLink();
+    void setSecurityRoleLink(SecurityRole securityRole);
+    String getDescription();
+    void setDescription(String description);
     /** the one in the code. */
-    public String getRoleName();
-    public void setRoleName(String rolename);
+    String getRoleName();
+    void setRoleName(String rolename);
 }
 

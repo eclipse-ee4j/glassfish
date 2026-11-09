@@ -25,7 +25,7 @@ public interface LineReader
     Reads a line, outputting an optional prompt first.  If the prompt is null
     then no prompt is printed.
      */
-    public String readLine(String prompt) throws java.io.IOException;
+    String readLine(String prompt) throws java.io.IOException;
 
 }
 

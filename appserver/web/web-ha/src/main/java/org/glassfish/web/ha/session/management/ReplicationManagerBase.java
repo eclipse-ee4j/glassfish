@@ -40,8 +40,8 @@ public abstract class ReplicationManagerBase<T extends Storeable> extends Persis
 
     protected Logger _logger = LogFacade.getLogger();
 
-    protected boolean relaxCacheVersionSemantics = false;
-    protected boolean disableJreplica = false;
+    protected boolean relaxCacheVersionSemantics;
+    protected boolean disableJreplica;
 
     public BackingStore<String, T> getBackingStore() {
         return this.backingStore;

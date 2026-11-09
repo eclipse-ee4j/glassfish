@@ -343,7 +343,7 @@ public class HtmlReportProducer implements Closeable {
             System.err.println("Please specify the input file name");
             return;
         }
-        try (final HtmlReportProducer producer = new HtmlReportProducer(args[0])) {
+        try (HtmlReportProducer producer = new HtmlReportProducer(args[0])) {
             producer.produce();
         }
     }

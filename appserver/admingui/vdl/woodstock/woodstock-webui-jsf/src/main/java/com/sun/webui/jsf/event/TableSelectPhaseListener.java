@@ -42,12 +42,12 @@ import java.util.HashMap;
  * table pages is necessary. In this scenario, use the keepSelected method to
  * prevent state from being cleared by this instance.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.event.TableSelectPhaseListener.level = FINE
  * </pre>
- * </p>
+ *
  */
 public final class TableSelectPhaseListener implements PhaseListener {
 
@@ -59,7 +59,7 @@ public final class TableSelectPhaseListener implements PhaseListener {
     /**
      * Unselected object for primitive values.
      */
-    private Object unselected = null;
+    private Object unselected;
 
     /**
      * Selected values map.
@@ -70,7 +70,7 @@ public final class TableSelectPhaseListener implements PhaseListener {
     /**
      *  Do not clear selected flag.
      */
-    private boolean keepSelected = false;
+    private boolean keepSelected;
 
     /**
      * Default constructor.

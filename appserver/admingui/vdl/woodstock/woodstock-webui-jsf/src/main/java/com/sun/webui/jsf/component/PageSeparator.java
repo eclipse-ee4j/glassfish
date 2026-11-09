@@ -46,7 +46,7 @@ public final class PageSeparator extends UIOutput {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -58,7 +58,7 @@ public final class PageSeparator extends UIOutput {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -72,12 +72,12 @@ public final class PageSeparator extends UIOutput {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Construct a new {@code PageSeparator}.
@@ -130,7 +130,7 @@ public final class PageSeparator extends UIOutput {
     @Property(name = "value",
             displayName = "Value",
             isHidden = true, isAttribute = false)
-    private Object value = null;
+    private Object value;
 
     @Override
     public Object getValue() {

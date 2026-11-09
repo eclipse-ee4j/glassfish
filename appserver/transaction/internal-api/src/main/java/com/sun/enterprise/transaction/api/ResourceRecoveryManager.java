@@ -35,7 +35,7 @@ public interface ResourceRecoveryManager {
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath) throws Exception;
+    boolean recoverIncompleteTx(boolean delegated, String logPath) throws Exception;
 
     /**
      * recover incomplete transactions with before and after event notifications
@@ -46,24 +46,24 @@ public interface ResourceRecoveryManager {
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance,
+    boolean recoverIncompleteTx(boolean delegated, String logPath, String instance,
             boolean notifyRecoveryListeners) throws Exception;
 
     /**
      * recover the xa-resources
      * @param force boolean to indicate if it has to be forced.
      */
-    public void recoverXAResources(boolean force);
+    void recoverXAResources(boolean force);
 
     /**
      * to recover xa resources
      */
-    public void recoverXAResources();
+    void recoverXAResources();
 
     /**
      * to enable lazy recovery, setting lazy to "true" will
      *
      * @param lazy boolean
      */
-    public void setLazyRecovery(boolean lazy);
+    void setLazyRecovery(boolean lazy);
 }

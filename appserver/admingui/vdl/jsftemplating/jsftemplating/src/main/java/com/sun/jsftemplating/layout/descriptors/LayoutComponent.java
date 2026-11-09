@@ -484,7 +484,7 @@ public class LayoutComponent extends LayoutElementBase implements LayoutElement 
      * Component type
      * </p>
      */
-    private ComponentType _type = null;
+    private ComponentType _type;
 
     /**
      * <p>
@@ -493,7 +493,7 @@ public class LayoutComponent extends LayoutElementBase implements LayoutElement 
      * context of a <code>Renderer</code>.
      * </p>
      */
-    private boolean _overwrite = false;
+    private boolean _overwrite;
 
     /**
      * <p>
@@ -547,5 +547,5 @@ public class LayoutComponent extends LayoutElementBase implements LayoutElement 
      * The value of the nested property.
      * </p>
      */
-    private boolean _nested = false;
+    private boolean _nested;
 }

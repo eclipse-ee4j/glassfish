@@ -40,24 +40,24 @@ public final class Listbox extends ListSelector {
     @Property(name = "monospace",
             displayName = "Use Monospace Space",
             category = "Appearance")
-    private boolean monospace = false;
+    private boolean monospace;
 
     /**
      * monospace set flag.
      */
-    private boolean monospaceSet = false;
+    private boolean monospaceSet;
 
     /**
      * Flag indicating that the application user can make select more than one
      * option at a time from the list-box.
      */
     @Property(name = "multiple", displayName = "Multiple", category = "Data")
-    private boolean multiple = false;
+    private boolean multiple;
 
     /**
      * multiple set flag.
      */
-    private boolean multipleSet = false;
+    private boolean multipleSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -67,7 +67,7 @@ public final class Listbox extends ListSelector {
     @Property(name = "toolTip",
             displayName = "Tool Tip",
             category = "Behavior")
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Default constructor.

@@ -124,7 +124,7 @@ public class LoggingAnnotationsTest {
                 new Exception(TEST_EXCEPTION_MESSAGE), TEST_CONF_FILE);
         String[] expectedContents = new String[] {
                 CANNOT_READ_TEST_CONFIGURATION_FILE_MSG + TEST_CONF_FILE,
-                TEST_EXCEPTION_MESSAGE
+                TEST_EXCEPTION_MESSAGE,
         };
         validateLogContents(ULF_LOG, expectedContents);
         validateLogContents(ODL_LOG, expectedContents);

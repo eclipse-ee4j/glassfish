@@ -58,10 +58,10 @@ import org.jvnet.hk2.annotations.Service;
 public class GetContextRootCommand implements AdminCommand {
 
     @Param(primary=true)
-    private String modulename = null;
+    private String modulename;
 
     @Param(optional=true)
-    private String appname = null;
+    private String appname;
 
     @Inject
     ApplicationRegistry appRegistry;

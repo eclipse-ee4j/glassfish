@@ -25,7 +25,7 @@ import org.glassfish.api.naming.NamingObjectProxy;
 
 public class ConnectorInternalObjectsProxy implements NamingObjectProxy {
 
-    private Object actualObject = null;
+    private Object actualObject;
 
     public ConnectorInternalObjectsProxy(Object o){
         this.actualObject = o;

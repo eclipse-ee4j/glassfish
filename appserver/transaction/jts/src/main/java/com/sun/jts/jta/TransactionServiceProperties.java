@@ -58,9 +58,9 @@ public class TransactionServiceProperties {
     private static final String HABITAT = "HABITAT";
     private static final int DEFAULT_SERVER_ID = 100 ;
 
-    private static Properties properties = null;
-    private static volatile boolean orbAvailable = false;
-    private static volatile boolean recoveryInitialized = false;
+    private static Properties properties;
+    private static volatile boolean orbAvailable;
+    private static volatile boolean recoveryInitialized;
 
     public static synchronized Properties getJTSProperties (ServiceLocator serviceLocator, boolean isORBAvailable) {
         if (orbAvailable == isORBAvailable && properties != null) {

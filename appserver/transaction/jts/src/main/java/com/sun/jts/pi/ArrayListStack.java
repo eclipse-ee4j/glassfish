@@ -27,11 +27,11 @@ import java.util.ArrayList;
 
 /**
  * The <code>ArrayListStack</code> class represents a last-in-first-out
- * (LIFO) stack of objects. It encapsulates class <tt>ArrayList</tt> with four
+ * (LIFO) stack of objects. It encapsulates class <code>ArrayList</code> with four
  * operations that allow a list to be treated as a stack. The usual
- * <tt>push</tt> and <tt>pop</tt> operations are provided, as well as a
- * method to <tt>peek</tt> at the top item on the stack, and a method to test
- * for whether the stack is <tt>empty</tt>
+ * <code>push</code> and <code>pop</code> operations are provided, as well as a
+ * method to <code>peek</code> at the top item on the stack, and a method to test
+ * for whether the stack is <code>empty</code>
  * <p>
  * When a stack is first created, it contains no items.
  * @author  Darpan Dinker, $Author: tcfujii $
@@ -62,7 +62,7 @@ public class ArrayListStack {
 
     /**
      * Pushes an item onto the top of this stack. This method will internally
-     * add elements to the <tt>ArrayList</tt> if the stack is full.
+     * add elements to the <code>ArrayList</code> if the stack is full.
      * @param   obj   the object to be pushed onto this stack.
      * @see     java.util.ArrayList#add
      */
@@ -75,7 +75,7 @@ public class ArrayListStack {
      * Removes the object at the top of this stack and returns that
      * object as the value of this function.
      * @return     The object at the top of this stack (the last item
-     *             of the <tt>ArrayList</tt> object). Null if stack is empty.
+     *             of the <code>ArrayList</code> object). Null if stack is empty.
      */
     public Object pop() {
         if (curIndex > 0) {
@@ -98,7 +98,7 @@ public class ArrayListStack {
      * Looks at the object at the top of this stack without removing it
      * from the stack.
      * @return     the object at the top of this stack (the last item
-     *             of the <tt>ArrayList</tt> object).  Null if stack is empty.
+     *             of the <code>ArrayList</code> object).  Null if stack is empty.
      */
     public Object peek() {
         Object top = null;

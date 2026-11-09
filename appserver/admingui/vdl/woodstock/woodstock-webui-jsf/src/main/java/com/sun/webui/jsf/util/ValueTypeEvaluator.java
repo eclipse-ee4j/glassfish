@@ -47,12 +47,12 @@ public class ValueTypeEvaluator {
     /**
      * Value type.
      */
-    private ValueType valueType = null;
+    private ValueType valueType;
 
     /**
      * UI component.
      */
-    private UIComponent component = null;
+    private UIComponent component;
 
     /**
      * Creates a new instance of ValueTypeEvaluator.

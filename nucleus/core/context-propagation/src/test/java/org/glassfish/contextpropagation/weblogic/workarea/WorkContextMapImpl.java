@@ -137,12 +137,12 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
     return (map != null ? map.version() : 0);
   }
 
-  private final WorkContextMap getMapMaybe() {
+  private WorkContextMap getMapMaybe() {
     return (WorkContextMap)localContextMap.get();
   }
 
   @SuppressWarnings("unchecked")
-  private final WorkContextMap getMap() {
+  private WorkContextMap getMap() {
     WorkContextMap map = (WorkContextMap)localContextMap.get();
     if (map == null) {
       map = new WorkContextLocalMap();

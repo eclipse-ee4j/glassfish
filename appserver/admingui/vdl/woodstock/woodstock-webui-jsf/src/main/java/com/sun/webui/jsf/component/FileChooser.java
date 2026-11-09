@@ -315,7 +315,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     /**
      * handling a special case where both files and folders can be chosen.
      */
-    private boolean fileAndFolderChooser = false;
+    private boolean fileAndFolderChooser;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -334,7 +334,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -353,7 +353,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Set this attribute to true to sort from the highest value to lowest
@@ -363,12 +363,12 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     @Property(name = "descending",
             displayName = "Descending",
             category = "Advanced")
-    private boolean descending = false;
+    private boolean descending;
 
     /**
      * descending set flag.
      */
-    private boolean descendingSet = false;
+    private boolean descendingSet;
 
     /**
      * Indicates that activation of this component by the user is not currently
@@ -377,12 +377,12 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Use this attribute to configure the file chooser as a folder chooser. Set
@@ -392,12 +392,12 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     @Property(name = "folderChooser",
             displayName = "Folder Chooser",
             category = "Appearance")
-    private boolean folderChooser = false;
+    private boolean folderChooser;
 
     /**
      * folderChooser set flag.
      */
-    private boolean folderChooserSet = false;
+    private boolean folderChooserSet;
 
     /**
      * Use this attribute to specify the initial folder to display in the Look
@@ -411,7 +411,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private Object lookin = null;
+    private Object lookin;
 
     /**
      * Specifies the model associated with the FileChooser. The model provides
@@ -427,7 +427,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
             shortDescription = "The model associated with the filechooser",
             isHidden = true,
             isAttribute = false)
-    private com.sun.webui.jsf.model.ResourceModel model = null;
+    private com.sun.webui.jsf.model.ResourceModel model;
 
     /**
      * Set multiple to true to allow multiple files or folders to be selected
@@ -437,12 +437,12 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     @Property(name = "multiple",
             displayName = "Multiple",
             category = "Appearance")
-    private boolean multiple = false;
+    private boolean multiple;
 
     /**
      * multiple set flag.
      */
-    private boolean multipleSet = false;
+    private boolean multipleSet;
 
     /**
      * <p>
@@ -452,12 +452,12 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     @Property(name = "readOnly",
             displayName = "Read-only",
             category = "Behavior")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * The number of items to display in the list box. The value must be greater
@@ -476,7 +476,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     /**
      * rows set flag.
      */
-    private boolean rowsSet = false;
+    private boolean rowsSet;
 
     /**
      * Field to use to sort the list of files. Valid values are:
@@ -498,7 +498,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
     /**
      * sortField set flag.
      */
-    private boolean sortFieldSet = false;
+    private boolean sortFieldSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -508,7 +508,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -520,7 +520,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Default constructor.
@@ -691,9 +691,9 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
 
     /**
      * <p>
-     * Override the default {@link UIComponentBase#processDecodes} processing to
+     * Override the default {@code UIComponentBase#processDecodes} processing to
      * perform the following steps.</p>
-     * <ul>
+     * <p>
      * FileChooser obtains instances of the sub components and calls their
      * "processDecodes" methods before it calls its own "decode" method. After,
      * if FacesContext.getRenderResponse() returns true an error has occurred
@@ -704,6 +704,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
      * value which will cause the FileChooser to participate in the JSF life
      * cycle processing.
      *
+     * <ul>
      * <li>If the {@code rendered} property of this {@link UIComponent} is
      * {@code false}, skip further processing.</li>
      * <li>Call the {@code processDecodes()} method of all facets of this
@@ -866,7 +867,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
 
     /**
      * <p>
-     * Override the default {@link UIComponentBase#processValidators} processing
+     * Override the default {@code UIComponentBase#processValidators} processing
      * to perform the following steps.</p>
      * <ul>
      * <li>If the {@code rendered} property of this {@link UIComponent} is
@@ -3293,7 +3294,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
      * <li>{@code java.io.File}</li>
      * <li>{@code java.lang.String}</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * If a type other than these is contained in a list type or bound directly
      * to the {@code selected} attribute, then you must specify a converter
@@ -3338,7 +3339,7 @@ public final class FileChooser extends WebuiInput implements NamingContainer {
      * <li>{@code java.io.File}</li>
      * <li>{@code java.lang.String}</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * If a type other than these is contained in a list type or bound directly
      * to the {@code selected} attribute, then you must specify a converter with

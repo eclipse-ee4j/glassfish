@@ -23,14 +23,14 @@ package org.glassfish.api.admin;
  * <p>
  * Progress is represented by two attributes:
  * <ul>
- * <li>{@code steps}</li> - an integer value which represents units of progress (a.k.a. steps) taken during command
- * execution to show progress. Should not be greater than * {@code totalStepCount} (if defined).
- * <li>{@code message}</li> - A progress message to be sent to the client.
- * <ul>
+ * <li>{@code steps} - an integer value which represents units of progress (a.k.a. steps) taken during command
+ * execution to show progress. Should not be greater than {@code totalStepCount} (if defined).</li>
+ * <li>{@code message} - A progress message to be sent to the client.</li>
+ * </ul>
  * <p>
  * Because {@code AdminCommand} can execute other {@code AdminCommand} and command execution on a cluster triggers the
  * replication process the {@code ProgressStatus} can have child ProgressStatus objects. Any {@code ProgressStatus} can
- * be used independently without knowledge of the parent's {@code ProgressStatus}.<br/>
+ * be used independently without knowledge of the parent's {@code ProgressStatus}.<br>
  * Any child ProgressStatus objects can be <i>named</i> by its creator. The {@code name} is mainly used in connection
  * with the {@code message} attribute to define its context.
  *
@@ -38,7 +38,6 @@ package org.glassfish.api.admin;
  * <b>Usage:</b>
  * <p>
  * First inject a {@code ProgressStatus} into an {@code AdminCommand} implementation.
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -50,7 +49,6 @@ package org.glassfish.api.admin;
  *
  * Optionally pass the total step count or name to provide context of the progress (if the name is not provided it
  * defaults to the command's name).
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -62,7 +60,6 @@ package org.glassfish.api.admin;
  *
  * Total step count can also be set via this method. This overrides the count if it was previously set (possibly via the
  * &#064;Progress annotation).
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -73,7 +70,6 @@ package org.glassfish.api.admin;
  * <p>
  * The primary use of {@code tatalStepCount} is as the denominator for computing the completion percentage as reported
  * in the commands progress report:
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -90,7 +86,6 @@ package org.glassfish.api.admin;
  * <p>
  * The {@code progress()} methods are used to move progress forward (or backwards). The current step count will be
  * incremented by the number of steps indicated.
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -110,7 +105,6 @@ package org.glassfish.api.admin;
  * <p>
  * It is possible to set the current step count to a specific value, for example when an error occurs and the command
  * must repeat a set of operations.
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -123,7 +117,6 @@ package org.glassfish.api.admin;
  *
  * <p>
  * Any ProgressStatus can be completed using methods
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -143,7 +136,6 @@ package org.glassfish.api.admin;
  * {@code ProgressStatus} is not visible to the child ProgressStatus object and the child can progress somewhat
  * independently from the parent's progress. But generally the parent should not complete its progress before the
  * children have completed.
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -155,7 +147,6 @@ package org.glassfish.api.admin;
  * </blockquote>
  * <p>
  * The name allocated to the child is used in the progress status output to define context of the {@code message}.
- * <p>
  * <blockquote>
  *
  * <pre>
@@ -292,7 +283,7 @@ public interface ProgressStatus extends ProgressEvent {
     /**
      * Create a child ProgressStatus object which can be used independently by a command's subroutine or sub-commands. <br/>
      * The name allocated to the child is used in the progress status output:<br/>
-     * <p>
+     *
      * <blockquote>
      *
      * <pre>
@@ -323,7 +314,7 @@ public interface ProgressStatus extends ProgressEvent {
      * Create a child ProgressStatus object which can be used independently by a command's subroutine or sub-commands. <br/>
      * This version does not take a name and therefor a child name will not be use in any messages generated from this
      * ProgressStatus object.
-     * <p>
+     *
      * <blockquote>
      *
      * <pre>
@@ -331,7 +322,7 @@ public interface ProgressStatus extends ProgressEvent {
      * </pre>
      *
      * </blockquote>
-     * <p>
+     *
      *
      * @param allocatedSteps the number of progress steps the parent is allocating to the child.
      * @return ProgressStatus of the child

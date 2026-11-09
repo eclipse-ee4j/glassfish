@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
 public class AroundInvokeInvocationContext extends CallbackInvocationContext implements InterceptorManager.AroundInvokeContext {
 
     private Method method;
-    private int interceptorIndex = 0;
+    private int interceptorIndex;
     private InterceptorManager.InterceptorChain chain;
     private Object[] parameters;
 

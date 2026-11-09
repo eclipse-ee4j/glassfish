@@ -50,8 +50,8 @@ public class ScatteredArchive extends ReadableArchiveAdapter {
     public static class Builder {
 
         final String name;
-        File topDir = null;
-        File resources = null;
+        File topDir;
+        File resources;
         final List<URL> urls = new ArrayList<URL>();
         final Map<String, File> metadata = new HashMap<String, File>();
 
@@ -376,13 +376,13 @@ public class ScatteredArchive extends ReadableArchiveAdapter {
 
     /**
      * Returns the path used to create or open the underlying archive
-     * <p/>
-     * <p/>
+     *
+     * <p>
      * TODO: abstraction breakage:
      * Several callers, most notably {@link org.glassfish.api.deployment.DeploymentContext#getSourceDir()}
      * implementation, assumes that this URI is an URL, and in fact file URL.
-     * <p/>
-     * <p/>
+     *
+     * <p>
      * If this needs to be URL, use of {@link URI} is misleading. And furthermore,
      * if its needs to be a file URL, this should be {@link File}.
      *
@@ -413,7 +413,7 @@ public class ScatteredArchive extends ReadableArchiveAdapter {
 
     /**
      * Returns the name of the archive.
-     * <p/>
+     * <p>
      * Implementations should not return null.
      *
      * @return the name of the archive

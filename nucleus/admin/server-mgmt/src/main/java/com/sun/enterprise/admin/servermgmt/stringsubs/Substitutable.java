@@ -20,7 +20,7 @@ import java.io.Reader;
 import java.io.Writer;
 
 /**
- * Defines the creation of {@link Reader} & {@link Writer} for a file on which string substitution has to be performed.
+ * Defines the creation of {@link Reader} &amp; {@link Writer} for a file on which string substitution has to be performed.
  */
 public interface Substitutable {
     /**

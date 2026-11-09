@@ -52,8 +52,8 @@ import javax.tools.StandardLocation;
 public class UIComponentFactoryAP extends AbstractProcessor {
 
     public static final String FACTORY_FILE = "META-INF/jsftemplating/UIComponentFactory.map";
-    private boolean _setup = false;
-    private PrintWriter writer = null;
+    private boolean _setup;
+    private PrintWriter writer;
 
     private boolean setup() {
         if (_setup) {

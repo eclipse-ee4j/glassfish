@@ -43,42 +43,42 @@ public class WebListenerConfig {
     }
 
     /**
-     * Sets the id used for configuring <tt>WebListener</tt>.
+     * Sets the id used for configuring <code>WebListener</code>.
      */
     public void setId(String id) {
         this.id = id;
     }
 
     /**
-     * Gets the id used for configuring <tt>WebListener</tt>.
+     * Gets the id used for configuring <code>WebListener</code>.
      */
     public String getId() {
         return id;
     }
 
     /**
-     * Sets the port number used for configuring <tt>WebListener</tt>.
+     * Sets the port number used for configuring <code>WebListener</code>.
      */
     public void setPort(int port) {
         this.port = port;
     }
 
     /**
-     * Gets the port number used for configuring <tt>WebListener</tt>.
+     * Gets the port number used for configuring <code>WebListener</code>.
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * Sets the protocol used for configuring <tt>WebListener</tt>.
+     * Sets the protocol used for configuring <code>WebListener</code>.
      */
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
 
     /**
-     * Gets the protocol used for configuring <tt>WebListener</tt>.
+     * Gets the protocol used for configuring <code>WebListener</code>.
      */
     public String getProtocol() {
         return protocol;

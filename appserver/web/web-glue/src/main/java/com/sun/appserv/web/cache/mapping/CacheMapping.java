@@ -30,10 +30,10 @@ public class CacheMapping {
 
     // timeout specified value or via Field
     private int timeout = CacheHelper.TIMEOUT_VALUE_NOT_SET;
-    private Field timeoutField = null;
+    private Field timeoutField;
 
     // a field to force caching engine to refresh entry
-    private Field refreshField = null;
+    private Field refreshField;
 
     // set of standard HTTP methods eligible for caching
     private String methods[] = new String[0];

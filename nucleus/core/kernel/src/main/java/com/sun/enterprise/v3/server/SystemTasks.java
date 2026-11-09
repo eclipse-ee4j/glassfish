@@ -31,5 +31,5 @@ public interface SystemTasks {
     /**
      * Write the process ID to a file.
      */
-    public void writePidFile();
+    void writePidFile();
 }

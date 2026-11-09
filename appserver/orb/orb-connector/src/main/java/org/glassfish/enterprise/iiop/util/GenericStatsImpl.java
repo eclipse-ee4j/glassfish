@@ -28,7 +28,7 @@ import org.glassfish.external.statistics.Stats;
 /** Provides for generic implementation of any Stats interface. This class facilitates
  * composition over inheritance for all the classes that implement their
  * specific Stats interfaces. None of them has to implement the methods defined
- * by the {@link javax.management.j2ee.statistics.Stats} interface. This class
+ * by the {@code javax.management.j2ee.statistics.Stats} interface. This class
  * implements the same interface and does that job. All that implementing classes
  * have to do is implement the specific accessing methods in their Stats interfaces
  * and delegate the rest to this class. <b> This class invokes all these methods in

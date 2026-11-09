@@ -37,7 +37,7 @@ public interface AuthorizationConstraint extends WebDescriptor {
 
     /**
      * Add a security role to the constraint.
-     * @param the security role.
+     * @param securityRole security role.
      */
     void addSecurityRole(SecurityRole securityRole);
 }

@@ -70,6 +70,6 @@ public class WebModuleVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    WebModule _w = null;
-    Cluster _c = null;
+    WebModule _w;
+    Cluster _c;
 }

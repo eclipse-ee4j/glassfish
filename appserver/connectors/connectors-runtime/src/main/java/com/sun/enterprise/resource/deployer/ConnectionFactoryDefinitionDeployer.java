@@ -317,7 +317,7 @@ public class ConnectionFactoryDefinitionDeployer implements ResourceDeployer<Con
         private final ConnectionFactoryDefinitionDescriptor desc;
         private final SimpleJndiName name;
 
-        public MyConnectorConnectionPool(ConnectionFactoryDefinitionDescriptor desc, SimpleJndiName name) {
+        MyConnectorConnectionPool(ConnectionFactoryDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }

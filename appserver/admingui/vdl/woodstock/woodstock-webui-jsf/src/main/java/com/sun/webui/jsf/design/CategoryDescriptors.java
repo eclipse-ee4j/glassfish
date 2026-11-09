@@ -146,6 +146,6 @@ public final class CategoryDescriptors {
         ACCESSIBILITY,
         JAVASCRIPT,
         ADVANCED,
-        INTERNAL
+        INTERNAL,
     };
 }

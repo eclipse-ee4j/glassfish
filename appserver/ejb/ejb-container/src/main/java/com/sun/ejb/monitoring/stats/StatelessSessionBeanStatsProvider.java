@@ -34,7 +34,7 @@ import org.glassfish.gmbal.ManagedObject;
 @ManagedObject
 public class StatelessSessionBeanStatsProvider extends EjbMonitoringStatsProvider {
 
-    private BoundedRangeStatisticImpl methodReadyCount = null;
+    private BoundedRangeStatisticImpl methodReadyCount;
 
     private StatelessSessionContainer delegate;
 

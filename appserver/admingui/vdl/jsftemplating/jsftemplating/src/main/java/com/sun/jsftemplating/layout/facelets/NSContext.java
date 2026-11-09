@@ -129,7 +129,7 @@ public class NSContext implements javax.xml.namespace.NamespaceContext {
         _prefixes.put(uri, prefix);
     }
 
-    private String _defaultNSURI = null;
+    private String _defaultNSURI;
 
     private Map<String, String> _uris = new HashMap<>();
     private Map<String, String> _prefixes = new HashMap<>();

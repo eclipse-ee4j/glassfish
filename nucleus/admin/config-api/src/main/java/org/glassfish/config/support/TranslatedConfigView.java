@@ -79,7 +79,7 @@ public class TranslatedConfigView implements ConfigView {
      * example, for a variable "key" with value "name" and variable "servername" with value "GlassFish", the expression
      * "${server${key}}" will expand to "GlassFish"
      *
-     * @param variableName
+     * @param value
      * @return Value or null
      */
     public static Object getTranslatedValue(Object value) {

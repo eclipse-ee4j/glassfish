@@ -22,11 +22,11 @@
 J2EE server components can expose their JSR 77 compliant Stats implementations
 to a JMX client with the help of this package. <br>
 <br>
-The J2EE server components register their <tt>Stats </tt>implementations through
-the implementation of &nbsp;<tt><b>MonitoringRegistry</b></tt>
+The J2EE server components register their <code>Stats </code>implementations through
+the implementation of &nbsp;<code><b>MonitoringRegistry</b></code>
 interface class that provides the ability to register and unregister components
 to make them available (or unavailable) to JMX clients. The registration
-implementation would introspect the <tt>Stats </tt>implementation, create a <tt>DynamicMBean </tt>out of the introspected parts, and exposes this derived management interface to JMX clients by registering the <tt>DynamicMBean </tt>with the <tt>MBeanServer. </tt>Any calls to the MBean's public API is delegated to the <tt>Stats </tt>implementation and the underlying <tt>Statistic</tt>'s monitored attribute value is returned. &nbsp;<br>
+implementation would introspect the <code>Stats </code>implementation, create a <code>DynamicMBean </code>out of the introspected parts, and exposes this derived management interface to JMX clients by registering the <code>DynamicMBean </code>with the <code>MBeanServer. </code>Any calls to the MBean's public API is delegated to the <code>Stats </code>implementation and the underlying <code>Statistic</code>'s monitored attribute value is returned. &nbsp;<br>
 <br>
 One can obtain an instance of this interface's implementation instance by
 using the following code as an example:
@@ -45,26 +45,26 @@ registry.registerEJBStats( ...);<br>
 <p>
 The magnitude of monitoring and corresponding number of attributes involved
 in monitoring is dependent on the level at which monitoring of each component
-is set. A change in monitoring level to <tt>OFF, LOW </tt>or<tt> HIGH</tt>
+is set. A change in monitoring level to <code>OFF, LOW </code>or<code> HIGH</code>
 from a prior setting results in a change in the extent to which monitoring
 is performed for that component. Following each such change in state, the
-J2EE server component has to unregister its previous <tt>Stats </tt>implementation. The <tt>MonitoringRegistrationHelper&nbsp;</tt> unregisters the <tt>DynamicMBean </tt>from the <tt>MBeanServer </tt>as a result. If the change in state results in monitoring level being either <tt>HIGH</tt> or <tt>LOW</tt>(i.e. not <tt>OFF</tt>), the component will now register a <tt>Stats </tt>implementation that reflects the higher or lower set of attributes that are monitored. The <tt>MonitoringRegistrationHelper </tt>will now generate a new <tt>DynamicMBean</tt> that will expose the revised higher or lower level of observed attributes as a result of the change in setting. <br>
+J2EE server component has to unregister its previous <code>Stats </code>implementation. The <code>MonitoringRegistrationHelper&nbsp;</code> unregisters the <code>DynamicMBean </code>from the <code>MBeanServer </code>as a result. If the change in state results in monitoring level being either <code>HIGH</code> or <code>LOW</code>(i.e. not <code>OFF</code>), the component will now register a <code>Stats </code>implementation that reflects the higher or lower set of attributes that are monitored. The <code>MonitoringRegistrationHelper </code>will now generate a new <code>DynamicMBean</code> that will expose the revised higher or lower level of observed attributes as a result of the change in setting. <br>
 <br>
 <br>
 <h2>Package Specification</h2>
 The registration interface and its related classes are defined in the
-<tt>com.sun.enterprise.admin.monitor.registry</tt> &nbsp;package. The following interfaces and classes are part of this package.<br>
+<code>com.sun.enterprise.admin.monitor.registry</code> &nbsp;package. The following interfaces and classes are part of this package.<br>
 <ul>
-  <li><tt>MonitoringRegistry</tt> interface - declares methods to register, unregister and to find if a component's <tt>Stats </tt>implementation&nbsp; is already registered.</li>
-  <li><tt>MonitoringRegistrationException</tt> class - reports exceptions that may occur during registration or unregistration process.</li>
-  <li><tt>MonitoringLevelListener</tt> interface - interface provides <code>setLevel</code> method. Implementations will be notified of changes in monitoring level through this method.</li>
-  <li><tt>MonitoringLevel</tt> class - describes various recognized monitoring levels</li>  
+  <li><code>MonitoringRegistry</code> interface - declares methods to register, unregister and to find if a component's <code>Stats </code>implementation&nbsp; is already registered.</li>
+  <li><code>MonitoringRegistrationException</code> class - reports exceptions that may occur during registration or unregistration process.</li>
+  <li><code>MonitoringLevelListener</code> interface - interface provides <code>setLevel</code> method. Implementations will be notified of changes in monitoring level through this method.</li>
+  <li><code>MonitoringLevel</code> class - describes various recognized monitoring levels</li>  
 </ul>
 
 <h2>Related Documentation</h2>
 The implementations and associated helper classes are defined in the<br>
-<tt>com.sun.enterprise.admin.monitor.stats.spi</tt> and<br>
-<tt>com.sun.enterprise.admin.monitor.stats.util</tt> packages<br><br>
+<code>com.sun.enterprise.admin.monitor.stats.spi</code> and<br>
+<code>com.sun.enterprise.admin.monitor.stats.util</code> packages<br><br>
 See the associated package file for information on how client will access the
 stats implementations.<br><br>
 

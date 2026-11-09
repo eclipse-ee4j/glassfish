@@ -32,7 +32,7 @@ public interface Translator {
     /**
      * {@link Translator} that does nothing.
      */
-    public static final Translator NOOP = new Translator() {
+    Translator NOOP = new Translator() {
         public String translate(String str) {
             return str;
         }
@@ -43,7 +43,7 @@ public interface Translator {
      * found references are translated. If a System Property is not defined, its reference is returned verbatim.
      * No escape sequences are handled.
      */
-    public static final Translator SYS_PROP_TR = new Translator() {
+    Translator SYS_PROP_TR = new Translator() {
         public String translate(String s) {
             StringBuilder sb = new StringBuilder();
             int length = s.length();

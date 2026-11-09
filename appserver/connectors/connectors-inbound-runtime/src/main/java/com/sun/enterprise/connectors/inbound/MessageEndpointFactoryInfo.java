@@ -20,7 +20,7 @@ import jakarta.resource.spi.ActivationSpec;
 import jakarta.resource.spi.endpoint.MessageEndpointFactory;
 
 /**
- * An instance of this class keeps <code> ActivationSpec <code>
+ * An instance of this class keeps <code> ActivationSpec </code>
  * and <code>MessageEndPointFactory</code> related to a endpoint
  * activation.
  *

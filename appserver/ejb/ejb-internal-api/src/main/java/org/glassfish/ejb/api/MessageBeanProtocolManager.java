@@ -40,8 +40,6 @@ public interface MessageBeanProtocolManager {
      *
      * @param resourceHandle handle associated with this listener.  can be null.
      *
-     * @throws Exception if the MessageBeanContainer was not able to create
-     * the MessageBeanListener
      */
     MessageBeanListener createMessageBeanListener(ResourceHandle resourceHandle)
       throws ResourcesExceededException;

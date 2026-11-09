@@ -33,7 +33,7 @@ import org.glassfish.api.admin.CommandValidationException;
  * A class that's supposed to capture all the behavior common to operation on a "local" domain. It's supposed to act as
  * the abstract base class that provides more functionality to the commands that operate on a local domain.
  *
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @author Byron Nevins (bnevins@dev.java.net)
  */
 public abstract class LocalDomainCommand extends LocalServerCommand {

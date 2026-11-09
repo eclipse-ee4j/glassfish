@@ -40,7 +40,7 @@ public class ErrorMsg {
     /**
      *
      */
-    protected String context = null;
+    protected String context;
 
     protected static final ResourceBundle messages = I18NHelper.loadBundle(ErrorMsg.class);
 

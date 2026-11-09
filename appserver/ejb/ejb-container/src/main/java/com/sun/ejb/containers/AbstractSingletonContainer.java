@@ -60,13 +60,13 @@ public abstract class AbstractSingletonContainer
     //        client views.
 
 
-    private EJBLocalObjectImpl theEJBLocalBusinessObjectImpl = null;
-    private EJBLocalObjectImpl theOptionalEJBLocalBusinessObjectImpl = null;
+    private EJBLocalObjectImpl theEJBLocalBusinessObjectImpl;
+    private EJBLocalObjectImpl theOptionalEJBLocalBusinessObjectImpl;
 
 
     // Data members for Remote business view. Any objects representing the
     // Remote business interface are not subtypes of EJBObject.
-    private EJBObjectImpl theRemoteBusinessObjectImpl = null;
+    private EJBObjectImpl theRemoteBusinessObjectImpl;
 
     // Information about a web service ejb endpoint.  Used as a conduit
     // between webservice runtime and ejb container.  Contains a Remote
@@ -80,11 +80,11 @@ public abstract class AbstractSingletonContainer
     protected AtomicBoolean singletonInitialized = new AtomicBoolean(false);
 
     // used to protect against synchronous loopback calls during Singleton init
-    private boolean initializationInProgress = false;
+    private boolean initializationInProgress;
 
     // Set to true if Singleton failed to complete its initialization successfully.
     // If true, Singleton is not accessible.
-    protected boolean singletonInitializationFailed = false;
+    protected boolean singletonInitializationFailed;
 
     protected volatile ComponentContext singletonCtx;
 

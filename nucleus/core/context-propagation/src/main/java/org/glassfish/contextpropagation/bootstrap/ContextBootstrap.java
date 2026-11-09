@@ -54,11 +54,11 @@ public class ContextBootstrap {
 
   /**
    * This function must be called by the server prior to using context propagation.
-   * @param loggerAdapter An adaptor to the logger that is appropriate for
+   * @param aLoggerAdapter An adaptor to the logger that is appropriate for
    * context propagation messages.
-   * @param tla An adaptor to the thread management system that allows safe
+   * @param aThreadLocalAccessor An adaptor to the thread management system that allows safe
    * storage of the ContextMap on the current thread.
-   * @param contextAccessController An adaptor to the security manager that
+   * @param aContextAccessController An adaptor to the security manager that
    * is used to determine access to particular work contexts by the user
    * associated to the current thread.
    * @param aGuid a unique identifier for this process that is suitable for

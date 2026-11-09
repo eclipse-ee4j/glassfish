@@ -196,7 +196,7 @@ public class DeferredFragment extends UIComponentBase {
         }
 
         // A reference to the DeferredFragment
-        private DeferredFragment df = null;
+        private DeferredFragment df;
     }
 
     /**
@@ -220,6 +220,7 @@ public class DeferredFragment extends UIComponentBase {
          * <li>Register any tasks that need to be executed, add a listener for each task or the specified event within the
          * task.</li>
          * <li>Ensure a FragmentRenderer component exists at the end of the page.</li>
+         * </ul>
          */
         @Override
         public void processEvent(ComponentSystemEvent event) throws AbortProcessingException {
@@ -299,7 +300,7 @@ public class DeferredFragment extends UIComponentBase {
             comp.addReadyListener(fragmentRenderer);
         }
 
-        private boolean done = false;
+        private boolean done;
         private static final String FRAGMENT_RENDERER = "jsft-FR";
     }
 

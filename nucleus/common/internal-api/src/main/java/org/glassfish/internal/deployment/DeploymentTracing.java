@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 public class DeploymentTracing {
 
-    public static enum Mark {
+    public enum Mark {
         ARCHIVE_OPENED,
         ARCHIVE_HANDLER_OBTAINED,
         INITIAL_CONTEXT_CREATED,
@@ -59,7 +59,7 @@ public class DeploymentTracing {
 
     }
 
-    public static enum ModuleMark {
+    public enum ModuleMark {
         PREPARE,
         PREPARE_EVENTS,
         PREPARED,
@@ -70,7 +70,7 @@ public class DeploymentTracing {
 
     }
 
-    public static enum ContainerMark {
+    public enum ContainerMark {
         SNIFFER_DONE,
         BEFORE_CONTAINER_SETUP,
         AFTER_CONTAINER_SETUP,

@@ -31,7 +31,7 @@ public interface DefaultResourceProxy {
 
     String getLogicalName();
 
-    static class Util {
+    class Util {
         /*
          * This utility method is useful for obtaining the logical name for the given physical name and a list of
          * DefaultResourceProxies. If the physicalName is not found, then null is returned.

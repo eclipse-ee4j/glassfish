@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
  * the appropriate ArchiveHandler. ArchiveDetectors are supposed to be part of the connector module of a container. Each
  * detector has a rank as returned by {@link #rank()} which can be used to order the detectors as archive detection.
  *
- * <p/>
+ * <p>
  * This is a container pluggability interface.
  *
  * @author Sanjeeb.Sahoo@Sun.COM

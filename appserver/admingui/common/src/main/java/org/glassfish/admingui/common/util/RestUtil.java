@@ -169,7 +169,7 @@ public class RestUtil {
                     neutralizeForLog(GuiUtil.getCommonMessage("LOG_REST_REQUEST_INFO",
                             new Object[] {
                                     endpoint,
-                                    (useData && "post".equals(method)) ? data : maskedAttr, method
+                                    (useData && "post".equals(method)) ? data : maskedAttr, method,
                             })));
         }
 
@@ -955,7 +955,7 @@ public class RestUtil {
 
         final HostnameVerifier defaultVerifier = javax.net.ssl.HttpsURLConnection.getDefaultHostnameVerifier();
 
-        public BasicHostnameVerifier() {
+        BasicHostnameVerifier() {
         }
 
         public boolean verify(String host, SSLSession sslSession) {

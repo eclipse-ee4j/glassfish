@@ -48,7 +48,7 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
 
     protected JavaEEIOUtils ioUtils;
 
-    protected HASingleSignOnEntryMetadata metadata = null;
+    protected HASingleSignOnEntryMetadata metadata;
 
     protected ClassLoader appClassLoader;
 

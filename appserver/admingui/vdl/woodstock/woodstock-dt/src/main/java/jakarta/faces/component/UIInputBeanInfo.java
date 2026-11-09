@@ -125,17 +125,17 @@ public final class UIInputBeanInfo extends UIOutputBeanInfo {
                                     ValueChangeListener.class
                                             .getMethod("processValueChange",
                                                     new Class[]{
-                                                        ValueChangeEvent.class
+                                                        ValueChangeEvent.class,
                                                     })},
                                 UIInput.class
                                         .getMethod("addValueChangeListener",
                                                 new Class[]{
-                                                    ValueChangeListener.class
+                                                    ValueChangeListener.class,
                                                 }),
                                 UIInput.class
                                         .getMethod("removeValueChangeListener",
                                                 new Class[]{
-                                                    ValueChangeListener.class
+                                                    ValueChangeListener.class,
                                                 }),
                                 UIInput.class
                                         .getMethod("getValueChangeListeners",
@@ -147,13 +147,13 @@ public final class UIInputBeanInfo extends UIOutputBeanInfo {
                                         .getMethod("validate", new Class[]{
                                             FacesContext.class,
                                             UIComponent.class,
-                                            Object.class
+                                            Object.class,
                                         })
                                 },
                                 null, null);
                 eventSetDescriptors = new EventSetDescriptor[]{
                     valueChangeEventDescriptor,
-                    validateEventDescriptor
+                    validateEventDescriptor,
                 };
             } catch (IntrospectionException e) {
                 e.printStackTrace();

@@ -54,7 +54,7 @@ class LayoutStateManagementStrategy extends StateManagementStrategy {
     /**
      * Constructor.
      */
-    public LayoutStateManagementStrategy() {
+    LayoutStateManagementStrategy() {
         this.classMap = new ConcurrentHashMap<>(32);
     }
 
@@ -279,7 +279,7 @@ class LayoutStateManagementStrategy extends StateManagementStrategy {
         /**
          * Constructor.
          */
-        public FacetNode() {
+        FacetNode() {
         }
 
         /**
@@ -289,7 +289,7 @@ class LayoutStateManagementStrategy extends StateManagementStrategy {
          * @param name the facet name
          * @param component the component
          */
-        public FacetNode(int parent, String name, UIComponent component) {
+        FacetNode(int parent, String name, UIComponent component) {
             super(parent, component);
             facetName = name;
         }
@@ -352,7 +352,7 @@ class LayoutStateManagementStrategy extends StateManagementStrategy {
         /**
          * Constructor.
          */
-        public TreeNode() {
+        TreeNode() {
         }
 
         /**
@@ -361,7 +361,7 @@ class LayoutStateManagementStrategy extends StateManagementStrategy {
          * @param parent the parent
          * @param component the component
          */
-        public TreeNode(int parent, UIComponent component) {
+        TreeNode(int parent, UIComponent component) {
             this.parent = parent;
             this.id = component.getId();
             this.componentType = component.getClass().getName();

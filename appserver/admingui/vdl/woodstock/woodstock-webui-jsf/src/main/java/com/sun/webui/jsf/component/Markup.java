@@ -46,7 +46,7 @@ public final class Markup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraAttributes = null;
+    private String extraAttributes;
 
     /**
      * Flag indicating that tag is a singleton tag and that it should end with a
@@ -55,12 +55,12 @@ public final class Markup extends UIComponentBase {
     @Property(name = "singleton",
             displayName = "Single Tag",
             category = "Advanced")
-    private boolean singleton = false;
+    private boolean singleton;
 
     /**
      * singleton set flag.
      */
-    private boolean singletonSet = false;
+    private boolean singletonSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -70,7 +70,7 @@ public final class Markup extends UIComponentBase {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -82,7 +82,7 @@ public final class Markup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Name of the HTML element to render.
@@ -94,7 +94,7 @@ public final class Markup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String tag = null;
+    private String tag;
 
     /**
      * Construct a new {@code Markup}.

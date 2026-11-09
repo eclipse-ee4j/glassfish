@@ -58,7 +58,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
 
     @LogMessageInfo(message = "Failed to scan archive for annotations: {0}", level="WARNING")
     private static final String FAILED_ANNOTATION_SCAN = "NCLS-DEPLOYMENT-00009";
-    boolean found = false;
+    boolean found;
     List<String> annotations = new ArrayList<>();
 
     public GenericAnnotationDetector(Class[] annotationClasses) {

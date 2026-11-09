@@ -37,13 +37,12 @@ import java.util.Map;
  * An implementation of {@link FilterCriteria}
  * that compares the value of a {@link ValueExpression} with a predefined
  * <code>compareValue</code>.  A user may specify matches to include less than
- * (<), equal to (==), or greater than (>) the <code>compareValue</code> Object,
+ * (&lt;), equal to (==), or greater than (>) the <code>compareValue</code> Object,
  * or any combination of the above.
  *
  * <p>Use the <code>requestMapKey</code> property
  *
  * @see TableDataProvider
- * @see TableDataFilter
  */
 @Component(isTag = false)
 public final class ValueBindingFilterCriteria extends FilterCriteria {
@@ -61,12 +60,12 @@ public final class ValueBindingFilterCriteria extends FilterCriteria {
     /**
      * Match less than flag.
      */
-    private boolean matchLessThan = false;
+    private boolean matchLessThan;
 
     /**
      * Match greater than flag.
      */
-    private boolean matchGreaterThan = false;
+    private boolean matchGreaterThan;
 
     /**
      * Value expression.

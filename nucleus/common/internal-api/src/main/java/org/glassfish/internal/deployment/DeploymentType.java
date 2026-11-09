@@ -33,7 +33,7 @@ import java.util.Comparator;
  * mutable fields of the deployment objects.
  * <p>
  * The list of deployment types are as follows:
- * <p><ol>
+ * <ol>
  * <li> INTERNAL_APP
  * <li> JDBC_SYS_RES
  * <li> DEPLOYMENT_HANDLER

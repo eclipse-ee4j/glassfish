@@ -44,7 +44,7 @@ public final class Table2RowGroup extends TableRowGroup
     /**
      * A List containing Table2Column children.
      */
-    private List<Table2Column> table2ColumnChildren = null;
+    private List<Table2Column> table2ColumnChildren;
 
     /**
      * Flag indicating to turn off default Ajax functionality. Set
@@ -58,7 +58,7 @@ public final class Table2RowGroup extends TableRowGroup
     /**
      * ajaxify set flag.
      */
-    private boolean ajaxifySet = false;
+    private boolean ajaxifySet;
 
     /**
      * Default constructor.

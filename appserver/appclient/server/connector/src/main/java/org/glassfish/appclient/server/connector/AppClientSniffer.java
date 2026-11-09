@@ -34,7 +34,7 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class AppClientSniffer extends GenericSniffer {
     private static final String[] stigmas = {
-        "META-INF/application-client.xml", "META-INF/sun-application-client.xml", "META-INF/glassfish-application-client.xml"
+        "META-INF/application-client.xml", "META-INF/sun-application-client.xml", "META-INF/glassfish-application-client.xml",
     };
 
     private static final String[] containers = {"appclient"};

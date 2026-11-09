@@ -56,10 +56,10 @@ public class Validator {
     }
 
     /**
-     * Checks the validity of the given value for the entry. This method does basic checks such as null ness & type.
+     * Checks the validity of the given value for the entry. This method does basic checks such as null ness &amp; type.
      *
      * @param obj
-     * @Throws InvalidConfigException
+     * @throws InvalidConfigException
      */
     public void validate(Object obj) throws InvalidConfigException {
         if (obj == null) {

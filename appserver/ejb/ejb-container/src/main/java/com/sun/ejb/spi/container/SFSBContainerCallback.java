@@ -24,21 +24,21 @@ import java.io.IOException;
 
 public interface SFSBContainerCallback {
 
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
-    public int getPassivationBatchCount();
+    int getPassivationBatchCount();
 
-    public void invokePeriodically(long delay, long periodicity, Runnable target);
+    void invokePeriodically(long delay, long periodicity, Runnable target);
 
-    public void activateEJB(Object sessionKey,
+    void activateEJB(Object sessionKey,
             StatefulEJBContext ctx, Object cookie);
 
-    public boolean passivateEJB(StatefulEJBContext ctx);
+    boolean passivateEJB(StatefulEJBContext ctx);
 
-    public boolean isPassivationCapable();
+    boolean isPassivationCapable();
 
-    public byte[] serializeContext(StatefulEJBContext ctx) throws IOException;
+    byte[] serializeContext(StatefulEJBContext ctx) throws IOException;
 
-    public Object deserializeData(byte[] data) throws Exception;
+    Object deserializeData(byte[] data) throws Exception;
 
 }

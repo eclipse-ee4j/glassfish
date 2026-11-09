@@ -57,12 +57,12 @@ public @interface AccessRequired {
      * value. If the referenced field is a ConfigBean then at runtime the resource name of that ConfigBean replaces the
      * token. Otherwise the field's {@code toString()} return value replaces the token.
      */
-    public String[] resource();
+    String[] resource();
 
     /**
      * One or more actions to authorize against the named resource.
      */
-    public String[] action();
+    String[] action();
 
     /**
      * Declares multiple class-level {@code @AccessRequired} authorization steps, typically each identifying different
@@ -70,14 +70,14 @@ public @interface AccessRequired {
      */
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface List {
-        public AccessRequired[] value();
+    @interface List {
+        AccessRequired[] value();
     }
 
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface Delegate {
-        public Class value();
+    @interface Delegate {
+        Class value();
     }
 
     /**
@@ -86,13 +86,13 @@ public @interface AccessRequired {
      */
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface To {
+    @interface To {
         /**
          * Action(s) to be authorized on the ConfigBean
          *
          * @return
          */
-        public String[] value();
+        String[] value();
     }
 
     /**
@@ -101,30 +101,30 @@ public @interface AccessRequired {
      */
     @Target(ElementType.FIELD)
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface NewChild {
+    @interface NewChild {
 
         /**
          * Name of the collection on the owner that will contain the new child.
          */
-        public String collection() default "";
+        String collection() default "";
 
         /**
          * Type of the new {@code ConfigBean} to be created.
          */
-        public Class type();
+        Class type();
 
         /**
          * Action(s) to be authorized, defaulted to "create."
          */
-        public String[] action() default "create";
+        String[] action() default "create";
 
         /**
          * Declares multiple authorization checks for creating the same single new {@code ConfigBean}.
          */
         @Target(ElementType.FIELD)
         @Retention(RetentionPolicy.RUNTIME)
-        public @interface List {
-            public NewChild[] value();
+        @interface List {
+            NewChild[] value();
         }
     }
 
@@ -153,7 +153,7 @@ public @interface AccessRequired {
      * link a given AccessCheck with a given object of interest in the command.
      *
      */
-    public class AccessCheck<T> {
+    class AccessCheck<T> {
 
         /**
          * Implements a collection of the related objects in an AccessCheck collection.
@@ -261,7 +261,7 @@ public @interface AccessRequired {
         private final String childName;
         private final ConfigBeanProxy resource;
         private final boolean isFailureFatal;
-        private boolean isSuccessful = false;
+        private boolean isSuccessful;
         private final T relatedObject;
 
         /**
@@ -540,7 +540,7 @@ public @interface AccessRequired {
     /**
      * Utility methods used both from AccessCheck and from CommandSecurityChecker.
      */
-    public static class Util {
+    class Util {
         public static String resourceNameFromDom(Dom d) {
             Dom lastDom = null;
             final StringBuilder path = new StringBuilder();

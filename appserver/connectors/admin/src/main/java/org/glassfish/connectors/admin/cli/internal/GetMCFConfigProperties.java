@@ -61,7 +61,7 @@ public class GetMCFConfigProperties implements AdminCommand {
 
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

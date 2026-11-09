@@ -36,7 +36,7 @@ public class AbsoluteOrderingNode extends DeploymentDescriptorNode<AbsoluteOrder
 
     public final static XMLElement tag = new XMLElement(WebTagNames.ABSOLUTE_ORDERING);
 
-    protected AbsoluteOrderingDescriptor descriptor = null;
+    protected AbsoluteOrderingDescriptor descriptor;
 
    /**
     * @return the descriptor instance to associate with this XMLNode

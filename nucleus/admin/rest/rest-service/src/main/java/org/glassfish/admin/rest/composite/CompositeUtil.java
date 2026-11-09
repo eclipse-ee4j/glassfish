@@ -100,7 +100,7 @@ public class CompositeUtil {
     private static final Map<String, Class<?>> generatedClasses = new HashMap<>();
     private static final Map<String, List<String>> modelExtensions = new HashMap<>();
     private final boolean extensionsLoaded = false;
-    private static volatile Validator beanValidator = null;
+    private static volatile Validator beanValidator;
     private static final LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(CompositeUtil.class);
 
     private CompositeUtil() {

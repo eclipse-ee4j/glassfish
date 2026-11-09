@@ -35,9 +35,9 @@ import java.util.ArrayList;
  */
 public interface WebContainerStartStopOperation {
 
-    public ArrayList doPreStop();
+    ArrayList doPreStop();
 
-    public void doPostStop(ArrayList list);
+    void doPostStop(ArrayList list);
 
-    public void init(EmbeddedWebContainer embedded);
+    void init(EmbeddedWebContainer embedded);
 }

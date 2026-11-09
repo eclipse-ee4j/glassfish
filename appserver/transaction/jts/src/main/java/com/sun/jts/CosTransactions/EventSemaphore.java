@@ -50,7 +50,7 @@ package com.sun.jts.CosTransactions;
 //-----------------------------------------------------------------------------
 
 public class EventSemaphore {
-    boolean posted = false;
+    boolean posted;
 
     /**Default EventSemaphore constructor.
      *

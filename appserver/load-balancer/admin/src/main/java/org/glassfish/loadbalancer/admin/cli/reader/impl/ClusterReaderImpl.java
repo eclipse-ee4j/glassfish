@@ -129,10 +129,10 @@ public class ClusterReaderImpl implements ClusterReader {
         }
     }
     // ---- VARIABLE(S) - PRIVATE --------------------------
-    private Cluster _cluster = null;
-    private ClusterRef _clusterRef = null;
-    private Domain _domain = null;
-    private ApplicationRegistry _appRegistry = null;
+    private Cluster _cluster;
+    private ClusterRef _clusterRef;
+    private Domain _domain;
+    private ApplicationRegistry _appRegistry;
     private static final String defaultLBPolicy =
             "round-robin";
 }

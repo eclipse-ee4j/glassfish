@@ -65,18 +65,18 @@ public final class Bootstrap {
     /**
      * Debugging detail level for processing the startup.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
      * Daemon reference.
      */
-    private Object catalinaDaemon = null;
+    private Object catalinaDaemon;
 
 
-    private ClassLoader commonLoader = null;
-    private ClassLoader catalinaLoader = null;
-    private ClassLoader sharedLoader = null;
+    private ClassLoader commonLoader;
+    private ClassLoader catalinaLoader;
+    private ClassLoader sharedLoader;
 
 
     // ------------------------------------------------------ Private Methods

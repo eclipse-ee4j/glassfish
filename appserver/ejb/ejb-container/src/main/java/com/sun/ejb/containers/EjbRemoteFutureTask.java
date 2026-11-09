@@ -37,10 +37,10 @@ public class EjbRemoteFutureTask<V>
     private GenericEJBHome server;
 
     // Used to remember if cancel() was called already
-    private boolean cancelCalled = false;
+    private boolean cancelCalled;
 
 
-    private boolean complete = false;
+    private boolean complete;
     private V resultValue;
     private Throwable resultException;
 

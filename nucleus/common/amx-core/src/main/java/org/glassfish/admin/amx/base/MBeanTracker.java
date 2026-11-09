@@ -118,7 +118,7 @@ public final class MBeanTracker implements NotificationListener, MBeanRegistrati
     }
 
     @Override
-    public final void postRegister(final Boolean registrationSucceeded) {
+    public void postRegister(final Boolean registrationSucceeded) {
         if (mServer == null) {
             return;
         }
@@ -140,14 +140,14 @@ public final class MBeanTracker implements NotificationListener, MBeanRegistrati
     }
 
     @Override
-    public final void preDeregister() throws Exception {
+    public void preDeregister() throws Exception {
         if (mServer != null) {
             mServer.removeNotificationListener(mObjectName, this);
         }
     }
 
     @Override
-    public final void postDeregister() {
+    public void postDeregister() {
     }
 
     private boolean isRelevantMBean(final ObjectName child) {

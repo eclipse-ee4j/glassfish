@@ -435,7 +435,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      *
      * @return The initialization state
      */
-    final InitializationState getInitializationState() {
+    InitializationState getInitializationState() {
         return initialized;
     }
 
@@ -445,7 +445,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      * @return The reason why the service failed to initialize, null if initialization was successful or the failure reason
      * was unknown.
      */
-    final String getReasonInitializationFailed() {
+    String getReasonInitializationFailed() {
         return reasonInitFailed;
     }
 
@@ -454,7 +454,7 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
      *
      * @throws IllegalStateException This service is not available.
      */
-    final void checkServiceAvailability() {
+    void checkServiceAvailability() {
         if (InitializationState.SUCCESS_INIT != getInitializationState()) {
             throw new IllegalStateException(
                     localStrings.getLocalString("service.atz.not_avail", "The Authorization service is not available.")

@@ -34,6 +34,6 @@ public interface ApplicationVisitor extends ComponentVisitor {
      * visit an application object
      * @param application the application descriptor
      */
-    public void accept(Application application);
+    void accept(Application application);
 }
 

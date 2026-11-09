@@ -38,32 +38,32 @@ import java.io.Serializable;
  *     If not, we can move this factory interface to closed source.
  */
 public interface SerializableContextFactory {
-  public WLSContext createInstance();
+  WLSContext createInstance();
 
-  public interface WLSContext {
+  interface WLSContext {
     /**
      * Writes the implementation of <code>Context</code> to the
      * {@link ContextOutput} data stream.
      */
-    public void writeContext(ObjectOutput out) throws IOException;
+    void writeContext(ObjectOutput out) throws IOException;
 
     /**
      * Reads the implementation of <code>Context</code> from the
      * {@link ContextInput} data stream.
      */
-    public void readContext(ObjectInput in) throws IOException;
+    void readContext(ObjectInput in) throws IOException;
 
-    public interface WLSContextHelper {
-      public byte[] toBytes(WLSContext ctx) throws IOException;
-      public byte[] toBytes(Serializable object) throws IOException;
-      public WLSContext readFromBytes(WLSContext ctx, byte[] bytes) throws IOException;
-      public Serializable readFromBytes(byte[] bytes) throws IOException, ClassNotFoundException;
+    interface WLSContextHelper {
+      byte[] toBytes(WLSContext ctx) throws IOException;
+      byte[] toBytes(Serializable object) throws IOException;
+      WLSContext readFromBytes(WLSContext ctx, byte[] bytes) throws IOException;
+      Serializable readFromBytes(byte[] bytes) throws IOException, ClassNotFoundException;
     }
 
     /**
      * HELPER is used internally to facilitate work with WLSContexts
      */
-    public static WLSContextHelper HELPER = new WLSContextHelper() {
+    WLSContextHelper HELPER = new WLSContextHelper() {
       @Override
       public byte[] toBytes(WLSContext ctx) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

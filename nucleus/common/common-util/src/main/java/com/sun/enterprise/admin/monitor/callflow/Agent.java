@@ -81,7 +81,7 @@ public interface Agent {
      *
      * @param requestType Type of the request.
      */
-    public void        requestStart(RequestType requestType);
+    void        requestStart(RequestType requestType);
 
     /**
      * This method may be called by the        container during request dispatch,
@@ -91,14 +91,14 @@ public interface Agent {
      * This method may be called many times by the container, but only before
      * <code>startTime</code> is called.
      */
-    public void        addRequestInfo(RequestInfo requestInfo,        String value);
+    void        addRequestInfo(RequestInfo requestInfo,        String value);
 
     /**
      * This method is called by        a request processor thread, after completion
      * of request processing. Upon being called, this method releases the
      * thread local state.
      */
-    public void        requestEnd();
+    void        requestEnd();
 
     /**
      * This method is called by        a request processor thread, when the thread
@@ -108,7 +108,7 @@ public interface Agent {
      *
      * @param type Describes the type of the container or application.
      */
-    public void        startTime(ContainerTypeOrApplicationType type);
+    void        startTime(ContainerTypeOrApplicationType type);
 
     /**
      * This method is called by        a request processor thread, when the thread
@@ -116,7 +116,7 @@ public interface Agent {
      * this method is called from a method postInvoke point, after the
      * container has completed all method call related cleanup activity.
      */
-    public void        endTime();
+    void        endTime();
 
     // Method trap points
 
@@ -132,7 +132,7 @@ public interface Agent {
      * component type, application name, module        name, component        name,
      * transaction id, and security id.
      */
-    public void        ejbMethodStart(CallFlowInfo info);
+    void        ejbMethodStart(CallFlowInfo info);
 
     /**
      * This method is called by        a request processor thread, after invoking a
@@ -142,7 +142,7 @@ public interface Agent {
      * @param info This        object encapsulates information        about the outcome of
      * the invocation such as exception, if any.
      */
-    public void        ejbMethodEnd(CallFlowInfo info);
+    void        ejbMethodEnd(CallFlowInfo info);
 
     /**
      * This method is called by        a request processor thread, before invoking a
@@ -152,7 +152,7 @@ public interface Agent {
      * This trap point collects        information such as method name, component
      * name, component type, application name, module name, callerPrincipal.
      */
-    public void        webMethodStart(
+    void        webMethodStart(
             String methodName, String applicationName, String moduleName,
             String componentName, ComponentType        componentType,
             String callerPrincipal);
@@ -162,35 +162,35 @@ public interface Agent {
      * target method on        a filter or servlet. This trap point gathers information
      * on the outcome of the invocation        such as        exception, if any.
      */
-    public void        webMethodEnd(Throwable exception);
+    void        webMethodEnd(Throwable exception);
 
     /**
      * This method is called the persistence container on a request processor
      * thread, before invoking a method        on the
      * @see jakarta.persistence.EntityManager EntityManager interface
      */
-    public void        entityManagerMethodStart (EntityManagerMethod entityManagerMethod);
+    void        entityManagerMethodStart (EntityManagerMethod entityManagerMethod);
 
     /**
      * This method is called the persistence container on a request processor
      * thread, after invoking a        method on the
      * @see jakarta.persistence.EntityManager EntityManager interface
      */
-    public void        entityManagerMethodEnd ();
+    void        entityManagerMethodEnd ();
 
     /**
      * This method is called the persistence container on a request processor
      * thread, before invoking a method        on the
      * @see jakarta.persistence.Query Query interface
      */
-    public void        entityManagerQueryStart        (EntityManagerQueryMethod queryMethod);
+    void        entityManagerQueryStart        (EntityManagerQueryMethod queryMethod);
 
     /**
      * This method is called the persistence container on a request processor
      * thread, after invoking a        method on the
      * @see jakarta.persistence.Query Query interface
      */
-    public void        entityManagerQueryEnd ();
+    void        entityManagerQueryEnd ();
 
     /**
      * Data accessors.
@@ -199,7 +199,7 @@ public interface Agent {
     /**
      * @return Callflow        thread local data.
      */
-    public ThreadLocalData getThreadLocalData();
+    ThreadLocalData getThreadLocalData();
 
     /**
      * Support for notifications.
@@ -211,12 +211,12 @@ public interface Agent {
      * Registered listeners are        notified during        the following call trap        points:
      * { requestStart, requestEnd, methodStart,        methodEnd }.
      */
-    public void        registerListener(Listener listener);
+    void        registerListener(Listener listener);
 
     /**
      * Unregister a listener.
      */
-    public void        unregisterListener(Listener listener);
+    void        unregisterListener(Listener listener);
 
     /**
      * API to support AMX MBean        calls.
@@ -229,7 +229,7 @@ public interface Agent {
      *
      * @param enable true, to turn on call flow.
      */
-    public void        setEnable(boolean enable);
+    void        setEnable(boolean enable);
 
     /**
      * Get enabled information of call flow's persistent logging. Only user of
@@ -238,7 +238,7 @@ public interface Agent {
      *
      * @return true if persistent logging is enabled, false otherwise.
      */
-    public boolean isEnabled();
+    boolean isEnabled();
 
     // Filters
 
@@ -251,13 +251,13 @@ public interface Agent {
      * Note, there may be other        filters        that may be further applied to narrow
      * the scope of call flow data collection.
      */
-    public void        setCallerIPFilter(String ipAddress);
+    void        setCallerIPFilter(String ipAddress);
 
     /**
      * Gets the        IP address of the client, only for which, call flow
      * information would be collected.
      */
-    public String getCallerIPFilter ();
+    String getCallerIPFilter ();
 
     /**
      * Specifies the caller principal, only for        which, call flow information
@@ -267,37 +267,37 @@ public interface Agent {
      * Note, there may be other        filters        that may be further applied to narrow
      * the scope of call flow data collection.
      */
-    public void        setCallerPrincipalFilter(String        callerPrincipal);
+    void        setCallerPrincipalFilter(String        callerPrincipal);
 
     /**
      * Gets the        caller principal, only for which, call flow information
      * would be        collected.
      */
-    public String getCallerPrincipalFilter();
+    String getCallerPrincipalFilter();
 
     /**
      * Clear all accumulated data collected in the previous CallFlow runs
      * from the        database. This is only called from AMX APIs.
      */
-    public void        clearData ();
+    void        clearData ();
 
     /**
      * Delete request ids from the database
      */
-    public boolean deleteRequestIds (String[] requestIds);
+    boolean deleteRequestIds (String[] requestIds);
     /**
      * @return a list of Map objects. Each entry in the        list contains
      * information pertaining to a unique request. Refer to AMX        MBean API
      * com.sun.appserv.management.monitor.CallFlowMonitor for more details.
      */
-    public List<Map<String, String>> getRequestInformation();
+    List<Map<String, String>> getRequestInformation();
 
     /**
      * @return a list of Map objects. The list contains        the ordered call stack
      * flow stack information. Refer to        AMX MBean API
      * com.sun.appserv.management.monitor.CallFlowMonitor for more details.
      */
-    public List<Map<String, String>> getCallStackForRequest(String requestId);
+    List<Map<String, String>> getCallStackForRequest(String requestId);
 
     /**
      * @return a Map object containing time information        for a request,
@@ -305,5 +305,5 @@ public interface Agent {
      * Refer to        AMX MBean API com.sun.appserv.management.monitor.CallFlowMonitor
      * for more        details.
      */
-    public Map<String, String> getPieInformation(String        requestID);
+    Map<String, String> getPieInformation(String        requestID);
 }

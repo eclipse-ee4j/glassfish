@@ -26,7 +26,7 @@ package com.sun.jts.codegen.otsidl;
 
 public final class TransAncestryHolder implements org.omg.CORBA.portable.Streamable
 {
-  public org.omg.CosTransactions.TransIdentity value[] = null;
+  public org.omg.CosTransactions.TransIdentity[] value;
 
   public TransAncestryHolder ()
   {

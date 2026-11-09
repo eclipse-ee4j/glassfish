@@ -36,7 +36,7 @@ public class RegisterInstanceCommandParameters implements CommandParameters {
     @Param(name = ParameterNames.PARAM_CLUSTER, optional = true)
     public String clusterName;
     @Param(name = ParameterNames.PARAM_LBENABLED, optional = true)
-    public String lbEnabled = null;
+    public String lbEnabled;
 
     public static class ParameterNames {
         public static final String OPERAND_NAME = "name";

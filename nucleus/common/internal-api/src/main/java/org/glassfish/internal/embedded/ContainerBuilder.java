@@ -33,7 +33,7 @@ public interface ContainerBuilder<T extends EmbeddedContainer> {
      * Default sets of container that can be built.
      * Other containers can be added not using one of this predefined types.
      */
-    public enum Type {
+    enum Type {
         /**
          * ejb container type
          */

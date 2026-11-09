@@ -29,52 +29,52 @@ import org.jvnet.hk2.config.Configured;
 @Configured
 public interface RestConfig extends ConfigExtension {
 
-    public static String DEBUG = "debug";
-    public static String INDENTLEVEL = "indentLevel";
-    public static String SHOWHIDDENCOMMANDS = "showHiddenCommands";
-    public static String WADLGENERATION = "wadlGeneration";
-    public static String LOGRESPONSES = "logOutput";
-    public static String LOGINPUTS = "logInput";
-    public static String SHOWDEPRECATEDITEMS = "showDeprecatedItems";
-    public static String SESSIONTOKENTIMEOUT = "sessionTokenTimeout";
+    String DEBUG = "debug";
+    String INDENTLEVEL = "indentLevel";
+    String SHOWHIDDENCOMMANDS = "showHiddenCommands";
+    String WADLGENERATION = "wadlGeneration";
+    String LOGRESPONSES = "logOutput";
+    String LOGINPUTS = "logInput";
+    String SHOWDEPRECATEDITEMS = "showDeprecatedItems";
+    String SESSIONTOKENTIMEOUT = "sessionTokenTimeout";
 
     @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getDebug();
+    String getDebug();
 
-    public void setDebug(String debugFlag);
+    void setDebug(String debugFlag);
 
     @Attribute(defaultValue = "-1", dataType = Integer.class)
-    public String getIndentLevel();
+    String getIndentLevel();
 
-    public void setIndentLevel(String indentLevel);
-
-    @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getWadlGeneration();
-
-    public void setWadlGeneration(String wadlGeneration);
+    void setIndentLevel(String indentLevel);
 
     @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getShowHiddenCommands();
+    String getWadlGeneration();
 
-    public void setShowHiddenCommands(String showHiddenCommands);
-
-    @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getLogOutput();
-
-    public void setLogOutput(String logOutput);
+    void setWadlGeneration(String wadlGeneration);
 
     @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getLogInput();
+    String getShowHiddenCommands();
 
-    public void setLogInput(String logInput);
+    void setShowHiddenCommands(String showHiddenCommands);
 
     @Attribute(defaultValue = "false", dataType = Boolean.class)
-    public String getShowDeprecatedItems();
+    String getLogOutput();
 
-    public void setShowDeprecatedItems(String showDeprecatedItems);
+    void setLogOutput(String logOutput);
+
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getLogInput();
+
+    void setLogInput(String logInput);
+
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getShowDeprecatedItems();
+
+    void setShowDeprecatedItems(String showDeprecatedItems);
 
     @Attribute(defaultValue = "30", dataType = Integer.class)
-    public String getSessionTokenTimeout();
+    String getSessionTokenTimeout();
 
-    public void setSessionTokenTimeout(String timeout);
+    void setSessionTokenTimeout(String timeout);
 }

@@ -58,7 +58,7 @@ public class JavaWebStartAccessDescriptor extends Descriptor {
     /**
      * Holds value of property contextRoot.
      */
-    private String contextRoot = null;
+    private String contextRoot;
 
     /**
      * Getter for property contextRoot.
@@ -81,7 +81,7 @@ public class JavaWebStartAccessDescriptor extends Descriptor {
     /**
      * Holds value of property vendor.
      */
-    private String vendor = null;
+    private String vendor;
 
     /**
      * Getter for property vendor.
@@ -112,7 +112,7 @@ public class JavaWebStartAccessDescriptor extends Descriptor {
     /**
      * Declaration and methods for jnlp-doc subelement.
      */
-    private String jnlpDoc = null;
+    private String jnlpDoc;
 
     public String getJnlpDocument() {
         return jnlpDoc;

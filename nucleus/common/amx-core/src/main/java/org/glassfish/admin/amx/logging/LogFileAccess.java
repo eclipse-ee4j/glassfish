@@ -36,19 +36,19 @@ public interface LogFileAccess
     /**
         Value meaning the most current version of the log file.
      */
-    public static final String  MOST_RECENT_NAME = "MostRecentLogFileName";
+    String  MOST_RECENT_NAME = "MostRecentLogFileName";
 
         /**
                 Key designating the server.log log files.
                 <i>Not necessarily the same as the file name of the log file</i>.
          */
-    public static final String        SERVER_KEY        = "server";
+    String        SERVER_KEY        = "server";
 
         /**
                 Key designating the access.log log file.
                 <i>Not necessarily the same as the file name of the log file</i>.
          */
-    public static final String        ACCESS_KEY        = "access";
+    String        ACCESS_KEY        = "access";
 
     /**
             Keys which may be used to specify which log file to access.
@@ -60,7 +60,7 @@ public interface LogFileAccess
             @return a String[] of the legal keys which designate log files
      */
     @ManagedAttribute
-    public String[]        getLogFileKeys();
+    String[]        getLogFileKeys();
 
 
         /**
@@ -82,7 +82,7 @@ public interface LogFileAccess
                 @return String[] of all log filenames
          */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-        public String[] getLogFileNames( @Param(name="key") final String key );
+        String[] getLogFileNames( @Param(name="key") String key );
 
         /**
                 The entire specified log file is read, converted into a String, and returned.
@@ -97,16 +97,16 @@ public interface LogFileAccess
                 @see #getLogFileKeys
          */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-        public String getLogFile(
-        @Param(name="key") final String key,
-        @Param(name="fileName") final String fileName );
+        String getLogFile(
+        @Param(name="key") String key,
+        @Param(name="fileName") String fileName );
 
     /**
                 Rotate all log files as soon as possible.  May return
                 prior to the rotation occuring.
      */
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
-    public void rotateAllLogFiles();
+    void rotateAllLogFiles();
 
 
     /**
@@ -120,7 +120,7 @@ public interface LogFileAccess
             @param key
      */
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
-    public void rotateLogFile( @Param(name="key") String key );
+    void rotateLogFile( @Param(name="key") String key );
 }
 
 

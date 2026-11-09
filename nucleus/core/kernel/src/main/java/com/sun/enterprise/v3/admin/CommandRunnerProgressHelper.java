@@ -58,13 +58,13 @@ class CommandRunnerProgressHelper {
     //From constructor
     private Progress progressAnnotation;
     private CommandProgressImpl commandProgress;
-    private int replicationCount = 0;
+    private int replicationCount;
 
     //Changed during lifecycle
-    private ProgressStatus progressForMainCommand = null;
-    private ProgressStatusMirroringImpl progressMirroring = null;
+    private ProgressStatus progressForMainCommand;
+    private ProgressStatusMirroringImpl progressMirroring;
 
-    public CommandRunnerProgressHelper(AdminCommand command, String name, Job job, ProgressStatus clientProgressStatus) {
+    CommandRunnerProgressHelper(AdminCommand command, String name, Job job, ProgressStatus clientProgressStatus) {
         if (command instanceof GenericCrudCommand) {
             GenericCrudCommand gcc = (GenericCrudCommand) command;
             Class<?> decorator = gcc.getDecoratorClass();

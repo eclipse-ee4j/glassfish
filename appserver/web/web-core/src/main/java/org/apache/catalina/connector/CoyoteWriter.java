@@ -45,7 +45,7 @@ public class CoyoteWriter extends PrintWriter {
     // ----------------------------------------------------- Instance Variables
 
     protected OutputBuffer ob;
-    protected boolean error = false;
+    protected boolean error;
 
     // ----------------------------------------------------------- Constructors
 

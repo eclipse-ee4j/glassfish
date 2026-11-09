@@ -21,6 +21,6 @@ import jakarta.ejb.EJBLocalHome;
 public interface GenericEJBLocalHome extends EJBLocalHome {
 
     // Method through which internal object creation request will take place.
-    public Object create(String intfClassName);
+    Object create(String intfClassName);
 
 }

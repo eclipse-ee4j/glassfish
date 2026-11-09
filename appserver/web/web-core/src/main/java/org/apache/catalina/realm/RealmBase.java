@@ -101,7 +101,7 @@ public abstract class RealmBase implements Lifecycle, Realm {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The Container with which this Realm is associated.

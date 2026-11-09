@@ -153,7 +153,7 @@ public class DefaultServlet extends HttpServlet {
     /**
      * The debugging detail level for this servlet.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The input buffer size to use when serving resources.
@@ -163,7 +163,7 @@ public class DefaultServlet extends HttpServlet {
     /**
      * Should we generate directory listings?
      */
-    protected volatile boolean listings = false;
+    protected volatile boolean listings;
 
     /**
      * The sorting mechanism for directory listings
@@ -188,37 +188,37 @@ public class DefaultServlet extends HttpServlet {
     /**
      * Allow customized directory listing per directory.
      */
-    protected String localXsltFile = null;
+    protected String localXsltFile;
 
     /**
      * Allow customized directory listing per context.
      */
-    protected String contextXsltFile = null;
+    protected String contextXsltFile;
 
     /**
      * Allow customized directory listing per instance.
      */
-    protected String globalXsltFile = null;
+    protected String globalXsltFile;
 
     /**
      * Allow a readme file to be included.
      */
-    protected String readmeFile = null;
+    protected String readmeFile;
 
     /**
      * Proxy directory context.
      */
-    protected transient ProxyDirContext resources = null;
+    protected transient ProxyDirContext resources;
 
     /**
      * Alternate doc bases
      */
-    protected transient ArrayList<AlternateDocBase> alternateDocBases = null;
+    protected transient ArrayList<AlternateDocBase> alternateDocBases;
 
     /**
      * File encoding to be used when reading static files. If none is specified the platform default is used.
      */
-    protected String fileEncoding = null;
+    protected String fileEncoding;
 
     /**
      * Minimum size for sendfile usage in bytes.
@@ -2343,7 +2343,7 @@ public class DefaultServlet extends HttpServlet {
         private final ProxyDirContext resources;
         private final String dirName;
 
-        public LastModifiedComparator(ProxyDirContext resources, String dirName) {
+        LastModifiedComparator(ProxyDirContext resources, String dirName) {
             this.resources = resources;
             this.dirName = dirName;
         }
@@ -2375,7 +2375,7 @@ public class DefaultServlet extends HttpServlet {
         private final ProxyDirContext resources;
         private final String dirName;
 
-        public SizeComparator(ProxyDirContext resources, String dirName) {
+        SizeComparator(ProxyDirContext resources, String dirName) {
             this.resources = resources;
             this.dirName = dirName;
         }

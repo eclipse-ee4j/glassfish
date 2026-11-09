@@ -24,17 +24,17 @@ import java.util.Set;
  * @author Shing Wai Chan
  */
 public class HASingleSignOnEntryMetadata implements Serializable {
-    protected String id = null;
+    protected String id;
 
-    protected String authType = null;
+    protected String authType;
 
-    protected byte[] principalBytes = null;
+    protected byte[] principalBytes;
 
     protected Set<HASessionData> sessionDataSet = new HashSet<HASessionData>();
 
-    protected String userName = null;
+    protected String userName;
 
-    protected String realmName = null;
+    protected String realmName;
 
     protected long lastAccessTime;
 

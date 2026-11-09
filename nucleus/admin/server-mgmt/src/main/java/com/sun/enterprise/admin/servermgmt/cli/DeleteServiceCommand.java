@@ -62,7 +62,7 @@ public final class DeleteServiceCommand extends CLICommand {
     private String userSpecifiedNode;
     private static final LocalStringsImpl strings = new LocalStringsImpl(DeleteServiceCommand.class);
     private ServerDirs dirs;
-    private ServerDirsSelector selector = null;
+    private ServerDirsSelector selector;
 
     /**
      */

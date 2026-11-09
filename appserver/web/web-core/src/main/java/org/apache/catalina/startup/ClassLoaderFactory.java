@@ -55,7 +55,7 @@ public final class ClassLoaderFactory {
     /**
      * Debugging detail level for processing the startup.
      */
-    private static int debug = 0;
+    private static int debug;
 
     // ------------------------------------------------------ Static Properties
 

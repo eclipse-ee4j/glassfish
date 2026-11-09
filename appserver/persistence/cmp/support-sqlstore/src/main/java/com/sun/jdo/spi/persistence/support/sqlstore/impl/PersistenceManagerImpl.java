@@ -78,26 +78,26 @@ public class PersistenceManagerImpl implements PersistenceManager {
     private boolean _isClosed = true;
 
     // Current wrapper
-    private PersistenceManagerWrapper current = null;
+    private PersistenceManagerWrapper current;
 
     // Reference to the associated JTA Transaction if any
-    private jakarta.transaction.Transaction _jta = null;
+    private jakarta.transaction.Transaction _jta;
 
     /**
      * Reference to global PersistenceStore
      */
-    private PersistenceStore _store = null;
+    private PersistenceStore _store;
 
     /**
      * Associated Transaction
      */
-    private TransactionImpl _transaction = null;
+    private TransactionImpl _transaction;
 
     /**
      * PersistenceManagerFactory that created (and could be pooling)
      * this PersistenceManager
      */
-    private PersistenceManagerFactory persistenceManagerFactory = null;
+    private PersistenceManagerFactory persistenceManagerFactory;
 
 
     /**
@@ -126,7 +126,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * should be have instances removed during
      * {@link #afterCompletion}.
      */
-    private boolean cleanupVersionConsistencyCache = false;
+    private boolean cleanupVersionConsistencyCache;
 
     //
     // Properties for controlling construction of caches.
@@ -237,22 +237,22 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Flag for active transaction
      */
-    private boolean _activeTransaction = false;
+    private boolean _activeTransaction;
 
     /**
      * User Object
      */
-    private Object _userObject = null;
+    private Object _userObject;
 
     /**
      * Flag for commit process
      */
-    private boolean _insideCommit = false;
+    private boolean _insideCommit;
 
     /**
      * Flag for flush processing
      */
-    private boolean _insideFlush = false;
+    private boolean _insideFlush;
 
     /**
      * Pattern for OID class names
@@ -263,7 +263,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Properies object
      */
-    private Properties _properties = null;
+    private Properties _properties;
 
     /**
      * Lock used for synchronizing access to the _txCache and _weakCache
@@ -286,18 +286,18 @@ public class PersistenceManagerImpl implements PersistenceManager {
      * Note that the exclusive lock can go multi-level deep
      * as long as the same thread is acquiring it.
      */
-    private long _readWriteCount = 0;
+    private long _readWriteCount;
 
     /**
      * The number of threads that are currently waiting on
      * the _readWriteLock.
      */
-    private long _waiterCount = 0;
+    private long _waiterCount;
 
     /**
      * The thread that has the write (exclusive) lock.
      */
-    private Thread _exclusiveLockHolder = null;
+    private Thread _exclusiveLockHolder;
 
     /** Indicates if this PM is running in a multithreaded environment, i.e.,
      * if it has to do locking.
@@ -2615,7 +2615,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     static class ExtensionFilter implements FilenameFilter {
         private String ext;
 
-        public ExtensionFilter(String ext) {
+        ExtensionFilter(String ext) {
             this.ext = ext;
         }
 

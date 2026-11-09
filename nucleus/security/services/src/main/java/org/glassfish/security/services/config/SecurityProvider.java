@@ -38,8 +38,8 @@ public interface SecurityProvider extends ConfigBeanProxy {
      */
     @Attribute
     @NotNull
-    public String getName();
-    public void setName(String value) throws PropertyVetoException;
+    String getName();
+    void setName(String value) throws PropertyVetoException;
 
     /**
      * Gets the type of the security provider.

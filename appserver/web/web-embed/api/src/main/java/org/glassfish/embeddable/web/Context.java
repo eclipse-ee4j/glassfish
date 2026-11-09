@@ -62,7 +62,7 @@ public interface Context extends ServletContext {
      * @throws IllegalStateException if this context has already been
      * initialized and started
      */
-    public <T extends EventListener> void addListener(T t);
+    <T extends EventListener> void addListener(T t);
 
     /**
      * Instantiates a listener from the given class and registers it with
@@ -86,7 +86,7 @@ public interface Context extends ServletContext {
      * @throws IllegalStateException if this context has already been
      * initialized and started
      */
-    public void addListener(Class <? extends EventListener> c);
+    void addListener(Class <? extends EventListener> c);
 
     /**
      * Enables or disables directory listings on this <tt>Context</tt>.
@@ -94,7 +94,7 @@ public interface Context extends ServletContext {
      * @param directoryListing true if directory listings are to be
      * enabled on this <tt>Context</tt>, false otherwise
      */
-    public void setDirectoryListing(boolean directoryListing);
+    void setDirectoryListing(boolean directoryListing);
 
     /**
      * Checks whether directory listings are enabled or disabled on this
@@ -103,7 +103,7 @@ public interface Context extends ServletContext {
      * @return true if directory listings are enabled on this
      * <tt>Context</tt>, false otherwise
      */
-    public boolean isDirectoryListing();
+    boolean isDirectoryListing();
 
     /**
      * Set the security related configuration for this context
@@ -112,7 +112,7 @@ public interface Context extends ServletContext {
      *
      * @param config the security configuration for this context
      */
-    public void setSecurityConfig(SecurityConfig config);
+    void setSecurityConfig(SecurityConfig config);
 
     /**
      * Gets the security related configuration for this context
@@ -121,23 +121,23 @@ public interface Context extends ServletContext {
      *
      * @return the security configuration for this context
      */
-    public SecurityConfig getSecurityConfig();
+    SecurityConfig getSecurityConfig();
 
     /**
      * Set the location of the default web xml that will be used.
      *
      * @param defaultWebXml the defaultWebXml path to be used
      */
-    public void setDefaultWebXml(String defaultWebXml);
+    void setDefaultWebXml(String defaultWebXml);
 
     /**
      * Return the context path for this Context.
      */
-    public String getPath();
+    String getPath();
 
     /**
      * Set the context path for this Context.
      */
-    public void setPath(String path);
+    void setPath(String path);
 
 }

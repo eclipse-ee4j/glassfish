@@ -24,8 +24,8 @@ public class NRUSessionCache
     extends LruSessionCache
 {
 
-    protected boolean doOrdering = false;
-    protected int orderingThreshold = 0;
+    protected boolean doOrdering;
+    protected int orderingThreshold;
 
     public NRUSessionCache(String cacheName,
         SFSBContainerCallback container, int cacheIdleTime, int removalTime)

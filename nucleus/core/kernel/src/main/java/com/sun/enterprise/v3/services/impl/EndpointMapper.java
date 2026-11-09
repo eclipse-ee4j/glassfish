@@ -36,25 +36,25 @@ public interface EndpointMapper<E> {
      * @param contextRoot for the proxy
      * @param endpointAdapter servicing requests.
      */
-    public void registerEndpoint(String contextRoot, Collection<String> vsServers, E adapter,
+    void registerEndpoint(String contextRoot, Collection<String> vsServers, E adapter,
                                  ApplicationContainer container) throws EndpointRegistrationException;
 
 
     /**
      * Removes the context-root from our list of endpoints.
      */
-    public void unregisterEndpoint(String contextRoot, ApplicationContainer app) throws EndpointRegistrationException;
+    void unregisterEndpoint(String contextRoot, ApplicationContainer app) throws EndpointRegistrationException;
 
     /**
      * Registers a new endpoint (proxy implementation) defined by the passed
      * {@link Endpoint} object.
      * @param endpoint {@link Endpoint}
      */
-    public void registerEndpoint(Endpoint endpoint) throws EndpointRegistrationException;
+    void registerEndpoint(Endpoint endpoint) throws EndpointRegistrationException;
 
     /**
      * Removes the {@link Endpoint} from our list of endpoints.
      * @param endpoint {@link Endpoint}
      */
-    public void unregisterEndpoint(Endpoint endpoint) throws EndpointRegistrationException;
+    void unregisterEndpoint(Endpoint endpoint) throws EndpointRegistrationException;
 }

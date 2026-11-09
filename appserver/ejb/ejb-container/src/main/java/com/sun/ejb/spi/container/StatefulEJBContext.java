@@ -24,20 +24,20 @@ import jakarta.ejb.SessionContext;
 
 public interface StatefulEJBContext {
 
-    public long getLastAccessTime();
+    long getLastAccessTime();
 
-    public boolean canBePassivated();
+    boolean canBePassivated();
 
-    public SessionContext getSessionContext();
+    SessionContext getSessionContext();
 
-    public boolean existsInStore();
+    boolean existsInStore();
 
-    public void setExistsInStore(boolean val);
+    void setExistsInStore(boolean val);
 
-    public long getVersion();
+    long getVersion();
 
-    public long incrementAndGetVersion();
+    long incrementAndGetVersion();
 
-    public void setVersion(long versionInBackingStore);
+    void setVersion(long versionInBackingStore);
 
 }

@@ -50,10 +50,10 @@ public class EjbTimedObjectStatsProvider {
 
     private static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
-    private String appName = null;
-    private String moduleName = null;
-    private String beanName = null;
-    private boolean registered = false;
+    private String appName;
+    private String moduleName;
+    private String beanName;
+    private boolean registered;
 
     public EjbTimedObjectStatsProvider(String appName, String moduleName,
             String beanName) {

@@ -28,7 +28,7 @@ public class NestedDigestAlgoParamImpl implements NestedDigestAlgoParam {
 
     private byte[] delimeter = ":".getBytes();
     private String algorithm = "";
-    private AlgorithmParameterSpec[] params = null;
+    private AlgorithmParameterSpec[] params;
     private String name = "";
 
     public NestedDigestAlgoParamImpl(String algorithm, String name, AlgorithmParameterSpec[] values) {

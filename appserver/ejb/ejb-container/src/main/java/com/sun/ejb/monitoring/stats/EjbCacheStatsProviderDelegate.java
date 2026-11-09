@@ -20,19 +20,19 @@ public interface EjbCacheStatsProviderDelegate
     extends com.sun.ejb.spi.stats.StatsProvider
 {
 
-    public int getCacheHits();
+    int getCacheHits();
 
-    public int getCacheMisses();
+    int getCacheMisses();
 
-    public int getNumBeansInCache();
+    int getNumBeansInCache();
 
-    public int getNumExpiredSessionsRemoved();
+    int getNumExpiredSessionsRemoved();
 
-    public int getNumPassivationErrors();
+    int getNumPassivationErrors();
 
-    public int getNumPassivations();
+    int getNumPassivations();
 
-    public int getNumPassivationSuccess();
+    int getNumPassivationSuccess();
 
-    public int getMaxCacheSize();
+    int getMaxCacheSize();
 }

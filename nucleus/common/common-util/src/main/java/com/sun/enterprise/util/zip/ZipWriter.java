@@ -355,11 +355,11 @@ public class ZipWriter {
     }
     /////////////////////////////////////////////////////////////////////////////////////////
     //private                    String            zipFilename        = null;
-    private String dirName = null;
+    private String dirName;
     private OutputStream userStream;
     private File userOutFile;
     private ZipOutputStream zipStream;
     private byte[] buffer = new byte[16384];
-    private ZipItem[] items = null;
+    private ZipItem[] items;
 
 }

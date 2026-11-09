@@ -37,7 +37,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 class ClientJNLPConfigData {
 
     private static final String CONFIG_FILE_NAME = "client-jnlp-config.properties";
-    private File previousConfigFileUsed = null;
+    private File previousConfigFileUsed;
     private File configFileFromDomain;
     private File configFileFromInstall;
     private long lastModified = -1;

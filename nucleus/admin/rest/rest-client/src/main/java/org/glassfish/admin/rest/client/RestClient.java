@@ -30,7 +30,7 @@ public class RestClient {
     protected String host;
     protected int port;
     protected Client client;
-    protected boolean useSsl = false;
+    protected boolean useSsl;
 
     public RestClient() {
         this("localhost", 4848, false, null, null);

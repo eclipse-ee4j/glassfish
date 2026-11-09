@@ -34,7 +34,7 @@ public interface TransactionalResource {
      *
      * @return true if the resource is part of a transaction.
      */
-    public boolean isTransactional();
+    boolean isTransactional();
 
     /**
      * To check whether lazy enlistment is suspended or not.<br>
@@ -42,35 +42,35 @@ public interface TransactionalResource {
      *
      * @return true if enlistment is suspended, otherwise false.
      */
-    public boolean isEnlistmentSuspended();
+    boolean isEnlistmentSuspended();
 
     /**
      * Returns the (optional) XAResource reference for this resource handle.
      *
      * @return the XAResource reference for this resource handle or null if no reference is set.
      */
-    public XAResource getXAResource();
+    XAResource getXAResource();
 
     /**
      * Returns true if the ResourceHandle is supported in an XA transaction.
      *
      * @return true if the ResourceHandle is supported in an XA transaction, otherwise false.
      */
-    public boolean supportsXA();
+    boolean supportsXA();
 
     /**
      * Returns the component instance holding this resource handle.
      *
      * @return the component instance holding this resource handle.
      */
-    public Object getComponentInstance();
+    Object getComponentInstance();
 
     /**
      * Sets the component instance holding this resource handle.
      *
      * @param instance the component instance holding this resource handle.
      */
-    public void setComponentInstance(Object instance);
+    void setComponentInstance(Object instance);
 
     /**
      * Closes the (optional) 'userConnection' / 'connection handle' (used by the application code to refer to the underlying
@@ -79,28 +79,28 @@ public interface TransactionalResource {
      * @throws PoolingException wrapping any 'userConnection' specific exception that might occur during the close call.
      * @throws UnsupportedOperationException when the method is not implemented.
      */
-    public void closeUserConnection() throws Exception;
+    void closeUserConnection() throws Exception;
 
     /**
      * Returns true if the resource handle is enlisted in a transaction.
      *
      * @return true if the resource handle is enlisted in a transaction.
      */
-    public boolean isEnlisted();
+    boolean isEnlisted();
 
     /**
      * Returns true if the resource handle is sharable within the component.
      *
      * @return true if the resource handle is sharable within the component.
      */
-    public boolean isShareable();
+    boolean isShareable();
 
     /**
      * Returns the String that can identify this resource.
      *
      * @return the String that can identify this resource.
      */
-    public String getName();
+    String getName();
 
     /**
      * Indicates that a resource has been enlisted in the transaction.

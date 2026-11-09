@@ -21,7 +21,7 @@ package org.glassfish.admin.rest.utils;
  */
 public class PropertyException extends Exception {
 
-    private String field = null;
+    private String field;
 
     public PropertyException(String field, Throwable cause) {
         super(cause);

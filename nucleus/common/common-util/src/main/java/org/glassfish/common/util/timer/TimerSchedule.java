@@ -47,17 +47,17 @@ public class TimerSchedule implements Serializable {
     private String month_ = "*";
     private String dayOfWeek_ = "*";
     private String year_ = "*";
-    private String timezone_ = null;
-    private TimeZone tz_ = null;
+    private String timezone_;
+    private TimeZone tz_;
 
-    private Date start_ = null;
-    private Date end_ = null;
+    private Date start_;
+    private Date end_;
 
-    private boolean configured = false;
+    private boolean configured;
     private boolean isValid = true;
 
-    private boolean lastDayOfMonth = false;
-    private int dayBeforeEndOfMonth = 0;
+    private boolean lastDayOfMonth;
+    private int dayBeforeEndOfMonth;
 
     private BitSet seconds = new BitSet(60);
     private BitSet minutes = new BitSet(60);

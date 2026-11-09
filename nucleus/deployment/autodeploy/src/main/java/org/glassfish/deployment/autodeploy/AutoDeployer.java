@@ -50,24 +50,24 @@ public class AutoDeployer {
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployer.class);
 
-    private Boolean verify=null;
-    private Boolean forceDeploy=null;
-    private Boolean enabled=null;
-    private Boolean jspPreCompilation=null;
+    private Boolean verify;
+    private Boolean forceDeploy;
+    private Boolean enabled;
+    private Boolean jspPreCompilation;
     private boolean renameOnSuccess = true;
-    private File directory = null;
-    private String virtualServer = null;
+    private File directory;
+    private String virtualServer;
 
-    private String target=null;
-    private DirectoryScanner directoryScanner=null;
+    private String target;
+    private DirectoryScanner directoryScanner;
 
-    private boolean cancelDeployment =false;
+    private boolean cancelDeployment;
 
     private final AtomicBoolean inProgress = new AtomicBoolean(false);
 
     private ServiceLocator habitat;
 
-    private File domainRoot = null;
+    private File domainRoot;
 
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.deployment.LogMessages";

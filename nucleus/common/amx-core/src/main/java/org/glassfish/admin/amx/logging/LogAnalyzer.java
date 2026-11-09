@@ -134,7 +134,7 @@ for (int i = 0; i < infos.length; ++i) {
      * @param numIntervals number of intervals
      */
     @ManagedAttribute
-    void setKeepErrorStatisticsForIntervals(@Param(name = "numIntervals") final int numIntervals);
+    void setKeepErrorStatisticsForIntervals(@Param(name = "numIntervals") int numIntervals);
 
 
     /**
@@ -150,7 +150,7 @@ for (int i = 0; i < infos.length; ++i) {
      * @param minutes The duration of an interval in minutes.
      */
     @ManagedAttribute
-    void setErrorStatisticsIntervalMinutes(@Param(name = "minutes") final long minutes);
+    void setErrorStatisticsIntervalMinutes(@Param(name = "minutes") long minutes);
 
 
     /**

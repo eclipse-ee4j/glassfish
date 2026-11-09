@@ -59,12 +59,12 @@ class Log {
 
     /**A reference to the LogControl object.
      */
-    private LogControl logControl = null;
+    private LogControl logControl;
 
     /**The log path.
      */
     // private static String logPath = null;
-    private String logPath = null;
+    private String logPath;
     /*
         Logger to log transaction messages
     */

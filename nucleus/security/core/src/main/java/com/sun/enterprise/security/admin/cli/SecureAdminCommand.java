@@ -109,7 +109,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
      * @param <T>
      */
     interface Work<T extends Context> {
-        boolean run(final T context) throws TransactionFailure;
+        boolean run(T context) throws TransactionFailure;
     }
 
     /**
@@ -159,9 +159,9 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         private final Transaction t;
         private final Domain d;
-        private Domain d_w = null;
+        private Domain d_w;
 
-        private SecureAdmin secureAdmin_w = null;
+        private SecureAdmin secureAdmin_w;
 
         TopLevelContext(final Transaction t, final Domain d) {
             this.t = t;

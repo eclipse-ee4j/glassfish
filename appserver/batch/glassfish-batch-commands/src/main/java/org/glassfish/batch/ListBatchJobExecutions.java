@@ -163,7 +163,7 @@ public class ListBatchJobExecutions
     @Override
     protected final String[] getAllHeaders() {
         return new String[]{
-                JOB_NAME, EXECUTION_ID, START_TIME, END_TIME, BATCH_STATUS, EXIT_STATUS, JOB_PARAMETERS, STEP_COUNT
+                JOB_NAME, EXECUTION_ID, START_TIME, END_TIME, BATCH_STATUS, EXIT_STATUS, JOB_PARAMETERS, STEP_COUNT,
         };
     }
 

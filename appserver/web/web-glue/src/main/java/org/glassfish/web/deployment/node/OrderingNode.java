@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 public class OrderingNode extends DeploymentDescriptorNode {
     public final static XMLElement tag = new XMLElement(WebTagNames.ORDERING);
 
-    protected OrderingDescriptor descriptor = null;
+    protected OrderingDescriptor descriptor;
 
     public OrderingNode() {
         super();

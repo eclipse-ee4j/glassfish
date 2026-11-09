@@ -133,7 +133,7 @@ public class ModuleExploder {
                             "enterprise.deployment.backend.error_saving_manifest",
                             new Object[]
                     { explodedManifest.getAbsolutePath(),
-                              preservedManifestFromArchive.getAbsolutePath()
+                              preservedManifestFromArchive.getAbsolutePath(),
                     } ) ) ;
                 }
             }
@@ -178,7 +178,7 @@ public class ModuleExploder {
                             "enterprise.deployment.backend.error_deleting_manifest",
                             new Object []
                     { explodedManifest.getAbsolutePath(),
-                              preservedManifestFromArchive.getAbsolutePath()
+                              preservedManifestFromArchive.getAbsolutePath(),
                     }
                     ) );
                 }
@@ -189,7 +189,7 @@ public class ModuleExploder {
                         "enterprise.deployment.backend.error_restoring_manifest",
                         new Object []
                 { preservedManifestFromArchive.getAbsolutePath(),
-                          explodedManifest.getAbsolutePath()
+                          explodedManifest.getAbsolutePath(),
                 }
                 ) );
             }

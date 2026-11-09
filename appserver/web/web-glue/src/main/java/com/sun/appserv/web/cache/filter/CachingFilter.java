@@ -58,7 +58,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
     CacheHelper helper;
     Cache cache;
 
-    boolean isEnabled = false;
+    boolean isEnabled;
 
     private static final Logger _logger = LogFacade.getLogger();
 

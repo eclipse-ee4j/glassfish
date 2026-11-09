@@ -73,7 +73,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerEntityBeanStats(EntityBeanStats entityBeanStats,
+    void registerEntityBeanStats(EntityBeanStats entityBeanStats,
     String entityBeanName, String moduleName, String applicationName,
     MonitoringLevelListener listener) throws MonitoringRegistrationException;
 
@@ -86,7 +86,7 @@ public interface MonitoringRegistry {
      * standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterEntityBeanStats(String entityBeanName, String moduleName,
+    void unregisterEntityBeanStats(String entityBeanName, String moduleName,
     String applicationName) throws MonitoringRegistrationException;
 
     /**
@@ -104,7 +104,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerStatelessSessionBeanStats(
+    void registerStatelessSessionBeanStats(
     StatelessSessionBeanStats statelessSessionBeanStats,
     String statelessSessionBeanName, String moduleName, String applicationName,
     MonitoringLevelListener listener) throws MonitoringRegistrationException;
@@ -118,7 +118,7 @@ public interface MonitoringRegistry {
      * deployed under a standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterStatelessSessionBeanStats(String statelessSessionBeanName,
+    void unregisterStatelessSessionBeanStats(String statelessSessionBeanName,
     String moduleName, String applicationName)
     throws MonitoringRegistrationException;
 
@@ -137,7 +137,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerStatefulSessionBeanStats(
+    void registerStatefulSessionBeanStats(
     StatefulSessionBeanStats statefulSessionBeanStats,
     String statefulSessionBeanName, String moduleName, String applicationName,
     MonitoringLevelListener listener) throws MonitoringRegistrationException;
@@ -151,7 +151,7 @@ public interface MonitoringRegistry {
      * deployed under a standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterStatefulSessionBeanStats(String statefulSessionBeanName,
+    void unregisterStatefulSessionBeanStats(String statefulSessionBeanName,
     String moduleName, String applicationName) throws MonitoringRegistrationException;
 
     /**
@@ -169,7 +169,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerMessageDrivenBeanStats(
+    void registerMessageDrivenBeanStats(
     MessageDrivenBeanStats messageDrivenBeanStats,
     String messageDrivenBeanName, String moduleName, String applicationName,
     MonitoringLevelListener listener) throws MonitoringRegistrationException;
@@ -183,7 +183,7 @@ public interface MonitoringRegistry {
      * deployed under a standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterMessageDrivenBeanStats(String messageDrivenBeanName,
+    void unregisterMessageDrivenBeanStats(String messageDrivenBeanName,
     String moduleName, String applicationName)
     throws MonitoringRegistrationException;
 
@@ -202,7 +202,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerEJBCacheStats(EJBCacheStats ejbCacheStats, MonitoredObjectType ejbType, String ejbName,
+    void registerEJBCacheStats(EJBCacheStats ejbCacheStats, MonitoredObjectType ejbType, String ejbName,
     String moduleName, String applicationName, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
 
@@ -215,7 +215,7 @@ public interface MonitoringRegistry {
      * standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterEJBCacheStats( MonitoredObjectType ejbType, String ejbName, String moduleName,
+    void unregisterEJBCacheStats( MonitoredObjectType ejbType, String ejbName, String moduleName,
     String applicationName)
     throws MonitoringRegistrationException;
 
@@ -234,7 +234,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerEJBPoolStats(EJBPoolStats ejbPoolStats, MonitoredObjectType ejbType, String ejbName,
+    void registerEJBPoolStats(EJBPoolStats ejbPoolStats, MonitoredObjectType ejbType, String ejbName,
     String moduleName, String applicationName, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
 
@@ -247,7 +247,7 @@ public interface MonitoringRegistry {
      * standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterEJBPoolStats(MonitoredObjectType ejbType, String ejbName, String moduleName,
+    void unregisterEJBPoolStats(MonitoredObjectType ejbType, String ejbName, String moduleName,
     String applicationName) throws MonitoringRegistrationException;
 
     /**
@@ -266,7 +266,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerEJBMethodStats(EJBMethodStats ejbMethodStats,
+    void registerEJBMethodStats(EJBMethodStats ejbMethodStats,
     String ejbMethodName, MonitoredObjectType ejbType, String ejbName, String moduleName,
     String applicationName, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
@@ -281,7 +281,7 @@ public interface MonitoringRegistry {
      * standalone module.
      * @throws MonitoringRegistrationException
      */
-    public void unregisterEJBMethodStats(String ejbMethodName, MonitoredObjectType ejbType, String ejbName,
+    void unregisterEJBMethodStats(String ejbMethodName, MonitoredObjectType ejbType, String ejbName,
     String moduleName, String applicationName)
     throws MonitoringRegistrationException;
 
@@ -296,7 +296,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerOrbConnectionManagerStats(OrbConnectionManagerStats orbConnectionManagerStats,
+    void registerOrbConnectionManagerStats(OrbConnectionManagerStats orbConnectionManagerStats,
     String connectionMgrName, MonitoringLevelListener listener) throws MonitoringRegistrationException;
 
     /**
@@ -304,7 +304,7 @@ public interface MonitoringRegistry {
      * @param orbName
      * @throws MonitoringRegistrationException
      */
-    public void unregisterOrbConnectionManagerStats(String orbName)
+    void unregisterOrbConnectionManagerStats(String orbName)
     throws MonitoringRegistrationException;
 
     /**
@@ -318,7 +318,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerThreadPoolStats(ThreadPoolStats ThreadPoolStats,
+    void registerThreadPoolStats(ThreadPoolStats ThreadPoolStats,
     String threadPoolId, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
 
@@ -327,7 +327,7 @@ public interface MonitoringRegistry {
      * @param poolId    String representing the (unique) name of the pool
      * @throws MonitoringRegistrationException
      */
-    public void unregisterThreadPoolStats(String poolId)
+    void unregisterThreadPoolStats(String poolId)
     throws MonitoringRegistrationException;
 
     /**
@@ -341,7 +341,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerConnectorConnectionPoolStats(
+    void registerConnectorConnectionPoolStats(
     com.sun.enterprise.admin.monitor.stats.ConnectorConnectionPoolStats connectorConnectionPoolStats,
     String connectorConnectionPoolName, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
@@ -351,7 +351,7 @@ public interface MonitoringRegistry {
      * @param connectorConnectionPoolName
      * @throws MonitoringRegistrationException
      */
-    public void unregisterConnectorConnectionPoolStats(String connectorConnectionPoolName)
+    void unregisterConnectorConnectionPoolStats(String connectorConnectionPoolName)
     throws MonitoringRegistrationException;
 
     /**
@@ -365,7 +365,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerJDBCConnectionPoolStats(
+    void registerJDBCConnectionPoolStats(
     com.sun.enterprise.admin.monitor.stats.JDBCConnectionPoolStats jdbcConnectionPoolStats,
     String jdbcConnectionPoolName, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
@@ -375,7 +375,7 @@ public interface MonitoringRegistry {
      * @param jdbcConnectionPoolName
      * @throws MonitoringRegistrationException
      */
-    public void unregisterJDBCConnectionPoolStats(String jdbcConnectionPoolName)
+    void unregisterJDBCConnectionPoolStats(String jdbcConnectionPoolName)
     throws MonitoringRegistrationException;
 
     /**
@@ -387,19 +387,19 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerJTAStats(GFJTAStats jtaStats, MonitoringLevelListener listener)
+    void registerJTAStats(GFJTAStats jtaStats, MonitoringLevelListener listener)
     throws MonitoringRegistrationException;
 
     /**
      * Unregisters the Stats implementation for the resource JTAStats
      * @throws MonitoringRegistrationException
      */
-    public void unregisterJTAStats() throws MonitoringRegistrationException;
+    void unregisterJTAStats() throws MonitoringRegistrationException;
 
-    public void registerJVMStats(JVMStats stats,
+    void registerJVMStats(JVMStats stats,
     MonitoringLevelListener listener) throws MonitoringRegistrationException;
 
-    public void unregisterJVMStats() throws MonitoringRegistrationException;
+    void unregisterJVMStats() throws MonitoringRegistrationException;
 
     /**
      * Registeres the Stats for Http Listener for the web-server/web-container layer.
@@ -409,7 +409,7 @@ public interface MonitoringRegistry {
      * @param        vsId            String representing the id of pertinent virtual server (may not be null)
      * @throws        MonitoringRegistrationException in case there is a registration failure
      */
-    public void registerHttpListenerStats(HTTPListenerStats stats,
+    void registerHttpListenerStats(HTTPListenerStats stats,
                                           String listenerName,
                                           String vsId,
                                        MonitoringLevelListener listener)
@@ -422,7 +422,7 @@ public interface MonitoringRegistry {
      * @param            vsId                String represeting the virtual server id (may not be null)
      * @throws            MonitoringRegistrationException in case of a failure
      */
-    public void unregisterHttpListenerStats(String listenerName, String vsId)
+    void unregisterHttpListenerStats(String listenerName, String vsId)
                                  throws MonitoringRegistrationException;
 
 
@@ -443,7 +443,7 @@ public interface MonitoringRegistry {
      * @param objType {@link MonitoredObjectType} that indicates a specific monitored object
      * @throws RuntimeException if the registration fails
      */
-    public void registerMonitoringLevelListener(MonitoringLevelListener listener,
+    void registerMonitoringLevelListener(MonitoringLevelListener listener,
     com.sun.enterprise.admin.monitor.registry.MonitoredObjectType objType);
 
     /**
@@ -453,7 +453,7 @@ public interface MonitoringRegistry {
      * @param        MonitoringLevelListener that is registered earlier
      * @throws        RuntimeException if the Listener is not registered before
      */
-    public void unregisterMonitoringLevelListener(MonitoringLevelListener listener);
+    void unregisterMonitoringLevelListener(MonitoringLevelListener listener);
 
         /**
          * registers a servlet/JSP, with the monitoring infrastructure
@@ -476,7 +476,7 @@ public interface MonitoringRegistry {
          * @throws MonitoringRegistrationException in case of a failure
          */
 
-        public void registerServletStats(com.sun.enterprise.admin.monitor.stats.ServletStats stats,
+        void registerServletStats(com.sun.enterprise.admin.monitor.stats.ServletStats stats,
                                      String j2eeAppName,
                                      String webModuleName,
                                      String ctxRoot,
@@ -505,7 +505,7 @@ public interface MonitoringRegistry {
          * @throws MonitoringRegistrationException in case of a failure
          */
 
-        public void unregisterServletStats(String j2eeAppName,
+        void unregisterServletStats(String j2eeAppName,
                                            String webModuleName,
                                            String ctxRoot,
                                            String vsId,
@@ -530,7 +530,7 @@ public interface MonitoringRegistry {
      *
      * @throws MonitoringRegistrationException
      */
-    public void registerWebModuleStats(WebModuleStats stats,
+    void registerWebModuleStats(WebModuleStats stats,
                                        String j2eeAppName,
                                        String webModuleName,
                                        String ctxRoot,
@@ -554,7 +554,7 @@ public interface MonitoringRegistry {
      *
      * @throws MonitoringRegistrationException
      */
-    public void unregisterWebModuleStats(String j2eeAppName,
+    void unregisterWebModuleStats(String j2eeAppName,
                                          String webModuleName,
                                          String ctxRoot,
                                          String vsId)
@@ -577,7 +577,7 @@ public interface MonitoringRegistry {
      *
      * @return The desired WebModuleStats
      */
-    public WebModuleStats getWebModuleStats(String j2eeAppName,
+    WebModuleStats getWebModuleStats(String j2eeAppName,
                                             String webModuleName,
                                             String ctxRoot,
                                             String vsId);
@@ -589,7 +589,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCHttpServiceStats(
+    void registerPWCHttpServiceStats(
            com.sun.enterprise.admin.monitor.stats.PWCHttpServiceStats stats,
        MonitoringLevelListener listener)
            throws MonitoringRegistrationException;
@@ -598,7 +598,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the HttpService
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCHttpServiceStats() throws MonitoringRegistrationException;
+    void unregisterPWCHttpServiceStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -607,7 +607,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCConnectionQueueStats(
+    void registerPWCConnectionQueueStats(
            com.sun.enterprise.admin.monitor.stats.PWCConnectionQueueStats stats,
        MonitoringLevelListener listener)
            throws MonitoringRegistrationException;
@@ -616,7 +616,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the ConnectionQueue
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCConnectionQueueStats() throws MonitoringRegistrationException;
+    void unregisterPWCConnectionQueueStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -625,7 +625,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCDnsStats(
+    void registerPWCDnsStats(
            com.sun.enterprise.admin.monitor.stats.PWCDnsStats stats,
        MonitoringLevelListener listener)
        throws MonitoringRegistrationException;
@@ -635,7 +635,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the DNS
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCDnsStats() throws MonitoringRegistrationException;
+    void unregisterPWCDnsStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -644,7 +644,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCKeepAliveStats(
+    void registerPWCKeepAliveStats(
            com.sun.enterprise.admin.monitor.stats.PWCKeepAliveStats stats,
        MonitoringLevelListener listener)
        throws MonitoringRegistrationException;
@@ -654,7 +654,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the KeepAlive system
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCKeepAliveStats() throws MonitoringRegistrationException;
+    void unregisterPWCKeepAliveStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -663,7 +663,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCThreadPoolStats(
+    void registerPWCThreadPoolStats(
            com.sun.enterprise.admin.monitor.stats.PWCThreadPoolStats stats,
        MonitoringLevelListener listener)
        throws MonitoringRegistrationException;
@@ -673,7 +673,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the PWCThreadPool
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCThreadPoolStats() throws MonitoringRegistrationException;
+    void unregisterPWCThreadPoolStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -682,7 +682,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCFileCacheStats(
+    void registerPWCFileCacheStats(
            com.sun.enterprise.admin.monitor.stats.PWCFileCacheStats stats,
        MonitoringLevelListener listener)
        throws MonitoringRegistrationException;
@@ -692,7 +692,7 @@ public interface MonitoringRegistry {
      * Unregisters the stats for the FileCache
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCFileCacheStats() throws MonitoringRegistrationException;
+    void unregisterPWCFileCacheStats() throws MonitoringRegistrationException;
 
 
     /**
@@ -703,7 +703,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCVirtualServerStats(
+    void registerPWCVirtualServerStats(
            com.sun.enterprise.admin.monitor.stats.PWCVirtualServerStats stats,
        String vsId,
        MonitoringLevelListener listener)
@@ -715,7 +715,7 @@ public interface MonitoringRegistry {
      * @param vsId the Id of the virtual-server, whose stats need to be deregistered
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCVirtualServerStats(String vsId) throws MonitoringRegistrationException;
+    void unregisterPWCVirtualServerStats(String vsId) throws MonitoringRegistrationException;
 
     /**
      * Registers the RequestStats for PWC.
@@ -725,7 +725,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerPWCRequestStats(
+    void registerPWCRequestStats(
            com.sun.enterprise.admin.monitor.stats.PWCRequestStats stats,
        String vsId,
        MonitoringLevelListener listener)
@@ -737,7 +737,7 @@ public interface MonitoringRegistry {
      * @param vsId the Id of the virutal-server
      * @throws MonitoringRegistrationException
      */
-    public void unregisterPWCRequestStats(String vsId) throws MonitoringRegistrationException;
+    void unregisterPWCRequestStats(String vsId) throws MonitoringRegistrationException;
 
 
     // Connector related changes
@@ -750,7 +750,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerConnectorWorkMgmtStats(
+    void registerConnectorWorkMgmtStats(
            com.sun.enterprise.admin.monitor.stats.ConnectorWorkMgmtStats stats,
        String j2eeAppName,
        String moduleName,
@@ -767,7 +767,7 @@ public interface MonitoringRegistry {
      * @param listener the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerConnectorWorkMgmtStats(
+    void registerConnectorWorkMgmtStats(
            com.sun.enterprise.admin.monitor.stats.ConnectorWorkMgmtStats stats,
        String j2eeAppName,
        String moduleName,
@@ -783,7 +783,7 @@ public interface MonitoringRegistry {
      *
      * @throws MonitoringRegistrationException
      */
-    public void unregisterConnectorWorkMgmtStats(
+    void unregisterConnectorWorkMgmtStats(
        String j2eeAppName,
        String moduleName) throws MonitoringRegistrationException;
 
@@ -798,7 +798,7 @@ public interface MonitoringRegistry {
      *              from jms-service
      * @throws MonitoringRegistrationException
      */
-    public void unregisterConnectorWorkMgmtStats(
+    void unregisterConnectorWorkMgmtStats(
        String j2eeAppName,
        String moduleName, boolean isJms) throws MonitoringRegistrationException;
 
@@ -809,7 +809,7 @@ public interface MonitoringRegistry {
      * @param   listener    the listener for monitoring level changes
      * @throws  MonitoringRegistrationException
      */
-    public void registerConnectionFactoryStats(
+    void registerConnectionFactoryStats(
            com.sun.enterprise.admin.monitor.stats.ConnectionFactoryStats stats,
            String factoryName,
            MonitoringLevelListener listener) throws MonitoringRegistrationException;
@@ -819,7 +819,7 @@ public interface MonitoringRegistry {
      * @param   factoryName the name of the connection factory
      * @throws MonitoringRegistrationException
      */
-    public void unregisterConnectionFactoryStats(String factoryName) throws MonitoringRegistrationException;
+    void unregisterConnectionFactoryStats(String factoryName) throws MonitoringRegistrationException;
 
     /**
      * Registers the Stats implementation for ConnectorConnectionPoolStats
@@ -834,7 +834,7 @@ public interface MonitoringRegistry {
      * in monitoring level.
      * @throws MonitoringRegistrationException
      */
-    public void registerConnectorConnectionPoolStats(
+    void registerConnectorConnectionPoolStats(
            com.sun.enterprise.admin.monitor.stats.ConnectorConnectionPoolStats stats,
            String poolName,
            String j2eeAppName,
@@ -849,7 +849,7 @@ public interface MonitoringRegistry {
      * @param   moduleName
      * @throws MonitoringRegistrationException
      */
-    public void unregisterConnectorConnectionPoolStats(String poolName,
+    void unregisterConnectorConnectionPoolStats(String poolName,
                                                        String j2eeAppName,
                                                        String moduleName)
                                                        throws MonitoringRegistrationException;
@@ -866,7 +866,7 @@ public interface MonitoringRegistry {
      * @param listener  the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerStatefulSessionStoreStats(StatefulSessionStoreStats stats,
+    void registerStatefulSessionStoreStats(StatefulSessionStoreStats stats,
                                                   MonitoredObjectType ejbType,
                                                   String ejbName,
                                                   String moduleName,
@@ -881,7 +881,7 @@ public interface MonitoringRegistry {
      * @param j2eeAppName   the name of the j2eeApp, that contains the ejb jar
      * @throws MonitoringRegistrationException
      */
-    public void unregisterStatefulSessionStoreStats(
+    void unregisterStatefulSessionStoreStats(
                                                     MonitoredObjectType ejbType,
                                                     String ejbName,
                                                     String moduleName,
@@ -900,7 +900,7 @@ public interface MonitoringRegistry {
      * @param   listener    the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerTimerStats(TimerServiceStats stats,
+    void registerTimerStats(TimerServiceStats stats,
                                    MonitoredObjectType ejbType,
                                    String ejbName,
                                    String moduleName,
@@ -915,7 +915,7 @@ public interface MonitoringRegistry {
      * @param   j2eeAppName the name of the j2eeApp, that contains the ejb jar
      * @throws MonitoringRegistrationException
      */
-    public void unregisterTimerStats(
+    void unregisterTimerStats(
                                      MonitoredObjectType ejbType,
                                      String ejbName,
                                      String moduleName,
@@ -936,7 +936,7 @@ public interface MonitoringRegistry {
      * @param listener  the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerWSAggregateStatsForWeb(Stats stats,
+    void registerWSAggregateStatsForWeb(Stats stats,
           String endpointName, String moduleName, String ctxRoot,
           String j2eeAppName,  String vs, MonitoringLevelListener listener)
                 throws MonitoringRegistrationException;
@@ -951,7 +951,7 @@ public interface MonitoringRegistry {
      * @param j2eeAppName   the name of the j2eeApp, that contains the ejb jar
      * @throws MonitoringRegistrationException
      */
-    public void unregisterWSAggregateStatsForWeb(String endpointName,
+    void unregisterWSAggregateStatsForWeb(String endpointName,
                 String moduleName, String ctxRoot, String j2eeAppName,
                 String vs)
                         throws MonitoringRegistrationException;
@@ -968,7 +968,7 @@ public interface MonitoringRegistry {
      * @param listener  the listener for monitoring level changes
      * @throws MonitoringRegistrationException
      */
-    public void registerWSAggregateStatsForEjb(Stats stats,
+    void registerWSAggregateStatsForEjb(Stats stats,
           String endpointName, String moduleName, String j2eeAppName,
           MonitoringLevelListener listener)
                 throws MonitoringRegistrationException;
@@ -981,7 +981,7 @@ public interface MonitoringRegistry {
      * @param j2eeAppName   the name of the j2eeApp, that contains the ejb jar
      * @throws MonitoringRegistrationException
      */
-    public void unregisterWSAggregateStatsForEjb(String endpointName,
+    void unregisterWSAggregateStatsForEjb(String endpointName,
                 String moduleName, String j2eeAppName)
                         throws MonitoringRegistrationException;
 }

@@ -152,7 +152,7 @@ public class WeakValueHashMap<K, V> extends HashMap<K, Object> {
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final V getReferenceObject(WeakReference<V> ref) {
+    private V getReferenceObject(WeakReference<V> ref) {
         return (ref == null) ? null : ref.get();
     }
 

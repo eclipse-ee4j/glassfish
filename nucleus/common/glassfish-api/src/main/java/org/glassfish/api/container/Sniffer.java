@@ -144,7 +144,7 @@ public interface Sniffer {
      * @throws java.io.IOException in case of errors searching or reading the archive for the
      *             deployment configuration(s)
      */
-    Map<String, String> getDeploymentConfigurations(final ReadableArchive source) throws IOException;
+    Map<String, String> getDeploymentConfigurations(ReadableArchive source) throws IOException;
 
     /**
      * @return the set of the sniffers that should not co-exist for the same module. For example, ejb and appclient sniffers

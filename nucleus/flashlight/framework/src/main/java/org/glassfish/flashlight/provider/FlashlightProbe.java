@@ -369,14 +369,14 @@ public class FlashlightProbe
 
     public static final class ProbeInvokeState {
         private int invokerId;
-        private Object state = null;
+        private Object state;
         /* package */ ProbeInvokeState() {}
         /* package */ ProbeInvokeState(int invokerId, Object state) {
             this.invokerId = invokerId;
             this.state = state;
         }
-        /* package */ final Object getState() { return state; }
-        /* package */ final int getInvokerId() { return invokerId; }
+        /* package */ Object getState() { return state; }
+        /* package */ int getInvokerId() { return invokerId; }
     }
 
     private Method probeMethod;
@@ -401,10 +401,10 @@ public class FlashlightProbe
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
     public final static LocalStringManagerImpl localStrings =
                             new LocalStringManagerImpl(FlashlightProbe.class);
-    private FlashlightProbe parent = null;
-    private boolean stateful = false;
-    private boolean statefulReturn = false;
-    private boolean statefulException = false;
-    private String [] profileNames = null;
+    private FlashlightProbe parent;
+    private boolean stateful;
+    private boolean statefulReturn;
+    private boolean statefulException;
+    private String [] profileNames;
 }
 

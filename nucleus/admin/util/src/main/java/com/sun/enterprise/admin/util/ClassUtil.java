@@ -26,7 +26,7 @@ final class ClassToClassMapping {
     final Class mSrc;
     final Class mDest;
 
-    public ClassToClassMapping(Class src, Class dest) {
+    ClassToClassMapping(Class src, Class dest) {
         mSrc = src;
         mDest = dest;
     }

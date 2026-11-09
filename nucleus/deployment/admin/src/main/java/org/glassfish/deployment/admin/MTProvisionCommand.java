@@ -60,13 +60,13 @@ import org.jvnet.hk2.annotations.Service;
 public class MTProvisionCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(optional=true)
-    public File customizations = null;
+    public File customizations;
 
     @Param
-    public String tenant = null;
+    public String tenant;
 
     @Param
-    public String contextroot = null;
+    public String contextroot;
 
     @Param(primary=true)
     public String appname;

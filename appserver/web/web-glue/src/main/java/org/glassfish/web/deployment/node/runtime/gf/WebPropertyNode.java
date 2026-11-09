@@ -34,7 +34,7 @@ import org.w3c.dom.Node;
 */
 public class WebPropertyNode extends RuntimeDescriptorNode<WebProperty> {
 
-    protected WebProperty descriptor = null;
+    protected WebProperty descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

@@ -66,7 +66,7 @@ public class DeleteTransport implements AdminCommand {
     @Param(name="transportname", primary=true)
     String transportName;
 
-    Transport transportToBeRemoved = null;
+    Transport transportToBeRemoved;
 
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;

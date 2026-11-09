@@ -66,7 +66,7 @@ public class GlassFishMainActivator implements BundleActivator {
     private static final String[] DEFAULT_INSTALLATION_LOCATIONS_RELATIVE = new String[]{
         // Order is important.
         "modules/",
-        "modules/autostart/"
+        "modules/autostart/",
     };
 
     private static final String[] DEFAULT_START_LOCATIONS_RELATIVE = new String[]{
@@ -74,7 +74,7 @@ public class GlassFishMainActivator implements BundleActivator {
         // osgi-resource-locator must come ahead of osgi-adapter
         "modules/osgi-resource-locator.jar",
         "modules/osgi-adapter.jar",
-        "modules/autostart/"
+        "modules/autostart/",
     };
 
 

@@ -40,13 +40,13 @@ import org.glassfish.persistence.common.I18NHelper;
 public class PersistenceManagerWrapper implements PersistenceManager {
 
     // Previous  PersistenceManagerWrapper
-    private PersistenceManagerWrapper prev = null;
+    private PersistenceManagerWrapper prev;
 
     // Actual  PersistenceManager
-    private PersistenceManagerImpl pm = null;
+    private PersistenceManagerImpl pm;
 
     // Boolean flag that allows to use this wrapper
-    private boolean isValid = false;
+    private boolean isValid;
 
     /**
      * I18N message handler

@@ -45,7 +45,7 @@ public interface NamingObjectProxy {
     /**
      * Special Naming Object proxy whose first create() call replaces itself in naming service.
      */
-    public interface InitializationNamingObjectProxy extends NamingObjectProxy {
+    interface InitializationNamingObjectProxy extends NamingObjectProxy {
     }
 
 }

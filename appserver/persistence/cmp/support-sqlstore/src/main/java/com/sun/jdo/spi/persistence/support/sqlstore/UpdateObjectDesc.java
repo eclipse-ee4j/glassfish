@@ -27,7 +27,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
  */
 public interface UpdateObjectDesc extends ActionDesc {
 
-    public void setObjectInfo(StateManager biStateManager,
+    void setObjectInfo(StateManager biStateManager,
                               StateManager aiStateManager,
                               int action);
 

@@ -48,7 +48,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      */
     @Attribute (defaultValue="30")
     @Min(value=1)
-    public String getShutdownTimeoutInSeconds();
+    String getShutdownTimeoutInSeconds();
 
     /**
      * Sets the value of the shutdownTimeoutInSeconds property.
@@ -56,7 +56,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      * @param value allowed object is
      *              {@link String }
      */
-    public void setShutdownTimeoutInSeconds(String value) throws PropertyVetoException;
+    void setShutdownTimeoutInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the connector-classloading-policy.<br>
@@ -69,7 +69,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      *         {@link String }
      */
     @Attribute (defaultValue="derived")
-    public String getClassLoadingPolicy();
+    String getClassLoadingPolicy();
 
     /**
      * Sets the value of the connector-classloading-policy.<br>
@@ -80,7 +80,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      * @param value allowed object is
      *              {@link String }
      */
-    public void setClassLoadingPolicy(String value) throws PropertyVetoException;
+    void setClassLoadingPolicy(String value) throws PropertyVetoException;
 
     /**
      *    Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

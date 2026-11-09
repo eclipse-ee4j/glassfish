@@ -30,9 +30,9 @@ package com.sun.jdo.spi.persistence.utility;
  */
 public interface Linkable
 {
-    public Linkable getNext();
-    public Linkable getPrevious();
-    public void setNext(Linkable node);
-    public void setPrevious(Linkable node);
+    Linkable getNext();
+    Linkable getPrevious();
+    void setNext(Linkable node);
+    void setPrevious(Linkable node);
 }
 

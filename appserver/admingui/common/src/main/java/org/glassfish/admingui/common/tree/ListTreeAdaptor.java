@@ -430,6 +430,6 @@ public class ListTreeAdaptor extends TreeAdaptorBase {
     /**
      * This sub-nodes of the top-level Node.
      */
-    private transient List<Object>            _children        =   null;
-    private transient Map<String, Object>   _childMap        =   null;
+    private transient List<Object>            _children;
+    private transient Map<String, Object>   _childMap;
 }

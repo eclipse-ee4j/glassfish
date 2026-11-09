@@ -28,7 +28,7 @@ public interface StatsProvider {
      *
      * @return statistics
      */
-    public Object getStatsObject();
+    Object getStatsObject();
 
     /**
      * Set object, from which <tt>StatsProvider</tt> can get statistics directly
@@ -36,5 +36,5 @@ public interface StatsProvider {
      *
      * @param object statistics
      */
-    public void setStatsObject(Object object);
+    void setStatsObject(Object object);
 }

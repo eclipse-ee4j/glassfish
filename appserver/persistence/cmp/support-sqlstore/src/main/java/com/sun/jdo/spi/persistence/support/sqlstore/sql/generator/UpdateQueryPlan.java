@@ -46,7 +46,7 @@ import org.netbeans.modules.dbschema.TableElement;
 public class UpdateQueryPlan extends QueryPlan {
 
     /** Flag indicating whether we use batch update. */
-    private boolean batch = false;
+    private boolean batch;
 
     private UpdateObjectDescImpl updateDesc;
 

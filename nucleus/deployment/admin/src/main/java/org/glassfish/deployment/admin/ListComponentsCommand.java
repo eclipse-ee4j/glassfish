@@ -94,7 +94,7 @@ import org.jvnet.hk2.annotations.Service;
 public class ListComponentsCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(optional=true)
-    String type = null;
+    String type;
 
     @Param(primary=true, optional=true)
     public String target = "server";

@@ -115,7 +115,7 @@ public class ListBatchRuntimeConfiguration
     @Override
     protected final String[] getAllHeaders() {
         return new String[] {
-                DATA_SOURCE_NAME, EXECUTOR_SERVICE_NAME
+                DATA_SOURCE_NAME, EXECUTOR_SERVICE_NAME,
         };
     }
 

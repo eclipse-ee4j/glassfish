@@ -362,7 +362,7 @@ public final class JDOMetaDataProperties {
                                                 PROPERTY_OID_CLASSNAME,
                                                 PROPERTY_ACCESS_MODIFIER,
                                                 PROPERTY_JDO_MODIFIER,
-                                                PROPERTY_SUPER_CLASSNAME
+                                                PROPERTY_SUPER_CLASSNAME,
                                               }, classname);
 
             //do we have a valid property value?
@@ -372,7 +372,7 @@ public final class JDOMetaDataProperties {
                                         ACCESS_PUBLIC,
                                         ACCESS_PROTECTED,
                                         ACCESS_PACKAGE_LOCAL,
-                                        ACCESS_PRIVATE
+                                        ACCESS_PRIVATE,
                                     },
                                 PROPERTY_ACCESS_MODIFIER,
                                 classname);
@@ -499,7 +499,7 @@ public final class JDOMetaDataProperties {
                                        PROPERTY_ACCESS_MODIFIER,
                                        PROPERTY_JDO_MODIFIER,
                                        PROPERTY_TYPE,
-                                       PROPERTY_ANNOTATION_TYPE
+                                       PROPERTY_ANNOTATION_TYPE,
                                    },
                                entry);
 
@@ -510,7 +510,7 @@ public final class JDOMetaDataProperties {
                                         ACCESS_PUBLIC,
                                         ACCESS_PROTECTED,
                                         ACCESS_PACKAGE_LOCAL,
-                                        ACCESS_PRIVATE
+                                        ACCESS_PRIVATE,
                                     },
                                 PROPERTY_ACCESS_MODIFIER,
                                 entry);
@@ -519,7 +519,7 @@ public final class JDOMetaDataProperties {
                                     {
                                         JDO_PERSISTENT,
                                         JDO_TRANSIENT,
-                                        JDO_TRANSACTIONAL
+                                        JDO_TRANSACTIONAL,
                                     },
                                 PROPERTY_JDO_MODIFIER,
                                 entry);
@@ -528,7 +528,7 @@ public final class JDOMetaDataProperties {
                                     {
                                         ANNOTATION_TYPE_PK,
                                         ANNOTATION_TYPE_DFG,
-                                        ANNOTATION_TYPE_MEDIATED
+                                        ANNOTATION_TYPE_MEDIATED,
                                     },
                                 PROPERTY_ANNOTATION_TYPE,
                                 entry);
@@ -828,12 +828,12 @@ public final class JDOMetaDataProperties {
         /**
          * The name of the property.
          */
-        String name = null;
+        String name;
 
         /**
          * The value of the property.
          */
-        String value = null;
+        String value;
 
         /******************************************************************
          * Creates a string-representation of this object.
@@ -901,12 +901,12 @@ public final class JDOMetaDataProperties {
         /**
          * The name of the superclass.
          */
-        private String superClassName = null;
+        private String superClassName;
 
         /**
          * The name of the oid class.
          */
-        private String oidClassName = null;
+        private String oidClassName;
 
         /**
          * The access modifier.
@@ -926,12 +926,12 @@ public final class JDOMetaDataProperties {
         /**
          *
          */
-        private String[] managedFieldNames = null;
+        private String[] managedFieldNames;
 
         /**
          *
          */
-        private String[] fieldNames = null;
+        private String[] fieldNames;
 
 
         /******************************************************************
@@ -1124,7 +1124,7 @@ public final class JDOMetaDataProperties {
             Collections.sort(this.fields, new Comparator<Object>() {
 
                 @Override
-                public final int compare(Object f1, Object f2) {
+                public int compare(Object f1, Object f2) {
                     JDOField field1 = (JDOField) f1;
                     JDOField field2 = (JDOField) f2;
                     // if we dont have managed fields we dont care
@@ -1199,7 +1199,7 @@ public final class JDOMetaDataProperties {
         /**
          * The type of the field.
          */
-        private String type = null;
+        private String type;
 
         /**
          * The access modifier of the field.
@@ -1209,12 +1209,12 @@ public final class JDOMetaDataProperties {
         /**
          * The JDO modifier of the field.
          */
-        private String jdoModifier = null;
+        private String jdoModifier;
 
         /**
          * The annotation type.
          */
-        private String annotationType = null;
+        private String annotationType;
 
         /******************************************************************
          *  Creates a new object with the given name.

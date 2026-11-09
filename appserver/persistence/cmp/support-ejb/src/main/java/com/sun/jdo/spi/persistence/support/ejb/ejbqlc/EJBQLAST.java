@@ -51,10 +51,10 @@ public class EJBQLAST
     private static String INDENT = "  "; //NOI18N
 
     /** The line info */
-    protected int line = 0;
+    protected int line;
 
     /** The column info */
-    protected int column = 0;
+    protected int column;
 
     /** The type info */
     protected transient Object typeInfo;

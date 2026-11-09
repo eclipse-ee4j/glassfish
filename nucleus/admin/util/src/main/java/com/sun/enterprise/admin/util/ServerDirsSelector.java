@@ -46,8 +46,8 @@ public class ServerDirsSelector {
     private String userSpecifiedNodeDir; // nodeDirRoot
     private String userSpecifiedNode;
 
-    private DomainDirs domainDirs = null;
-    private InstanceDirs instanceDirs = null;
+    private DomainDirs domainDirs;
+    private InstanceDirs instanceDirs;
 
     /**
      * Creates a selector for choosing the correct set of directories.

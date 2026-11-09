@@ -50,7 +50,7 @@ public class BaseCache<K, V> implements Cache<K, V> {
     /** threshold for the cache; once the threshold is reached
      *  entries are removed to accomodate newer inserts
      */
-    protected int threshold = 0;
+    protected int threshold;
 
     // the number of cache hits
     protected int     hitCount;

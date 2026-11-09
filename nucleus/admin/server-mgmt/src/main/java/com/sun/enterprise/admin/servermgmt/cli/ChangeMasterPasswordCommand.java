@@ -69,7 +69,7 @@ public class ChangeMasterPasswordCommand extends CLICommand {
     protected String nodeDir;
 
     @Param(name = "domaindir", optional = true)
-    protected String domainDirParam = null;
+    protected String domainDirParam;
 
     private final String CHANGE_MASTER_PASSWORD_DAS = "_change-master-password-das";
 

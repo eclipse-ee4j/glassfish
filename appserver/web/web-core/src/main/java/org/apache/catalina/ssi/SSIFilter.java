@@ -49,15 +49,15 @@ import org.apache.catalina.Globals;
  * @see org.apache.catalina.ssi.SSIServlet
  */
 public class SSIFilter implements Filter {
-    protected FilterConfig config = null;
+    protected FilterConfig config;
     /** Debug level for this servlet. */
-    protected int debug = 0;
+    protected int debug;
     /** Expiration time in seconds for the doc. */
-    protected Long expires = null;
+    protected Long expires;
     /** virtual path can be webapp-relative */
-    protected boolean isVirtualWebappRelative = false;
+    protected boolean isVirtualWebappRelative;
     /** regex pattern to match when evaluating content types */
-    protected Pattern contentTypeRegEx = null;
+    protected Pattern contentTypeRegEx;
     /** default pattern for ssi filter content type matching */
     protected Pattern shtmlRegEx =
         Pattern.compile("text/x-server-parsed-html(;.*)?");

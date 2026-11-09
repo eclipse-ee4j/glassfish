@@ -37,7 +37,7 @@ public interface GlobalMessageListener {
      * @return a message ID to trace the request in the subsequent callbacks
      * or null if this invocation should not be traced further.
      */
-    public String preProcessRequest(Endpoint endpoint);
+    String preProcessRequest(Endpoint endpoint);
 
     /**
      * Callback when a 2.X web service request is about the be delivered to the
@@ -45,7 +45,7 @@ public interface GlobalMessageListener {
      * @param mid message ID returned by preProcessRequest call
      * @param ctx the jaxrpc message trace, transport dependent
      */
-    public void processRequest(String mid, SOAPMessageContext ctx, TransportInfo info);
+    void processRequest(String mid, SOAPMessageContext ctx, TransportInfo info);
 
     /**
      * Callback when a 2.X web service response was returned by the Web Service
@@ -53,7 +53,7 @@ public interface GlobalMessageListener {
      * @param mid message ID returned by the preProcessRequest call
      * @param ctx jaxrpc message trace, transport dependent.
      */
-    public void processResponse(String mid, SOAPMessageContext ctx);
+    void processResponse(String mid, SOAPMessageContext ctx);
 
     /**
      * Callback when a web service response has finished being processed
@@ -61,7 +61,7 @@ public interface GlobalMessageListener {
      * @param mid returned by the preProcessRequest call
      * @param info the response transport dependent information
      */
-    public void postProcessResponse(String mid, TransportInfo info);
+    void postProcessResponse(String mid, TransportInfo info);
 
 }
 

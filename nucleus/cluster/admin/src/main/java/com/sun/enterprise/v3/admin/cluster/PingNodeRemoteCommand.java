@@ -46,7 +46,7 @@ public abstract class PingNodeRemoteCommand implements AdminCommand {
     @Param(optional = true, name = "validate", shortName = "v", alias = "full", defaultValue = "false")
     private boolean validate;
     private static final String NL = System.getProperty("line.separator");
-    private Logger logger = null;
+    private Logger logger;
     protected abstract String validateSubType(Node node);
 
     protected final void executeInternal(AdminCommandContext context) {

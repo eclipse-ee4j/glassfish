@@ -32,7 +32,7 @@ public class ConfigurationException extends HK2RuntimeException {
      */
     private static final long serialVersionUID = -5739251253923553480L;
 
-    private transient Location location = null;
+    private transient Location location;
 
     public ConfigurationException(String message) {
         super(message);

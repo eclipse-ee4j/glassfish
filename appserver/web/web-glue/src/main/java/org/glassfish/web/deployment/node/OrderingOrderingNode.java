@@ -35,7 +35,7 @@ import org.xml.sax.Attributes;
  */
 public class OrderingOrderingNode extends DeploymentDescriptorNode<OrderingOrderingDescriptor> {
 
-    protected OrderingOrderingDescriptor descriptor = null;
+    protected OrderingOrderingDescriptor descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

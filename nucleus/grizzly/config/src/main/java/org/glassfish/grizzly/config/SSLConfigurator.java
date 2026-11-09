@@ -465,7 +465,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
             {"rsa_des_sha", "SSL_RSA_WITH_DES_CBC_SHA"},
             // backward compatible with AS 9.0 or earlier
             {"SSL_RSA_WITH_NULL_MD5", "SSL_RSA_WITH_NULL_MD5"},
-            {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"}
+            {"SSL_RSA_WITH_NULL_SHA", "SSL_RSA_WITH_NULL_SHA"},
         };
 
         private static final Map<String, CipherInfo> ciphers = new HashMap<>();

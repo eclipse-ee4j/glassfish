@@ -177,7 +177,7 @@ final class ImplHelper extends Assertion {
             "// annotation: grant direct write access",
             (new StringBuffer("this."))
                  .append(fieldName).append(" = ").append(newvalue)
-                 .append(JavaClassWriterHelper.delim_).toString()
+                 .append(JavaClassWriterHelper.delim_).toString(),
         };
     }
 

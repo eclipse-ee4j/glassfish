@@ -30,7 +30,7 @@ public class ConnectorTimerProxy extends Timer {
 
     private volatile static ConnectorTimerProxy connectorTimer;
     private Timer timer;
-    private boolean timerException = false;
+    private boolean timerException;
     private final Object getTimerLock = new Object();
 
     private final static Logger _logger = LogDomains.getLogger(ConnectorTimerProxy.class,

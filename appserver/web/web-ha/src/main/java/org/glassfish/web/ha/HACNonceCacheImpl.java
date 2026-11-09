@@ -49,8 +49,8 @@ public class HACNonceCacheImpl  implements CNonceCache {
     private ServiceLocator services;
 
     private CNonceCacheImpl localStore;
-    private BackingStore<String, NonceInfo> backingStore = null;
-    private String storeName = null;
+    private BackingStore<String, NonceInfo> backingStore;
+    private String storeName;
     private Map<String, String> props;
     private static final String BS_TYPE_REPLICATED ="replicated";
     private static final Logger logger = LogFacade.getLogger();

@@ -42,7 +42,7 @@ class MemoryReporter {
     private List<GarbageCollectorMXBean> gcmbeans;
     private final static StringManager sm = StringManager.getManager(MemoryReporter.class);
 
-    public MemoryReporter(final MBeanServerConnection mbsc) {
+    MemoryReporter(final MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
     }
     public String getMemoryReport() {

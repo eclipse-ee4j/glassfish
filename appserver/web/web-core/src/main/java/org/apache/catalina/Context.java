@@ -163,21 +163,21 @@ public interface Context extends Container {
      * @return the name that will be assigned to any session tracking
      * cookies created on behalf of this context
      */
-    public String getSessionCookieName();
+    String getSessionCookieName();
 
 
     /**
      * @return the session tracking cookie configuration of this
      * <tt>ServletContext</tt>.
      */
-    public SessionCookieConfig getSessionCookieConfig();
+    SessionCookieConfig getSessionCookieConfig();
 
 
     /**
      * @return the name that will be assigned to any session tracking
      * parameter created on behalf of this context
      */
-    public String getSessionParameterName();
+    String getSessionParameterName();
 
 
     /**
@@ -187,7 +187,7 @@ public interface Context extends Container {
      * @return true if the rewriting of URLs with the jsessionids of HTTP
      * sessions belonging to this context is enabled, false otherwise
      */
-    public boolean isEnableURLRewriting();
+    boolean isEnableURLRewriting();
 
 
     /**
@@ -198,7 +198,7 @@ public interface Context extends Container {
      * jsessionids of HTTP sessions belonging to this context should be
      * enabled, false otherwise
      */
-    public void setEnableURLRewriting(boolean enableURLRewriting);
+    void setEnableURLRewriting(boolean enableURLRewriting);
 
 
     /**
@@ -665,7 +665,7 @@ public interface Context extends Container {
      *
      * @throws ServletException if the servlet fails to be initialized
      */
-    public ServletRegistration.Dynamic addServlet(String servletName,
+    ServletRegistration.Dynamic addServlet(String servletName,
             Servlet instance, Map<String, String> initParams)
         throws ServletException;
 
@@ -685,7 +685,7 @@ public interface Context extends Container {
      *
      * @throws ServletException if the servlet fails to be initialized
      */
-    public ServletRegistration.Dynamic addServlet(String servletName,
+    ServletRegistration.Dynamic addServlet(String servletName,
             Servlet instance, Map<String, String> initParams,
             String... urlPatterns)
         throws ServletException;
@@ -709,7 +709,7 @@ public interface Context extends Container {
      * Checks whether this web application has any security constraints
      * defined.
      */
-    public boolean hasConstraints();
+    boolean hasConstraints();
 
 
     /**
@@ -778,7 +778,7 @@ public interface Context extends Container {
      * @return the default error page of this context, or null if this
      * context does not have any default error page
      */
-    public ErrorPage getDefaultErrorPage();
+    ErrorPage getDefaultErrorPage();
 
 
     /**
@@ -1138,13 +1138,13 @@ public interface Context extends Container {
      * Checks whether this web application has any watched resources
      * defined.
      */
-    public boolean hasWatchedResources();
+    boolean hasWatchedResources();
 
 
     /**
      * Clears any watched resources defined for this web application.
      */
-    public void removeWatchedResources();
+    void removeWatchedResources();
 
 
     /**
@@ -1159,7 +1159,7 @@ public interface Context extends Container {
     void removeWrapperListeners();
 
 
-    public void removeWelcomeFiles();
+    void removeWelcomeFiles();
 
 
     // START S1AS8PE 4817642
@@ -1337,7 +1337,7 @@ public interface Context extends Container {
      *
      * @param request
      */
-    public void fireRequestInitializedEvent(ServletRequest request);
+    void fireRequestInitializedEvent(ServletRequest request);
 
     /**
      * Notifies all ServletRequestListener instances configured for this Context
@@ -1345,5 +1345,5 @@ public interface Context extends Container {
      *
      * @param request
      */
-    public void fireRequestDestroyedEvent(ServletRequest request);
+    void fireRequestDestroyedEvent(ServletRequest request);
 }

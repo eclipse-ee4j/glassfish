@@ -25,7 +25,7 @@ package com.sun.enterprise.config.modularity.customization;
  */
 public class ConfigCustomizationToken {
 
-    public static enum CustomizationType {
+    public enum CustomizationType {
         PORT, FILE, STRING
     }
 

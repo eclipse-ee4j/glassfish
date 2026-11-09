@@ -87,7 +87,7 @@ public class GenerateJvmReportCommand implements AdminCommand {
            acceptableValues = "summary, thread, class, memory, log")
     String type;
 
-    private MBeanServer mbs = null;  //needs to be injected, I guess
+    private MBeanServer mbs;  //needs to be injected, I guess
 
     public void execute(AdminCommandContext ctx) {
         prepare();

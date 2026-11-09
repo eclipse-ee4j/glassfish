@@ -65,7 +65,7 @@ public abstract class HAStoreBase extends StoreBase {
      * or FINEST.
      *
      */
-    protected int _debug = 0;
+    protected int _debug;
 
     protected void debug(String message) {
         log(message);
@@ -100,7 +100,7 @@ public abstract class HAStoreBase extends StoreBase {
     /**
     * The application id
     */
-    protected String applicationId = null;
+    protected String applicationId;
 
     public String getApplicationId() {
         if(applicationId != null)
@@ -134,7 +134,7 @@ public abstract class HAStoreBase extends StoreBase {
     /**
     * The cluster id
     */
-    protected String clusterId = null;
+    protected String clusterId;
 
     /**
     * Return the cluster id for this Store

@@ -166,7 +166,7 @@ public class GetHabitatInfo implements AdminCommand {
     @Retention(RUNTIME)
     @Target({ TYPE })
     @jakarta.validation.Constraint(validatedBy = GetHabitatInfo.Validator.class)
-    public static @interface Constraint {
+    public @interface Constraint {
         String message() default "The contract argument is test but started is true.";
 
         Class<?>[] groups() default {};

@@ -74,11 +74,11 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
     private ImpersonationService impersonationService;
 
     // Authentication Service Configuration Information
-    private String name = null;
-    private String realmName = null;
-    private Configuration configuration = null;
-    private boolean usePasswordCredential = false;
-    private org.glassfish.security.services.config.AuthenticationService config = null;
+    private String name;
+    private String realmName;
+    private Configuration configuration;
+    private boolean usePasswordCredential;
+    private org.glassfish.security.services.config.AuthenticationService config;
 
 
     /**
@@ -319,7 +319,7 @@ public class AuthenticationServiceImpl implements AuthenticationService, PostCon
         private final String user;
         private final char[] pass;
 
-        public AuthenticationCallbackHandler(String username, char[] password) {
+        AuthenticationCallbackHandler(String username, char[] password) {
             user = username;
             pass = password;
         }

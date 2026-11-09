@@ -338,7 +338,7 @@ public class StringUtils {
             "abc\n\n",
             "q",
             "\n\nk\n\nz\n\n",
-            "sd.adj;ld"
+            "sd.adj;ld",
         };
 
         for (int k = 0; k < ss.length; k++) {

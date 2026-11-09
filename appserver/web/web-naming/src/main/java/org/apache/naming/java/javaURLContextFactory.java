@@ -67,7 +67,7 @@ public class javaURLContextFactory
     /**
      * Initial context.
      */
-    protected static volatile Context initialContext = null;
+    protected static volatile Context initialContext;
 
 
     // --------------------------------------------------------- Public Methods

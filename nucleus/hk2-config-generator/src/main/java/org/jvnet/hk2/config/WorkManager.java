@@ -203,11 +203,11 @@ public class WorkManager implements Executor {
 
 
   private final class Watcher<V> extends FutureTask<V> {
-    public Watcher(Callable<V> task) {
+    Watcher(Callable<V> task) {
       super(task);
     }
 
-    public Watcher(Runnable runnable, V result) {
+    Watcher(Runnable runnable, V result) {
       super(runnable, result);
     }
 

@@ -107,19 +107,19 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
     // This instance is a replacement for a deleted instance with the same
     // ObjectId.
-    private boolean isReplacementInstance = false;
+    private boolean isReplacementInstance;
 
     // This instance needs to be registered with the global (weak) cache at
     // rollback if it transitions to persistent (HOLLOW or P_NONTX) state.
-    private boolean needsRegisterAtRollback = false;
+    private boolean needsRegisterAtRollback;
 
     // This instance needs to be to be verified at the time it is removed
     // from the global (weak) cache at rollback if it transitions to transient state.
-    private boolean needsVerifyAtDeregister = false;
+    private boolean needsVerifyAtDeregister;
 
     // This flag is initially set to false and changed to true when the first
     // operation (e.g. makePersistent, loadForRead, or getObjectById) succeeds.
-    private boolean valid = false;
+    private boolean valid;
 
     /** Stores the updates to the associated object. */
     private UpdateObjectDescImpl updateDesc;

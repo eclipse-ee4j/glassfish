@@ -173,7 +173,7 @@ public class RWLock {
 
     class Queue extends LinkedList {
 
-        public Queue() {
+        Queue() {
             super();
         }
 

@@ -51,6 +51,6 @@ public class InstanceVisitor implements Visitor {
     }
 
     //--- PRIVATE VARS ----
-    Cluster _c = null;
-    int _i = 0;
+    Cluster _c;
+    int _i;
 }

@@ -41,25 +41,25 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
      * The key to store the module name in the deployment descriptor map.
      * @see getDeploymentConfigurations
      */
-    public static final String MODULE_NAME_KEY = "module-name";
+    String MODULE_NAME_KEY = "module-name";
     /**
      * The key to store the deployment descriptor path in the deployment
      * descriptor map.
      * @see getDeploymentConfigurations
      */
-    public static final String DD_PATH_KEY =  "dd-path";
+    String DD_PATH_KEY =  "dd-path";
     /**
      * The key to store the deployment descriptor content in the deployment
      * descriptor map.
      * @see getDeploymentConfigurations
      */
-    public static final String DD_CONTENT_KEY = "dd-content";
+    String DD_CONTENT_KEY = "dd-content";
 
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void stopDomain();
+    void stopDomain();
 
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void restartDomain();
+    void restartDomain();
 
     /**
      * Return a list of deployment descriptor maps for the specified
@@ -74,7 +74,7 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
      *
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public List<Map<String, String>> getDeploymentConfigurations(
+    List<Map<String, String>> getDeploymentConfigurations(
             @Param(name = "applicationName") String applicationName);
 
     /**
@@ -85,7 +85,7 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
      *         name and the value is the component type
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public Map<String, String> getSubComponentsOfModule(
+    Map<String, String> getSubComponentsOfModule(
             @Param(name = "applicationName") String applicationName,
             @Param(name = "moduleName") String moduleName);
 
@@ -96,7 +96,7 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
      * @return the context root of a specified module
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public String getContextRoot(
+    String getContextRoot(
             @Param(name = "applicationName") String applicationName,
             @Param(name = "moduleName") String moduleName);
 
@@ -104,7 +104,7 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
     Execute a REST command.  Do not include a leading "/".
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public String executeREST(@Param(name = "command") final String command);
+    String executeREST(@Param(name = "command") String command);
 
     /**
     Return the base URL for use with {@link #executeREST}.  Example:
@@ -114,27 +114,27 @@ public interface RuntimeRoot extends AMXProxy, Utility, Singleton
     included; simply append the command string and call {@link #executeREST}.
      */
     @ManagedAttribute
-    public String getRESTBaseURL();
+    String getRESTBaseURL();
 
     @ManagedAttribute
-    public String[] getSupportedCipherSuites();
+    String[] getSupportedCipherSuites();
 
     @ManagedAttribute
     @Description("Return the available JMXServiceURLs in no particular order")
-    public String[] getJMXServiceURLs();
+    String[] getJMXServiceURLs();
 
 
     /** Which: all | summary | memory| class | thread  log */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
     @Description("Return a summary report of the specified type")
-    public String getJVMReport( @Param(name = "which")String which);
+    String getJVMReport( @Param(name = "which")String which);
 
     @ManagedAttribute
-    public Map<String,ServerRuntime>   getServerRuntime();
+    Map<String,ServerRuntime>   getServerRuntime();
 
     @ManagedAttribute
     @Description("Whether the server was started with --debug")
-    public boolean isStartedInDebugMode();
+    boolean isStartedInDebugMode();
 }
 
 

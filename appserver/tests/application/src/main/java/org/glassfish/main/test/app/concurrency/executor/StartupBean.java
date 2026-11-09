@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 @Startup
 public class StartupBean {
 
-    private boolean submittedTaskExecuted = false;
+    private boolean submittedTaskExecuted;
 
     @Resource
     ManagedExecutorService executor;

@@ -148,12 +148,12 @@ public abstract class PersistentManagerBase extends ManagerBase implements Lifec
     /**
      * Has this component been started yet?
      */
-    private boolean started = false;
+    private boolean started;
 
     /**
      * Store object which will manage the Session store.
      */
-    private Store store = null;
+    private Store store;
 
     /**
      * Whether to save and reload sessions when the Manager <code>unload</code> and <code>load</code> methods are called.

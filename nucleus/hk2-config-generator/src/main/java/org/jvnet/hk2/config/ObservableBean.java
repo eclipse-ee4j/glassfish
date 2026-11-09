@@ -30,7 +30,7 @@ public interface ObservableBean {
      *
      * @param listener new listener
      */
-    public void addListener(ConfigListener listener);
+    void addListener(ConfigListener listener);
 
     /**
      * Remove a listener
@@ -38,5 +38,5 @@ public interface ObservableBean {
      * @param listener to remove
      * @return true if listener removal was successful.
      */
-    public boolean removeListener(ConfigListener listener);
+    boolean removeListener(ConfigListener listener);
 }

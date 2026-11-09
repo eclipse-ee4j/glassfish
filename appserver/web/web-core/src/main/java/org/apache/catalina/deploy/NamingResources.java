@@ -52,7 +52,7 @@ public class NamingResources implements Serializable {
     /**
      * Associated container object.
      */
-    private Object container = null;
+    private Object container;
 
 
     /**

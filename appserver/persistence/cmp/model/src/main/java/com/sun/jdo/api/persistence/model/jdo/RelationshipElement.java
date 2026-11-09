@@ -373,7 +373,7 @@ public class RelationshipElement extends PersistenceFieldElement
          * {@link #NULLIFY_ACTION}, {@link #RESTRICT_ACTION},
          * {@link #CASCADE_ACTION}, or {@link #AGGREGATE_ACTION}
          */
-        public int getUpdateAction ();
+        int getUpdateAction ();
 
         /** Set the update action for this relationship element.
          * @param action - an integer indicating the update action, one of:
@@ -382,14 +382,14 @@ public class RelationshipElement extends PersistenceFieldElement
          * {@link #AGGREGATE_ACTION}
          * @exception ModelException if impossible
          */
-        public void setUpdateAction (int action) throws ModelException;
+        void setUpdateAction (int action) throws ModelException;
 
         /** Get the delete action for this relationship element.
          * @return the delete action, one of {@link #NONE_ACTION},
          * {@link #NULLIFY_ACTION}, {@link #RESTRICT_ACTION},
          * {@link #CASCADE_ACTION}, or {@link #AGGREGATE_ACTION}
          */
-        public int getDeleteAction ();
+        int getDeleteAction ();
 
         /** Set the delete action for this relationship element.
          * @param action - an integer indicating the delete action, one of:
@@ -398,57 +398,57 @@ public class RelationshipElement extends PersistenceFieldElement
          * {@link #AGGREGATE_ACTION}
          * @exception ModelException if impossible
          */
-        public void setDeleteAction (int action) throws ModelException;
+        void setDeleteAction (int action) throws ModelException;
 
         /** Determines whether this relationship element should prefetch or not.
          * @return <code>true</code> if the relationship should prefetch,
          * <code>false</code> otherwise
          */
-        public boolean isPrefetch ();
+        boolean isPrefetch ();
 
         /** Set whether this relationship element should prefetch or not.
          * @param flag - if <code>true</code>, the relationship is set to
          * prefetch; otherwise, it is not
          * @exception ModelException if impossible
          */
-        public void setPrefetch (boolean flag) throws ModelException;
+        void setPrefetch (boolean flag) throws ModelException;
 
         /** Get the lower cardinality bound for this relationship element.
          * @return the lower cardinality bound
          */
-        public int getLowerBound ();
+        int getLowerBound ();
 
         /** Set the lower cardinality bound for this relationship element.
          * @param lowerBound - an integer indicating the lower cardinality bound
          * @exception ModelException if impossible
          */
-        public void setLowerBound (int lowerBound) throws ModelException;
+        void setLowerBound (int lowerBound) throws ModelException;
 
         /** Get the upper cardinality bound for this relationship element.
          * Returns {@link java.lang.Integer#MAX_VALUE} for <code>n</code>
          * @return the upper cardinality bound
          */
-        public int getUpperBound ();
+        int getUpperBound ();
 
         /** Set the upper cardinality bound for this relationship element.
          * @param upperBound - an integer indicating the upper cardinality bound
          * (use {@link java.lang.Integer#MAX_VALUE} for <code>n</code>)
          * @exception ModelException if impossible
          */
-        public void setUpperBound (int upperBound) throws ModelException;
+        void setUpperBound (int upperBound) throws ModelException;
 
         /** Get the collection class (for example Set, List, Vector, etc.)
          * for this relationship element.
          * @return the collection class
          */
-        public String getCollectionClass ();
+        String getCollectionClass ();
 
         /** Set the collection class for this relationship element.
          * @param collectionClass - a string indicating the type of
          * collection (for example Set, List, Vector, etc.)
          * @exception ModelException if impossible
          */
-        public void setCollectionClass (String collectionClass)
+        void setCollectionClass (String collectionClass)
             throws ModelException;
 
         /** Get the element class for this relationship element.  If primitive
@@ -456,7 +456,7 @@ public class RelationshipElement extends PersistenceFieldElement
          * <code><i>wrapperclass</i>.TYPE.toString()</code> to specify them.
          * @return the element class
          */
-        public String getElementClass ();
+        String getElementClass ();
 
         /** Set the element class for this relationship element.
          * @param elementClass - a string indicating the type of elements
@@ -464,7 +464,7 @@ public class RelationshipElement extends PersistenceFieldElement
          * <code><i>wrapperclass</i>.TYPE.toString()</code> to specify them.
          * @exception ModelException if impossible
          */
-        public void setElementClass (String elementClass) throws ModelException;
+        void setElementClass (String elementClass) throws ModelException;
 
         /** Get the relative name of the inverse relationship field for this
          * relationship element.  In the case of two-way relationships, the two
@@ -477,7 +477,7 @@ public class RelationshipElement extends PersistenceFieldElement
          * @return the relative name of the inverse relationship element
          * @see #getInverseRelationship
          */
-        public String getInverseRelationshipName ();
+        String getInverseRelationshipName ();
 
         /** Changes the inverse relationship element for this relationship
          * element.  This method is invoked for both sides from
@@ -490,7 +490,7 @@ public class RelationshipElement extends PersistenceFieldElement
          * relationship.
          * @exception ModelException if impossible
          */
-        public void changeInverseRelationship (
+        void changeInverseRelationship (
             RelationshipElement inverseRelationship) throws ModelException;
     }
 }

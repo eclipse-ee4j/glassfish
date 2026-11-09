@@ -261,7 +261,7 @@ public class V2DottedNameSupport {
         final String name;
         final String relativeName;
 
-        public TreeNode(Dom node, String name, String relativeName) {
+        TreeNode(Dom node, String name, String relativeName) {
             this.node = node;
             this.name = name;
             this.relativeName = relativeName;

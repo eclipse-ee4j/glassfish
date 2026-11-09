@@ -47,14 +47,14 @@ public final class SessionContextImpl
 {
 
     private boolean completedTxStatus;
-    private boolean afterCompletionDelayed=false;
-    private boolean committing=false;
-    private boolean inAfterCompletion=false;
-    private boolean isStateless = false;
-    private boolean isStateful  = false;
+    private boolean afterCompletionDelayed;
+    private boolean committing;
+    private boolean inAfterCompletion;
+    private boolean isStateless;
+    private boolean isStateful;
 
-    private boolean existsInSessionStore = false;
-    private transient int refCount = 0;
+    private boolean existsInSessionStore;
+    private transient int refCount;
 
     private boolean txCheckpointDelayed;
     private long    lastPersistedAt;
@@ -63,7 +63,7 @@ public final class SessionContextImpl
 
     // Do not call Session Synchronization callbacks when in transactional
     // lifecycle callbacks
-    private boolean inLifeCycleCallback = false;
+    private boolean inLifeCycleCallback;
 
     // Map of entity managers with extended persistence context
     // for this stateful session bean.
@@ -328,15 +328,15 @@ public final class SessionContextImpl
         this.existsInSessionStore = val;
     }
 
-    public final void incrementRefCount() {
+    public void incrementRefCount() {
         refCount++;
     }
 
-    public final void decrementRefCount() {
+    public void decrementRefCount() {
         refCount--;
     }
 
-    public final int getRefCount() {
+    public int getRefCount() {
         return refCount;
     }
 

@@ -364,7 +364,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     @Pattern(regexp = SCHEME_PATTERN)
     String getScheme();
 
-    void setScheme(final String scheme);
+    void setScheme(String scheme);
 
     /**
      * Returns the HTTP request header name, whose value (if non-null) would be used
@@ -374,7 +374,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     @Attribute
     String getSchemeMapping();
 
-    void setSchemeMapping(final String schemeMapping);
+    void setSchemeMapping(String schemeMapping);
 
     /**
      * Returns the HTTP request header name, whose value (if non-null) would be used
@@ -383,7 +383,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     @Attribute
     String getRemoteUserMapping();
 
-    void setRemoteUserMapping(final String remoteUserMapping);
+    void setRemoteUserMapping(String remoteUserMapping);
 
     @Attribute(defaultValue = "" + WEBSOCKET_SUPPORT_ENABLED, dataType = Boolean.class)
     String getWebsocketsSupportEnabled();

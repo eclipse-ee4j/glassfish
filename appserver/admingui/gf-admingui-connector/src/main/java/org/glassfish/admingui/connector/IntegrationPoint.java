@@ -191,5 +191,5 @@ public class IntegrationPoint implements Serializable {
     private String parentId;
     private String content;
     private int priority;
-    private String configId = null;
+    private String configId;
 }

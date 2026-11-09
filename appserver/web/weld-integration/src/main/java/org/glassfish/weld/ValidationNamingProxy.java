@@ -73,7 +73,7 @@ public class ValidationNamingProxy implements NamedNamingObjectProxy {
      * @param clazz
      * @return
      */
-    private static final Object getAndCreateBean(BeanManager beanManager, Class<?> clazz) {
+    private static Object getAndCreateBean(BeanManager beanManager, Class<?> clazz) {
         Set<Bean<?>> beans = beanManager.getBeans(clazz);
 
         if (!beans.isEmpty()) {

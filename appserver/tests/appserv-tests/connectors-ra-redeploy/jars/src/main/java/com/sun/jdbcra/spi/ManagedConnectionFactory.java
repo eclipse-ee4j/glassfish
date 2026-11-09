@@ -43,8 +43,8 @@ public abstract class ManagedConnectionFactory implements jakarta.resource.spi.M
     protected DataSourceSpec spec = new DataSourceSpec();
     protected transient DataSourceObjectBuilder dsObjBuilder;
 
-    protected java.io.PrintWriter logWriter = null;
-    protected jakarta.resource.spi.ResourceAdapter ra = null;
+    protected java.io.PrintWriter logWriter;
+    protected jakarta.resource.spi.ResourceAdapter ra;
 
     private static Logger _logger;
     static {

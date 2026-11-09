@@ -23,8 +23,8 @@ package com.sun.enterprise.deployment.xml;
 
 public interface ApplicationClientTagNames extends TagNames {
 
-    public static String APPLICATION_CLIENT_TAG = "application-client";
-    public static String CALLBACK_HANDLER = "callback-handler";
+    String APPLICATION_CLIENT_TAG = "application-client";
+    String CALLBACK_HANDLER = "callback-handler";
 
 }
 

@@ -128,7 +128,7 @@ public class WeldContextListenerTest {
     private class LocalWeldContextListener extends WeldContextListener {
         private final JspApplicationContext jspApplicationContext;
 
-        public LocalWeldContextListener(JspApplicationContext jspApplicationContext) {
+        LocalWeldContextListener(JspApplicationContext jspApplicationContext) {
             super();
             this.jspApplicationContext = jspApplicationContext;
         }

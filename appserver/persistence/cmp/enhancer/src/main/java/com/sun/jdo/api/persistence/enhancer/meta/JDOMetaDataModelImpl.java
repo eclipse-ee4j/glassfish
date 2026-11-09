@@ -229,7 +229,7 @@ public class JDOMetaDataModelImpl extends Support implements JDOMetaData {
      * Returns an array of field names of all declared, persistent fields
      * of a class.
      */
-    private final String[] getPersistentFields(String classPath)
+    private String[] getPersistentFields(String classPath)
         throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final String className = pathToName(classPath);
         final PersistenceClassElement pce = model.getPersistenceClass(className);

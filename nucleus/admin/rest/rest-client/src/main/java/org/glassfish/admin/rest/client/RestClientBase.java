@@ -47,8 +47,8 @@ public abstract class RestClientBase {
     protected Client client;
     protected RestClientBase parent;
 
-    private boolean initialized = false;
-    private boolean isNew = false;
+    private boolean initialized;
+    private boolean isNew;
 
     protected RestClientBase(Client c, RestClientBase p) {
         client = c;
@@ -331,7 +331,7 @@ public abstract class RestClientBase {
         return formData;
     }
 
-    public static enum Method {
+    public enum Method {
         GET, PUT, POST, DELETE
     };
 }

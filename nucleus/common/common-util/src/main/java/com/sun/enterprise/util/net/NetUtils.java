@@ -571,7 +571,7 @@ public final class NetUtils {
     }
 
     @FunctionalInterface
-    private static interface ThrowingPredicate<T> extends Predicate<T> {
+    private interface ThrowingPredicate<T> extends Predicate<T> {
 
         boolean throwing(T object) throws Exception;
 

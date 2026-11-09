@@ -288,12 +288,12 @@ public class AMXConfigImpl extends AMXImplBase
         return name == null ? NO_NAME : name;
     }
 
-    private final ConfigBean getConfigBean()
+    private ConfigBean getConfigBean()
     {
         return mConfigBean;
     }
 
-    private final ConfigBeanProxy getConfigBeanProxy()
+    private ConfigBeanProxy getConfigBeanProxy()
     {
         return getConfigBean().getProxy(getConfigBean().getProxyType());
     }
@@ -376,7 +376,7 @@ public class AMXConfigImpl extends AMXImplBase
         final Map<String,Object>  mAttrs;
         final List<CreateParams>  mChildren;
 
-        public CreateParams( final String type, final Map<String,?> values )
+        CreateParams( final String type, final Map<String,?> values )
         {
             mAttrs    = MapUtil.newMap();
             mChildren = ListUtil.newList();
@@ -758,7 +758,7 @@ public class AMXConfigImpl extends AMXImplBase
     {
         private final List<CreateParams> mSubs;
 
-        public SubElementsCallback(final List<CreateParams> subs)
+        SubElementsCallback(final List<CreateParams> subs)
         {
             mSubs = subs;
         }
@@ -868,7 +868,7 @@ public class AMXConfigImpl extends AMXImplBase
         return remove(child);
     }
 
-    private final ObjectName remove(final ObjectName childObjectName)
+    private ObjectName remove(final ObjectName childObjectName)
     {
         ObjectName removed = null;
         try
@@ -1048,12 +1048,12 @@ public class AMXConfigImpl extends AMXImplBase
                 CONFIG_OBJECT_NAME_KEY, configObjectName);
     }
 
-    private final ConfigBeanJMXSupport getConfigBeanJMXSupport()
+    private ConfigBeanJMXSupport getConfigBeanJMXSupport()
     {
         return ConfigBeanJMXSupportRegistry.getInstance(getConfigBean());
     }
 
-    private static final Map<String, String> getDefaultValues(final Class<? extends ConfigBeanProxy> intf, boolean useAMXAttributeNames)
+    private static Map<String, String> getDefaultValues(final Class<? extends ConfigBeanProxy> intf, boolean useAMXAttributeNames)
     {
         return ConfigBeanJMXSupportRegistry.getInstance(intf).getDefaultValues(useAMXAttributeNames);
     }
@@ -1082,7 +1082,7 @@ public class AMXConfigImpl extends AMXImplBase
     {
         return new String[]
                 {
-                    Util.typeFromName(attributeName), attributeName
+                    Util.typeFromName(attributeName), attributeName,
                 };
     }
 
@@ -1315,12 +1315,12 @@ public class AMXConfigImpl extends AMXImplBase
 
         final WriteableView mWriteable;
 
-        public Applyer(final ConfigBean cb) throws TransactionFailure
+        Applyer(final ConfigBean cb) throws TransactionFailure
         {
             this(cb, new Transaction());
         }
 
-        public Applyer(final ConfigBean cb, final Transaction t)
+        Applyer(final ConfigBean cb, final Transaction t)
                 throws TransactionFailure
         {
             mConfigBean = cb;
@@ -1368,7 +1368,7 @@ public class AMXConfigImpl extends AMXImplBase
     {
         private final Map<String, Object> mChanges;
 
-        public MakeChangesApplyer(
+        MakeChangesApplyer(
                 final ConfigBean cb,
                 final Map<String, Object> changes)
                 throws TransactionFailure

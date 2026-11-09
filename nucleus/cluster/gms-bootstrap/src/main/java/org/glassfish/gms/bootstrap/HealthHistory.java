@@ -97,7 +97,7 @@ public final class HealthHistory implements ConfigListener {
     private static final String GMS_INSTANCE_UNKNOWN_STATE="NCLS-CLSTR-20006";
 
     // NOT_RUNNING means there is no time information associated
-    public static enum STATE {
+    public enum STATE {
         NOT_RUNNING (strings.getString("state.not_running")),
         RUNNING     (strings.getString("state.running")),
         REJOINED    (strings.getString("state.rejoined")),

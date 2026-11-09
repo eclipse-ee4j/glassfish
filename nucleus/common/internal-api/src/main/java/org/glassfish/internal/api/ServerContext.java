@@ -37,7 +37,7 @@ public interface ServerContext {
      *
      * @return  the server command-line arguments
      */
-    public String[] getCmdLineArgs();
+    String[] getCmdLineArgs();
 
     /**
      * Get a factory for supported pluggable features. The server can support
@@ -53,35 +53,35 @@ public interface ServerContext {
      *
      * @return  the server install root
      */
-    public File getInstallRoot();
+    File getInstallRoot();
 
     /**
      * Get the server instance name
      *
      * @return  the server instance name
      */
-    public String getInstanceName();
+    String getInstanceName();
 
     /**
      * Get a URL representation of server configuration
      *
      * @return    the URL to the server configuration
      */
-    public String getServerConfigURL();
+    String getServerConfigURL();
 
     /**
      * Get the server configuration bean.
      *
      * @return  the server config bean
      */
-    public com.sun.enterprise.config.serverbeans.Server getConfigBean();
+    com.sun.enterprise.config.serverbeans.Server getConfigBean();
 
     /**
      * Get the initial naming context.
      *
      * @return    the initial naming context
      */
-    public InitialContext getInitialContext();
+    InitialContext getInitialContext();
 
     /**
      * Get the classloader that loads .jars in $instance/lib and classes
@@ -89,21 +89,21 @@ public interface ServerContext {
      *
      * @return  the common class loader for this instance
      */
-    public ClassLoader getCommonClassLoader();
+    ClassLoader getCommonClassLoader();
 
     /**
      * Returns the shared class loader for this server instance.
      *
      * @return    the shared class loader
      */
-    public ClassLoader getSharedClassLoader();
+    ClassLoader getSharedClassLoader();
 
     /**
      * Get the parent class loader for the life cycle modules.
      *
      * @return  the parent class loader for the life cycle modules
      */
-    public ClassLoader getLifecycleParentClassLoader();
+    ClassLoader getLifecycleParentClassLoader();
 
     /**
      * Returns the environment object for this instance.
@@ -117,20 +117,20 @@ public interface ServerContext {
      *
      * @return InvocationManager
      */
-    public InvocationManager getInvocationManager();
+    InvocationManager getInvocationManager();
 
     /**
      * get the default domain name
      *
      * @return String default domain name
      */
-    public String getDefaultDomainName();
+    String getDefaultDomainName();
 
 
     /**
      * Returns the default habitat for this instance
      * @return defa ult habitat
      */
-    public ServiceLocator getDefaultServices();
+    ServiceLocator getDefaultServices();
 
 }

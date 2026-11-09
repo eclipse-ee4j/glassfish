@@ -82,7 +82,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     // Single instance
     private static final RecoveryLockFile instance = new RecoveryLockFile();
 
-    private volatile boolean started = false;
+    private volatile boolean started;
     private String instance_name;
     private String log_path;
     private GMSCallBack gmsCallBack;

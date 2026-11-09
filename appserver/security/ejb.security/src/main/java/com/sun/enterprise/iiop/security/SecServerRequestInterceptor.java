@@ -578,11 +578,11 @@ class Counter {
 
     public int count;
 
-    public Counter(int count) {
+    Counter(int count) {
         this.count = count;
     }
 
-    public Counter() {
+    Counter() {
         count = 0;
     }
 

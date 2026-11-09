@@ -130,14 +130,14 @@ public class StandardManager extends ManagerBase implements Lifecycle, PropertyC
     /**
      * Has this component been started yet?
      */
-    private boolean started = false;
+    private boolean started;
 
     /*
      * The absolute path name of the file where sessions are persisted.
      */
     private String absPathName;
 
-    long processingTime = 0;
+    long processingTime;
 
     // ------------------------------------------------------------- Properties
 

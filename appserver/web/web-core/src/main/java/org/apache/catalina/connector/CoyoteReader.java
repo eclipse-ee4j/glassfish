@@ -48,7 +48,7 @@ public class CoyoteReader
 
     protected InputBuffer ib;
 
-    protected char[] lineBuffer = null;
+    protected char[] lineBuffer;
 
 
     // ----------------------------------------------------------- Constructors

@@ -32,7 +32,7 @@ public class HtmlEntityEncoder {
         null, null, null, null, null,
         null, null, null, null, null,
         null, null, null, "&#59;", "&lt;",
-        null, "&gt;"
+        null, "&gt;",
     };
 
     private static final int START = 34;

@@ -25,8 +25,8 @@ import java.net.HttpURLConnection;
  */
 public interface ProprietaryWriter {
 
-    boolean isWriteable(final Object entity);
+    boolean isWriteable(Object entity);
 
-    void writeTo(final Object entity, final HttpURLConnection urlConnection) throws IOException;
+    void writeTo(Object entity, HttpURLConnection urlConnection) throws IOException;
 
 }

@@ -54,7 +54,7 @@ public class TimeoutValueNode extends DeploymentDescriptorNode<TimeoutValueDescr
         }
     }
 
-    private TimeoutValueDescriptor descriptor = null;
+    private TimeoutValueDescriptor descriptor;
 
     @Override
     public TimeoutValueDescriptor getDescriptor() {

@@ -159,7 +159,7 @@ public class ComponentEnvManagerImpl implements ComponentEnvManager {
      * EJBs in war files will use the same component ID as the web bundle.
      */
     private static class RefCountJndiNameEnvironment {
-        public RefCountJndiNameEnvironment(JndiNameEnvironment env) {
+        RefCountJndiNameEnvironment(JndiNameEnvironment env) {
             this.env = env;
             this.refcnt = new AtomicInteger(1);
         }

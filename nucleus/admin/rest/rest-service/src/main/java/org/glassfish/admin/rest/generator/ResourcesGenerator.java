@@ -23,11 +23,11 @@ import org.jvnet.hk2.config.DomDocument;
  * @author Mitesh Meswani
  */
 public interface ResourcesGenerator {
-    public static enum Strategy {
+    enum Strategy {
         TEXT, ASM
     }
 
-    public ClassWriter getClassWriter(String className, String baseClassName, String resourcePath);
+    ClassWriter getClassWriter(String className, String baseClassName, String resourcePath);
 
     void generateSingle(ConfigModel rootModel, DomDocument document);
 

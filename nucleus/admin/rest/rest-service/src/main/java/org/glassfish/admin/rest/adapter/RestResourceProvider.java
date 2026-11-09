@@ -37,7 +37,7 @@ public interface RestResourceProvider {
 
     Set<Class<?>> getResourceClasses(ServiceLocator habitat);
 
-    ResourceConfig getResourceConfig(Set<Class<?>> classes, final ServerContext sc, final ServiceLocator habitat,
+    ResourceConfig getResourceConfig(Set<Class<?>> classes, ServerContext sc, ServiceLocator habitat,
             Set<? extends Binder> additionalBinders) throws EndpointRegistrationException;
 
     String getContextRoot();

@@ -28,7 +28,7 @@ import org.glassfish.web.LogFacade;
 public class ValueConstraint {
 
     private static final String[] EXPR_NAMES = {
-        "", "'equals'", "'greater'", "'lesser'", "'not-equals'", "'in-range'"
+        "", "'equals'", "'greater'", "'lesser'", "'not-equals'", "'in-range'",
     };
 
     private static final Logger _logger = LogFacade.getLogger();
@@ -39,7 +39,7 @@ public class ValueConstraint {
     private static final ResourceBundle _rb = _logger.getResourceBundle();
 
     // field values to match
-    private String matchValue = null;
+    private String matchValue;
     private float minValue = Float.MIN_VALUE;
     private float maxValue = Float.MAX_VALUE;
 
@@ -52,7 +52,7 @@ public class ValueConstraint {
     // whether to cache if there was a match
     private boolean cacheOnMatch = true;
     // whether to cache if there was a failure to match
-    private boolean cacheOnMatchFailure = false;
+    private boolean cacheOnMatchFailure;
 
     /** create constraint: field value matches with the given string expression
      * @param value specific value to match

@@ -90,9 +90,9 @@ class AsyncContextImpl implements AsyncContext {
     // The possibly wrapped response passed to ServletRequest.startAsync
     private ServletResponse servletResponse;
 
-    private boolean isOriginalRequestAndResponse = false;
+    private boolean isOriginalRequestAndResponse;
 
-    private boolean isStartAsyncWithZeroArg = false;
+    private boolean isStartAsyncWithZeroArg;
 
     // defaults to false
     private final AtomicBoolean isDispatchInProgress = new AtomicBoolean();
@@ -104,7 +104,7 @@ class AsyncContextImpl implements AsyncContext {
         }
     };
 
-    private volatile boolean hasDispatch = false;
+    private volatile boolean hasDispatch;
 
     private final AtomicBoolean isOkToConfigure = new AtomicBoolean(true);
 
@@ -647,7 +647,7 @@ class AsyncContextImpl implements AsyncContext {
         private final ServletRequest request;
         private final ServletResponse response;
 
-        public AsyncListenerContext(AsyncListener listener, ServletRequest request, ServletResponse response) {
+        AsyncListenerContext(AsyncListener listener, ServletRequest request, ServletResponse response) {
             this.listener = listener;
             this.request = request;
             this.response = response;

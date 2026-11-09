@@ -410,7 +410,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     /**
      * The current application dispatch depth.
      */
-    private int dispatchDepth = 0;
+    private int dispatchDepth;
 
     /**
      * The maximum allowed application dispatch depth.
@@ -953,7 +953,7 @@ public class Request implements HttpRequest, HttpServletRequest {
     /**
      * URI byte to char converter (not recycled).
      */
-    protected B2CConverter URIConverter = null;
+    protected B2CConverter URIConverter;
 
     /**
      * Return the URI converter.

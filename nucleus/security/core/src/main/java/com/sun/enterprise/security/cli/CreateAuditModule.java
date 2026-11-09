@@ -95,7 +95,7 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     SecurityConfigListener securityConfigListener;
 
     @AccessRequired.NewChild(type = AuditModule.class)
-    private SecurityService securityService = null;
+    private SecurityService securityService;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

@@ -89,7 +89,7 @@ import static org.glassfish.main.jul.cfg.GlassFishLogManagerProperty.KEY_ROOT_HA
 
 public final class LoggingImpl extends AMXImplBase {
 
-    private static MBeanNotificationInfo[] SELF_NOTIFICATION_INFOS = null;
+    private static MBeanNotificationInfo[] SELF_NOTIFICATION_INFOS;
 
     private final Map<Level, String> mLevelToNotificationTypeMap;
     private final Map<String, NotificationBuilder> mNotificationTypeToNotificationBuilderMap;

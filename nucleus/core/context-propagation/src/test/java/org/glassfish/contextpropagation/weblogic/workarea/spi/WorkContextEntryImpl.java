@@ -40,7 +40,7 @@ public final class WorkContextEntryImpl implements WorkContextEntry
     "JMS_TOPIC",
     "SOAP",
     "MIME_HEADER",
-    "ONEWAY"
+    "ONEWAY",
   };
 
   private String name;

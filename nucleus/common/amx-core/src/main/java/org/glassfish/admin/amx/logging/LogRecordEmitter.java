@@ -87,36 +87,36 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
      * </ul>
      */
     /** Notification type <i>prefix</i> for a LogRecord Notification */
-    public static final String LOG_RECORD_NOTIFICATION_PREFIX = "org.glassfish.admin.amx.logging.Logging.";
+    String LOG_RECORD_NOTIFICATION_PREFIX = "org.glassfish.admin.amx.logging.Logging.";
 
     /** Notification type for a SEVERE LogRecord */
-    public static final String LOG_RECORD_SEVERE_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.SEVERE;
+    String LOG_RECORD_SEVERE_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.SEVERE;
 
     /** Notification type for a WARNING LogRecord */
-    public static final String LOG_RECORD_WARNING_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.WARNING;
+    String LOG_RECORD_WARNING_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.WARNING;
 
     /** Notification type for an INFO LogRecord */
-    public static final String LOG_RECORD_INFO_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.INFO;
+    String LOG_RECORD_INFO_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.INFO;
 
     /** Notification type for a CONFIG LogRecord */
-    public static final String LOG_RECORD_CONFIG_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.CONFIG;
+    String LOG_RECORD_CONFIG_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.CONFIG;
 
     /** Notification type for a FINE LogRecord */
-    public static final String LOG_RECORD_FINE_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINE;
+    String LOG_RECORD_FINE_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINE;
 
     /** Notification type for a FINER LogRecord */
-    public static final String LOG_RECORD_FINER_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINER;
+    String LOG_RECORD_FINER_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINER;
 
     /** Notification type for a FINEST LogRecord */
-    public static final String LOG_RECORD_FINEST_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINEST;
+    String LOG_RECORD_FINEST_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + Level.FINEST;
 
     /**
      * Notification type for any other level eg a specific level number not equivalent to any of the
      * standard ones
      */
-    public static final String LOG_RECORD_OTHER_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + "OTHER";
+    String LOG_RECORD_OTHER_NOTIFICATION_TYPE = LOG_RECORD_NOTIFICATION_PREFIX + "OTHER";
 
-    public static final Set<String> ALL_LOG_RECORD_NOTIFICATION_TYPES = Collections.unmodifiableSet(SetUtil.newSet(
+    Set<String> ALL_LOG_RECORD_NOTIFICATION_TYPES = Collections.unmodifiableSet(SetUtil.newSet(
         new String[]
             {
                 LOG_RECORD_SEVERE_NOTIFICATION_TYPE,
@@ -132,7 +132,7 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
     /**
      * All keys within the Map found in Notification.getUserData() have this prefix.
      */
-    public static final String LOG_RECORD_KEY_PREFIX = "LogRecord.";
+    String LOG_RECORD_KEY_PREFIX = "LogRecord.";
 
     /**
      * Key to access the string representation of the {@link java.util.logging.LogRecord}.
@@ -140,31 +140,31 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
      * Use LOG_RECORD_STRING_KEY
      * to obtain this value.
      */
-    public static final String LOG_RECORD_AS_STRING_KEY = LOG_RECORD_KEY_PREFIX + "toString";
+    String LOG_RECORD_AS_STRING_KEY = LOG_RECORD_KEY_PREFIX + "toString";
 
     /** value: Level */
-    public static final String LOG_RECORD_LEVEL_KEY = LOG_RECORD_KEY_PREFIX + "Level";
+    String LOG_RECORD_LEVEL_KEY = LOG_RECORD_KEY_PREFIX + "Level";
 
     /** value: String */
-    public static final String LOG_RECORD_LOGGER_NAME_KEY = LOG_RECORD_KEY_PREFIX + "LoggerName";
+    String LOG_RECORD_LOGGER_NAME_KEY = LOG_RECORD_KEY_PREFIX + "LoggerName";
 
     /** value: String */
-    public static final String LOG_RECORD_MESSAGE_KEY = LOG_RECORD_KEY_PREFIX + "Message";
+    String LOG_RECORD_MESSAGE_KEY = LOG_RECORD_KEY_PREFIX + "Message";
 
     /** value: Long */
-    public static final String LOG_RECORD_MILLIS_KEY = LOG_RECORD_KEY_PREFIX + "Millis";
+    String LOG_RECORD_MILLIS_KEY = LOG_RECORD_KEY_PREFIX + "Millis";
 
     /** value: Long */
-    public static final String LOG_RECORD_SEQUENCE_NUMBER_KEY = LOG_RECORD_KEY_PREFIX + "SequenceNumber";
+    String LOG_RECORD_SEQUENCE_NUMBER_KEY = LOG_RECORD_KEY_PREFIX + "SequenceNumber";
 
     /** value: String */
-    public static final String LOG_RECORD_SOURCE_CLASS_NAME_KEY = LOG_RECORD_KEY_PREFIX + "SourceClassName";
+    String LOG_RECORD_SOURCE_CLASS_NAME_KEY = LOG_RECORD_KEY_PREFIX + "SourceClassName";
 
     /** value: String */
-    public static final String LOG_RECORD_SOURCE_METHOD_NAME_KEY = LOG_RECORD_KEY_PREFIX + "SourceMethodName";
+    String LOG_RECORD_SOURCE_METHOD_NAME_KEY = LOG_RECORD_KEY_PREFIX + "SourceMethodName";
 
     /** value: Integer */
-    public static final String LOG_RECORD_THREAD_ID_KEY = LOG_RECORD_KEY_PREFIX + "ThreadID";
+    String LOG_RECORD_THREAD_ID_KEY = LOG_RECORD_KEY_PREFIX + "ThreadID";
 
     /**
      * value: Throwable
@@ -174,7 +174,7 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
      * <p>
      * If nothing was thrown this key will not be found in the Map.
      */
-    public static final String LOG_RECORD_THROWN_KEY = LOG_RECORD_KEY_PREFIX + "Thrown";
+    String LOG_RECORD_THROWN_KEY = LOG_RECORD_KEY_PREFIX + "Thrown";
 
     /**
      * value: Throwable
@@ -185,7 +185,7 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
      * <p>
      * If the root cause is the same as the thrown exception, then this value will not exist.
      */
-    public static final String LOG_RECORD_ROOT_CAUSE_KEY = LOG_RECORD_KEY_PREFIX + "ThrownRootCause";
+    String LOG_RECORD_ROOT_CAUSE_KEY = LOG_RECORD_KEY_PREFIX + "ThrownRootCause";
 
     /**
      * Get the number of listeners for the specified log level.
@@ -194,7 +194,7 @@ public interface LogRecordEmitter extends NotificationEmitter, ListenerInfo
      * @return number of listeners listening for messages of the specified level, or higher level
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public int getLogLevelListenerCount(@Param(name = "logLevel") final Level logLevel);
+    int getLogLevelListenerCount(@Param(name = "logLevel") Level logLevel);
 }
 
 

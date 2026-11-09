@@ -108,7 +108,7 @@ public class DefaultGUICallbackHandlerTest {
                 "Some fascinating text of great interest to the user goes here");
         LanguageCallback langCB = new LanguageCallback();
         Callback[] callbacks = new Callback[] {
-            choiceCB, confirmationCB, nameCB, passwordCB, textInCB, textOutCB, langCB
+            choiceCB, confirmationCB, nameCB, passwordCB, textInCB, textOutCB, langCB,
         };
 
         CallbackHandler ch = new DefaultGUICallbackHandler();

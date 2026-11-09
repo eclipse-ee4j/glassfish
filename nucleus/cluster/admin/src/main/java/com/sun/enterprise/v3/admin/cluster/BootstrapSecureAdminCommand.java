@@ -56,7 +56,7 @@ public class BootstrapSecureAdminCommand implements AdminCommand, PostConstruct 
     private final static String DOWNLOADED_FILE_MIME_TYPE = "application/octet-stream";
     private final static String DOWNLOAD_DATA_REQUEST_NAME = "secure-admin";
 
-    private File[] bootstrappedFiles = null;
+    private File[] bootstrappedFiles;
 
     @Inject
     private ServerEnvironment env;
@@ -66,7 +66,7 @@ public class BootstrapSecureAdminCommand implements AdminCommand, PostConstruct 
     public void postConstruct() {
         bootstrappedFiles = new File[] {
             env.getJKS(),
-            env.getTrustStore()
+            env.getTrustStore(),
                 };
     }
 

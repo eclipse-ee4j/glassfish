@@ -51,7 +51,7 @@ public final class Duration {
      * Use more compact output
      * ref: https://glassfish.dev.java.net/issues/show_bug.cgi?id=12606
      */
-    final public void setTerse() {
+    public void setTerse() {
         terse = true;
     }
 

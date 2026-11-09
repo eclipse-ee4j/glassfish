@@ -31,11 +31,11 @@ public interface EmbeddedLifecycle {
      * Notification of embedded server creation
      * @param server the newly created server
      */
-    public void creation(Server server);
+    void creation(Server server);
 
     /**
      * Notification of embedded server destruction
      * @param server the stopped embedded server instance
      */
-    public void destruction(Server server);
+    void destruction(Server server);
 }

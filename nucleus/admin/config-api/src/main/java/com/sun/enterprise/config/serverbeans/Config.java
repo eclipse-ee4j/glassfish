@@ -393,7 +393,7 @@ public interface Config extends Named, PropertyBag, SystemPropertyBag, Payload, 
                 getNetworkConfig(),
                 getSecurityService(),
                 getThreadPools(),
-                getMonitoringService()
+                getMonitoringService(),
         };
 
         for (ConfigBeanProxy proxy : directRef) {

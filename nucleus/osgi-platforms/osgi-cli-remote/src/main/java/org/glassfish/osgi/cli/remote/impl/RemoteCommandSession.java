@@ -44,7 +44,7 @@ class RemoteCommandSession {
     private final CommandSession delegate;
     private final String id;
 
-    public RemoteCommandSession(final CommandSession delegate) {
+    RemoteCommandSession(final CommandSession delegate) {
         this.delegate = delegate;
         this.id = UUID.randomUUID().toString();
     }

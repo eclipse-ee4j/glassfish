@@ -99,7 +99,7 @@ public class EJBContainerProviderImpl implements EJBContainerProvider {
     private static EJBContainerImpl container;
     private static GlassFishRuntime runtime;
     private static ArchiveFactory archiveFactory;
-    private static Class[] ejbAnnotations = null;
+    private static Class[] ejbAnnotations;
 
     public EJBContainerProviderImpl() {}
 

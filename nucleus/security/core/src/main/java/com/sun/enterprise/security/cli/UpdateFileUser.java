@@ -83,7 +83,7 @@ public class UpdateFileUser implements AdminCommand, AdminCommandSecurity.Preaut
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(UpdateFileUser.class);
 
     @Param(name = "groups", optional = true, separator = ':')
-    private List<String> groups = null;
+    private List<String> groups;
 
     // @Param(name="userpasswordfile", optional=true)
     // String passwordFile;
@@ -113,7 +113,7 @@ public class UpdateFileUser implements AdminCommand, AdminCommandSecurity.Preaut
     @Inject
     private AdminService adminService;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
     @AccessRequired.To("update")
     private AuthRealm fileAuthRealm;

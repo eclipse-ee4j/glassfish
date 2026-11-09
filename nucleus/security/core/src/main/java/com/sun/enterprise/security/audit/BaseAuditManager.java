@@ -70,7 +70,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // access to the specified audit modules which the subclass audit manager
     // deals with.
     protected List<T> typedModules = Collections.synchronizedList(new ArrayList<T>());
-    private Class<T> typedModuleClass = null; // typically set by postConstruct of a subclass invoking setTypeClass
+    private Class<T> typedModuleClass; // typically set by postConstruct of a subclass invoking setTypeClass
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
@@ -84,7 +84,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     private Map<String, BaseAuditModule> nameToModuleMap = new HashMap<String, BaseAuditModule>();
     // make this accessible to the containers so that the cost of non-audit case,
     // is just a comparision.
-    protected boolean auditOn = false;
+    protected boolean auditOn;
 
     @Inject
     private ServerContext serverContext;

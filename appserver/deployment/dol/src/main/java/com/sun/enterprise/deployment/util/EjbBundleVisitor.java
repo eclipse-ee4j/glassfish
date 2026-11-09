@@ -31,7 +31,7 @@ public interface EjbBundleVisitor extends ComponentVisitor {
      * visits an ejb bundle descriptor
      * @param bundleDescriptor ejb bundle descriptor
      */
-    public void accept(EjbBundleDescriptor bundleDescriptor);
+    void accept(EjbBundleDescriptor bundleDescriptor);
 
 }
 

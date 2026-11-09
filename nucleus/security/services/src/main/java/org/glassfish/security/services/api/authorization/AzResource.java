@@ -35,5 +35,5 @@ public interface AzResource extends AzAttributes {
      * Determines the URI representing this resource.
      * @return The URI representing this resource, never null.
      */
-    public URI getUri();
+    URI getUri();
 }

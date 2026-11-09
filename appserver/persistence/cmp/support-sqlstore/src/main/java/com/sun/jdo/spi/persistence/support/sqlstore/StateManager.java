@@ -43,11 +43,11 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
  */
 public interface StateManager
 {
-    static final byte LOAD_REQUIRED  = (byte)1;
+    byte LOAD_REQUIRED  = (byte)1;
 
-    static final byte READ_OK        = (byte)-1;
+    byte READ_OK        = (byte)-1;
 
-    static final byte READ_WRITE_OK  = (byte)0;
+    byte READ_WRITE_OK  = (byte)0;
 
 
     /**

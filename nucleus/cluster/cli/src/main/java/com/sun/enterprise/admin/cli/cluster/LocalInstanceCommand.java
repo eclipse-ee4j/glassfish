@@ -97,7 +97,7 @@ public abstract class LocalInstanceCommand extends LocalServerCommand {
     protected File nodeDirChild;        // the specific node dir
     protected File instanceDir;         // the specific instance dir
     protected String domainName;
-    protected boolean isCreateInstanceFilesystem = false;
+    protected boolean isCreateInstanceFilesystem;
     private InstanceDirs instanceDirs;
 
     // This is especially used for change-master-password command for a node.

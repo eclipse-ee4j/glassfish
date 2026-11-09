@@ -510,6 +510,6 @@ public class GlassFishTestEnvironment {
             @Override
             public void checkServerTrusted(X509Certificate[] certs, String authType) {
             }
-        }
+        },
     };
 }

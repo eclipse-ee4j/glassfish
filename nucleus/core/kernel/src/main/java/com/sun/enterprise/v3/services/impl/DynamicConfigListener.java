@@ -337,7 +337,7 @@ public class DynamicConfigListener implements ConfigListener {
     private static final class Lock {
         private final int[] ports;
 
-        public Lock(int... ports) {
+        Lock(int... ports) {
             this.ports = ports;
         }
 

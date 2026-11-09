@@ -28,7 +28,7 @@ public interface ProgressProvider {
 
     Progress getProgress();
 
-    public static class Utils {
+    class Utils {
         public static Progress provide(final String name, final int totalStepCount) {
             return new Progress() {
                 @Override

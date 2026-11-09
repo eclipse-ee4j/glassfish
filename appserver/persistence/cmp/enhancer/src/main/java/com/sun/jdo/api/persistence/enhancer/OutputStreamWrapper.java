@@ -53,7 +53,7 @@ public class OutputStreamWrapper
      *  The classname of the written Java class. This parameter
      *  is set by the enhancer.
      */
-    private String className = null;
+    private String className;
 
 
     /**********************************************************************

@@ -2182,7 +2182,7 @@ class V3WebappLoader extends WebappLoader {
  */
 class WebServletRegistrationImpl extends ServletRegistrationImpl {
 
-    public WebServletRegistrationImpl(StandardWrapper wrapper, StandardContext context) {
+    WebServletRegistrationImpl(StandardWrapper wrapper, StandardContext context) {
         super(wrapper, context);
     }
 
@@ -2227,7 +2227,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
     private String runAsRoleName;
     private ServletSecurityElement servletSecurityElement;
 
-    public DynamicWebServletRegistrationImpl(StandardWrapper wrapper, WebModule webModule) {
+    DynamicWebServletRegistrationImpl(StandardWrapper wrapper, WebModule webModule) {
         super(wrapper, webModule);
         this.webModule = webModule;
 

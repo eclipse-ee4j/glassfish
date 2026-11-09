@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  */
 public class UserDataConstraintNode  extends DeploymentDescriptorNode<UserDataConstraintImpl> {
 
-    protected UserDataConstraintImpl descriptor = null;
+    protected UserDataConstraintImpl descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

@@ -110,7 +110,7 @@ public class ContextRootCheckValidator implements ConstraintValidator<ContextRoo
 
     }
 
-    private static final boolean isSameApp(String name1, String name2) {
+    private static boolean isSameApp(String name1, String name2) {
         try {
             if (name1.equals(name2)) {
                 return true;
@@ -127,7 +127,7 @@ public class ContextRootCheckValidator implements ConstraintValidator<ContextRoo
         return false;
     }
 
-    private static final String getUntaggedName(String appName) throws Exception {
+    private static String getUntaggedName(String appName) throws Exception {
 
         if (appName != null && !appName.isEmpty()) {
             int colonIndex = appName.indexOf(":");

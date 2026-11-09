@@ -37,7 +37,7 @@ public interface CLibrary extends Library {
      * Comparing http://linux.die.net/man/3/getpwnam and my Mac OS X reveals that the structure of this field isn't very
      * portable. In particular, we cannot read the real name reliably.
      */
-    public class Passwd extends Structure {
+    class Passwd extends Structure {
         /**
          * User name.
          */
@@ -110,7 +110,7 @@ public interface CLibrary extends Library {
 
     }
 
-    public class Group extends Structure {
+    class Group extends Structure {
         public String gr_name;
         // ... the rest of the field is not interesting for us
 
@@ -149,9 +149,9 @@ public interface CLibrary extends Library {
     // other user/group related functions that are likely useful
     // see http://www.gnu.org/software/libc/manual/html_node/Users-and-Groups.html#Users-and-Groups
 
-    public static final CLibrary libc = Instance.init();
+    CLibrary libc = Instance.init();
 
-    static class Instance {
+    class Instance {
         private static CLibrary init() {
             if (Platform.isMac() || Platform.isOpenBSD()) {
                 return Native.loadLibrary("c", BSDCLibrary.class);

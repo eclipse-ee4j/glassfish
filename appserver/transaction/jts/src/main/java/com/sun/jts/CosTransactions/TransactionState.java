@@ -161,24 +161,24 @@ class TransactionState {
     static Logger _logger = LogDomains.getLogger(TransactionState.class, LogDomains.TRANSACTION_LOGGER);
 
     static RWLock freezeLock = new RWLock();
-    GlobalTID globalTID = null;
-    Long      localTID = null;
+    GlobalTID globalTID;
+    Long      localTID;
     int       state =  STATE_NONE;
 
-    boolean        subordinate = false;
-    CoordinatorLog logRecord = null;
-    Object         logSection = null;
+    boolean        subordinate;
+    CoordinatorLog logRecord;
+    Object         logSection;
 
     //static long epochNumber    = new Date().getTime();
     static long sequenceNumber = 1;
 
-    static boolean inDoubt = false;
+    static boolean inDoubt;
 
     //get server name only once
     //static String serverName = Configuration.getServerName();
 
     //half built cached TID - used as template for any globalTIDs generations
-    static byte [] TIDTemplate=null;
+    static byte [] TIDTemplate;
 
     // GDH State table added to for one phase commit of single resource
     // could have extended further to split out:
@@ -798,7 +798,7 @@ class TransactionState {
      *
      *
      */
-    private static final byte[] generateTID(long localTID) {
+    private static byte[] generateTID(long localTID) {
         if (TIDTemplate == null) {
             synchronized (TransactionState.class) {
                 if (TIDTemplate == null) {

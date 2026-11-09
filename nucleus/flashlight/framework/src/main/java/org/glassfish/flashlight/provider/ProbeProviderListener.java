@@ -19,8 +19,8 @@ package org.glassfish.flashlight.provider;
 
 public interface ProbeProviderListener {
 
-    public void providerRegistered(String moduleName, String providerName, String appName);
+    void providerRegistered(String moduleName, String providerName, String appName);
 
-    public void providerUnregistered(String moduleName, String providerName, String appName);
+    void providerUnregistered(String moduleName, String providerName, String appName);
 
 }

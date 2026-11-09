@@ -292,14 +292,14 @@ public class ExportSyncBundle implements AdminCommand {
     private ServerSynchronizer serverSynchronizer;
     @Inject
     private ServerEnvironment env;
-    private ActionReport report = null;
+    private ActionReport report;
     private File syncBundleExport;
-    private Logger logger = null;
-    private Payload.Outbound payload = null;
+    private Logger logger;
+    private Payload.Outbound payload;
     private Server instance;
     private Cluster cluster;
     private SyncRequest syncRequest = new SyncRequest();
     private static final String[] ALL_DIRS = new String[]{
-        "config", "applications", "lib", "docroot", "config-specific"
+        "config", "applications", "lib", "docroot", "config-specific",
     };
 }

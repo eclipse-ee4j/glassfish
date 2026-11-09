@@ -31,7 +31,7 @@ import org.w3c.dom.Node;
 
 public class SessionConfigNode extends RuntimeDescriptorNode<SessionConfig> {
 
-    protected SessionConfig descriptor = null;
+    protected SessionConfig descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

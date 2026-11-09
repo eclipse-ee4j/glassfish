@@ -83,9 +83,9 @@ public class WebComponentInvocation extends ComponentInvocation {
     }
 
     private static class PairKey {
-        private Object instance = null;
-        private Thread thread = null;
-        int hCode = 0;
+        private Object instance;
+        private Thread thread;
+        int hCode;
 
         private PairKey(Object inst, Thread thr) {
             instance = inst;

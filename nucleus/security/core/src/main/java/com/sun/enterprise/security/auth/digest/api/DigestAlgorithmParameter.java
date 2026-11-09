@@ -28,22 +28,22 @@ public interface DigestAlgorithmParameter extends AlgorithmParameterSpec {
      * @returns the delimiter to be used while performing digest calculation, null otherwise.
      *
      */
-    public byte[] getDelimiter();
+    byte[] getDelimiter();
 
     /**
      *
      * @returns the parameter value.
      */
-    public byte[] getValue();
+    byte[] getValue();
 
     /**
      * @returns the digest algorithm to be used.eg: MD5,MD5-sess etc..
      *
      */
-    public String getAlgorithm();
+    String getAlgorithm();
 
     /**
      * @returns the name of the parameter, null if no name is present.
      */
-    public String getName();
+    String getName();
 }

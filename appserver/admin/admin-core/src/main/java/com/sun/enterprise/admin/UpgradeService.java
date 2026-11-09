@@ -60,7 +60,7 @@ public class UpgradeService implements ConfigurationUpgrade, PostConstruct {
      * names from v2 to 3.1. (Issue 15195.)
      */
     @Inject @Named("gmsupgrade") @Optional
-    ConfigurationUpgrade precondition = null;
+    ConfigurationUpgrade precondition;
 
     private final static Logger logger = Logger.getAnonymousLogger();
 

@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class BucketizedHashtable<K, V> implements Cloneable, Map<K, V>, Serializable {
     private int bucketSize;
-    private Hashtable<K, V>[] hashtables = null;
+    private Hashtable<K, V>[] hashtables;
 
     /**
      * Constructs a new, empty BucketizedHashtable with the specified

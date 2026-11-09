@@ -41,7 +41,7 @@ class ThreadMonitor {
     private final MBeanServerConnection mbsc;
     private final StringManager sm = StringManager.getManager(ThreadMonitor.class);
     private static final BigInteger S2NANOS = new BigInteger("" + 1000000000);
-    public ThreadMonitor(final MBeanServerConnection mbsc) {
+    ThreadMonitor(final MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
     }
     public final String getThreadDump() {

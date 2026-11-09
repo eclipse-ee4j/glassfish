@@ -38,14 +38,14 @@ public class SessionManagerConfigurationHelper {
     private static final Logger _logger = LogFacade.getLogger();
 
 
-protected WebModule _ctx = null;
-    protected SessionManager _smBean = null;
-    protected WebBundleDescriptor _wbd = null;
-    protected WebModuleConfig _wmInfo = null;
+protected WebModule _ctx;
+    protected SessionManager _smBean;
+    protected WebBundleDescriptor _wbd;
+    protected WebModuleConfig _wmInfo;
     protected PersistenceType _persistence = PersistenceType.MEMORY;
-    protected String _persistenceFrequency = null;
-    protected String _persistenceScope = null;
-    private boolean _initialized = false;
+    protected String _persistenceFrequency;
+    protected String _persistenceScope;
+    private boolean _initialized;
     private ArrayList<String> _systemApps = new ArrayList<String>();
     protected ServerConfigLookup serverConfigLookup;
 

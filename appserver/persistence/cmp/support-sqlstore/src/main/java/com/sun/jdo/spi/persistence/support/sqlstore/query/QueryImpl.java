@@ -87,7 +87,7 @@ public class QueryImpl implements Query {
     /**
      *
      */
-    private boolean compiled = false;
+    private boolean compiled;
 
     /**
      *
@@ -122,7 +122,7 @@ public class QueryImpl implements Query {
     /**
      * Flag indicating whtehr this instance was created by serialization.
      */
-    private transient boolean createdBySerialization = false;
+    private transient boolean createdBySerialization;
 
     /**
      * I18N support

@@ -43,11 +43,11 @@ public class SemaphoreImpl implements Semaphore {
 
     /** Thread which holds the lock.
      */
-    private Thread _holder = null;
+    private Thread _holder;
 
     /** Semaphore counter.
      */
-    private int _counter = 0;
+    private int _counter;
 
 
     public SemaphoreImpl(String owner) {

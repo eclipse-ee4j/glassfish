@@ -33,7 +33,7 @@ public interface WebServiceEngine {
      * @return an iterator of all the registered active endpoints in
      * the engine.
      */
-    public Iterator<Endpoint> getEndpoints();
+    Iterator<Endpoint> getEndpoints();
 
     /**
      * @return an Endpoint instance if the supplied selector is the endpoint's
@@ -41,45 +41,45 @@ public interface WebServiceEngine {
      * the endpoint URL
      * @param endpointSelector the endpoint selector
      */
-    public Endpoint getEndpoint(String endpointSelector);
+    Endpoint getEndpoint(String endpointSelector);
 
     /**
      * Register a new listener interface to receive notification of
      * web service endpoint creation and deletion
      * @param listener instance to register
      */
-    public void addLifecycleListener(EndpointLifecycleListener listener);
+    void addLifecycleListener(EndpointLifecycleListener listener);
 
     /**
      * Unregister a listener interface
      * @param listener to unregister.
      */
-    public void removeLifecycleListener(EndpointLifecycleListener listener);
+    void removeLifecycleListener(EndpointLifecycleListener listener);
 
     /**
      * Register a new listener interface to receive authentication
      * notification.
      * @param listener to add
      */
-    public void addAuthListener(AuthenticationListener listener);
+    void addAuthListener(AuthenticationListener listener);
 
     /**
      * Unregister a listener interface
      * @param listener to remove
      */
-    public void removeAuthListener(AuthenticationListener listener);
+    void removeAuthListener(AuthenticationListener listener);
 
     /**
      * Set the unique global listener interface to trace all web service requests
      * or responses. Set to null if no tracing is needed
      * @param listener to register
      */
-    public void setGlobalMessageListener(GlobalMessageListener listener);
+    void setGlobalMessageListener(GlobalMessageListener listener);
 
     /**
      * get the global listener interface or null if none is set.
      * @return the global message listener
      */
-    public GlobalMessageListener getGlobalMessageListener();
+    GlobalMessageListener getGlobalMessageListener();
 
 }

@@ -68,7 +68,7 @@ import org.glassfish.main.jdke.i18n.LocalStringsImpl;
 public class DefaultGUICallbackHandler implements javax.security.auth.callback.CallbackHandler {
     /* records which confirmation callback binding to use - either the last
      * one passed by the caller or the default */
-    private CallbackGUIBindings.Confirmation confirmationCallbackGUIBinding = null;
+    private CallbackGUIBindings.Confirmation confirmationCallbackGUIBinding;
 
     /* most severe message type found among the callbacks with a message type,
      * such as ConfirmationCallback and TextOutputCallback

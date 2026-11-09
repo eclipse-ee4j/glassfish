@@ -57,7 +57,7 @@ final class ApplicationFilterChain implements FilterChain {
     /**
      * Construct a new chain instance with no defined filters.
      */
-    public ApplicationFilterChain() {
+    ApplicationFilterChain() {
         super();
     }
 
@@ -71,12 +71,12 @@ final class ApplicationFilterChain implements FilterChain {
     /**
      * The int which is used to maintain the current position in the filter chain.
      */
-    private int pos = 0;
+    private int pos;
 
     /**
      * The int which gives the current number of filters in the chain.
      */
-    private int n = 0;
+    private int n;
 
     /**
      * The servlet instance to be executed by this chain.

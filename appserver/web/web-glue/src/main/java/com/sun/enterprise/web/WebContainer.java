@@ -274,7 +274,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
      * <p/>
      * This value is non-zero only when the iAS level is one of FINE, FINER or FINEST.
      */
-    protected int _debug = 0;
+    protected int _debug;
 
     /**
      * Absolute path for location where all the deployed standalone modules are stored for this Server Instance.

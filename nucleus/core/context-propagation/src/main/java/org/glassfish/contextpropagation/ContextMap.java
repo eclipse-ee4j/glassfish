@@ -43,18 +43,18 @@ public interface ContextMap {
    * @return A set of propagation modes supported by this context.
    * @throws InsufficientCredentialException
    */
-  public EnumSet<PropagationMode> getPropagationModes(String name) throws InsufficientCredentialException;
+  EnumSet<PropagationMode> getPropagationModes(String name) throws InsufficientCredentialException;
 
   /**
    * @return true if there are no context in the ContextMap
    */
-  public boolean isEmpty();
+  boolean isEmpty();
 
   /**
    *
    * @return An Iterator<String> listing all the context names in the ContextMap
    */
-  public Iterator<String> names();
+  Iterator<String> names();
 
   /**
    * ViewCapable instances are custom contexts and are created by the context
@@ -66,13 +66,13 @@ public interface ContextMap {
    * @return The ViewCapableInstance
    * @throws InsufficientCredentialException
    */
-  public <T extends ViewCapable> T createViewCapable(String prefix) throws InsufficientCredentialException;
+  <T extends ViewCapable> T createViewCapable(String prefix) throws InsufficientCredentialException;
 
   /**
    * @return The Location of the request relative to the original location where it
    * was first submitted.
    */
-  public Location getLocation();
+  Location getLocation();
 
   /**
    *
@@ -144,7 +144,7 @@ public interface ContextMap {
     * This method is used when one needs to propagate the ContextMap to another Thread.
     * @return The AccessControlledMap that is in scope for the current thread
     */
-  public AccessControlledMap getAccessControlledMap();
+  AccessControlledMap getAccessControlledMap();
 
 
 }

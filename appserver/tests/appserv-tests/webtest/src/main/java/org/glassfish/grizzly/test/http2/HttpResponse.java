@@ -36,10 +36,10 @@ import org.glassfish.grizzly.http2.Http2Stream;
 public class HttpResponse {
     private HttpContent httpContent;
     private HttpResponsePacket response;
-    private boolean push = false;
+    private boolean push;
     private HttpPushPromise pushPromise;
     private Map<String, List<String>> headerMap = new HashMap<>();
-    private Map<String, String> trailerMap = null;
+    private Map<String, String> trailerMap;
 
     HttpResponse(HttpContent httpContent, Map<String, String> trailerMap) {
         this.httpContent = httpContent;

@@ -621,9 +621,9 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
     }
 
     private class SCOHashIterator implements Iterator<Object> {
-        Iterator<?> _iterator = null;
-        HashSet _caller = null;
-        Object lastReturned = null;
+        Iterator<?> _iterator;
+        HashSet _caller;
+        Object lastReturned;
 
         SCOHashIterator(Iterator<?> it, HashSet cl) {
             _iterator = it;

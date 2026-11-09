@@ -57,60 +57,60 @@ Of course, these two MBeans would normally be found in different MBeanServers.
 @AMXMBeanMetadata(singleton = true, globalSingleton = true)
 public interface DomainRoot extends AMXProxy
 {
-    public static final String PARENT_PATH = "";
+    String PARENT_PATH = "";
 
-    public static final String PATH = PARENT_PATH + PathnameConstants.SEPARATOR;
+    String PATH = PARENT_PATH + PathnameConstants.SEPARATOR;
 
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
     @Description("Stop the domain immediately")
-    public void stopDomain();
+    void stopDomain();
 
     /**
     Return the {@link Ext} MBean, parent of top-level utility and specialty MBeans.
      */
     @ManagedAttribute
     @Description("Get the primary extension point for AMX MBeans other than monitoring")
-    public Ext getExt();
+    Ext getExt();
 
     /**
     Return the {@link Tools} MBean.
      */
     @ManagedAttribute
     @Description("Get the Tools MBean")
-    public Tools getTools();
+    Tools getTools();
 
     /**
     @return the singleton {@link Query}.
      */
     @ManagedAttribute
     @Description("Get the Query MBean")
-    public Query getQueryMgr();
+    Query getQueryMgr();
 
     /**
     @return the singleton {@link Logging}.
      */
     @ManagedAttribute
     @Description("Get the Logging MBean")
-    public Logging getLogging();
+    Logging getLogging();
 
     /**
     @return the singleton {@link BulkAccess}.
      */
     @ManagedAttribute
     @Description("Get the BulkAccess MBean")
-    public BulkAccess getBulkAccess();
+    BulkAccess getBulkAccess();
 
     /**
     @return the singleton {@link Pathnames}.
      */
     @ManagedAttribute
-    public Pathnames getPathnames();
+    Pathnames getPathnames();
 
     /**
     @return the singleton {@link Sample}.
      */
     @ManagedAttribute
-    public Sample getSample();
+    Sample getSample();
 
     /**
     Return the name of this appserver domain.  Not to be confused with the
@@ -126,7 +126,7 @@ public interface DomainRoot extends AMXProxy
     @return the name of the Appserver domain
      */
     @ManagedAttribute
-    public String getAppserverDomainName();
+    String getAppserverDomainName();
 
     /**
     For module dependency reasons, the returned object must be cast to the appropriate type,
@@ -134,7 +134,7 @@ public interface DomainRoot extends AMXProxy
     @return the JSR 77 J2EEDomain.
      */
     @ManagedAttribute
-    public AMXProxy getJ2EEDomain();
+    AMXProxy getJ2EEDomain();
 
     /**
     Get the DomainConfig.
@@ -143,31 +143,31 @@ public interface DomainRoot extends AMXProxy
     @return the singleton DomainConfig
      */
     @ManagedAttribute
-    public AMXConfigProxy getDomain();
+    AMXConfigProxy getDomain();
 
     /**
     @return the singleton {@link MonitoringRoot}.
      */
     @ManagedAttribute
     @Description("Get the root MBean of all monitoring MBeans")
-    public MonitoringRoot getMonitoringRoot();
+    MonitoringRoot getMonitoringRoot();
 
     @ManagedAttribute
     @Description("Get the root MBean of all runtime MBeans")
-    public RuntimeRoot getRuntime();
+    RuntimeRoot getRuntime();
 
     /**
     @return the singleton SystemInfo
      */
     @ManagedAttribute
-    public SystemInfo getSystemInfo();
+    SystemInfo getSystemInfo();
 
     /**
     Notification type for JMX Notification issued when AMX MBeans are loaded
     and ready for use.
     @see #getAMXReady
      */
-    public static final String AMX_READY_NOTIFICATION_TYPE =
+    String AMX_READY_NOTIFICATION_TYPE =
             AMX.NOTIFICATION_PREFIX + "DomainRoot" + ".AMXReady";
 
     /**
@@ -181,45 +181,45 @@ public interface DomainRoot extends AMXProxy
     @see #AMX_READY_NOTIFICATION_TYPE
      */
     @ManagedAttribute
-    public boolean getAMXReady();
+    boolean getAMXReady();
 
     /**
     Wait (block) until AMX is ready for use. Upon return, AMX is ready for use.
      */
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public void waitAMXReady();
+    void waitAMXReady();
 
     /**
     @since Glassfish V3
      */
     @ManagedAttribute
-    public String getDebugPort();
+    String getDebugPort();
 
     /**
     @since Glassfish V3
      */
     @ManagedAttribute
-    public String getApplicationServerFullVersion();
+    String getApplicationServerFullVersion();
 
     /**
     @since Glassfish V3
      */
     @ManagedAttribute
-    public String getInstanceRoot();
+    String getInstanceRoot();
 
     /**
     @return the directory for the domain
     @since Glassfish V3
      */
     @ManagedAttribute
-    public String getDomainDir();
+    String getDomainDir();
 
     /**
     @return the configuration directory, typically 'config' subdirectory of {@link #getDomainDir}
     @since Glassfish V3
      */
     @ManagedAttribute
-    public String getConfigDir();
+    String getConfigDir();
 
     /**
     @return the installation directory
@@ -227,7 +227,7 @@ public interface DomainRoot extends AMXProxy
      */
     @ManagedAttribute
     @Description("the installation directory")
-    public String getInstallDir();
+    String getInstallDir();
 
     /**
     Return the time the domain admin server has been running.
@@ -236,7 +236,7 @@ public interface DomainRoot extends AMXProxy
      */
     @ManagedAttribute
     @Description("Return the time the domain admin server has been running.  uptime[0] contains the time in milliseconds.  uptime[1] contains a human-readable string describing the duration.")
-    public Object[] getUptimeMillis();
+    Object[] getUptimeMillis();
 
     /**
         Return a Map of all non-compliant MBeans (MBeans might no longer be registered).
@@ -245,7 +245,7 @@ public interface DomainRoot extends AMXProxy
      */
     @ManagedAttribute
     @Description("Return a Map of all non-compliant MBeans (MBeans might no longer be registered).  The List&lt;String> contains all issues with that MBean")
-    public Map<ObjectName, List<String>> getComplianceFailures();
+    Map<ObjectName, List<String>> getComplianceFailures();
 }
 
 

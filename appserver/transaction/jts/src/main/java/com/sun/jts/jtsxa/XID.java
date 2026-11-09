@@ -76,8 +76,8 @@ public class XID implements Xid {
     private byte data[];       // The XID data (size XIDDATASIZE)
 
     // ADDITION
-    private byte cachedBqual[] = null;
-    private byte cachedGtrid[] = null;
+    private byte[] cachedBqual;
+    private byte[] cachedGtrid;
 
 
     //-----------------------------------------------------------------------//

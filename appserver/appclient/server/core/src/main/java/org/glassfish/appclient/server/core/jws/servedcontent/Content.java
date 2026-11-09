@@ -25,25 +25,25 @@ import java.net.URI;
  */
 public interface Content {
 
-    public enum State {
+    enum State {
         AVAILABLE,
         UNAVAILABLE,
         SUSPENDED
     }
 
-    public State state();
+    State state();
 
-    public boolean isAvailable(final URI requestURI) throws IOException;
+    boolean isAvailable(URI requestURI) throws IOException;
 
-    public void suspend();
+    void suspend();
 
-    public void resume();
+    void resume();
 
-    public void start();
+    void start();
 
-    public void stop();
+    void stop();
 
-    public class Adapter implements Content {
+    class Adapter implements Content {
 
         private State state = State.AVAILABLE;
 

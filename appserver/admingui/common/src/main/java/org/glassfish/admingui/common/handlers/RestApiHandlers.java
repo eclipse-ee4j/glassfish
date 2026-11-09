@@ -248,7 +248,8 @@ public class RestApiHandlers {
                         ex.getMessage(),
                         ex.getCause(),
                         GuiUtil.getCommonMessage("LOG_REST_REQUEST_INFO",
-                        new Object[]{endpoint, maskedAttr, method})});
+                        new Object[]{endpoint, maskedAttr, method}),
+                    });
                 GuiUtil.handleError(handlerCtx, GuiUtil.getMessage("msg.error.checkLog"));
                 return;
             }

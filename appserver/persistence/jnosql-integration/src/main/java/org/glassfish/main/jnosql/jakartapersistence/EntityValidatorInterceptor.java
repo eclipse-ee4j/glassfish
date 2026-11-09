@@ -34,7 +34,7 @@ import org.eclipse.jnosql.jakartapersistence.mapping.spi.MethodInterceptor;
  */
 public class EntityValidatorInterceptor implements MethodInterceptor {
 
-    Validator validator = null;
+    Validator validator;
 
     @Override
     public Object intercept(InvocationContext context) throws Exception {

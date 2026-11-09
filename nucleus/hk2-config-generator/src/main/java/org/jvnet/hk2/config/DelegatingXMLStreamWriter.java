@@ -29,7 +29,7 @@ import javax.xml.stream.XMLStreamWriter;
 abstract class DelegatingXMLStreamWriter implements XMLStreamWriter, AutoCloseable {
     private final XMLStreamWriter writer;
 
-    public DelegatingXMLStreamWriter(XMLStreamWriter writer) {
+    DelegatingXMLStreamWriter(XMLStreamWriter writer) {
         this.writer = writer;
     }
 

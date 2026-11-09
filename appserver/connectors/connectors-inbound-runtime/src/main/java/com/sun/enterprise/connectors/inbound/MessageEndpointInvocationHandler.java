@@ -43,7 +43,7 @@ public final class MessageEndpointInvocationHandler
         implements InvocationHandler {
 
     private MessageBeanListener listener_;
-    private boolean beforeDeliveryCalled = false;
+    private boolean beforeDeliveryCalled;
 
     private boolean throwTransactedExceptions_ = true;
     private MessageBeanProtocolManager messageBeanPM_;

@@ -79,7 +79,7 @@ public class DeleteHttp implements AdminCommand {
     String protocolName;
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
-    Protocol protocolToBeRemoved = null;
+    Protocol protocolToBeRemoved;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
     @Inject

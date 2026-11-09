@@ -36,8 +36,8 @@ import javax.xml.namespace.QName;
  */
 public class SOAPMessageContextImpl implements SOAPMessageContext {
 
-    private Packet packet = null;
-    private SOAPMessage message = null;
+    private Packet packet;
+    private SOAPMessage message;
     private static final Logger logger = LogUtils.getLogger();
 
     public SOAPMessageContextImpl(Packet pkt) {

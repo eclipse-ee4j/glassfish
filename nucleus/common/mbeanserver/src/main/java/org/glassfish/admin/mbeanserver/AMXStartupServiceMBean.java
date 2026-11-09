@@ -31,12 +31,12 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface AMXStartupServiceMBean extends AMXLoader
 {
-    public ObjectName getDomainRoot();
+    ObjectName getDomainRoot();
 
-    public JMXServiceURL[] getJMXServiceURLs();
+    JMXServiceURL[] getJMXServiceURLs();
 
     /** ObjectName of the MBean which actually laods AMX MBeans; that MBean references this constant */
-    public static final ObjectName OBJECT_NAME = AMXUtil.newObjectName(LOADER_PREFIX + "startup");
+    ObjectName OBJECT_NAME = AMXUtil.newObjectName(LOADER_PREFIX + "startup");
 
 }
 

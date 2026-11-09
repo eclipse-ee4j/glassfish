@@ -31,7 +31,7 @@ public final class ReadOnlyBeanNotifierImpl
     implements java.io.Serializable,
         com.sun.appserv.ejb.ReadOnlyBeanNotifier
 {
-    transient private ReadOnlyEJBHome readOnlyBeanHome = null;
+    transient private ReadOnlyEJBHome readOnlyBeanHome;
 
     public ReadOnlyBeanNotifierImpl()
         throws java.rmi.RemoteException

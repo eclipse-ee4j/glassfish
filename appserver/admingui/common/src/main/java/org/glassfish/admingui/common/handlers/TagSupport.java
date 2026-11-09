@@ -171,7 +171,7 @@ public class TagSupport implements Serializable{
             // Initialize it...
             result = (Map<String, List<Tag>>[]) new Map[] {
                     new HashMap<String, List<Tag>>(),        // By Tag Name
-                    new HashMap<String, List<Tag>>()        // By Page ID
+                    new HashMap<String, List<Tag>>(),       // By Page ID
                 };
         } else {
             try {

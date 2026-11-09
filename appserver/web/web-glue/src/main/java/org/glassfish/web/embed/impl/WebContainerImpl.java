@@ -118,9 +118,9 @@ public class WebContainerImpl implements WebContainer {
 
     private EmbeddedWebContainer embedded;
 
-    private Engine engine = null;
+    private Engine engine;
 
-    private boolean initialized = false;
+    private boolean initialized;
 
     private String listenerName = "embedded-listener";
 

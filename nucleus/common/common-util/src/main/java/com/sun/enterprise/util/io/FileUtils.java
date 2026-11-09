@@ -1050,7 +1050,7 @@ public final class FileUtils {
         private final File newFile;
         private boolean renameResult;
 
-        public RenameFileWork(File originalFile, File newFile) {
+        RenameFileWork(File originalFile, File newFile) {
             this.originalFile = originalFile;
             this.newFile = newFile;
         }

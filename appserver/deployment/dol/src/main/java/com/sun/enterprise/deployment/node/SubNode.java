@@ -28,9 +28,9 @@ import org.w3c.dom.Node;
 @Contract
 public interface SubNode<T> {
 
-  public Node writeDeploymentDescriptor( Node parentNode,T next);
+  Node writeDeploymentDescriptor( Node parentNode,T next);
 
-  public String getTagName();
+  String getTagName();
 
-  public T getDescriptor();
+  T getDescriptor();
 }

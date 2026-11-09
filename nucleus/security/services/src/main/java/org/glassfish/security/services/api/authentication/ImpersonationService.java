@@ -47,6 +47,6 @@ public interface ImpersonationService {
      *
      * @throws LoginException
      */
-    public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
+    Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
             throws LoginException;
 }

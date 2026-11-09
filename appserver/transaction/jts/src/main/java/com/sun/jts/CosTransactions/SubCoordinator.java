@@ -88,18 +88,18 @@ import org.omg.CosTransactions.otid_t;
 //----------------------------------------------------------------------------
 
 class SubCoordinator extends CoordinatorImpl {
-    String              name = null;
-    RegisteredResources participants = null;
-    SuperiorInfo        superInfo = null;
-    NestingInfo         nestingInfo = null;
-    TransactionState    tranState = null;
-    CompletionHandler   terminator = null;
-    boolean             registered = false;
+    String              name;
+    RegisteredResources participants;
+    SuperiorInfo        superInfo;
+    NestingInfo         nestingInfo;
+    TransactionState    tranState;
+    CompletionHandler   terminator;
+    boolean             registered;
     boolean             root = true;
-    boolean             rollbackOnly = false;
-    boolean             dying = false;
-    boolean             temporary = false;
-    int                 hash = 0;
+    boolean             rollbackOnly;
+    boolean             dying;
+    boolean             temporary;
+    int                 hash;
     /*
         Logger to log transaction messages
     */
@@ -1637,7 +1637,7 @@ class SubCoordinator extends CoordinatorImpl {
         return result;
     }
 
-    private static Any emptyData = null;
+    private static Any emptyData;
 
     /**
      * Creates a PropagationContext which contains the information which would

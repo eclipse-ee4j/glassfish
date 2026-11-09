@@ -95,7 +95,7 @@ public class ResourceLocator {
 
         return new Enumeration<>() {
 
-            int index = 0;
+            int index;
 
             private boolean next() {
                 while (index < enums.length) {

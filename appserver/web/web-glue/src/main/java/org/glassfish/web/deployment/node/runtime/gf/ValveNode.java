@@ -34,7 +34,7 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
                 WebPropertyNode.class, "addWebProperty");
     }
 
-    protected Valve descriptor = null;
+    protected Valve descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

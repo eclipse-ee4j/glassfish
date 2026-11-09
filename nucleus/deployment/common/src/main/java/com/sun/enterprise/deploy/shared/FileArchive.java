@@ -877,7 +877,7 @@ public class FileArchive extends AbstractReadableArchive implements WritableArch
 
         void flush();
 
-        public class Util {
+        class Util {
 
             private final static String MARKER_FILE_PATH = ".glassfishStaleFiles";
 

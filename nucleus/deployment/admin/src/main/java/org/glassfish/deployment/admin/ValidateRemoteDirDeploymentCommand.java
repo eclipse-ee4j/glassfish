@@ -196,7 +196,7 @@ public class ValidateRemoteDirDeploymentCommand extends DeployCommandParameters
      */
     private static class TargetInfo {
 
-        private boolean containsNonDAS = false;
+        private boolean containsNonDAS;
         private final List<String> targetNames = new ArrayList<String>();
 
         private TargetInfo(final String targetExpr) {

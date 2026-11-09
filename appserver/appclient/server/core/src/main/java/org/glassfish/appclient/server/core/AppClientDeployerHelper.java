@@ -285,8 +285,8 @@ public abstract class AppClientDeployerHelper {
         return null;
     }
 
-    public abstract void createAndAddLibraryJNLPs(final AppClientDeployerHelper helper,
-            final TokenHelper tHelper, final Map<String,DynamicContent> dynamicContent)
+    public abstract void createAndAddLibraryJNLPs(AppClientDeployerHelper helper,
+            TokenHelper tHelper, Map<String,DynamicContent> dynamicContent)
             throws IOException;
 
     public Map<String,Map<URI,StaticContent>> signingAliasToJar() {
@@ -460,7 +460,7 @@ public abstract class AppClientDeployerHelper {
         generateAppClientFacade();
     }
 
-    protected abstract void addTopLevelContentToClientFacade(final OutputJarArchive facadeArchive) throws IOException;
+    protected abstract void addTopLevelContentToClientFacade(OutputJarArchive facadeArchive) throws IOException;
 
     /**
      * Adds the client policy files to the top-level generated JAR.
@@ -488,8 +488,8 @@ public abstract class AppClientDeployerHelper {
      * @param pathInJar
      * @throws IOException
      */
-    protected abstract void copyFileToTopLevelJAR(final OutputJarArchive clientFacadeArchive, final File inputFile,
-        final String pathInJar) throws IOException;
+    protected abstract void copyFileToTopLevelJAR(OutputJarArchive clientFacadeArchive, File inputFile,
+        String pathInJar) throws IOException;
 
 
     protected final void generateAppClientFacade() throws IOException, URISyntaxException {

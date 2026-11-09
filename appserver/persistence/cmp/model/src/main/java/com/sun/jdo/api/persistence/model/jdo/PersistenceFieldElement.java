@@ -219,14 +219,14 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @return the persistence type, one of {@link #PERSISTENT} or
          * {@link #DERIVED}
          */
-        public int getPersistenceType ();
+        int getPersistenceType ();
 
         /** Set the persistence type of this field element.
          * @param type - an integer indicating the persistence type, one of:
          * {@link #PERSISTENT} or {@link #DERIVED}
          * @exception ModelException if impossible
          */
-        public void setPersistenceType (int type) throws ModelException;
+        void setPersistenceType (int type) throws ModelException;
 
         /** Determines whether this field element is read sensitive or not.
          * This value is only used if <code>getPersistenceType</code> returns
@@ -239,7 +239,7 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @see #DERIVED
          *
          */
-        public boolean isReadSensitive ();
+        boolean isReadSensitive ();
 
         /** Set whether this field element is read sensitive or not.
          * @param flag - if <code>true</code> and this is a derived field, the
@@ -251,7 +251,7 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @see #setPersistenceType
          * @see #DERIVED
          */
-        public void setReadSensitive (boolean flag) throws ModelException;
+        void setReadSensitive (boolean flag) throws ModelException;
 
         /** Determines whether this field element is write sensitive or not.
          * This value is only used if <code>getPersistenceType</code> returns
@@ -264,7 +264,7 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @see #DERIVED
          *
          */
-        public boolean isWriteSensitive ();
+        boolean isWriteSensitive ();
 
         /** Set whether this field element is write sensitive or not.
          * @param flag - if <code>true</code> and this is a derived field, the
@@ -276,14 +276,14 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @see #setPersistenceType
          * @see #DERIVED
          */
-        public void setWriteSensitive (boolean flag) throws ModelException;
+        void setWriteSensitive (boolean flag) throws ModelException;
 
         /** Determines whether this field element is a key field or not.
          * @return <code>true</code> if the field is a key field,
          * <code>false</code> otherwise
          * @see PersistenceClassElement#getKeyClass
          */
-        public boolean isKey ();
+        boolean isKey ();
 
         /** Set whether this field element is a key field or not.
          * @param flag - if <code>true</code>, the field element is marked
@@ -291,6 +291,6 @@ public class PersistenceFieldElement extends PersistenceMemberElement
          * @exception ModelException if impossible
          * @see PersistenceClassElement#getKeyClass
          */
-        public void setKey (boolean flag) throws ModelException;
+        void setKey (boolean flag) throws ModelException;
     }
 }

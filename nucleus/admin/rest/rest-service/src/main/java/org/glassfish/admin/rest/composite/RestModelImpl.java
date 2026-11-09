@@ -27,7 +27,7 @@ import java.util.TreeSet;
  * @author jdlee
  */
 public class RestModelImpl {
-    private boolean allFieldsSet = false;
+    private boolean allFieldsSet;
 
     private Set<String> setFields = new TreeSet<String>();
 
@@ -44,7 +44,7 @@ public class RestModelImpl {
     }
 
     // TBD - remove once the conversion to the new REST style guide is completed
-    private boolean trimmed = false;
+    private boolean trimmed;
 
     public void trimmed() {
         this.trimmed = true;

@@ -51,8 +51,8 @@ public class DefaultCacheHelper implements CacheHelper {
     // cache manager
     CacheManager manager;
 
-    String attrKeyGenerator = null;
-    boolean isKeyGeneratorChecked = false;
+    String attrKeyGenerator;
+    boolean isKeyGeneratorChecked;
     CacheKeyGenerator keyGenerator;
 
     /**

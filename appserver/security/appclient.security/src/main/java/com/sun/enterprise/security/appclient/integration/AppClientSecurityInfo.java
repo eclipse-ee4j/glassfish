@@ -34,7 +34,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface AppClientSecurityInfo {
 
-    public enum CredentialType {
+    enum CredentialType {
         USERNAME_PASSWORD, CERTIFICATE, ALL
     }
 

@@ -57,11 +57,11 @@ import org.omg.PortableServer.POA;
  */
 public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
 
-    private static POA poa = null;
-    private OTSResource thisRef = null;
-    private XAResource xaRes = null;
-    private Xid xid = null;
-    private TransactionState tranState = null;
+    private static POA poa;
+    private OTSResource thisRef;
+    private XAResource xaRes;
+    private Xid xid;
+    private TransactionState tranState;
 
 
     /*

@@ -23,7 +23,7 @@ final class EmbeddedFieldMetadata extends AbstractFieldMetadata {
 
     private final String entityName;
 
-    public EmbeddedFieldMetadata(MappingType type, Field field, String name, String entityName,
+    EmbeddedFieldMetadata(MappingType type, Field field, String name, String entityName,
                                  FieldReader reader, FieldWriter writer, String udt) {
         super(type, field, name, null, reader, writer, udt);
         this.entityName = entityName;

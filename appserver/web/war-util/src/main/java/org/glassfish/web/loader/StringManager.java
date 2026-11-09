@@ -52,7 +52,7 @@ public class StringManager {
     // START SJSAS 6412710
     private final HashMap<Locale, ResourceBundle> bundles =
         new HashMap<Locale, ResourceBundle>(5);
-    private String bundleName = null;
+    private String bundleName;
     // END SJSAS 6412710
 
 

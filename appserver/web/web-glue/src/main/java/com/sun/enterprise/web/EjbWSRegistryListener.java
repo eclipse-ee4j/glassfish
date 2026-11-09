@@ -36,9 +36,9 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface EjbWSRegistryListener {
 
-    public void register();
+    void register();
 
-    public void unregister();
+    void unregister();
 
-    public void setContainer(WebContainer wc);
+    void setContainer(WebContainer wc);
 }

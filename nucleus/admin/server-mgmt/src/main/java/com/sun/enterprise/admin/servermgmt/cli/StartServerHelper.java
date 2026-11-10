@@ -166,6 +166,10 @@ public final class StartServerHelper {
         if (situationReport != null) {
             report.append(signs.getSituationReport());
         }
+        // The server could die before it was able to log anything.
+        if (signs.isError() && launcher.getCommandLine() != null) {
+            report.append("\n\nJVM invocation command line:\n").append(launcher.getCommandLine().toString("\n"));
+        }
         // Print output just if user explicitly asked
         // or start failed and user did not explicitly forbid the print.
         if (launcher.getPidBeforeRestart() != null || lifeSignCheck.isPrintServerOutput(signs.isError())) {

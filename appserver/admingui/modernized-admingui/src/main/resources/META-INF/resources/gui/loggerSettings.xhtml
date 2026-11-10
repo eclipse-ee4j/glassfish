@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!--
+
+    Copyright (c) 2024 Contributors to the Eclipse Foundation
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Log viewer - GlassFish Admin Console</title>
+
+        <!-- 
+            Include GlassFish Admin Console CSS for consistent styling.
+            These stylesheets provide the visual theme and component styles
+            used throughout the console, ensuring this page looks integrated.
+        -->
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/theme/com/sun/webui/jsf/suntheme/css/css_master.css"/>
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/yui/reset-fonts-grids.css"/>
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resource/common/css/style.css"/>
+
+        <!-- 
+            Custom CSS for this page.
+            Demonstrates how to add page-specific styling while maintaining
+            consistency with the overall console design.
+        -->
+        <style type="text/css">
+            .hello-container {
+                padding: 20px;
+                margin: 20px;
+                background-color: #f8f9fa;
+                border: 1px solid #dee2e6;
+                border-radius: 5px;
+            }
+            .hello-title {
+                color: #2c5aa0;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 15px;
+            }
+            .hello-message {
+                font-size: 18px;
+                color: #333;
+                margin-bottom: 10px;
+            }
+            .hello-description {
+                font-size: 14px;
+                color: #666;
+                font-style: italic;
+            }
+        </style>
+        <script name="jquery/jquery.js" library="primefaces"></script>
+    </h:head>
+    <h:body>
+        <h1>Logger test</h1>
+        <h:form id="form" style="height:100%;">
+            <p:messages showDetail="true" closable="true"/>
+
+            <p:tabView id="tabs" cache="false">
+                <!-- ===================== General ===================== -->
+                <p:tab title="General">
+                    <p:toolbar class="mb-3">
+                        <p:toolbarGroup>
+                            <p:commandButton value="Load Defaults"
+                                             icon="pi pi-refresh"
+                                             actionListener="#{loggerSettingsView.loadDefaults()}"
+                                             update="@form"/>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:commandButton value="Save"
+                                             icon="pi pi-save"
+                                             actionListener="#{loggerSettingsView.save()}"
+                                             update="@form"
+                                             styleClass="p-button-success"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:panel header="Logger Settings" toggleable="true" toggleSpeed="150">
+                        <p:outputPanel>
+                            <p:panelGrid id="grid" columns="4" styleClass="w-full"
+                                         columnClasses="col-12 md:col-3, col-12 md:col-3, col-12 md:col-3, col-12 md:col-3"
+                                         layout="grid">
+
+                                <p:outputLabel for="writeSys" value="Write to System Log:"/>
+                                <p:selectBooleanCheckbox id="writeSys" value="#{loggerSettingsView.writeToSystemLog}"/>
+                                <p:outputLabel for="logToFile" value="Log to Log File:"/>
+                                <p:selectBooleanCheckbox id="logToFile" value="#{loggerSettingsView.logToFile}"/>
+
+                                <p:outputLabel for="rotateAtMidnight" value="Rotation on Date Change:"/>
+                                <p:selectBooleanCheckbox id="rotateAtMidnight" value="#{loggerSettingsView.rotateAtMidnight}"/>
+                                <p:outputLabel for="multiline" value="Multiline Mode:"/>
+                                <p:selectBooleanCheckbox id="multiline" value="#{loggerSettingsView.multilineMode}"/>
+
+                                <p:outputLabel for="consoleFmt" value="Console Logging Format:"/>
+                                <p:selectOneMenu id="consoleFmt" value="#{loggerSettingsView.consoleFormat}" styleClass="w-full">
+                                    <f:selectItems value="#{loggerSettingsView.consoleFormats}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="fileFmt" value="Log File Logging Format:"/>
+                                <p:selectOneMenu id="fileFmt" value="#{loggerSettingsView.fileFormat}" styleClass="w-full">
+                                    <f:selectItems value="#{loggerSettingsView.fileFormats}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="excludeFields" value="Format Exclude Fields:"/>
+                                <p:chips id="excludeFields" value="#{loggerSettingsView.formatExcludeFields}"
+                                         placeholder="ex: tid, timeMillis, levelValue"/>
+
+                                <p:outputLabel for="fileRotationLimit" value="File Rotation Limit (MB):"/>
+                                <p:spinner id="fileRotationLimit" value="#{loggerSettingsView.fileRotationLimit}" min="0" stepFactor="10"/>
+
+                                <p:outputLabel for="fileRotationTime" value="File Rotation Time Limit (minutes):"/>
+                                <p:spinner id="fileRotationTime" value="#{loggerSettingsView.fileRotationTime}" min="0" stepFactor="5"/>
+
+                                <p:outputLabel for="flushFrequency" value="Flush Frequency:"/>
+                                <p:inputNumber id="flushFrequency" value="#{loggerSettingsView.flushFrequency}" minValue="0"/>
+
+                                <p:outputLabel for="maxHistory" value="Maximum History Files:"/>
+                                <p:inputNumber id="maxHistory" value="#{loggerSettingsView.maxHistoryFiles}" minValue="0"/>
+
+                                <p:outputLabel for="logFile" value="Log File:"/>
+                                <p:inputText id="logFile" value="#{loggerSettingsView.logFile}" styleClass="w-full"
+                                             placeholder="${com.sun.aas.instanceRoot}/logs/server.log"/>
+
+                                <p:outputLabel for="logHandler" value="Log Handler:"/>
+                                <p:inputText id="logHandler" value="#{loggerSettingsView.logHandler}" styleClass="w-full"
+                                             placeholder="org.glassfish.main.jul.handler.SimpleLogHandler"/>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </p:panel>
+                </p:tab>
+                <!-- ===================== Log Levels ===================== -->
+                <p:tab title="Log Levels">
+                    <p:toolbar class="mb-3">
+                        <p:toolbarGroup>
+                            <p:commandButton value="Add Logger" icon="pi pi-plus"
+                                             actionListener="#{loggerSettingsView.addLogger()}"
+                                             update="dtLoggers"/>
+                            <p:commandButton value="Delete Logger" icon="pi pi-trash" styleClass="p-button-danger"
+                                             actionListener="#{loggerSettingsView.deleteSelected()}"
+                                             update="dtLoggers @parent:@parent"/>
+                        </p:toolbarGroup>
+                        <p:toolbarGroup align="right">
+                            <p:selectOneMenu id="bulkLevel" value="#{loggerSettingsView.bulkLevel}">
+                                <f:selectItems value="#{loggerSettingsView.levels}"/>
+                            </p:selectOneMenu>
+                            <p:commandButton value="Change Level" icon="pi pi-check"
+                                             actionListener="#{loggerSettingsView.applyBulkLevel()}"
+                                             update="dtLoggers"/>
+                            <p:commandButton value="Save" icon="pi pi-save" styleClass="ml-2 p-button-success"
+                                             actionListener="#{loggerSettingsView.save()}"
+                                             update="@form"/>
+                        </p:toolbarGroup>
+                    </p:toolbar>
+
+                    <p:dataTable id="dtLoggers"
+                                 value="#{loggerSettingsView.loggers}"
+                                 var="row"
+                                 selection="#{loggerSettingsView.selected}"
+                                 rowKey="#{row.name}"
+                                 selectionMode="multiple"
+                                 paginator="true" rows="15"
+                                 resizableColumns="true" stripedRows="true" size="small">
+
+                        <p:column style="width:3rem"/>
+
+                        <p:column headerText="Logger Name" field="name" filterBy="#{row.name}" filterMatchMode="contains" sortBy="#{row.name}">
+                            <h:outputText value="#{row.name}"/>
+                        </p:column>
+
+                        <p:column headerText="Log Level" style="width:14rem">
+                            <p:selectOneMenu value="#{row.level}" styleClass="w-full">
+                                <f:selectItems value="#{loggerSettingsView.levels}"/>
+                                <p:ajax update="@this"/>
+                            </p:selectOneMenu>
+                        </p:column>
+
+                        <p:column headerText="Custom (optionnel)">
+                            <p:inputText value="#{row.customLevel}" placeholder="e.g. FINEST"/>
+                        </p:column>
+                    </p:dataTable>
+                </p:tab>
+            </p:tabView>
+        </h:form>
+    </h:body>
+</html>

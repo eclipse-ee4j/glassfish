@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -42,8 +42,10 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
     private static final System.Logger LOG = System.getLogger(MongoDbBeforeAllExtension.class.getName());
 
     private final GenericContainer<?> mongodb
-            = new GenericContainer<>("mongo:latest")
+            = new GenericContainer<>("mongo:" + System.getProperty("mongodb.version", "latest"))
                     .withExposedPorts(27017)
+                    // Fixes stability issues, see https://jira.mongodb.org/browse/SERVER-125742
+                    .withEnv("MONGO_TCMALLOC_PER_CPU_CACHE_SIZE_BYTES", "0")
                     .waitingFor(Wait.defaultWaitStrategy());
 
     @Override

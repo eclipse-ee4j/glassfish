@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-~ Copyright (c) 2025 Contributors to the Eclipse Foundation
+~ Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
 ~
 ~ Licensed under the Apache License, Version 2.0 (the "License");
 ~ you may not use this file except in compliance with the License.
@@ -21,74 +21,73 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>data-tck</artifactId>
+        <artifactId>tck-data</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-data-tck-nosql-runner</artifactId>
+    <artifactId>tck-data-nosql</artifactId>
+    <name>TCK: Jakarta Data NoSQL</name>
 
-    <name>Jakarta Data TCK Web Runner for GlassFish using NoSQL Entities</name>
+    <properties>
+        <!--
+            MongoDB 8 - 9.0 has problems with Linux kernel versions 6.19.0 through 7.0.13.
+            There's a workaround for 8.2, but it fails 6 tests..
+            See https://jira.mongodb.org/browse/SERVER-125742
+        -->
+        <mongodb.version>latest</mongodb.version>
+    </properties>
 
-    <!-- Runtime Dependencies -->
     <dependencies>
-        <!-- The TCK -->
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-tck</artifactId>
         </dependency>
 
-        <!-- The API -->
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.transaction</groupId>
-            <artifactId>jakarta.transaction-api</artifactId>
-        </dependency>
-
-        <!-- JNoSQL driver -->
-        <dependency>
-            <groupId>org.eclipse.jnosql.databases</groupId>
-            <artifactId>jnosql-mongodb</artifactId>
-            <version>${jnosql.version}</version>
-        </dependency>
-
-        <!-- Junit5 -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-        </dependency>
-
-        <!-- Signature Test Plugin -->
-        <dependency>
-            <groupId>jakarta.tck</groupId>
-            <artifactId>sigtest-maven-plugin</artifactId>
-        </dependency>
-
-        <!-- APIs referenced by TCK that do not require implementations for standalone tests -->
-        <dependency>
-            <groupId>org.jboss.shrinkwrap</groupId>
-            <artifactId>shrinkwrap-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-core</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-api</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.transaction</groupId>
+            <artifactId>jakarta.transaction-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jnosql.databases</groupId>
+            <artifactId>jnosql-mongodb</artifactId>
+            <version>${jnosql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>jakarta.tck</groupId>
+            <artifactId>sigtest-maven-plugin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.shrinkwrap</groupId>
+            <artifactId>shrinkwrap-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
@@ -114,20 +113,18 @@
                 <executions>
                     <execution>
                         <id>unpack-glassfish</id>
-                        <phase>test-compile</phase>
+                        <phase>process-test-resources</phase>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
                         <goals>
                             <goal>single</goal>
                         </goals>
-                        <phase>test-compile</phase>
+                        <phase>compile</phase>
                         <configuration>
                             <finalName>jnosql</finalName>
                             <outputDirectory>target</outputDirectory>
@@ -138,14 +135,12 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Surefire plugin - Entrypoint for Junit5 -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <groups><![CDATA[web & nosql]]></groups>
-
                     <systemPropertyVariables>
+                        <mongodb.version>${mongodb.version}</mongodb.version>
                         <jnosql.mongo.artifacts>${project.build.directory}/jnosql-mongo-deps</jnosql.mongo.artifacts>
                         <jakarta.tck.database.type>DOCUMENT</jakarta.tck.database.type>
                         <!-- For starting MongoDB in Docker and setting config for tests -->
@@ -155,5 +150,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

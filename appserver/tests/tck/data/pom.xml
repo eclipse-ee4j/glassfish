@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (c) 2021, 2024 Contributors to the Eclipse Foundation.
+    Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,7 +27,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>data-tck</artifactId>
+    <artifactId>tck-data</artifactId>
     <packaging>pom</packaging>
 
     <name>Data TCK Parent</name>
@@ -38,14 +38,7 @@
     </modules>
 
     <properties>
-        <glassfish.version.main>8</glassfish.version.main>
-        <glassfish.root>${project.build.directory}</glassfish.root>
-        <glassfish.home>${glassfish.root}/glassfish${glassfish.version.main}</glassfish.home>
-        <glassfish.version>${project.version}</glassfish.version>
-
         <jakarta.data.tck.version>1.0.2</jakarta.data.tck.version>
-
-        <weld.version>6.0.4.Final</weld.version>
     </properties>
 
     <dependencyManagement>
@@ -69,17 +62,10 @@
                 <version>1.2.6</version>
             </dependency>
 
-            <!-- The TCK -->
             <dependency>
                 <groupId>jakarta.data</groupId>
                 <artifactId>jakarta.data-tck</artifactId>
                 <version>${jakarta.data.tck.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.testcontainers</groupId>
-                <artifactId>testcontainers</artifactId>
-                <version>${testcontainers.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -117,28 +103,36 @@
                         <dependenciesToScan>
                             <dependency>jakarta.data:jakarta.data-tck</dependency>
                         </dependenciesToScan>
-
-                        <!-- If running back-to-back tests at different levels
-                        use this to distinguish the results -->
+                        <!-- If running back-to-back tests at different levels use this to distinguish the results -->
                         <reportNameSuffix>core</reportNameSuffix>
-
                         <systemPropertyVariables>
                             <junit.jupiter.extensions.autodetection.enabled>false</junit.jupiter.extensions.autodetection.enabled>
+                            <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
                             <glassfish.home>${glassfish.home}</glassfish.home>
 
                             <jakarta.tck.profile>core</jakarta.tck.profile>
                             <jakarta.tck.skip.deployment>false</jakarta.tck.skip.deployment>
 
-                            <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
 
                             <jimage.dir>target/jimage</jimage.dir>
                             <signature.sigTestClasspath>${glassfish.home}/glassfish/modules/jakarta.data-api.jar</signature.sigTestClasspath>
-                            <java.util.logging.config.file>target/test-classes/logging.properties</java.util.logging.config.file>
                         </systemPropertyVariables>
                     </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase />
+                        <inherited>false</inherited>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

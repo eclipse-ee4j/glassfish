@@ -4536,7 +4536,9 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
 
             for (var entry : initializerListOrdered) {
                 Class<? extends ServletContainerInitializer> initializer = entry.getKey();
-                if (isUseMyFaces() && FACES_INITIALIZER.equals(initializer.getName())) {
+                if (isUseMyFaces() && FACES_INITIALIZER.equals(initializer.getName())
+                    && initializer.getClassLoader() != getClassLoader()) {
+                    // Skip the server's Faces initializer, but not the one bundled in the application
                     continue;
                 }
 

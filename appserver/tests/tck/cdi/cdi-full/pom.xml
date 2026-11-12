@@ -42,10 +42,6 @@
             <groupId>ee.omnifish.arquillian</groupId>
             <artifactId>arquillian-glassfish-server-managed</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.main</groupId>
-            <artifactId>glassfish-jul-extension</artifactId>
-        </dependency>
 
         <!-- Jakarta EE APIs -->
         <dependency>
@@ -167,12 +163,6 @@
             <artifactId>cdi-tck-api</artifactId>
             <version>${tck.cdi.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <!--
@@ -184,29 +174,7 @@
             <artifactId>cdi-tck-core-impl</artifactId>
             <version>${tck.cdi.version}</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>cdi-tck-core-impl</artifactId>
-            <version>${tck.cdi.version}</version>
-            <type>xml</type>
-            <classifier>suite</classifier>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.jboss.weld</groupId>
             <artifactId>weld-lite-extension-translator</artifactId>
@@ -224,13 +192,6 @@
             <artifactId>testng</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- Arquillian and TestNG dependency, required on both sides -->
-        <dependency>
-            <groupId>org.jcommander</groupId>
-            <artifactId>jcommander</artifactId>
-            <version>1.85</version>
-            <scope>runtime</scope>
-        </dependency>
         <dependency>
             <groupId>org.jboss.arquillian.testng</groupId>
             <artifactId>arquillian-testng-container</artifactId>
@@ -244,6 +205,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>glassfish-jul-extension</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -318,25 +284,39 @@
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- Last version supporting suites -->
-                <version>3.5.6</version>
                 <configuration>
-                    <!-- Surefire / TestNG Properties -->
-                    <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${project.build.testOutputDirectory}/tck-core-suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
-                    <excludedGroups>${excluded.groups}</excludedGroups>
                     <dependenciesToScan>
                         <dependency>jakarta.enterprise:cdi-tck-core-impl</dependency>
                     </dependenciesToScan>
+                    <includes>
+                        <include>org/jboss/cdi/tck/tests/**/*</include>
+                        <include>org/jboss/cdi/tck/interceptors/tests/**/*</include>
+                    </includes>
+                    <excludes>
+                        <exclude>org.jboss.cdi.tck.tests.full.extensions.lifecycle.processBeanAttributes.specialization.VetoTest</exclude>
+                    </excludes>
+                    <excludedGroups>se</excludedGroups>
                     <properties>
                         <property>
                             <name>surefire.testng.verbose</name>
                             <value>1</value>
                         </property>
+                        <property>
+                            <name>listener</name>
+                            <value>
+                            org.jboss.cdi.tck.impl.testng.SingleTestClassMethodInterceptor,
+                            org.jboss.cdi.tck.impl.testng.ConfigurationLoggingListener,
+                            org.jboss.cdi.tck.impl.testng.ProgressLoggingTestListener,
+                            org.testng.reporters.jq.Main,
+                            org.testng.reporters.FailedReporter,
+                            org.testng.reporters.XMLReporter,
+                            org.testng.reporters.EmailableReporter2,
+                            org.testng.reporters.TestHTMLReporter
+                            </value>
+                        </property>
                     </properties>
                     <systemPropertyVariables>
+                        <debugMode>true</debugMode>
                         <glassfish.home>${glassfish.root}/glassfish8</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.enableAssertions>:org.jboss.cdi.tck...</glassfish.enableAssertions>
@@ -354,53 +334,10 @@
                         </glassfish.postBootCommands>
                         <libPath>${project.build.outputDirectory}</libPath>
                         <org.jboss.cdi.tck.libraryDirectory>${project.build.directory}/dependency/lib</org.jboss.cdi.tck.libraryDirectory>
-                        <debugMode>true</debugMode>
                     </systemPropertyVariables>
+                    <workingDirectory>${project.build.directory}</workingDirectory>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <!--
-                We had to customize it to be compatible with TestNG7,
-                which replaced EmailableReporter with EmailableReporter2.
-                We enabled also verbose.
-            -->
-            <id>overwrite-tck-core-suite.xml</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>copy-test-suites</id>
-                                <phase>pre-integration-test</phase>
-                                <goals>
-                                    <goal>copy</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>jakarta.enterprise</groupId>
-                                            <artifactId>cdi-tck-core-impl</artifactId>
-                                            <version>${tck.cdi.version}</version>
-                                            <type>xml</type>
-                                            <classifier>suite</classifier>
-                                            <overWrite>false</overWrite>
-                                            <outputDirectory>src/test/resources</outputDirectory>
-                                            <destFileName>tck-core-suite.xml</destFileName>
-                                        </artifactItem>
-                                    </artifactItems>
-                                    <overWriteReleases>true</overWriteReleases>
-                                    <overWriteSnapshots>true</overWriteSnapshots>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

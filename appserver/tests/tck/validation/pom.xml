@@ -121,6 +121,8 @@
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
+                <!-- Last version supporting suites -->
+                <version>3.5.6</version>
                 <configuration>
                     <argLine>-Xmx1024m</argLine>
 

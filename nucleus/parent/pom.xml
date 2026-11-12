@@ -261,7 +261,7 @@
         <shrinkwrap.version>3.3.7</shrinkwrap.version>
         <testcontainers.version>2.0.5</testcontainers.version>
 
-        <surefire.version>3.6.0</surefire.version>
+        <surefire.version>3.6.1</surefire.version>
         <junit5-surefire-tree-reporter.version>1.5.1</junit5-surefire-tree-reporter.version>
 
         <file.executable.suffix></file.executable.suffix>

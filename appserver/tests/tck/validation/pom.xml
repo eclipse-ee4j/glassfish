@@ -38,6 +38,12 @@
             <artifactId>validation-tck-tests</artifactId>
             <version>3.1.1</version>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjfx</groupId>
+                    <artifactId>javafx-controls</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Utility classes for TestNG and Arquillian, used in suite.xml -->
@@ -119,39 +125,47 @@
 
             <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <!-- Last version supporting suites -->
-                <version>3.5.6</version>
                 <configuration>
-                    <argLine>-Xmx1024m</argLine>
-
-                    <!-- Surefire / TestNG Properties -->
-                    <!-- The suite, the exclude and the test dependencies together determine which tests are being run -->
-                    <suiteXmlFiles>
-                        <suiteXmlFile>${project.basedir}/suite.xml</suiteXmlFile>
-                    </suiteXmlFiles>
                     <dependenciesToScan>
                         <dependency>jakarta.validation:validation-tck-tests</dependency>
                     </dependenciesToScan>
+                    <includes>
+                        <include>org/hibernate/beanvalidation/tck/tests/**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <!-- Alternative to org.hibernate.beanvalidation.tck.util.IntegrationTestsMethodSelector -->
+                        <exclude>org.hibernate.beanvalidation.tck.tests.valueextraction.builtin.JavaFXValueExtractorsTest</exclude>
+                    </excludes>
+                    <forkCount>1</forkCount>
                     <properties>
                         <property>
                             <name>surefire.testng.verbose</name>
-                            <value>-1</value>
+                            <value>1</value>
+                        </property>
+                        <property>
+                            <name>listener</name>
+                            <value>
+                            org.jboss.cdi.tck.impl.testng.SingleTestClassMethodInterceptor,
+                            org.jboss.cdi.tck.impl.testng.ProgressLoggingTestListener,
+                            org.testng.reporters.jq.Main,
+                            org.testng.reporters.FailedReporter,
+                            org.testng.reporters.XMLReporter,
+                            org.testng.reporters.EmailableReporter2,
+                            org.testng.reporters.TestHTMLReporter
+                            </value>
                         </property>
                     </properties>
-                    <forkCount>1</forkCount>
-
-                    <!-- System Properties -->
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.home}</glassfish.home>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.maxHeapSize>2048m</glassfish.maxHeapSize>
 
                         <validation.provider>org.hibernate.validator.HibernateValidator</validation.provider>
-
                         <glassfish.systemProperties>
                             validation.provider=org.hibernate.validator.HibernateValidator
                         </glassfish.systemProperties>
                     </systemPropertyVariables>
+                    <workingDirectory>${project.build.directory}</workingDirectory>
                 </configuration>
             </plugin>
         </plugins>

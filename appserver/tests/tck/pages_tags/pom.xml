@@ -26,7 +26,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-pages-tags</artifactId>
+    <artifactId>tck-pages-tags</artifactId>
     <packaging>pom</packaging>
 
     <name>TCK: pages tags</name>
@@ -63,7 +63,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-pages-tags-tck</artifactId>
+            <artifactId>tck-pages-tags-download</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>

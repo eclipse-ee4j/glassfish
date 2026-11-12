@@ -57,7 +57,7 @@ mvn clean install -Dgroups=security
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-rest</artifactId>
+    <artifactId>tck-rest</artifactId>
 
    <name>Jakarta REST TCK run on glassfish</name>
    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta REST standalone TCK</description>

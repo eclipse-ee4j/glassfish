@@ -27,7 +27,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-validation</artifactId>
+    <artifactId>tck-validation</artifactId>
 
     <name>TCK: Validation</name>
     <description>Aggregates dependencies and runs the Jakarta Validation TCK</description>

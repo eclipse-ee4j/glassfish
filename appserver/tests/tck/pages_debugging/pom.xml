@@ -26,7 +26,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-pages-debugging</artifactId>
+    <artifactId>tck-pages-debugging</artifactId>
     <packaging>pom</packaging>
 
     <name>TCK: pages debugging</name>

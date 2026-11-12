@@ -22,11 +22,11 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-microprofile</artifactId>
+        <artifactId>tck-microprofile</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile-config</artifactId>
+    <artifactId>tck-microprofile-config</artifactId>
     <name>TCK: MicroProfile Config</name>
 
     <dependencies>

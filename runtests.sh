@@ -75,7 +75,7 @@ if [ -z "${MVN_REPOSITORY}" ]; then
   export MVN_REPOSITORY="${HOME}/.m2/repository"
 fi
 
-export M2_HOME="${M2_HOME=$(realpath $(dirname $(realpath $(which mvn)))/..)}"
+export M2_HOME="${M2_HOME:-$(realpath $(dirname $(realpath $(which mvn)))/..)}"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
 
 if [ -z "${2}" ]; then

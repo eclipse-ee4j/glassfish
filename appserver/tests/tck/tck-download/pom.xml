@@ -44,12 +44,12 @@
         <module>activation</module>
         <module>authentication</module>
         <module>authorization</module>
+        <module>debugging</module>
         <module>expression-language</module>
         <module>faces</module>
         <module>pages</module>
 
         <module>jakarta-pages-tags-tck</module>
-        <module>jakarta-pages-debugging-tck</module>
         <module>jakarta-security-tck</module>
         <module>jakarta-servlet-tck</module>
         <module>jakarta-websocket-tck</module>

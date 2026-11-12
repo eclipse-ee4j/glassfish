@@ -26,10 +26,10 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tck-pages-debugging</artifactId>
+    <artifactId>tck-debugging</artifactId>
     <packaging>pom</packaging>
 
-    <name>TCK: pages debugging</name>
+    <name>TCK: Debugging</name>
 
     <properties>
         <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
@@ -62,7 +62,7 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-pages-debugging-tck</artifactId>
+            <artifactId>tck-debugging-download</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -103,7 +103,7 @@
                             <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <includeArtifactIds>glassfish,jakarta-pages-debugging-tck</includeArtifactIds>
+                            <includeArtifactIds>glassfish,tck-debugging-download</includeArtifactIds>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
@@ -237,7 +237,10 @@
                                         <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
                                         <fail status="${testResult}" message="${contents}" />
                                     </then>
-                                </if>
+                                    <else>
+                                        <echo message="Test passed OK" />
+                                    </else>
+                                 </if>
                             </target>
                         </configuration>
                     </execution>

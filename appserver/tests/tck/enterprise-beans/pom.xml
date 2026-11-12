@@ -157,7 +157,6 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -956,7 +955,7 @@
                                     <dependenciesToScan>jakarta.tck:ejb32</dependenciesToScan>
                                     <groups>${tck.groups}</groups>
                                     <includes>
-                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.expire.**.*Test</include>
+                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.expire.*Test</include>
                                     </includes>
                                 </configuration>
                             </execution>
@@ -982,7 +981,7 @@
                                     <dependenciesToScan>jakarta.tck:ejb32</dependenciesToScan>
                                     <groups>${tck.groups}</groups>
                                     <includes>
-                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tx.**.*Test</include>
+                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tx.*Test</include>
                                     </includes>
                                 </configuration>
                             </execution>
@@ -1008,7 +1007,7 @@
                                     <dependenciesToScan>jakarta.tck:ejb32</dependenciesToScan>
                                     <groups>${tck.groups}</groups>
                                     <includes>
-                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.txnonpersistent.**.*Test</include>
+                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.txnonpersistent.*Test</include>
                                     </includes>
                                 </configuration>
                             </execution>
@@ -1034,9 +1033,9 @@
                                     <dependenciesToScan>jakarta.tck:ejb32</dependenciesToScan>
                                     <groups>${tck.groups}</groups>
                                     <includes>
-                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tz.**.*Test</include>
+                                        <include>com.sun.ts.tests.ejb32.lite.timer.schedule.tz.*Test</include>
                                         <include>com.sun.ts.tests.ejb32.lite.timer.service.**.*Test</include>
-                                        <include>com.sun.ts.tests.ejb32.lite.timer.timerconfig.**.*Test</include>
+                                        <include>com.sun.ts.tests.ejb32.lite.timer.timerconfig.*Test</include>
                                     </includes>
                                 </configuration>
                             </execution>

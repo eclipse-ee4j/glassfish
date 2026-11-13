@@ -141,6 +141,10 @@
                         <Export-Package>
                             *
                         </Export-Package>
+                        <Include-Resource>
+                            {maven-resources},
+                            META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/
+                        </Include-Resource>
                     </instructions>
                 </configuration>
                 <executions>
@@ -149,6 +153,19 @@
                         <phase>process-classes</phase>
                         <goals>
                             <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-inhabitant-generator</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-inhabitants</id>
+                        <goals>
+                            <goal>generate-inhabitants</goal>
                         </goals>
                     </execution>
                 </executions>

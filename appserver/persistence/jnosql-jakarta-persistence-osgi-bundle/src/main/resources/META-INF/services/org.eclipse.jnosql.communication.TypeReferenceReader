@@ -1,0 +1,7 @@
+org.eclipse.jnosql.communication.reader.ListTypeReferenceReader
+org.eclipse.jnosql.communication.reader.SetTypeReferenceReader
+org.eclipse.jnosql.communication.reader.MapTypeReferenceReader
+org.eclipse.jnosql.communication.reader.StreamTypeReferenceReader
+org.eclipse.jnosql.communication.reader.OptionalTypeReferenceReader
+org.eclipse.jnosql.communication.reader.QueueTypeReferenceReader
+org.eclipse.jnosql.communication.reader.NavigableSetTypeReferenceReader

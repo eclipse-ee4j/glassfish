@@ -4,10 +4,13 @@
  */
 package ee.jakarta.tck.nosql.select;
 
+import org.glassfish.tck.nosql.CustomArquillianExtension;
 import org.glassfish.tck.nosql.NoSqlTckArchives;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(CustomArquillianExtension.class)
 public class SelectMappedSuperclassTckRunner extends SelectMappedSuperclassTest {
 
     @Deployment

@@ -68,7 +68,19 @@ public final class TransactionDispatcher {
             return;
         }
 
-        Object securityToken = security.establish(exchange.authenticatedUser());
+        Object securityToken;
+        try {
+            securityToken = security.establish(exchange.authenticatedUser());
+        } catch (SecurityException e) {
+            // A credential the realm refused. Nothing was established, so there
+            // is nothing to clear, and the bridge is never reached. The reason
+            // is fixed because the exception text is the realm's, not the
+            // caller's to read. XAER_RMFAIL: the resource manager cannot serve
+            // this caller, which a coordinator reads differently from a
+            // malformed request.
+            fail(exchange, Protocol.SC_FORBIDDEN, "not authorized", XAException.XAER_RMFAIL);
+            return;
+        }
         try {
             perform(exchange, request);
         } catch (TransactionBridge.TransactionException e) {
@@ -78,7 +90,7 @@ public final class TransactionDispatcher {
             // being flattened into a status code.
             exchange.setStatus(Protocol.SC_EXCEPTION);
             exchange.setResponseHeader(H_ERROR_CODE, Integer.toString(e.errorCode()));
-            exchange.setResponseHeader("X-GF-Reason", String.valueOf(e.getMessage()).replace('\n', ' '));
+            exchange.setResponseHeader("X-GF-Reason", singleLine(String.valueOf(e.getMessage())));
         } finally {
             security.clear(securityToken);
         }
@@ -177,10 +189,19 @@ public final class TransactionDispatcher {
     }
 
     private static void fail(ServerExchange exchange, int status, String reason) {
+        fail(exchange, status, reason, XAException.XAER_INVAL);
+    }
+
+    private static void fail(ServerExchange exchange, int status, String reason, int errorCode) {
         exchange.setStatus(status);
-        exchange.setResponseHeader(H_ERROR_CODE, Integer.toString(XAException.XAER_INVAL));
+        exchange.setResponseHeader(H_ERROR_CODE, Integer.toString(errorCode));
         if (reason != null) {
-            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' '));
+            exchange.setResponseHeader("X-GF-Reason", singleLine(reason));
         }
+    }
+
+    /** A header value must not carry a line break, or it could end the header and start another. */
+    private static String singleLine(String text) {
+        return text.replace('\n', ' ').replace('\r', ' ');
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 package org.glassfish.main.test.app.persistence.data.repository.nosql;
 
 import java.io.File;
+import java.lang.System.Logger;
 import java.net.http.HttpResponse;
 
 import org.glassfish.main.itest.tools.TestUtilities;
@@ -44,21 +45,17 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 public class DataNoSqlRepositoryTest {
 
-    private static final System.Logger LOG =
-            System.getLogger(DataNoSqlRepositoryTest.class.getName());
+    private static final Logger LOG = System.getLogger(DataNoSqlRepositoryTest.class.getName());
 
-    private static final String APP_NAME =
-            DataNoSqlRepositoryTest.class.getSimpleName() + "WebApp";
+    private static final String APP_NAME = DataNoSqlRepositoryTest.class.getSimpleName() + "WebApp";
 
-    private static final Package TEST_PACKAGE =
-            Product.class.getPackage();
+    private static final Package TEST_PACKAGE = Product.class.getPackage();
 
     private static final Asadmin ASADMIN = getAsadmin();
 
-    private static final GenericContainer<?> MONGODB =
-            new GenericContainer<>("mongo:latest")
-                    .withExposedPorts(27017)
-                    .waitingFor(Wait.defaultWaitStrategy());
+    private static final GenericContainer<?> MONGODB = new GenericContainer<>(
+        "mongo:" + System.getProperty("mongodb.version", "latest")).withExposedPorts(27017)
+            .waitingFor(Wait.defaultWaitStrategy());
 
     @TempDir
     private static File tempDir;
@@ -67,25 +64,17 @@ public class DataNoSqlRepositoryTest {
 
     @BeforeAll
     public static void deploy() throws Exception {
-        assumeTrue(
-                DockerClientFactory.instance().isDockerAvailable(),
-                "Docker is not available on this environment");
+        assumeTrue(DockerClientFactory.instance().isDockerAvailable(), "Docker is not available on this environment");
 
         MONGODB.start();
-
-        String mongoDbHost =
-                MONGODB.getHost() + ":" + MONGODB.getFirstMappedPort();
-
+        String mongoDbHost = MONGODB.getHost() + ":" + MONGODB.getFirstMappedPort();
         LOG.log(INFO, "Started MongoDB in Docker at " + mongoDbHost);
 
-        PomEquippedResolveStage resolver =
-                Maven.resolver().loadPomFromFile("pom.xml");
-
+        PomEquippedResolveStage resolver = Maven.resolver().loadPomFromFile("pom.xml");
         File[] mongoDependencies = resolver
                 .resolve("org.eclipse.jnosql.databases:jnosql-mongodb")
                 .withTransitivity()
                 .asFile();
-
         WebArchive webArchive = ShrinkWrap.create(WebArchive.class)
                 .addPackage(TEST_PACKAGE)
                 .deleteClass(DataNoSqlRepositoryTest.class)
@@ -112,9 +101,7 @@ public class DataNoSqlRepositoryTest {
 
     @Test
     public void test() throws Exception {
-        final HttpResponse<String> response =
-                getHttpResource(APP_NAME + "/TestServlet");
-
+        final HttpResponse<String> response = getHttpResource(APP_NAME + "/TestServlet");
         assertThat(response.statusCode(), equalTo(200));
         assertThat(response.body(), equalTo("products=1"));
     }
@@ -125,7 +112,6 @@ public class DataNoSqlRepositoryTest {
             ASADMIN.exec("undeploy", APP_NAME);
             TestUtilities.delete(warFile);
         }
-
         MONGODB.stop();
     }
 }

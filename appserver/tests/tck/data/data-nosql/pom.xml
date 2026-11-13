@@ -28,15 +28,6 @@
     <artifactId>tck-data-nosql</artifactId>
     <name>TCK: Jakarta Data NoSQL</name>
 
-    <properties>
-        <!--
-            MongoDB 8 - 9.0 has problems with Linux kernel versions 6.19.0 through 7.0.13.
-            There's a workaround for 8.2, but it fails 6 tests..
-            See https://jira.mongodb.org/browse/SERVER-125742
-        -->
-        <mongodb.version>latest</mongodb.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>jakarta.data</groupId>

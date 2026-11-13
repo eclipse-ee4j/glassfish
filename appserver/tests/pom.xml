@@ -39,6 +39,12 @@
         <jboss.arquillian.version>1.10.2.Final</jboss.arquillian.version>
         <jakarta.arquillian.version>10.0.0.Final</jakarta.arquillian.version>
         <embedded.glassfish.maven.plugin.version>8.1</embedded.glassfish.maven.plugin.version>
+        <!--
+            MongoDB 8 - 9.0 has problems with Linux kernel versions 6.19.0 through 7.0.13.
+            There's a workaround for 8.2, but it fails 6 tests in tck-data-nosql.
+            See https://jira.mongodb.org/browse/SERVER-125742
+        -->
+        <mongodb.version>latest</mongodb.version>
     </properties>
 
     <build>

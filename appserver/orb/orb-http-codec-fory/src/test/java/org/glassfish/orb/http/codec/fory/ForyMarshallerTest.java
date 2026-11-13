@@ -22,8 +22,10 @@ import java.io.ObjectInputFilter;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.glassfish.orb.http.protocol.ChunkedInput;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
@@ -33,6 +35,7 @@ import org.glassfish.orb.http.protocol.Marshallers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -42,11 +45,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ForyMarshallerTest {
 
+    private static final String STREAMING = "org.glassfish.orb.http.codec.fory.streaming";
+
     private final Marshaller marshaller = new ForyMarshaller();
+
+    private static void restore(String previous) {
+        if (previous == null) {
+            System.clearProperty(STREAMING);
+        } else {
+            System.setProperty(STREAMING, previous);
+        }
+    }
 
     @Test
     void streamsSmallObjectsIntoChunkedOutput() throws Exception {
-        System.setProperty("org.glassfish.orb.http.codec.fory.streaming", "true");
+        String previous = System.getProperty(STREAMING);
+        System.setProperty(STREAMING, "true");
         ChunkedOutput out = new ChunkedOutput(64);
         try {
             try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
@@ -60,7 +74,7 @@ class ForyMarshallerTest {
                 assertEquals("small", reader.readObject());
             }
         } finally {
-            System.clearProperty("org.glassfish.orb.http.codec.fory.streaming");
+            restore(previous);
         }
     }
 
@@ -313,6 +327,121 @@ class ForyMarshallerTest {
             }
             assertEquals(1, ForyMarshaller.readerCount(loader),
                     "one reader per (loader, filter), not one per request");
+        }
+    }
+
+    @Test
+    @DisplayName("a streamed frame after a nearly full chunk round-trips")
+    void streamedFrameAfterNearlyFullChunkRoundTrips() throws Exception {
+        String previous = System.getProperty(STREAMING);
+        System.setProperty(STREAMING, "true");
+        try {
+            ChunkedOutput out = new ChunkedOutput(16);
+            out.write(new byte[13]);
+            try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
+                w.writeObject("x".repeat(4096));
+                w.flush();
+            }
+
+            ChunkedInput in = new ChunkedInput(out.toByteBuffers());
+            assertEquals(13, in.readNBytes(13).length);
+            try (Marshaller.ObjectReader r = marshaller.newReader(in, getClass().getClassLoader(), ALLOW_ALL)) {
+                assertEquals("x".repeat(4096), r.readObject());
+            }
+        } finally {
+            restore(previous);
+        }
+    }
+
+    @Test
+    @DisplayName("a streamed byte[] frame over several chunks has a correct header")
+    void streamedFrameSpanningManyChunks() throws Exception {
+        String previous = System.getProperty(STREAMING);
+        System.setProperty(STREAMING, "true");
+        try {
+            byte[] value = new byte[200];
+            new Random(9L).nextBytes(value);
+            ChunkedOutput out = new ChunkedOutput(64);
+            out.write(new byte[62]);
+            try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
+                w.writeObject(value);
+                w.flush();
+            }
+
+            // The 5 byte header starts at 62 and straddles the first chunk boundary.
+            byte[] bytes = out.toByteArray();
+            assertEquals(0, bytes[62]);
+            assertEquals(out.size() - 67, ByteBuffer.wrap(bytes, 63, 4).getInt());
+            assertTrue(out.size() > 192, "the frame must span four chunks");
+            int buffered = 0;
+            for (ByteBuffer b : out.toByteBuffers()) {
+                buffered += b.remaining();
+            }
+            assertEquals(out.size(), buffered, "no chunk may carry padding");
+
+            ChunkedInput in = new ChunkedInput(out.toByteBuffers());
+            assertEquals(62, in.readNBytes(62).length);
+            try (Marshaller.ObjectReader r = marshaller.newReader(in, getClass().getClassLoader(), ALLOW_ALL)) {
+                assertArrayEquals(value, (byte[]) r.readObject());
+            }
+        } finally {
+            restore(previous);
+        }
+    }
+
+    @Test
+    @DisplayName("a header straddling a chunk boundary round-trips at every offset")
+    void streamedHeaderStraddlingChunkBoundary() throws Exception {
+        String previous = System.getProperty(STREAMING);
+        System.setProperty(STREAMING, "true");
+        try {
+            int chunk = 32;
+            for (int prefix = chunk - 4; prefix < chunk; prefix++) {
+                ChunkedOutput out = new ChunkedOutput(chunk);
+                out.write(new byte[prefix]);
+                try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
+                    w.writeObject("straddle " + prefix);
+                    w.flush();
+                }
+                ChunkedInput in = new ChunkedInput(out.toByteBuffers());
+                assertEquals(prefix, in.readNBytes(prefix).length);
+                try (Marshaller.ObjectReader r = marshaller.newReader(
+                        in, getClass().getClassLoader(), ALLOW_ALL)) {
+                    assertEquals("straddle " + prefix, r.readObject());
+                }
+            }
+        } finally {
+            restore(previous);
+        }
+    }
+
+    @Test
+    @DisplayName("a large String, a small Integer and a large byte[] in sequence round-trip")
+    void mixedSequenceOverSmallChunks() throws Exception {
+        String previous = System.getProperty(STREAMING);
+        System.setProperty(STREAMING, "true");
+        try {
+            String text = "y".repeat(300);
+            byte[] blob = new byte[500];
+            new Random(4L).nextBytes(blob);
+            ChunkedOutput out = new ChunkedOutput(32);
+            out.write(new byte[30]);
+            try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
+                w.writeObject(text);
+                w.writeObject(7);
+                w.writeObject(blob);
+                w.flush();
+            }
+
+            ChunkedInput in = new ChunkedInput(out.toByteBuffers());
+            assertEquals(30, in.readNBytes(30).length);
+            try (Marshaller.ObjectReader r = marshaller.newReader(in, getClass().getClassLoader(), ALLOW_ALL)) {
+                assertEquals(text, r.readObject());
+                assertEquals(7, r.readObject());
+                assertArrayEquals(blob, (byte[]) r.readObject());
+            }
+        } finally {
+            restore(previous);
         }
     }
 }

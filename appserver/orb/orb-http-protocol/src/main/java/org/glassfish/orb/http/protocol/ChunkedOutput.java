@@ -122,41 +122,40 @@ public final class ChunkedOutput extends OutputStream {
     }
 
     /**
-     * Reserves a codec frame header in the current chunk and patches its
+     * Reserves a codec frame header at the current position and patches its
      * payload length when the returned frame is closed. The payload can then
      * be written directly to this stream, avoiding an intermediate byte array.
+     * The header is written like any other bytes, so it may span two chunks;
+     * every chunk except the last stays completely filled.
      *
      * @param kind codec-specific frame kind
      * @return a frame that must be closed after its payload is written
      */
     public Frame beginFrame(byte kind) {
-        if (chunkSize < 5) {
-            throw new IllegalStateException("chunkSize must be at least five bytes for framing");
-        }
-        if (currentPos > chunkSize - 5) {
-            rollOver();
-        }
-        int headerOffset = currentPos;
-        current[currentPos++] = kind;
-        current[currentPos++] = 0;
-        current[currentPos++] = 0;
-        current[currentPos++] = 0;
-        current[currentPos++] = 0;
-        total += 5;
-        return new Frame(current, headerOffset, total);
+        long headerPos = total;
+        write(kind);
+        write(0);
+        write(0);
+        write(0);
+        write(0);
+        return new Frame(headerPos);
+    }
+
+    // Invariant: every chunk in the list is exactly chunkSize long, so pos / chunkSize indexes it directly.
+    private void patch(long pos, byte value) {
+        long idx = pos / chunkSize;
+        int offset = (int) (pos % chunkSize);
+        byte[] chunk = idx < chunks.size() ? chunks.get((int) idx) : current;
+        chunk[offset] = value;
     }
 
     /** A reserved frame whose four-byte length is patched on close. */
     public final class Frame implements AutoCloseable {
-        private final byte[] header;
-        private final int headerOffset;
-        private final long payloadStart;
+        private final long headerPos;
         private boolean closed;
 
-        private Frame(byte[] header, int headerOffset, long payloadStart) {
-            this.header = header;
-            this.headerOffset = headerOffset;
-            this.payloadStart = payloadStart;
+        private Frame(long headerPos) {
+            this.headerPos = headerPos;
         }
 
         @Override
@@ -164,15 +163,15 @@ public final class ChunkedOutput extends OutputStream {
             if (closed) {
                 return;
             }
-            long length = total - payloadStart;
+            long length = total - (headerPos + 5);
             if (length > Integer.MAX_VALUE) {
                 throw new IllegalStateException("frame larger than 2 GiB");
             }
             int value = (int) length;
-            header[headerOffset + 1] = (byte) (value >>> 24);
-            header[headerOffset + 2] = (byte) (value >>> 16);
-            header[headerOffset + 3] = (byte) (value >>> 8);
-            header[headerOffset + 4] = (byte) value;
+            patch(headerPos + 1, (byte) (value >>> 24));
+            patch(headerPos + 2, (byte) (value >>> 16));
+            patch(headerPos + 3, (byte) (value >>> 8));
+            patch(headerPos + 4, (byte) value);
             closed = true;
         }
     }

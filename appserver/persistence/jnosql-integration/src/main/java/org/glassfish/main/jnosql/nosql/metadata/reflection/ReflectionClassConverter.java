@@ -32,12 +32,14 @@ import org.eclipse.jnosql.mapping.metadata.EntityMetadata;
 import org.eclipse.jnosql.mapping.metadata.FieldMetadata;
 import org.eclipse.jnosql.mapping.metadata.InheritanceMetadata;
 import org.eclipse.jnosql.mapping.metadata.MappingType;
+import org.jvnet.hk2.annotations.Service;
 
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+@Service
 public final class ReflectionClassConverter implements ClassConverter {
 
     private static final Logger LOGGER = Logger.getLogger(ReflectionClassConverter.class.getName());

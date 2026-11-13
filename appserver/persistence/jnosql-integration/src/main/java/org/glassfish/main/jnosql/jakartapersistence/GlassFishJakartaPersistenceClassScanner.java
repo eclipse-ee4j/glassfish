@@ -30,18 +30,23 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.persistence.jpa.JPADeployer;
+import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
 import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentContext;
 
 /**
- * Server global implementation of class scanner for JPA repositories. Must be stateless.
- * If necessary, state can be set in the deployment context via transient metadata.
+ * Server global implementation of class scanner for JPA repositories. Must be
+ * stateless.
+ * If necessary, state can be set in the deployment context via transient
+ * metadata.
  *
  * @author Ondro Mihalyi
  */
-public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassScanner implements JakartaPersistenceClassScanner {
+@Service
+public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassScanner
+        implements JakartaPersistenceClassScanner {
 
     public static final String JPA_DATA_ENABLED_META_DATA_KEY = "JPADataEnabled";
 
@@ -102,14 +107,16 @@ public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassS
 
     @Override
     public Set<Class<?>> repositoriesStandard() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isSupportedStandardInterface).collect(toUnmodifiableSet());
+        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isSupportedStandardInterface)
+                .collect(toUnmodifiableSet());
         LOG.log(DEBUG, () -> "Detected standard JPA repository interfaces: " + result);
         return result;
     }
 
     @Override
     public Set<Class<?>> customRepositories() {
-        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isNotSupportedStandardInterface).collect(toUnmodifiableSet());
+        Set<Class<?>> result = enabledRepositoriesStreamMatching(this::isNotSupportedStandardInterface)
+                .collect(toUnmodifiableSet());
         LOG.log(DEBUG, () -> "Detected custom JPA interfaces: " + result);
         return result;
     }

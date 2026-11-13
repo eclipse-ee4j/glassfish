@@ -19,8 +19,9 @@ import java.util.List;
 
 import org.eclipse.jnosql.mapping.metadata.ConstructorMetadata;
 import org.eclipse.jnosql.mapping.metadata.ParameterMetaData;
-record DefaultConstructorMetadata(Constructor<?> constructor,
-                                  List<ParameterMetaData> parameters) implements ConstructorMetadata {
+
+public record DefaultConstructorMetadata(Constructor<?> constructor,
+                                         List<ParameterMetaData> parameters) implements ConstructorMetadata {
 
     @Override
     public boolean isDefault() {

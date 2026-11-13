@@ -207,8 +207,22 @@
                 </executions>
             </plugin>
             <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-test</id>
+                        <!-- All tests are executed using the failsafe plugin -->
+                        <phase />
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                        <include>**/*IT.java</include>
+                    </includes>
                     <systemPropertyVariables>
                         <mongodb.version>${mongodb.version}</mongodb.version>
                     </systemPropertyVariables>

@@ -86,26 +86,39 @@ public class ForyGrpcExtension implements OrbHttpExtension, PostConstruct {
                 (path, exchange) -> {
                     ForyEjbIndex.ForyRoute route = index.foryRoute(path);
                     if (route == null) throw new IllegalStateException("unknown Fory route: " + path);
-                    Object securityToken = security.establish(exchange.authenticatedUser());
-                    try {
-                        var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
-                        Object target = container.getTargetObject(key, route.view());
-                        return new ForyGrpcServerAdapter.Target() {
-                            @Override public Object value() { return target; }
-                            @Override public void close() {
-                                try {
-                                    container.releaseTargetObject(target);
-                                } finally {
-                                    security.clear(securityToken);
-                                }
-                            }
-                        };
-                    } catch (RuntimeException | Error failure) {
-                        security.clear(securityToken);
-                        throw failure;
-                    }
+                    return acquire(route, exchange);
                 },
                 16 * 1024 * 1024, transactions);
+    }
+
+    /**
+     * Establishes the caller's identity and obtains the target. Whatever fails
+     * after the identity was established hands it back before the failure
+     * propagates, because no {@code Target} exists yet whose close would.
+     */
+    ForyGrpcServerAdapter.Target acquire(ForyEjbIndex.ForyRoute route, ServerExchange exchange) throws Exception {
+        Object securityToken = security.establish(exchange.authenticatedUser());
+        try {
+            var key = container.resolve(route.app(), route.module(), null, route.bean(), null);
+            Object target = container.getTargetObject(key, route.view());
+            return new ForyGrpcServerAdapter.Target() {
+                @Override public Object value() { return target; }
+                @Override public void close() {
+                    try {
+                        container.releaseTargetObject(target);
+                    } finally {
+                        security.clear(securityToken);
+                    }
+                }
+            };
+        } catch (Exception | Error failure) {
+            try {
+                security.clear(securityToken);
+            } catch (RuntimeException | Error clearFailure) {
+                failure.addSuppressed(clearFailure);
+            }
+            throw failure;
+        }
     }
 
     @Override

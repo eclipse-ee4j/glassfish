@@ -105,25 +105,26 @@ public class LogFacade {
     public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_FAIL = PREFIX + "00011";
 
     @LogMessageInfo(
-            message = "Finding ThreadLocal references for web application [{0}] is not supported by the JVM. Use '--add-opens java.base/java.lang=ALL-UNNAMED' java argument to enable it",
+            message = "Finding ThreadLocal references for web application [{0}] is not supported by the JVM."
+                + " Use '--add-opens java.base/java.lang=ALL-UNNAMED' java argument to enable it",
             level = "FINE")
     public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_NOT_SUPPORTED = PREFIX + "00012";
 
     @LogMessageInfo(
             message = "The web application [{0}] created a ThreadLocal with key of [{1}]"
-                + " but failed to remove it when the web application was stopped."
+                + " but failed to remove it when the web application was stopped. Server removed the value."
                 + " Threads are going to be renewed over time to try and avoid a probable memory leak.",
             level = "SEVERE",
-            cause = "Failed to remove a ThreadLocal when the web application was stopped",
+            cause = "Application failed to remove a ThreadLocal when the web application was stopped.",
             action = "Threads are going to be renewed over time to try and avoid a probable memory leak.")
     public static final String CHECK_THREAD_LOCALS_FOR_LEAKS_KEY = PREFIX + "00015";
 
     @LogMessageInfo(
             message = "The web application [{0}] created a ThreadLocal with key of [{1}] and a value of [{2}]"
-                + " but failed to remove it when the web application was stopped."
+                + " but failed to remove it when the web application was stopped. Server removed the value."
                 + " Threads are going to be renewed over time to try and avoid a probable memory leak.",
             level = "SEVERE",
-            cause = "Failed to remove a ThreadLocal when the web application was stopped",
+            cause = "Application failed to remove a ThreadLocal when the web application was stopped.",
             action = "Threads are going to be renewed over time to try and avoid a probable memory leak.")
     public static final String CHECK_THREAD_LOCALS_FOR_LEAKS = PREFIX + "00016";
 

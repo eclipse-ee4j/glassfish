@@ -178,6 +178,11 @@
                         <version>7.12.0</version>
                     </dependency>
                     <dependency>
+                        <groupId>org.testng</groupId>
+                        <artifactId>testng-ant</artifactId>
+                        <version>1.0.0</version>
+                    </dependency>
+                    <dependency>
                         <groupId>com.sun.jsftemplating</groupId>
                         <artifactId>jsftemplating-dynafaces</artifactId>
                         <version>0.1</version>
@@ -204,9 +209,9 @@
                         </exclusions>
                     </dependency>
                     <dependency>
-                        <groupId>com.beust</groupId>
+                        <groupId>org.jcommander</groupId>
                         <artifactId>jcommander</artifactId>
-                        <version>1.82</version>
+                        <version>3.0</version>
                     </dependency>
                 </dependencies>
             </plugin>

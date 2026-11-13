@@ -21,7 +21,6 @@ package oracle.toplink.essentials.testing.framework;
 import oracle.toplink.essentials.internal.databaseaccess.Platform;
 import oracle.toplink.essentials.threetier.ServerSession;
 
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 import jakarta.persistence.EntityManager;

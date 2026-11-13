@@ -20,6 +20,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputFilter;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -258,5 +260,37 @@ class ForyMarshallerTest {
     void theCodecTokenIsStable() {
         assertEquals("fory", marshaller.codec());
         assertNotNull(Marshallers.find("fory").orElse(null));
+    }
+
+    @Test
+    @DisplayName("the default filter is one shared instance, so it can key a cache")
+    void defaultFilterIsASingleton() {
+        assertSame(JavaSerializationMarshaller.defaultFilter(),
+                JavaSerializationMarshaller.defaultFilter());
+    }
+
+    @Test
+    @DisplayName("repeated requests with the default filter reuse one reader")
+    void readersAreCachedAcrossRequests() throws Exception {
+        String name = "cached";
+        // A throwaway loader, so entries other tests made cannot be counted.
+        // The writer uses the context class loader and the reader this one:
+        // WRITERS and READERS are keyed separately.
+        try (URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader())) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                writer.writeObject(new Node(name));
+                writer.flush();
+            }
+            for (int request = 0; request < 2; request++) {
+                try (Marshaller.ObjectReader reader = marshaller.newReader(
+                        new ByteArrayInputStream(out.toByteArray()), loader,
+                        JavaSerializationMarshaller.defaultFilter())) {
+                    assertEquals(name, ((Node) reader.readObject()).name);
+                }
+            }
+            assertEquals(1, ForyMarshaller.readerCount(loader),
+                    "one reader per (loader, filter), not one per request");
+        }
     }
 }

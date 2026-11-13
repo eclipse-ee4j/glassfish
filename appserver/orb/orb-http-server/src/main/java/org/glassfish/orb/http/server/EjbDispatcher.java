@@ -176,7 +176,7 @@ public final class EjbDispatcher {
             // The credential was offered and refused. Saying so is the point:
             // running the call anonymously would answer a caller that asked to
             // be someone with the rights of no one.
-            fail(exchange, Protocol.SC_FORBIDDEN, e.getMessage());
+            fail(exchange, Protocol.SC_FORBIDDEN, "not authorized");
             return;
         }
 
@@ -440,7 +440,7 @@ public final class EjbDispatcher {
         if (reason != null) {
             // A short diagnostic header, never a marshalled body: a protocol
             // level failure must be readable by an intermediary too.
-            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' '));
+            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' ').replace('\r', ' '));
         }
     }
 

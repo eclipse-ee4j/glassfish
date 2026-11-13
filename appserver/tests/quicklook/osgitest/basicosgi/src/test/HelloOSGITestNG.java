@@ -18,8 +18,7 @@
 package test.osgi.hello;
 
 import com.sun.appserv.test.AdminBaseDevTest;
-import org.testng.annotations.Configuration;
-import org.testng.annotations.ExpectedExceptions;
+
 import org.testng.annotations.Test;
 import org.testng.annotations.*;
 import org.testng.Assert;

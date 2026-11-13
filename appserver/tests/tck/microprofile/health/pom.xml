@@ -22,11 +22,11 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-microprofile</artifactId>
+        <artifactId>tck-microprofile</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile-health</artifactId>
+    <artifactId>tck-microprofile-health</artifactId>
     <name>TCK: MicroProfile Health</name>
 
     <dependencies>

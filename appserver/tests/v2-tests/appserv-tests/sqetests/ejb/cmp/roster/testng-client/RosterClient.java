@@ -25,7 +25,6 @@ import com.sun.s1peqe.ejb.cmp.roster.ejb.*;
 import com.sun.s1peqe.ejb.cmp.roster.util.*;
 
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 public class RosterClient {

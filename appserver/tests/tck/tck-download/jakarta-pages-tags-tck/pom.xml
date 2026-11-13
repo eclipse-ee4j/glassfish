@@ -27,7 +27,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jakarta-pages-tags-tck</artifactId>
+    <artifactId>tck-pages-tags-download</artifactId>
     <packaging>pom</packaging>
     <name>TCK: Install Jakarta Tags TCK</name>
 

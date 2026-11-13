@@ -23,11 +23,11 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-microprofile</artifactId>
+        <artifactId>tck-microprofile</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile-jwt</artifactId>
+    <artifactId>tck-microprofile-jwt</artifactId>
     <name>TCK: MicroProfile JWT</name>
     <description>Aggregates dependencies and runs the MicroProfile JWT TCK</description>
 

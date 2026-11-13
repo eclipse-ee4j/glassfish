@@ -15,8 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-import org.testng.annotations.Configuration;
-import org.testng.annotations.ExpectedExceptions;
+
 import org.testng.annotations.Test;
 import org.testng.annotations.Parameters;
 

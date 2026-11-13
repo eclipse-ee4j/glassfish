@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-~ Copyright (c) 2025 Contributors to the Eclipse Foundation
+~ Copyright (c) 2025, 2026 Contributors to the Eclipse Foundation
 ~
 ~ Licensed under the Apache License, Version 2.0 (the "License");
 ~ you may not use this file except in compliance with the License.
@@ -21,62 +21,52 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>data-tck</artifactId>
+        <artifactId>tck-data</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-data-tck-web-glassfish-runner</artifactId>
+    <artifactId>tck-data-jpa</artifactId>
+    <name>TCK: Jakarta Data JPA</name>
 
-    <name>Jakarta Data TCK Web Runner for GlassFish using JPA Entities</name>
-
-    <!-- Runtime Dependencies -->
     <dependencies>
-        <!-- The TCK -->
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-tck</artifactId>
         </dependency>
 
-        <!-- The API -->
+        <dependency>
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>jakarta.data</groupId>
             <artifactId>jakarta.data-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>jakarta.transaction</groupId>
             <artifactId>jakarta.transaction-api</artifactId>
         </dependency>
 
-        <!-- Junit5 -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-        </dependency>
-
-        <!-- Signature Test Plugin -->
         <dependency>
             <groupId>jakarta.tck</groupId>
             <artifactId>sigtest-maven-plugin</artifactId>
         </dependency>
 
-        <!-- APIs referenced by TCK that do not require implementations for standalone tests -->
         <dependency>
             <groupId>org.jboss.shrinkwrap</groupId>
             <artifactId>shrinkwrap-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.arquillian.junit5</groupId>
-            <artifactId>arquillian-junit5-core</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
         </dependency>
         <dependency>
-            <groupId>jakarta.enterprise</groupId>
-            <artifactId>jakarta.enterprise.cdi-api</artifactId>
+            <groupId>org.jboss.arquillian.junit5</groupId>
+            <artifactId>arquillian-junit5-core</artifactId>
         </dependency>
 
         <dependency>
@@ -103,17 +93,14 @@
                 <executions>
                     <execution>
                         <id>unpack-glassfish</id>
-                        <phase>test-compile</phase>
+                        <phase>process-test-resources</phase>
                     </execution>
                 </executions>
             </plugin>
-
-            <!-- Surefire plugin - Entrypoint for Junit5 -->
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <groups><![CDATA[web & persistence]]></groups>
-
                     <systemPropertyVariables>
                         <glassfish.postBootCommands>
                             create-jdbc-connection-pool --datasourceclassname org.apache.derby.jdbc.ClientDataSource --property databaseName=${glassfish.home}/glassfish/domains/domain1/config/derbyDB:serverName=localhost:portNumber=1527 DerbyPool

@@ -40,7 +40,6 @@
 
     <properties>
         <tck.cdi.version>4.1.0</tck.cdi.version>
-        <excluded.groups>se</excluded.groups>
     </properties>
 
     <dependencyManagement>

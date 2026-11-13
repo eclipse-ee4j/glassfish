@@ -35,6 +35,7 @@
 
     <modules>
         <module>glassfish-runner</module>
+        <module>nosql</module>
         <module>tck-download</module>
         <module>activation</module>
         <module>authentication</module>

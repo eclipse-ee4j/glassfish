@@ -58,6 +58,12 @@
             <groupId>org.eclipse.jnosql.databases</groupId>
             <artifactId>jnosql-mongodb</artifactId>
             <version>${jnosql.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jnosql.mapping</groupId>
+                    <artifactId>jnosql-mapping-document</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Junit5 -->

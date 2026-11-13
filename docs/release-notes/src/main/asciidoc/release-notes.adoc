@@ -63,6 +63,7 @@ Key new features in {productName} {product-majorVersion} include:
 * https://microprofile.io/specifications/jwt/[MicroProfile JWT] API
 * https://microprofile.io/specifications/rest-client[MicroProfile REST Client] API (since {productName} 7.0.6)
 * https://microprofile.io/specifications/health[MicroProfile Health] API (since {productName} 7.1.0)
+* https://microprofile.io/specifications/telemetry/[MicroProfile Telemetry] (since {productName} 8.0.6, Full Platform only)
 * https://jakarta.ee/specifications/mvc/[Jakarta MVC] API updated to version 2.0
 * xref:embedded-server-guide.adoc#running-from-command-line[Runnable Embedded GlassFish JAR] (since {productName} 7.0.18)
 * xref:administration-guide.adoc#log-executed-admin-commands[Admin Command Logger] (since {productName} 7.0.16)
@@ -896,6 +897,13 @@ Table 1-5 MicroProfile Standards Implementations in {productName} {product-curre
 |X
 |X
 |X
+
+|https://microprofile.io/specifications/telemetry/[MicroProfile Telemetry]
+|{microprofile-telemetry-version}
+|X
+|-
+|-
+|-
 |===
 
 [[extensions-support]]

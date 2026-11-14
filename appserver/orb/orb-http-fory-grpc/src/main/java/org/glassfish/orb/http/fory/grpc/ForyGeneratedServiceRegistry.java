@@ -46,6 +46,19 @@ public final class ForyGeneratedServiceRegistry {
         this.stale = Objects.requireNonNull(stale, "stale");
     }
 
+    /**
+     * What to run, instead of the miss refresher, when a lookup finds a binding
+     * while {@link #onStale} says the registry is out of date. It is separate
+     * because the two differ in what they may do: a caller that is looking for
+     * something published can afford to wait for a rebuild, one that is looking
+     * for something unknown should not.
+     */
+    private volatile Runnable staleHit;
+
+    public void onStaleHit(Runnable staleHit) {
+        this.staleHit = Objects.requireNonNull(staleHit, "staleHit");
+    }
+
     public void onMiss(Runnable refresher) {
         this.refresher = Objects.requireNonNull(refresher, "refresher");
     }
@@ -77,8 +90,12 @@ public final class ForyGeneratedServiceRegistry {
 
     public Binding lookup(String wirePath) {
         Binding binding = bindings.get(wirePath);
-        if (binding == null || stale.getAsBoolean()) {
+        if (binding == null) {
             refresher.run();
+            binding = bindings.get(wirePath);
+        } else if (stale.getAsBoolean()) {
+            Runnable hit = staleHit;
+            (hit != null ? hit : refresher).run();
             binding = bindings.get(wirePath);
         }
         return binding;

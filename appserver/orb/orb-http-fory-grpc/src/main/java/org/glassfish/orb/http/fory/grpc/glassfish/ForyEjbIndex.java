@@ -151,6 +151,9 @@ final class ForyEjbIndex {
     // Guarded by rebuilding.
     private long lastRebuild;
 
+    /** Whether the last attempt to read the deployment failed; guarded by rebuilding. */
+    private boolean readFailing;
+
     private Map<ViewKey, Published> built = Map.of();
 
     ForyEjbIndex(ApplicationRegistry applications) {
@@ -160,9 +163,10 @@ final class ForyEjbIndex {
     ForyEjbIndex(Supplier<List<DeployedView>> deployed, LongSupplier clock) {
         this.deployed = deployed;
         this.clock = clock;
-        foryRegistry.onMiss(this::refreshIfDue);
+        foryRegistry.onMiss(() -> refreshIfDue(false));
+        foryRegistry.onStaleHit(() -> refreshIfDue(true));
         foryRegistry.onStale(() -> stale);
-        catalog.onMiss(this::refreshIfDue);
+        catalog.onMiss(() -> refreshIfDue(false));
     }
 
     ForyGeneratedServiceRegistry foryRegistry() {
@@ -227,21 +231,33 @@ final class ForyEjbIndex {
             rebuild();
         } finally {
             rebuilding.unlock();
+            applyPendingDrops();
         }
-        applyPendingDrops();
     }
 
-    /** The hook for a path that is not published, or is published while the deployment has changed. */
-    private void refreshIfDue() {
+    /**
+     * The hook for a path that is not published, or is published while the
+     * deployment has changed.
+     *
+     * @param hit whether the path is published. Only then does a request that
+     *        knows the deployment changed wait (a bounded time) for a rebuild
+     *        that is running, because it is about to be answered with a binding
+     *        that may be the old one. A miss has nothing to wait for and is
+     *        answered at once, so that a caller who asks for paths that do not
+     *        exist cannot hold request threads.
+     */
+    private void refreshIfDue(boolean hit) {
         long seen = generation;
         try {
-            boolean locked = stale
+            boolean locked = stale && hit
                     ? rebuilding.tryLock(STALE_WAIT_MILLIS, TimeUnit.MILLISECONDS)
                     : rebuilding.tryLock();
             if (!locked) {
                 return; // a rebuild is running: answer from what is published
             }
         } catch (InterruptedException e) {
+            // The flag is set again for whoever is serving the request, which
+            // stops there instead of going on with it.
             Thread.currentThread().interrupt();
             return;
         }
@@ -249,14 +265,19 @@ final class ForyEjbIndex {
             if (generation != seen && !stale) {
                 return; // another request rebuilt while this one waited
             }
+            if (readFailing && clock.getAsLong() - lastRebuild < MIN_REBUILD_INTERVAL_NANOS) {
+                return; // the registry could not be read a moment ago
+            }
             if (!stale && clock.getAsLong() - lastRebuild < MIN_REBUILD_INTERVAL_NANOS) {
                 return;
             }
             rebuild();
         } finally {
+            // On every path, including the early returns: a drop that found the
+            // lock taken left its work for whoever held it.
             rebuilding.unlock();
+            applyPendingDrops();
         }
-        applyPendingDrops();
     }
 
     // Called with the lock held.
@@ -270,9 +291,13 @@ final class ForyEjbIndex {
             views = deployed.get();
         } catch (RuntimeException | LinkageError e) {
             stale = retryFailures || stale;
-            LOG.log(Level.WARNING, "cannot read the deployed applications: " + e);
+            // Tried again no sooner than the interval, and said once per run of failures.
+            LOG.log(readFailing ? Level.DEBUG : Level.WARNING, "cannot read the deployed applications: " + e);
+            readFailing = true;
+            lastRebuild = clock.getAsLong();
             return;
         }
+        readFailing = false;
         lastRebuild = clock.getAsLong();
         Map<ViewKey, Published> next = new LinkedHashMap<>();
         for (DeployedView view : views) {
@@ -350,6 +375,12 @@ final class ForyEjbIndex {
         String bean = deployedView.bean();
         if (app == null || module == null || bean == null) {
             throw new IllegalArgumentException("the application, module or bean has no name");
+        }
+        if (deployedView.loader() == null) {
+            // Between the unload of the application's modules and its being
+            // marked as not loaded; it is about to go, and is not news.
+            LOG.log(Level.DEBUG, "not publishing " + bean + ": its class loader is gone");
+            return Published.NOTHING;
         }
         if (deployedView.stateful()) {
             // Every call to a stateful bean needs a session, and this endpoint
@@ -467,7 +498,7 @@ final class ForyEjbIndex {
     }
 
     /** Reads the remote business views of the applications deployed now. */
-    private static List<DeployedView> deployedViews(ApplicationRegistry applications) {
+    static List<DeployedView> deployedViews(ApplicationRegistry applications) {
         List<DeployedView> result = new ArrayList<>();
         for (String name : applications.getAllApplicationNames()) {
             ApplicationInfo info = applications.get(name);

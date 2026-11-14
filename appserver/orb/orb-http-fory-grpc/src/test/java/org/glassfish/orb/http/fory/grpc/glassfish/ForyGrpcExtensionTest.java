@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.api.event.EventListener;
+import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -97,21 +99,30 @@ class ForyGrpcExtensionTest {
     }
 
     @Test
-    void anApplicationRegisteredWhileItUnloadsIsForgottenWhenItsUndeploymentSucceeds() {
+    void undeployingOneApplicationLeavesTheOthersPublishedAndTheirBindingsUntouched() {
         List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
-        deployed.add(ForyEjbIndexTest.view("app", "module", "CalcBean", Calc.class));
+        deployed.add(new ForyEjbIndex.DeployedView("a", "module", "CalcBean", Calc.class.getName(),
+                ForyEjbIndexTest.view("a", "module", "CalcBean", Calc.class).loader(), false, "a"));
+        deployed.add(new ForyEjbIndex.DeployedView("b", "module", "CalcBean", Calc.class.getName(),
+                ForyEjbIndexTest.view("b", "module", "CalcBean", Calc.class).loader(), false, "b"));
         ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
         ForyGrpcExtension extension = new ForyGrpcExtension();
         extension.init(index, TransactionBridge.NONE);
         ForyGeneratedServiceRegistry registry = index.foryRegistry();
+        String pathB = ROOT + "/fory/" + ForyEjbIndex.serviceName("b", "module", "CalcBean", Calc.class) + "/Twice";
+        ForyGeneratedServiceRegistry.Binding bindingB = registry.lookup(pathB);
+        assertEquals(6, registry.size());
 
-        extension.event(new EventListener.Event<>(Deployment.APPLICATION_UNLOADED, null));
-        assertNotNull(registry.lookup(wire("Twice")), "a request while the registry still lists the application");
-        deployed.clear();
+        // The undeployment of a: the unload event from inside its unload, then
+        // the success event, both before the registry lets go of it.
+        extension.event(new EventListener.Event<>(Deployment.APPLICATION_UNLOADED,
+                new ApplicationInfo(null, null, "a")));
         extension.event(new EventListener.Event<>(Deployment.UNDEPLOYMENT_SUCCESS, null));
 
-        assertEquals(0, registry.size());
-        assertEquals(0, index.catalog().size());
+        assertEquals(3, registry.size(), "the other application was unpublished along with a");
+        deployed.remove(0);
+        assertSame(bindingB, registry.lookup(pathB), "the other application's binding was built again");
+        assertEquals(3, registry.size());
     }
 
     @Test

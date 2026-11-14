@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
@@ -475,14 +476,15 @@ class ForyEjbIndexTest {
     }
 
     @Test
-    void aFailureReadingTheDeploymentKeepsWhatWasPublished() {
+    void aFailureReadingTheDeploymentKeepsWhatWasPublishedAndIsRetriedNoSoonerThanTheInterval() {
         AtomicInteger reads = new AtomicInteger();
+        AtomicLong now = new AtomicLong(1_000_000_000L);
         ForyEjbIndex index = new ForyEjbIndex(() -> {
             if (reads.incrementAndGet() > 1) {
                 throw new IllegalStateException("registry unavailable");
             }
             return List.of(view("app", "module", "GreeterBean", Greeter.class));
-        }, System::nanoTime);
+        }, now::get);
         index.refresh();
         index.markStale();
 
@@ -491,10 +493,18 @@ class ForyEjbIndexTest {
         assertEquals(1, index.foryRegistry().size());
         assertEquals(1, warnings.size(), warnings.toString());
 
-        // The change it could not read is still to be looked at: the next
-        // request tries again, rather than waiting out the interval.
+        // A registry that keeps failing is not asked again for every request.
+        for (int i = 0; i < 50; i++) {
+            index.foryRegistry().lookup("/missing/" + i);
+        }
+        assertEquals(2, reads.get());
+
+        // After the interval it is, and a failure that goes on is not said again.
+        now.addAndGet(ForyEjbIndex.MIN_REBUILD_INTERVAL_NANOS + 1);
         index.foryRegistry().lookup("/missing");
         assertEquals(3, reads.get());
+        assertEquals(1, warnings.size(), warnings.toString());
+        assertEquals(1, index.foryRegistry().size());
     }
 
     @Test
@@ -515,27 +525,41 @@ class ForyEjbIndexTest {
     }
 
     @Test
-    void anApplicationStillRegisteredWhileItUnloadsDoesNotStayPublished() {
-        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
-        deployed.add(view("app", "module", "GreeterBean", Greeter.class));
-        ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
+    void anUnloadingApplicationIsNotPublishedAgain() {
+        // The registry reader leaves out an application that is not loaded
+        // (see ForyEjbIndexRegistryTest), which is what the supplier does here
+        // from the moment the application starts to unload.
+        AtomicBoolean unloading = new AtomicBoolean();
+        ForyEjbIndex index = new ForyEjbIndex(() -> unloading.get()
+                ? List.of() : List.of(view("app", "module", "GreeterBean", Greeter.class)), System::nanoTime);
         index.refresh();
         String path = wire("app", "module", "GreeterBean", Greeter.class, "Greet");
         assertNotNull(index.foryRegistry().lookup(path));
 
-        // APPLICATION_UNLOADED: the registry still lists the application.
+        unloading.set(true);
         index.drop("app");
-        assertEquals(0, index.foryRegistry().size());
-        // A request in that window rebuilds and sees it again ...
-        assertNotNull(index.foryRegistry().lookup(path));
-
-        // ... and UNDEPLOYMENT_SUCCESS, after the registry let go of it, forgets it for good.
-        deployed.clear();
-        index.dropAll();
+        // A request in the window between the unload and the registry's letting go of it.
+        assertNull(index.foryRegistry().lookup(path));
 
         assertEquals(0, index.foryRegistry().size());
         assertEquals(0, index.catalog().size());
-        assertNull(index.foryRegistry().lookup(path));
+    }
+
+    @Test
+    void dropGoesByTheNameTheApplicationIsRegisteredUnder() {
+        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
+        deployed.add(new ForyEjbIndex.DeployedView("display-name", "module", "GreeterBean", Greeter.class.getName(),
+                LOADER, false, "registered-as"));
+        ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
+        index.refresh();
+        assertEquals(1, index.foryRegistry().size());
+
+        index.drop("display-name");
+        assertEquals(1, index.foryRegistry().size(), "dropped by a name the application is not registered under");
+
+        deployed.clear();
+        index.drop("registered-as");
+        assertEquals(0, index.foryRegistry().size());
     }
 
     @Test
@@ -614,6 +638,122 @@ class ForyEjbIndexTest {
         // What the event asked for is done once the rebuild is over, whatever it published.
         assertEquals(0, index.foryRegistry().size());
         assertEquals(0, index.catalog().size());
+    }
+
+    @Test
+    void aDropThatFoundTheLockTakenIsAppliedWhenTheHolderTakesAnEarlyReturn() throws Exception {
+        AtomicBoolean armed = new AtomicBoolean();
+        AtomicReference<ForyEjbIndex> holder = new AtomicReference<>();
+        ForyEjbIndex index = new ForyEjbIndex(
+                () -> List.of(view("app", "module", "GreeterBean", Greeter.class)), () -> {
+                    if (armed.compareAndSet(true, false)) {
+                        // The request that holds the lock is checking how old the last
+                        // rebuild is; a deployment event arrives now, on its own thread.
+                        Thread event = new Thread(() -> holder.get().drop("app"));
+                        event.start();
+                        try {
+                            event.join(10_000);
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
+                    }
+                    return 1_000_000_000L;
+                });
+        holder.set(index);
+        index.refresh();
+        assertEquals(1, index.foryRegistry().size());
+
+        armed.set(true);
+        // A miss that is too soon after the last rebuild to look again.
+        index.foryRegistry().lookup("/missing");
+
+        assertEquals(0, index.foryRegistry().size(), "the queued drop was left undone");
+    }
+
+    @Test
+    void aRequestForAPublishedPathWaitsAShortTimeForARebuildThatIsRunning() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        AtomicInteger reads = new AtomicInteger();
+        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
+        deployed.add(view("app", "module", "GreeterBean", Greeter.class));
+        ForyEjbIndex index = new ForyEjbIndex(() -> {
+            if (reads.incrementAndGet() == 2) {
+                entered.countDown();
+                try {
+                    release.await(60, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            return List.copyOf(deployed);
+        }, System::nanoTime);
+        index.refresh();
+        String path = wire("app", "module", "GreeterBean", Greeter.class, "Greet");
+        ForyGeneratedServiceRegistry.Binding old = index.foryRegistry().lookup(path);
+        index.markStale();
+        Thread rebuilder = new Thread(() -> index.foryRegistry().lookup("/missing"));
+        rebuilder.start();
+        assertTrue(entered.await(30, TimeUnit.SECONDS));
+        // The redeployment is read by the rebuild that is running.
+        deployed.set(0, new ForyEjbIndex.DeployedView("app", "module", "GreeterBean", Greeter.class.getName(),
+                new ClassLoader(LOADER) { }, false));
+        index.markStale();
+
+        AtomicReference<ForyGeneratedServiceRegistry.Binding> served = new AtomicReference<>();
+        Thread hit = new Thread(() -> served.set(index.foryRegistry().lookup(path)));
+        hit.start();
+        Thread.sleep(50);
+        release.countDown();
+        hit.join(30_000);
+        rebuilder.join(30_000);
+
+        assertNotNull(served.get());
+        assertNotSame(old, served.get(), "answered with the old binding without waiting for the rebuild");
+    }
+
+    @Test
+    void aMissDoesNotWaitForARebuildThatIsRunningEvenWhenTheDeploymentChanged() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        AtomicInteger reads = new AtomicInteger();
+        ForyEjbIndex index = new ForyEjbIndex(() -> {
+            if (reads.incrementAndGet() == 2) {
+                entered.countDown();
+                try {
+                    release.await(60, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            return List.of(view("app", "module", "GreeterBean", Greeter.class));
+        }, System::nanoTime);
+        index.refresh();
+        index.markStale();
+        Thread rebuilder = new Thread(() -> index.foryRegistry().lookup("/missing"));
+        rebuilder.start();
+        try {
+            assertTrue(entered.await(30, TimeUnit.SECONDS));
+            index.markStale();
+
+            long started = System.nanoTime();
+            index.foryRegistry().lookup("/missing/again");
+
+            long millis = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - started);
+            assertTrue(millis < ForyEjbIndex.STALE_WAIT_MILLIS, "a miss waited " + millis + " ms");
+        } finally {
+            release.countDown();
+            rebuilder.join(30_000);
+        }
+    }
+
+    @Test
+    void aViewWhoseClassLoaderIsGoneIsLeftOutWithoutAWarning() {
+        ForyEjbIndex index = index(List.of(
+                new ForyEjbIndex.DeployedView("app", "module", "Gone", Greeter.class.getName(), null, false)));
+
+        assertEquals(0, index.foryRegistry().size());
+        assertEquals(List.of(), warnings);
     }
 
     @Test

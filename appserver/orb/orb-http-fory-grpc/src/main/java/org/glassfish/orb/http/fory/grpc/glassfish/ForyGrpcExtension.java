@@ -123,11 +123,13 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
      * The deployment events that say what the index holds is out of date.
      *
      * <p>{@code APPLICATION_UNLOADED} is sent from inside the application's own
-     * unload, before it is removed from the registry, so the index forgets the
-     * application by name and the registry reader skips an application that is
-     * not loaded; {@code UNDEPLOYMENT_SUCCESS} comes after the removal and
-     * forgets everything once more, which also catches a rebuild that read the
-     * registry in between. A started application only marks the index stale.
+     * unload, and so is {@code UNDEPLOYMENT_SUCCESS}: both come before the
+     * registry lets go of the application. Neither can therefore be taken to
+     * mean that the application is gone from it. What makes a rebuild leave an
+     * unloading application out is that the registry reader skips applications
+     * that are not loaded; the unload event forgets that application, by name
+     * and only that one, so that the others are served all the while. The
+     * undeployment event only marks the index stale.
      */
     @Override
     public void event(Event<?> event) {
@@ -138,9 +140,8 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
         if (event.is(Deployment.APPLICATION_UNLOADED)) {
             Object hook = event.hook();
             current.drop(hook instanceof ApplicationInfo info ? info.getName() : null);
-        } else if (event.is(Deployment.UNDEPLOYMENT_SUCCESS)) {
-            current.dropAll();
-        } else if (event.is(Deployment.APPLICATION_STARTED) || event.is(Deployment.APPLICATION_LOADED)) {
+        } else if (event.is(Deployment.UNDEPLOYMENT_SUCCESS) || event.is(Deployment.APPLICATION_STARTED)
+                || event.is(Deployment.APPLICATION_LOADED)) {
             current.markStale();
         }
     }

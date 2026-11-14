@@ -176,10 +176,11 @@ public class HttpNamingContext implements Context {
                     return client.createHomeProxy(view, component, locator);
                 }
                 return client.createProxy(view, locator);
-            } catch (ClassNotFoundException e) {
-                // The view interface is not on this client's classpath. Hand
-                // back the reference rather than failing: the caller may only
-                // want to inspect or re-bind it.
+            } catch (ClassNotFoundException | IllegalArgumentException e) {
+                // The view interface is not on this client's classpath, or is
+                // an interface Proxy cannot implement (non-public in another
+                // loader, say). Hand back the reference rather than failing:
+                // the caller may only want to inspect or re-bind it.
                 return ref;
             }
         }

@@ -306,10 +306,11 @@ public final class HttpEjbClient implements AutoCloseable {
 
     /**
      * Best effort and not waited for: the caller has already waited one
-     * timeout and must not wait a second for the courtesy. The cancel only
-     * marks the invocation as abandoned (no interrupt): interrupting a thread
-     * in the middle of a transactional business method is not a decision for
-     * a client that has merely stopped listening.
+     * timeout and must not wait a second for the courtesy. Sent without the
+     * interrupt flag, so the server only marks the invocation cancelled and
+     * discards its result: the bean keeps running to completion.
+     * Interrupting a thread in the middle of a transactional business method
+     * is not a decision for a client that has merely stopped listening.
      */
     private void cancelQuietly(EjbLocator locator, String invocationId) {
         try {

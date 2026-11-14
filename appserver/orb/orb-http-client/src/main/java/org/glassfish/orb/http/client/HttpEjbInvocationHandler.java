@@ -61,29 +61,19 @@ final class HttpEjbInvocationHandler implements InvocationHandler {
         if (method.getDeclaringClass() == Object.class) {
             return invokeObjectMethod(method, args);
         }
-        if (method.getDeclaringClass() == EJBObject.class) {
-            return invokeComponentMethod(method, args);
-        }
-        // An EJB asynchronous method is declared to return Future<V>. Dispatch
-        // it without blocking and let the caller decide when to join.
-        if (Future.class.isAssignableFrom(method.getReturnType())) {
-            CompletableFuture<Object> future = client.invokeAsync(locator, viewClass, method, args);
-            return future;
-        }
         try {
+            if (method.getDeclaringClass() == EJBObject.class) {
+                return invokeComponentMethod(method, args);
+            }
+            // An EJB asynchronous method is declared to return Future<V>. Dispatch
+            // it without blocking and let the caller decide when to join.
+            if (Future.class.isAssignableFrom(method.getReturnType())) {
+                CompletableFuture<Object> future = client.invokeAsync(locator, viewClass, method, args);
+                return future;
+            }
             return client.invoke(locator, viewClass, method, args);
         } catch (java.io.IOException e) {
-            // A transport failure (a timeout, a protocol error) is not
-            // something a business interface that does not declare IOException
-            // can carry; through a proxy it would surface as an
-            // UndeclaredThrowableException. EJBException is what a caller of a
-            // remote bean already has to expect.
-            for (Class<?> declared : method.getExceptionTypes()) {
-                if (declared.isInstance(e)) {
-                    throw e;
-                }
-            }
-            throw new jakarta.ejb.EJBException(e.getMessage(), e);
+            throw TransportErrors.translate(e, method, viewClass);
         }
     }
 

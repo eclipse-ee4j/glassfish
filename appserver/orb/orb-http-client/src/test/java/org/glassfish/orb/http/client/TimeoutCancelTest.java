@@ -42,6 +42,15 @@ class TimeoutCancelTest {
         String greet(String name);
     }
 
+    /** An EJB 2.x component interface: RMI style, every method declares RemoteException. */
+    public interface Cart extends jakarta.ejb.EJBObject {
+        String hello() throws java.rmi.RemoteException;
+    }
+
+    public interface CartHome extends jakarta.ejb.EJBHome {
+        Cart create() throws jakarta.ejb.CreateException, java.rmi.RemoteException;
+    }
+
     /**
      * Times out on every invocation (or answers 400 to it) and accepts
      * everything else. A cancel is only ever sent asynchronously, so the
@@ -138,6 +147,46 @@ class TimeoutCancelTest {
             Greeter greeter = client.createProxy(Greeter.class, new EjbLocator("app", "module", "", "GreeterBean"));
 
             assertThrows(EJBException.class, () -> greeter.greet("world"));
+        }
+    }
+
+    private HttpEjbClient clientOver(TimingOutTransport transport) {
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+        return new HttpEjbClient(config, transport, new JavaSerializationMarshaller(),
+                JavaSerializationMarshaller.defaultFilter());
+    }
+
+    @Test
+    @DisplayName("a timeout in a business method of a component interface is a RemoteException")
+    void aComponentMethodTimeoutIsARemoteException() throws Exception {
+        try (HttpEjbClient client = clientOver(new TimingOutTransport(false))) {
+            Cart cart = client.createComponentProxy(Cart.class,
+                    new EjbLocator("app", "module", "", "CartBean", new byte[] { 1 }), null);
+
+            java.rmi.RemoteException thrown = assertThrows(java.rmi.RemoteException.class, cart::hello);
+            assertTrue(thrown.getCause() instanceof HttpTimeoutException, String.valueOf(thrown.getCause()));
+        }
+    }
+
+    @Test
+    @DisplayName("a timeout in create() on an EJB 2.x home is a RemoteException")
+    void aHomeCreateTimeoutIsARemoteException() throws Exception {
+        try (HttpEjbClient client = clientOver(new TimingOutTransport(false))) {
+            CartHome home = client.createHomeProxy(CartHome.class, Cart.class,
+                    new EjbLocator("app", "module", "", "CartBean"));
+
+            assertThrows(java.rmi.RemoteException.class, home::create);
+        }
+    }
+
+    @Test
+    @DisplayName("a timeout in remove() on a component is a RemoteException")
+    void aRemoveTimeoutIsARemoteException() throws Exception {
+        try (HttpEjbClient client = clientOver(new TimingOutTransport(false))) {
+            Cart cart = client.createComponentProxy(Cart.class,
+                    new EjbLocator("app", "module", "", "CartBean", new byte[] { 1 }), null);
+
+            assertThrows(java.rmi.RemoteException.class, cart::remove);
         }
     }
 }

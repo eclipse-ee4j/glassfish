@@ -22,7 +22,9 @@ import jakarta.resource.spi.XATerminator;
 
 import java.lang.reflect.Proxy;
 import java.util.List;
+import java.util.Map;
 
+import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 /**
@@ -44,10 +46,22 @@ final class TerminatorRecorder {
      */
     static JavaEETransactionManager manager(List<String> terminatorCalls, List<String> managerCalls,
             Xid... listed) {
+        return manager(terminatorCalls, managerCalls, Map.of(), listed);
+    }
+
+    /**
+     * @param failures the terminator call (by name) that throws, and what it throws
+     * @return a manager to hand to the bridge
+     */
+    static JavaEETransactionManager manager(List<String> terminatorCalls, List<String> managerCalls,
+            Map<String, XAException> failures, Xid... listed) {
         XATerminator terminator = (XATerminator) Proxy.newProxyInstance(
                 TerminatorRecorder.class.getClassLoader(), new Class<?>[] { XATerminator.class },
                 (proxy, method, args) -> {
                     terminatorCalls.add(method.getName());
+                    if (failures.containsKey(method.getName())) {
+                        throw failures.get(method.getName());
+                    }
                     if (method.getName().equals("recover")) {
                         return listed;
                     }

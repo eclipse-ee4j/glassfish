@@ -167,10 +167,26 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         try {
             vote = terminator().prepare(xid);
         } catch (XAException e) {
-            discard(xid);
+            if (votedToRollBack(e)) {
+                discard(xid);
+            }
             throw failure("prepare failed for " + Xids.key(xid), e.errorCode, e);
         }
         return vote;
+    }
+
+    /**
+     * Whether a failed prepare was the branch's own vote to roll back.
+     *
+     * <p>Only the rollback codes are a vote ({@code XA_RBROLLBACK} through
+     * {@code XA_RBEND}). Any other failure - {@code XAER_PROTO} for a branch
+     * that was already prepared, {@code XAER_NOTA} for one that is not known -
+     * says the prepare was refused for a reason about the call and not about
+     * the work, and rolling the branch back on that evidence would destroy a
+     * prepared branch the coordinator has promised to commit.
+     */
+    private static boolean votedToRollBack(XAException e) {
+        return e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND;
     }
 
     /**
@@ -276,6 +292,11 @@ public class GlassFishTransactionBridge implements TransactionBridge {
      */
     @Override
     public Xid begin(long timeoutSeconds) throws TransactionException {
+        if (timeoutSeconds < 0) {
+            // 0 means the server's default. A negative number means nothing,
+            // and what the manager does with one is its own business.
+            throw new TransactionException("a transaction timeout cannot be negative", XAException.XAER_INVAL);
+        }
         Xid xid = newXid();
         recreate(xid, timeoutSeconds);
         release(xid);
@@ -360,9 +381,20 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         }
     }
 
+    /**
+     * The failure the caller is told about.
+     *
+     * <p>The message travels to the client in a response header, so it names
+     * the operation, the branch and the XA error code - what a coordinator can
+     * act on - and not the cause's own text, which is whatever the transaction
+     * manager chose to say about its internals. The cause stays on the
+     * exception and is logged at debug level, where the server's own log can
+     * have it.
+     */
     private static TransactionException failure(String message, int errorCode, Throwable cause) {
-        return new TransactionException(message + ": " + cause, errorCode == 0
-                ? XAException.XAER_RMERR : errorCode, cause);
+        int code = errorCode == 0 ? XAException.XAER_RMERR : errorCode;
+        LOG.log(Level.DEBUG, message, cause);
+        return new TransactionException(message + " (XA error " + code + ")", code, cause);
     }
 
     /** Exposed so the endpoint can report what it wired without reflection. */

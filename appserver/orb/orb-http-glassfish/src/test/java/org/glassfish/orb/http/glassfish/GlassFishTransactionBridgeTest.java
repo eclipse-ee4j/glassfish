@@ -19,6 +19,7 @@ package org.glassfish.orb.http.glassfish;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
@@ -188,6 +189,62 @@ class GlassFishTransactionBridgeTest {
         bridge.prepare(OWN);
 
         assertEquals(List.of("rollback", "forget", "commit", "prepare"), terminatorCalls);
+    }
+
+    @Test
+    @DisplayName("a prepare refused for a protocol reason does not roll the branch back")
+    void aProtocolRefusalLeavesThePreparedBranchAlone() {
+        bridge = new GlassFishTransactionBridge(TerminatorRecorder.manager(terminatorCalls, managerCalls,
+                Map.of("prepare", new XAException(XAException.XAER_PROTO))));
+
+        // A client that prepared the branch and then asks for a one-phase
+        // commit of it: the second prepare is refused as a protocol error, and
+        // the branch it refers to is prepared, promised, and not ours to undo.
+        TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
+                () -> bridge.commit(CLIENT, true));
+
+        assertEquals(XAException.XAER_PROTO, thrown.errorCode());
+        assertEquals(List.of("prepare"), terminatorCalls);
+    }
+
+    @Test
+    @DisplayName("a prepare that votes to roll back is rolled back, as the coordinator will assume")
+    void aRollbackVoteRollsTheBranchBack() {
+        bridge = new GlassFishTransactionBridge(TerminatorRecorder.manager(terminatorCalls, managerCalls,
+                Map.of("prepare", new XAException(XAException.XA_RBROLLBACK))));
+
+        TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
+                () -> bridge.prepare(CLIENT));
+
+        assertEquals(XAException.XA_RBROLLBACK, thrown.errorCode());
+        assertEquals(List.of("prepare", "rollback"), terminatorCalls);
+    }
+
+    @Test
+    @DisplayName("the failure sent to the caller carries the XA error code and not the manager's own text")
+    void theFailureDoesNotLeakTheCause() {
+        bridge = new GlassFishTransactionBridge(TerminatorRecorder.manager(terminatorCalls, managerCalls,
+                Map.of("rollback", new XAException("secret internal detail"))));
+
+        TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
+                () -> bridge.rollback(CLIENT));
+
+        assertTrue(!thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
+        assertTrue(thrown.getMessage().contains("rollback failed"), thrown.getMessage());
+        assertEquals(XAException.XAER_RMERR, thrown.errorCode());
+    }
+
+    @Test
+    @DisplayName("a negative timeout is refused before anything is begun")
+    void aNegativeTimeoutIsRefused() {
+        wire();
+
+        TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
+                () -> bridge.begin(-1));
+
+        assertEquals(XAException.XAER_INVAL, thrown.errorCode());
+        assertTrue(terminatorCalls.isEmpty(), "terminator was called: " + terminatorCalls);
+        assertTrue(managerCalls.isEmpty(), "manager was called: " + managerCalls);
     }
 
     private static void assertTransactionFailure(Executable operation) {

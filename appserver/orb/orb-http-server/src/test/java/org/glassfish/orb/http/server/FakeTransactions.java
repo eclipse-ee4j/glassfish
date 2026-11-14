@@ -60,6 +60,12 @@ final class FakeTransactions implements TransactionBridge {
     boolean refuseRollbackOnly;
     /** When set, recreate throws this instead of importing. */
     RuntimeException recreateThrows;
+    /** When set, recreateRollbackOnly returns null, as a broken bridge would. */
+    boolean returnNullHandle;
+    /** When set, releaseRollbackOnly throws this after recording. */
+    RuntimeException releaseRollbackOnlyThrows;
+    /** Run inside recreateRollbackOnly once it has succeeded, to stand in for something happening mid-call. */
+    Runnable afterRecreateRollbackOnly;
     /** When set, detach throws this. */
     RuntimeException detachThrows;
 
@@ -111,8 +117,14 @@ final class FakeTransactions implements TransactionBridge {
         }
         // What a real bridge does: a recreated branch, or a local transaction
         // for a caller that sent none, either marked rollback-only.
+        if (returnNullHandle) {
+            return null;
+        }
         String handle = xid == null ? "local" : Xids.key(xid);
         imported.put(handle, timeoutSeconds);
+        if (afterRecreateRollbackOnly != null) {
+            afterRecreateRollbackOnly.run();
+        }
         return handle;
     }
 
@@ -120,6 +132,9 @@ final class FakeTransactions implements TransactionBridge {
     public void releaseRollbackOnly(Object handle) throws TransactionException {
         record("releaseRollbackOnly(" + handle + ")");
         imported.remove(String.valueOf(handle));
+        if (releaseRollbackOnlyThrows != null) {
+            throw releaseRollbackOnlyThrows;
+        }
     }
 
     @Override

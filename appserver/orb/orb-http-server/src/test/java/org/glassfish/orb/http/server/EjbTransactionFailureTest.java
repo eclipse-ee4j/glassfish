@@ -101,8 +101,15 @@ class EjbTransactionFailureTest {
             String[] parameterTypes, Object... arguments) throws IOException {
         FakeContainer container = new FakeContainer();
         container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+        return invoke(transactions, container, new InvocationRegistry(), extraHeaders, carryTransaction,
+                methodName, parameterTypes, arguments);
+    }
+
+    private static Loopback.InMemoryExchange invoke(TransactionBridge transactions, FakeContainer container,
+            InvocationRegistry registry, Map<String, String> extraHeaders, boolean carryTransaction,
+            String methodName, String[] parameterTypes, Object... arguments) throws IOException {
         EjbDispatcher dispatcher = new EjbDispatcher(container, SecurityBridge.NONE, transactions,
-                new JavaSerializationMarshaller(), new InvocationRegistry(), SessionAffinity.forThisNode());
+                new JavaSerializationMarshaller(), registry, SessionAffinity.forThisNode());
 
         String path = EjbRoutes.invokePath(Protocol.CONTEXT_PATH, "myapp", "mymodule", null,
                 "GreeterBean", null, TestBeans.Greeter.class.getName(), methodName, parameterTypes);
@@ -116,7 +123,7 @@ class EjbTransactionFailureTest {
             writer.writeObject(Map.of());
         }
         Map<String, String> headers = new java.util.HashMap<>(extraHeaders);
-        headers.put("Content-Type", ContentType.of(JavaSerializationMarshaller.CODEC,
+        headers.putIfAbsent("Content-Type", ContentType.of(JavaSerializationMarshaller.CODEC,
                 ContentType.KIND_INVOCATION).toHeaderValue());
         Loopback.InMemoryExchange exchange = new Loopback.InMemoryExchange("POST",
                 path.getBytes(StandardCharsets.UTF_8), null, headers, body.toByteArray());
@@ -288,15 +295,94 @@ class EjbTransactionFailureTest {
     }
 
     @Test
-    @DisplayName("a request that repeats after a codec downgrade is imported and released each time")
-    void eachAttemptIsPairedWithItsOwnRelease() throws IOException {
+    @DisplayName("guard: a request refused for its codec never reaches the bridge, and the retry is paired with its release")
+    void aRequestRefusedForItsCodecNeverReachesTheBridge() throws IOException {
         FakeTransactions transactions = new FakeTransactions();
+        Map<String, String> exotic = Map.of(Protocol.H_TXN_ROLLBACK_ONLY, "true",
+                "Content-Type", ContentType.of("exotic", ContentType.KIND_INVOCATION).toHeaderValue());
+
+        Loopback.InMemoryExchange refused = invoke(transactions, exotic, false);
+        assertEquals(Protocol.SC_NOT_ACCEPTABLE, refused.toResponse().status());
+        assertEquals(List.of(), transactions.calls, "the bridge was reached by a request that was refused");
 
         invoke(transactions, rollbackOnly(), false);
-        invoke(transactions, rollbackOnly(), false);
 
-        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet,key=true)", "releaseRollbackOnly(local)",
-                "detach", "recreateRollbackOnly(none,0,greet,key=true)", "releaseRollbackOnly(local)"),
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet,key=true)", "releaseRollbackOnly(local)"),
                 transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a bridge that returns no handle is refused with XAER_RMERR and the thread is detached")
+    void aMissingHandleIsRefused() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        transactions.returnNullHandle = true;
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), false);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.toResponse().status());
+        assertEquals(List.of(Integer.toString(XAException.XAER_RMERR)),
+                exchange.toResponse().headers().get(TransactionDispatcher.H_ERROR_CODE));
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet,key=true)", "detach"),
+                transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a container that fails to release the target does not skip the transaction release")
+    void aFailingTargetReleaseStillReleasesTheTransaction() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        FakeContainer container = new FakeContainer();
+        container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+        container.releaseFails = new IllegalStateException("container broke");
+
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class,
+                () -> invoke(transactions, container, new InvocationRegistry(), rollbackOnly(), true, "greet",
+                        new String[] { String.class.getName(), int.class.getName() }, "Ada", 1));
+
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet,key=true)",
+                "releaseRollbackOnly(" + Xids.key(CARRIED) + ")"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a release that throws is logged, detaches the thread and leaves the response alone")
+    void aFailingReleaseDetachesAndKeepsTheResponse() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        transactions.releaseRollbackOnlyThrows = new IllegalStateException("release broke");
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), true);
+
+        assertEquals(Protocol.SC_OK, exchange.toResponse().status());
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet,key=true)",
+                "releaseRollbackOnly(" + Xids.key(CARRIED) + ")", "detach"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("guard: a cancelled call that holds a rollback-only handle releases it")
+    void aCancelledCallReleasesItsHandle() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        InvocationRegistry registry = new InvocationRegistry();
+        transactions.afterRecreateRollbackOnly = () -> registry.cancel("inv-1", false);
+        FakeContainer container = new FakeContainer();
+        container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+        Map<String, String> headers = new java.util.HashMap<>(rollbackOnly());
+        headers.put(Protocol.H_INVOCATION_ID, "inv-1");
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, container, registry, headers, true, "greet",
+                new String[] { String.class.getName(), int.class.getName() }, "Ada", 1);
+
+        assertEquals(Protocol.SC_CANCELLED, exchange.toResponse().status());
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet,key=true)",
+                "releaseRollbackOnly(" + Xids.key(CARRIED) + ")"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a refused timeout on a call with no branch detaches the thread once, not twice")
+    void aBadTimeoutWithNoBranchDetachesOnce() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        Map<String, String> headers = Map.of(Protocol.H_TXN_ROLLBACK_ONLY, "true", Protocol.H_TXN_TIMEOUT, "-1");
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, headers, false);
+
+        assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status());
+        assertEquals(List.of("detach"), transactions.calls);
     }
 }

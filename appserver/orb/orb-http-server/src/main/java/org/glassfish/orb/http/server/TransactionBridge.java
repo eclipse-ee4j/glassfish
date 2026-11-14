@@ -107,21 +107,23 @@ public interface TransactionBridge {
      * <li>NEVER: the call fails with {@code EJBException}, as for any client
      *     transaction.</li>
      * </ul>
-     * Which attribute applies depends on the bean (an ejb-jar.xml override, or
-     * two beans sharing a view interface), which is why the bridge receives the
-     * resolved {@code key} and why the dispatcher never guesses from
-     * {@code method}.
+     * For an {@code @Asynchronous} method the container does not propagate the
+     * client's transaction at all, so REQUIRED behaves like REQUIRES_NEW there.
      *
      * <p>Contract of a normal return: the calling thread is associated with a
-     * transaction that is <em>marked rollback-only</em>. For a non-null
-     * {@code xid} that is the recreated branch, marked rollback-only; for a
-     * null {@code xid} it is a local transaction begun for this call and marked
-     * rollback-only, so the container sees a client transaction either way.
-     * The returned handle says what to undo, and the dispatcher passes it to
+     * transaction that is <em>marked rollback-only</em>. That is all the
+     * container needs: it need not be the caller's own transaction. For a
+     * non-null {@code xid} the bridge may recreate that branch and mark it, or
+     * - and for a coordinator that may already be rolling the branch back this
+     * is the better choice - begin a <em>local</em> transaction and mark that.
+     * For a null {@code xid} it is always a local transaction. The returned
+     * handle says what to undo, and the dispatcher passes it to
      * {@link #releaseRollbackOnly} exactly once, in a {@code finally}, on every
      * path after a normal return: the call ran, the bean threw, the container
-     * refused it, the invocation was cancelled or the response could not be
-     * written. It is never combined with {@link #release}.
+     * refused it, the invocation was cancelled, the target could not be
+     * released or the response could not be written. It is never combined with
+     * {@link #release}. A bridge that returns null is broken: the dispatcher
+     * detaches the thread and refuses the call with {@link XAException#XAER_RMERR}.
      *
      * <p>Contract of a failure: when this throws, nothing is left associated
      * with the thread (the dispatcher also calls {@link #detach}) and no handle
@@ -133,9 +135,36 @@ public interface TransactionBridge {
      * running the method in a transaction of its own would commit work the
      * caller's transaction is about to roll back.
      *
+     * <h3>What the GlassFish bridge must do</h3>
+     * <ul>
+     * <li>{@code xid != null}: recreate the branch and mark it rollback-only
+     *     (or, per the note above, begin a local transaction instead). If
+     *     marking throws, release the branch quietly, detach and throw. The
+     *     handle is the {@code xid}.</li>
+     * <li>{@code xid == null}: {@code begin(timeoutSeconds)} - not
+     *     {@code setTransactionTimeout}, which is per thread and would carry
+     *     over to later requests - mark it rollback-only and return a
+     *     {@code Local(tx)} record. On any failure roll the transaction back
+     *     quietly, detach, then throw.</li>
+     * <li>{@link #releaseRollbackOnly}, handle an {@code Xid}: {@code
+     *     release(xid)}, catching everything and logging at DEBUG only, and
+     *     detach in a {@code finally}.</li>
+     * <li>{@link #releaseRollbackOnly}, handle a {@code Local}: if
+     *     {@code getTransaction() != handle.tx} suspend what is on the thread
+     *     and {@code resume(handle.tx)}; then {@code rollback()}, swallowing
+     *     {@code IllegalStateException}; detach in a {@code finally}. Never call
+     *     {@code rollback()} on a transaction that is not on the thread.</li>
+     * <li>The integration test must check that {@code isNullTransaction()} is
+     *     false on a Grizzly request thread during the call.</li>
+     * </ul>
+     *
      * @param xid the caller's branch, or null if it had none to send
      * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
-     * @param key the bean the invocation is addressed to, as resolved
+     * @param key the bean the invocation is addressed to, as resolved. The
+     *     container decides the attribute, so a GlassFish bridge need not use
+     *     it; it is passed so that a bridge for a container that cannot apply
+     *     attributes itself has the bean's identity to do so, and for
+     *     diagnostics
      * @param method the business method about to be invoked; informational only
      * @return an opaque, non-null handle for {@link #releaseRollbackOnly}
      */
@@ -151,10 +180,11 @@ public interface TransactionBridge {
      * <p>For a recreated branch that means letting it go as {@link #release}
      * does, but without complaint: the branch is marked rollback-only on
      * purpose, and releasing it must neither throw nor log a warning on every
-     * call. For a local transaction begun because the caller sent no xid it
-     * means rolling that transaction back, never committing it. The default
-     * does nothing, matching the default of {@link #recreateRollbackOnly},
-     * which never returns normally.
+     * call. For a local transaction it means rolling that transaction back,
+     * never committing it. When this throws, the dispatcher logs, detaches the
+     * thread and leaves the response as it was. The default does nothing,
+     * matching the default of {@link #recreateRollbackOnly}, which never
+     * returns normally.
      *
      * @param handle what {@link #recreateRollbackOnly} returned
      */

@@ -83,9 +83,15 @@ final class FakeContainer implements ContainerBridge {
         return session;
     }
 
+    /** When set, releasing a target throws this, after counting it. */
+    RuntimeException releaseFails;
+
     @Override
     public void releaseTargetObject(Object target) {
         released++;
+        if (releaseFails != null) {
+            throw releaseFails;
+        }
     }
 
     @Override

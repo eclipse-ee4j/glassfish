@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.glassfish.orb.http.protocol.ChunkedOutput;
@@ -244,13 +245,17 @@ public final class EjbDispatcher {
                 exchange.setResponseHeader("X-GF-Reason",
                         String.valueOf(e.getMessage()).replace('\n', ' ').replace('\r', ' '));
             } finally {
-                if (target != null) {
-                    container.releaseTargetObject(target);
+                try {
+                    if (target != null) {
+                        container.releaseTargetObject(target);
+                    }
+                } finally {
+                    // Release after the container is done with the target, and
+                    // whatever happened above - including the container failing
+                    // to release the target: a branch left associated with this
+                    // thread would leak into whatever the pool runs next.
+                    releaseTransaction(imported);
                 }
-                // Release after the container is done with the target, and
-                // whatever happened above: a branch left associated with this
-                // thread would leak into whatever the pool runs next.
-                releaseTransaction(imported);
             }
         } finally {
             security.clear(securityToken);
@@ -381,27 +386,35 @@ public final class EjbDispatcher {
             return null;
         }
         Xid xid = Xids.fromContext(txContext);
-        if (xid == null) {
-            // A rollback-only call with no branch to import: whatever a
-            // previous request left on this thread must not be seen.
-            transactions.detach();
-        }
         long timeout;
         try {
             timeout = requestedTimeout(exchange);
         } catch (BadTimeoutException e) {
             // Refusing the request must not leave the previous one's
-            // association on this pooled thread.
+            // association on this pooled thread. Nothing else has detached yet.
             transactions.detach();
             throw e;
+        }
+        if (xid == null) {
+            // A rollback-only call with no branch to import: whatever a
+            // previous request left on this thread must not be seen.
+            transactions.detach();
         }
         try {
             if (rollbackOnly) {
                 Object handle = transactions.recreateRollbackOnly(xid, timeout, key, method);
-                return new Imported(xid, handle);
+                if (handle == null) {
+                    // The contract is a non-null handle. A bridge that returns
+                    // none may have begun a transaction on this thread that
+                    // nothing will now release, so refuse and leave it clean.
+                    throw new TransactionBridge.TransactionException(
+                            "the transaction bridge returned no handle for a rollback-only import",
+                            XAException.XAER_RMERR);
+                }
+                return new Imported(xid, handle, true);
             }
             transactions.recreate(xid, timeout);
-            return new Imported(xid, null);
+            return new Imported(xid, null, false);
         } catch (TransactionBridge.TransactionException | RuntimeException e) {
             // A manager that fails halfway may already have associated the
             // thread, and nothing will release a branch that was never
@@ -421,8 +434,10 @@ public final class EjbDispatcher {
      * @param xid    the caller's branch, or null if it sent none
      * @param handle what {@link TransactionBridge#recreateRollbackOnly} returned, or null for an
      *               ordinary import
+     * @param rollbackOnly whether this was a rollback-only import, which is released by
+     *               handle and never by xid
      */
-    private record Imported(Xid xid, Object handle) {
+    private record Imported(Xid xid, Object handle, boolean rollbackOnly) {
     }
 
     private void releaseTransaction(Imported imported) {
@@ -430,7 +445,7 @@ public final class EjbDispatcher {
             return;
         }
         try {
-            if (imported.handle() != null) {
+            if (imported.rollbackOnly()) {
                 // Whatever the bridge associated for a rollback-only call is
                 // the bridge's to undo, and release(xid) is not the way: it
                 // may never have associated that xid.
@@ -441,7 +456,14 @@ public final class EjbDispatcher {
         } catch (TransactionBridge.TransactionException | RuntimeException e) {
             // The invocation's own outcome has already been written. Losing
             // the release is bad, but overwriting a successful reply with this
-            // failure would be worse - recovery exists for exactly this.
+            // failure would be worse - recovery exists for exactly this. What
+            // the failed release may have left on the thread is not to be
+            // inherited by the next request.
+            try {
+                transactions.detach();
+            } catch (RuntimeException detachFailure) {
+                e.addSuppressed(detachFailure);
+            }
             System.getLogger(EjbDispatcher.class.getName()).log(System.Logger.Level.WARNING,
                     "failed to release imported transaction "
                             + (imported.xid() == null ? "(local)" : Xids.key(imported.xid())), e);

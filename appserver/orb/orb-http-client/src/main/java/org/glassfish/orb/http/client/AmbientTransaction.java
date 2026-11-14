@@ -134,9 +134,6 @@ final class AmbientTransaction {
      */
     private static final Map<ClassLoader, Long> MISSES = Collections.synchronizedMap(new WeakHashMap<>());
 
-    /** The last lookup failure that was not final, for the report when no name worked. */
-    private static volatile Exception lastLookupFailure;
-
     private static volatile TransactionManager manager;
 
     private static volatile TransactionSynchronizationRegistry registry;
@@ -158,14 +155,7 @@ final class AmbientTransaction {
         UNAVAILABLE.set(false);
         LOOKUP_FAILURE_REPORTED.set(false);
         MISSES.clear();
-        lastLookupFailure = null;
         clock = System::nanoTime;
-    }
-
-    /** Visible for tests: forgets the registry but keeps the manager, as when only a lookup went wrong. */
-    static void forgetRegistry() {
-        registry = null;
-        MISSES.clear();
     }
 
     /** What the state of the caller's transaction means for an invocation. */
@@ -342,9 +332,11 @@ final class AmbientTransaction {
     }
 
     /**
-     * The registry could not be had on this thread. If a transaction manager
-     * is already known and reports a transaction here, refuse: the caller is
-     * inside a transaction this class cannot join.
+     * The registry could not be had on this thread. {@link #registry} has by
+     * now resolved the transaction manager through its server-wide names, so if
+     * it reports a transaction on this thread, refuse: the caller is inside a
+     * transaction this class cannot join, and sending the call without it would
+     * commit its work alone. A thread with no transaction proceeds.
      */
     private static void failIfAKnownManagerHasATransaction(ClientConfiguration config) {
         TransactionManager known = manager;
@@ -377,12 +369,15 @@ final class AmbientTransaction {
             // and asking again on every call costs a JNDI lookup on every call.
             return null;
         }
-        lastLookupFailure = null;
+        // A failure is kept here, not in shared state: another thread's lookup
+        // must not reset it before it is reported, and nothing static may keep
+        // a naming exception (and the class loader behind it) alive.
+        Exception[] failure = new Exception[1];
         // Only a lookup that cannot succeed here at all latches UNAVAILABLE,
         // and it does so itself. A miss for any other reason is a miss to be
         // believed for RETRY_AFTER_NANOS and then tried again.
         for (String name : REGISTRY_NAMES) {
-            Object found = lookup(name);
+            Object found = lookup(name, failure);
             if (found instanceof TransactionSynchronizationRegistry resolved) {
                 registry = resolved;
                 MISSES.remove(loader);
@@ -392,12 +387,16 @@ final class AmbientTransaction {
                 return null;
             }
         }
-        Exception failure = lastLookupFailure;
-        Level level = failure != null && LOOKUP_FAILURE_REPORTED.compareAndSet(false, true)
+        // No name worked. The manager is resolved now, under the same delay: its
+        // server-wide names need no component environment, and a manager that
+        // is known is what lets join refuse a call made inside a transaction
+        // instead of sending it outside.
+        manager();
+        Level level = failure[0] != null && LOOKUP_FAILURE_REPORTED.compareAndSet(false, true)
                 ? Level.WARNING : Level.DEBUG;
         LOG.log(level, "could not look up the transaction registry as " + REGISTRY_NAMES
                 + "; remote calls from this thread will not join a caller's transaction until this works: "
-                + failure);
+                + failure[0]);
         MISSES.put(loader, clock.getAsLong() + RETRY_AFTER_NANOS);
         return null;
     }
@@ -408,7 +407,7 @@ final class AmbientTransaction {
             return known;
         }
         for (String name : MANAGER_NAMES) {
-            if (lookup(name) instanceof TransactionManager resolved) {
+            if (lookup(name, null) instanceof TransactionManager resolved) {
                 manager = resolved;
                 return resolved;
             }
@@ -419,10 +418,11 @@ final class AmbientTransaction {
     /**
      * Looks a name up in whatever JNDI the JVM is configured with.
      *
+     * @param failure if not null, receives the failure of a lookup that did not find the name
      * @return what is bound, or null if nothing is; null is also returned, and
      *         joining switched off for good, when no lookup here can ever work
      */
-    private static Object lookup(String name) {
+    private static Object lookup(String name, Exception[] failure) {
         InitialContext context = null;
         try {
             context = new InitialContext();
@@ -446,7 +446,9 @@ final class AmbientTransaction {
             return null;
         } catch (NamingException | RuntimeException e) {
             // Not final: the next call may be on a thread that can see it.
-            lastLookupFailure = e;
+            if (failure != null) {
+                failure[0] = e;
+            }
             return null;
         } finally {
             if (context != null) {

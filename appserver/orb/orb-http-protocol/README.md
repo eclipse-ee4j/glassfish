@@ -85,14 +85,22 @@ rolling back) is not refused by the client. It is sent with the header
 had already joined it and no xid otherwise. The server applies the invoked
 method's transaction attribute as it does for a client transaction arriving
 over IIOP: a method that needs the caller's transaction (REQUIRED, MANDATORY,
-SUPPORTS) fails with `EJBTransactionRolledbackException`, a method that does not
-(REQUIRES_NEW, NOT_SUPPORTED) runs outside it. A server MUST understand the header or answer an error: one that ignored it
+SUPPORTS) fails with `EJBTransactionRolledbackException`, a method that does
+not (REQUIRES_NEW, NOT_SUPPORTED) runs outside it.
+
+A server MUST understand the header or answer an error: one that ignored it
 would run a REQUIRED method in a transaction of its own and commit work the
 caller is about to roll back. A server whose transaction bridge does not
 implement it refuses the call with a rollback exception, which is the safe
-side, and that is the default. (The header cannot be made mandatory on the
-wire, so a server older than this header is not protected.) A call made from `afterCompletion`, when the caller's
-transaction has completed, is sent without a transaction.
+side, and that is the default. The marker is a header rather than a new
+transaction-context type in the invocation envelope. A new type would be
+rejected by a server that does not know it, so that server would fail closed,
+whereas a server older than this header simply ignores it and is not
+protected; the header was kept for now and that trade-off has not been
+revisited.
+
+A call made from `afterCompletion`, when the caller's transaction has
+completed, is sent without a transaction.
 
 ### What is supported
 

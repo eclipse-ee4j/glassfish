@@ -258,7 +258,8 @@ class AmbientTransactionTest {
             now.addAndGet(1_000_000_000L);
         }
 
-        assertEquals(2, OPENED.get(), "every call looked the registry up again");
+        // Two registry names and the four manager names, once.
+        assertEquals(6, OPENED.get(), "every call looked the registry up again");
     }
 
     @Test
@@ -267,7 +268,7 @@ class AmbientTransactionTest {
         AtomicLong now = new AtomicLong();
         AmbientTransaction.clock = now::get;
         AmbientTransaction.join(config, transport);
-        assertEquals(2, OPENED.get(), "both registry names were tried");
+        assertEquals(6, OPENED.get(), "both registry names and the manager names were tried");
 
         FakeTransaction transaction = new FakeTransaction();
         BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
@@ -317,17 +318,20 @@ class AmbientTransactionTest {
     void aMissIsPerContextClassLoader() throws Exception {
         AtomicLong now = new AtomicLong();
         AmbientTransaction.clock = now::get;
-        // An unmanaged thread: it cannot see the registry.
-        runWithLoader(new URLClassLoader(new URL[0]), () -> AmbientTransaction.join(config, transport));
+        try (URLClassLoader unmanaged = new URLClassLoader(new URL[0]);
+                URLClassLoader managed = new URLClassLoader(new URL[0])) {
+            // An unmanaged thread: it cannot see the registry.
+            runWithLoader(unmanaged, () -> AmbientTransaction.join(config, transport));
 
-        FakeTransaction transaction = new FakeTransaction();
-        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
-        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+            FakeTransaction transaction = new FakeTransaction();
+            BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+            BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
 
-        // A managed thread, inside the first one's backoff window.
-        runWithLoader(new URLClassLoader(new URL[0]), () -> AmbientTransaction.join(config, transport));
+            // A managed thread, inside the first one's backoff window.
+            runWithLoader(managed, () -> AmbientTransaction.join(config, transport));
 
-        assertEquals(1, transaction.enlisted, "another thread's miss stopped this one from joining");
+            assertEquals(1, transaction.enlisted, "another thread's miss stopped this one from joining");
+        }
     }
 
     @Test
@@ -344,22 +348,97 @@ class AmbientTransactionTest {
     }
 
     @Test
-    @DisplayName("when the registry cannot be had but a known manager reports a transaction, the call is refused")
-    void aKnownManagerWithATransactionFailsClosed() {
+    @DisplayName("a thread in a transaction is refused when only the registry is missing, even from the same loader")
+    void aThreadInATransactionIsRefusedWhenOnlyTheRegistryIsMissing() {
         AtomicLong now = new AtomicLong();
         AmbientTransaction.clock = now::get;
-        FakeTransaction transaction = new FakeTransaction();
-        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
-        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+        // The server-wide manager name works without a component environment;
+        // the registry is not bound for this thread's loader.
+        FakeManager manager = new FakeManager(null);
+        BOUND.put("java:appserver/TransactionManager", manager);
+
+        // First a thread with no transaction: a miss, and the call proceeds.
         AmbientTransaction.join(config, transport);
-        ClientTransactionContext.disassociate();
+        assertNull(ClientTransactionContext.current());
 
-        // Only the registry goes missing for this thread; the manager is known.
-        AmbientTransaction.forgetRegistry();
-        BOUND.remove("java:comp/TransactionSynchronizationRegistry");
-
+        // Then a thread of the same application, inside a transaction, within
+        // the delay: it must not be sent without it.
+        FakeTransaction active = new FakeTransaction();
+        manager.transaction = active;
         assertThrows(EJBException.class, () -> AmbientTransaction.join(config, transport),
                 "the call would have been sent outside the caller's transaction");
+        assertEquals(0, active.enlisted);
+    }
+
+    @Test
+    @DisplayName("guard: a thread with no transaction is not affected when only the registry is missing")
+    void aThreadWithoutATransactionProceedsWhenOnlyTheRegistryIsMissing() {
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(null));
+
+        assertEquals(false, AmbientTransaction.join(config, transport));
+        assertEquals(false, AmbientTransaction.join(config, transport));
+    }
+
+    private static final class Captured extends java.util.logging.Handler {
+        final java.util.List<java.util.logging.LogRecord> warnings = new java.util.ArrayList<>();
+
+        @Override
+        public void publish(java.util.logging.LogRecord record) {
+            if (record.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()) {
+                warnings.add(record);
+            }
+        }
+
+        @Override
+        public void flush() {
+        }
+
+        @Override
+        public void close() {
+        }
+    }
+
+    @Test
+    @DisplayName("guard: a miss is reported once at WARNING when no name worked, and again never")
+    void aMissIsReportedOnceAtWarning() {
+        java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AmbientTransaction.class.getName());
+        Captured captured = new Captured();
+        logger.addHandler(captured);
+        try {
+            AtomicLong now = new AtomicLong();
+            AmbientTransaction.clock = now::get;
+
+            AmbientTransaction.join(config, transport);
+            now.addAndGet(31_000_000_000L);
+            AmbientTransaction.join(config, transport);
+            now.addAndGet(31_000_000_000L);
+            AmbientTransaction.join(config, transport);
+
+            assertEquals(1, captured.warnings.size(), "the miss was reported " + captured.warnings.size() + " times");
+        } finally {
+            logger.removeHandler(captured);
+        }
+    }
+
+    @Test
+    @DisplayName("guard: nothing is reported at WARNING when a later registry name worked")
+    void aHitOnTheSecondNameIsNotAMiss() {
+        java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AmbientTransaction.class.getName());
+        Captured captured = new Captured();
+        logger.addHandler(captured);
+        try {
+            FakeTransaction transaction = new FakeTransaction();
+            // java:appserver misses, java:comp answers.
+            BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+            BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+            AmbientTransaction.join(config, transport);
+
+            assertEquals(1, transaction.enlisted);
+            assertEquals(0, captured.warnings.size(), "a miss on the first name was reported");
+        } finally {
+            logger.removeHandler(captured);
+        }
     }
 
     @Test
@@ -515,7 +594,8 @@ class AmbientTransactionTest {
     }
 
     static final class FakeManager implements TransactionManager {
-        private final Transaction transaction;
+        /** What the manager reports for the calling thread; tests change it between calls. */
+        Transaction transaction;
 
         FakeManager(Transaction transaction) {
             this.transaction = transaction;

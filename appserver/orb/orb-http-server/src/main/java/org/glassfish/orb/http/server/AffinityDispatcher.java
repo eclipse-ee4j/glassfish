@@ -81,6 +81,11 @@ public final class AffinityDispatcher {
             return Protocol.CONTEXT_PATH;
         }
         String segment = path.segment(0);
-        return SAFE_SEGMENT.matcher(segment).matches() ? "/" + segment : Protocol.CONTEXT_PATH;
+        if (SAFE_SEGMENT.matcher(segment).matches()) {
+            return "/" + segment;
+        }
+        System.getLogger(AffinityDispatcher.class.getName()).log(System.Logger.Level.DEBUG,
+                "context path segment is not a plain path segment; the cookie uses the default path");
+        return Protocol.CONTEXT_PATH;
     }
 }

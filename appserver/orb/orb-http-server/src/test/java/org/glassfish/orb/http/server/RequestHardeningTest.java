@@ -48,6 +48,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -215,11 +216,206 @@ class RequestHardeningTest {
         }
     }
 
+    @Test
+    @DisplayName("a second invocation with an id already in flight is refused, not allowed to take it over")
+    void aDuplicateInvocationIdIsRefused() throws Exception {
+        FakeContainer container = new FakeContainer();
+        SlowBean bean = new SlowBean();
+        container.registerStateless("SlowBean", bean);
+        EjbDispatcher dispatcher = new EjbDispatcher(container);
+        Map<String, String> id = Map.of(Protocol.H_INVOCATION_ID, "dup-1");
+        Loopback.InMemoryExchange first = invocation(Slow.class, "SlowBean", "slow", new String[0], body(), id);
+        Loopback.InMemoryExchange second = invocation(Slow.class, "SlowBean", "slow", new String[0], body(), id);
+
+        ExecutorService pool = Executors.newFixedThreadPool(2, r -> {
+            Thread t = new Thread(r, "dispatch");
+            t.setDaemon(true);
+            return t;
+        });
+        try {
+            Future<?> running = pool.submit(() -> {
+                dispatcher.dispatch(first);
+                return null;
+            });
+            assertTrue(bean.started.await(30, TimeUnit.SECONDS));
+
+            // On a thread of its own, so that a dispatcher that wrongly accepts
+            // it (and blocks on the slow bean) fails the test instead of hanging it.
+            pool.submit(() -> {
+                dispatcher.dispatch(second);
+                return null;
+            }).get(30, TimeUnit.SECONDS);
+            assertEquals(Protocol.SC_BAD_REQUEST, second.toResponse().status());
+
+            dispatcher.registry().cancel("dup-1", true);
+            running.get(30, TimeUnit.SECONDS);
+        } finally {
+            pool.shutdownNow();
+        }
+    }
+
+    /** An exchange whose request body blocks until the reading thread is interrupted. */
+    private static final class BlockingBodyExchange implements ServerExchange {
+
+        final Loopback.InMemoryExchange delegate;
+        final CountDownLatch reading = new CountDownLatch(1);
+
+        BlockingBodyExchange(Loopback.InMemoryExchange delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public String method() {
+            return delegate.method();
+        }
+
+        @Override
+        public byte[] pathBytes() {
+            return delegate.pathBytes();
+        }
+
+        @Override
+        public int pathOffset() {
+            return delegate.pathOffset();
+        }
+
+        @Override
+        public int pathLength() {
+            return delegate.pathLength();
+        }
+
+        @Override
+        public String requestHeader(String name) {
+            return delegate.requestHeader(name);
+        }
+
+        @Override
+        public String queryParameter(String name) {
+            return delegate.queryParameter(name);
+        }
+
+        @Override
+        public java.io.InputStream requestBody() {
+            return new java.io.InputStream() {
+                @Override
+                public int read() throws IOException {
+                    reading.countDown();
+                    try {
+                        Thread.sleep(60_000);
+                    } catch (InterruptedException e) {
+                        throw new java.io.InterruptedIOException("interrupted");
+                    }
+                    return -1;
+                }
+            };
+        }
+
+        @Override
+        public void setStatus(int status) {
+            delegate.setStatus(status);
+        }
+
+        @Override
+        public void setResponseHeader(String name, String value) {
+            delegate.setResponseHeader(name, value);
+        }
+
+        @Override
+        public void writeBody(java.nio.ByteBuffer[] body) {
+            delegate.writeBody(body);
+        }
+
+        @Override
+        public String authenticatedUser() {
+            return delegate.authenticatedUser();
+        }
+    }
+
+    @Test
+    @DisplayName("a cancel that interrupts the reading of the body is answered 408, not 400")
+    void aCancelDuringReadingIsACancellation() throws Exception {
+        EjbDispatcher dispatcher = dispatcherWithGreeter();
+        BlockingBodyExchange exchange = new BlockingBodyExchange(invocation(TestBeans.Greeter.class,
+                "GreeterBean", "greet", GREET_TYPES, new byte[0], Map.of(Protocol.H_INVOCATION_ID, "read-1")));
+
+        ExecutorService pool = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r, "dispatch");
+            t.setDaemon(true);
+            return t;
+        });
+        try {
+            Future<Boolean> result = pool.submit(() -> {
+                dispatcher.dispatch(exchange);
+                return Thread.currentThread().isInterrupted();
+            });
+            assertTrue(exchange.reading.await(30, TimeUnit.SECONDS));
+
+            dispatcher.registry().cancel("read-1", true);
+
+            boolean interrupted = result.get(30, TimeUnit.SECONDS);
+            assertEquals(Protocol.SC_CANCELLED, exchange.delegate.toResponse().status());
+            assertFalse(interrupted);
+        } finally {
+            pool.shutdownNow();
+        }
+    }
+
+    /** A container that fails the way a bug in it would, with an IllegalArgumentException. */
+    private static final class BrokenContainer implements ContainerBridge {
+
+        private final FakeContainer delegate = new FakeContainer();
+
+        BrokenContainer() {
+            delegate.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+        }
+
+        @Override
+        public org.glassfish.orb.http.protocol.EjbKey resolve(String appName, String moduleName,
+                String distinctName, String beanName, byte[] sessionId) throws NoSuchTargetException {
+            return delegate.resolve(appName, moduleName, distinctName, beanName, sessionId);
+        }
+
+        @Override
+        public Object getTargetObject(org.glassfish.orb.http.protocol.EjbKey key, String viewClassName) {
+            throw new IllegalArgumentException("a bug in the container");
+        }
+
+        @Override
+        public void releaseTargetObject(Object target) {
+        }
+
+        @Override
+        public ClassLoader classLoader(org.glassfish.orb.http.protocol.EjbKey key) {
+            return delegate.classLoader(key);
+        }
+
+        @Override
+        public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
+                throws NoSuchTargetException {
+            return delegate.createSession(appName, moduleName, distinctName, beanName);
+        }
+
+        @Override
+        public void removeSession(org.glassfish.orb.http.protocol.EjbKey key) throws NoSuchTargetException {
+            delegate.removeSession(key);
+        }
+    }
+
+    @Test
+    @DisplayName("an IllegalArgumentException from the container is not blamed on the caller's arguments")
+    void aContainerFailureIsNotReportedAsABadRequest() throws Exception {
+        EjbDispatcher dispatcher = new EjbDispatcher(new BrokenContainer());
+        Loopback.InMemoryExchange exchange = invocation(TestBeans.Greeter.class, "GreeterBean", "greet",
+                GREET_TYPES, body("a", 1), Map.of());
+
+        assertThrows(IllegalArgumentException.class, () -> dispatcher.dispatch(exchange));
+    }
+
     // ---- registry ---------------------------------------------------------
 
     @Test
     @DisplayName("an interrupt sent to a finished invocation does not stay on its thread")
-    void cancelLeavesNoInterruptBehind() {
+    void cancelLeavesNoInterruptBehind() throws Exception {
         InvocationRegistry registry = new InvocationRegistry();
         InvocationRegistry.Registration registration = registry.register("x");
 

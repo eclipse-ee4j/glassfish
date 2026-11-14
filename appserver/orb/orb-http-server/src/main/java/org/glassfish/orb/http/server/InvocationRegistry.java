@@ -19,6 +19,8 @@ package org.glassfish.orb.http.server;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.glassfish.orb.http.protocol.ProtocolException;
+
 /**
  * Tracks in-flight invocations so that a later {@code DELETE .../cancel/...}
  * can reach them.
@@ -72,6 +74,20 @@ public final class InvocationRegistry {
             }
         }
 
+        /**
+         * The work is over: a cancel arriving from now on marks it cancelled
+         * but interrupts nothing, and an interrupt already delivered is
+         * cleared before the response is written.
+         */
+        public void finish() {
+            synchronized (this) {
+                closed = true;
+                if (interruptedByCancel && thread == Thread.currentThread()) {
+                    Thread.interrupted();
+                }
+            }
+        }
+
         private synchronized void cancel(boolean interrupt) {
             cancelled = true;
             if (interrupt && !closed) {
@@ -86,10 +102,12 @@ public final class InvocationRegistry {
      *                     did not send one - in which case the invocation is
      *                     simply not cancellable
      */
-    public Registration register(String invocationId) {
+    public Registration register(String invocationId) throws ProtocolException {
         Registration registration = new Registration(invocationId, Thread.currentThread());
-        if (invocationId != null) {
-            inFlight.put(invocationId, registration);
+        if (invocationId != null && inFlight.putIfAbsent(invocationId, registration) != null) {
+            // Overwriting would let one caller take over another's
+            // cancellation.
+            throw new ProtocolException("an invocation with this id is already in flight");
         }
         return registration;
     }

@@ -222,7 +222,7 @@ public final class NamingDispatcher {
             return reader.readObject();
         } catch (ProtocolException | ClassNotFoundException e) {
             throw e;
-        } catch (IOException | RuntimeException e) {
+        } catch (IOException | RuntimeException | LinkageError e) {
             // A body that does not decode is the caller's mistake, not a
             // server failure; see EjbDispatcher for the same rule.
             throw new ProtocolException("malformed request body: " + e.getClass().getSimpleName(), e);

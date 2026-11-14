@@ -28,17 +28,19 @@ import java.lang.reflect.Method;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
+
+import javax.lang.model.SourceVersion;
 
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
@@ -50,6 +52,7 @@ import org.glassfish.orb.http.fory.grpc.ForyGrpcSkeleton;
 import org.glassfish.orb.http.fory.grpc.ForyIdlGenerator;
 import org.glassfish.orb.http.fory.grpc.ForyRuntimeModelGenerator;
 import org.glassfish.orb.http.fory.grpc.ForyTypeIds;
+import org.glassfish.orb.http.fory.grpc.ForyViewMethods;
 import org.glassfish.orb.http.protocol.Protocol;
 
 /**
@@ -64,10 +67,19 @@ import org.glassfish.orb.http.protocol.Protocol;
  * <p>A rebuild happens when something asks for a path that is not published
  * and either the deployment changed since the last one ({@link #markStale},
  * {@link #drop}) or the last one is more than {@link #MIN_REBUILD_INTERVAL_NANOS}
- * old. The second condition is what keeps a caller who is not known yet from
- * making the server build the whole index for every request it sends. A view
- * that was already built is reused for as long as its application stays
- * deployed, so a rebuild costs one compile only for a view it has not seen.
+ * old, and also when something asks for a path that is published while the
+ * deployment is known to have changed, so that a redeployment under the same
+ * names is not served with the old bindings. The interval is what keeps a caller
+ * who is not known yet from making the server build the whole index for every
+ * request it sends. A view that was already built is reused for as long as its
+ * application stays deployed, so a rebuild costs one compile only for a view it
+ * has not seen.
+ *
+ * <p>Rebuilds are one at a time, and nothing that serves a call or reports a
+ * deployment event waits for one for long: a request that finds a rebuild
+ * running is answered from the snapshot that is published (a request that
+ * knows the deployment changed waits a bounded time first), and {@link #drop}
+ * never waits.
  *
  * <p>Each view is published completely or not at all: its document and every
  * one of its methods, or nothing and a warning.
@@ -77,19 +89,30 @@ final class ForyEjbIndex {
     /** The least time between two rebuilds that nothing but a miss asked for. */
     static final long MIN_REBUILD_INTERVAL_NANOS = TimeUnit.SECONDS.toNanos(1);
 
+    /** How long a request that knows the deployment changed waits for a rebuild that is running. */
+    static final long STALE_WAIT_MILLIS = 200;
+
+    private static final String ALL = "\0all";
+
     private static final Logger LOG = System.getLogger(ForyEjbIndex.class.getName());
 
     private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
     /** One remote business view of one deployed bean. */
     record DeployedView(String app, String module, String bean, String viewName, ClassLoader loader,
-                        boolean stateful) {
+                        boolean stateful, String registryName) {
+
+        DeployedView(String app, String module, String bean, String viewName, ClassLoader loader,
+                     boolean stateful) {
+            this(app, module, bean, viewName, loader, stateful, app);
+        }
     }
 
     record ForyRoute(String app, String module, String bean, String view) {
     }
 
-    private record ViewKey(String app, String module, String bean, String viewName, ClassLoader loader) {
+    private record ViewKey(String registryName, String app, String module, String bean, String viewName,
+                           ClassLoader loader) {
     }
 
     private record Entry(String wirePath, ForyGeneratedServiceRegistry.Binding binding) {
@@ -116,6 +139,9 @@ final class ForyEjbIndex {
 
     private final ReentrantLock rebuilding = new ReentrantLock();
 
+    /** Applications whose views are to be forgotten; applied by whoever next holds the lock. */
+    private final Set<String> dropped = ConcurrentHashMap.newKeySet();
+
     /** Bumped by every rebuild and every drop. */
     private volatile long generation;
 
@@ -135,6 +161,7 @@ final class ForyEjbIndex {
         this.deployed = deployed;
         this.clock = clock;
         foryRegistry.onMiss(this::refreshIfDue);
+        foryRegistry.onStale(() -> stale);
         catalog.onMiss(this::refreshIfDue);
     }
 
@@ -152,25 +179,48 @@ final class ForyEjbIndex {
     }
 
     /**
-     * An application was unloaded: forget everything at once, so that nothing
-     * this index holds keeps the application's classes (and the models and
-     * runtimes built over them) alive, and so that a redeployed application
-     * is not served with the signatures of the one it replaced.
+     * An application is being unloaded: forget its views, so that nothing this
+     * index holds keeps the application's classes (and the models and runtimes
+     * built over them) alive.
+     *
+     * <p>Never waits. If a rebuild is running, the forgetting is left to run
+     * right after it, which also removes what that rebuild publishes.
+     *
+     * @param registryName the name the application is registered under, or
+     *        {@code null} for every application
      */
-    void drop() {
-        rebuilding.lock();
-        try {
-            built = Map.of();
-            foryRegistry.clear();
-            catalog.clear();
-            stale = true;
-            generation++;
-        } finally {
-            rebuilding.unlock();
+    void drop(String registryName) {
+        dropped.add(registryName == null ? ALL : registryName);
+        stale = true;
+        applyPendingDrops();
+    }
+
+    /** Forgets every application's views; see {@link #drop(String)}. */
+    void dropAll() {
+        drop(null);
+    }
+
+    private void applyPendingDrops() {
+        while (!dropped.isEmpty() && rebuilding.tryLock()) {
+            try {
+                Set<String> names = new HashSet<>(dropped);
+                dropped.removeAll(names);
+                if (names.contains(ALL)) {
+                    built = Map.of();
+                } else {
+                    Map<ViewKey, Published> remaining = new LinkedHashMap<>(built);
+                    remaining.keySet().removeIf(key -> names.contains(key.registryName()));
+                    built = remaining;
+                }
+                publishSnapshot(built);
+                generation++;
+            } finally {
+                rebuilding.unlock();
+            }
         }
     }
 
-    /** Rebuilds now. */
+    /** Rebuilds now, waiting for a rebuild that is running; for the start of the server. */
     void refresh() {
         rebuilding.lock();
         try {
@@ -178,12 +228,23 @@ final class ForyEjbIndex {
         } finally {
             rebuilding.unlock();
         }
+        applyPendingDrops();
     }
 
-    /** The hook for a path that is not published; see the class comment. */
+    /** The hook for a path that is not published, or is published while the deployment has changed. */
     private void refreshIfDue() {
         long seen = generation;
-        rebuilding.lock();
+        try {
+            boolean locked = stale
+                    ? rebuilding.tryLock(STALE_WAIT_MILLIS, TimeUnit.MILLISECONDS)
+                    : rebuilding.tryLock();
+            if (!locked) {
+                return; // a rebuild is running: answer from what is published
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        }
         try {
             if (generation != seen && !stale) {
                 return; // another request rebuilt while this one waited
@@ -195,23 +256,28 @@ final class ForyEjbIndex {
         } finally {
             rebuilding.unlock();
         }
+        applyPendingDrops();
     }
 
     // Called with the lock held.
     private void rebuild() {
         boolean retryFailures = stale;
+        // Cleared before the deployment is read, so that a change announced
+        // while it is being read is not lost; put back if it cannot be read.
         stale = false;
-        lastRebuild = clock.getAsLong();
         List<DeployedView> views;
         try {
             views = deployed.get();
-        } catch (RuntimeException e) {
+        } catch (RuntimeException | LinkageError e) {
+            stale = retryFailures || stale;
             LOG.log(Level.WARNING, "cannot read the deployed applications: " + e);
             return;
         }
+        lastRebuild = clock.getAsLong();
         Map<ViewKey, Published> next = new LinkedHashMap<>();
         for (DeployedView view : views) {
-            ViewKey key = new ViewKey(view.app(), view.module(), view.bean(), view.viewName(), view.loader());
+            ViewKey key = new ViewKey(view.registryName(), view.app(), view.module(), view.bean(),
+                    view.viewName(), view.loader());
             Published published = built.get(key);
             if (published == null || published.failed() && retryFailures) {
                 published = publish(view);
@@ -219,10 +285,21 @@ final class ForyEjbIndex {
             next.put(key, published);
         }
         refuseViewsThatShareAService(next);
+        publishSnapshot(next);
+        built = next;
+        generation++;
+        lastRebuild = clock.getAsLong();
+    }
 
+    /**
+     * Publishes what the views contribute. The documents are checked and
+     * swapped in first, so that a document that cannot be published fails
+     * before anything has changed, and the bindings, which cannot fail, follow.
+     */
+    private void publishSnapshot(Map<ViewKey, Published> all) {
         Map<String, ForyGeneratedServiceRegistry.Binding> bindings = new HashMap<>();
         Map<String, String> documents = new LinkedHashMap<>();
-        for (Published published : next.values()) {
+        for (Published published : all.values()) {
             for (Entry entry : published.entries()) {
                 bindings.put(entry.wirePath(), entry.binding());
             }
@@ -230,11 +307,8 @@ final class ForyEjbIndex {
                 documents.put(published.idlPath(), published.idl());
             }
         }
-        foryRegistry.replaceAll(bindings);
         catalog.replaceAll(documents);
-        built = next;
-        generation++;
-        lastRebuild = clock.getAsLong();
+        foryRegistry.replaceAll(bindings);
     }
 
     /**
@@ -301,10 +375,7 @@ final class ForyEjbIndex {
         // the rest missing would answer UNIMPLEMENTED for calls the document
         // advertises.
         List<Entry> entries = new ArrayList<>();
-        for (Method method : Arrays.stream(view.getMethods())
-                .filter(m -> m.getDeclaringClass() != Object.class)
-                .sorted(Comparator.comparing(Method::getName))
-                .toList()) {
+        for (Method method : ForyViewMethods.of(view)) {
             String rpcName = Character.toUpperCase(method.getName().charAt(0)) + method.getName().substring(1);
             Class<?> parameter = method.getParameterCount() == 0 ? void.class : method.getParameterTypes()[0];
             var models = ForyRuntimeModelGenerator.unary(packageName, method.getName(), parameter,
@@ -366,14 +437,29 @@ final class ForyEjbIndex {
                 out.append("__");
             } else if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9') {
                 out.append(c);
-            } else if (c <= 0xFF) {
-                out.append('_').append(HEX[c >>> 4]).append(HEX[c & 0x0F]);
             } else {
-                out.append("_u").append(HEX[c >>> 12]).append(HEX[(c >>> 8) & 0x0F])
-                        .append(HEX[(c >>> 4) & 0x0F]).append(HEX[c & 0x0F]);
+                escapeInto(out, c);
             }
         }
+        // A name that would not be a Java identifier as it is - it starts with
+        // a digit, or it is a keyword - has its first character escaped too, so
+        // that 2fa-app and a module named default can be published.
+        if (out.length() > 0 && (Character.isDigit(out.charAt(0)) || SourceVersion.isKeyword(out))) {
+            char first = name.charAt(0);
+            StringBuilder escaped = new StringBuilder(out.length() + 2);
+            escapeInto(escaped, first);
+            return escaped.append(out, 1, out.length()).toString();
+        }
         return out.toString();
+    }
+
+    private static void escapeInto(StringBuilder out, char c) {
+        if (c <= 0xFF) {
+            out.append('_').append(HEX[c >>> 4]).append(HEX[c & 0x0F]);
+        } else {
+            out.append("_u").append(HEX[c >>> 12]).append(HEX[(c >>> 8) & 0x0F])
+                    .append(HEX[(c >>> 4) & 0x0F]).append(HEX[c & 0x0F]);
+        }
     }
 
     private static String pathPart(String value) {
@@ -385,7 +471,9 @@ final class ForyEjbIndex {
         List<DeployedView> result = new ArrayList<>();
         for (String name : applications.getAllApplicationNames()) {
             ApplicationInfo info = applications.get(name);
-            if (info == null) {
+            // An application that is being unloaded is still registered until
+            // its undeployment completes, and its classes are about to go.
+            if (info == null || !info.isLoaded()) {
                 continue;
             }
             Application application = info.getMetaData(Application.class);
@@ -403,7 +491,7 @@ final class ForyEjbIndex {
                     boolean stateful = ejb instanceof EjbSessionDescriptor session && session.isStateful();
                     for (String viewName : views) {
                         result.add(new DeployedView(application.getRegistrationName(), module, ejb.getName(),
-                                viewName, loader, stateful));
+                                viewName, loader, stateful, name));
                     }
                 }
             }

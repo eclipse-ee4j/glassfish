@@ -97,6 +97,24 @@ class ForyGrpcExtensionTest {
     }
 
     @Test
+    void anApplicationRegisteredWhileItUnloadsIsForgottenWhenItsUndeploymentSucceeds() {
+        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
+        deployed.add(ForyEjbIndexTest.view("app", "module", "CalcBean", Calc.class));
+        ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
+        ForyGrpcExtension extension = new ForyGrpcExtension();
+        extension.init(index, TransactionBridge.NONE);
+        ForyGeneratedServiceRegistry registry = index.foryRegistry();
+
+        extension.event(new EventListener.Event<>(Deployment.APPLICATION_UNLOADED, null));
+        assertNotNull(registry.lookup(wire("Twice")), "a request while the registry still lists the application");
+        deployed.clear();
+        extension.event(new EventListener.Event<>(Deployment.UNDEPLOYMENT_SUCCESS, null));
+
+        assertEquals(0, registry.size());
+        assertEquals(0, index.catalog().size());
+    }
+
+    @Test
     void answersACallWithAPrimitiveParameterFromRequestToResponse() throws Exception {
         ForyGrpcExtension extension = extension(new Calc() {
             @Override

@@ -77,6 +77,22 @@ class ForyEjbIndexTest {
         String run(String value);
     }
 
+    public interface WithAHelper {
+        String run(String value);
+
+        static String help(String value) {
+            return value;
+        }
+    }
+
+    public interface Empty {
+        String run(String value);
+    }
+
+    public interface RunRequest {
+        String run(String value);
+    }
+
     public interface One {
         interface Api {
             String call(String value);
@@ -169,17 +185,30 @@ class ForyEjbIndexTest {
     }
 
     @Test
-    void namesThatAreNotJavaNamesPublishNothingAndLogAWarning() {
+    void namesThatAreNotJavaNamesArePublishedUnderTheirEscapedNames() {
+        // A leading digit and a keyword are escaped, so that the application
+        // 2fa-app and a module named default are served like any other.
         ForyEjbIndex index = index(List.of(
                 view("2fa-app", "module", "GreeterBean", Greeter.class),
                 view("app", "default", "GreeterBean", Greeter.class),
                 view("app", "module", "GreeterBean", Greeter.class)));
 
-        assertEquals(1, index.foryRegistry().size());
-        assertEquals(1, index.catalog().size());
-        assertEquals(2, warnings.size(), warnings.toString());
-        assertTrue(warnings.stream().anyMatch(w -> w.contains("2fa-app")), warnings.toString());
-        assertTrue(warnings.stream().anyMatch(w -> w.contains("default")), warnings.toString());
+        assertEquals(3, index.foryRegistry().size());
+        assertEquals(3, index.catalog().size());
+        assertEquals(List.of(), warnings);
+        assertNotNull(index.foryRegistry().lookup(wire("2fa-app", "module", "GreeterBean", Greeter.class, "Greet")));
+        assertNotNull(index.foryRegistry().lookup(wire("app", "default", "GreeterBean", Greeter.class, "Greet")));
+    }
+
+    @Test
+    void theEscapedNameOfAnythingIsAJavaName() {
+        for (String name : new String[] {"2fa-app", "default", "class", "true", "9", "-", "a.b", "\u00e8", "_"}) {
+            String escaped = ForyEjbIndex.escape(name);
+            assertTrue(javax.lang.model.SourceVersion.isIdentifier(escaped)
+                    && !javax.lang.model.SourceVersion.isKeyword(escaped), name + " -> " + escaped);
+        }
+        assertNotEquals(ForyEjbIndex.escape("2"), ForyEjbIndex.escape("_32"));
+        assertNotEquals(ForyEjbIndex.escape("default"), ForyEjbIndex.escape("_64efault"));
     }
 
     @Test
@@ -422,8 +451,9 @@ class ForyEjbIndexTest {
         // The same view under the class loader of the new deployment.
         deployed.set(0, new ForyEjbIndex.DeployedView("app", "module", "GreeterBean", Greeter.class.getName(),
                 new ClassLoader(LOADER) { }, false));
-        index.drop();
+        index.markStale();
 
+        // A hit: the path is published, under the old loader's binding.
         assertNotSame(first, index.foryRegistry().lookup(path), "the old binding survived the redeployment");
     }
 
@@ -437,7 +467,7 @@ class ForyEjbIndexTest {
         assertNotNull(index.foryRegistry().lookup(path));
 
         deployed.clear();
-        index.drop();
+        index.dropAll();
 
         assertEquals(0, index.foryRegistry().size());
         assertEquals(0, index.catalog().size());
@@ -459,6 +489,149 @@ class ForyEjbIndexTest {
         index.refresh();
 
         assertEquals(1, index.foryRegistry().size());
+        assertEquals(1, warnings.size(), warnings.toString());
+
+        // The change it could not read is still to be looked at: the next
+        // request tries again, rather than waiting out the interval.
+        index.foryRegistry().lookup("/missing");
+        assertEquals(3, reads.get());
+    }
+
+    @Test
+    void anErrorReadingTheDeploymentIsCaughtToo() {
+        AtomicInteger reads = new AtomicInteger();
+        ForyEjbIndex index = new ForyEjbIndex(() -> {
+            if (reads.incrementAndGet() > 1) {
+                throw new NoClassDefFoundError("a class the registry needs");
+            }
+            return List.of(view("app", "module", "GreeterBean", Greeter.class));
+        }, System::nanoTime);
+        index.refresh();
+        index.markStale();
+
+        index.refresh();
+
+        assertEquals(1, index.foryRegistry().size());
+    }
+
+    @Test
+    void anApplicationStillRegisteredWhileItUnloadsDoesNotStayPublished() {
+        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
+        deployed.add(view("app", "module", "GreeterBean", Greeter.class));
+        ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
+        index.refresh();
+        String path = wire("app", "module", "GreeterBean", Greeter.class, "Greet");
+        assertNotNull(index.foryRegistry().lookup(path));
+
+        // APPLICATION_UNLOADED: the registry still lists the application.
+        index.drop("app");
+        assertEquals(0, index.foryRegistry().size());
+        // A request in that window rebuilds and sees it again ...
+        assertNotNull(index.foryRegistry().lookup(path));
+
+        // ... and UNDEPLOYMENT_SUCCESS, after the registry let go of it, forgets it for good.
+        deployed.clear();
+        index.dropAll();
+
+        assertEquals(0, index.foryRegistry().size());
+        assertEquals(0, index.catalog().size());
+        assertNull(index.foryRegistry().lookup(path));
+    }
+
+    @Test
+    void dropForgetsOnlyTheNamedApplication() {
+        List<ForyEjbIndex.DeployedView> deployed = new ArrayList<>();
+        deployed.add(new ForyEjbIndex.DeployedView("a", "module", "GreeterBean", Greeter.class.getName(), LOADER,
+                false, "a"));
+        deployed.add(new ForyEjbIndex.DeployedView("b", "module", "GreeterBean", Greeter.class.getName(), LOADER,
+                false, "b"));
+        ForyEjbIndex index = new ForyEjbIndex(() -> List.copyOf(deployed), System::nanoTime);
+        index.refresh();
+        String pathA = wire("a", "module", "GreeterBean", Greeter.class, "Greet");
+        String pathB = wire("b", "module", "GreeterBean", Greeter.class, "Greet");
+        ForyGeneratedServiceRegistry.Binding b = index.foryRegistry().lookup(pathB);
+        assertEquals(2, index.foryRegistry().size());
+
+        deployed.remove(0);
+        index.drop("a");
+
+        assertEquals(1, index.foryRegistry().size());
+        assertEquals(1, index.catalog().size());
+        assertNull(index.foryRegistry().lookup(pathA));
+        assertSame(b, index.foryRegistry().lookup(pathB), "the other application's view was built again");
+    }
+
+    @Test
+    void requestsAndDeploymentEventsDoNotWaitForARebuildThatIsRunning() throws Exception {
+        CountDownLatch entered = new CountDownLatch(1);
+        CountDownLatch release = new CountDownLatch(1);
+        AtomicInteger reads = new AtomicInteger();
+        ForyEjbIndex index = new ForyEjbIndex(() -> {
+            if (reads.incrementAndGet() == 2) {
+                entered.countDown();
+                try {
+                    release.await(60, TimeUnit.SECONDS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            return List.of(view("app", "module", "GreeterBean", Greeter.class));
+        }, System::nanoTime);
+        index.refresh();
+        index.markStale();
+        Thread rebuilder = new Thread(() -> index.foryRegistry().lookup("/missing"));
+        rebuilder.start();
+        try {
+            assertTrue(entered.await(30, TimeUnit.SECONDS), "the rebuild did not start");
+            index.markStale();
+
+            List<Thread> misses = new ArrayList<>();
+            AtomicInteger returned = new AtomicInteger();
+            for (int i = 0; i < 8; i++) {
+                int id = i;
+                Thread miss = new Thread(() -> {
+                    index.foryRegistry().lookup("/missing/" + id);
+                    returned.incrementAndGet();
+                });
+                misses.add(miss);
+                miss.start();
+            }
+            Thread event = new Thread(() -> {
+                index.drop("app");
+                returned.incrementAndGet();
+            });
+            event.start();
+            for (Thread t : misses) {
+                t.join(10_000);
+            }
+            event.join(10_000);
+
+            assertEquals(9, returned.get(), "requests or a deployment event were parked behind the rebuild");
+        } finally {
+            release.countDown();
+            rebuilder.join(30_000);
+        }
+        // What the event asked for is done once the rebuild is over, whatever it published.
+        assertEquals(0, index.foryRegistry().size());
+        assertEquals(0, index.catalog().size());
+    }
+
+    @Test
+    void aStaticHelperOfAViewDoesNotUnpublishIt() {
+        ForyEjbIndex index = index(List.of(view("app", "module", "Bean", WithAHelper.class)));
+
+        assertEquals(1, index.foryRegistry().size());
+        assertEquals(List.of(), warnings);
+    }
+
+    @Test
+    void aViewNamedLikeAMessageIsRefusedAndOneNamedEmptyIsFine() {
+        ForyEjbIndex index = index(List.of(
+                view("app", "module", "Bean", Empty.class),
+                view("app", "module", "Bean", RunRequest.class)));
+
+        assertEquals(1, index.foryRegistry().size());
+        assertNotNull(index.foryRegistry().lookup(wire("app", "module", "Bean", Empty.class, "Run")));
         assertEquals(1, warnings.size(), warnings.toString());
     }
 

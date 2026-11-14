@@ -12,6 +12,7 @@ package org.glassfish.orb.http.fory.grpc;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BooleanSupplier;
 
 /**
  * Deploy-time index of Fory service methods and their generated runtimes.
@@ -32,6 +33,18 @@ public final class ForyGeneratedServiceRegistry {
      * application that arrived later.
      */
     private volatile Runnable refresher = () -> { };
+
+    /**
+     * Tells the registry when what it holds is known to be out of date (an
+     * application was started or replaced), so that a lookup that finds a
+     * binding still asks the refresher before trusting it. A redeployment under
+     * the same names would otherwise be a hit on the old binding, forever.
+     */
+    private volatile BooleanSupplier stale = () -> false;
+
+    public void onStale(BooleanSupplier stale) {
+        this.stale = Objects.requireNonNull(stale, "stale");
+    }
 
     public void onMiss(Runnable refresher) {
         this.refresher = Objects.requireNonNull(refresher, "refresher");
@@ -64,7 +77,7 @@ public final class ForyGeneratedServiceRegistry {
 
     public Binding lookup(String wirePath) {
         Binding binding = bindings.get(wirePath);
-        if (binding == null) {
+        if (binding == null || stale.getAsBoolean()) {
             refresher.run();
             binding = bindings.get(wirePath);
         }

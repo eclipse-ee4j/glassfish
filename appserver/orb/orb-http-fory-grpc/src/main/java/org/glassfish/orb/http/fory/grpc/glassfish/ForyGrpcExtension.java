@@ -24,6 +24,7 @@ import java.io.IOException;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
@@ -78,9 +79,9 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
 
     private volatile ForyEjbIndex index;
 
-    private ForyGrpcCatalog foryCatalog;
+    private volatile ForyGrpcCatalog foryCatalog;
 
-    private ForyGrpcServerAdapter foryGrpc;
+    private volatile ForyGrpcServerAdapter foryGrpc;
 
     @Override
     public void postConstruct() {
@@ -118,6 +119,16 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
         index = foryIndex;
     }
 
+    /**
+     * The deployment events that say what the index holds is out of date.
+     *
+     * <p>{@code APPLICATION_UNLOADED} is sent from inside the application's own
+     * unload, before it is removed from the registry, so the index forgets the
+     * application by name and the registry reader skips an application that is
+     * not loaded; {@code UNDEPLOYMENT_SUCCESS} comes after the removal and
+     * forgets everything once more, which also catches a rebuild that read the
+     * registry in between. A started application only marks the index stale.
+     */
     @Override
     public void event(Event<?> event) {
         ForyEjbIndex current = index;
@@ -125,8 +136,11 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
             return;
         }
         if (event.is(Deployment.APPLICATION_UNLOADED)) {
-            current.drop();
-        } else if (event.is(Deployment.APPLICATION_STARTED)) {
+            Object hook = event.hook();
+            current.drop(hook instanceof ApplicationInfo info ? info.getName() : null);
+        } else if (event.is(Deployment.UNDEPLOYMENT_SUCCESS)) {
+            current.dropAll();
+        } else if (event.is(Deployment.APPLICATION_STARTED) || event.is(Deployment.APPLICATION_LOADED)) {
             current.markStale();
         }
     }

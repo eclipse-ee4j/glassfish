@@ -556,26 +556,43 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
      * A session that is already gone is not an error. A client whose removal
      * timed out will send it again, and telling it that its own cleanup failed
      * would invite it to keep trying to remove something that no longer exists.
+     * The same goes for a key that names no session at all, whether it is
+     * unknown or too short to be a key.
+     * <p>
+     * Bracketed like {@link #createSession}: the pre-destroy callback runs in
+     * the application's context class loader, which a transport thread does not
+     * have until the bracket puts it there.
      */
     @Override
     public void removeSession(byte[] instanceKey) {
-        SessionContextImpl context = _getContextForInstance(instanceKey);
-        if (context == null) {
-            return;
-        }
-
-        EjbInvocation inv = super.createEjbInvocation(context.getEJB(), context);
-        context.setInEjbRemove(true);
+        externalPreInvoke();
         try {
-            destroyBean(inv, context);
-        } catch (Throwable t) {
-            // Mirrors removeBean: a bean that fails its own pre-destroy still
-            // has to be destroyed, or the session leaks.
-            _logger.log(FINE, "exception thrown from SFSB PRE_DESTROY", t);
+            SessionContextImpl context;
+            try {
+                context = _getContextForInstance(instanceKey);
+            } catch (NoSuchObjectLocalException | IndexOutOfBoundsException gone) {
+                // _getContextForInstance never returns null: an unknown or
+                // expired key throws, and a key too short to decode runs off
+                // the end of its array.
+                _logger.log(FINE, "[SFSBContainer] removeSession: no session for the key", gone);
+                return;
+            }
+
+            EjbInvocation inv = super.createEjbInvocation(context.getEJB(), context);
+            context.setInEjbRemove(true);
+            try {
+                destroyBean(inv, context);
+            } catch (Throwable t) {
+                // Mirrors removeBean: a bean that fails its own pre-destroy still
+                // has to be destroyed, or the session leaks.
+                _logger.log(FINE, "exception thrown from SFSB PRE_DESTROY", t);
+            } finally {
+                context.setInEjbRemove(false);
+            }
+            forceDestroyBean(context);
         } finally {
-            context.setInEjbRemove(false);
+            externalPostInvoke();
         }
-        forceDestroyBean(context);
     }
 
     @Override

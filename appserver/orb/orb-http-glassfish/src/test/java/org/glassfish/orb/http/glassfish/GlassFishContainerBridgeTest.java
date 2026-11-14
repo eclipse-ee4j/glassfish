@@ -20,6 +20,7 @@ import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 
 import jakarta.ejb.CreateException;
+import jakarta.ejb.NoSuchObjectLocalException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -28,12 +29,14 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
+import org.glassfish.orb.http.protocol.EjbKey;
 import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.ContainerBridge;
@@ -69,6 +72,8 @@ class GlassFishContainerBridgeTest {
 
     private final List<String> createCalls = new ArrayList<>();
     private final List<Long> refreshes = new ArrayList<>();
+    private final List<String> removeCalls = new ArrayList<>();
+    private Exception removeFails;
     private final Map<Long, EjbContainerFacade> containers = new HashMap<>();
     private final GlassFishContainerBridge bridge = new GlassFishContainerBridge(containers::get);
 
@@ -108,6 +113,12 @@ class GlassFishContainerBridgeTest {
                                 throw createFails;
                             }
                             return SESSION;
+                        case "removeSession":
+                            removeCalls.add(Arrays.toString((byte[]) args[0]));
+                            if (removeFails != null) {
+                                throw removeFails;
+                            }
+                            return null;
                         default:
                             return other(proxy, method.getName(), args);
                     }
@@ -209,6 +220,30 @@ class GlassFishContainerBridgeTest {
         assertEquals(1, refreshes.size());
     }
 
+    @Test
+    @DisplayName("removing a session that is already gone, or never existed, is not an error")
+    void removingAGoneSessionIsNotAnError() throws Exception {
+        statefulWithHome();
+        removeFails = new NoSuchObjectLocalException("Invalid Session Key");
+
+        bridge.removeSession(new EjbKey(COUNTER, SESSION));
+
+        // The container was asked, and its refusal was the answer.
+        assertEquals(List.of(Arrays.toString(SESSION)), removeCalls);
+    }
+
+    @Test
+    @DisplayName("a container that has no sessions to remove is reported without its own wording")
+    void aBeanWithoutSessionsIsReportedPlainly() {
+        containers.put(GREETER, facade(descriptor("GreeterBean", false, true, Set.of()), null));
+        removeFails = new RemoteException("secret internal detail");
+
+        ContainerBridge.NoSuchTargetException thrown = assertThrows(ContainerBridge.NoSuchTargetException.class,
+                () -> bridge.removeSession(new EjbKey(GREETER, SESSION)));
+
+        assertTrue(!thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
+    }
+
     // ---- through the dispatcher ---------------------------------------------
 
     @Test
@@ -240,6 +275,20 @@ class GlassFishContainerBridgeTest {
     @DisplayName("open answers 404 for a bean that does not exist")
     void openAnswers404ForAnUnknownBean() throws Exception {
         assertEquals(Protocol.SC_NOT_FOUND, open("NoSuchBean").status);
+    }
+
+    @Test
+    @DisplayName("remove answers 204 for a session that is already gone, and does not fail the request")
+    void removeAnswers204ForAGoneSession() throws Exception {
+        statefulWithHome();
+        removeFails = new NoSuchObjectLocalException("Invalid Session Key");
+
+        Exchange exchange = new Exchange("DELETE", EjbRoutes.removePath(Protocol.CONTEXT_PATH,
+                "myapp", "mymodule", null, "CounterBean", EjbRoutes.encodeSessionId(SESSION)));
+        new EjbDispatcher(bridge).dispatch(exchange);
+
+        assertEquals(Protocol.SC_NO_CONTENT, exchange.status);
+        assertEquals(1, removeCalls.size());
     }
 
     private Exchange open(String bean) throws Exception {

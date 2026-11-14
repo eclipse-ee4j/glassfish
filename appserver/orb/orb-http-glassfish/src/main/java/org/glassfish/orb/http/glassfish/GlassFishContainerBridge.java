@@ -16,15 +16,19 @@
 
 package org.glassfish.orb.http.glassfish;
 
+import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.ejb.containers.EjbContainerUtil;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 
 import jakarta.ejb.CreateException;
+import jakarta.ejb.NoSuchObjectLocalException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Set;
@@ -59,6 +63,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Singleton
 public class GlassFishContainerBridge implements ContainerBridge {
+
+    private static final Logger LOG = System.getLogger(GlassFishContainerBridge.class.getName());
 
     /**
      * The instance key every stateless and singleton reference carries.
@@ -201,13 +207,28 @@ public class GlassFishContainerBridge implements ContainerBridge {
         }
     }
 
+    /**
+     * Removes a session, and treats one that is already gone as removed.
+     *
+     * <p>The facade's contract is that removal is idempotent, because a client
+     * that retries after a timeout must not be told its own cleanup failed. The
+     * stateful container answers an unknown or expired key with
+     * {@code NoSuchObjectLocalException}, and without this that reached the
+     * endpoint as a 500 with a stack trace in the log for a second remove or
+     * for any session id at all.
+     */
     @Override
     public void removeSession(EjbKey key) throws NoSuchTargetException {
         EjbContainerFacade facade = facade(key);
         try {
             facade.removeSession(key.instanceKey());
+        } catch (NoSuchObjectLocalException gone) {
+            LOG.log(Level.DEBUG, "session already gone for " + key, gone);
         } catch (RemoteException e) {
-            throw new NoSuchTargetException("cannot remove session for " + key + ": " + e.getMessage());
+            // The container's own wording is not the caller's business; what
+            // the caller needs is that this bean has no sessions to remove.
+            LOG.log(Level.DEBUG, "cannot remove session for " + key, e);
+            throw new NoSuchTargetException("cannot remove session for " + key);
         }
     }
 
@@ -252,10 +273,10 @@ public class GlassFishContainerBridge implements ContainerBridge {
             return null;
         }
         try {
-            return com.sun.ejb.codegen.RemoteGenerator.getGeneratedRemoteIntfName(viewClassName);
+            return RemoteGenerator.getGeneratedRemoteIntfName(viewClassName);
         } catch (RuntimeException e) {
-            throw new NoSuchTargetException("cannot derive the generated interface for "
-                    + viewClassName + ": " + e);
+            LOG.log(Level.DEBUG, "cannot derive the generated interface for " + viewClassName, e);
+            throw new NoSuchTargetException("cannot derive the generated interface for " + viewClassName);
         }
     }
 

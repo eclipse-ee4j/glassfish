@@ -16,12 +16,13 @@
 
 package org.glassfish.orb.http.client;
 
+import jakarta.ejb.EJBException;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.http.HttpTimeoutException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -41,23 +42,36 @@ class TimeoutCancelTest {
         String greet(String name);
     }
 
-    /** Times out on every invocation and accepts everything else. */
+    /**
+     * Times out on every invocation (or answers 400 to it) and accepts
+     * everything else. A cancel is only ever sent asynchronously, so the
+     * caller does not wait for it.
+     */
     private static final class TimingOutTransport implements HttpTransport {
 
-        final List<Request> requests = new ArrayList<>();
+        final List<Request> requests = new java.util.concurrent.CopyOnWriteArrayList<>();
+        final List<Request> asyncRequests = new java.util.concurrent.CopyOnWriteArrayList<>();
+        final boolean badRequest;
+
+        TimingOutTransport(boolean badRequest) {
+            this.badRequest = badRequest;
+        }
 
         @Override
         public Response exchange(Request request) throws IOException {
             requests.add(request);
-            if (request.uri().getRawPath().contains("/invoke/")) {
-                throw new HttpTimeoutException("request timed out");
+            if (badRequest) {
+                return new Response(Protocol.SC_BAD_REQUEST, null, Map.of("X-GF-Reason", List.of("malformed")),
+                        new ByteArrayInputStream(new byte[0]));
             }
-            return new Response(Protocol.SC_NO_CONTENT, null, Map.of(), new ByteArrayInputStream(new byte[0]));
+            throw new HttpTimeoutException("request timed out");
         }
 
         @Override
         public CompletableFuture<Response> exchangeAsync(Request request) {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
+            asyncRequests.add(request);
+            return CompletableFuture.completedFuture(
+                    new Response(Protocol.SC_NO_CONTENT, null, Map.of(), new ByteArrayInputStream(new byte[0])));
         }
 
         @Override
@@ -73,7 +87,7 @@ class TimeoutCancelTest {
     @Test
     @DisplayName("a call that times out asks the server to stop it, and still reports the timeout")
     void aTimedOutCallIsCancelledOnTheServer() throws Exception {
-        TimingOutTransport transport = new TimingOutTransport();
+        TimingOutTransport transport = new TimingOutTransport(false);
         ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
 
         try (HttpEjbClient client = new HttpEjbClient(config, transport, new JavaSerializationMarshaller(),
@@ -84,13 +98,46 @@ class TimeoutCancelTest {
             assertThrows(HttpTimeoutException.class,
                     () -> client.invoke(locator, Greeter.class, greet, new Object[] { "world" }));
 
-            assertEquals(2, transport.requests.size(), "the invocation and then a cancel");
+            assertEquals(1, transport.requests.size(), "the invocation is the only call the caller waits for");
+            assertEquals(1, transport.asyncRequests.size(), "the cancel goes out without being waited for");
             HttpTransport.Request invocation = transport.requests.get(0);
-            HttpTransport.Request cancel = transport.requests.get(1);
+            HttpTransport.Request cancel = transport.asyncRequests.get(0);
             String id = invocation.headers().get(Protocol.H_INVOCATION_ID);
             assertEquals("DELETE", cancel.method());
             assertTrue(cancel.uri().getRawPath().contains("/cancel/"), cancel.uri().toString());
             assertTrue(cancel.uri().getRawPath().contains("/" + id + "/"), cancel.uri().toString());
+            assertTrue(cancel.uri().getRawPath().endsWith("/false"),
+                    "the caller has stopped listening; it has not asked for the bean to be interrupted: "
+                            + cancel.uri());
+        }
+    }
+
+    @Test
+    @DisplayName("through a proxy a timeout is an EJBException, not an UndeclaredThrowableException")
+    void aTimeoutThroughAProxyIsAnEjbException() throws Exception {
+        TimingOutTransport transport = new TimingOutTransport(false);
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new JavaSerializationMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            Greeter greeter = client.createProxy(Greeter.class, new EjbLocator("app", "module", "", "GreeterBean"));
+
+            EJBException thrown = assertThrows(EJBException.class, () -> greeter.greet("world"));
+            assertTrue(thrown.getCause() instanceof HttpTimeoutException, String.valueOf(thrown.getCause()));
+        }
+    }
+
+    @Test
+    @DisplayName("through a proxy a 400 from the server is an EJBException too")
+    void aBadRequestThroughAProxyIsAnEjbException() throws Exception {
+        TimingOutTransport transport = new TimingOutTransport(true);
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new JavaSerializationMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            Greeter greeter = client.createProxy(Greeter.class, new EjbLocator("app", "module", "", "GreeterBean"));
+
+            assertThrows(EJBException.class, () -> greeter.greet("world"));
         }
     }
 }

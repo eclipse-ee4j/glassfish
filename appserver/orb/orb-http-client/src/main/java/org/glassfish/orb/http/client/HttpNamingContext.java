@@ -60,8 +60,6 @@ public class HttpNamingContext implements Context {
     private final HttpEjbClient client;
     private final HttpTransport transport;
     private final ClientConfiguration config;
-    /** Not final: see {@link #downgrade}. */
-    private volatile Marshaller marshaller;
     private final ObjectInputFilter filter;
     private final Hashtable<Object, Object> environment;
     private final String contextPath;
@@ -78,7 +76,6 @@ public class HttpNamingContext implements Context {
                       Hashtable<?, ?> environment) {
         this.config = config;
         this.transport = transport;
-        this.marshaller = marshaller;
         this.filter = JavaSerializationMarshaller.defaultFilter();
         this.client = new HttpEjbClient(config, transport, marshaller, filter);
         this.environment = environment == null ? new Hashtable<>() : new Hashtable<>(environment);
@@ -163,20 +160,26 @@ public class HttpNamingContext implements Context {
         if (value instanceof RemoteEjbReference ref) {
             try {
                 Class<?> view = Class.forName(ref.viewClassName(), false, contextClassLoader());
+                if (!view.isInterface()) {
+                    // Cannot be proxied; same answer as a view that is not here.
+                    return ref;
+                }
                 EjbLocator locator = new EjbLocator(ref.appName(), ref.moduleName(),
                         ref.distinctName(), ref.beanName(), ref.sessionId());
                 if (ref.isHome()) {
                     // EJB 2.x: what the client narrows and calls create() on.
                     Class<?> component =
                             Class.forName(ref.componentClassName(), false, contextClassLoader());
+                    if (!component.isInterface()) {
+                        return ref;
+                    }
                     return client.createHomeProxy(view, component, locator);
                 }
                 return client.createProxy(view, locator);
-            } catch (ClassNotFoundException | IllegalArgumentException e) {
-                // The view interface is not on this client's classpath, or the
-                // name is a class that is not an interface and cannot be
-                // proxied. Hand back the reference rather than failing: the
-                // caller may only want to inspect or re-bind it.
+            } catch (ClassNotFoundException e) {
+                // The view interface is not on this client's classpath. Hand
+                // back the reference rather than failing: the caller may only
+                // want to inspect or re-bind it.
                 return ref;
             }
         }
@@ -203,12 +206,12 @@ public class HttpNamingContext implements Context {
             URI uri = RequestUri.build(config.baseUri(), path, query);
 
             HttpTransport.Response first = transport.exchange(buildRequest(operation, uri, payload));
-            if (isUnsupportedCodec(first)) {
+            if (client.isUnsupportedCodec(first)) {
                 // The same fallback an invocation has: the server cannot read
                 // the codec the body was written in, so use the one every peer
                 // has and send it again.
                 first.close();
-                downgrade();
+                client.downgrade();
                 first = transport.exchange(buildRequest(operation, uri, payload));
             }
 
@@ -246,7 +249,7 @@ public class HttpNamingContext implements Context {
     }
 
     private HttpTransport.Request buildRequest(String operation, URI uri, Object payload) throws IOException {
-        Marshaller codec = marshaller;
+        Marshaller codec = client.marshaller();
         ByteBuffer[] body = null;
         String contentType = null;
         if (payload != null) {
@@ -262,23 +265,6 @@ public class HttpNamingContext implements Context {
                 NamingRoutes.methodFor(operation), uri, contentType,
                 ContentType.of(codec.codec(), ContentType.KIND_VALUE).toHeaderValue(),
                 Map.of(), body);
-    }
-
-    /** @return whether the server refused the codec rather than the request */
-    private boolean isUnsupportedCodec(HttpTransport.Response response) {
-        if (response.status() != Protocol.SC_NOT_ACCEPTABLE
-                || marshaller.codec().equals(ContentType.CODEC_JSER)
-                || config.codec() != null) {
-            // A codec asked for by name is not walked back quietly.
-            return false;
-        }
-        String reason = response.firstHeader("X-GF-Reason");
-        return reason != null && reason.contains("unsupported codec");
-    }
-
-    /** Falls back to the codec that is always present, for good: see {@code HttpEjbClient}. */
-    private void downgrade() {
-        this.marshaller = new JavaSerializationMarshaller();
     }
 
     private Object readBody(HttpTransport.Response response, String expectedKind) throws IOException, ClassNotFoundException {
@@ -318,8 +304,9 @@ public class HttpNamingContext implements Context {
      */
     private Marshaller codecFor(ContentType type) throws ProtocolException {
         String replied = type.codec();
-        if (marshaller.codec().equals(replied)) {
-            return marshaller;
+        Marshaller current = client.marshaller();
+        if (current.codec().equals(replied)) {
+            return current;
         }
         String required = config.codec();
         if (required != null) {

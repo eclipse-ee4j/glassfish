@@ -71,6 +71,8 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_CODEC = "org.glassfish.orb.http.codec";
 
+    private static final java.util.Set<String> WARNED_PLAIN_TOKEN = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Object url = environment == null ? null : environment.get(Context.PROVIDER_URL);
@@ -115,8 +117,9 @@ public class HttpInitialContextFactory implements InitialContextFactory {
 
         Object token = environment.get(PROP_BEARER_TOKEN);
         if (token != null) {
-            if (!"https".equalsIgnoreCase(scheme)) {
-                // A bearer token is a password in all but name.
+            if (!"https".equalsIgnoreCase(scheme) && WARNED_PLAIN_TOKEN.add(baseUri.toString())) {
+                // A bearer token is a password in all but name. Once per URL:
+                // an application opens contexts in a loop.
                 System.getLogger(HttpInitialContextFactory.class.getName())
                         .log(System.Logger.Level.WARNING,
                              "a bearer token will be sent over plain HTTP to {0}; use https", baseUri);

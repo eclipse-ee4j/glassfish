@@ -70,7 +70,21 @@ final class HttpEjbInvocationHandler implements InvocationHandler {
             CompletableFuture<Object> future = client.invokeAsync(locator, viewClass, method, args);
             return future;
         }
-        return client.invoke(locator, viewClass, method, args);
+        try {
+            return client.invoke(locator, viewClass, method, args);
+        } catch (java.io.IOException e) {
+            // A transport failure (a timeout, a protocol error) is not
+            // something a business interface that does not declare IOException
+            // can carry; through a proxy it would surface as an
+            // UndeclaredThrowableException. EJBException is what a caller of a
+            // remote bean already has to expect.
+            for (Class<?> declared : method.getExceptionTypes()) {
+                if (declared.isInstance(e)) {
+                    throw e;
+                }
+            }
+            throw new jakarta.ejb.EJBException(e.getMessage(), e);
+        }
     }
 
     /** The {@link EJBObject} operations, which the container owns. */

@@ -25,8 +25,13 @@ import jakarta.inject.Singleton;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.LongSupplier;
@@ -56,10 +61,13 @@ import org.jvnet.hk2.annotations.Service;
  * <p>The refresh on a miss is rate limited. A miss is something any caller can
  * cause, including one that has not authenticated, and a rebuild walks every
  * deployed application; without a limit a stream of requests for a bean that
- * does not exist is a stream of full rebuilds. A bean deployed within
- * {@link #MIN_REFRESH_INTERVAL_NANOS} of the last rebuild is therefore found by
- * the first miss after that interval, not by the miss that happens to come
- * first.
+ * does not exist is a stream of full rebuilds. Inside
+ * {@link #MIN_REFRESH_INTERVAL_NANOS} of the last rebuild a miss therefore
+ * rebuilds only if the registry no longer holds the very applications the index
+ * was built from - one was deployed, undeployed or redeployed - which is
+ * checked by identity and costs a walk of the application names, not of their
+ * beans. So a bean deployed a moment after a miss is not a 404 for the next
+ * second.
  *
  * <p>A rebuild is published whole. Readers see either the previous index or
  * the new one, never the empty map a clear-then-fill would show in between.
@@ -84,6 +92,7 @@ public class EjbNameIndex {
     /** Guarded by {@code this}: when the last rebuild finished, valid once {@code rebuilt} is set. */
     private long lastRebuildNanos;
     private boolean rebuilt;
+    private int rebuilds;
 
     public EjbNameIndex() {
         this(null, System::nanoTime, MIN_REFRESH_INTERVAL_NANOS);
@@ -146,12 +155,67 @@ public class EjbNameIndex {
         return snapshot.ambiguous().contains(unqualified) ? null : snapshot.ids().get(unqualified);
     }
 
-    /** A miss: rebuild unless the index was rebuilt a moment ago. */
+    /**
+     * A miss: rebuild unless the index was rebuilt a moment ago and the
+     * deployed applications are the same ones it was built from.
+     */
     private synchronized void refreshIfDue() {
-        if (rebuilt && clock.getAsLong() - lastRebuildNanos < minRefreshIntervalNanos) {
+        if (rebuilt && clock.getAsLong() - lastRebuildNanos < minRefreshIntervalNanos
+                && sameApplications(current.applications(), deployed().values())) {
             return;
         }
         rebuild();
+    }
+
+    /**
+     * Drops the entries that name one bean, for a caller that found its
+     * container gone. The index is not rebuilt: the next miss does that, within
+     * the rate limit, because a different set of applications is registered by
+     * then.
+     *
+     * @param ejbId the id that no longer has a container
+     */
+    synchronized void forget(long ejbId) {
+        Snapshot snapshot = current;
+        Map<String, Long> kept = new HashMap<>(snapshot.ids());
+        kept.values().removeIf(id -> id == ejbId);
+        current = new Snapshot(Map.copyOf(kept), snapshot.ambiguous(), snapshot.applications());
+    }
+
+    /**
+     * The deployed applications, copied while the registry's own monitor is
+     * held: its {@code add} and {@code remove} are synchronized on it, and its
+     * name set is the live key set of a plain map, so iterating that set while a
+     * deployment adds to it fails.
+     */
+    private Map<String, ApplicationInfo> deployed() {
+        Map<String, ApplicationInfo> copy = new LinkedHashMap<>();
+        synchronized (applications) {
+            for (String name : new ArrayList<>(applications.getAllApplicationNames())) {
+                ApplicationInfo info = applications.get(name);
+                if (info != null) {
+                    copy.put(name, info);
+                }
+            }
+        }
+        return copy;
+    }
+
+    private static boolean sameApplications(Set<ApplicationInfo> built, Collection<ApplicationInfo> now) {
+        if (built.size() != now.size()) {
+            return false;
+        }
+        for (ApplicationInfo info : now) {
+            if (!built.contains(info)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** @return how many times the index has been rebuilt from the registry, for tests */
+    synchronized int rebuilds() {
+        return rebuilds;
     }
 
     /**
@@ -170,12 +234,12 @@ public class EjbNameIndex {
 
     private void rebuild() {
         Entries entries = new Entries();
-        for (String name : applications.getAllApplicationNames()) {
-            ApplicationInfo info = applications.get(name);
-            if (info == null) {
-                LOG.log(Level.DEBUG, "application {0} is registered but has no info", name);
-                continue;
-            }
+        Map<String, ApplicationInfo> deployed = deployed();
+        entries.applications.addAll(deployed.values());
+        rebuilds++;
+        for (Map.Entry<String, ApplicationInfo> entry : deployed.entrySet()) {
+            String name = entry.getKey();
+            ApplicationInfo info = entry.getValue();
             Application application = info.getMetaData(Application.class);
             if (application == null) {
                 LOG.log(Level.DEBUG, "application {0} carries no Application metadata", name);
@@ -219,8 +283,8 @@ public class EjbNameIndex {
     }
 
     /** What an index holds: the keys that name one bean, and the module-less keys that name several. */
-    private record Snapshot(Map<String, Long> ids, Set<String> ambiguous) {
-        static final Snapshot EMPTY = new Snapshot(Map.of(), Set.of());
+    private record Snapshot(Map<String, Long> ids, Set<String> ambiguous, Set<ApplicationInfo> applications) {
+        static final Snapshot EMPTY = new Snapshot(Map.of(), Set.of(), Set.of());
     }
 
     /** The beans of one rebuild, collected before anything is published. */
@@ -228,6 +292,7 @@ public class EjbNameIndex {
 
         private final Map<String, Long> ids = new HashMap<>();
         private final Set<String> ambiguous = new HashSet<>();
+        private final Set<ApplicationInfo> applications = Collections.newSetFromMap(new IdentityHashMap<>());
 
         /**
          * Records a bean under its module, and under the application alone so a
@@ -236,7 +301,12 @@ public class EjbNameIndex {
          * module-less key stops naming either.
          */
         void add(String appName, String moduleName, String beanName, long ejbId) {
-            ids.put(key(appName, moduleName, beanName), ejbId);
+            String exact = key(appName, moduleName, beanName);
+            Long replaced = ids.put(exact, ejbId);
+            if (replaced != null && replaced != ejbId) {
+                // The same name now means a different bean: neither is singled out.
+                ambiguous.add(exact);
+            }
             String unqualified = key(appName, null, beanName);
             Long first = ids.putIfAbsent(unqualified, ejbId);
             if (first != null && first != ejbId) {
@@ -249,7 +319,7 @@ public class EjbNameIndex {
         }
 
         private Snapshot build() {
-            return new Snapshot(Map.copyOf(ids), Set.copyOf(ambiguous));
+            return new Snapshot(Map.copyOf(ids), Set.copyOf(ambiguous), applications);
         }
     }
 }

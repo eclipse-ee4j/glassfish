@@ -35,6 +35,8 @@ import org.glassfish.orb.http.protocol.ProtocolException;
  */
 public final class AffinityDispatcher {
 
+    private static final System.Logger LOG = System.getLogger(AffinityDispatcher.class.getName());
+
     private static final Pattern SAFE_SEGMENT = Pattern.compile("[A-Za-z0-9._~-]+");
 
     private final SessionAffinity affinity;
@@ -84,7 +86,7 @@ public final class AffinityDispatcher {
         if (SAFE_SEGMENT.matcher(segment).matches()) {
             return "/" + segment;
         }
-        System.getLogger(AffinityDispatcher.class.getName()).log(System.Logger.Level.DEBUG,
+        LOG.log(System.Logger.Level.DEBUG,
                 "context path segment is not a plain path segment; the cookie uses the default path");
         return Protocol.CONTEXT_PATH;
     }

@@ -411,6 +411,184 @@ class RequestHardeningTest {
         assertThrows(IllegalArgumentException.class, () -> dispatcher.dispatch(exchange));
     }
 
+    /** Records whether the dispatching thread still carried an interrupt when a response was written. */
+    private static final class InterruptRecordingExchange implements ServerExchange {
+
+        final Loopback.InMemoryExchange delegate;
+        volatile boolean interruptedDuringWrite;
+
+        InterruptRecordingExchange(Loopback.InMemoryExchange delegate) {
+            this.delegate = delegate;
+        }
+
+        private void note() {
+            interruptedDuringWrite |= Thread.currentThread().isInterrupted();
+        }
+
+        @Override
+        public String method() {
+            return delegate.method();
+        }
+
+        @Override
+        public byte[] pathBytes() {
+            return delegate.pathBytes();
+        }
+
+        @Override
+        public int pathOffset() {
+            return delegate.pathOffset();
+        }
+
+        @Override
+        public int pathLength() {
+            return delegate.pathLength();
+        }
+
+        @Override
+        public String requestHeader(String name) {
+            return delegate.requestHeader(name);
+        }
+
+        @Override
+        public String queryParameter(String name) {
+            return delegate.queryParameter(name);
+        }
+
+        @Override
+        public java.io.InputStream requestBody() {
+            return delegate.requestBody();
+        }
+
+        @Override
+        public void setStatus(int status) {
+            note();
+            delegate.setStatus(status);
+        }
+
+        @Override
+        public void setResponseHeader(String name, String value) {
+            note();
+            delegate.setResponseHeader(name, value);
+        }
+
+        @Override
+        public void writeBody(java.nio.ByteBuffer[] body) {
+            note();
+            delegate.writeBody(body);
+        }
+
+        @Override
+        public String authenticatedUser() {
+            return delegate.authenticatedUser();
+        }
+    }
+
+    interface Quick {
+        String quick();
+    }
+
+    /** A bean that is cancelled, with an interrupt, while it runs, and then returns normally. */
+    private static final class SelfCancellingBean implements Quick {
+
+        private final InvocationRegistry registry;
+
+        SelfCancellingBean(InvocationRegistry registry) {
+            this.registry = registry;
+        }
+
+        @Override
+        public String quick() {
+            registry.cancel("fin-1", true);
+            return "done";
+        }
+    }
+
+    /** A container that is cancelled, with an interrupt, while it resolves the target, and then fails. */
+    private static final class CancellingContainer implements ContainerBridge {
+
+        private final FakeContainer delegate = new FakeContainer();
+        private final InvocationRegistry registry;
+
+        CancellingContainer(InvocationRegistry registry) {
+            this.registry = registry;
+            delegate.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+        }
+
+        @Override
+        public org.glassfish.orb.http.protocol.EjbKey resolve(String appName, String moduleName,
+                String distinctName, String beanName, byte[] sessionId) throws NoSuchTargetException {
+            return delegate.resolve(appName, moduleName, distinctName, beanName, sessionId);
+        }
+
+        @Override
+        public Object getTargetObject(org.glassfish.orb.http.protocol.EjbKey key, String viewClassName)
+                throws NoSuchTargetException {
+            registry.cancel("fin-2", true);
+            throw new NoSuchTargetException("gone");
+        }
+
+        @Override
+        public void releaseTargetObject(Object target) {
+        }
+
+        @Override
+        public ClassLoader classLoader(org.glassfish.orb.http.protocol.EjbKey key) {
+            return delegate.classLoader(key);
+        }
+
+        @Override
+        public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
+                throws NoSuchTargetException {
+            return delegate.createSession(appName, moduleName, distinctName, beanName);
+        }
+
+        @Override
+        public void removeSession(org.glassfish.orb.http.protocol.EjbKey key) throws NoSuchTargetException {
+            delegate.removeSession(key);
+        }
+    }
+
+    @Test
+    @DisplayName("a cancel that lands while the bean runs leaves no interrupt pending when the answer is written")
+    void noInterruptIsPendingWhenTheAnswerIsWrittenAfterTheWork() throws Exception {
+        InvocationRegistry registry = new InvocationRegistry();
+        FakeContainer container = new FakeContainer();
+        container.registerStateless("QuickBean", new SelfCancellingBean(registry));
+        EjbDispatcher dispatcher = new EjbDispatcher(container, SecurityBridge.NONE,
+                new JavaSerializationMarshaller(), registry);
+        InterruptRecordingExchange exchange = new InterruptRecordingExchange(invocation(Quick.class,
+                "QuickBean", "quick", new String[0], body(), Map.of(Protocol.H_INVOCATION_ID, "fin-1")));
+
+        try {
+            dispatcher.dispatch(exchange);
+
+            assertEquals(Protocol.SC_CANCELLED, exchange.delegate.toResponse().status());
+            assertFalse(exchange.interruptedDuringWrite, "the answer was written with an interrupt pending");
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
+    @Test
+    @DisplayName("a cancel that lands while the target is resolved leaves no interrupt pending on the 404")
+    void noInterruptIsPendingWhenTheTargetIsMissing() throws Exception {
+        InvocationRegistry registry = new InvocationRegistry();
+        EjbDispatcher dispatcher = new EjbDispatcher(new CancellingContainer(registry), SecurityBridge.NONE,
+                new JavaSerializationMarshaller(), registry);
+        InterruptRecordingExchange exchange = new InterruptRecordingExchange(invocation(TestBeans.Greeter.class,
+                "GreeterBean", "greet", GREET_TYPES, body("a", 1), Map.of(Protocol.H_INVOCATION_ID, "fin-2")));
+
+        try {
+            dispatcher.dispatch(exchange);
+
+            assertEquals(Protocol.SC_NOT_FOUND, exchange.delegate.toResponse().status());
+            assertFalse(exchange.interruptedDuringWrite, "the answer was written with an interrupt pending");
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
     // ---- registry ---------------------------------------------------------
 
     @Test

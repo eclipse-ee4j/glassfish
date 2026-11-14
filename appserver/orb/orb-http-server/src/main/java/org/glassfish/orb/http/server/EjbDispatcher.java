@@ -223,6 +223,7 @@ public final class EjbDispatcher {
                 writeResult(codec, exchange, result);
 
             } catch (ContainerBridge.NoSuchTargetException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
             } catch (InvocationTargetException e) {
                 registration.finish();
@@ -241,8 +242,10 @@ public final class EjbDispatcher {
                     writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
                 }
             } catch (ClassNotFoundException | NoSuchMethodException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_FORBIDDEN, e.toString());
             } finally {
                 if (target != null) {

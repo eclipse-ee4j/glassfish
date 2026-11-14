@@ -110,8 +110,11 @@ public final class NamingDispatcher {
             // not a RuntimeException, and letting that escape takes the
             // connection down instead of answering.
             exchange.setStatus(Protocol.SC_EXCEPTION);
-            exchange.setResponseHeader("X-GF-Reason",
-                    (operationLabel(request) + " failed: " + e).replace('\n', ' '));
+            // The cause is the server's business: its text can name internals,
+            // so the caller is told which operation failed and nothing else.
+            System.getLogger(NamingDispatcher.class.getName()).log(System.Logger.Level.DEBUG,
+                    operationLabel(request) + " failed", e);
+            exchange.setResponseHeader("X-GF-Reason", operationLabel(request) + " failed");
         } finally {
             security.clear(securityToken);
         }

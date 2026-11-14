@@ -34,8 +34,9 @@ import org.jvnet.hk2.annotations.Service;
  * components, mechanism selection, client and server request interceptors. But
  * the container does not consume any of that - it consumes
  * {@code SecurityContext}, and all of that apparatus exists to arrive here.
- * Over HTTP the identity has already been established by the container's own
- * authentication, so only the last step remains.
+ * Over HTTP the identity arrives with the request - HTTP Basic, checked
+ * against the realm by {@link RealmAuthenticator}; any other scheme and a
+ * client certificate are treated as anonymous - so only the last step remains.
  */
 @Service
 @Singleton

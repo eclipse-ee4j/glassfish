@@ -96,6 +96,7 @@ class MarshallersTest {
     @Test
     @DisplayName("releasing a class loader reaches the codecs, so they can drop what they keep for it")
     void releaseReachesTheCodecs() {
+        CountingMarshaller.RELEASED.clear();
         ClassLoader loader = new java.net.URLClassLoader(new java.net.URL[0], getClass().getClassLoader());
         assertEquals(CountingMarshaller.CODEC, Marshallers.preferred(loader).codec());
 

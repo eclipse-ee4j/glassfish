@@ -42,18 +42,56 @@ import java.io.OutputStream;
  * no unfiltered path. {@link #defaultFilter()} supplies a conservative
  * starting point which callers are expected to narrow to the deployed
  * application's classes.
+ *
+ * <p>What the default bounds: the depth of the graph, the number of objects
+ * and bytes in a stream, and the declared memory of any one array (and so of
+ * the arrays that collections allocate while being read). What it does not
+ * bound: the sum of several arrays, each under the limit, within one stream's
+ * byte limit.
  */
 public final class JavaSerializationMarshaller implements Marshaller {
 
     public static final String CODEC = ContentType.CODEC_JSER;
+
+    private static final String PROPERTY_PREFIX = "org.glassfish.orb.http.filter.";
+
+    /**
+     * The most memory, in bytes, that one array may be declared to need.
+     * Override with {@code org.glassfish.orb.http.filter.maxArrayBytes}.
+     *
+     * <p>The filter is asked about an array's <em>declared</em> length before
+     * the array is allocated, and {@code maxbytes} only counts what has been
+     * read so far. A request body of a few dozen bytes can therefore declare a
+     * {@code long[100_000_000]}, and the server would allocate 800 MB for it
+     * before anything else has looked at the request. A bound on the declared
+     * size (element size times length) is what prevents that; 16 MB admits a
+     * real payload of several MB and refuses the declaration.
+     */
+    static final long MAX_ARRAY_BYTES = Long.getLong(PROPERTY_PREFIX + "maxArrayBytes", 16L * 1024 * 1024);
+
+    /**
+     * Deepest object graph accepted, {@code org.glassfish.orb.http.filter.maxDepth}.
+     * 256 rather than the 64 this started with: a 65-node chain of custom
+     * objects is ordinary, and 256 levels stay far from a stack overflow. The
+     * Fory codec is configured with the same value.
+     */
+    static final long MAX_DEPTH = Long.getLong(PROPERTY_PREFIX + "maxDepth", 256L);
+
+    /** {@code org.glassfish.orb.http.filter.maxRefs}: objects in one stream. */
+    static final long MAX_REFS = Long.getLong(PROPERTY_PREFIX + "maxRefs", 10_000_000L);
+
+    /** {@code org.glassfish.orb.http.filter.maxBytes}: bytes in one stream. */
+    static final long MAX_BYTES = Long.getLong(PROPERTY_PREFIX + "maxBytes", 100L * 1024 * 1024);
 
     /**
      * The one filter {@link #defaultFilter()} returns. It is immutable and
      * thread-safe, and being a single instance lets callers use it as a cache
      * key.
      */
-    private static final ObjectInputFilter DEFAULT_FILTER = ObjectInputFilter.Config.createFilter(
-            "maxdepth=256;maxrefs=10000000;maxarray=104857600;maxbytes=104857600;*");
+    private static final ObjectInputFilter DEFAULT_FILTER = ObjectInputFilter.merge(
+            JavaSerializationMarshaller::checkArrayBudget,
+            ObjectInputFilter.Config.createFilter("maxdepth=" + MAX_DEPTH + ";maxrefs=" + MAX_REFS
+                    + ";maxbytes=" + MAX_BYTES + ";*"));
 
     @Override
     public String codec() {
@@ -127,6 +165,31 @@ public final class JavaSerializationMarshaller implements Marshaller {
      */
     public static ObjectInputFilter defaultFilter() {
         return DEFAULT_FILTER;
+    }
+
+    private static ObjectInputFilter.Status checkArrayBudget(ObjectInputFilter.FilterInfo info) {
+        Class<?> type = info.serialClass();
+        long length = info.arrayLength();
+        if (length < 0 || type == null || !type.isArray()) {
+            return ObjectInputFilter.Status.UNDECIDED;
+        }
+        return length > MAX_ARRAY_BYTES / wireSize(type.getComponentType())
+                ? ObjectInputFilter.Status.REJECTED
+                : ObjectInputFilter.Status.UNDECIDED;
+    }
+
+    /** What one element of this type costs to allocate; a reference counts as 8. */
+    private static long wireSize(Class<?> component) {
+        if (component == byte.class || component == boolean.class) {
+            return 1;
+        }
+        if (component == char.class || component == short.class) {
+            return 2;
+        }
+        if (component == int.class || component == float.class) {
+            return 4;
+        }
+        return 8;
     }
 
     /**

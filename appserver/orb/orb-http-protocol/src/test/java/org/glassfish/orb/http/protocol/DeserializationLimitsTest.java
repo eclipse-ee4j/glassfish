@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * What the default deserialization filter lets through, and how it combines
@@ -116,5 +117,45 @@ class DeserializationLimitsTest {
                 getClass().getClassLoader(), JavaSerializationMarshaller.defaultFilter(), null)) {
             assertEquals(new Date(0), reader.readObject());
         }
+    }
+
+    /**
+     * Rewrites the first int that follows a class descriptor's end marker,
+     * which for a one element array is its length and for an ArrayList its
+     * size.
+     */
+    private static byte[] declaring(byte[] stream, int declared) {
+        byte[] marker = { 0x78, 0x70, 0, 0, 0, 1 };
+        outer:
+        for (int i = 0; i + marker.length <= stream.length; i++) {
+            for (int j = 0; j < marker.length; j++) {
+                if (stream[i + j] != marker[j]) {
+                    continue outer;
+                }
+            }
+            byte[] out = stream.clone();
+            java.nio.ByteBuffer.wrap(out).putInt(i + 2, declared);
+            return out;
+        }
+        throw new AssertionError("no length found in the stream");
+    }
+
+    @Test
+    @DisplayName("a body of a few dozen bytes cannot declare a long[100,000,000]")
+    void aDeclaredHugeArrayIsRefusedBeforeItIsAllocated() throws Exception {
+        byte[] lying = declaring(write(new long[1]), 100_000_000);
+        assertTrue(lying.length < 100, "the body is only " + lying.length + " bytes");
+
+        assertThrows(InvalidClassException.class, () -> readWithDefaults(lying));
+    }
+
+    @Test
+    @DisplayName("a body that declares an ArrayList of 100,000,000 elements is refused the same way")
+    void aDeclaredHugeListIsRefused() throws Exception {
+        ArrayList<String> one = new ArrayList<>();
+        one.add("x");
+        byte[] lying = declaring(write(one), 100_000_000);
+
+        assertThrows(InvalidClassException.class, () -> readWithDefaults(lying));
     }
 }

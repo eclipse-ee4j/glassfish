@@ -35,6 +35,17 @@ import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
  * So the same {@link ObjectInputFilter} that guards Java serialization guards
  * this codec too. One policy, two codecs: changing the codec changes the
  * encoding and nothing about what is allowed to be decoded.
+ *
+ * <p>Limits of this check. Fory asks only "is this class acceptable", so the
+ * filter sees depth, reference count and stream length as zero and an array
+ * length of -1: the filter's {@code maxarray}, {@code maxrefs} and
+ * {@code maxbytes} do not apply to Fory, and neither does the array budget of
+ * the default filter. Only the class allow/deny decision, the JVM-wide
+ * {@code jdk.serialFilter} and Fory's own depth limit (see
+ * {@code ForyMarshaller}) are enforced. A custom
+ * {@code jdk.serialFilterFactory} is not consulted: only the filter itself
+ * is. Bounding declared array and collection sizes on this codec needs
+ * support from Fory itself and is not done here.
  */
 final class FilterBackedTypeChecker implements TypeChecker {
 

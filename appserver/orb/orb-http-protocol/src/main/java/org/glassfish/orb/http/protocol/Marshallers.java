@@ -149,7 +149,10 @@ public final class Marshallers {
     /**
      * Lets go of everything the codecs hold for a class loader.
      *
-     * <p>Call this when an application is undeployed. Discovery results and a
+     * <p>Call this when an application is undeployed. The container adapter
+     * is the caller; nothing in the transport does it. It may run
+     * concurrently with codec calls for the same loader, which then rebuild
+     * what they need, and it matches the exact loader object only. Discovery results and a
      * codec's own per-loader state are both keyed by the loader, but the
      * values refer back to it, so a weak key alone never lets it go: without
      * this call every undeployed application keeps its class loader alive.

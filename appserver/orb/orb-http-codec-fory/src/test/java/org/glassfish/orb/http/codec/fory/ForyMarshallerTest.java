@@ -382,4 +382,43 @@ class ForyMarshallerTest {
         }
         assertNull(reference.get().get(), "the loader is still reachable after release");
     }
+
+    private WeakReference<ClassLoader> useAndReleaseOnThisThread() throws Exception {
+        URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader());
+        Thread.currentThread().setContextClassLoader(loader);
+        try {
+            Marshallers.preferred(loader);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                writer.writeObject(new Node("a"));
+                writer.flush();
+            }
+            try (Marshaller.ObjectReader reader = marshaller.newReader(
+                    new ByteArrayInputStream(out.toByteArray()), loader, ALLOW_ALL)) {
+                assertNotNull(reader.readObject());
+            }
+            Marshallers.release(loader);
+        } finally {
+            Thread.currentThread().setContextClassLoader(null);
+        }
+        return new WeakReference<>(loader);
+    }
+
+    @Test
+    @DisplayName("the loader is collectable when the work and the release ran on a long-lived pooled thread")
+    void aLoaderUsedOnAPooledThreadIsCollectable() throws Exception {
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
+        try {
+            // The thread stays alive for the whole check, as a container's worker
+            // thread does: per-thread state it keeps would pin the loader.
+            WeakReference<ClassLoader> reference = executor.submit(this::useAndReleaseOnThisThread).get();
+            for (int i = 0; i < 100 && reference.get() != null; i++) {
+                System.gc();
+                Thread.sleep(50);
+            }
+            assertNull(reference.get(), "the loader is still reachable after release");
+        } finally {
+            executor.shutdownNow();
+        }
+    }
 }

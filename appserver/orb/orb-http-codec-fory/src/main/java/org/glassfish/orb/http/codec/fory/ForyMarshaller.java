@@ -47,6 +47,13 @@ import org.glassfish.orb.http.protocol.Marshaller;
  * and remote calls already rely on all three. Fory is configured to match
  * rather than to be fast in ways that would silently alter what an
  * application observes - see the settings in {@link #newFory}.
+ *
+ * <p>What is bounded when decoding: which classes may be instantiated (the
+ * transport's filter, see {@code FilterBackedTypeChecker}), the depth of the
+ * graph, and the size of one frame, which is read incrementally and so only
+ * grows with the bytes that actually arrive. What is not: the declared length
+ * of an array or collection inside a frame, and the number of references.
+ * Java serialization has those limits and this codec does not.
  */
 public final class ForyMarshaller implements Marshaller {
 

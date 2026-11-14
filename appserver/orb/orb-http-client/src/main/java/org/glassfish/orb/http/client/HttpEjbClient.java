@@ -274,10 +274,17 @@ public final class HttpEjbClient implements AutoCloseable {
         }
     }
 
+    /** Joins the caller's transaction unless this client was configured not to. */
+    private void joinAmbientTransaction() {
+        if (config.joinAmbientTransaction()) {
+            AmbientTransaction.join(config, transport);
+        }
+    }
+
     Object invoke(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) throws Throwable {
         // Before the request is built, because building it reads the thread's
         // transaction and joining is what puts one there.
-        AmbientTransaction.join(config, transport);
+        joinAmbientTransaction();
         HttpTransport.Request request = buildInvocation(locator, viewClass, method, args, newInvocationId());
         HttpTransport.Response response;
         try {
@@ -333,7 +340,7 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {
-        AmbientTransaction.join(config, transport);
+        joinAmbientTransaction();
         final String invocationId = newInvocationId();
         final HttpTransport.Request request;
         try {

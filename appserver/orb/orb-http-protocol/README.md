@@ -64,6 +64,20 @@ The protocol on the wire is unchanged; only the HTTP version carrying it
 differs. Use `https://` in the provider URL and the client negotiates
 h2 via ALPN.
 
+A remote call made inside a transaction that the caller's container began
+joins that transaction, so the remote work is prepared, committed or rolled
+back with it. That needs a server that imports transactions. To make the
+client send such calls without a transaction instead, add:
+
+```java
+environment.put("org.glassfish.orb.http.ambientTransaction", "false");
+```
+
+Only the value `false` changes anything. With joining off the remote call runs
+and commits on its own, whatever the caller's transaction does afterwards, so
+use it to reach a server that cannot import transactions, not to hide a failure
+to join. A transaction begun through `HttpUserTransaction` is not affected.
+
 ### What is supported
 
 | Capability | Status |

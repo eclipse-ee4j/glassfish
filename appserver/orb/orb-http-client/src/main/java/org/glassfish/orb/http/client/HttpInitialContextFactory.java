@@ -71,6 +71,19 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_CODEC = "org.glassfish.orb.http.codec";
 
+    /**
+     * Set to {@code false} to stop invocations from joining a transaction the
+     * caller's container began. The default, joining, makes a remote call made
+     * inside a container transaction a branch of it, and needs a server that
+     * can import transactions. Anything other than {@code false} keeps the
+     * default, so a misspelt value cannot turn atomicity off by accident.
+     * <p>
+     * With joining off, a remote call inside a transaction runs and commits on
+     * its own whatever the caller's transaction does later. It does not affect
+     * a transaction begun through {@link HttpUserTransaction}.
+     */
+    public static final String PROP_AMBIENT_TRANSACTION = "org.glassfish.orb.http.ambientTransaction";
+
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Object url = environment == null ? null : environment.get(Context.PROVIDER_URL);
@@ -128,6 +141,11 @@ public class HttpInitialContextFactory implements InitialContextFactory {
         Object codec = environment.get(PROP_CODEC);
         if (codec != null) {
             builder.codec(codec.toString());
+        }
+
+        Object ambient = environment.get(PROP_AMBIENT_TRANSACTION);
+        if (ambient != null && "false".equalsIgnoreCase(ambient.toString().trim())) {
+            builder.joinAmbientTransaction(false);
         }
 
         return new HttpNamingContext(builder.build(), environment);

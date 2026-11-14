@@ -72,6 +72,11 @@ public class HttpNamingContext implements Context {
     private final java.util.concurrent.atomic.AtomicBoolean lentToProxies =
             new java.util.concurrent.atomic.AtomicBoolean();
 
+    /** @return the settings this context was built with; visible for tests */
+    ClientConfiguration configuration() {
+        return config;
+    }
+
     public HttpNamingContext(ClientConfiguration config, Hashtable<?, ?> environment) {
         this(config, new JdkHttpTransport(config), environment);
     }

@@ -287,6 +287,64 @@ class ForyGrpcServerAdapterTest {
     }
 
     @Test
+    void acceptsOnlyWellFormedGrpcContentTypes() {
+        assertTrue(ForyGrpcServerAdapter.isGrpc("application/grpc"));
+        assertTrue(ForyGrpcServerAdapter.isGrpc("application/grpc+proto; x=y"));
+        assertFalse(ForyGrpcServerAdapter.isGrpc("application/grpc+"));
+        assertFalse(ForyGrpcServerAdapter.isGrpc("application/grpc+ fory"));
+        assertFalse(ForyGrpcServerAdapter.isGrpc("application/grpc/x"));
+        assertFalse(ForyGrpcServerAdapter.isGrpc("application/grpcfory"));
+    }
+
+    @Test
+    void aRefusedCallIsPermissionDeniedAndAMissingBeanIsNotFound() throws Exception {
+        for (Object[] expected : new Object[][] {
+                {new SecurityException("no"), "7"},
+                {new RuntimeException("wrapped", new SecurityException("no")), "7"},
+                {new IllegalStateException("x"), "2"}}) {
+            Fixture fixture = new Fixture(name -> {
+                throw (RuntimeException) expected[0];
+            });
+            FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+            fixture.adapter().dispatch(exchange);
+
+            assertEquals(expected[1], exchange.trailers.get("grpc-status"), expected[0].toString());
+        }
+    }
+
+    @Test
+    void aFailureOfTheContainerIsReportedInGeneralTermsAndNotFoundForAGoneBean() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        fixture.acquireFailure = new IllegalStateException("jdbc:secret@internal-host");
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("13", exchange.trailers.get("grpc-status"));
+        assertFalse(exchange.trailers.get("grpc-message").contains("secret"), exchange.trailers.toString());
+
+        Fixture gone = new Fixture(name -> "Hello " + name);
+        gone.acquireFailure = new org.glassfish.orb.http.server.ContainerBridge.NoSuchTargetException("gone");
+        FakeExchange goneExchange = gone.exchange(gone.frame("Ada"));
+
+        gone.adapter().dispatch(goneExchange);
+
+        assertEquals("5", goneExchange.trailers.get("grpc-status"));
+    }
+
+    @Test
+    void aBodyThatCannotBeReadIsCancelled() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+        exchange.bodyFails = true;
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("1", exchange.trailers.get("grpc-status"));
+    }
+
+    @Test
     void answers405WithTheMethodItAccepts() throws Exception {
         Fixture fixture = new Fixture(name -> "Hello " + name);
         FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
@@ -311,6 +369,7 @@ class ForyGrpcServerAdapterTest {
         private final ForyGeneratedRuntime runtime;
         private final ForyGrpcServerAdapter adapter;
         private final Object bean;
+        private Exception acquireFailure;
 
         Fixture(Greeter bean) {
             this(bean, 1 << 20);
@@ -360,6 +419,9 @@ class ForyGrpcServerAdapterTest {
                     });
             adapter = new ForyGrpcServerAdapter(registry, (path, exchange) -> {
                 events.add("acquire");
+                if (acquireFailure != null) {
+                    throw acquireFailure;
+                }
                 return new ForyGrpcServerAdapter.Target() {
                     @Override
                     public Object value() {
@@ -415,6 +477,7 @@ class ForyGrpcServerAdapterTest {
         private final Map<String, String> trailers = new LinkedHashMap<>();
         private byte[] body = new byte[0];
         private boolean trailersSupported = true;
+        private boolean bodyFails;
         private String contentType = "application/grpc+fory";
 
         FakeExchange(String path, byte[] requestBody) {
@@ -459,7 +522,10 @@ class ForyGrpcServerAdapterTest {
         }
 
         @Override
-        public InputStream requestBody() {
+        public InputStream requestBody() throws IOException {
+            if (bodyFails) {
+                throw new IOException("connection reset");
+            }
             return new ByteArrayInputStream(requestBody);
         }
 

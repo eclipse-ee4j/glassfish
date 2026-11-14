@@ -17,8 +17,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.server.ContainerBridge;
 import org.glassfish.orb.http.server.ServerExchange;
 import org.glassfish.orb.http.server.TransactionBridge;
 
@@ -31,10 +33,14 @@ public final class ForyGrpcServerAdapter {
 
     /** The status codes this adapter can produce; see the gRPC status definitions. */
     static final int STATUS_OK = 0;
+    static final int STATUS_CANCELLED = 1;
     static final int STATUS_UNKNOWN = 2;
     static final int STATUS_INVALID_ARGUMENT = 3;
+    static final int STATUS_NOT_FOUND = 5;
+    static final int STATUS_PERMISSION_DENIED = 7;
     static final int STATUS_RESOURCE_EXHAUSTED = 8;
     static final int STATUS_UNIMPLEMENTED = 12;
+    static final int STATUS_INTERNAL = 13;
 
     private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
@@ -45,8 +51,6 @@ public final class ForyGrpcServerAdapter {
      * carry anything, and the message travels in a header.
      */
     static final int MAX_STATUS_MESSAGE_CHARS = 512;
-
-    private static final String GRPC_CONTENT_TYPE = "application/grpc";
 
     private final ForyGeneratedServiceRegistry registry;
     private final TargetProvider targets;
@@ -117,8 +121,9 @@ public final class ForyGrpcServerAdapter {
             answerWithStatus(exchange, e.status(), e.getMessage());
             return;
         } catch (IOException e) {
+            // The client went away, or the connection broke, mid-body.
             LOG.log(Level.DEBUG, "cannot read the request body", e);
-            answerWithStatus(exchange, STATUS_UNKNOWN, "cannot read the request");
+            answerWithStatus(exchange, STATUS_CANCELLED, "cannot read the request");
             return;
         } catch (RuntimeException e) {
             LOG.log(Level.DEBUG, "cannot decode the request message", e);
@@ -138,10 +143,27 @@ public final class ForyGrpcServerAdapter {
             answerWithStatus(exchange, STATUS_UNKNOWN, "cannot prepare the request thread");
             return;
         }
-        byte[] frame;
-        try (Target target = targets.acquire(binding, path, exchange)) {
-            Object response = binding.invoke(target.value(), request);
-            frame = frame(binding.runtime().serialize(response));
+        Target target;
+        try {
+            target = targets.acquire(binding, path, exchange);
+        } catch (Throwable e) {
+            if (e instanceof VirtualMachineError error) {
+                throw error;
+            }
+            // The container, not the bean: the caller is told in general terms
+            // and the cause goes to the log.
+            if (e instanceof ContainerBridge.NoSuchTargetException) {
+                LOG.log(Level.DEBUG, "no target for " + path, e);
+                answerWithStatus(exchange, STATUS_NOT_FOUND, "no such bean");
+            } else {
+                LOG.log(Level.WARNING, "cannot reach the bean for " + path, e);
+                answerWithStatus(exchange, STATUS_INTERNAL, "cannot reach the bean");
+            }
+            return;
+        }
+        Object response;
+        try (target) {
+            response = binding.invoke(target.value(), request);
         } catch (Throwable e) {
             if (e instanceof VirtualMachineError error) {
                 // Out of memory or a broken VM: nothing here can answer for it.
@@ -150,7 +172,15 @@ public final class ForyGrpcServerAdapter {
             // The call reached the bean and failed there: the client gets a
             // gRPC status, not a transport error.
             LOG.log(Level.DEBUG, "call failed: " + path, e);
-            answerWithStatus(exchange, STATUS_UNKNOWN, e.toString());
+            answerWithStatus(exchange, statusOf(e), e.toString());
+            return;
+        }
+        byte[] frame;
+        try {
+            frame = frame(binding.runtime().serialize(response));
+        } catch (RuntimeException e) {
+            LOG.log(Level.WARNING, "cannot encode the response of " + path, e);
+            answerWithStatus(exchange, STATUS_INTERNAL, "cannot encode the response");
             return;
         }
 
@@ -160,20 +190,33 @@ public final class ForyGrpcServerAdapter {
         exchange.writeBody(new ByteBuffer[] {ByteBuffer.wrap(frame)});
     }
 
-    /** A gRPC content type is application/grpc, optionally with a +suffix or parameters. */
+    /** application/grpc, optionally with a +subtype and then parameters, and nothing else. */
+    private static final Pattern GRPC_CONTENT_TYPE_FORM =
+            Pattern.compile("application/grpc(\\+[a-z0-9][a-z0-9.\\-]*)?(\\s*;.*)?");
+
     static boolean isGrpc(String contentType) {
-        if (contentType == null) {
-            return false;
+        return contentType != null
+                && GRPC_CONTENT_TYPE_FORM.matcher(contentType.trim().toLowerCase(Locale.ROOT)).matches();
+    }
+
+    /**
+     * What an exception from the bean means to a gRPC client. The container
+     * reports a refused call as an access exception, wrapped, so the causes
+     * are looked at too; the classes are matched by name because they are the
+     * container's, and this class does not depend on it.
+     */
+    static int statusOf(Throwable failure) {
+        Throwable current = failure;
+        for (int depth = 0; current != null && depth < 8; depth++, current = current.getCause()) {
+            String name = current.getClass().getName();
+            if (current instanceof SecurityException || name.endsWith("EJBAccessException")) {
+                return STATUS_PERMISSION_DENIED;
+            }
+            if (name.endsWith("NoSuchEJBException") || name.endsWith("NoSuchObjectLocalException")) {
+                return STATUS_NOT_FOUND;
+            }
         }
-        String value = contentType.trim().toLowerCase(Locale.ROOT);
-        if (!value.startsWith(GRPC_CONTENT_TYPE)) {
-            return false;
-        }
-        if (value.length() == GRPC_CONTENT_TYPE.length()) {
-            return true;
-        }
-        char next = value.charAt(GRPC_CONTENT_TYPE.length());
-        return next == '+' || next == ';';
+        return STATUS_UNKNOWN;
     }
 
     /** A gRPC error is an HTTP 200 whose trailers carry the status. */

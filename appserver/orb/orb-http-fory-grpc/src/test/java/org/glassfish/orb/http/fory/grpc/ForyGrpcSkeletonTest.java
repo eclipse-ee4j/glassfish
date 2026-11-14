@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -394,12 +396,75 @@ class ForyGrpcSkeletonTest {
     }
 
     @Test
-    void idlRefusesTypesWhoseModelFieldWouldNotMatchTheDeclaredWireType() {
+    void idlRefusesATypeWithNoCounterpartOnTheWire() {
         assertThrows(IllegalArgumentException.class,
                 () -> ForyIdlGenerator.generate("p", "S", WithAChar.class));
+    }
+
+    @Test
+    void byteAndShortAreOneAndTwoBytesOnTheWire() throws Throwable {
+        String idl = ForyIdlGenerator.generate("p", "S", WithAShort.class)
+                + ForyIdlGenerator.generate("p", "S", WithAByte.class);
+        assertTrue(idl.contains("int16 value = 1;"), idl);
+        assertTrue(idl.contains("int8 value = 1;"), idl);
+
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "gen.small", "next", byte.class, byte.class);
+        ForyGeneratedRuntime runtime = new ForyGeneratedRuntime(models, 3200, 3201);
+        Object request = runtime.deserialize(runtime.serialize(
+                models.request().getConstructor(byte.class).newInstance((byte) 41)), models.request());
+        Object response = ForyGrpcSkeleton.of("svc", WithAByte.class).invoke("/svc/next",
+                (WithAByte) v -> (byte) (v + 1), request,
+                ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+        assertEquals((byte) 42, invokeValue(runtime.deserialize(runtime.serialize(response), models.response())));
+    }
+
+    public interface WithAHelper {
+        String run(String value);
+
+        static String help(String value) {
+            return value;
+        }
+    }
+
+    @Test
+    void aStaticHelperOfTheViewIsNotAnRpc() {
+        String idl = ForyIdlGenerator.generate("p", "S", WithAHelper.class);
+
+        assertTrue(idl.contains("rpc Run("), idl);
+        assertTrue(!idl.contains("Help"), idl);
+        assertTrue(ForyGrpcSkeleton.of("svc", WithAHelper.class).contains("/svc/run"));
+        assertTrue(!ForyGrpcSkeleton.of("svc", WithAHelper.class).contains("/svc/help"));
+    }
+
+    @Test
+    void theIdlDeclaresNoMessageNobodyUses() {
+        assertTrue(!ForyIdlGenerator.generate("p", "S", Greeter.class).contains("Empty"));
+    }
+
+    @Test
+    void aServiceNamedLikeAMessageIsRefused() {
         assertThrows(IllegalArgumentException.class,
-                () -> ForyIdlGenerator.generate("p", "S", WithAShort.class));
+                () -> ForyIdlGenerator.generate("p", "GreetRequest", Greeter.class));
         assertThrows(IllegalArgumentException.class,
-                () -> ForyIdlGenerator.generate("p", "S", WithAByte.class));
+                () -> ForyIdlGenerator.generate("p", "GreetResponse", Greeter.class));
+    }
+
+    @Test
+    void theRuntimeDoesNotHoldTheContextLoaderOfTheThreadThatBuiltIt() {
+        ClassLoader marker = new ClassLoader(getClass().getClassLoader()) { };
+        ClassLoader before = Thread.currentThread().getContextClassLoader();
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "gen.loader", "greet", String.class, String.class);
+        ForyGeneratedRuntime runtime;
+        Thread.currentThread().setContextClassLoader(marker);
+        try {
+            runtime = new ForyGeneratedRuntime(models, 3300, 3301);
+        } finally {
+            Thread.currentThread().setContextClassLoader(before);
+        }
+
+        assertNotSame(marker, runtime.classLoader());
+        assertSame(models.request().getClassLoader(), runtime.classLoader());
     }
 }

@@ -50,6 +50,11 @@ public final class ForyGeneratedRuntime {
         fory.register(models.response(), responseTypeId);
     }
 
+    /** The class loader the runtime resolves classes with; see the constructor. */
+    ClassLoader classLoader() {
+        return fory.execute(Fory::getClassLoader);
+    }
+
     public byte[] serialize(Object value) {
         return fory.serialize(value);
     }

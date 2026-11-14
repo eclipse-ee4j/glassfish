@@ -95,10 +95,22 @@ class ForyGrpcCatalogTest {
         assertEquals(404, exchange.status);
     }
 
+    @Test
+    void answers405WithTheMethodsItAccepts() throws IOException {
+        ForyGrpcCatalog catalog = new ForyGrpcCatalog();
+        Exchange exchange = new Exchange("POST", CONTEXT + ForyGrpcCatalog.PREFIX);
+
+        catalog.dispatch(exchange);
+
+        assertEquals(405, exchange.status);
+        assertEquals("GET, HEAD", exchange.headers.get("Allow"));
+    }
+
     private static final class Exchange implements ServerExchange {
         private final String method;
         private final String path;
         private int status;
+        private final java.util.Map<String, String> headers = new java.util.HashMap<>();
         private byte[] body = new byte[0];
 
         Exchange(String method, String path) {
@@ -148,6 +160,7 @@ class ForyGrpcCatalogTest {
 
         @Override
         public void setResponseHeader(String name, String value) {
+            headers.put(name, value);
         }
 
         @Override

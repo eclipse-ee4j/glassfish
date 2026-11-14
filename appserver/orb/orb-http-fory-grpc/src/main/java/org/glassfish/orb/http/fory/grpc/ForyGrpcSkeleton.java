@@ -41,8 +41,7 @@ public final class ForyGrpcSkeleton {
     public static ForyGrpcSkeleton of(String service, Class<?> view) {
         Objects.requireNonNull(service, "service");
         Objects.requireNonNull(view, "view");
-        List<ForyGrpcMethod> methods = java.util.Arrays.stream(view.getMethods())
-                .filter(method -> method.getDeclaringClass() != Object.class)
+        List<ForyGrpcMethod> methods = ForyViewMethods.of(view).stream()
                 .map(method -> ForyGrpcMethod.of('/' + service + '/' + method.getName(), method))
                 .toList();
         return new ForyGrpcSkeleton(methods);

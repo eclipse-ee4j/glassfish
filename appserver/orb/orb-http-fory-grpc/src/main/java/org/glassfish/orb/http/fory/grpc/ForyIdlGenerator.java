@@ -10,10 +10,8 @@
 package org.glassfish.orb.http.fory.grpc;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.lang.model.SourceVersion;
@@ -40,17 +38,17 @@ public final class ForyIdlGenerator {
             throw new IllegalArgumentException("not a valid service name: " + serviceName);
         }
         StringBuilder out = new StringBuilder(512)
-                .append("package ").append(packageName).append(";\n\n")
-                .append("message Empty {}\n\n");
+                .append("package ").append(packageName).append(";\n\n");
         Set<String> names = new HashSet<>();
-        Method[] methods = Arrays.stream(view.getMethods())
-                .filter(method -> Modifier.isPublic(method.getModifiers()))
-                .filter(method -> method.getDeclaringClass() != Object.class)
-                .sorted(Comparator.comparing(Method::getName)
-                        .thenComparing(method -> Arrays.toString(method.getParameterTypes())))
-                .toArray(Method[]::new);
+        List<Method> methods = ForyViewMethods.of(view);
         for (Method method : methods) {
             String rpcName = upperFirst(method.getName());
+            // A service with the name of one of the messages would be a second
+            // declaration of that name in the document.
+            if ((rpcName + "Request").equals(serviceName) || (rpcName + "Response").equals(serviceName)) {
+                throw new IllegalArgumentException("the service " + serviceName
+                        + " has the name of a message of its method " + method);
+            }
             // The message and rpc names are the method's name with its first
             // letter upper-cased, so foo and Foo (which are not overloads) are
             // the same name here, and the document would declare it twice.
@@ -91,11 +89,12 @@ public final class ForyIdlGenerator {
     private static String foryType(Class<?> type) {
         // Only the types whose deploy-time model field (see
         // ForyRuntimeModelGenerator) has exactly the type the document
-        // declares. byte, short and char are not here: the model would carry a
-        // one-byte or two-byte field where the client's int32 or string field
-        // is, and a mismatch is not an error on the wire, it reads as null.
+        // declares. char is not here: it has no counterpart on the wire, and
+        // a mismatch is not an error, it reads as null.
         if (type == String.class) return "string";
         if (type == boolean.class || type == Boolean.class) return "bool";
+        if (type == byte.class || type == Byte.class) return "int8";
+        if (type == short.class || type == Short.class) return "int16";
         if (type == int.class || type == Integer.class) return "int32";
         if (type == long.class || type == Long.class) return "int64";
         if (type == float.class || type == Float.class) return "float32";

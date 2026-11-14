@@ -437,6 +437,22 @@ class ForyGrpcSkeletonTest {
         assertTrue(!ForyGrpcSkeleton.of("svc", WithAHelper.class).contains("/svc/help"));
     }
 
+    /** Has, besides get(), the bridge method the compiler generates for the generic interface. */
+    public static class Supplying implements java.util.function.Supplier<String> {
+        @Override
+        public String get() {
+            return "x";
+        }
+    }
+
+    @Test
+    void aBridgeMethodIsNotAnRpcOfItsOwn() {
+        List<java.lang.reflect.Method> methods = ForyViewMethods.of(Supplying.class);
+
+        assertEquals(1, methods.size(), methods.toString());
+        assertEquals(String.class, methods.get(0).getReturnType());
+    }
+
     @Test
     void theIdlDeclaresNoMessageNobodyUses() {
         assertTrue(!ForyIdlGenerator.generate("p", "S", Greeter.class).contains("Empty"));

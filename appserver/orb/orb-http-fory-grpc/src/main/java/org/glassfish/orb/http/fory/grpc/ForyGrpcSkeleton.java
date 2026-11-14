@@ -60,13 +60,39 @@ public final class ForyGrpcSkeleton {
         }
         Object argument = request;
         if (method.parameterCount() == 1) {
-            argument = adapter.request(path, request, method.parameterType());
+            try {
+                argument = adapter.request(path, request, method.parameterType());
+            } catch (RuntimeException e) {
+                throw new ForyGrpcCallException("cannot adapt the request of " + path, e);
+            }
             if (!method.accepts(argument)) {
-                throw new IllegalArgumentException("adapted request type does not match " + method.javaMethod());
+                throw new ForyGrpcCallException("adapted request type does not match " + method.javaMethod());
             }
         }
+        // What the bean throws comes out of here as it is.
         Object result = method.invoke(target, argument);
-        return adapter.response(path, result, method.returnType());
+        try {
+            return adapter.response(path, result, method.returnType());
+        } catch (RuntimeException e) {
+            throw new ForyGrpcCallException("cannot adapt the response of " + path, e);
+        }
+    }
+
+    /**
+     * @return whether the failure is one the method declares, which makes it
+     *         part of its contract and so something its caller may be told
+     */
+    public boolean declares(String path, Throwable failure) {
+        ForyGrpcMethod method = methods.get(path);
+        if (method == null) {
+            return false;
+        }
+        for (Class<?> declared : method.javaMethod().getExceptionTypes()) {
+            if (declared.isInstance(failure)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean contains(String path) {

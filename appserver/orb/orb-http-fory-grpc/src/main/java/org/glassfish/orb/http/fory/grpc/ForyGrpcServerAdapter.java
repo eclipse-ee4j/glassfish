@@ -102,6 +102,12 @@ public final class ForyGrpcServerAdapter {
         String path = new String(exchange.pathBytes(), exchange.pathOffset(), exchange.pathLength(),
                 StandardCharsets.UTF_8);
         ForyGeneratedServiceRegistry.Binding binding = registry.lookup(path);
+        if (Thread.currentThread().isInterrupted()) {
+            // Interrupted while waiting for the index: the flag stays set, and
+            // nothing more is read or run for this call.
+            answerWithStatus(exchange, STATUS_CANCELLED, "interrupted");
+            return;
+        }
         if (binding == null) {
             // A gRPC client reads HTTP 404 as UNIMPLEMENTED.
             exchange.setStatus(Protocol.SC_NOT_FOUND);
@@ -161,18 +167,30 @@ public final class ForyGrpcServerAdapter {
             }
             return;
         }
-        Object response;
-        try (target) {
+        Object response = null;
+        Throwable failure = null;
+        try {
             response = binding.invoke(target.value(), request);
         } catch (Throwable e) {
             if (e instanceof VirtualMachineError error) {
                 // Out of memory or a broken VM: nothing here can answer for it.
                 throw error;
             }
-            // The call reached the bean and failed there: the client gets a
-            // gRPC status, not a transport error.
-            LOG.log(Level.DEBUG, "call failed: " + path, e);
-            answerWithStatus(exchange, statusOf(e), e.toString());
+            failure = e;
+        }
+        // Releasing the target is the container's business: a failure of it is
+        // logged, and neither changes the answer to a call that has run nor
+        // gets its text sent to the caller.
+        try {
+            target.close();
+        } catch (Throwable e) {
+            if (e instanceof VirtualMachineError error) {
+                throw error;
+            }
+            LOG.log(Level.WARNING, "cannot release the target of " + path, e);
+        }
+        if (failure != null) {
+            answerWithFailure(exchange, path, binding, failure);
             return;
         }
         byte[] frame;
@@ -190,6 +208,80 @@ public final class ForyGrpcServerAdapter {
         exchange.writeBody(new ByteBuffer[] {ByteBuffer.wrap(frame)});
     }
 
+    /**
+     * Answers a call that failed. Only what the bean itself threw, and what
+     * its method declares, is passed on with its text; whatever the container
+     * or this machinery threw is reported in general terms, and the cause
+     * goes to the log, because their messages name classes, loaders and hosts.
+     */
+    private void answerWithFailure(ServerExchange exchange, String path,
+                                   ForyGeneratedServiceRegistry.Binding binding, Throwable failure)
+            throws IOException {
+        if (failure instanceof ForyGrpcCallException || failure instanceof NoSuchMethodException
+                || failure instanceof Error || failure instanceof java.rmi.RemoteException
+                || failure instanceof java.lang.reflect.UndeclaredThrowableException) {
+            LOG.log(Level.WARNING, "call failed inside the endpoint: " + path, failure);
+            answerWithStatus(exchange, STATUS_INTERNAL, "internal error");
+            return;
+        }
+        if (causedBy(failure, ACCESS_REFUSED)) {
+            LOG.log(Level.DEBUG, "call refused: " + path, failure);
+            answerWithStatus(exchange, STATUS_PERMISSION_DENIED, "access denied");
+            return;
+        }
+        if (causedBy(failure, NO_SUCH_BEAN)) {
+            LOG.log(Level.DEBUG, "no such bean: " + path, failure);
+            answerWithStatus(exchange, STATUS_NOT_FOUND, "no such bean");
+            return;
+        }
+        if (failure instanceof SecurityException) {
+            answerWithStatus(exchange, STATUS_PERMISSION_DENIED, failure.toString());
+            return;
+        }
+        if (isA(failure.getClass(), "jakarta.ejb.EJBException")) {
+            LOG.log(Level.WARNING, "container failure in " + path, failure);
+            answerWithStatus(exchange, STATUS_INTERNAL, "internal error");
+            return;
+        }
+        if (failure instanceof RuntimeException || binding.skeleton().declares(binding.skeletonPath(), failure)) {
+            LOG.log(Level.DEBUG, "call failed: " + path, failure);
+            answerWithStatus(exchange, STATUS_UNKNOWN, failure.toString());
+            return;
+        }
+        LOG.log(Level.WARNING, "call failed with an undeclared " + failure.getClass().getName() + ": " + path,
+                failure);
+        answerWithStatus(exchange, STATUS_INTERNAL, "internal error");
+    }
+
+    /** The exceptions with which the container says a call was refused. */
+    private static final String[] ACCESS_REFUSED = {"jakarta.ejb.EJBAccessException", "jakarta.ejb.AccessLocalException"};
+
+    /** The ones with which it says the bean is not there. */
+    private static final String[] NO_SUCH_BEAN = {"jakarta.ejb.NoSuchEJBException",
+        "jakarta.ejb.NoSuchObjectLocalException"};
+
+    /** Whether the failure, or what it was caused by, is one of the named exceptions or a subclass of one. */
+    private static boolean causedBy(Throwable failure, String[] names) {
+        Throwable current = failure;
+        for (int depth = 0; current != null && depth < 8; depth++, current = current.getCause()) {
+            for (String name : names) {
+                if (isA(current.getClass(), name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private static boolean isA(Class<?> type, String name) {
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            if (c.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** application/grpc, optionally with a +subtype and then parameters, and nothing else. */
     private static final Pattern GRPC_CONTENT_TYPE_FORM =
             Pattern.compile("application/grpc(\\+[a-z0-9][a-z0-9.\\-]*)?(\\s*;.*)?");
@@ -197,26 +289,6 @@ public final class ForyGrpcServerAdapter {
     static boolean isGrpc(String contentType) {
         return contentType != null
                 && GRPC_CONTENT_TYPE_FORM.matcher(contentType.trim().toLowerCase(Locale.ROOT)).matches();
-    }
-
-    /**
-     * What an exception from the bean means to a gRPC client. The container
-     * reports a refused call as an access exception, wrapped, so the causes
-     * are looked at too; the classes are matched by name because they are the
-     * container's, and this class does not depend on it.
-     */
-    static int statusOf(Throwable failure) {
-        Throwable current = failure;
-        for (int depth = 0; current != null && depth < 8; depth++, current = current.getCause()) {
-            String name = current.getClass().getName();
-            if (current instanceof SecurityException || name.endsWith("EJBAccessException")) {
-                return STATUS_PERMISSION_DENIED;
-            }
-            if (name.endsWith("NoSuchEJBException") || name.endsWith("NoSuchObjectLocalException")) {
-                return STATUS_NOT_FOUND;
-            }
-        }
-        return STATUS_UNKNOWN;
     }
 
     /** A gRPC error is an HTTP 200 whose trailers carry the status. */

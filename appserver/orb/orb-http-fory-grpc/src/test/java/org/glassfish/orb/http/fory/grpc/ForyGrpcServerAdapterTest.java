@@ -258,7 +258,8 @@ class ForyGrpcServerAdapterTest {
 
         fixture.adapter().dispatch(exchange);
 
-        assertEquals("2", exchange.trailers.get("grpc-status"));
+        assertEquals("13", exchange.trailers.get("grpc-status"));
+        assertFalse(exchange.trailers.get("grpc-message").contains("gone"), exchange.trailers.toString());
     }
 
     @Test
@@ -296,21 +297,121 @@ class ForyGrpcServerAdapterTest {
         assertFalse(ForyGrpcServerAdapter.isGrpc("application/grpcfory"));
     }
 
+    private String statusOfABeanThatThrows(RuntimeException failure) throws Exception {
+        Fixture fixture = new Fixture(name -> {
+            throw failure;
+        });
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        lastMessage = exchange.trailers.get("grpc-message");
+        return exchange.trailers.get("grpc-status");
+    }
+
+    private String lastMessage;
+
     @Test
-    void aRefusedCallIsPermissionDeniedAndAMissingBeanIsNotFound() throws Exception {
-        for (Object[] expected : new Object[][] {
-                {new SecurityException("no"), "7"},
-                {new RuntimeException("wrapped", new SecurityException("no")), "7"},
-                {new IllegalStateException("x"), "2"}}) {
-            Fixture fixture = new Fixture(name -> {
-                throw (RuntimeException) expected[0];
-            });
-            FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+    void aCallTheContainerRefusedIsPermissionDenied() throws Exception {
+        assertEquals("7", statusOfABeanThatThrows(new jakarta.ejb.EJBAccessException("not in role")));
+        assertFalse(lastMessage.contains("not in role"), lastMessage);
+        assertEquals("7", statusOfABeanThatThrows(new jakarta.ejb.AccessLocalException("not in role")));
+        assertEquals("7", statusOfABeanThatThrows(
+                new IllegalStateException("wrapped", new jakarta.ejb.EJBAccessException("not in role"))));
+    }
 
+    @Test
+    void aSecurityExceptionOfTheBeanItselfIsPermissionDeniedButOneInsideAnotherFailureIsNot() throws Exception {
+        assertEquals("7", statusOfABeanThatThrows(new SecurityException("no")));
+        assertEquals("2", statusOfABeanThatThrows(new RuntimeException("wrapped", new SecurityException("no"))));
+    }
+
+    @Test
+    void aBeanThatIsNotThereIsNotFound() throws Exception {
+        assertEquals("5", statusOfABeanThatThrows(new jakarta.ejb.NoSuchEJBException("gone")));
+        assertEquals("5", statusOfABeanThatThrows(new jakarta.ejb.NoSuchObjectLocalException("gone")));
+    }
+
+    @Test
+    void aFailureOfTheContainerInsideTheCallIsReportedInGeneralTerms() throws Exception {
+        assertEquals("13", statusOfABeanThatThrows(
+                new jakarta.ejb.EJBException("nested exception is: java.sql.SQLException jdbc:secret@host")));
+        assertFalse(lastMessage.contains("secret"), lastMessage);
+    }
+
+    @Test
+    void anExceptionOfTheBeansOwnCodeIsPassedOnWithItsClassAndMessage() throws Exception {
+        assertEquals("2", statusOfABeanThatThrows(new IllegalStateException("no such customer 42")));
+        assertTrue(lastMessage.contains("IllegalStateException"), lastMessage);
+        assertTrue(lastMessage.contains("no such customer 42"), lastMessage);
+    }
+
+    @Test
+    void aMismatchBetweenTheTargetAndTheSkeletonIsReportedInGeneralTerms() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        fixture.adaptWithAnotherResponseModel = true;
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        // The response cannot be built from what the bean returned.
+        assertEquals("13", exchange.trailers.get("grpc-status"));
+        assertEquals("internal error", exchange.trailers.get("grpc-message"));
+    }
+
+    @Test
+    void aResponseThatCannotBeEncodedIsInternal() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        fixture.respondWithAClassTheRuntimeDoesNotKnow = true;
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("13", exchange.trailers.get("grpc-status"));
+        assertEquals("cannot encode the response", exchange.trailers.get("grpc-message"));
+    }
+
+    @Test
+    void aFailureToReleaseTheTargetIsLoggedAndDoesNotChangeTheAnswer() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        fixture.closeFails = true;
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("0", exchange.trailers.get("grpc-status"));
+        assertEquals("Hello Ada", fixture.responseOf(exchange.body()));
+    }
+
+    @Test
+    void aFailureToReleaseTheTargetAfterAFailedCallDoesNotReplaceTheFailure() throws Exception {
+        Fixture fixture = new Fixture(name -> {
+            throw new IllegalStateException("bean said no");
+        });
+        fixture.closeFails = true;
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("2", exchange.trailers.get("grpc-status"));
+        assertTrue(exchange.trailers.get("grpc-message").contains("bean said no"));
+        assertFalse(exchange.trailers.get("grpc-message").contains("release"), exchange.trailers.toString());
+    }
+
+    @Test
+    void aThreadThatWasInterruptedAnswersCancelledAndReadsNothing() throws Exception {
+        List<String> events = new ArrayList<>();
+        Fixture fixture = new Fixture(name -> "Hello " + name, events);
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+        Thread.currentThread().interrupt();
+        try {
             fixture.adapter().dispatch(exchange);
-
-            assertEquals(expected[1], exchange.trailers.get("grpc-status"), expected[0].toString());
+        } finally {
+            assertTrue(Thread.interrupted());
         }
+
+        assertEquals("1", exchange.trailers.get("grpc-status"));
+        assertEquals(List.of(), events);
     }
 
     @Test
@@ -363,6 +464,10 @@ class ForyGrpcServerAdapterTest {
         assertEquals("caff%C3%A8 100%25", ForyGrpcServerAdapter.percentEncode("caffè 100%"));
     }
 
+    /** A class the generated runtime has not registered. */
+    public static final class NotRegistered {
+    }
+
     /** A registry with one method, its generated models, and the adapter under test. */
     private static final class Fixture {
         private final ForyRuntimeModelGenerator.GeneratedModels models;
@@ -370,6 +475,9 @@ class ForyGrpcServerAdapterTest {
         private final ForyGrpcServerAdapter adapter;
         private final Object bean;
         private Exception acquireFailure;
+        private boolean closeFails;
+        private boolean adaptWithAnotherResponseModel;
+        private boolean respondWithAClassTheRuntimeDoesNotKnow;
 
         Fixture(Greeter bean) {
             this(bean, 1 << 20);
@@ -398,9 +506,27 @@ class ForyGrpcServerAdapterTest {
             models = ForyRuntimeModelGenerator.unary("generated.adapter", "greet", String.class, String.class);
             runtime = new ForyGeneratedRuntime(models, 2000, 2001);
             ForyGeneratedServiceRegistry registry = new ForyGeneratedServiceRegistry();
+            ForyGeneratedSchemaAdapter real = ForyGeneratedSchemaAdapter.unary(models.request(), models.response());
+            // The generated adapter, unless a test says the response cannot be made.
+            ForyGrpcSchemaAdapter underTest = new ForyGrpcSchemaAdapter() {
+                @Override
+                public Object request(String methodPath, Object generatedRequest, Class<?> javaType) {
+                    return real.request(methodPath, generatedRequest, javaType);
+                }
+
+                @Override
+                public Object response(String methodPath, Object javaValue, Class<?> javaType) {
+                    if (adaptWithAnotherResponseModel) {
+                        throw new IllegalArgumentException("cannot construct generated.other.Response in loader@42");
+                    }
+                    if (respondWithAClassTheRuntimeDoesNotKnow) {
+                        return new NotRegistered();
+                    }
+                    return real.response(methodPath, javaValue, javaType);
+                }
+            };
             Runnable register = () -> registry.register(PATH, PATH,
-                    ForyGrpcSkeleton.of("demo.Greeter", Greeter.class), models, runtime,
-                    ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+                    ForyGrpcSkeleton.of("demo.Greeter", Greeter.class), models, runtime, underTest);
             if (registeredUpFront) {
                 register.run();
             } else {
@@ -430,6 +556,9 @@ class ForyGrpcServerAdapterTest {
 
                     @Override
                     public void close() {
+                        if (closeFails) {
+                            throw new IllegalStateException("cannot release: secret");
+                        }
                     }
                 };
             }, maxMessageBytes, transactions);

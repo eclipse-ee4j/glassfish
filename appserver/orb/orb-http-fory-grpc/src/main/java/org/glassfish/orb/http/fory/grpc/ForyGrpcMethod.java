@@ -120,9 +120,14 @@ public final class ForyGrpcMethod {
     }
 
     Object invoke(Object target, Object request) throws Throwable {
-        MethodHandle callable = method.getDeclaringClass().isInstance(target)
-                ? handle
-                : forTargetClass.get(target.getClass());
+        MethodHandle callable;
+        try {
+            callable = method.getDeclaringClass().isInstance(target)
+                    ? handle
+                    : forTargetClass.get(target.getClass());
+        } catch (IllegalArgumentException e) {
+            throw new ForyGrpcCallException("the target does not offer " + method.getName(), e);
+        }
         return switch (callable.type().parameterCount()) {
             case 1 -> callable.invokeExact(target);
             case 2 -> callable.invokeExact(target, request);

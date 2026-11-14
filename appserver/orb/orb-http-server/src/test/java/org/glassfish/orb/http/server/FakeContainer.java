@@ -40,6 +40,12 @@ final class FakeContainer implements ContainerBridge {
 
     volatile int released;
 
+    /** When set, session creation and removal append their name here, to be read against a security trace. */
+    volatile java.util.List<String> trace;
+
+    /** When set, session creation and removal throw it, as a container that fails would. */
+    volatile RuntimeException failSessions;
+
     void registerStateless(String beanName, Object instance) {
         statelessBeans.put(beanName, instance);
         beanIds.computeIfAbsent(beanName, k -> nextId.getAndIncrement());
@@ -95,10 +101,14 @@ final class FakeContainer implements ContainerBridge {
 
     @Override
     public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
-            throws NoSuchTargetException {
+            throws NoSuchTargetException, SessionRefusedException {
+        record("createSession");
         java.util.function.Supplier<Object> factory = statefulFactories.get(beanName);
         if (factory == null) {
-            throw new NoSuchTargetException("no stateful bean named " + beanName);
+            if (statelessBeans.containsKey(beanName)) {
+                throw new SessionRefusedException(beanName + " is not a stateful session bean");
+            }
+            throw new NoSuchTargetException("no bean named " + beanName);
         }
         long id = beanIds.get(beanName);
         byte[] sessionId = new byte[8];
@@ -109,8 +119,20 @@ final class FakeContainer implements ContainerBridge {
 
     @Override
     public void removeSession(EjbKey key) throws NoSuchTargetException {
+        record("removeSession");
         if (sessions.remove(sessionKey(key)) == null) {
             throw new NoSuchTargetException("no such session");
+        }
+    }
+
+    private void record(String call) {
+        java.util.List<String> events = trace;
+        if (events != null) {
+            events.add(call);
+        }
+        RuntimeException failure = failSessions;
+        if (failure != null) {
+            throw failure;
         }
     }
 

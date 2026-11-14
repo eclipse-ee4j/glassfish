@@ -54,6 +54,20 @@ public interface ContainerBridge {
     }
 
     /**
+     * Thrown when a bean exists but will not open a session: it is not
+     * stateful, or the container refused to create one. That is a failure of
+     * the request, not an absent target, so it must not be reported as one.
+     */
+    class SessionRefusedException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        public SessionRefusedException(String message) {
+            super(message);
+        }
+    }
+
+    /**
      * Resolves the four-part bean name, plus an optional stateful session id,
      * into the container's object key.
      *
@@ -89,11 +103,17 @@ public interface ContainerBridge {
      */
     ClassLoader classLoader(EjbKey key);
 
-    /** Creates a stateful session and returns its id. */
+    /**
+     * Creates a stateful session and returns its id.
+     *
+     * @throws NoSuchTargetException if there is no such bean
+     * @throws SessionRefusedException if the bean exists but cannot open a
+     *         session, for instance because it is not stateful
+     */
     byte[] createSession(String appName,
                          String moduleName,
                          String distinctName,
-                         String beanName) throws NoSuchTargetException;
+                         String beanName) throws NoSuchTargetException, SessionRefusedException;
 
     /**
      * Ends a stateful session.

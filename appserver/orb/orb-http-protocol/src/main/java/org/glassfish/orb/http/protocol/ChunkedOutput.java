@@ -141,6 +141,23 @@ public final class ChunkedOutput extends OutputStream {
         return new Frame(headerPos);
     }
 
+    /**
+     * Drops everything written at or after {@code pos}. The bytes are not
+     * cleared; they are unreachable because the write position moves back, and
+     * later writes overwrite them.
+     */
+    private void truncate(long pos) {
+        int index = (int) (pos / chunkSize);
+        if (index < chunks.size()) {
+            // The position lies in a chunk that was already handed to the
+            // list: take it back as the current one and forget the later ones.
+            current = chunks.get(index);
+            chunks.subList(index, chunks.size()).clear();
+        }
+        currentPos = (int) (pos % chunkSize);
+        total = pos;
+    }
+
     // Invariant: every chunk in the list is exactly chunkSize long, so pos / chunkSize indexes it directly.
     private void patch(long pos, byte value) {
         long idx = pos / chunkSize;
@@ -153,14 +170,39 @@ public final class ChunkedOutput extends OutputStream {
     public final class Frame implements AutoCloseable {
         private final long headerPos;
         private boolean closed;
+        private boolean aborted;
 
         private Frame(long headerPos) {
             this.headerPos = headerPos;
         }
 
+        /**
+         * Discards the frame: the header and whatever payload was written
+         * after it are removed, and the stream ends where it did before
+         * {@link #beginFrame}. Call it when the payload could not be written
+         * completely, so that no frame is left that looks valid but is empty
+         * or short. Calling it twice, or after an earlier abort, does nothing.
+         *
+         * @throws IllegalStateException if the frame was already closed
+         */
+        public void abort() {
+            if (aborted) {
+                return;
+            }
+            if (closed) {
+                throw new IllegalStateException("frame already closed");
+            }
+            truncate(headerPos);
+            aborted = true;
+        }
+
+        /**
+         * Patches the payload length into the header. Closing an aborted or
+         * an already closed frame does nothing.
+         */
         @Override
         public void close() {
-            if (closed) {
+            if (closed || aborted) {
                 return;
             }
             long length = total - (headerPos + 5);

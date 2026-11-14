@@ -22,6 +22,7 @@ import com.sun.enterprise.security.auth.realm.Realm;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Base64;
 
 import javax.security.auth.Subject;
@@ -35,6 +36,10 @@ import javax.security.auth.Subject;
  * than IIOP's, but none at all wearing the shape of one. The credential is
  * therefore checked against the server's realm, which is the same check the
  * web container makes for the same header.
+ * <p>
+ * Only {@code Basic} is checked. Any other {@code Authorization} scheme - a
+ * bearer token, {@code Negotiate} - is not examined, and the call is treated
+ * as anonymous; so is a client certificate, which nothing here reads.
  * <p>
  * A credential that is absent and a credential that is wrong are different
  * answers. Absent means the call is anonymous, which is what an unsecured bean
@@ -67,8 +72,9 @@ final class RealmAuthenticator {
      */
     static String authenticate(String authorization) {
         if (authorization == null || !authorization.regionMatches(true, 0, BASIC, 0, BASIC.length())) {
-            // No credential, or a scheme this transport does not implement.
-            // Either way there is nothing to believe and nothing to refuse.
+            // No credential, or a scheme this transport does not implement
+            // (Bearer, Negotiate, ...). Either way the call proceeds as
+            // anonymous: it is not examined and not refused.
             AUTHENTICATED.remove();
             return null;
         }
@@ -102,7 +108,10 @@ final class RealmAuthenticator {
             LOG.log(Level.DEBUG, "rejected credential for " + user, e);
             throw new SecurityException("authentication failed");
         } finally {
-            java.util.Arrays.fill(password, '\0');
+            // Zeroes this copy only. The credential object the login builds
+            // takes its own copy, and the decoded String above stays on the
+            // heap until it is collected; the String cannot be wiped.
+            Arrays.fill(password, '\0');
         }
     }
 

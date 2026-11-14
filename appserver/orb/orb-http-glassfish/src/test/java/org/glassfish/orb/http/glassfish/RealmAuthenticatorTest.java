@@ -56,8 +56,8 @@ class RealmAuthenticatorTest {
     @Test
     @DisplayName("a scheme this transport does not implement is not a refusal either")
     void anotherSchemeIsIgnored() {
-        // Bearer tokens and client certificates are established elsewhere.
-        // There is nothing here to believe and nothing to reject.
+        // Only Basic is checked. These schemes are not examined, so the call
+        // is anonymous: nothing here to believe and nothing to reject.
         assertNull(RealmAuthenticator.authenticate("Bearer abc.def.ghi"));
         assertNull(RealmAuthenticator.authenticate("Negotiate YII="));
     }

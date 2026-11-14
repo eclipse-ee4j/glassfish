@@ -25,6 +25,7 @@ import java.lang.System.Logger.Level;
 
 import org.glassfish.api.container.EndpointRegistrationException;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
@@ -54,7 +55,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @RunLevel(value = PostStartupRunLevel.VAL, mode = RunLevel.RUNLEVEL_MODE_NON_VALIDATING)
-public class OrbHttpEndpoint implements PostConstruct {
+public class OrbHttpEndpoint implements PostConstruct, PreDestroy {
 
     private static final Logger LOG = System.getLogger(OrbHttpEndpoint.class.getName());
 
@@ -72,6 +73,9 @@ public class OrbHttpEndpoint implements PostConstruct {
 
     @Inject
     private GlassFishTransactionBridge transactions;
+
+    /** Whether the endpoint is registered, so that only a registration is ever undone. */
+    private volatile boolean mounted;
 
     @Override
     public void postConstruct() {
@@ -99,6 +103,26 @@ public class OrbHttpEndpoint implements PostConstruct {
         }
     }
 
+    /**
+     * Takes the endpoint off the listeners when the service goes away, so a
+     * server that stops this service does not keep answering with handlers
+     * whose bridges are shutting down. Never throws: there is nothing further
+     * to try, and a failure here must not hide whatever is stopping the server.
+     */
+    @Override
+    public void preDestroy() {
+        if (!mounted) {
+            return;
+        }
+        try {
+            grizzly.unregisterEndpoint(Protocol.CONTEXT_PATH);
+            mounted = false;
+            LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP unmounted from {0}", Protocol.CONTEXT_PATH);
+        } catch (Exception | LinkageError e) {
+            LOG.log(Level.WARNING, "could not unmount " + Protocol.CONTEXT_PATH, e);
+        }
+    }
+
     private void mount() throws EndpointRegistrationException {
         // Before the dispatchers are built, so their defaults are chosen from
         // everything that is installed rather than from what a ServiceLoader
@@ -113,6 +137,7 @@ public class OrbHttpEndpoint implements PostConstruct {
                 new TransactionDispatcher(transactions, security),
                 new AffinityDispatcher(affinity));
         grizzly.registerEndpoint(Protocol.CONTEXT_PATH, handler, null);
+        mounted = true;
         LOG.log(Level.INFO, "Remote EJB and JNDI over HTTP mounted at {0}", Protocol.CONTEXT_PATH);
     }
 }

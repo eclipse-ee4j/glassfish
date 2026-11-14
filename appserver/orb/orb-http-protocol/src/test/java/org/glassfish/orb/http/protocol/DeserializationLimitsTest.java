@@ -21,8 +21,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InvalidClassException;
 import java.io.ObjectInputFilter;
 import java.io.Serializable;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
@@ -157,5 +159,147 @@ class DeserializationLimitsTest {
         byte[] lying = declaring(write(one), 100_000_000);
 
         assertThrows(InvalidClassException.class, () -> readWithDefaults(lying));
+    }
+
+    private static final int NESTING = 50;
+
+    private static byte[] patch(byte[] stream, int declared) {
+        byte[] out = stream.clone();
+        java.nio.ByteBuffer buf = java.nio.ByteBuffer.wrap(out);
+        for (int i = 0; i + 10 <= out.length; i++) {
+            if (out[i] == 0x78 && out[i + 1] == 0x70 && buf.getInt(i + 2) == 1) {
+                buf.putInt(i + 2, declared);            // first level: after the class descriptor
+            } else if (out[i] == 0x71 && buf.getInt(i + 1) == 0x7E0000 && buf.getInt(i + 5) == 1) {
+                buf.putInt(i + 5, declared);            // later levels: after a reference to it
+            } else if (out[i] == 0x77 && out[i + 1] == 0x08 && buf.getInt(i + 6) == 1) {
+                buf.putInt(i + 6, declared);            // HashMap: mappings, in block data
+            }
+        }
+        return out;
+    }
+
+    /** Runs the read and reports how much memory this thread allocated while doing it. */
+    private long allocatedWhileReading(byte[] body) throws Exception {
+        com.sun.management.ThreadMXBean threads = (com.sun.management.ThreadMXBean)
+                ManagementFactory.getThreadMXBean();
+        long id = Thread.currentThread().getId();
+        long before = threads.getThreadAllocatedBytes(id);
+        assertThrows(InvalidClassException.class, () -> readWithDefaults(body));
+        return threads.getThreadAllocatedBytes(id) - before;
+    }
+
+    private static final long SMALL = 64L * 1024 * 1024;
+
+    @Test
+    @DisplayName("a 2 KB chain of nested Object[2,097,151] is refused before the heap grows")
+    void aNestedArrayChainIsRefused() throws Exception {
+        Object[] chain = new Object[1];
+        Object[] at = chain;
+        for (int i = 1; i < NESTING; i++) {
+            Object[] next = new Object[1];
+            at[0] = next;
+            at = next;
+        }
+        byte[] body = patch(write(chain), 2_097_151);
+        assertTrue(body.length < 2048, "the body is " + body.length + " bytes");
+
+        long allocated = allocatedWhileReading(body);
+
+        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
+    }
+
+    @Test
+    @DisplayName("nested ArrayLists that each declare 2 million elements are refused before the heap grows")
+    void aNestedListChainIsRefused() throws Exception {
+        ArrayList<Object> chain = new ArrayList<>();
+        ArrayList<Object> at = chain;
+        for (int i = 1; i < NESTING; i++) {
+            ArrayList<Object> next = new ArrayList<>();
+            at.add(next);
+            at = next;
+        }
+        byte[] body = patch(write(chain), 2_097_151);
+
+        long allocated = allocatedWhileReading(body);
+
+        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
+    }
+
+    @Test
+    @DisplayName("nested HashMaps that each declare a million mappings are refused before the heap grows")
+    void aNestedMapChainIsRefused() throws Exception {
+        HashMap<String, Object> chain = new HashMap<>();
+        HashMap<String, Object> at = chain;
+        for (int i = 1; i < NESTING; i++) {
+            HashMap<String, Object> next = new HashMap<>();
+            at.put("k", next);
+            at = next;
+        }
+        byte[] body = patch(write(chain), 1_000_000);
+
+        long allocated = allocatedWhileReading(body);
+
+        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
+    }
+
+    @Test
+    @DisplayName("the budget stays in force around a filter an application narrowed to its own classes")
+    void aNarrowedFilterKeepsTheBudget() throws Exception {
+        ObjectInputFilter allowAll = info -> ObjectInputFilter.Status.ALLOWED;
+        Object[] chain = new Object[1];
+        Object[] at = chain;
+        for (int i = 1; i < NESTING; i++) {
+            Object[] next = new Object[1];
+            at[0] = next;
+            at = next;
+        }
+        byte[] body = patch(write(chain), 2_097_151);
+
+        try (Marshaller.ObjectReader reader = marshaller.newReader(new ByteArrayInputStream(body),
+                getClass().getClassLoader(), allowAll)) {
+            assertThrows(InvalidClassException.class, reader::readObject);
+        }
+    }
+
+    @Test
+    @DisplayName("a graph 101 levels deep is refused at the default depth limit")
+    void aTooDeepGraphIsRefused() throws Exception {
+        Link head = new Link();
+        Link tail = head;
+        for (int i = 0; i < 100; i++) {
+            tail.next = new Link();
+            tail = tail.next;
+        }
+
+        assertThrows(InvalidClassException.class, () -> readWithDefaults(write(head)));
+    }
+
+    @Test
+    @DisplayName("a stream of 250,000 objects is refused at the default reference limit")
+    void tooManyReferencesAreRefused() throws Exception {
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = 0; i < 250_000; i++) {
+            numbers.add(i);
+        }
+
+        assertThrows(InvalidClassException.class, () -> readWithDefaults(write(numbers)));
+    }
+
+    @Test
+    @DisplayName("a missing, non-numeric, zero or negative limit falls back to the default")
+    void aBadLimitPropertyFallsBack() {
+        String name = "org.glassfish.orb.http.filter.testLimit";
+        try {
+            System.clearProperty(name);
+            assertEquals(42L, JavaSerializationMarshaller.limit("testLimit", 42L));
+            for (String bad : new String[] { "-5", "0", "abc", "" }) {
+                System.setProperty(name, bad);
+                assertEquals(42L, JavaSerializationMarshaller.limit("testLimit", 42L), bad);
+            }
+            System.setProperty(name, "7");
+            assertEquals(7L, JavaSerializationMarshaller.limit("testLimit", 42L));
+        } finally {
+            System.clearProperty(name);
+        }
     }
 }

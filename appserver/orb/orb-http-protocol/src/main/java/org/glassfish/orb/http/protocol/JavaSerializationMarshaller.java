@@ -43,11 +43,20 @@ import java.io.OutputStream;
  * starting point which callers are expected to narrow to the deployed
  * application's classes.
  *
- * <p>What the default bounds: the depth of the graph, the number of objects
- * and bytes in a stream, and the declared memory of any one array (and so of
- * the arrays that collections allocate while being read). What it does not
- * bound: the sum of several arrays, each under the limit, within one stream's
- * byte limit.
+ * <h3>What is bounded, and what an anonymous request can still cost</h3>
+ * Every reader, whatever filter it is given, also runs a per-stream budget of
+ * declared array memory (length times element size, a reference counting as 8,
+ * including the arrays that collections allocate while being read). A
+ * collection or array allocates before it reads its elements, so a limit on
+ * each array alone is not a limit: nested arrays that each pass it can hold
+ * gigabytes live, which the round-2 version of this filter allowed.
+ * {@link #defaultFilter()} adds limits on depth, objects and bytes per stream.
+ * With the defaults one stream can still retain: up to
+ * {@code maxArrayBytes} (32 MB) of arrays, up to {@code maxRefs} (200,000)
+ * objects, and strings or other leaf data up to {@code maxBytes} (100 MB) of
+ * wire bytes; in practice well under 200 MB, and an attacker has to send what
+ * it wants retained for the strings and objects. The byte limit is the
+ * remaining soft spot and can be lowered with the property below.
  */
 public final class JavaSerializationMarshaller implements Marshaller {
 
@@ -56,42 +65,80 @@ public final class JavaSerializationMarshaller implements Marshaller {
     private static final String PROPERTY_PREFIX = "org.glassfish.orb.http.filter.";
 
     /**
-     * The most memory, in bytes, that one array may be declared to need.
-     * Override with {@code org.glassfish.orb.http.filter.maxArrayBytes}.
+     * The declared array memory, in bytes, one <em>stream</em> may add up to
+     * (default 32 MB), {@code org.glassfish.orb.http.filter.maxArrayBytes}.
      *
-     * <p>The filter is asked about an array's <em>declared</em> length before
-     * the array is allocated, and {@code maxbytes} only counts what has been
-     * read so far. A request body of a few dozen bytes can therefore declare a
-     * {@code long[100_000_000]}, and the server would allocate 800 MB for it
-     * before anything else has looked at the request. A bound on the declared
-     * size (element size times length) is what prevents that; 16 MB admits a
-     * real payload of several MB and refuses the declaration.
+     * <p>The filter is asked about an array's declared length before the
+     * array is allocated, and {@code maxbytes} only counts what has been read
+     * so far, so a body of a few dozen bytes can declare a
+     * {@code long[100_000_000]}. A bound per array is not enough either:
+     * each level of a nested structure allocates before it reads the next, so
+     * the bound has to be on the running total for the stream.
      */
-    static final long MAX_ARRAY_BYTES = Long.getLong(PROPERTY_PREFIX + "maxArrayBytes", 16L * 1024 * 1024);
+    static final long MAX_ARRAY_BYTES = limit("maxArrayBytes", 32L * 1024 * 1024);
 
     /**
-     * Deepest object graph accepted, {@code org.glassfish.orb.http.filter.maxDepth}.
-     * 256 rather than the 64 this started with: a 65-node chain of custom
-     * objects is ordinary, and 256 levels stay far from a stack overflow. The
-     * Fory codec is configured with the same value.
+     * Deepest object graph accepted (default 100),
+     * {@code org.glassfish.orb.http.filter.maxDepth}. 64 refused an ordinary
+     * 65-node chain; 100 admits it and stays far from a stack overflow. The
+     * Fory codec reads the same value.
      */
-    static final long MAX_DEPTH = Long.getLong(PROPERTY_PREFIX + "maxDepth", 256L);
+    static final long MAX_DEPTH = limit("maxDepth", 100L);
 
-    /** {@code org.glassfish.orb.http.filter.maxRefs}: objects in one stream. */
-    static final long MAX_REFS = Long.getLong(PROPERTY_PREFIX + "maxRefs", 10_000_000L);
+    /**
+     * Objects in one stream (default 200,000),
+     * {@code org.glassfish.orb.http.filter.maxRefs}. Every object read is kept
+     * until the call is over, so this is what bounds the object heap one
+     * request can build.
+     */
+    static final long MAX_REFS = limit("maxRefs", 200_000L);
 
-    /** {@code org.glassfish.orb.http.filter.maxBytes}: bytes in one stream. */
-    static final long MAX_BYTES = Long.getLong(PROPERTY_PREFIX + "maxBytes", 100L * 1024 * 1024);
+    /** Bytes in one stream (default 100 MB), {@code org.glassfish.orb.http.filter.maxBytes}. */
+    static final long MAX_BYTES = limit("maxBytes", 100L * 1024 * 1024);
 
     /**
      * The one filter {@link #defaultFilter()} returns. It is immutable and
      * thread-safe, and being a single instance lets callers use it as a cache
-     * key.
+     * key. The array budget is not in it: it is stateful and is added around
+     * every stream by the reader.
      */
-    private static final ObjectInputFilter DEFAULT_FILTER = ObjectInputFilter.merge(
-            JavaSerializationMarshaller::checkArrayBudget,
-            ObjectInputFilter.Config.createFilter("maxdepth=" + MAX_DEPTH + ";maxrefs=" + MAX_REFS
-                    + ";maxbytes=" + MAX_BYTES + ";*"));
+    private static final ObjectInputFilter DEFAULT_FILTER = ObjectInputFilter.Config.createFilter(
+            "maxdepth=" + MAX_DEPTH + ";maxrefs=" + MAX_REFS + ";maxbytes=" + MAX_BYTES + ";*");
+
+    /**
+     * Reads a positive limit from a system property. A missing, non-numeric,
+     * zero or negative value is logged and replaced by the default: this runs
+     * in a static initialiser, and a bad property must never make the class
+     * fail to load.
+     */
+    static long limit(String name, long fallback) {
+        String raw = System.getProperty(PROPERTY_PREFIX + name);
+        if (raw == null) {
+            return fallback;
+        }
+        try {
+            long value = Long.parseLong(raw.trim());
+            if (value > 0) {
+                return value;
+            }
+        } catch (NumberFormatException e) {
+            // reported below
+        }
+        System.getLogger(JavaSerializationMarshaller.class.getName()).log(System.Logger.Level.WARNING,
+                "ignoring {0}{1}={2}: it must be a positive number; using {3}",
+                PROPERTY_PREFIX, name, raw, fallback);
+        return fallback;
+    }
+
+    /** @return the deepest graph the filters accept; the Fory codec uses the same bound */
+    public static long maxDepth() {
+        return MAX_DEPTH;
+    }
+
+    /** @return the per-stream budget of declared array memory, in bytes */
+    public static long maxArrayBytes() {
+        return MAX_ARRAY_BYTES;
+    }
 
     @Override
     public String codec() {
@@ -139,7 +186,10 @@ public final class JavaSerializationMarshaller implements Marshaller {
         }
         ClassLoader resolved = loader != null ? loader : Thread.currentThread().getContextClassLoader();
         ObjectInputStream ois = new LoaderAwareObjectInputStream(in, resolved);
-        ois.setObjectInputFilter(withJvmWideFilter(filter, jvmWide));
+        // The budget goes around whatever filter the caller passed,
+        // including an application's narrowed one.
+        ois.setObjectInputFilter(ObjectInputFilter.merge(new StreamBudget(),
+                withJvmWideFilter(filter, jvmWide)));
         return new ObjectReader() {
             @Override
             public Object readObject() throws IOException, ClassNotFoundException {
@@ -167,15 +217,29 @@ public final class JavaSerializationMarshaller implements Marshaller {
         return DEFAULT_FILTER;
     }
 
-    private static ObjectInputFilter.Status checkArrayBudget(ObjectInputFilter.FilterInfo info) {
-        Class<?> type = info.serialClass();
-        long length = info.arrayLength();
-        if (length < 0 || type == null || !type.isArray()) {
-            return ObjectInputFilter.Status.UNDECIDED;
+    /**
+     * Adds up the declared size of every array in one stream and refuses
+     * once the total passes the budget. One instance per stream: it carries
+     * state, and a stream is read by one thread.
+     */
+    private static final class StreamBudget implements ObjectInputFilter {
+
+        private long declared;
+
+        @Override
+        public Status checkInput(FilterInfo info) {
+            Class<?> type = info.serialClass();
+            long length = info.arrayLength();
+            if (length < 0 || type == null || !type.isArray()) {
+                return Status.UNDECIDED;
+            }
+            long size = wireSize(type.getComponentType());
+            if (length > MAX_ARRAY_BYTES / size) {
+                return Status.REJECTED;
+            }
+            declared += length * size;
+            return declared > MAX_ARRAY_BYTES ? Status.REJECTED : Status.UNDECIDED;
         }
-        return length > MAX_ARRAY_BYTES / wireSize(type.getComponentType())
-                ? ObjectInputFilter.Status.REJECTED
-                : ObjectInputFilter.Status.UNDECIDED;
     }
 
     /** What one element of this type costs to allocate; a reference counts as 8. */

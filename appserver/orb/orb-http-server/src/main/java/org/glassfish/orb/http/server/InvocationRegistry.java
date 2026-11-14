@@ -42,6 +42,10 @@ public final class InvocationRegistry {
         private final String id;
         private final Thread thread;
         private volatile boolean cancelled;
+        // Both guarded by this: whether the invocation is over, and whether a
+        // cancel interrupted its thread.
+        private boolean closed;
+        private boolean interruptedByCancel;
 
         private Registration(String id, Thread thread) {
             this.id = id;
@@ -56,6 +60,23 @@ public final class InvocationRegistry {
         public void close() {
             if (id != null) {
                 inFlight.remove(id, this);
+            }
+            synchronized (this) {
+                closed = true;
+                if (interruptedByCancel && thread == Thread.currentThread()) {
+                    // The interrupt was meant for this invocation. The thread
+                    // belongs to a pool and runs someone else's request next;
+                    // handing it over interrupted would fail that one instead.
+                    Thread.interrupted();
+                }
+            }
+        }
+
+        private synchronized void cancel(boolean interrupt) {
+            cancelled = true;
+            if (interrupt && !closed) {
+                interruptedByCancel = true;
+                thread.interrupt();
             }
         }
     }
@@ -85,10 +106,7 @@ public final class InvocationRegistry {
             // that loses the race is not an error.
             return false;
         }
-        registration.cancelled = true;
-        if (interrupt) {
-            registration.thread.interrupt();
-        }
+        registration.cancel(interrupt);
         return true;
     }
 

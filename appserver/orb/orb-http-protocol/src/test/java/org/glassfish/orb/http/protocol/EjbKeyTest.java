@@ -112,6 +112,17 @@ class EjbKeyTest {
     }
 
     @Test
+    @DisplayName("a length that overflows the bounds check is a protocol error, not an IllegalArgumentException")
+    void aLengthThatWrapsTheBoundsCheckIsRejected() {
+        // 12 + 0x7FFFFFF4 is 2^31, which wraps negative in int arithmetic and
+        // used to pass the "does it fit" test.
+        byte[] header = new byte[12];
+        java.nio.ByteBuffer.wrap(header).putLong(1L).putInt(0x7FFFFFF4);
+
+        assertThrows(ProtocolException.class, () -> EjbKey.fromBytes(header));
+    }
+
+    @Test
     void isDefensivelyCopied() {
         byte[] instanceKey = { 1, 2, 3 };
         EjbKey key = new EjbKey(1L, instanceKey);

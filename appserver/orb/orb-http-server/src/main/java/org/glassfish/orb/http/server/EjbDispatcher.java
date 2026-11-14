@@ -186,7 +186,25 @@ public final class EjbDispatcher {
             try {
                 Method method = resolveMethod(loader, invocation);
                 invokedMethod = method;
-                Object[] args = readArguments(codec, exchange.requestBody(), loader, method.getParameterCount());
+                Object[] args;
+                try {
+                    args = readArguments(codec, exchange.requestBody(), loader, method.getParameterCount());
+                } catch (ProtocolException e) {
+                    // Already a statement about the protocol; dispatch answers 400.
+                    throw e;
+                } catch (ClassNotFoundException e) {
+                    // The caller sent a class this application does not have.
+                    // That is a bad request, not a missing bean.
+                    fail(exchange, Protocol.SC_BAD_REQUEST, "unknown class in the request body: " + e.getMessage());
+                    return;
+                } catch (IOException | RuntimeException | LinkageError e) {
+                    // A body that does not decode - truncated, corrupt, refused by
+                    // the filter, or written by another codec. The caller's fault,
+                    // so not a 500 with a stack trace.
+                    fail(exchange, Protocol.SC_BAD_REQUEST,
+                            "malformed request body: " + e.getClass().getSimpleName());
+                    return;
+                }
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
@@ -202,12 +220,24 @@ public final class EjbDispatcher {
             } catch (ContainerBridge.NoSuchTargetException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
             } catch (InvocationTargetException e) {
-                // The bean threw. Whether the caller sees that exception or an
-                // EJBException is not ours to choose: the specification decides,
-                // and getting it wrong would change the exception contract of an
-                // application that was only meant to change transport.
-                Throwable thrown = e.getCause() != null ? e.getCause() : e;
-                writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
+                if (registration.isCancelled()) {
+                    // The caller cancelled and this is what the cancellation did
+                    // to the bean - typically an InterruptedException. Reporting
+                    // it as the bean's own failure would be a lie, exactly as
+                    // reporting a result would be.
+                    fail(exchange, Protocol.SC_CANCELLED, "invocation cancelled");
+                } else {
+                    // The bean threw. Whether the caller sees that exception or an
+                    // EJBException is not ours to choose: the specification decides,
+                    // and getting it wrong would change the exception contract of an
+                    // application that was only meant to change transport.
+                    Throwable thrown = e.getCause() != null ? e.getCause() : e;
+                    writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
+                }
+            } catch (IllegalArgumentException e) {
+                // Method.invoke refusing the arguments it was given: a wrong
+                // number or a wrong type. The bean never ran.
+                fail(exchange, Protocol.SC_BAD_REQUEST, "arguments do not match the method");
             } catch (ClassNotFoundException | NoSuchMethodException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {

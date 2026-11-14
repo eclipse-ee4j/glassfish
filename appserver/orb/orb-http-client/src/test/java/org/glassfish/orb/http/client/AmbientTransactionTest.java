@@ -16,16 +16,21 @@
 
 package org.glassfish.orb.http.client;
 
+import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.Synchronization;
 import jakarta.transaction.Transaction;
 import jakarta.transaction.TransactionManager;
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -60,6 +65,11 @@ class AmbientTransactionTest {
 
     static int branches;
 
+    /** Initial contexts the fake JNDI handed out and was given back. */
+    static final AtomicInteger OPENED = new AtomicInteger();
+
+    static final AtomicInteger CLOSED = new AtomicInteger();
+
     private ClientConfiguration config;
 
     private RecordingTransport transport;
@@ -68,6 +78,8 @@ class AmbientTransactionTest {
     void setUp() {
         BOUND.clear();
         started = null;
+        OPENED.set(0);
+        CLOSED.set(0);
         AmbientTransaction.forget();
         ClientTransactionContext.disassociate();
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, Factory.class.getName());
@@ -229,12 +241,80 @@ class AmbientTransactionTest {
                 "back on the first endpoint, the call must carry the first endpoint's branch");
     }
 
+    @Test
+    @DisplayName("one lookup that fails does not turn joining off for the rest of the JVM")
+    void aFailedLookupIsNotRemembered() {
+        // Nothing bound yet, as on a thread that cannot see the component
+        // environment: the lookup fails, and that is all it says.
+        AmbientTransaction.join(config, transport);
+        assertNull(ClientTransactionContext.current());
+
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+        // No forget(): the earlier miss must not have been cached.
+        AmbientTransaction.join(config, transport);
+
+        assertEquals(1, transaction.enlisted, "an earlier failed lookup disabled joining");
+    }
+
+    @Test
+    @DisplayName("every initial context the lookup opens is closed")
+    void lookupsCloseTheirContext() {
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+        AmbientTransaction.join(config, transport);
+
+        assertEquals(1, transaction.enlisted);
+        assertEquals(2, OPENED.get(), "one lookup for the registry and one for the manager");
+        assertEquals(OPENED.get(), CLOSED.get(), "an initial context was left open");
+    }
+
+    @Test
+    @DisplayName("a client whose JNDI is this transport does not ask the server for a transaction registry")
+    void aStandaloneClientDoesNotProbeTheServer() throws Exception {
+        AtomicInteger connections = new AtomicInteger();
+        try (ServerSocket server = new ServerSocket(0)) {
+            Thread acceptor = new Thread(() -> {
+                try {
+                    while (true) {
+                        Socket socket = server.accept();
+                        connections.incrementAndGet();
+                        socket.close();
+                    }
+                } catch (IOException closed) {
+                    // The test is over.
+                }
+            }, "ambient-test-acceptor");
+            acceptor.setDaemon(true);
+            acceptor.start();
+
+            System.setProperty(Context.INITIAL_CONTEXT_FACTORY, HttpInitialContextFactory.class.getName());
+            System.setProperty(Context.PROVIDER_URL,
+                    "http://localhost:" + server.getLocalPort() + "/glassfish-services");
+            try {
+                AmbientTransaction.join(config, transport);
+                AmbientTransaction.join(config, transport);
+            } finally {
+                System.clearProperty(Context.PROVIDER_URL);
+            }
+        }
+
+        // Joining would have asked the remote server, with the user's
+        // credentials, for a registry that only exists inside a container.
+        assertEquals(0, connections.get(), "the join probed the server");
+    }
+
     // ---- doubles ---------------------------------------------------------
 
     /** Binds the names this class looks up; everything else is absent. */
     public static final class Factory implements InitialContextFactory {
         @Override
         public Context getInitialContext(Hashtable<?, ?> environment) {
+            OPENED.incrementAndGet();
             return (Context) java.lang.reflect.Proxy.newProxyInstance(
                     Factory.class.getClassLoader(), new Class<?>[] { Context.class },
                     (proxy, method, args) -> {
@@ -247,6 +327,7 @@ class AmbientTransactionTest {
                             return bound;
                         }
                         if ("close".equals(method.getName())) {
+                            CLOSED.incrementAndGet();
                             return null;
                         }
                         return null;
@@ -254,11 +335,33 @@ class AmbientTransactionTest {
         }
     }
 
-    static final class FakeTransaction implements Transaction {
+    static class FakeTransaction implements Transaction {
         int enlisted;
 
+        /** What {@link #getStatus()} answers. */
+        int status = Status.STATUS_ACTIVE;
+
+        /** When set, enlisting throws this. */
+        Exception enlistFailure;
+
+        /** Whether the branch starts before the failure is thrown, as with a manager that fails late. */
+        boolean startFirst;
+
+        private void failIfTold() throws RollbackException, jakarta.transaction.SystemException {
+            if (enlistFailure instanceof RollbackException rollback) {
+                throw rollback;
+            }
+            if (enlistFailure instanceof jakarta.transaction.SystemException system) {
+                throw system;
+            }
+        }
+
         @Override
-        public boolean enlistResource(XAResource resource) throws jakarta.transaction.SystemException {
+        public boolean enlistResource(XAResource resource)
+                throws RollbackException, jakarta.transaction.SystemException {
+            if (!startFirst) {
+                failIfTold();
+            }
             enlisted++;
             try {
                 // What a real manager does next, and what associates the
@@ -271,6 +374,7 @@ class AmbientTransactionTest {
             } catch (Exception e) {
                 throw new jakarta.transaction.SystemException(e.toString());
             }
+            failIfTold();
             return true;
         }
 
@@ -285,7 +389,7 @@ class AmbientTransactionTest {
 
         @Override
         public int getStatus() {
-            return Status.STATUS_ACTIVE;
+            return status;
         }
 
         @Override

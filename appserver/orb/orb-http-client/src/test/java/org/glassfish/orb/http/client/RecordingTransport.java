@@ -36,6 +36,9 @@ final class RecordingTransport implements HttpTransport {
     /** Every request URI, in order, as "METHOD path?query". */
     final List<String> calls = new ArrayList<>();
 
+    /** The headers of every request, in the same order as {@link #calls}. */
+    final List<Map<String, String>> requestHeaders = new ArrayList<>();
+
     private final Map<String, Response> canned = new HashMap<>();
 
     private int status = Protocol_SC_NO_CONTENT;
@@ -60,6 +63,7 @@ final class RecordingTransport implements HttpTransport {
         String uri = request.uri().getPath()
                 + (request.uri().getRawQuery() == null ? "" : "?" + request.uri().getRawQuery());
         calls.add(request.method() + ' ' + uri);
+        requestHeaders.add(request.headers());
         for (Map.Entry<String, Response> entry : canned.entrySet()) {
             if (uri.contains(entry.getKey())) {
                 return entry.getValue();

@@ -340,7 +340,13 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {
-        joinAmbientTransaction();
+        try {
+            joinAmbientTransaction();
+        } catch (RuntimeException e) {
+            // Nothing was sent, and the caller asked for a future: it fails
+            // like any other call rather than throwing from the call site.
+            return CompletableFuture.failedFuture(e);
+        }
         final String invocationId = newInvocationId();
         final HttpTransport.Request request;
         try {

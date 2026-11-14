@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.EjbSessionDescriptor;
 
 import jakarta.ejb.CreateException;
 import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -47,6 +48,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,6 +74,7 @@ class GlassFishContainerBridgeTest {
 
     private final List<String> createCalls = new ArrayList<>();
     private final List<Long> refreshes = new ArrayList<>();
+    private final List<Long> forgotten = new ArrayList<>();
     private final List<String> removeCalls = new ArrayList<>();
     private Exception removeFails;
     private final Map<Long, EjbContainerFacade> containers = new HashMap<>();
@@ -92,6 +95,11 @@ class GlassFishContainerBridgeTest {
             @Override
             public void refresh() {
                 refreshes.add(1L);
+            }
+
+            @Override
+            void forget(long ejbId) {
+                forgotten.add(ejbId);
             }
         });
     }
@@ -201,7 +209,9 @@ class GlassFishContainerBridgeTest {
                 ContainerBridge.SessionRefusedException.class,
                 () -> bridge.createSession("myapp", "mymodule", null, "BrokenCounterBean"));
 
-        assertTrue(refused.getMessage().contains("PostConstruct failed"), refused.getMessage());
+        // What the caller is told is fixed; the container's own text is only the cause.
+        assertFalse(refused.getMessage().contains("PostConstruct failed"), refused.getMessage());
+        assertEquals(CreateException.class, refused.getCause().getClass());
     }
 
     @Test
@@ -213,11 +223,12 @@ class GlassFishContainerBridgeTest {
     }
 
     @Test
-    @DisplayName("a bean whose container has gone is absent, and the index is refreshed")
+    @DisplayName("a bean whose container has gone is absent, and only its entry is dropped, not the whole index rebuilt")
     void aVanishedContainerIsAbsent() {
         assertThrows(ContainerBridge.NoSuchTargetException.class,
                 () -> bridge.createSession("myapp", "mymodule", null, "GoneBean"));
-        assertEquals(1, refreshes.size());
+        assertEquals(List.of(99L), forgotten);
+        assertTrue(refreshes.isEmpty(), "the whole index was rebuilt");
     }
 
     @Test
@@ -233,15 +244,27 @@ class GlassFishContainerBridgeTest {
     }
 
     @Test
-    @DisplayName("a container that has no sessions to remove is reported without its own wording")
-    void aBeanWithoutSessionsIsReportedPlainly() {
+    @DisplayName("removing a session of a bean that is not stateful is a refusal, and the container is not asked")
+    void aBeanWithoutSessionsRefusesRemoval() {
         containers.put(GREETER, facade(descriptor("GreeterBean", false, true, Set.of()), null));
-        removeFails = new RemoteException("secret internal detail");
 
-        ContainerBridge.NoSuchTargetException thrown = assertThrows(ContainerBridge.NoSuchTargetException.class,
+        assertThrows(ContainerBridge.SessionRefusedException.class,
                 () -> bridge.removeSession(new EjbKey(GREETER, SESSION)));
 
-        assertTrue(!thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
+        assertTrue(removeCalls.isEmpty(), "the container was asked: " + removeCalls);
+    }
+
+    @Test
+    @DisplayName("a session the container will not remove now is a refusal, without the container's wording")
+    void aBusySessionIsAFixedRefusal() {
+        statefulWithHome();
+        removeFails = new RemoveException("secret internal detail");
+
+        ContainerBridge.SessionRefusedException thrown = assertThrows(ContainerBridge.SessionRefusedException.class,
+                () -> bridge.removeSession(new EjbKey(COUNTER, SESSION)));
+
+        assertFalse(thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
+        assertEquals(removeFails, thrown.getCause());
     }
 
     // ---- through the dispatcher ---------------------------------------------
@@ -272,6 +295,18 @@ class GlassFishContainerBridgeTest {
     }
 
     @Test
+    @DisplayName("open answers 500 with a fixed reason when the container refuses, not the container's own text")
+    void openGivesAFixedReasonWhenTheContainerRefuses() throws Exception {
+        containers.put(COUNTER, facade(descriptor("BrokenCounterBean", true, true, Set.of()),
+                new CreateException("secret internal detail")));
+
+        Exchange exchange = open("BrokenCounterBean");
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.status);
+        assertFalse(String.valueOf(exchange.headers.get("X-GF-Reason")).contains("secret internal detail"));
+    }
+
+    @Test
     @DisplayName("open answers 404 for a bean that does not exist")
     void openAnswers404ForAnUnknownBean() throws Exception {
         assertEquals(Protocol.SC_NOT_FOUND, open("NoSuchBean").status);
@@ -289,6 +324,43 @@ class GlassFishContainerBridgeTest {
 
         assertEquals(Protocol.SC_NO_CONTENT, exchange.status);
         assertEquals(1, removeCalls.size());
+    }
+
+    @Test
+    @DisplayName("remove answers 500, not 204, for a bean that has no sessions")
+    void removeAnswers500ForABeanWithoutSessions() throws Exception {
+        containers.put(GREETER, facade(descriptor("GreeterBean", false, true, Set.of()), null));
+
+        Exchange exchange = new Exchange("DELETE", EjbRoutes.removePath(Protocol.CONTEXT_PATH,
+                "myapp", "mymodule", null, "GreeterBean", EjbRoutes.encodeSessionId(SESSION)));
+        new EjbDispatcher(bridge).dispatch(exchange);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.status);
+        assertTrue(removeCalls.isEmpty());
+    }
+
+    @Test
+    @DisplayName("remove answers 500, not 204, for a session the container will not remove now")
+    void removeAnswers500ForABusySession() throws Exception {
+        statefulWithHome();
+        removeFails = new RemoveException("secret internal detail");
+
+        Exchange exchange = new Exchange("DELETE", EjbRoutes.removePath(Protocol.CONTEXT_PATH,
+                "myapp", "mymodule", null, "CounterBean", EjbRoutes.encodeSessionId(SESSION)));
+        new EjbDispatcher(bridge).dispatch(exchange);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.status);
+        assertFalse(String.valueOf(exchange.headers.get("X-GF-Reason")).contains("secret internal detail"));
+    }
+
+    @Test
+    @DisplayName("remove answers 204 for a bean that is not deployed")
+    void removeAnswers204ForAnUnknownBean() throws Exception {
+        Exchange exchange = new Exchange("DELETE", EjbRoutes.removePath(Protocol.CONTEXT_PATH,
+                "myapp", "mymodule", null, "NoSuchBean", EjbRoutes.encodeSessionId(SESSION)));
+        new EjbDispatcher(bridge).dispatch(exchange);
+
+        assertEquals(Protocol.SC_NO_CONTENT, exchange.status);
     }
 
     private Exchange open(String bean) throws Exception {

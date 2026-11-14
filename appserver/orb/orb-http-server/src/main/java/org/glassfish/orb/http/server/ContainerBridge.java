@@ -54,8 +54,8 @@ public interface ContainerBridge {
     }
 
     /**
-     * Thrown when a bean exists but will not open a session: it is not
-     * stateful, or the container refused to create one. That is a failure of
+     * Thrown when a bean exists but will not open or remove a session: it is
+     * not stateful, or the container refused. That is a failure of
      * the request, not an absent target, so it must not be reported as one.
      */
     class SessionRefusedException extends Exception {
@@ -124,6 +124,11 @@ public interface ContainerBridge {
      * reference is dead rather than merely idle.
      *
      * @param key the session to end
+     * @throws NoSuchTargetException if there is no such bean
+     * @throws SessionRefusedException if the session cannot be removed: the
+     *         bean has no sessions at all (it is not stateful), or the session
+     *         exists but is busy or in a transaction. A session that is already
+     *         gone is not an error and is not reported as one.
      */
-    void removeSession(EjbKey key) throws NoSuchTargetException;
+    void removeSession(EjbKey key) throws NoSuchTargetException, SessionRefusedException;
 }

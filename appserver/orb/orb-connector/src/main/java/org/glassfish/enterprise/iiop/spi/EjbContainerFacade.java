@@ -19,6 +19,7 @@ package org.glassfish.enterprise.iiop.spi;
 import com.sun.enterprise.deployment.EjbDescriptor;
 
 import jakarta.ejb.CreateException;
+import jakarta.ejb.RemoveException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -73,8 +74,11 @@ public interface EjbContainerFacade {
      * @param instanceKey the key returned by {@link #createSession}
      * @throws RemoteException if this container has no stateful sessions, which
      *         is also what the default does
+     * @throws RemoveException if the session exists and cannot be removed now:
+     *         it is processing an invocation, it has a transaction in
+     *         progress, or the container is not started
      */
-    default void removeSession(byte[] instanceKey) throws RemoteException {
+    default void removeSession(byte[] instanceKey) throws RemoteException, RemoveException {
         throw new RemoteException("this container has no stateful sessions to remove");
     }
 

@@ -24,6 +24,7 @@ import com.sun.enterprise.deployment.EjbSessionDescriptor;
 
 import jakarta.ejb.CreateException;
 import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
@@ -202,8 +203,13 @@ public class GlassFishContainerBridge implements ContainerBridge {
         try {
             return facade.createSession(remoteViewFor(facade));
         } catch (CreateException | RemoteException e) {
-            throw new SessionRefusedException("cannot create a session for "
-                    + beanName + ": " + e.getMessage());
+            // What the caller is told is fixed: the container's own text can
+            // name the bean's internals. The cause is kept and logged.
+            LOG.log(Level.DEBUG, "cannot create a session for " + beanName, e);
+            SessionRefusedException refused = new SessionRefusedException(
+                    "cannot create a session for " + beanName);
+            refused.initCause(e);
+            throw refused;
         }
     }
 
@@ -216,19 +222,28 @@ public class GlassFishContainerBridge implements ContainerBridge {
      * {@code NoSuchObjectLocalException}, and without this that reached the
      * endpoint as a 500 with a stack trace in the log for a second remove or
      * for any session id at all.
+     *
+     * <p>A bean that has no sessions, or a session the container will not
+     * remove now, is a refusal and not a success: the caller must not be told
+     * its cleanup worked when it did not.
      */
     @Override
-    public void removeSession(EjbKey key) throws NoSuchTargetException {
+    public void removeSession(EjbKey key) throws NoSuchTargetException, SessionRefusedException {
         EjbContainerFacade facade = facade(key);
+        if (!isStateful(facade)) {
+            throw new SessionRefusedException("this bean has no sessions to remove");
+        }
         try {
             facade.removeSession(key.instanceKey());
         } catch (NoSuchObjectLocalException gone) {
             LOG.log(Level.DEBUG, "session already gone for " + key, gone);
-        } catch (RemoteException e) {
-            // The container's own wording is not the caller's business; what
-            // the caller needs is that this bean has no sessions to remove.
+        } catch (RemoveException | RemoteException e) {
+            // The container's own wording is not the caller's business.
             LOG.log(Level.DEBUG, "cannot remove session for " + key, e);
-            throw new NoSuchTargetException("cannot remove session for " + key);
+            SessionRefusedException refused = new SessionRefusedException(
+                    "the session cannot be removed now");
+            refused.initCause(e);
+            throw refused;
         }
     }
 
@@ -303,7 +318,7 @@ public class GlassFishContainerBridge implements ContainerBridge {
         if (facade == null) {
             // The index named a bean the container no longer has - an
             // application undeployed between the lookup and the call.
-            index.refresh();
+            index.forget(ejbId);
             throw new NoSuchTargetException("no container for ejbId " + ejbId);
         }
         return facade;

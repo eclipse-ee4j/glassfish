@@ -559,23 +559,66 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
      * The same goes for a key that names no session at all, whether it is
      * unknown or too short to be a key.
      * <p>
+     * A session that exists but cannot be removed now is refused, not skipped:
+     * one that is processing an invocation, one with a transaction in
+     * progress (EJB 2.0 section 7.6.4, the same rule {@code remove()} applies
+     * on the IIOP path), and any session while the container is not started.
+     * The caller is told, because the session is still there.
+     * <p>
      * Bracketed like {@link #createSession}: the pre-destroy callback runs in
      * the application's context class loader, which a transport thread does not
-     * have until the bracket puts it there.
+     * have until the bracket puts it there. Every path leaves through
+     * {@code externalPostInvoke}.
+     * <p>
+     * The guards are checked under the session's monitor but the removal is
+     * not: an invocation that starts between the check and the destroy is not
+     * excluded, as on any path that does not hold the instance for the whole
+     * removal.
+     *
+     * @throws RemoveException if the session exists and cannot be removed now
      */
     @Override
-    public void removeSession(byte[] instanceKey) {
+    public void removeSession(byte[] instanceKey) throws RemoveException {
         externalPreInvoke();
         try {
+            if (containerState != CONTAINER_STARTED) {
+                throw new RemoveException("Cannot remove session: the container is not started");
+            }
+
+            Serializable sessionKey;
+            try {
+                sessionKey = (Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1);
+            } catch (IndexOutOfBoundsException tooShort) {
+                // A key too short to decode runs off the end of its array. Only
+                // the decoding is excused: a failure in the lookup below is the
+                // container's own and must not be mistaken for "gone".
+                _logger.log(FINE, "[SFSBContainer] removeSession: not a session key", tooShort);
+                return;
+            }
+
             SessionContextImpl context;
             try {
-                context = _getContextForInstance(instanceKey);
-            } catch (NoSuchObjectLocalException | IndexOutOfBoundsException gone) {
-                // _getContextForInstance never returns null: an unknown or
-                // expired key throws, and a key too short to decode runs off
-                // the end of its array.
+                context = _getContextForKey(sessionKey);
+            } catch (NoSuchObjectLocalException gone) {
+                // _getContextForKey never returns null: an unknown or expired
+                // key throws.
                 _logger.log(FINE, "[SFSBContainer] removeSession: no session for the key", gone);
                 return;
+            }
+
+            synchronized (context) {
+                if (context.getState() == BeanState.DESTROYED) {
+                    // Undeploy (removeBeansOnUndeploy) got there first; running
+                    // the pre-destroy callback twice is not removal.
+                    return;
+                }
+                if (context.getState() == BeanState.INVOKING) {
+                    throw new RemoveException("Cannot remove session: it is processing an invocation");
+                }
+                Transaction tc = context.getTransaction();
+                if (tc != null && tc.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                    throw new RemoveException("Cannot remove session: transaction in progress");
+                }
             }
 
             EjbInvocation inv = super.createEjbInvocation(context.getEJB(), context);
@@ -590,6 +633,8 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
                 context.setInEjbRemove(false);
             }
             forceDestroyBean(context);
+        } catch (SystemException e) {
+            throw new RemoveException("Cannot remove session: its transaction cannot be read");
         } finally {
             externalPostInvoke();
         }
@@ -1278,7 +1323,15 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
      * @throws NoSuchObjectLocalException if the target object does not exist
      */
     private SessionContextImpl _getContextForInstance(byte[] instanceKey) {
-        Serializable sessionKey = (Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1);
+        return _getContextForKey((Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1));
+    }
+
+    /**
+     * The context for an already decoded key.
+     *
+     * @throws NoSuchObjectLocalException if there is no such session
+     */
+    private SessionContextImpl _getContextForKey(Serializable sessionKey) {
         _logger.log(FINE, "[SFSBContainer] Got request for: {0}", sessionKey);
         while (true) {
             SessionContextImpl sc = (SessionContextImpl) sessionBeanCache.lookupEJB(sessionKey, this, null);

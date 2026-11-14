@@ -977,7 +977,9 @@ class ForyMarshallerTest {
             try (Marshaller.ObjectReader r = marshaller.newReader(
                     new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
                 long before = allocation.getCurrentThreadAllocatedBytes();
-                assertThrows(IOException.class, r::readObject);
+                // Ten zero bytes are not a valid value, so Fory may reject them
+                // before it reaches the end of the stream; only the allocation matters here.
+                assertThrows(Exception.class, r::readObject);
                 long used = allocation.getCurrentThreadAllocatedBytes() - before;
                 assertTrue(used < (1 << 20), "allocated " + used + " bytes for 10 received");
             }

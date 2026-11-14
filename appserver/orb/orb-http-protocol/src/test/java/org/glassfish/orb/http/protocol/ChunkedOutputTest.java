@@ -347,8 +347,12 @@ class ChunkedOutputTest {
     }
 
     @Test
-    @DisplayName("a closed frame cannot be aborted after a later frame was closed")
+    @DisplayName("[guard] a closed frame cannot be aborted after a later frame was closed")
     void staleFrameCannotBeAborted() throws IOException {
+        // GUARD / characterization test: a closed frame already refused abort()
+        // before this change. The open-frame checks in abort() and close()
+        // are defensive: with beginFrame() refusing a second open frame, no
+        // sequence of calls reaches them, so no test can fail on removing them.
         // Scenario B: f1 closed, f2 begun and closed, then f1.abort() must not
         // cut the stream back to f1's header and swallow f2.
         ChunkedOutput out = new ChunkedOutput(8);

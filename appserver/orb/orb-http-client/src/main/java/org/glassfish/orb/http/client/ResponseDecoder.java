@@ -18,12 +18,15 @@ package org.glassfish.orb.http.client;
 
 import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.NoSuchEJBException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
 import java.util.concurrent.CancellationException;
+
+import javax.transaction.xa.XAException;
 
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
@@ -80,7 +83,15 @@ final class ResponseDecoder {
                     // Asynchronous invocation acknowledged; there is no result yet.
                     return null;
                 }
-                case Protocol.SC_EXCEPTION -> throw readThrowable(response, loader);
+                case Protocol.SC_EXCEPTION -> {
+                    String xaCode = response.firstHeader(HttpTransactionClient.H_ERROR_CODE);
+                    if (xaCode != null) {
+                        // The transaction bridge refused, not the bean: there is
+                        // no marshalled exception to read, only a code.
+                        throw transactionFailure(response, xaCode);
+                    }
+                    throw readThrowable(response, loader);
+                }
                 case Protocol.SC_NOT_FOUND -> throw new NoSuchEJBException(reason(response, "no such bean or session"));
                 case Protocol.SC_FORBIDDEN ->
                         throw new EJBAccessException(reason(response, "not authorised to invoke this method"));
@@ -159,6 +170,28 @@ final class ResponseDecoder {
     static String reason(HttpTransport.Response response, String fallback) {
         String reason = response.firstHeader("X-GF-Reason");
         return reason == null || reason.isBlank() ? fallback : fallback + ": " + reason;
+    }
+
+    /**
+     * The server could not import or carry the caller's transaction.
+     *
+     * <p>A rollback code is the one a caller can act on: the transaction is
+     * gone, and it is the same type an EJB container raises for it. Anything
+     * else is a failure of the call, with the code kept in the message because
+     * a response with no body has nowhere else to put it.
+     */
+    private static Throwable transactionFailure(HttpTransport.Response response, String xaCode) {
+        int code;
+        try {
+            code = Integer.parseInt(xaCode.trim());
+        } catch (NumberFormatException e) {
+            code = XAException.XAER_RMERR;
+        }
+        String message = reason(response, "the server could not carry the transaction (XA error code " + code + ")");
+        if (code >= XAException.XA_RBBASE && code <= XAException.XA_RBEND) {
+            return new EJBTransactionRolledbackException(message);
+        }
+        return new EJBException(message);
     }
 
     private Throwable readThrowable(HttpTransport.Response response, ClassLoader loader) {

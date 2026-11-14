@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -69,8 +70,7 @@ public class HttpNamingContext implements Context {
      * Whether a proxy has been built from this context's transport. Once one
      * has, closing the context must not close the transport underneath it.
      */
-    private final java.util.concurrent.atomic.AtomicBoolean lentToProxies =
-            new java.util.concurrent.atomic.AtomicBoolean();
+    private final AtomicBoolean lentToProxies = new AtomicBoolean();
 
     /** @return the settings this context was built with; visible for tests */
     ClientConfiguration configuration() {
@@ -168,19 +168,24 @@ public class HttpNamingContext implements Context {
     private Object resolve(Object value) {
         if (value instanceof RemoteEjbReference ref) {
             try {
-                // From here the client outlives this context: the proxy about
-                // to be returned will use it long after close().
-                lentToProxies.set(true);
                 Class<?> view = Class.forName(ref.viewClassName(), false, contextClassLoader());
                 EjbLocator locator = new EjbLocator(ref.appName(), ref.moduleName(),
                         ref.distinctName(), ref.beanName(), ref.sessionId());
+                Object proxy;
                 if (ref.isHome()) {
                     // EJB 2.x: what the client narrows and calls create() on.
                     Class<?> component =
                             Class.forName(ref.componentClassName(), false, contextClassLoader());
-                    return client.createHomeProxy(view, component, locator);
+                    proxy = client.createHomeProxy(view, component, locator);
+                } else {
+                    proxy = client.createProxy(view, locator);
                 }
-                return client.createProxy(view, locator);
+                // From here the client outlives this context: the proxy being
+                // returned will use it long after close(). Only now, once there
+                // is a proxy: a lookup that fails or hands back the bare
+                // reference lends nothing, and close() must still release.
+                lentToProxies.set(true);
+                return proxy;
             } catch (ClassNotFoundException e) {
                 // The view interface is not on this client's classpath. Hand
                 // back the reference rather than failing: the caller may only

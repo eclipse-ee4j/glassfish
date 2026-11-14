@@ -63,6 +63,17 @@ class ProxyOutlivesContextTest {
 
         final AtomicBoolean closed = new AtomicBoolean();
 
+        /** The view the lookup's reference names. */
+        final String viewClassName;
+
+        Recording() {
+            this(Greeter.class.getName());
+        }
+
+        Recording(String viewClassName) {
+            this.viewClassName = viewClassName;
+        }
+
         @Override
         public Response exchange(Request request) throws IOException {
             if (closed.get()) {
@@ -74,7 +85,7 @@ class ProxyOutlivesContextTest {
             try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
                 if (lookup) {
                     writer.writeObject(new RemoteEjbReference("app", "module", null,
-                            "GreeterBean", Greeter.class.getName(), null));
+                            "GreeterBean", viewClassName, null));
                 } else {
                     writer.writeObject("hello");
                     writer.writeObject(new HashMap<String, Object>());
@@ -134,6 +145,21 @@ class ProxyOutlivesContextTest {
         context.close();
 
         assertTrue(transport.closed.get());
+    }
+
+    @Test
+    @DisplayName("a lookup that hands back a bare reference lends nothing, so close still releases")
+    void aReferenceWithoutAProxyDoesNotKeepTheTransportOpen() throws Exception {
+        Recording transport = new Recording("no.such.View");
+        HttpNamingContext context = contextOver(transport);
+
+        // The view is not on this client's classpath, so the reference comes
+        // back as it is and no proxy was made.
+        Object found = context.lookup("java:global/app/module/GreeterBean!no.such.View");
+        context.close();
+
+        assertTrue(found instanceof RemoteEjbReference, String.valueOf(found));
+        assertTrue(transport.closed.get(), "the transport of a context that lent nothing stayed open");
     }
 
     @Test

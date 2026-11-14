@@ -244,6 +244,28 @@ final class AmbientTransaction {
                 ClientTransactionContext.currentDeadlineNanos()));
     }
 
+    /**
+     * Drops a branch a container's transaction left on this thread, if that
+     * transaction has ended.
+     * <p>
+     * {@link #join} does this on every invocation, but a caller that never
+     * invokes - {@link HttpUserTransaction} asking about its own state - would
+     * otherwise see the leftover as a transaction of its own.
+     * <p>
+     * Does nothing unless the thread's association came from a container's
+     * manager, so the common case costs one thread-local read.
+     */
+    static void dropStaleBranch() {
+        if (!ClientTransactionContext.isAmbient() || UNAVAILABLE.get()) {
+            return;
+        }
+        TransactionSynchronizationRegistry synchronizations = registry();
+        if (synchronizations != null && synchronizations.getTransactionKey() == null) {
+            LOG.log(Level.DEBUG, "dropping a branch left on this thread by a transaction that has ended");
+            ClientTransactionContext.disassociate();
+        }
+    }
+
     private static TransactionSynchronizationRegistry registry() {
         TransactionSynchronizationRegistry known = registry;
         if (known != null) {

@@ -56,6 +56,9 @@ public final class HttpUserTransaction implements UserTransaction {
 
     @Override
     public void begin() throws NotSupportedException, SystemException {
+        // A branch a finished container transaction left on this thread is not
+        // a reason to refuse.
+        AmbientTransaction.dropStaleBranch();
         if (ClientTransactionContext.current() != null) {
             // Nested transactions are not part of JTA, and quietly starting a
             // second one would orphan the first.
@@ -74,8 +77,9 @@ public final class HttpUserTransaction implements UserTransaction {
     public void commit() throws RollbackException, HeuristicMixedException,
             HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
         Xid xid = require();
+        boolean markedRollbackOnly = Boolean.TRUE.equals(rollbackOnly.get());
         try {
-            if (Boolean.TRUE.equals(rollbackOnly.get())) {
+            if (markedRollbackOnly) {
                 // Marked for rollback: honour it here rather than sending a
                 // commit the server would have to refuse anyway.
                 client.rollbackUserTransaction(xid);
@@ -83,12 +87,44 @@ public final class HttpUserTransaction implements UserTransaction {
             }
             client.commitUserTransaction(xid);
         } catch (XAException e) {
-            if (e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND) {
-                RollbackException rollback = new RollbackException("the transaction was rolled back");
-                rollback.initCause(e);
-                throw rollback;
+            int code = e.errorCode;
+            if (markedRollbackOnly) {
+                // The server no longer knows the transaction, which is what a
+                // rollback was asking for: the outcome is the one reported.
+                if (code == XAException.XAER_NOTA) {
+                    throw rolledBack("the transaction was marked rollback only", e);
+                }
+                throw systemException("rollback of a transaction marked rollback only failed", e);
             }
-            throw systemException("commit failed", e);
+            switch (code) {
+                case XAException.XA_HEURCOM -> {
+                    // A heuristic decision to commit is the outcome that was
+                    // asked for. Reporting it as a failure would make a caller
+                    // undo work that is committed.
+                    return;
+                }
+                case XAException.XA_HEURMIX, XAException.XA_HEURHAZ -> {
+                    HeuristicMixedException mixed =
+                            new HeuristicMixedException("the transaction completed heuristically: " + e.getMessage());
+                    mixed.initCause(e);
+                    throw mixed;
+                }
+                case XAException.XA_HEURRB -> {
+                    HeuristicRollbackException rolledBack = new HeuristicRollbackException(
+                            "the transaction was rolled back heuristically: " + e.getMessage());
+                    rolledBack.initCause(e);
+                    throw rolledBack;
+                }
+                default -> {
+                    // XAER_NOTA: the server has no such transaction, which for
+                    // one it began is a timeout that rolled it back.
+                    if (code == XAException.XAER_NOTA
+                            || (code >= XAException.XA_RBBASE && code <= XAException.XA_RBEND)) {
+                        throw rolledBack("the transaction was rolled back", e);
+                    }
+                    throw systemException("commit failed", e);
+                }
+            }
         } finally {
             clear();
         }
@@ -122,7 +158,11 @@ public final class HttpUserTransaction implements UserTransaction {
 
     @Override
     public int getStatus() {
-        if (ClientTransactionContext.current() == null) {
+        // Only a transaction begun through this object is its business. One a
+        // container's manager started is not active here: committing it from
+        // here would send the server a commit for a branch the container owns.
+        AmbientTransaction.dropStaleBranch();
+        if (ownTransaction() == null) {
             return Status.STATUS_NO_TRANSACTION;
         }
         return Boolean.TRUE.equals(rollbackOnly.get())
@@ -136,11 +176,24 @@ public final class HttpUserTransaction implements UserTransaction {
     }
 
     private Xid require() {
-        Xid xid = ClientTransactionContext.current();
+        AmbientTransaction.dropStaleBranch();
+        Xid xid = ownTransaction();
         if (xid == null) {
-            throw new IllegalStateException("no transaction is associated with this thread");
+            throw new IllegalStateException("no transaction begun through this UserTransaction is associated"
+                    + " with this thread");
         }
         return xid;
+    }
+
+    /** @return the branch begun through this transport on this thread, not one a container's manager enlisted */
+    private static Xid ownTransaction() {
+        return ClientTransactionContext.isAmbient() ? null : ClientTransactionContext.current();
+    }
+
+    private static RollbackException rolledBack(String message, XAException cause) {
+        RollbackException rollback = new RollbackException(message);
+        rollback.initCause(cause);
+        return rollback;
     }
 
     private void clear() {

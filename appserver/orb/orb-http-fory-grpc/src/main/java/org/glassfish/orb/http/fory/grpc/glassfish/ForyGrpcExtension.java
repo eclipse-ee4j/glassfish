@@ -21,8 +21,11 @@ import jakarta.inject.Singleton;
 
 import java.io.IOException;
 
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.internal.data.ApplicationRegistry;
+import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcCatalog;
 import org.glassfish.orb.http.fory.grpc.ForyGrpcServerAdapter;
@@ -30,7 +33,9 @@ import org.glassfish.orb.http.glassfish.GlassFishContainerBridge;
 import org.glassfish.orb.http.glassfish.GlassFishSecurityBridge;
 import org.glassfish.orb.http.glassfish.GlassFishTransactionBridge;
 import org.glassfish.orb.http.glassfish.OrbHttpExtension;
+import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.ServerExchange;
+import org.glassfish.orb.http.server.TransactionBridge;
 import org.jvnet.hk2.annotations.Service;
 
 /**
@@ -43,12 +48,24 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @Singleton
-public class ForyGrpcExtension implements OrbHttpExtension, PostConstruct {
+public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostConstruct {
 
     private static final String CALLS = "/fory/";
 
+    /**
+     * Only what is under this extension's own roots is its: a path that merely
+     * contains the segment (an application or module named {@code fory}) is
+     * the EJB endpoint's.
+     */
+    private static final String CALLS_ROOT = Protocol.CONTEXT_PATH + CALLS;
+
+    private static final String CATALOG_ROOT = Protocol.CONTEXT_PATH + ForyGrpcCatalog.PREFIX;
+
     @Inject
     private ApplicationRegistry applications;
+
+    @Inject
+    private Events events;
 
     @Inject
     private GlassFishContainerBridge container;
@@ -59,36 +76,59 @@ public class ForyGrpcExtension implements OrbHttpExtension, PostConstruct {
     @Inject
     private GlassFishTransactionBridge transactions;
 
+    private volatile ForyEjbIndex index;
+
     private ForyGrpcCatalog foryCatalog;
 
     private ForyGrpcServerAdapter foryGrpc;
 
     @Override
     public void postConstruct() {
-        ForyEjbIndex index = new ForyEjbIndex(applications);
-        foryCatalog = new ForyGrpcCatalog();
-        ForyGeneratedServiceRegistry registry = index.foryRegistry();
+        init(new ForyEjbIndex(applications), transactions);
+        // The index is rebuilt when something it does not have is asked for;
+        // these tell it when what it has stopped being true.
+        events.register(this);
+    }
+
+    /** Publishes what is deployed now and starts serving it. */
+    void init(ForyEjbIndex foryIndex, TransactionBridge transactionBridge) {
+        ForyGeneratedServiceRegistry registry = foryIndex.foryRegistry();
+        foryCatalog = foryIndex.catalog();
         // This runs while the server starts, before any application is
-        // deployed, so what is published here is usually empty. Both the
-        // catalog and the registry rebuild themselves when they are asked for
-        // something they do not have, which is how a bean deployed later
-        // becomes visible without restarting the server.
-        ForyGrpcCatalog catalog = foryCatalog;
-        Runnable republish = () -> {
-            catalog.clear();
-            index.foryIdl().forEach(catalog::register);
-            index.refreshForyRegistry();
-        };
-        catalog.onMiss(republish);
-        registry.onMiss(republish);
-        republish.run();
-        foryGrpc = new ForyGrpcServerAdapter(registry,
-                (path, exchange) -> {
-                    ForyEjbIndex.ForyRoute route = index.foryRoute(path);
-                    if (route == null) throw new IllegalStateException("unknown Fory route: " + path);
-                    return acquire(route, exchange);
-                },
-                16 * 1024 * 1024, transactions);
+        // deployed, so what is published here is usually empty. The index
+        // rebuilds itself when it is asked for something it does not have, which
+        // is how a bean deployed later becomes visible without restarting the
+        // server.
+        foryIndex.refresh();
+        foryGrpc = new ForyGrpcServerAdapter(registry, new ForyGrpcServerAdapter.TargetProvider() {
+            @Override
+            public ForyGrpcServerAdapter.Target acquire(String path, ServerExchange exchange) {
+                throw new IllegalStateException("unknown Fory route: " + path);
+            }
+
+            @Override
+            public ForyGrpcServerAdapter.Target acquire(ForyGeneratedServiceRegistry.Binding binding,
+                    String path, ServerExchange exchange) throws Exception {
+                if (!(binding.attachment() instanceof ForyEjbIndex.ForyRoute route)) {
+                    throw new IllegalStateException("unknown Fory route: " + path);
+                }
+                return ForyGrpcExtension.this.acquire(route, exchange);
+            }
+        }, 16 * 1024 * 1024, transactionBridge);
+        index = foryIndex;
+    }
+
+    @Override
+    public void event(Event<?> event) {
+        ForyEjbIndex current = index;
+        if (current == null) {
+            return;
+        }
+        if (event.is(Deployment.APPLICATION_UNLOADED)) {
+            current.drop();
+        } else if (event.is(Deployment.APPLICATION_STARTED)) {
+            current.markStale();
+        }
     }
 
     /**
@@ -123,12 +163,12 @@ public class ForyGrpcExtension implements OrbHttpExtension, PostConstruct {
 
     @Override
     public boolean serves(String path) {
-        return path.contains(CALLS) || path.contains(ForyGrpcCatalog.PREFIX);
+        return path.startsWith(CALLS_ROOT) || path.startsWith(CATALOG_ROOT);
     }
 
     @Override
     public void dispatch(String path, ServerExchange exchange) throws IOException {
-        if (path.contains(CALLS)) {
+        if (path.startsWith(CALLS_ROOT)) {
             foryGrpc.dispatch(exchange);
         } else {
             foryCatalog.dispatch(exchange);

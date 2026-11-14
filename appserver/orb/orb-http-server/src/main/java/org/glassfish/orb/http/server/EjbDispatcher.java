@@ -222,6 +222,8 @@ public final class EjbDispatcher {
                 }
                 writeResult(codec, exchange, result);
 
+            } catch (BadTimeoutException e) {
+                fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
             } catch (ContainerBridge.NoSuchTargetException e) {
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
             } catch (InvocationTargetException e) {
@@ -327,13 +329,48 @@ public final class EjbDispatcher {
         }
     }
 
+    /** The caller's transaction timeout header could not be taken at its word. */
+    private static final class BadTimeoutException extends Exception {
+
+        private static final long serialVersionUID = 1L;
+
+        BadTimeoutException(String message) {
+            super(message);
+        }
+    }
+
+    /**
+     * Reads the caller's remaining transaction time.
+     *
+     * @return the timeout in seconds, 0 when the caller sent none
+     * @throws BadTimeoutException if the header is not a number of seconds a
+     *         transaction manager can take: a negative or oversized value would
+     *         otherwise reach {@code recreate} as the caller wrote it
+     */
+    private static long requestedTimeout(ServerExchange exchange) throws BadTimeoutException {
+        String header = exchange.requestHeader(Protocol.H_TXN_TIMEOUT);
+        if (header == null) {
+            return 0;
+        }
+        long timeout;
+        try {
+            timeout = Long.parseLong(header.trim());
+        } catch (NumberFormatException e) {
+            throw new BadTimeoutException(Protocol.H_TXN_TIMEOUT + " must be a number of seconds");
+        }
+        if (timeout < 0 || timeout > Integer.MAX_VALUE) {
+            throw new BadTimeoutException(Protocol.H_TXN_TIMEOUT + " is out of range: " + timeout);
+        }
+        return timeout;
+    }
+
     /**
      * Imports the caller's transaction, if the invocation carries one.
      *
      * @return the branch that was imported, or null if there was none
      */
     private Xid importTransaction(TxContext txContext, ServerExchange exchange)
-            throws TransactionBridge.TransactionException {
+            throws TransactionBridge.TransactionException, BadTimeoutException {
         if (!txContext.isPresent()) {
             // Deliberately outside a transaction, so make that true: this
             // thread has served other requests, and one of them may have left
@@ -342,16 +379,16 @@ public final class EjbDispatcher {
             return null;
         }
         Xid xid = Xids.fromContext(txContext);
-        long timeout = 0;
-        String header = exchange.requestHeader(Protocol.H_TXN_TIMEOUT);
-        if (header != null) {
-            try {
-                timeout = Long.parseLong(header.trim());
-            } catch (NumberFormatException e) {
-                timeout = 0;
-            }
+        long timeout = requestedTimeout(exchange);
+        try {
+            transactions.recreate(xid, timeout);
+        } catch (TransactionBridge.TransactionException | RuntimeException e) {
+            // A manager that fails halfway may already have associated the
+            // thread, and nothing will release a branch that was never
+            // returned. Leave the thread with no transaction instead.
+            transactions.detach();
+            throw e;
         }
-        transactions.recreate(xid, timeout);
         return xid;
     }
 

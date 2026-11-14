@@ -131,6 +131,33 @@ class TransactionDispatcherTest {
         assertEquals(List.of("establish(alice)", "clear(token-alice)"), security.events);
     }
 
+    @Test
+    @DisplayName("recover passes the scan flags through; only an absent parameter means start a scan")
+    void recoverFlagsAreNotRewritten() {
+        FakeTransactions transactions = new FakeTransactions();
+        TransactionDispatcher dispatcher = new TransactionDispatcher(transactions);
+
+        // TMNOFLAGS continues a scan already under way; turning it into
+        // TMSTARTRSCAN restarted the scan on every page.
+        Loopback.InMemoryExchange continued = new Loopback.InMemoryExchange("GET",
+                TxRoutes.recoverPath(Protocol.CONTEXT_PATH).getBytes(StandardCharsets.UTF_8),
+                TxRoutes.PARAM_FLAGS + "=0", Map.of(), new byte[0]);
+        assertDoesNotThrow(() -> dispatcher.dispatch(continued));
+        assertEquals(Protocol.SC_OK, continued.toResponse().status());
+
+        Loopback.InMemoryExchange absent = exchange("GET", TxRoutes.recoverPath(Protocol.CONTEXT_PATH));
+        assertDoesNotThrow(() -> dispatcher.dispatch(absent));
+
+        Loopback.InMemoryExchange malformed = new Loopback.InMemoryExchange("GET",
+                TxRoutes.recoverPath(Protocol.CONTEXT_PATH).getBytes(StandardCharsets.UTF_8),
+                TxRoutes.PARAM_FLAGS + "=abc", Map.of(), new byte[0]);
+        assertDoesNotThrow(() -> dispatcher.dispatch(malformed));
+        assertEquals(Protocol.SC_BAD_REQUEST, malformed.toResponse().status());
+
+        assertEquals(List.of("recover(0)", "recover(" + javax.transaction.xa.XAResource.TMSTARTRSCAN + ")"),
+                transactions.calls);
+    }
+
     private static void assertReasonIsFixed(Loopback.InMemoryExchange exchange) {
         List<String> reasons = exchange.toResponse().headers().get("X-GF-Reason");
         assertEquals(1, reasons == null ? 0 : reasons.size(), "reason header: " + reasons);

@@ -76,7 +76,12 @@ public final class ForyRuntimeModelGenerator {
         int dot = name.lastIndexOf('.');
         String packageName = name.substring(0, dot);
         String simple = name.substring(dot + 1);
-        String javaType = type == void.class ? "java.lang.Void" : type.getCanonicalName();
+        if (type == void.class) {
+            // No value, and so no field: the IDL declares an empty message
+            // for it, and a field of type Void is one Fory cannot write.
+            return "package " + packageName + "; public final class " + simple + " { public " + simple + "() { } }";
+        }
+        String javaType = type.getCanonicalName();
         return "package " + packageName + "; public final class " + simple + " {"
                 + " @org.apache.fory.annotation.ForyField(id = " + VALUE_FIELD_ID + ")"
                 + " private final " + javaType + " value;"

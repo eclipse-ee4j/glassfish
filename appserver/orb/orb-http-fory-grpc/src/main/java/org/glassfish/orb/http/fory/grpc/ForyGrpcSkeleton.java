@@ -9,7 +9,6 @@
 
 package org.glassfish.orb.http.fory.grpc;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +17,10 @@ import java.util.Objects;
 /**
  * An immutable, deploy-time skeleton for a generated Fory service.
  *
- * <p>No reflection or method enumeration is performed on the invocation path.
- * The transport resolves the path once in the immutable map and then invokes
- * the cached method handle. Container target acquisition and release remain
+ * <p>No method enumeration is performed on the invocation path, and the
+ * signature of each method (parameter count and type, return type) was read
+ * when the skeleton was built. The transport resolves the path once in the
+ * immutable map and then invokes the cached method handle. Container target acquisition and release remain
  * outside this class so GlassFish can apply its normal EJB lifecycle rules.</p>
  */
 public final class ForyGrpcSkeleton {
@@ -59,16 +59,15 @@ public final class ForyGrpcSkeleton {
         if (method == null) {
             throw new NoSuchMethodException(path);
         }
-        Method javaMethod = method.javaMethod();
         Object argument = request;
-        if (javaMethod.getParameterCount() == 1) {
-            argument = adapter.request(path, request, javaMethod.getParameterTypes()[0]);
-            if (argument != null && !javaMethod.getParameterTypes()[0].isInstance(argument)) {
-                throw new IllegalArgumentException("adapted request type does not match " + javaMethod);
+        if (method.parameterCount() == 1) {
+            argument = adapter.request(path, request, method.parameterType());
+            if (!method.accepts(argument)) {
+                throw new IllegalArgumentException("adapted request type does not match " + method.javaMethod());
             }
         }
         Object result = method.invoke(target, argument);
-        return adapter.response(path, result, javaMethod.getReturnType());
+        return adapter.response(path, result, method.returnType());
     }
 
     public boolean contains(String path) {

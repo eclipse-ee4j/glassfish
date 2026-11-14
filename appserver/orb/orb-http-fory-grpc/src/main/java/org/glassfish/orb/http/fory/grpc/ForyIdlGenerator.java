@@ -16,6 +16,8 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.lang.model.SourceVersion;
+
 /** Generates the portable Fory IDL for a supported remote business view. */
 public final class ForyIdlGenerator {
 
@@ -28,6 +30,15 @@ public final class ForyIdlGenerator {
      * complex DTO mapping is added by the deploy-time model generator later.
      */
     public static String generate(String packageName, String serviceName, Class<?> view) {
+        // The same names become Java packages and classes in the deploy-time
+        // models, so a name Java would refuse (a leading digit, a keyword) is
+        // refused here, before anything is published.
+        if (!SourceVersion.isName(packageName)) {
+            throw new IllegalArgumentException("not a valid package name: " + packageName);
+        }
+        if (!SourceVersion.isIdentifier(serviceName) || SourceVersion.isKeyword(serviceName)) {
+            throw new IllegalArgumentException("not a valid service name: " + serviceName);
+        }
         StringBuilder out = new StringBuilder(512)
                 .append("package ").append(packageName).append(";\n\n")
                 .append("message Empty {}\n\n");
@@ -39,11 +50,15 @@ public final class ForyIdlGenerator {
                         .thenComparing(method -> Arrays.toString(method.getParameterTypes())))
                 .toArray(Method[]::new);
         for (Method method : methods) {
-            if (!names.add(method.getName())) {
-                throw new IllegalArgumentException(
-                        "overloaded EJB methods need an explicit Fory name: " + method);
-            }
             String rpcName = upperFirst(method.getName());
+            // The message and rpc names are the method's name with its first
+            // letter upper-cased, so foo and Foo (which are not overloads) are
+            // the same name here, and the document would declare it twice.
+            if (!names.add(rpcName)) {
+                throw new IllegalArgumentException(
+                        "overloaded EJB methods, or methods that differ only in the case of the first letter,"
+                        + " need an explicit Fory name: " + method);
+            }
             String request = rpcName + "Request";
             String response = rpcName + "Response";
             out.append("message ").append(request).append(" [id=")
@@ -74,10 +89,14 @@ public final class ForyIdlGenerator {
     }
 
     private static String foryType(Class<?> type) {
-        if (type == String.class || type == Character.class || type == char.class) return "string";
+        // Only the types whose deploy-time model field (see
+        // ForyRuntimeModelGenerator) has exactly the type the document
+        // declares. byte, short and char are not here: the model would carry a
+        // one-byte or two-byte field where the client's int32 or string field
+        // is, and a mismatch is not an error on the wire, it reads as null.
+        if (type == String.class) return "string";
         if (type == boolean.class || type == Boolean.class) return "bool";
-        if (type == byte.class || type == Byte.class || type == short.class || type == Short.class
-                || type == int.class || type == Integer.class) return "int32";
+        if (type == int.class || type == Integer.class) return "int32";
         if (type == long.class || type == Long.class) return "int64";
         if (type == float.class || type == Float.class) return "float32";
         if (type == double.class || type == Double.class) return "float64";

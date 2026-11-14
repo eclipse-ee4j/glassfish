@@ -18,7 +18,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ForyGrpcSkeletonTest {
 
@@ -228,5 +230,176 @@ class ForyGrpcSkeletonTest {
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains("string value = 1;"));
         org.junit.jupiter.api.Assertions.assertTrue(idl.contains(
                 "rpc Greet(GreetRequest) returns (GreetResponse);"));
+    }
+
+    public interface Calc {
+        int twice(int value);
+    }
+
+    public interface Admin {
+        void ping();
+
+        int answer();
+
+        void accept(String value);
+
+        String name();
+    }
+
+    public interface CaseClash {
+        String foo(String value);
+
+        String Foo(String value);
+    }
+
+    public interface WithAChar {
+        char next(char value);
+    }
+
+    public interface WithAShort {
+        short next(short value);
+    }
+
+    public interface WithAByte {
+        byte next(byte value);
+    }
+
+    @Test
+    void invokesAMethodWithAPrimitiveParameterAndResult() throws Throwable {
+        // int.class.isInstance(Integer) is false, so a check against the
+        // declared type refused every primitive parameter.
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "gen.calc", "twice", int.class, int.class);
+        Object request = models.request().getConstructor(int.class).newInstance(21);
+
+        Object response = ForyGrpcSkeleton.of("svc", Calc.class).invoke("/svc/twice", (Calc) v -> v * 2, request,
+                ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+
+        assertEquals(42, invokeValue(response));
+    }
+
+    @Test
+    void aPrimitiveParameterIsNeverNull() {
+        ForyGrpcSchemaAdapter nothing = new ForyGrpcSchemaAdapter() {
+            @Override
+            public Object request(String path, Object request, Class<?> type) {
+                return null;
+            }
+
+            @Override
+            public Object response(String path, Object value, Class<?> type) {
+                return value;
+            }
+        };
+
+        assertThrows(IllegalArgumentException.class, () -> ForyGrpcSkeleton.of("svc", Calc.class)
+                .invoke("/svc/twice", (Calc) v -> v, new Object(), nothing));
+    }
+
+    @Test
+    void aPrimitiveSurvivesTheWire() throws Throwable {
+        ForyRuntimeModelGenerator.GeneratedModels models = ForyRuntimeModelGenerator.unary(
+                "gen.calc3", "twice", int.class, int.class);
+        ForyGeneratedRuntime runtime = new ForyGeneratedRuntime(models, 3000, 3001);
+        Object request = runtime.deserialize(runtime.serialize(
+                models.request().getConstructor(int.class).newInstance(21)), models.request());
+
+        Object response = ForyGrpcSkeleton.of("svc", Calc.class).invoke("/svc/twice", (Calc) v -> v * 2, request,
+                ForyGeneratedSchemaAdapter.unary(models.request(), models.response()));
+
+        assertEquals(42, invokeValue(runtime.deserialize(runtime.serialize(response), models.response())));
+    }
+
+    @Test
+    void invokesVoidAndNoArgumentMethods() throws Throwable {
+        List<String> calls = new java.util.ArrayList<>();
+        Admin bean = new Admin() {
+            @Override
+            public void ping() {
+                calls.add("ping");
+            }
+
+            @Override
+            public int answer() {
+                return 42;
+            }
+
+            @Override
+            public void accept(String value) {
+                calls.add("accept:" + value);
+            }
+
+            @Override
+            public String name() {
+                return "admin";
+            }
+        };
+        ForyGrpcSkeleton skeleton = ForyGrpcSkeleton.of("svc", Admin.class);
+
+        ForyRuntimeModelGenerator.GeneratedModels ping = ForyRuntimeModelGenerator.unary(
+                "gen.admin", "ping", void.class, void.class);
+        ForyGeneratedRuntime pingRuntime = new ForyGeneratedRuntime(ping, 3100, 3101);
+        Object pingRequest = ping.request().getConstructor().newInstance();
+        Object pingResponse = skeleton.invoke("/svc/ping", bean, pingRequest,
+                ForyGeneratedSchemaAdapter.unary(ping.request(), ping.response()));
+        // Nothing to return is an empty message, and it survives the wire.
+        assertNotNull(pingRuntime.deserialize(pingRuntime.serialize(pingResponse), ping.response()));
+        assertNotNull(pingRuntime.deserialize(pingRuntime.serialize(pingRequest), ping.request()));
+
+        ForyRuntimeModelGenerator.GeneratedModels answer = ForyRuntimeModelGenerator.unary(
+                "gen.admin2", "answer", void.class, int.class);
+        Object answerRequest = answer.request().getConstructor().newInstance();
+        assertEquals(42, invokeValue(skeleton.invoke("/svc/answer", bean, answerRequest,
+                ForyGeneratedSchemaAdapter.unary(answer.request(), answer.response()))));
+
+        ForyRuntimeModelGenerator.GeneratedModels accept = ForyRuntimeModelGenerator.unary(
+                "gen.admin3", "accept", String.class, void.class);
+        Object acceptRequest = construct(accept.request(), "x");
+        assertNotNull(skeleton.invoke("/svc/accept", bean, acceptRequest,
+                ForyGeneratedSchemaAdapter.unary(accept.request(), accept.response())));
+        assertEquals(List.of("ping", "accept:x"), calls);
+
+        ForyRuntimeModelGenerator.GeneratedModels name = ForyRuntimeModelGenerator.unary(
+                "gen.admin4", "name", void.class, String.class);
+        Object nameRequest = name.request().getConstructor().newInstance();
+        assertEquals("admin", invokeValue(skeleton.invoke("/svc/name", bean, nameRequest,
+                ForyGeneratedSchemaAdapter.unary(name.request(), name.response()))));
+    }
+
+    @Test
+    void theIdlOfAPrimitiveSignatureUsesTheWireTypes() {
+        String idl = ForyIdlGenerator.generate("demo.calc", "Calc", Calc.class);
+
+        assertTrue(idl.contains("int32 value = 1;"), idl);
+        assertTrue(idl.contains("rpc Twice(TwiceRequest) returns (TwiceResponse);"), idl);
+    }
+
+    @Test
+    void idlRejectsMethodsDifferingOnlyInCase() {
+        // Both would be declared as FooRequest and rpc Foo.
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("p", "S", CaseClash.class));
+    }
+
+    @Test
+    void idlRejectsNamesThatAreNotJavaNames() {
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("glassfish.2fa_app.module", "Greeter", Greeter.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("glassfish.app.default", "Greeter", Greeter.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("glassfish.app.module", "class", Greeter.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("glassfish.app.module", "Not.Simple", Greeter.class));
+    }
+
+    @Test
+    void idlRefusesTypesWhoseModelFieldWouldNotMatchTheDeclaredWireType() {
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("p", "S", WithAChar.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("p", "S", WithAShort.class));
+        assertThrows(IllegalArgumentException.class,
+                () -> ForyIdlGenerator.generate("p", "S", WithAByte.class));
     }
 }

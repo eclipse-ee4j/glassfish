@@ -27,6 +27,16 @@ public final class ForyGrpcMethod {
     private final MethodHandle handle;
 
     /**
+     * What the invocation path needs to know about the signature, worked out
+     * once here so that no call has to ask the reflective {@link Method}
+     * (whose {@code getParameterTypes} copies an array every time).
+     */
+    private final int parameterCount;
+    private final Class<?> parameterType;
+    private final Class<?> boxedParameterType;
+    private final Class<?> returnType;
+
+    /**
      * The handle to use when the container hands back something that is not an
      * instance of the business view.
      *
@@ -50,6 +60,13 @@ public final class ForyGrpcMethod {
         this.path = path;
         this.method = method;
         this.handle = handle;
+        this.parameterCount = method.getParameterCount();
+        this.parameterType = parameterCount == 1 ? method.getParameterTypes()[0] : null;
+        // An int parameter receives an Integer: asking int.class whether an
+        // Integer is an instance of it is always no.
+        this.boxedParameterType = parameterType == null
+                ? null : MethodType.methodType(parameterType).wrap().returnType();
+        this.returnType = method.getReturnType();
     }
 
     /**
@@ -72,6 +89,34 @@ public final class ForyGrpcMethod {
 
     public Method javaMethod() {
         return method;
+    }
+
+    public int parameterCount() {
+        return parameterCount;
+    }
+
+    /** @return the declared type of the single parameter, or {@code null} if there is none */
+    public Class<?> parameterType() {
+        return parameterType;
+    }
+
+    public Class<?> returnType() {
+        return returnType;
+    }
+
+    /**
+     * @param argument the value an adapter produced for the parameter
+     * @return whether the method can be called with it; a primitive parameter
+     *         takes the matching wrapper, and not {@code null}
+     */
+    public boolean accepts(Object argument) {
+        if (parameterCount != 1) {
+            return argument == null;
+        }
+        if (argument == null) {
+            return !parameterType.isPrimitive();
+        }
+        return boxedParameterType.isInstance(argument);
     }
 
     Object invoke(Object target, Object request) throws Throwable {

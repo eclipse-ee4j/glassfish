@@ -25,7 +25,9 @@ import org.glassfish.orb.http.server.TransactionBridge;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -163,6 +165,140 @@ class ForyGrpcServerAdapterTest {
     }
 
     @Test
+    void refusesACallThatIsNotGrpcWith415() throws Exception {
+        for (String contentType : new String[] {null, "text/plain", "application/json",
+                "application/x-www-form-urlencoded", "application/grpc-web", "application/grpcx"}) {
+            List<String> events = new ArrayList<>();
+            Fixture fixture = new Fixture(name -> {
+                throw new AssertionError("the bean must not be reached");
+            }, events);
+            FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+            exchange.contentType = contentType;
+
+            fixture.adapter().dispatch(exchange);
+
+            assertEquals(415, exchange.status, String.valueOf(contentType));
+            assertNull(exchange.trailers.get("grpc-status"));
+            assertEquals(List.of(), events, "the container was reached for " + contentType);
+        }
+    }
+
+    @Test
+    void acceptsTheGrpcContentTypesAClientSends() throws Exception {
+        for (String contentType : new String[] {"application/grpc", "application/grpc+fory",
+                "application/grpc; charset=utf-8", "Application/GRPC+proto"}) {
+            Fixture fixture = new Fixture(name -> "Hello " + name);
+            FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+            exchange.contentType = contentType;
+
+            fixture.adapter().dispatch(exchange);
+
+            assertEquals("0", exchange.trailers.get("grpc-status"), contentType);
+        }
+    }
+
+    @Test
+    void refusesAMalformedFrameWithInvalidArgumentWithoutReachingTheContainer() throws Exception {
+        List<byte[]> bodies = new ArrayList<>();
+        bodies.add(new byte[0]);
+        bodies.add(new byte[] {0});
+        bodies.add(new byte[] {0, 0, 0, 0});
+        Fixture probe = new Fixture(name -> "Hello " + name);
+        byte[] full = probe.frame("Ada");
+        byte[] trailing = new byte[full.length + 1];
+        System.arraycopy(full, 0, trailing, 0, full.length);
+        bodies.add(trailing);
+
+        for (byte[] body : bodies) {
+            List<String> events = new ArrayList<>();
+            Fixture fixture = new Fixture(name -> {
+                throw new AssertionError("the bean must not be reached");
+            }, events);
+            FakeExchange exchange = fixture.exchange(body);
+
+            fixture.adapter().dispatch(exchange);
+
+            assertEquals("3", exchange.trailers.get("grpc-status"), "body of " + body.length + " bytes");
+            assertEquals(List.of(), events, "the container was reached for a body of " + body.length + " bytes");
+        }
+    }
+
+    @Test
+    void refusesAPayloadThatIsNotARequestMessageWithInvalidArgument() throws Exception {
+        List<String> events = new ArrayList<>();
+        Fixture fixture = new Fixture(name -> {
+            throw new AssertionError("the bean must not be reached");
+        }, events);
+        byte[] garbage = {0, 0, 0, 0, 3, 1, 2, 3};
+        FakeExchange exchange = fixture.exchange(garbage);
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("3", exchange.trailers.get("grpc-status"));
+        assertEquals(List.of(), events);
+    }
+
+    @Test
+    void doesNotAnswerForAnErrorOfTheVirtualMachine() throws Exception {
+        Fixture fixture = new Fixture(name -> {
+            throw new OutOfMemoryError("test");
+        });
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        assertThrows(OutOfMemoryError.class, () -> fixture.adapter().dispatch(exchange));
+        assertNull(exchange.trailers.get("grpc-status"));
+    }
+
+    @Test
+    void stillAnswersForAnOtherErrorOfTheBean() throws Exception {
+        Fixture fixture = new Fixture(name -> {
+            throw new NoClassDefFoundError("gone");
+        });
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals("2", exchange.trailers.get("grpc-status"));
+    }
+
+    @Test
+    void capsTheStatusMessage() throws Exception {
+        Fixture fixture = new Fixture(name -> {
+            throw new IllegalStateException("x".repeat(5000));
+        });
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+
+        fixture.adapter().dispatch(exchange);
+
+        String message = exchange.trailers.get("grpc-message");
+        assertEquals("2", exchange.trailers.get("grpc-status"));
+        assertTrue(message.startsWith("java.lang.IllegalStateException: xxx"), message);
+        assertTrue(message.length() <= ForyGrpcServerAdapter.MAX_STATUS_MESSAGE_CHARS, "" + message.length());
+    }
+
+    @Test
+    void neverCutsAStatusMessageInTheMiddleOfASurrogatePair() {
+        String message = "a".repeat(ForyGrpcServerAdapter.MAX_STATUS_MESSAGE_CHARS - 1) + "\uD83D\uDE00";
+
+        String capped = ForyGrpcServerAdapter.capped(message);
+
+        assertEquals(ForyGrpcServerAdapter.MAX_STATUS_MESSAGE_CHARS - 1, capped.length());
+        assertFalse(Character.isHighSurrogate(capped.charAt(capped.length() - 1)));
+    }
+
+    @Test
+    void answers405WithTheMethodItAccepts() throws Exception {
+        Fixture fixture = new Fixture(name -> "Hello " + name);
+        FakeExchange exchange = fixture.exchange(fixture.frame("Ada"));
+        exchange.method = "GET";
+
+        fixture.adapter().dispatch(exchange);
+
+        assertEquals(405, exchange.status);
+        assertEquals("POST", exchange.headers.get("Allow"));
+    }
+
+    @Test
     void percentEncodesAStatusMessageAsTheSpecificationRequires() {
         // Only bytes outside 0x20-0x7E, and the percent sign itself, are
         // encoded: a space is a legal header character and stays one.
@@ -279,6 +415,7 @@ class ForyGrpcServerAdapterTest {
         private final Map<String, String> trailers = new LinkedHashMap<>();
         private byte[] body = new byte[0];
         private boolean trailersSupported = true;
+        private String contentType = "application/grpc+fory";
 
         FakeExchange(String path, byte[] requestBody) {
             this.path = path;
@@ -313,7 +450,7 @@ class ForyGrpcServerAdapterTest {
 
         @Override
         public String requestHeader(String name) {
-            return null;
+            return "Content-Type".equalsIgnoreCase(name) ? contentType : null;
         }
 
         @Override

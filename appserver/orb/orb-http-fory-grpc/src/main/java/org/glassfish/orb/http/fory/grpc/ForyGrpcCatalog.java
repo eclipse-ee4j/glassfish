@@ -12,8 +12,9 @@ package org.glassfish.orb.http.fory.grpc;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Objects;
 
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.server.ServerExchange;
@@ -30,20 +31,38 @@ public final class ForyGrpcCatalog {
 
     public static final String PREFIX = "/.well-known/ejb/";
 
-    private final Map<String, byte[]> idlByPath = new ConcurrentHashMap<>();
+    /** One immutable map, replaced as a whole; see ForyGeneratedServiceRegistry. */
+    private volatile Map<String, byte[]> idlByPath = Map.of();
 
     /** Rebuilds the catalog; see ForyGeneratedServiceRegistry.onMiss. */
     private volatile Runnable refresher = () -> { };
 
     public void onMiss(Runnable refresher) {
-        this.refresher = java.util.Objects.requireNonNull(refresher, "refresher");
+        this.refresher = Objects.requireNonNull(refresher, "refresher");
     }
 
     public void clear() {
-        idlByPath.clear();
+        idlByPath = Map.of();
+    }
+
+    /** Replaces every document at once; nothing is replaced if any entry is invalid. */
+    public void replaceAll(Map<String, String> documents) {
+        Map<String, byte[]> next = new HashMap<>();
+        documents.forEach((path, idl) -> next.put(checked(path, idl), encode(idl)));
+        idlByPath = Map.copyOf(next);
     }
 
     public void register(String path, String idl) {
+        checked(path, idl);
+        // Copy on write: registering is a deploy-time act, lookups are not.
+        synchronized (this) {
+            Map<String, byte[]> next = new HashMap<>(idlByPath);
+            next.put(path, encode(idl));
+            idlByPath = Map.copyOf(next);
+        }
+    }
+
+    private static String checked(String path, String idl) {
         // The paths the server publishes carry its context path in front of
         // the well-known prefix, and dispatch looks them up by the whole
         // request path, so that is what is stored.
@@ -53,12 +72,17 @@ public final class ForyGrpcCatalog {
         if (idl == null || idl.isBlank()) {
             throw new IllegalArgumentException("IDL is empty");
         }
-        idlByPath.put(path, idl.getBytes(StandardCharsets.UTF_8));
+        return path;
+    }
+
+    private static byte[] encode(String idl) {
+        return idl.getBytes(StandardCharsets.UTF_8);
     }
 
     public void dispatch(ServerExchange exchange) throws IOException {
         if (!"GET".equals(exchange.method()) && !"HEAD".equals(exchange.method())) {
             exchange.setStatus(405);
+            exchange.setResponseHeader("Allow", "GET, HEAD");
             return;
         }
         String path = new String(exchange.pathBytes(), exchange.pathOffset(),

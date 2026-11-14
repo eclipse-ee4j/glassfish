@@ -9,14 +9,21 @@
 
 package org.glassfish.orb.http.fory.grpc;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
-/** Deploy-time index of Fory service methods and their generated runtimes. */
+/**
+ * Deploy-time index of Fory service methods and their generated runtimes.
+ *
+ * <p>The bindings are one immutable map behind one volatile reference. A
+ * rebuild builds a new map beside the old one and swaps it in with
+ * {@link #replaceAll}, so a lookup that runs during a rebuild sees the whole
+ * old set or the whole new one, never a half-filled one.</p>
+ */
 public final class ForyGeneratedServiceRegistry {
 
-    private final Map<String, Binding> bindings = new ConcurrentHashMap<>();
+    private volatile Map<String, Binding> bindings = Map.of();
 
     /**
      * Rebuilds the bindings from the applications deployed now. The bindings
@@ -31,15 +38,27 @@ public final class ForyGeneratedServiceRegistry {
     }
 
     public void clear() {
-        bindings.clear();
+        bindings = Map.of();
+    }
+
+    /** Replaces every binding at once with the given set. */
+    public void replaceAll(Map<String, Binding> snapshot) {
+        bindings = Map.copyOf(Objects.requireNonNull(snapshot, "snapshot"));
     }
 
     public void register(String wirePath, String skeletonPath, ForyGrpcSkeleton skeleton,
                          ForyRuntimeModelGenerator.GeneratedModels models,
                          ForyGeneratedRuntime runtime, ForyGrpcSchemaAdapter adapter) {
         Objects.requireNonNull(wirePath, "wirePath");
-        if (bindings.putIfAbsent(wirePath, new Binding(skeletonPath, skeleton, models, runtime, adapter)) != null) {
-            throw new IllegalArgumentException("duplicate Fory service method: " + wirePath);
+        Binding binding = new Binding(skeletonPath, skeleton, models, runtime, adapter);
+        // Copy on write: registering is a deploy-time act, lookups are not.
+        synchronized (this) {
+            if (bindings.containsKey(wirePath)) {
+                throw new IllegalArgumentException("duplicate Fory service method: " + wirePath);
+            }
+            Map<String, Binding> next = new HashMap<>(bindings);
+            next.put(wirePath, binding);
+            bindings = Map.copyOf(next);
         }
     }
 
@@ -56,10 +75,23 @@ public final class ForyGeneratedServiceRegistry {
         return bindings.size();
     }
 
+    /**
+     * @param attachment whatever the publisher needs to find again when the
+     *        call arrives, carried here so that it is replaced together with
+     *        the binding and cannot be looked up from a different generation
+     */
     public record Binding(String skeletonPath, ForyGrpcSkeleton skeleton,
                           ForyRuntimeModelGenerator.GeneratedModels models,
                           ForyGeneratedRuntime runtime,
-                          ForyGrpcSchemaAdapter adapter) {
+                          ForyGrpcSchemaAdapter adapter,
+                          Object attachment) {
+
+        public Binding(String skeletonPath, ForyGrpcSkeleton skeleton,
+                       ForyRuntimeModelGenerator.GeneratedModels models,
+                       ForyGeneratedRuntime runtime, ForyGrpcSchemaAdapter adapter) {
+            this(skeletonPath, skeleton, models, runtime, adapter, null);
+        }
+
         public Binding {
             Objects.requireNonNull(skeletonPath, "skeletonPath");
             Objects.requireNonNull(skeleton, "skeleton");

@@ -9,11 +9,13 @@
 
 package org.glassfish.orb.http.fory.grpc;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.glassfish.orb.http.protocol.Protocol;
@@ -36,6 +38,15 @@ public final class ForyGrpcServerAdapter {
 
     private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
+    private static final Logger LOG = System.getLogger(ForyGrpcServerAdapter.class.getName());
+
+    /**
+     * The longest status message sent, in characters. A bean's exception can
+     * carry anything, and the message travels in a header.
+     */
+    static final int MAX_STATUS_MESSAGE_CHARS = 512;
+
+    private static final String GRPC_CONTENT_TYPE = "application/grpc";
 
     private final ForyGeneratedServiceRegistry registry;
     private final TargetProvider targets;
@@ -68,6 +79,13 @@ public final class ForyGrpcServerAdapter {
     public void dispatch(ServerExchange exchange) throws IOException {
         if (!"POST".equals(exchange.method())) {
             exchange.setStatus(405);
+            exchange.setResponseHeader("Allow", "POST");
+            return;
+        }
+        if (!isGrpc(exchange.requestHeader("Content-Type"))) {
+            // Not a gRPC call, and in particular not something a browser can
+            // send across origins without a preflight.
+            exchange.setStatus(415); // Unsupported Media Type
             return;
         }
         if (!exchange.supportsResponseTrailers()) {
@@ -86,7 +104,28 @@ public final class ForyGrpcServerAdapter {
             return;
         }
 
-        byte[] frame;
+        // Read and decode the request before the container is asked for
+        // anything: a malformed call then costs no identity and no bean.
+        Object request;
+        try {
+            byte[] payload = readFrame(exchange.requestBody());
+            request = binding.runtime().deserialize(payload, binding.models().request());
+            if (!binding.models().request().isInstance(request)) {
+                throw new GrpcStatusException(STATUS_INVALID_ARGUMENT, "not a request message");
+            }
+        } catch (GrpcStatusException e) {
+            answerWithStatus(exchange, e.status(), e.getMessage());
+            return;
+        } catch (IOException e) {
+            LOG.log(Level.DEBUG, "cannot read the request body", e);
+            answerWithStatus(exchange, STATUS_UNKNOWN, "cannot read the request");
+            return;
+        } catch (RuntimeException e) {
+            LOG.log(Level.DEBUG, "cannot decode the request message", e);
+            answerWithStatus(exchange, STATUS_INVALID_ARGUMENT, "cannot decode the request message");
+            return;
+        }
+
         try {
             // A gRPC call carries no transaction context, so it runs outside
             // one - and that has to be made true rather than assumed. Request
@@ -95,21 +134,22 @@ public final class ForyGrpcServerAdapter {
             // committed or rolled back with someone else's work in it.
             transactions.detach();
         } catch (RuntimeException e) {
-            answerWithStatus(exchange, STATUS_UNKNOWN, e.toString());
+            LOG.log(Level.WARNING, "cannot clear the transaction from the request thread", e);
+            answerWithStatus(exchange, STATUS_UNKNOWN, "cannot prepare the request thread");
             return;
         }
-        try (Target target = targets.acquire(path, exchange)) {
-            byte[] payload = readFrame(exchange.requestBody());
-            Object request = binding.runtime().deserialize(payload, binding.models().request());
+        byte[] frame;
+        try (Target target = targets.acquire(binding, path, exchange)) {
             Object response = binding.invoke(target.value(), request);
             frame = frame(binding.runtime().serialize(response));
-        } catch (GrpcStatusException e) {
-            answerWithStatus(exchange, e.status(), e.getMessage());
-            return;
         } catch (Throwable e) {
-            // The call reached the bean and failed there, or the payload could
-            // not be decoded: either way the client gets a gRPC status, not a
-            // transport error.
+            if (e instanceof VirtualMachineError error) {
+                // Out of memory or a broken VM: nothing here can answer for it.
+                throw error;
+            }
+            // The call reached the bean and failed there: the client gets a
+            // gRPC status, not a transport error.
+            LOG.log(Level.DEBUG, "call failed: " + path, e);
             answerWithStatus(exchange, STATUS_UNKNOWN, e.toString());
             return;
         }
@@ -120,15 +160,43 @@ public final class ForyGrpcServerAdapter {
         exchange.writeBody(new ByteBuffer[] {ByteBuffer.wrap(frame)});
     }
 
+    /** A gRPC content type is application/grpc, optionally with a +suffix or parameters. */
+    static boolean isGrpc(String contentType) {
+        if (contentType == null) {
+            return false;
+        }
+        String value = contentType.trim().toLowerCase(Locale.ROOT);
+        if (!value.startsWith(GRPC_CONTENT_TYPE)) {
+            return false;
+        }
+        if (value.length() == GRPC_CONTENT_TYPE.length()) {
+            return true;
+        }
+        char next = value.charAt(GRPC_CONTENT_TYPE.length());
+        return next == '+' || next == ';';
+    }
+
     /** A gRPC error is an HTTP 200 whose trailers carry the status. */
     private void answerWithStatus(ServerExchange exchange, int status, String message) throws IOException {
         exchange.setStatus(Protocol.SC_OK);
         exchange.setResponseHeader("Content-Type", GRPC_FORY_CONTENT_TYPE);
         exchange.setResponseTrailer(GRPC_STATUS, Integer.toString(status));
         if (message != null && !message.isEmpty()) {
-            exchange.setResponseTrailer(GRPC_MESSAGE, percentEncode(message));
+            exchange.setResponseTrailer(GRPC_MESSAGE, percentEncode(capped(message)));
         }
         exchange.writeBody(new ByteBuffer[0]);
+    }
+
+    /** At most {@link #MAX_STATUS_MESSAGE_CHARS} characters, never ending in half a surrogate pair. */
+    static String capped(String message) {
+        if (message.length() <= MAX_STATUS_MESSAGE_CHARS) {
+            return message;
+        }
+        int end = MAX_STATUS_MESSAGE_CHARS;
+        if (Character.isHighSurrogate(message.charAt(end - 1))) {
+            end--;
+        }
+        return message.substring(0, end);
     }
 
     /**
@@ -152,7 +220,7 @@ public final class ForyGrpcServerAdapter {
     private byte[] readFrame(InputStream input) throws IOException {
         int flags = input.read();
         if (flags < 0) {
-            throw new EOFException("missing gRPC frame");
+            throw new GrpcStatusException(STATUS_INVALID_ARGUMENT, "missing gRPC frame");
         }
         if (flags != 0) {
             throw new GrpcStatusException(STATUS_UNIMPLEMENTED, "compressed gRPC frames are not supported");
@@ -167,13 +235,17 @@ public final class ForyGrpcServerAdapter {
         if (payload.length != length) {
             throw new GrpcStatusException(STATUS_INVALID_ARGUMENT, "truncated gRPC frame");
         }
+        if (input.read() >= 0) {
+            // A unary call is one message; whatever follows is not part of it.
+            throw new GrpcStatusException(STATUS_INVALID_ARGUMENT, "unexpected data after the request message");
+        }
         return payload;
     }
 
     private static int readByte(InputStream input) throws IOException {
         int value = input.read();
         if (value < 0) {
-            throw new EOFException("truncated gRPC frame header");
+            throw new GrpcStatusException(STATUS_INVALID_ARGUMENT, "truncated gRPC frame header");
         }
         return value;
     }
@@ -207,6 +279,18 @@ public final class ForyGrpcServerAdapter {
     @FunctionalInterface
     public interface TargetProvider {
         Target acquire(String path, ServerExchange exchange) throws Exception;
+
+        /**
+         * Obtains the target for a call that resolved to {@code binding}. A
+         * provider that needs what the binding carries (see
+         * {@link ForyGeneratedServiceRegistry.Binding#attachment()}) overrides
+         * this, and so cannot be answered from a different generation of the
+         * registry than the one the call was routed by.
+         */
+        default Target acquire(ForyGeneratedServiceRegistry.Binding binding, String path,
+                               ServerExchange exchange) throws Exception {
+            return acquire(path, exchange);
+        }
     }
 
     public interface Target extends AutoCloseable {

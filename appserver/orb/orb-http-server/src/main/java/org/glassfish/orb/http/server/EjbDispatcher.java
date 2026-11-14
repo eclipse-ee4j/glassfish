@@ -199,7 +199,7 @@ public final class EjbDispatcher {
         try (InvocationRegistry.Registration registration = registry.register(invocationId)) {
             Object target = null;
             Method invokedMethod = null;
-            Xid imported = null;
+            Imported imported = null;
             try {
                 Method method = resolveMethod(loader, invocation);
                 invokedMethod = method;
@@ -209,7 +209,7 @@ public final class EjbDispatcher {
 
                 // Import before resolving the target, so the container sees the
                 // transaction while it sets the invocation up rather than after.
-                imported = importTransaction(txContext, exchange, method);
+                imported = importTransaction(txContext, exchange, key, method);
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
@@ -369,7 +369,7 @@ public final class EjbDispatcher {
      *
      * @return the branch that was imported, or null if there was none
      */
-    private Xid importTransaction(TxContext txContext, ServerExchange exchange, Method method)
+    private Imported importTransaction(TxContext txContext, ServerExchange exchange, EjbKey key, Method method)
             throws TransactionBridge.TransactionException, BadTimeoutException {
         String marker = exchange.requestHeader(Protocol.H_TXN_ROLLBACK_ONLY);
         boolean rollbackOnly = marker != null && "true".equalsIgnoreCase(marker.trim());
@@ -381,18 +381,27 @@ public final class EjbDispatcher {
             return null;
         }
         Xid xid = Xids.fromContext(txContext);
-        long timeout = requestedTimeout(exchange);
         if (xid == null) {
             // A rollback-only call with no branch to import: whatever a
             // previous request left on this thread must not be seen.
             transactions.detach();
         }
+        long timeout;
+        try {
+            timeout = requestedTimeout(exchange);
+        } catch (BadTimeoutException e) {
+            // Refusing the request must not leave the previous one's
+            // association on this pooled thread.
+            transactions.detach();
+            throw e;
+        }
         try {
             if (rollbackOnly) {
-                transactions.recreateRollbackOnly(xid, timeout, method);
-            } else {
-                transactions.recreate(xid, timeout);
+                Object handle = transactions.recreateRollbackOnly(xid, timeout, key, method);
+                return new Imported(xid, handle);
             }
+            transactions.recreate(xid, timeout);
+            return new Imported(xid, null);
         } catch (TransactionBridge.TransactionException | RuntimeException e) {
             // A manager that fails halfway may already have associated the
             // thread, and nothing will release a branch that was never
@@ -404,21 +413,38 @@ public final class EjbDispatcher {
             }
             throw e;
         }
-        return xid;
     }
 
-    private void releaseTransaction(Xid xid) {
-        if (xid == null) {
+    /**
+     * What an import left to be undone.
+     *
+     * @param xid    the caller's branch, or null if it sent none
+     * @param handle what {@link TransactionBridge#recreateRollbackOnly} returned, or null for an
+     *               ordinary import
+     */
+    private record Imported(Xid xid, Object handle) {
+    }
+
+    private void releaseTransaction(Imported imported) {
+        if (imported == null) {
             return;
         }
         try {
-            transactions.release(xid);
-        } catch (TransactionBridge.TransactionException e) {
+            if (imported.handle() != null) {
+                // Whatever the bridge associated for a rollback-only call is
+                // the bridge's to undo, and release(xid) is not the way: it
+                // may never have associated that xid.
+                transactions.releaseRollbackOnly(imported.handle());
+            } else if (imported.xid() != null) {
+                transactions.release(imported.xid());
+            }
+        } catch (TransactionBridge.TransactionException | RuntimeException e) {
             // The invocation's own outcome has already been written. Losing
             // the release is bad, but overwriting a successful reply with this
             // failure would be worse - recovery exists for exactly this.
             System.getLogger(EjbDispatcher.class.getName()).log(System.Logger.Level.WARNING,
-                    "failed to release imported transaction " + Xids.key(xid), e);
+                    "failed to release imported transaction "
+                            + (imported.xid() == null ? "(local)" : Xids.key(imported.xid())), e);
         }
     }
 

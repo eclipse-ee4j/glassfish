@@ -26,8 +26,11 @@ import jakarta.transaction.TransactionSynchronizationRegistry;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.LongSupplier;
 
@@ -89,7 +92,15 @@ final class AmbientTransaction {
             "java:/TransactionManager",
             "java:jboss/TransactionManager");
 
-    private static final String REGISTRY_NAME = "java:comp/TransactionSynchronizationRegistry";
+    /**
+     * Where the registry is bound. The server-wide name comes first: GlassFish
+     * serves it through its transaction naming proxy without a component
+     * invocation, so it works on a thread that has no java:comp, which is
+     * exactly the thread that reaches here from an unmanaged executor.
+     */
+    private static final List<String> REGISTRY_NAMES = List.of(
+            "java:appserver/TransactionSynchronizationRegistry",
+            "java:comp/TransactionSynchronizationRegistry");
 
     /**
      * The branch the caller's manager started for one endpoint, kept with the
@@ -115,9 +126,16 @@ final class AmbientTransaction {
     /** The clock the retry delay is measured with; replaced in tests. */
     static volatile LongSupplier clock = System::nanoTime;
 
-    private static volatile boolean retryArmed;
+    /**
+     * Class loaders whose threads failed to find the registry, and when they
+     * may look again. Keyed by the thread's context class loader rather than
+     * held JVM-wide: what a lookup can see depends on the caller, so one
+     * thread's miss says nothing about another's.
+     */
+    private static final Map<ClassLoader, Long> MISSES = Collections.synchronizedMap(new WeakHashMap<>());
 
-    private static volatile long retryAtNanos;
+    /** The last lookup failure that was not final, for the report when no name worked. */
+    private static volatile Exception lastLookupFailure;
 
     private static volatile TransactionManager manager;
 
@@ -139,8 +157,15 @@ final class AmbientTransaction {
         registry = null;
         UNAVAILABLE.set(false);
         LOOKUP_FAILURE_REPORTED.set(false);
-        retryArmed = false;
+        MISSES.clear();
+        lastLookupFailure = null;
         clock = System::nanoTime;
+    }
+
+    /** Visible for tests: forgets the registry but keeps the manager, as when only a lookup went wrong. */
+    static void forgetRegistry() {
+        registry = null;
+        MISSES.clear();
     }
 
     /** What the state of the caller's transaction means for an invocation. */
@@ -185,7 +210,10 @@ final class AmbientTransaction {
         if (synchronizations == null) {
             // No container here, so there is nothing to join - and nothing to
             // judge either: an association in a JVM with no transaction
-            // manager belongs to whoever made it.
+            // manager belongs to whoever made it. Unless a manager is already
+            // known and says this thread is in a transaction: then the lookup
+            // merely failed, and sending without it would commit alone.
+            failIfAKnownManagerHasATransaction(config);
             return false;
         }
         if (ClientTransactionContext.current() != null && !ClientTransactionContext.isAmbient()) {
@@ -215,6 +243,8 @@ final class AmbientTransaction {
             return false;
         }
         if (standing == Standing.REFUSED) {
+            // A branch left on the thread must not outlive the refusal.
+            ClientTransactionContext.disassociate();
             throw new EJBException("the caller's transaction is not in a state a remote call can join (status "
                     + status + "), so the call to " + endpoint + " was not made");
         }
@@ -311,30 +341,64 @@ final class AmbientTransaction {
         }
     }
 
+    /**
+     * The registry could not be had on this thread. If a transaction manager
+     * is already known and reports a transaction here, refuse: the caller is
+     * inside a transaction this class cannot join.
+     */
+    private static void failIfAKnownManagerHasATransaction(ClientConfiguration config) {
+        TransactionManager known = manager;
+        if (known == null || UNAVAILABLE.get()) {
+            return;
+        }
+        try {
+            Transaction current = known.getTransaction();
+            if (current != null && standing(current.getStatus()) != Standing.NONE) {
+                throw new EJBException("the caller is in a transaction but the transaction registry could not be"
+                        + " looked up from this thread, so the call to " + config.baseUri()
+                        + " cannot join it and was not made");
+            }
+        } catch (SystemException e) {
+            // A manager that cannot say is no evidence of a transaction.
+            LOG.log(Level.DEBUG, "could not ask the known transaction manager: " + e);
+        }
+    }
+
     private static TransactionSynchronizationRegistry registry() {
         TransactionSynchronizationRegistry known = registry;
         if (known != null) {
             return known;
         }
-        if (retryArmed && clock.getAsLong() - retryAtNanos < 0) {
-            // A lookup failed a moment ago. Believing that for a while costs a
-            // call that could have joined, and asking again on every call
-            // costs a JNDI lookup on every call.
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        Long retryAt = MISSES.get(loader);
+        if (retryAt != null && clock.getAsLong() - retryAt < 0) {
+            // A lookup from this loader's threads failed a moment ago.
+            // Believing that for a while costs a call that could have joined,
+            // and asking again on every call costs a JNDI lookup on every call.
             return null;
         }
+        lastLookupFailure = null;
         // Only a lookup that cannot succeed here at all latches UNAVAILABLE,
         // and it does so itself. A miss for any other reason is a miss to be
         // believed for RETRY_AFTER_NANOS and then tried again.
-        Object found = lookup(REGISTRY_NAME);
-        if (found instanceof TransactionSynchronizationRegistry resolved) {
-            registry = resolved;
-            retryArmed = false;
-            return resolved;
+        for (String name : REGISTRY_NAMES) {
+            Object found = lookup(name);
+            if (found instanceof TransactionSynchronizationRegistry resolved) {
+                registry = resolved;
+                MISSES.remove(loader);
+                return resolved;
+            }
+            if (UNAVAILABLE.get()) {
+                return null;
+            }
         }
-        if (!UNAVAILABLE.get()) {
-            retryAtNanos = clock.getAsLong() + RETRY_AFTER_NANOS;
-            retryArmed = true;
-        }
+        Exception failure = lastLookupFailure;
+        Level level = failure != null && LOOKUP_FAILURE_REPORTED.compareAndSet(false, true)
+                ? Level.WARNING : Level.DEBUG;
+        LOG.log(level, "could not look up the transaction registry as " + REGISTRY_NAMES
+                + "; remote calls from this thread will not join a caller's transaction until this works: "
+                + failure);
+        MISSES.put(loader, clock.getAsLong() + RETRY_AFTER_NANOS);
         return null;
     }
 
@@ -382,9 +446,7 @@ final class AmbientTransaction {
             return null;
         } catch (NamingException | RuntimeException e) {
             // Not final: the next call may be on a thread that can see it.
-            Level level = LOOKUP_FAILURE_REPORTED.compareAndSet(false, true) ? Level.WARNING : Level.DEBUG;
-            LOG.log(level, "could not look up " + name + "; remote calls will not join a caller's"
-                    + " transaction until this works: " + e);
+            lastLookupFailure = e;
             return null;
         } finally {
             if (context != null) {

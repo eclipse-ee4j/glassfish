@@ -91,13 +91,20 @@ class RemainingTimeoutTest {
     }
 
     @Test
-    @DisplayName("a timeout that does not fit an int is clamped, and a negative one is none")
-    void aTimeoutIsClamped() {
+    @DisplayName("a timeout that does not fit an int is clamped")
+    void aHugeTimeoutIsClamped() {
         ClientTransactionContext.associate(XID, Long.MAX_VALUE, true);
         long huge = ClientTransactionContext.currentTimeoutSeconds();
-        assertTrue(huge <= Integer.MAX_VALUE && huge > Integer.MAX_VALUE - 5, "huge timeout became " + huge);
 
+        assertTrue(huge <= Integer.MAX_VALUE && huge > Integer.MAX_VALUE - 5, "huge timeout became " + huge);
+    }
+
+    @Test
+    @DisplayName("a negative timeout is stored as none")
+    void aNegativeTimeoutIsStoredAsNone() {
         ClientTransactionContext.associate(XID, -7, true);
+
+        assertEquals(0, ClientTransactionContext.configuredTimeoutSeconds());
         assertEquals(0, ClientTransactionContext.currentTimeoutSeconds());
     }
 

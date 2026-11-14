@@ -121,7 +121,9 @@ public final class Protocol {
      * transaction arriving over IIOP, so a method that requires the caller's
      * transaction (REQUIRED, MANDATORY, SUPPORTS) fails with a rollback
      * exception while one that does not (REQUIRES_NEW, NOT_SUPPORTED) runs
-     * outside it.
+     * outside it. A server MUST understand this header or answer an error;
+     * one that ignored it would run a REQUIRED method in a transaction of its
+     * own and commit work the caller is about to roll back.
      */
     public static final String H_TXN_ROLLBACK_ONLY = "x-gf-txn-rollback-only";
 

@@ -21,12 +21,17 @@ import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputFilter;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
 import javax.naming.Context;
 
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -131,6 +136,66 @@ class AmbientTransactionFailureTest {
         assertEquals("true", rollbackOnlyMarker(1));
         assertEquals(AmbientTransactionTest.started, ClientTransactionContext.current());
         assertEquals(1, transaction.enlisted, "the endpoint is enlisted once");
+    }
+
+    @Test
+    @DisplayName("a refused call drops the branch the thread was carrying")
+    void aRefusalDropsAStaleBranch() {
+        pinger().ping();
+        assertEquals(AmbientTransactionTest.started, ClientTransactionContext.current());
+
+        transaction.status = Status.STATUS_PREPARED;
+        assertThrows(EJBException.class, () -> pinger().ping());
+
+        assertNull(ClientTransactionContext.current(), "the refused call left its branch on the thread");
+    }
+
+    /** Announces a codec the server will refuse, over the built-in encoding. */
+    private static final class ExoticMarshaller implements Marshaller {
+        private final Marshaller delegate = new JavaSerializationMarshaller();
+
+        @Override
+        public String codec() {
+            return "exotic";
+        }
+
+        @Override
+        public ObjectWriter newWriter(OutputStream out) throws IOException {
+            return delegate.newWriter(out);
+        }
+
+        @Override
+        public ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter)
+                throws IOException {
+            return delegate.newReader(in, loader, filter);
+        }
+    }
+
+    @Test
+    @DisplayName("the rollback-only marker is on the retry after a codec downgrade too")
+    void theMarkerSurvivesACodecDowngrade() {
+        transaction.status = Status.STATUS_MARKED_ROLLBACK;
+        transport.refuseUnsupportedCodec = 1;
+        HttpEjbClient exotic = new HttpEjbClient(config, transport, new ExoticMarshaller(),
+                JavaSerializationMarshaller.defaultFilter());
+
+        exotic.createProxy(Pinger.class, new EjbLocator("app", "module", null, "PingerBean")).ping();
+
+        assertEquals(2, transport.calls.size(), "expected the refused attempt and one retry");
+        assertEquals("true", transport.requestHeaders.get(0).get(Protocol.H_TXN_ROLLBACK_ONLY));
+        assertEquals("true", transport.requestHeaders.get(1).get(Protocol.H_TXN_ROLLBACK_ONLY));
+    }
+
+    @Test
+    @DisplayName("the rollback-only marker is on an asynchronous call")
+    void theMarkerIsOnAnAsynchronousCall() throws Exception {
+        transaction.status = Status.STATUS_MARKED_ROLLBACK;
+
+        client.invokeAsync(new EjbLocator("app", "module", null, "PingerBean"), Pinger.class,
+                Pinger.class.getMethod("ping"), new Object[0]).handle((value, error) -> null).get();
+
+        assertEquals(1, transport.calls.size());
+        assertEquals("true", rollbackOnlyMarker(0));
     }
 
     @Test

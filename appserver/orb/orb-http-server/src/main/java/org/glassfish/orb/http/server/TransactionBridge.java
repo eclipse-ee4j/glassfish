@@ -21,6 +21,8 @@ import java.lang.reflect.Method;
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
+import org.glassfish.orb.http.protocol.EjbKey;
+
 /**
  * The seam onto the transaction manager.
  *
@@ -87,36 +89,76 @@ public interface TransactionBridge {
     void recreate(Xid xid, long timeoutSeconds) throws TransactionException;
 
     /**
-     * Admits an invocation whose caller's transaction can only roll back.
+     * Prepares an invocation whose caller's transaction can only roll back.
      *
      * <p>The caller sent {@code x-gf-txn-rollback-only}: its transaction is
-     * marked rollback-only or already rolling back. The container must treat
-     * the invocation as it treats an IIOP call arriving in such a client
-     * transaction, by the invoked method's transaction attribute. Returning
-     * normally means the call may run: the attribute does not use the caller's
-     * transaction (REQUIRES_NEW, NOT_SUPPORTED, ...), and the bridge has left
-     * the thread associated with whatever transaction the call should see, none
-     * for the first two. Throwing a {@link TransactionException} with
-     * {@link XAException#XA_RBROLLBACK} refuses it, which is what REQUIRED,
-     * MANDATORY and SUPPORTS do (the client sees a
-     * {@code TransactionRolledbackException}).
+     * marked rollback-only or already rolling back. The bridge does not decide
+     * what that means for the call. It makes the thread look to the container
+     * as an IIOP client in such a transaction does, and the <em>container</em>
+     * applies the invoked bean's transaction attribute (in GlassFish,
+     * {@code EJBContainerTransactionManager.preInvokeTx} /
+     * {@code BaseContainer.useClientTx}):
+     * <ul>
+     * <li>REQUIRED, MANDATORY, SUPPORTS: the call fails with a transaction
+     *     rolled back exception, which reaches the client as
+     *     {@code EJBTransactionRolledbackException};</li>
+     * <li>REQUIRES_NEW, NOT_SUPPORTED and bean-managed transactions: the
+     *     caller's transaction is suspended and the method runs;</li>
+     * <li>NEVER: the call fails with {@code EJBException}, as for any client
+     *     transaction.</li>
+     * </ul>
+     * Which attribute applies depends on the bean (an ejb-jar.xml override, or
+     * two beans sharing a view interface), which is why the bridge receives the
+     * resolved {@code key} and why the dispatcher never guesses from
+     * {@code method}.
      *
-     * <p>A successful return is paired with {@link #release} when {@code xid}
-     * is not null, exactly as for {@link #recreate}; when it is null there is
-     * nothing to release. A refusal leaves nothing associated.
+     * <p>Contract of a normal return: the calling thread is associated with a
+     * transaction that is <em>marked rollback-only</em>. For a non-null
+     * {@code xid} that is the recreated branch, marked rollback-only; for a
+     * null {@code xid} it is a local transaction begun for this call and marked
+     * rollback-only, so the container sees a client transaction either way.
+     * The returned handle says what to undo, and the dispatcher passes it to
+     * {@link #releaseRollbackOnly} exactly once, in a {@code finally}, on every
+     * path after a normal return: the call ran, the bean threw, the container
+     * refused it, the invocation was cancelled or the response could not be
+     * written. It is never combined with {@link #release}.
      *
-     * <p>The default refuses, the safe side for a bridge that cannot apply
-     * attributes: running the method inside a doomed transaction, or outside
-     * one the caller believes it is in, are both wrong.
+     * <p>Contract of a failure: when this throws, nothing is left associated
+     * with the thread (the dispatcher also calls {@link #detach}) and no handle
+     * exists. Throwing {@link TransactionException} with
+     * {@link XAException#XA_RBROLLBACK} refuses the call with a rollback code,
+     * which the client reports as {@code EJBTransactionRolledbackException}.
+     *
+     * <p>The default refuses, the safe side for a bridge that cannot do this:
+     * running the method in a transaction of its own would commit work the
+     * caller's transaction is about to roll back.
      *
      * @param xid the caller's branch, or null if it had none to send
      * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
-     * @param method the business method about to be invoked, whose attribute decides
+     * @param key the bean the invocation is addressed to, as resolved
+     * @param method the business method about to be invoked; informational only
+     * @return an opaque, non-null handle for {@link #releaseRollbackOnly}
      */
-    default void recreateRollbackOnly(Xid xid, long timeoutSeconds, Method method)
+    default Object recreateRollbackOnly(Xid xid, long timeoutSeconds, EjbKey key, Method method)
             throws TransactionException {
         throw new TransactionException("the caller's transaction is marked rollback-only",
                 XAException.XA_RBROLLBACK);
+    }
+
+    /**
+     * Undoes what {@link #recreateRollbackOnly} associated.
+     *
+     * <p>For a recreated branch that means letting it go as {@link #release}
+     * does, but without complaint: the branch is marked rollback-only on
+     * purpose, and releasing it must neither throw nor log a warning on every
+     * call. For a local transaction begun because the caller sent no xid it
+     * means rolling that transaction back, never committing it. The default
+     * does nothing, matching the default of {@link #recreateRollbackOnly},
+     * which never returns normally.
+     *
+     * @param handle what {@link #recreateRollbackOnly} returned
+     */
+    default void releaseRollbackOnly(Object handle) throws TransactionException {
     }
 
     /** Disassociates the transaction imported by {@link #recreate}. */

@@ -37,6 +37,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A failure of the transaction bridge during an invocation is reported in
@@ -91,20 +92,27 @@ class EjbTransactionFailureTest {
 
     private static Loopback.InMemoryExchange invoke(TransactionBridge transactions,
             Map<String, String> extraHeaders, boolean carryTransaction) throws IOException {
+        return invoke(transactions, extraHeaders, carryTransaction, "greet",
+                new String[] { String.class.getName(), int.class.getName() }, "Ada", 1);
+    }
+
+    private static Loopback.InMemoryExchange invoke(TransactionBridge transactions,
+            Map<String, String> extraHeaders, boolean carryTransaction, String methodName,
+            String[] parameterTypes, Object... arguments) throws IOException {
         FakeContainer container = new FakeContainer();
         container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
         EjbDispatcher dispatcher = new EjbDispatcher(container, SecurityBridge.NONE, transactions,
                 new JavaSerializationMarshaller(), new InvocationRegistry(), SessionAffinity.forThisNode());
 
         String path = EjbRoutes.invokePath(Protocol.CONTEXT_PATH, "myapp", "mymodule", null,
-                "GreeterBean", null, TestBeans.Greeter.class.getName(), "greet",
-                new String[] { String.class.getName(), int.class.getName() });
+                "GreeterBean", null, TestBeans.Greeter.class.getName(), methodName, parameterTypes);
         ByteArrayOutputStream body = new ByteArrayOutputStream();
         InvocationEnvelope.writeTxContext(body, carryTransaction
                 ? Xids.toContext(CARRIED, TxContext.TYPE_REMOTE) : TxContext.NONE);
         try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(body)) {
-            writer.writeObject("Ada");
-            writer.writeObject(1);
+            for (Object argument : arguments) {
+                writer.writeObject(argument);
+            }
             writer.writeObject(Map.of());
         }
         Map<String, String> headers = new java.util.HashMap<>(extraHeaders);
@@ -122,7 +130,8 @@ class EjbTransactionFailureTest {
                 Map.of(Protocol.H_TXN_TIMEOUT, bad));
 
         assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status(), "timeout " + bad);
-        assertEquals(List.of(), transactions.calls, "recreate must not see timeout " + bad);
+        // Nothing is imported, and the thread is left clean of the previous request.
+        assertEquals(List.of("detach"), transactions.calls, "recreate must not see timeout " + bad);
     }
 
     @Test
@@ -196,8 +205,9 @@ class EjbTransactionFailureTest {
         Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), true);
 
         assertEquals(Protocol.SC_OK, exchange.toResponse().status());
-        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet)",
-                "release(" + Xids.key(CARRIED) + ")"), transactions.calls);
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet,key=true)",
+                "releaseRollbackOnly(" + Xids.key(CARRIED) + ")"), transactions.calls);
+        assertEquals(Map.of(), transactions.imported);
     }
 
     @Test
@@ -211,19 +221,21 @@ class EjbTransactionFailureTest {
         assertEquals(Protocol.SC_EXCEPTION, exchange.toResponse().status());
         assertEquals(List.of(Integer.toString(XAException.XA_RBROLLBACK)),
                 exchange.toResponse().headers().get(TransactionDispatcher.H_ERROR_CODE));
-        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet)", "detach"),
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet,key=true)", "detach"),
                 transactions.calls);
     }
 
     @Test
-    @DisplayName("a rollback-only call with no branch to import still reaches the bridge, with no xid")
+    @DisplayName("a rollback-only call with no branch reaches the bridge with no xid, and is released after")
     void aRollbackOnlyCallWithoutABranchReachesTheBridge() throws IOException {
         FakeTransactions transactions = new FakeTransactions();
 
         Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), false);
 
         assertEquals(Protocol.SC_OK, exchange.toResponse().status());
-        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet)"), transactions.calls);
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet,key=true)",
+                "releaseRollbackOnly(local)"), transactions.calls);
+        assertEquals(Map.of(), transactions.imported, "the local transaction was left behind");
     }
 
     @Test
@@ -248,5 +260,43 @@ class EjbTransactionFailureTest {
 
         assertEquals(1, thrown.getSuppressed().length);
         assertEquals("detach is broken too", thrown.getSuppressed()[0].getMessage());
+    }
+
+    @Test
+    @DisplayName("the rollback-only handle is released when the bean throws")
+    void theHandleIsReleasedWhenTheBeanThrows() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), false, "refuse", new String[0]);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.toResponse().status());
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,refuse,key=true)",
+                "releaseRollbackOnly(local)"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("the rollback-only handle is released after an asynchronous method")
+    void theHandleIsReleasedAfterAnAsynchronousMethod() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), true, "greetLater",
+                new String[] { String.class.getName() }, "Ada");
+
+        assertTrue(exchange.toResponse().status() < 300, "status " + exchange.toResponse().status());
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greetLater,key=true)",
+                "releaseRollbackOnly(" + Xids.key(CARRIED) + ")"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a request that repeats after a codec downgrade is imported and released each time")
+    void eachAttemptIsPairedWithItsOwnRelease() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        invoke(transactions, rollbackOnly(), false);
+        invoke(transactions, rollbackOnly(), false);
+
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet,key=true)", "releaseRollbackOnly(local)",
+                "detach", "recreateRollbackOnly(none,0,greet,key=true)", "releaseRollbackOnly(local)"),
+                transactions.calls);
     }
 }

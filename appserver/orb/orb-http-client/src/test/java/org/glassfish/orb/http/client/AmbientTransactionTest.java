@@ -16,6 +16,7 @@
 
 package org.glassfish.orb.http.client;
 
+import jakarta.ejb.EJBException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.Synchronization;
@@ -27,6 +28,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -49,6 +52,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * A transaction this client did not start must still travel.
@@ -254,16 +258,16 @@ class AmbientTransactionTest {
             now.addAndGet(1_000_000_000L);
         }
 
-        assertEquals(1, OPENED.get(), "every call looked the registry up again");
+        assertEquals(2, OPENED.get(), "every call looked the registry up again");
     }
 
     @Test
-    @DisplayName("a failed lookup is tried again after the delay, and joining then works")
-    void aFailedLookupIsRetriedAfterTheDelay() {
+    @DisplayName("a failed lookup is not tried again before the delay is over")
+    void aFailedLookupIsNotRetriedBeforeTheDelay() {
         AtomicLong now = new AtomicLong();
         AmbientTransaction.clock = now::get;
         AmbientTransaction.join(config, transport);
-        assertEquals(1, OPENED.get());
+        assertEquals(2, OPENED.get(), "both registry names were tried");
 
         FakeTransaction transaction = new FakeTransaction();
         BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
@@ -273,10 +277,89 @@ class AmbientTransactionTest {
         now.addAndGet(29_000_000_000L);
         AmbientTransaction.join(config, transport);
         assertEquals(0, transaction.enlisted, "retried before the delay was over");
+    }
 
-        now.addAndGet(2_000_000_000L);
+    @Test
+    @DisplayName("a failed lookup is tried again once the delay is over, and joining then works")
+    void aFailedLookupIsRetriedOnceTheDelayIsOver() {
+        AtomicLong now = new AtomicLong();
+        AmbientTransaction.clock = now::get;
+        AmbientTransaction.join(config, transport);
+
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+        now.addAndGet(31_000_000_000L);
         AmbientTransaction.join(config, transport);
         assertEquals(1, transaction.enlisted, "never retried: one failed lookup disabled joining");
+    }
+
+    private static void runWithLoader(ClassLoader loader, Runnable work) throws Exception {
+        Throwable[] failure = new Throwable[1];
+        Thread thread = new Thread(() -> {
+            try {
+                work.run();
+            } catch (Throwable t) {
+                failure[0] = t;
+            }
+        });
+        thread.setContextClassLoader(loader);
+        thread.start();
+        thread.join();
+        if (failure[0] != null) {
+            throw new AssertionError(failure[0]);
+        }
+    }
+
+    @Test
+    @DisplayName("one thread's failed lookup does not stop a thread with another class loader from joining")
+    void aMissIsPerContextClassLoader() throws Exception {
+        AtomicLong now = new AtomicLong();
+        AmbientTransaction.clock = now::get;
+        // An unmanaged thread: it cannot see the registry.
+        runWithLoader(new URLClassLoader(new URL[0]), () -> AmbientTransaction.join(config, transport));
+
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+        // A managed thread, inside the first one's backoff window.
+        runWithLoader(new URLClassLoader(new URL[0]), () -> AmbientTransaction.join(config, transport));
+
+        assertEquals(1, transaction.enlisted, "another thread's miss stopped this one from joining");
+    }
+
+    @Test
+    @DisplayName("the server-wide registry name is tried first, so a thread without java:comp can join")
+    void theServerWideNameIsLookedUpFirst() {
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:appserver/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+
+        AmbientTransaction.join(config, transport);
+
+        assertEquals(1, transaction.enlisted);
+        assertEquals(2, OPENED.get(), "the first name should have been enough for the registry");
+    }
+
+    @Test
+    @DisplayName("when the registry cannot be had but a known manager reports a transaction, the call is refused")
+    void aKnownManagerWithATransactionFailsClosed() {
+        AtomicLong now = new AtomicLong();
+        AmbientTransaction.clock = now::get;
+        FakeTransaction transaction = new FakeTransaction();
+        BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
+        BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
+        AmbientTransaction.join(config, transport);
+        ClientTransactionContext.disassociate();
+
+        // Only the registry goes missing for this thread; the manager is known.
+        AmbientTransaction.forgetRegistry();
+        BOUND.remove("java:comp/TransactionSynchronizationRegistry");
+
+        assertThrows(EJBException.class, () -> AmbientTransaction.join(config, transport),
+                "the call would have been sent outside the caller's transaction");
     }
 
     @Test
@@ -289,7 +372,7 @@ class AmbientTransactionTest {
         AmbientTransaction.join(config, transport);
 
         assertEquals(1, transaction.enlisted);
-        assertEquals(2, OPENED.get(), "one lookup for the registry and one for the manager");
+        assertEquals(3, OPENED.get(), "java:appserver missed, java:comp found, and one for the manager");
         assertEquals(OPENED.get(), CLOSED.get(), "an initial context was left open");
     }
 

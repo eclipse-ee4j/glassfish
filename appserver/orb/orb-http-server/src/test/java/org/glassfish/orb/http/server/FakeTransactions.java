@@ -101,17 +101,25 @@ final class FakeTransactions implements TransactionBridge {
     }
 
     @Override
-    public void recreateRollbackOnly(Xid xid, long timeoutSeconds, java.lang.reflect.Method method)
-            throws TransactionException {
+    public Object recreateRollbackOnly(Xid xid, long timeoutSeconds, org.glassfish.orb.http.protocol.EjbKey key,
+            java.lang.reflect.Method method) throws TransactionException {
         record("recreateRollbackOnly(" + (xid == null ? "none" : Xids.key(xid)) + "," + timeoutSeconds
-                + "," + method.getName() + ")");
+                + "," + method.getName() + ",key=" + (key != null) + ")");
         if (refuseRollbackOnly) {
             throw new TransactionException("the caller's transaction is marked rollback-only",
                     XAException.XA_RBROLLBACK);
         }
-        if (xid != null) {
-            imported.put(Xids.key(xid), timeoutSeconds);
-        }
+        // What a real bridge does: a recreated branch, or a local transaction
+        // for a caller that sent none, either marked rollback-only.
+        String handle = xid == null ? "local" : Xids.key(xid);
+        imported.put(handle, timeoutSeconds);
+        return handle;
+    }
+
+    @Override
+    public void releaseRollbackOnly(Object handle) throws TransactionException {
+        record("releaseRollbackOnly(" + handle + ")");
+        imported.remove(String.valueOf(handle));
     }
 
     @Override

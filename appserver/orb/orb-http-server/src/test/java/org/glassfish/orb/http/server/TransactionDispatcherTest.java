@@ -150,7 +150,7 @@ class TransactionDispatcherTest {
     }
 
     @Test
-    @DisplayName("recover with no flags parameter starts a scan")
+    @DisplayName("guard: recover with no flags parameter starts a scan")
     void recoverWithoutFlagsStartsAScan() {
         FakeTransactions transactions = new FakeTransactions();
 

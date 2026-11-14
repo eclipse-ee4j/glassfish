@@ -149,7 +149,11 @@ public final class HttpUserTransaction implements UserTransaction {
             if (code == XAException.XAER_NOTA || code == XAException.XA_HEURRB
                     || (code >= XAException.XA_RBBASE && code <= XAException.XA_RBEND)) {
                 // The transaction is already gone or already rolled back,
-                // which is the state a rollback is asking for.
+                // which is the state a rollback is asking for. This assumes
+                // the request reached the server that owns the transaction:
+                // behind a load balancer with no session affinity, another
+                // server's "no such transaction" would be reported here as
+                // success while the transaction lives on.
                 return;
             }
             throw systemException("rollback failed", e);

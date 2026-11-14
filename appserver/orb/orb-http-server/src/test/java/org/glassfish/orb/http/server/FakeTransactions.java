@@ -54,6 +54,8 @@ final class FakeTransactions implements TransactionBridge {
     boolean voteReadOnly;
     /** When set, the next operation fails with this XA code. */
     int failWith;
+    /** When set, the failure carries this reason instead of the default one. */
+    String failReason;
 
     private void record(String call) {
         calls.add(call);
@@ -63,7 +65,7 @@ final class FakeTransactions implements TransactionBridge {
         if (failWith != 0) {
             int code = failWith;
             failWith = 0;
-            throw new TransactionException(what + " was told to fail", code);
+            throw new TransactionException(failReason != null ? failReason : what + " was told to fail", code);
         }
     }
 

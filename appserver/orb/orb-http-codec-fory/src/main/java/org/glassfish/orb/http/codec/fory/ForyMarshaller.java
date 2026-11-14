@@ -124,8 +124,9 @@ public final class ForyMarshaller implements Marshaller {
      * is present and bypassed. Keeping the two directions apart means the
      * reader has never been warmed by anything this process chose to send.
      * <p>
-     * Keyed weakly so an application class loader stays collectable after
-     * undeployment; a serializer cache must not pin a deployment in memory.
+     * Keyed weakly, but the value is a serializer that references its key's
+     * loader, so an entry keeps its loader reachable: the loader stays pinned
+     * for the life of this class.
      */
     private static final Map<ClassLoader, ThreadSafeFory> WRITERS =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -377,6 +378,16 @@ public final class ForyMarshaller implements Marshaller {
 
     private static ThreadSafeFory writerFor(ClassLoader loader) {
         return WRITERS.computeIfAbsent(resolve(loader), l -> newFory(l, null));
+    }
+
+    /**
+     * @param loader the class loader the readers were requested for
+     * @return how many readers are cached for {@code loader}, one per filter;
+     *         0 if none
+     */
+    static int readerCount(ClassLoader loader) {
+        Map<ObjectInputFilter, ThreadSafeFory> byFilter = READERS.get(resolve(loader));
+        return byFilter == null ? 0 : byFilter.size();
     }
 
     private static ThreadSafeFory readerFor(ClassLoader loader, ObjectInputFilter filter) {

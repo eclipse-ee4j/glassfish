@@ -70,6 +70,15 @@ public class GlassFishTransactionBridge implements TransactionBridge {
     @Inject
     private JavaEETransactionManager transactions;
 
+    /** Used by the container, which injects the manager. */
+    public GlassFishTransactionBridge() {
+    }
+
+    /** Used by tests, which have a manager of their own and no container. */
+    GlassFishTransactionBridge(JavaEETransactionManager transactions) {
+        this.transactions = transactions;
+    }
+
     @Override
     public void recreate(Xid xid, long timeoutSeconds) throws TransactionException {
         try {
@@ -283,11 +292,13 @@ public class GlassFishTransactionBridge implements TransactionBridge {
      */
     @Override
     public void commitUserTransaction(Xid xid) throws TransactionException {
+        requireOwn(xid);
         commitOnePhase(xid);
     }
 
     @Override
     public void rollbackUserTransaction(Xid xid) throws TransactionException {
+        requireOwn(xid);
         rollback(xid);
     }
 
@@ -321,6 +332,32 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         }
         detach();
         return terminator;
+    }
+
+    /**
+     * Refuses a user transaction end for a branch this transport did not begin.
+     *
+     * <p>This is a correctness guard, not authorization. A user transaction
+     * end completes the branch in one phase, which is only right for a branch
+     * {@link #begin} minted. A branch owned by the caller's own coordinator
+     * (for example {@code HttpUserTransaction.commit} while an
+     * {@code HttpXAResource} is started on the thread) must be completed by
+     * that coordinator through the XA routes, so the end is answered as unknown.
+     * The xids {@link #begin} mints always carry this transport's format id, so
+     * one with another format id was never handed out. The XA routes carry xids
+     * minted by the caller's own transaction manager, in whatever format that
+     * manager uses, and cannot be filtered this way.
+     *
+     * <p>Called before the terminator is touched, so a refusal neither
+     * detaches the thread nor reaches the manager.
+     *
+     * @param xid the branch about to be committed or rolled back
+     */
+    private static void requireOwn(Xid xid) throws TransactionException {
+        if (xid == null || xid.getFormatId() != FORMAT_ID) {
+            throw new TransactionException("no such branch: " + (xid == null ? "null" : Xids.key(xid)),
+                    XAException.XAER_NOTA);
+        }
     }
 
     private static TransactionException failure(String message, int errorCode, Throwable cause) {

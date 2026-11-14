@@ -279,20 +279,22 @@ public final class ForyMarshaller implements Marshaller {
      * Whether the value is estimated to be large enough to be written into the
      * chunked output directly.
      * <p>
-     * The 4 KiB default has no measured justification. {@code ForyCodecBenchmarkTest},
-     * which writes into a fresh {@link ChunkedOutput} in both modes, was run
-     * three times on separate GitHub Actions runners. Streamed encoding was
-     * never slower than the byte-array path for the sizes tried: for a
-     * {@code byte[]} of 1 KiB it measured 1.02x to 1.04x, of 2 KiB 1.11x to
-     * 1.15x, of 4 KiB 1.16x to 1.30x and of 16 KiB 1.38x to 1.44x the
-     * byte-array throughput, and it allocated less from 1 KiB up. For a
-     * 5 character string and a two entry map the difference was within the
-     * noise of the runs (0.97x to 1.21x). The threshold is therefore a
-     * conservative guess about where the saved copy starts to matter, not a
-     * measured crossover, and it is left as it is rather than changed without
-     * evidence for a different value. The sizes are estimates, and an
-     * unknown object graph is never estimated as large, so it takes the
-     * byte-array path unless the deployment enables streaming explicitly.
+     * The 4 KiB default has no measured justification.
+     * {@code ForyCodecBenchmarkTest}, which writes into a fresh
+     * {@link ChunkedOutput} in both modes, was run nine times on GitHub
+     * Actions runners (three jobs in each of three workflow runs). Streamed
+     * encoding of a {@code byte[]} measured, as a multiple of the byte-array
+     * throughput, 1.02x to 1.66x at 1 KiB, 0.86x to 1.17x at 2 KiB (below 1.0
+     * in one run only), 1.16x to 1.54x at 4 KiB and 1.38x to 1.66x at 16 KiB,
+     * and it allocated less from 1 KiB up. A 5 character string measured 1.01x
+     * to 1.33x and a two entry map 0.92x to 1.27x, which is within the noise
+     * between runs. There is no size below the threshold where the byte-array
+     * path was consistently faster, so the threshold is a conservative guess
+     * about where the saved copy starts to matter, not a measured crossover.
+     * It is left as it is, because a different value would need evidence that
+     * these runs do not give. The sizes are estimates, and an unknown object
+     * graph is never estimated as large, so it takes the byte-array path
+     * unless the deployment enables streaming explicitly.
      *
      * @param threshold the estimated size in bytes from which a value counts
      *                  as large; negative never does

@@ -111,6 +111,17 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!--
+            Test scope only: the round trip test drives the bridge through the
+            real client. The client does not depend on this module, so this is
+            not a cycle.
+        -->
+        <dependency>
+            <groupId>org.glassfish.main.orb</groupId>
+            <artifactId>orb-http-client</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>

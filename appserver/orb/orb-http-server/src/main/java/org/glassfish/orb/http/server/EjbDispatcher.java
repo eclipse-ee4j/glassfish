@@ -192,7 +192,7 @@ public final class EjbDispatcher {
             // The credential was offered and refused. Saying so is the point:
             // running the call anonymously would answer a caller that asked to
             // be someone with the rights of no one.
-            fail(exchange, Protocol.SC_FORBIDDEN, e.getMessage());
+            fail(exchange, Protocol.SC_FORBIDDEN, "not authorized");
             return;
         }
 
@@ -240,7 +240,7 @@ public final class EjbDispatcher {
                 exchange.setResponseHeader(TransactionDispatcher.H_ERROR_CODE,
                         Integer.toString(e.errorCode()));
                 exchange.setResponseHeader("X-GF-Reason",
-                        String.valueOf(e.getMessage()).replace('\n', ' '));
+                        String.valueOf(e.getMessage()).replace('\n', ' ').replace('\r', ' '));
             } finally {
                 if (target != null) {
                     container.releaseTargetObject(target);
@@ -509,7 +509,7 @@ public final class EjbDispatcher {
         if (reason != null) {
             // A short diagnostic header, never a marshalled body: a protocol
             // level failure must be readable by an intermediary too.
-            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' '));
+            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' ').replace('\r', ' '));
         }
     }
 

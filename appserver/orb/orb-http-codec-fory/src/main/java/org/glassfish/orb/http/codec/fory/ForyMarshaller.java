@@ -50,10 +50,14 @@ import org.glassfish.orb.http.protocol.Marshaller;
  *
  * <p>What is bounded when decoding: which classes may be instantiated (the
  * transport's filter, see {@code FilterBackedTypeChecker}), the depth of the
- * graph, and the size of one frame, which is read incrementally and so only
- * grows with the bytes that actually arrive. What is not: the declared length
- * of an array or collection inside a frame, and the number of references.
- * Java serialization has those limits and this codec does not.
+ * graph, the size of one frame (read incrementally, so it only grows with the
+ * bytes that arrive), and, by Fory's own gates which this class configures,
+ * the approximate memory one deserialization may materialise
+ * ({@code withMaxGraphMemoryBytes}) and the number of collection elements
+ * that are not backed by input bytes (Fory's default, 8192). What is not
+ * enforced here: the filter's per-stream array budget and reference limit,
+ * which Fory's type check cannot see. These Fory gates rely on Fory 1.7.1 and
+ * are not exercised by a test of ours.
  */
 public final class ForyMarshaller implements Marshaller {
 
@@ -84,12 +88,28 @@ public final class ForyMarshaller implements Marshaller {
             Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
 
     /**
-     * How deeply nested a graph may be, on the way in and on the way out.
-     * Fory's own default is 50, which refuses a graph Java serialization
-     * accepts; this is the same bound as the default deserialization filter's
-     * {@code maxdepth}, so the two codecs agree.
+     * How deeply nested a graph may be, on the way in and on the way out: the
+     * same value as the default deserialization filter's depth
+     * ({@code org.glassfish.orb.http.filter.maxDepth}, default 100). Fory's own
+     * default of 50 refused a 65-level graph that Java serialization accepts.
      */
-    private static final int MAX_DEPTH = 256;
+    private static final int MAX_DEPTH = (int) Math.min(Integer.MAX_VALUE, JavaSerializationMarshaller.maxDepth());
+
+    /**
+     * Fory's approximate gate on the memory one deserialization may
+     * materialise, four times the stream's array budget (128 MB by default,
+     * which is also Fory's own default). It is an estimate, not a hard limit.
+     */
+    private static final long MAX_GRAPH_MEMORY = 4 * JavaSerializationMarshaller.maxArrayBytes();
+
+    /**
+     * Instances in each pool. A pool builds this many Fory instances eagerly
+     * for every (loader, filter) pair, so it is bounded: Fory's default of four
+     * per processor is hundreds on a large machine. Set
+     * {@code org.glassfish.orb.http.codec.fory.poolSize} to change it.
+     */
+    static final int POOL_SIZE = Integer.getInteger("org.glassfish.orb.http.codec.fory.poolSize",
+            Math.max(1, Math.min(4 * Runtime.getRuntime().availableProcessors(), 16)));
 
     /**
      * @return whether generated serializers are in use
@@ -337,11 +357,12 @@ public final class ForyMarshaller implements Marshaller {
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
                 .withMaxDepth(MAX_DEPTH)
+                .withMaxGraphMemoryBytes(MAX_GRAPH_MEMORY)
                 .withCodegen(CODEGEN)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
             builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));
         }
-        return builder.buildThreadSafeFory();
+        return builder.buildThreadSafeForyPool(Math.max(1, POOL_SIZE));
     }
 }

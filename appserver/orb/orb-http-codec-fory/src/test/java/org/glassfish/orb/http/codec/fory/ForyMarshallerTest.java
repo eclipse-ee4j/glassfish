@@ -421,4 +421,39 @@ class ForyMarshallerTest {
             executor.shutdownNow();
         }
     }
+
+    @Test
+    @DisplayName("a graph deeper than the shared depth limit is refused on this codec too")
+    void aTooDeepGraphIsRefused() {
+        Node head = new Node("0");
+        Node tail = head;
+        for (int i = 1; i <= 150; i++) {
+            tail.peer = new Node(Integer.toString(i));
+            tail = tail.peer;
+        }
+        Node deep = head;
+
+        assertThrows(Exception.class, () -> roundTrip(deep, JavaSerializationMarshaller.defaultFilter()));
+    }
+
+    @Test
+    @DisplayName("the pool is bounded (guard) and its cost is reported")
+    void thePoolIsBounded() throws Exception {
+        assertTrue(ForyMarshaller.POOL_SIZE >= 1 && ForyMarshaller.POOL_SIZE <= 16,
+                "pool size " + ForyMarshaller.POOL_SIZE);
+        try (URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader())) {
+            com.sun.management.ThreadMXBean threads = (com.sun.management.ThreadMXBean)
+                    java.lang.management.ManagementFactory.getThreadMXBean();
+            long id = Thread.currentThread().getId();
+            long before = threads.getThreadAllocatedBytes(id);
+            try (Marshaller.ObjectReader reader = marshaller.newReader(
+                    new ByteArrayInputStream(new byte[0]), loader, JavaSerializationMarshaller.defaultFilter())) {
+                assertNotNull(reader);
+            }
+            long allocated = threads.getThreadAllocatedBytes(id) - before;
+            System.out.println("FORY-POOL poolSize=" + ForyMarshaller.POOL_SIZE
+                    + " allocatedBytesForFirstReaderPool=" + allocated
+                    + " processors=" + Runtime.getRuntime().availableProcessors());
+        }
+    }
 }

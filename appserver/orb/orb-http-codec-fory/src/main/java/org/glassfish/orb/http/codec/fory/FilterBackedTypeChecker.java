@@ -41,11 +41,11 @@ import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
  * length of -1: the filter's {@code maxarray}, {@code maxrefs} and
  * {@code maxbytes} do not apply to Fory, and neither does the array budget of
  * the default filter. Only the class allow/deny decision, the JVM-wide
- * {@code jdk.serialFilter} and Fory's own depth limit (see
+ * {@code jdk.serialFilter}, Fory's own depth limit and its memory gates (see
  * {@code ForyMarshaller}) are enforced. A custom
  * {@code jdk.serialFilterFactory} is not consulted: only the filter itself
- * is. Bounding declared array and collection sizes on this codec needs
- * support from Fory itself and is not done here.
+ * is. The array budget and reference limit of the Java serialization
+ * filter do not apply to this codec.
  */
 final class FilterBackedTypeChecker implements TypeChecker {
 

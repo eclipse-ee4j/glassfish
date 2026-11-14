@@ -284,9 +284,10 @@ class ChunkedOutputTest {
     }
 
     @Test
-    @DisplayName("closing a frame twice patches the same length and leaves the same bytes")
+    @DisplayName("[guard] closing a frame twice patches the same length and leaves the same bytes")
     void closingTwiceLeavesTheSameBytes() throws IOException {
-        // A guard: the second close is already a no-op on the parent.
+        // GUARD / characterization test: it passes with and without the abort
+        // change, because the second close was already a no-op.
         ChunkedOutput out = new ChunkedOutput(8);
         ChunkedOutput.Frame f = out.beginFrame((byte) 7);
         out.write(new byte[] {1, 2, 3});
@@ -302,9 +303,10 @@ class ChunkedOutputTest {
     }
 
     @Test
-    @DisplayName("every chunk listed by chunks() is full and together they hold all but the tail")
+    @DisplayName("[guard] every chunk listed by chunks() is full and together they hold all but the tail")
     void listedChunksAreAllFull() throws IOException {
-        // A guard for the invariant that patch() and toByteArray() rely on.
+        // GUARD / characterization test: documents the invariant that patch()
+        // and toByteArray() rely on; it is not expected to fail on a revert.
         ChunkedOutput out = new ChunkedOutput(16);
         out.write(new byte[14]);
         ChunkedOutput.Frame f = out.beginFrame((byte) 7);
@@ -319,6 +321,72 @@ class ChunkedOutputTest {
         }
         assertEquals(8, out.toByteBuffers().length);
         assertEquals(7, out.toByteBuffers()[7].remaining());
+    }
+
+    @Test
+    @DisplayName("a frame cannot be begun while another one is open")
+    void beginWhileOpenIsRefused() throws IOException {
+        // Scenario A: f1 = begin; f2 = begin; f1.abort(); write; f2.close().
+        // Without the check f2 would sit inside f1's bytes, f1.abort() would
+        // cut it off and f2.close() would patch a header that is gone.
+        ChunkedOutput out = new ChunkedOutput(8);
+        out.write(new byte[] {1, 2});
+        ChunkedOutput.Frame f1 = out.beginFrame((byte) 7);
+        assertThrows(IllegalStateException.class, () -> out.beginFrame((byte) 8));
+        assertEquals(7L, out.size(), "the refused begin wrote nothing");
+        f1.abort();
+        out.write(new byte[] {5, 6, 7, 8, 9, 10});
+        assertArrayEquals(new byte[] {1, 2, 5, 6, 7, 8, 9, 10}, out.toByteArray());
+
+        // Once the first frame is closed or aborted a new one can begin.
+        ChunkedOutput.Frame f3 = out.beginFrame((byte) 3);
+        f3.close();
+        ChunkedOutput.Frame f4 = out.beginFrame((byte) 4);
+        f4.abort();
+        assertEquals(13L, out.size());
+    }
+
+    @Test
+    @DisplayName("a closed frame cannot be aborted after a later frame was closed")
+    void staleFrameCannotBeAborted() throws IOException {
+        // Scenario B: f1 closed, f2 begun and closed, then f1.abort() must not
+        // cut the stream back to f1's header and swallow f2.
+        ChunkedOutput out = new ChunkedOutput(8);
+        ChunkedOutput.Frame f1 = out.beginFrame((byte) 1);
+        out.write(new byte[] {1});
+        f1.close();
+        ChunkedOutput.Frame f2 = out.beginFrame((byte) 2);
+        out.write(new byte[] {2, 2});
+        f2.close();
+        byte[] before = out.toByteArray();
+        assertThrows(IllegalStateException.class, f1::abort);
+        assertArrayEquals(before, out.toByteArray());
+        assertEquals(13L, out.size());
+    }
+
+    @Test
+    @DisplayName("a frame can be begun and closed after an abort took a chunk back from the list")
+    void frameAfterAbortThatReclaimedAChunk() throws IOException {
+        // Chunk size 4: the header at 3..7 lands in chunk 0 and 1, and 20 bytes
+        // of payload push several chunks into the list. The abort reclaims
+        // chunk 0 as the current one and forgets the others.
+        ChunkedOutput out = new ChunkedOutput(4);
+        out.write(new byte[] {1, 2, 3});
+        ChunkedOutput.Frame f = out.beginFrame((byte) 7);
+        out.write(new byte[20]);
+        assertTrue(out.chunks().size() >= 5);
+        f.abort();
+        assertEquals(0, out.chunks().size(), "chunk 0 is the current one again");
+        assertEquals(3L, out.size());
+
+        ChunkedOutput.Frame g = out.beginFrame((byte) 9);
+        out.write(new byte[] {4, 5, 6});
+        g.close();
+        byte[] expected = {1, 2, 3, 9, 0, 0, 0, 3, 4, 5, 6};
+        assertArrayEquals(expected, out.toByteArray());
+        assertArrayEquals(expected, flatten(out.toByteBuffers()));
+        assertEquals(2, out.chunks().size());
+        assertEquals(expected.length, remaining(out.toByteBuffers()));
     }
 
     private static long remaining(ByteBuffer[] buffers) {

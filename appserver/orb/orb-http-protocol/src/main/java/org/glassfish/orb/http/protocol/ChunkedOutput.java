@@ -68,6 +68,8 @@ public final class ChunkedOutput extends OutputStream {
     private byte[] current;
     private int currentPos;
     private long total;
+    /** The frame that has been begun and neither closed nor aborted, or null. */
+    private Frame open;
 
     public ChunkedOutput() {
         this(DEFAULT_CHUNK_SIZE);
@@ -128,17 +130,25 @@ public final class ChunkedOutput extends OutputStream {
      * The header is written like any other bytes, so it may span two chunks;
      * every chunk except the last stays completely filled.
      *
+     * Only one frame can be open at a time.
+     *
      * @param kind codec-specific frame kind
-     * @return a frame that must be closed after its payload is written
+     * @return a frame that must be closed or aborted after its payload is written
+     * @throws IllegalStateException if another frame is still open
      */
     public Frame beginFrame(byte kind) {
+        if (open != null) {
+            throw new IllegalStateException("a frame is already open");
+        }
         long headerPos = total;
         write(kind);
         write(0);
         write(0);
         write(0);
         write(0);
-        return new Frame(headerPos);
+        Frame frame = new Frame(headerPos);
+        open = frame;
+        return frame;
     }
 
     /**
@@ -181,9 +191,14 @@ public final class ChunkedOutput extends OutputStream {
          * after it are removed, and the stream ends where it did before
          * {@link #beginFrame}. Call it when the payload could not be written
          * completely, so that no frame is left that looks valid but is empty
-         * or short. Calling it twice, or after an earlier abort, does nothing.
+         * or short. Aborting a frame that was already aborted does nothing.
+         * <p>
+         * Buffers already handed out by {@link #toByteBuffers()} are
+         * invalidated, like by any write: the bytes they show may be
+         * overwritten by what is written next.
          *
-         * @throws IllegalStateException if the frame was already closed
+         * @throws IllegalStateException if the frame was already closed, or
+         *         is not the stream's open frame
          */
         public void abort() {
             if (aborted) {
@@ -192,18 +207,32 @@ public final class ChunkedOutput extends OutputStream {
             if (closed) {
                 throw new IllegalStateException("frame already closed");
             }
+            if (open != this) {
+                throw new IllegalStateException("not the open frame");
+            }
             truncate(headerPos);
             aborted = true;
+            open = null;
         }
 
         /**
          * Patches the payload length into the header. Closing an aborted or
          * an already closed frame does nothing.
+         *
+         * @throws IllegalStateException if the frame is not the stream's open
+         *         frame, if the stream no longer holds the whole header, or
+         *         if the payload is larger than 2 GiB
          */
         @Override
         public void close() {
             if (closed || aborted) {
                 return;
+            }
+            if (open != this) {
+                throw new IllegalStateException("not the open frame");
+            }
+            if (headerPos + 5 > total) {
+                throw new IllegalStateException("the frame header is no longer in the stream");
             }
             long length = total - (headerPos + 5);
             if (length > Integer.MAX_VALUE) {
@@ -215,13 +244,14 @@ public final class ChunkedOutput extends OutputStream {
             patch(headerPos + 3, (byte) (value >>> 8));
             patch(headerPos + 4, (byte) value);
             closed = true;
+            open = null;
         }
     }
 
     /**
      * Exposes the accumulated bytes as buffers over the internal chunks. No
      * data is copied; the returned buffers are invalidated by any further
-     * write to this stream. The buffers intentionally remain array-backed and
+     * write to this stream and by {@link Frame#abort()}, which rewinds it. The buffers intentionally remain array-backed and
      * writable so transports such as Grizzly can wrap them without creating a
      * defensive copy. Callers must treat them as immutable transport views.
      */

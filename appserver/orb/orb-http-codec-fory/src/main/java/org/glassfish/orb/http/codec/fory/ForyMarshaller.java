@@ -77,7 +77,15 @@ import org.glassfish.orb.http.protocol.Marshaller;
  *       an array. Off by default, and it is independent of the encode
  *       threshold. A negative, blank or non numeric value leaves it off; 0
  *       decodes every Fory frame from the stream. Frames of the Java
- *       serialization kind are always read into an array.</li>
+ *       serialization kind are always read into an array. The decoder starts
+ *       with a buffer of at most 64 KiB, so a frame just over 64 KiB overflows
+ *       it and reallocates: in the benchmark a 64 KiB string (a 65,547 byte
+ *       frame) decoded at 0.56x to 1.12x the throughput of the array path and
+ *       allocated 1.66x as much. The benchmark also reads from a
+ *       {@code ByteArrayInputStream}, whose {@code available()} reports the
+ *       whole frame, which is the best case for the stream decoder; on a
+ *       socket that holds only part of the frame, Fory grows its buffer by
+ *       doubling (5.24 MB instead of 2.23 MB for a 1 MiB frame in a test).</li>
  * </ul>
  */
 public final class ForyMarshaller implements Marshaller {
@@ -279,22 +287,16 @@ public final class ForyMarshaller implements Marshaller {
      * Whether the value is estimated to be large enough to be written into the
      * chunked output directly.
      * <p>
-     * The 4 KiB default has no measured justification.
-     * {@code ForyCodecBenchmarkTest}, which writes into a fresh
-     * {@link ChunkedOutput} in both modes, was run nine times on GitHub
-     * Actions runners (three jobs in each of three workflow runs). Streamed
-     * encoding of a {@code byte[]} measured, as a multiple of the byte-array
-     * throughput, 1.02x to 1.66x at 1 KiB, 0.86x to 1.17x at 2 KiB (below 1.0
-     * in one run only), 1.16x to 1.54x at 4 KiB and 1.38x to 1.66x at 16 KiB,
-     * and it allocated less from 1 KiB up. A 5 character string measured 1.01x
-     * to 1.33x and a two entry map 0.92x to 1.27x, which is within the noise
-     * between runs. There is no size below the threshold where the byte-array
-     * path was consistently faster, so the threshold is a conservative guess
-     * about where the saved copy starts to matter, not a measured crossover.
-     * It is left as it is, because a different value would need evidence that
-     * these runs do not give. The sizes are estimates, and an unknown object
-     * graph is never estimated as large, so it takes the byte-array path
-     * unless the deployment enables streaming explicitly.
+     * The 4 KiB default has no measured justification: in repeated runs of
+     * {@code ForyCodecBenchmarkTest} (both modes write into a fresh
+     * {@link ChunkedOutput}) there was no size below it at which the
+     * byte-array path was consistently faster, and no consistent crossover
+     * at which streaming starts to win. The threshold is a guess about where
+     * the saved copy starts to matter, and it is left as it is because a
+     * different value would need evidence those runs do not give. The sizes
+     * are estimates, and an unknown object graph is never estimated as
+     * large, so it takes the byte-array path unless the deployment enables
+     * streaming explicitly.
      *
      * @param threshold the estimated size in bytes from which a value counts
      *                  as large; negative never does
@@ -341,7 +343,7 @@ public final class ForyMarshaller implements Marshaller {
             return -1;
         }
         try {
-            return Math.max(-1, Integer.parseInt(configured.trim()));
+            return Integer.parseInt(configured.trim());
         } catch (NumberFormatException ignored) {
             return -1;
         }
@@ -416,11 +418,13 @@ public final class ForyMarshaller implements Marshaller {
      * Decodes one frame straight from the stream.
      * <p>
      * Fory reports a stream that ends early, or fails, as an unchecked
-     * exception from deep inside its buffer. The caller reads from a socket
-     * and expects an {@link IOException} for that, so a new exception of the
-     * recorded type is thrown, with the recorded failure as its cause and
-     * Fory's exception suppressed on it. The recorded exception itself is not
-     * modified.
+     * exception from deep inside its buffer, and that exception has the
+     * recorded failure as its cause. The caller reads from a socket and
+     * expects the {@link IOException} the socket threw, so the recorded
+     * exception itself is rethrown, unmodified and with its own type (a
+     * timeout stays a timeout). Fory's exception is dropped: attaching it to
+     * the recorded one would make the recorded exception reachable from
+     * itself.
      */
     private static Object readStreamed(ThreadSafeFory fory, InputStream in, int length)
             throws IOException {
@@ -431,19 +435,10 @@ public final class ForyMarshaller implements Marshaller {
             limited.drain();
             return value;
         } catch (RuntimeException e) {
-            IOException recorded = limited.failure;
-            if (recorded == null) {
-                throw e;
+            if (limited.failure != null) {
+                throw limited.failure;
             }
-            IOException thrown;
-            if (recorded instanceof EOFException) {
-                thrown = new EOFException(recorded.getMessage());
-                thrown.initCause(recorded);
-            } else {
-                thrown = new IOException(recorded.getMessage(), recorded);
-            }
-            thrown.addSuppressed(e);
-            throw thrown;
+            throw e;
         }
     }
 
@@ -505,7 +500,10 @@ public final class ForyMarshaller implements Marshaller {
         @Override
         public int available() throws IOException {
             // Without this the default of 0 makes the decoder grow its buffer
-            // by doubling, copying it each time, for a frame whose size is known.
+            // by doubling, copying it each time. It helps only when the
+            // delegate already holds the bytes; reporting the frame's remaining
+            // length instead would let a hostile header make the decoder
+            // allocate what it promises.
             return Math.min(remaining, delegate.available());
         }
 

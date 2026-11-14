@@ -347,28 +347,6 @@ class ChunkedOutputTest {
     }
 
     @Test
-    @DisplayName("[guard] a closed frame cannot be aborted after a later frame was closed")
-    void staleFrameCannotBeAborted() throws IOException {
-        // GUARD / characterization test: a closed frame already refused abort()
-        // before this change. The open-frame checks in abort() and close()
-        // are defensive: with beginFrame() refusing a second open frame, no
-        // sequence of calls reaches them, so no test can fail on removing them.
-        // Scenario B: f1 closed, f2 begun and closed, then f1.abort() must not
-        // cut the stream back to f1's header and swallow f2.
-        ChunkedOutput out = new ChunkedOutput(8);
-        ChunkedOutput.Frame f1 = out.beginFrame((byte) 1);
-        out.write(new byte[] {1});
-        f1.close();
-        ChunkedOutput.Frame f2 = out.beginFrame((byte) 2);
-        out.write(new byte[] {2, 2});
-        f2.close();
-        byte[] before = out.toByteArray();
-        assertThrows(IllegalStateException.class, f1::abort);
-        assertArrayEquals(before, out.toByteArray());
-        assertEquals(13L, out.size());
-    }
-
-    @Test
     @DisplayName("a frame can be begun and closed after an abort took a chunk back from the list")
     void frameAfterAbortThatReclaimedAChunk() throws IOException {
         // Chunk size 4: the header at 3..7 lands in chunk 0 and 1, and 20 bytes

@@ -130,6 +130,7 @@ public final class ChunkedOutput extends OutputStream {
      * The header is written like any other bytes, so it may span two chunks;
      * every chunk except the last stays completely filled.
      *
+     * <p>
      * Only one frame can be open at a time.
      *
      * @param kind codec-specific frame kind
@@ -168,7 +169,8 @@ public final class ChunkedOutput extends OutputStream {
         total = pos;
     }
 
-    // Invariant: every chunk in the list is exactly chunkSize long, so pos / chunkSize indexes it directly.
+    // Invariant: every chunk in the list is exactly chunkSize long, so
+    // pos / chunkSize indexes it directly.
     private void patch(long pos, byte value) {
         long idx = pos / chunkSize;
         int offset = (int) (pos % chunkSize);
@@ -197,8 +199,7 @@ public final class ChunkedOutput extends OutputStream {
          * invalidated, like by any write: the bytes they show may be
          * overwritten by what is written next.
          *
-         * @throws IllegalStateException if the frame was already closed, or
-         *         is not the stream's open frame
+         * @throws IllegalStateException if the frame was already closed
          */
         public void abort() {
             if (aborted) {
@@ -206,9 +207,6 @@ public final class ChunkedOutput extends OutputStream {
             }
             if (closed) {
                 throw new IllegalStateException("frame already closed");
-            }
-            if (open != this) {
-                throw new IllegalStateException("not the open frame");
             }
             truncate(headerPos);
             aborted = true;
@@ -219,20 +217,12 @@ public final class ChunkedOutput extends OutputStream {
          * Patches the payload length into the header. Closing an aborted or
          * an already closed frame does nothing.
          *
-         * @throws IllegalStateException if the frame is not the stream's open
-         *         frame, if the stream no longer holds the whole header, or
-         *         if the payload is larger than 2 GiB
+         * @throws IllegalStateException if the payload is larger than 2 GiB
          */
         @Override
         public void close() {
             if (closed || aborted) {
                 return;
-            }
-            if (open != this) {
-                throw new IllegalStateException("not the open frame");
-            }
-            if (headerPos + 5 > total) {
-                throw new IllegalStateException("the frame header is no longer in the stream");
             }
             long length = total - (headerPos + 5);
             if (length > Integer.MAX_VALUE) {
@@ -251,9 +241,9 @@ public final class ChunkedOutput extends OutputStream {
     /**
      * Exposes the accumulated bytes as buffers over the internal chunks. No
      * data is copied; the returned buffers are invalidated by any further
-     * write to this stream and by {@link Frame#abort()}, which rewinds it. The buffers intentionally remain array-backed and
-     * writable so transports such as Grizzly can wrap them without creating a
-     * defensive copy. Callers must treat them as immutable transport views.
+     * write to this stream and by {@link Frame#abort()}, which rewinds it.
+     * The buffers intentionally remain array-backed and writable so transports
+     * such as Grizzly can wrap them without creating a defensive copy. Callers must treat them as immutable transport views.
      */
     public ByteBuffer[] toByteBuffers() {
         int n = chunks.size() + (currentPos > 0 ? 1 : 0);

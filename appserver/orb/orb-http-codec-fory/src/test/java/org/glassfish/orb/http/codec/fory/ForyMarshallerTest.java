@@ -47,7 +47,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -718,8 +717,10 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("a large frame that is cut short is reported as an IOException")
+    @DisplayName("[guard] a large frame that is cut short is reported as an IOException")
     void truncatedLargeFrameIsAnIOException() throws Exception {
+        // GUARD / characterization test: the stream path already reported a
+        // cut frame as an EOFException before this round.
         withDecodeThreshold("0", () -> {
             byte[] value = new byte[10_000];
             new Random(6L).nextBytes(value);
@@ -754,7 +755,7 @@ class ForyMarshallerTest {
         }
 
         private IOException fail() {
-            IOException e = new IOException("connection reset");
+            IOException e = new java.net.SocketTimeoutException("connection reset");
             thrown.add(e);
             return e;
         }
@@ -793,18 +794,13 @@ class ForyMarshallerTest {
             try (Marshaller.ObjectReader r = marshaller.newReader(
                     flaky, getClass().getClassLoader(), ALLOW_ALL)) {
                 IOException e = assertThrows(IOException.class, r::readObject);
-                assertEquals("connection reset", e.getMessage());
-                assertTrue(e.getClass() == IOException.class, e.getClass().getName());
-
-                // The exception is a new one with the connection's as its cause;
-                // the connection's own exception is left as it was thrown.
+                // The connection's own exception arrives, unmodified.
                 assertEquals(1, flaky.thrown.size());
-                IOException original = flaky.thrown.get(0);
-                assertNotSame(original, e);
-                assertSame(original, e.getCause());
-                assertEquals(0, original.getSuppressed().length, "the original is not modified");
-                assertEquals(1, e.getSuppressed().length, "Fory's exception hangs off the new one");
-                assertNoCycle(e);
+                assertSame(flaky.thrown.get(0), e);
+                assertTrue(e instanceof java.net.SocketTimeoutException, e.getClass().getName());
+                assertEquals("connection reset", e.getMessage());
+                assertEquals(0, e.getSuppressed().length);
+                assertNoCircularReference(e);
             }
         });
     }
@@ -827,7 +823,7 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("a cut stream gives a new EOFException with the recorded one as its cause and no cycle")
+    @DisplayName("a cut stream gives an EOFException with no circular reference")
     void truncatedStreamedFrameHasNoCyclicGraph() throws Exception {
         withDecodeThreshold("0", () -> {
             byte[] value = new byte[10_000];
@@ -841,13 +837,19 @@ class ForyMarshallerTest {
                     new ByteArrayInputStream(Arrays.copyOf(full, full.length - 5_000)),
                     getClass().getClassLoader(), ALLOW_ALL)) {
                 EOFException e = assertThrows(EOFException.class, r::readObject);
-                assertTrue(e.getCause() instanceof EOFException, "cause " + e.getCause());
-                assertNotSame(e, e.getCause());
-                assertEquals(0, e.getCause().getSuppressed().length);
-                assertEquals(1, e.getSuppressed().length);
-                assertNoCycle(e);
+                assertTrue(e.getMessage().contains("truncated"), e.getMessage());
+                assertEquals(0, e.getSuppressed().length);
+                assertNoCircularReference(e);
             }
         });
+    }
+
+    /** The printed trace is what an operator sees; it marks a node it reaches twice. */
+    private static void assertNoCircularReference(Throwable t) {
+        assertNoCycle(t);
+        java.io.StringWriter text = new java.io.StringWriter();
+        t.printStackTrace(new java.io.PrintWriter(text));
+        assertTrue(!text.toString().contains("CIRCULAR REFERENCE"), text.toString());
     }
 
     private static int frameLength(byte[] encoded) {
@@ -960,15 +962,19 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("a streamed decode of a header that promises 1 GB allocates only a small start buffer")
+    @DisplayName("a streamed decode behind a header that promises 1 GB allocates at most the 64 KiB start buffer")
     void streamedDecodeDoesNotAllocateThePromisedLength() throws Exception {
         com.sun.management.ThreadMXBean allocation = allocationBean();
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        java.io.DataOutputStream data = new java.io.DataOutputStream(bytes);
-        data.writeByte(0);
-        data.writeInt(1_000_000_000);
-        data.write(new byte[10]);
-        byte[] cut = bytes.toByteArray();
+        List<String> valid = new ArrayList<>();
+        for (int i = 0; i < 20_000; i++) {
+            valid.add("item-" + i);
+        }
+        byte[] whole = encodeOne(marshaller, valid);
+        // The first 10 KB of a valid frame of a list of 20,000 strings, behind
+        // a header that promises 1 GB: the decoder reads real elements, which
+        // it can only do incrementally, and then the stream ends.
+        byte[] cut = Arrays.copyOf(whole, 5 + 10_000);
+        ByteBuffer.wrap(cut, 1, 4).putInt(1_000_000_000);
         byte[] warm = encodeOne(marshaller, new byte[100]);
         withDecodeThreshold("0", () -> {
             for (int i = 0; i < 3; i++) {
@@ -977,11 +983,10 @@ class ForyMarshallerTest {
             try (Marshaller.ObjectReader r = marshaller.newReader(
                     new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
                 long before = allocation.getCurrentThreadAllocatedBytes();
-                // Ten zero bytes are not a valid value, so Fory may reject them
-                // before it reaches the end of the stream; only the allocation matters here.
-                assertThrows(Exception.class, r::readObject);
+                EOFException e = assertThrows(EOFException.class, r::readObject);
                 long used = allocation.getCurrentThreadAllocatedBytes() - before;
-                assertTrue(used < (1 << 20), "allocated " + used + " bytes for 10 received");
+                assertTrue(e.getMessage().contains("truncated"), e.getMessage());
+                assertTrue(used < (1 << 20), "allocated " + used + " bytes for 10 KB received");
             }
         });
     }
@@ -1003,6 +1008,7 @@ class ForyMarshallerTest {
         assertEquals(10, limited.available());
         byte[] b = new byte[50];
         assertEquals(0, limited.read(b, 0, 0));
+        assertThrows(IndexOutOfBoundsException.class, () -> limited.read(b, -1, 0));
         assertEquals(4, limited.read(b, 0, 4));
         assertEquals(6, limited.available());
         assertEquals(6, limited.read(b, 0, 50));

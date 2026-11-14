@@ -30,6 +30,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -208,6 +209,21 @@ class GlassFishTransactionBridgeTest {
     }
 
     @Test
+    @DisplayName("a prepare refused for a resource-manager error is not a vote, and leaves the branch alone")
+    void aResourceManagerErrorLeavesTheBranchAlone() {
+        bridge = new GlassFishTransactionBridge(TerminatorRecorder.manager(terminatorCalls, managerCalls,
+                Map.of("prepare", new XAException(XAException.XAER_RMERR))));
+
+        TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
+                () -> bridge.prepare(CLIENT));
+
+        assertEquals(XAException.XAER_RMERR, thrown.errorCode());
+        assertEquals(List.of("prepare"), terminatorCalls);
+    }
+
+    // Characterization test: it passes without the change under test and pins
+    // behaviour that is meant to stay.
+    @Test
     @DisplayName("a prepare that votes to roll back is rolled back, as the coordinator will assume")
     void aRollbackVoteRollsTheBranchBack() {
         bridge = new GlassFishTransactionBridge(TerminatorRecorder.manager(terminatorCalls, managerCalls,
@@ -229,7 +245,7 @@ class GlassFishTransactionBridgeTest {
         TransactionBridge.TransactionException thrown = assertThrows(TransactionBridge.TransactionException.class,
                 () -> bridge.rollback(CLIENT));
 
-        assertTrue(!thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
+        assertFalse(thrown.getMessage().contains("secret internal detail"), thrown.getMessage());
         assertTrue(thrown.getMessage().contains("rollback failed"), thrown.getMessage());
         assertEquals(XAException.XAER_RMERR, thrown.errorCode());
     }

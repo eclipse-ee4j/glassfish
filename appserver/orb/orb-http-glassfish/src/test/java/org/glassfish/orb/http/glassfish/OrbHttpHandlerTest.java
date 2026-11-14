@@ -27,6 +27,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class OrbHttpHandlerTest {
 
+    // Characterization test: it passes without the change under test and pins
+    // behaviour that is meant to stay.
     @Test
     @DisplayName("each service is routed by the segment after the context path")
     void eachServiceIsRouted() {
@@ -47,6 +49,8 @@ class OrbHttpHandlerTest {
         assertEquals(Route.NAMING, OrbHttpHandler.route("/glassfish-services/naming/v1/lookup/txn/common/ejb"));
     }
 
+    // Characterization test: it passes without the change under test and pins
+    // behaviour that is meant to stay.
     @Test
     @DisplayName("a path that is not any service, or cannot be scanned, is left to the EJB dispatcher to refuse")
     void everythingElseGoesToTheEjbDispatcher() {

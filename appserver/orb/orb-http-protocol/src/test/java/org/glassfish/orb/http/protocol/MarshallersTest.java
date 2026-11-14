@@ -94,6 +94,18 @@ class MarshallersTest {
     }
 
     @Test
+    @DisplayName("releasing a class loader reaches the codecs, so they can drop what they keep for it")
+    void releaseReachesTheCodecs() {
+        ClassLoader loader = new java.net.URLClassLoader(new java.net.URL[0], getClass().getClassLoader());
+        assertEquals(CountingMarshaller.CODEC, Marshallers.preferred(loader).codec());
+
+        Marshallers.release(loader);
+
+        assertTrue(CountingMarshaller.RELEASED.contains(loader));
+        Marshallers.release(null);
+    }
+
+    @Test
     @DisplayName("discovery is cached rather than repeated per invocation")
     void discoveryIsCached() {
         assertSame(Marshallers.preferred(), Marshallers.preferred());

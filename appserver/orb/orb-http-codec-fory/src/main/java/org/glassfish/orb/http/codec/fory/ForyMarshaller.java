@@ -120,8 +120,8 @@ public final class ForyMarshaller implements Marshaller {
      * reader has never been warmed by anything this process chose to send.
      * <p>
      * Keyed weakly, but the value is a serializer that references its key's
-     * loader, so an entry keeps its loader reachable: the loader stays pinned
-     * for the life of this class.
+     * loader, so an entry keeps its loader reachable. {@link #release} is what
+     * removes the entry when the application goes away.
      */
     private static final Map<ClassLoader, ThreadSafeFory> WRITERS =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -259,6 +259,23 @@ public final class ForyMarshaller implements Marshaller {
                 materialiseStackTraces(suppressed);
             }
         }
+    }
+
+    /**
+     * Drops the writer and every reader built for {@code loader}. Both hold
+     * the loader strongly, so an undeployed application is only collectable
+     * once this has run.
+     *
+     * @param loader the loader of the application that is gone
+     */
+    @Override
+    public void release(ClassLoader loader) {
+        if (loader == null) {
+            return;
+        }
+        ClassLoader key = resolve(loader);
+        WRITERS.remove(key);
+        READERS.remove(key);
     }
 
     private static ThreadSafeFory writerFor(ClassLoader loader) {

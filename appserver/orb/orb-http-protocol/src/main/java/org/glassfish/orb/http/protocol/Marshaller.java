@@ -53,6 +53,16 @@ public interface Marshaller {
         return 0;
     }
 
+    /**
+     * Drops whatever this codec holds for a class loader, so that the loader
+     * can be collected once its application is undeployed. A codec that
+     * caches per loader overrides this; the default holds nothing.
+     *
+     * @param loader the loader of an application that is going away
+     */
+    default void release(ClassLoader loader) {
+    }
+
     ObjectWriter newWriter(OutputStream out) throws IOException;
 
     /**

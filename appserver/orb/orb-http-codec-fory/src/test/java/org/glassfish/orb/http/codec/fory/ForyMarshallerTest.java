@@ -20,11 +20,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputFilter;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
@@ -335,5 +337,49 @@ class ForyMarshallerTest {
             length++;
         }
         assertEquals(65, length);
+    }
+
+    @Test
+    @DisplayName("an application's class loader can be collected once the codec has been told it is gone")
+    void aReleasedLoaderCanBeCollected() throws Exception {
+        AtomicReference<WeakReference<ClassLoader>> reference = new AtomicReference<>();
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        // A thread of its own, so that nothing the codec cached per thread
+        // outlives the work and keeps the loader reachable from here.
+        Thread worker = new Thread(() -> {
+            try {
+                URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader());
+                Thread.currentThread().setContextClassLoader(loader);
+                try {
+                    Marshallers.preferred(loader);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                        writer.writeObject(new Node("a"));
+                        writer.flush();
+                    }
+                    try (Marshaller.ObjectReader reader = marshaller.newReader(
+                            new ByteArrayInputStream(out.toByteArray()), loader, ALLOW_ALL)) {
+                        assertNotNull(reader.readObject());
+                    }
+                    Marshallers.release(loader);
+                } finally {
+                    Thread.currentThread().setContextClassLoader(null);
+                }
+                reference.set(new WeakReference<>(loader));
+            } catch (Throwable t) {
+                failure.set(t);
+            }
+        });
+        worker.start();
+        worker.join();
+        if (failure.get() != null) {
+            throw new AssertionError(failure.get());
+        }
+
+        for (int i = 0; i < 100 && reference.get().get() != null; i++) {
+            System.gc();
+            Thread.sleep(50);
+        }
+        assertNull(reference.get().get(), "the loader is still reachable after release");
     }
 }

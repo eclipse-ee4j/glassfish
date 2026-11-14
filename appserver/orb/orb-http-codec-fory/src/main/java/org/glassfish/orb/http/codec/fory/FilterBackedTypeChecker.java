@@ -20,6 +20,7 @@ import java.io.ObjectInputFilter;
 
 import org.apache.fory.resolver.TypeChecker;
 import org.apache.fory.resolver.TypeResolver;
+import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 
 /**
  * Applies the transport's deserialization filter to Fory.
@@ -42,8 +43,18 @@ final class FilterBackedTypeChecker implements TypeChecker {
     private final ObjectInputFilter filter;
 
     FilterBackedTypeChecker(ClassLoader loader, ObjectInputFilter filter) {
+        this(loader, filter, ObjectInputFilter.Config.getSerialFilter());
+    }
+
+    /**
+     * @param jvmWide the JVM-wide filter ({@code jdk.serialFilter}), or
+     *                {@code null}. Java serialization honours it, and so does
+     *                this codec: an operator's deny list must not depend on
+     *                which codec the client happened to choose.
+     */
+    FilterBackedTypeChecker(ClassLoader loader, ObjectInputFilter filter, ObjectInputFilter jvmWide) {
         this.loader = loader;
-        this.filter = filter;
+        this.filter = JavaSerializationMarshaller.withJvmWideFilter(filter, jvmWide);
     }
 
     @Override

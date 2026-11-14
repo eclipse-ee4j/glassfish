@@ -53,7 +53,7 @@ public final class JavaSerializationMarshaller implements Marshaller {
      * key.
      */
     private static final ObjectInputFilter DEFAULT_FILTER = ObjectInputFilter.Config.createFilter(
-            "maxdepth=64;maxarray=100000;maxrefs=100000;maxbytes=104857600;*");
+            "maxdepth=256;maxrefs=10000000;maxarray=104857600;maxbytes=104857600;*");
 
     @Override
     public String codec() {
@@ -87,12 +87,21 @@ public final class JavaSerializationMarshaller implements Marshaller {
 
     @Override
     public ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter) throws IOException {
+        return newReader(in, loader, filter, ObjectInputFilter.Config.getSerialFilter());
+    }
+
+    /**
+     * @param jvmWide the JVM-wide filter ({@code jdk.serialFilter}), or
+     *                {@code null} if none is configured
+     */
+    ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter,
+                           ObjectInputFilter jvmWide) throws IOException {
         if (filter == null) {
             throw new IllegalArgumentException("a deserialization filter is required");
         }
         ClassLoader resolved = loader != null ? loader : Thread.currentThread().getContextClassLoader();
         ObjectInputStream ois = new LoaderAwareObjectInputStream(in, resolved);
-        ois.setObjectInputFilter(filter);
+        ois.setObjectInputFilter(withJvmWideFilter(filter, jvmWide));
         return new ObjectReader() {
             @Override
             public Object readObject() throws IOException, ClassNotFoundException {
@@ -118,6 +127,28 @@ public final class JavaSerializationMarshaller implements Marshaller {
      */
     public static ObjectInputFilter defaultFilter() {
         return DEFAULT_FILTER;
+    }
+
+    /**
+     * Combines a filter with the JVM-wide one, so that what an operator denied
+     * with {@code jdk.serialFilter} stays denied whatever filter the transport
+     * brings. A class either filter rejects is rejected.
+     *
+     * @param filter the transport's filter
+     * @return {@code filter} merged with the JVM-wide filter, or {@code filter}
+     *         itself if there is none
+     */
+    public static ObjectInputFilter withJvmWideFilter(ObjectInputFilter filter) {
+        return withJvmWideFilter(filter, ObjectInputFilter.Config.getSerialFilter());
+    }
+
+    /**
+     * @param filter the transport's filter
+     * @param jvmWide the JVM-wide filter, or {@code null}
+     * @return the two merged; a rejection by either wins
+     */
+    public static ObjectInputFilter withJvmWideFilter(ObjectInputFilter filter, ObjectInputFilter jvmWide) {
+        return jvmWide == null ? filter : ObjectInputFilter.merge(filter, jvmWide);
     }
 
     /**

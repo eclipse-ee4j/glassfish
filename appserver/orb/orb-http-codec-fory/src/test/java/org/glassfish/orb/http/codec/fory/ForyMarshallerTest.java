@@ -23,6 +23,7 @@ import java.io.Serializable;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
@@ -32,6 +33,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -292,5 +294,46 @@ class ForyMarshallerTest {
             assertEquals(1, ForyMarshaller.readerCount(loader),
                     "one reader per (loader, filter), not one per request");
         }
+    }
+
+    @Test
+    @DisplayName("what the JVM-wide filter denies is denied to this codec too")
+    void theJvmWideFilterAppliesToForyToo() {
+        ObjectInputFilter denyDate = info -> info.serialClass() == Date.class
+                ? ObjectInputFilter.Status.REJECTED
+                : ObjectInputFilter.Status.UNDECIDED;
+        ClassLoader loader = getClass().getClassLoader();
+
+        assertFalse(new FilterBackedTypeChecker(loader, ALLOW_ALL, denyDate).checkType(null, Date.class.getName()));
+        assertTrue(new FilterBackedTypeChecker(loader, ALLOW_ALL, null).checkType(null, Date.class.getName()));
+    }
+
+    @Test
+    @DisplayName("the default filter's limits do not refuse ordinary large payloads on this codec either")
+    void largePayloadsPassTheDefaultFilter() throws Exception {
+        ObjectInputFilter defaults = JavaSerializationMarshaller.defaultFilter();
+
+        byte[] bytes = new byte[200_000];
+        bytes[199_999] = 7;
+        assertEquals(7, ((byte[]) roundTrip(bytes, defaults))[199_999]);
+
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = 0; i < 150_000; i++) {
+            numbers.add(i);
+        }
+        assertEquals(numbers, roundTrip(numbers, defaults));
+
+        Node head = new Node("0");
+        Node tail = head;
+        for (int i = 1; i <= 64; i++) {
+            tail.peer = new Node(Integer.toString(i));
+            tail = tail.peer;
+        }
+        Node decoded = (Node) roundTrip(head, defaults);
+        int length = 1;
+        for (Node n = decoded; n.peer != null; n = n.peer) {
+            length++;
+        }
+        assertEquals(65, length);
     }
 }

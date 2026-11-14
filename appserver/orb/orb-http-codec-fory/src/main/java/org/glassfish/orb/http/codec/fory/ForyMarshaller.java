@@ -77,6 +77,14 @@ public final class ForyMarshaller implements Marshaller {
             Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
 
     /**
+     * How deeply nested a graph may be, on the way in and on the way out.
+     * Fory's own default is 50, which refuses a graph Java serialization
+     * accepts; this is the same bound as the default deserialization filter's
+     * {@code maxdepth}, so the two codecs agree.
+     */
+    private static final int MAX_DEPTH = 256;
+
+    /**
      * @return whether generated serializers are in use
      */
     static boolean codeGenerationEnabled() {
@@ -304,6 +312,7 @@ public final class ForyMarshaller implements Marshaller {
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
+                .withMaxDepth(MAX_DEPTH)
                 .withCodegen(CODEGEN)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {

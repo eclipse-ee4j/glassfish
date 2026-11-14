@@ -17,7 +17,6 @@
 package org.glassfish.orb.http.client;
 
 import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
@@ -28,16 +27,17 @@ import java.util.concurrent.ExecutionException;
 import javax.naming.Context;
 
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.Protocol;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A call that cannot join the transaction it is made in must not be made.
@@ -90,30 +90,108 @@ class AmbientTransactionFailureTest {
         return client.createProxy(Pinger.class, new EjbLocator("app", "module", null, "PingerBean"));
     }
 
+    private String rollbackOnlyMarker(int call) {
+        return transport.requestHeaders.get(call).get(Protocol.H_TXN_ROLLBACK_ONLY);
+    }
+
     @Test
-    @DisplayName("a transaction marked rollback-only refuses the call instead of running it outside")
-    void aRollbackOnlyTransactionRefusesTheCall() {
+    @DisplayName("a transaction marked rollback-only is not refused: the call is sent with the marker")
+    void aRollbackOnlyTransactionIsSentWithTheMarker() {
         transaction.status = Status.STATUS_MARKED_ROLLBACK;
 
-        assertThrows(EJBTransactionRolledbackException.class, () -> pinger().ping());
+        pinger().ping();
 
-        assertEquals(0, transport.calls.size(), "the bean was called outside the caller's transaction");
+        assertEquals(1, transport.calls.size());
+        assertEquals("true", rollbackOnlyMarker(0));
+        // A manager will not enlist in such a transaction, so there is no branch.
         assertEquals(0, transaction.enlisted);
         assertNull(ClientTransactionContext.current());
     }
 
     @Test
-    @DisplayName("a manager that refuses the enlistment because the transaction cannot commit refuses the call")
-    void aRollbackDuringEnlistmentRefusesTheCall() {
+    @DisplayName("a transaction that is already rolling back is sent with the marker too")
+    void aRollingBackTransactionIsSentWithTheMarker() {
+        transaction.status = Status.STATUS_ROLLING_BACK;
+
+        pinger().ping();
+
+        assertEquals("true", rollbackOnlyMarker(0));
+    }
+
+    @Test
+    @DisplayName("a joined transaction that becomes rollback-only still carries its branch, with the marker")
+    void aJoinedTransactionThatBecomesRollbackOnlyCarriesBranchAndMarker() {
+        pinger().ping();
+        assertNull(transport.requestHeaders.get(0).get(Protocol.H_TXN_ROLLBACK_ONLY));
+        ClientTransactionContext.disassociate();
+
+        transaction.status = Status.STATUS_MARKED_ROLLBACK;
+        pinger().ping();
+
+        assertEquals("true", rollbackOnlyMarker(1));
+        assertEquals(AmbientTransactionTest.started, ClientTransactionContext.current());
+        assertEquals(1, transaction.enlisted, "the endpoint is enlisted once");
+    }
+
+    @Test
+    @DisplayName("a call from afterCompletion, when the transaction has completed, is sent without a transaction")
+    void aCompletedTransactionIsNoTransaction() {
+        for (int completed : new int[] { Status.STATUS_COMMITTED, Status.STATUS_ROLLEDBACK,
+                Status.STATUS_NO_TRANSACTION }) {
+            transport.calls.clear();
+            transport.requestHeaders.clear();
+            transaction.status = completed;
+
+            pinger().ping();
+
+            assertEquals(1, transport.calls.size(), "status " + completed);
+            assertNull(rollbackOnlyHeader(), "status " + completed);
+            assertEquals(0, transaction.enlisted, "status " + completed);
+            assertNull(ClientTransactionContext.current(), "status " + completed);
+        }
+    }
+
+    private String rollbackOnlyHeader() {
+        return transport.requestHeaders.get(0).get(Protocol.H_TXN_ROLLBACK_ONLY);
+    }
+
+    @Test
+    @DisplayName("a branch joined earlier is not put back once its transaction has completed")
+    void aCompletedTransactionDoesNotRestoreItsBranch() {
+        pinger().ping();
+        ClientTransactionContext.disassociate();
+
+        transaction.status = Status.STATUS_COMMITTED;
+        pinger().ping();
+
+        assertNull(ClientTransactionContext.current(), "a completed transaction's xid was re-associated");
+        assertNull(transport.requestHeaders.get(1).get(Protocol.H_TXN_ROLLBACK_ONLY));
+    }
+
+    @Test
+    @DisplayName("a transaction in the middle of two-phase commit refuses the call")
+    void aTransactionInFlightRefusesTheCall() {
+        for (int inFlight : new int[] { Status.STATUS_PREPARING, Status.STATUS_PREPARED,
+                Status.STATUS_COMMITTING }) {
+            transport.calls.clear();
+            transaction.status = inFlight;
+
+            assertThrows(EJBException.class, () -> pinger().ping(), "status " + inFlight);
+
+            assertEquals(0, transport.calls.size(), "status " + inFlight);
+        }
+    }
+
+    @Test
+    @DisplayName("a manager that refuses the enlistment because the transaction cannot commit means rollback-only")
+    void aRollbackDuringEnlistmentIsRollbackOnly() {
         transaction.enlistFailure = new RollbackException("marked rollback-only");
         // A manager that refuses late has already started the branch.
         transaction.startFirst = true;
 
-        EJBTransactionRolledbackException thrown =
-                assertThrows(EJBTransactionRolledbackException.class, () -> pinger().ping());
+        pinger().ping();
 
-        assertInstanceOf(RollbackException.class, thrown.getCause());
-        assertEquals(0, transport.calls.size());
+        assertEquals("true", rollbackOnlyMarker(0));
         assertNull(ClientTransactionContext.current(), "a refused enlistment left its branch on the thread");
     }
 
@@ -124,7 +202,6 @@ class AmbientTransactionFailureTest {
 
         EJBException thrown = assertThrows(EJBException.class, () -> pinger().ping());
 
-        assertFalse(thrown instanceof EJBTransactionRolledbackException);
         assertInstanceOf(SystemException.class, thrown.getCause());
         assertEquals(0, transport.calls.size());
     }
@@ -134,28 +211,32 @@ class AmbientTransactionFailureTest {
     void aMissingManagerRefusesTheCall() {
         AmbientTransactionTest.BOUND.remove("java:appserver/TransactionManager");
 
-        assertThrows(EJBException.class, () -> pinger().ping());
+        EJBException thrown = assertThrows(EJBException.class, () -> pinger().ping());
 
         assertEquals(0, transport.calls.size());
+        assertTrue(thrown.getMessage().contains("org.glassfish.orb.http.transactionManager"), thrown.getMessage());
+        assertTrue(thrown.getMessage().contains(HttpInitialContextFactory.PROP_AMBIENT_TRANSACTION),
+                thrown.getMessage());
     }
 
     @Test
     @DisplayName("an asynchronous call that cannot join fails its future and sends nothing")
     void anAsynchronousCallFailsItsFuture() throws Exception {
-        transaction.status = Status.STATUS_MARKED_ROLLBACK;
+        transaction.status = Status.STATUS_PREPARED;
 
         ExecutionException thrown = assertThrows(ExecutionException.class, () -> client.invokeAsync(
                 new EjbLocator("app", "module", null, "PingerBean"), Pinger.class,
                 Pinger.class.getMethod("ping"), new Object[0]).get());
 
-        assertInstanceOf(EJBTransactionRolledbackException.class, thrown.getCause());
+        assertInstanceOf(EJBException.class, thrown.getCause());
         assertEquals(0, transport.calls.size());
     }
 
     @Test
-    @DisplayName("with joining switched off the same transaction does not stop the call")
+    @DisplayName("guard: with joining switched off a transaction that would refuse the call does not stop it")
     void switchingJoiningOffIsTheOnlyWayToCallAnyway() {
-        transaction.status = Status.STATUS_MARKED_ROLLBACK;
+        // Fails if only the switch is reverted: the join would then refuse.
+        transaction.status = Status.STATUS_PREPARED;
         HttpEjbClient detached = new HttpEjbClient(
                 ClientConfiguration.builder(config.baseUri()).joinAmbientTransaction(false).build(),
                 transport, new JavaSerializationMarshaller(), JavaSerializationMarshaller.defaultFilter());

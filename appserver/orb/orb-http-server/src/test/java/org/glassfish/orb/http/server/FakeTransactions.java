@@ -56,6 +56,12 @@ final class FakeTransactions implements TransactionBridge {
     int failWith;
     /** When set, the failure carries this reason instead of the default one. */
     String failReason;
+    /** When set, a rollback-only import is refused the way REQUIRED, MANDATORY and SUPPORTS refuse it. */
+    boolean refuseRollbackOnly;
+    /** When set, recreate throws this instead of importing. */
+    RuntimeException recreateThrows;
+    /** When set, detach throws this. */
+    RuntimeException detachThrows;
 
     private void record(String call) {
         calls.add(call);
@@ -83,12 +89,29 @@ final class FakeTransactions implements TransactionBridge {
     @Override
     public void recreate(Xid xid, long timeoutSeconds) throws TransactionException {
         record("recreate(" + Xids.key(xid) + "," + timeoutSeconds + ")");
+        if (recreateThrows != null) {
+            throw recreateThrows;
+        }
         maybeFail("recreate");
         imported.put(Xids.key(xid), timeoutSeconds);
         // Importing is how a server learns about a branch it did not begin,
         // which is the whole of the XA case: the coordinator mints the xid and
         // this side hears about it when work arrives for it.
         live.putIfAbsent(Xids.key(xid), xid);
+    }
+
+    @Override
+    public void recreateRollbackOnly(Xid xid, long timeoutSeconds, java.lang.reflect.Method method)
+            throws TransactionException {
+        record("recreateRollbackOnly(" + (xid == null ? "none" : Xids.key(xid)) + "," + timeoutSeconds
+                + "," + method.getName() + ")");
+        if (refuseRollbackOnly) {
+            throw new TransactionException("the caller's transaction is marked rollback-only",
+                    XAException.XA_RBROLLBACK);
+        }
+        if (xid != null) {
+            imported.put(Xids.key(xid), timeoutSeconds);
+        }
     }
 
     @Override
@@ -100,6 +123,9 @@ final class FakeTransactions implements TransactionBridge {
     @Override
     public void detach() {
         record("detach");
+        if (detachThrows != null) {
+            throw detachThrows;
+        }
     }
 
     @Override

@@ -75,7 +75,8 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      * Set to {@code false} to stop invocations from joining a transaction the
      * caller's container began. The default, joining, makes a remote call made
      * inside a container transaction a branch of it, and needs a server that
-     * can import transactions. Anything other than {@code false} keeps the
+     * can import transactions. It may also be set as a system property, and
+     * the JNDI environment wins. Anything other than {@code false} keeps the
      * default, so a misspelt value cannot turn atomicity off by accident.
      * <p>
      * With joining off, a remote call inside a transaction runs and commits on
@@ -144,6 +145,11 @@ public class HttpInitialContextFactory implements InitialContextFactory {
         }
 
         Object ambient = environment.get(PROP_AMBIENT_TRANSACTION);
+        if (ambient == null) {
+            // As org.glassfish.orb.http.transactionManager is: a deployment
+            // can set it for every client in the JVM without touching code.
+            ambient = System.getProperty(PROP_AMBIENT_TRANSACTION);
+        }
         if (ambient != null && "false".equalsIgnoreCase(ambient.toString().trim())) {
             builder.joinAmbientTransaction(false);
         }

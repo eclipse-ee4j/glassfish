@@ -50,6 +50,7 @@ class RemainingTimeoutTest {
     @AfterEach
     void tearDown() {
         ClientTransactionContext.disassociate();
+        AmbientTransaction.forget();
     }
 
     @Test
@@ -87,6 +88,54 @@ class RemainingTimeoutTest {
         // Zero would tell the server there is no timeout and let it apply its
         // own, longer one to a transaction that has already run out.
         assertEquals(1, ClientTransactionContext.currentTimeoutSeconds());
+    }
+
+    @Test
+    @DisplayName("a timeout that does not fit an int is clamped, and a negative one is none")
+    void aTimeoutIsClamped() {
+        ClientTransactionContext.associate(XID, Long.MAX_VALUE, true);
+        long huge = ClientTransactionContext.currentTimeoutSeconds();
+        assertTrue(huge <= Integer.MAX_VALUE && huge > Integer.MAX_VALUE - 5, "huge timeout became " + huge);
+
+        ClientTransactionContext.associate(XID, -7, true);
+        assertEquals(0, ClientTransactionContext.currentTimeoutSeconds());
+    }
+
+    @Test
+    @DisplayName("joining restores the branch's deadline rather than starting its clock again")
+    void joiningRestoresTheDeadline() throws Exception {
+        AmbientTransactionTest.BOUND.clear();
+        AmbientTransaction.forget();
+        System.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY,
+                AmbientTransactionTest.Factory.class.getName());
+        try {
+            AmbientTransactionTest.FakeTransaction transaction = new AmbientTransactionTest.FakeTransaction();
+            transaction.timeout = 100;
+            AmbientTransactionTest.BOUND.put("java:comp/TransactionSynchronizationRegistry",
+                    new AmbientTransactionTest.FakeRegistry(transaction));
+            AmbientTransactionTest.BOUND.put("java:appserver/TransactionManager",
+                    new AmbientTransactionTest.FakeManager(transaction));
+            RecordingTransport transport = new RecordingTransport();
+            HttpEjbClient client = new HttpEjbClient(
+                    ClientConfiguration.builder(URI.create("http://localhost:8080/glassfish-services")).build(),
+                    transport, new JavaSerializationMarshaller(), JavaSerializationMarshaller.defaultFilter());
+            Pinger pinger = client.createProxy(Pinger.class, new EjbLocator("app", "module", null, "PingerBean"));
+
+            pinger.ping();
+            Thread.sleep(1500);
+            // The thread forgets the branch, as a pooled thread does between
+            // requests; the second call finds it in the transaction's resources.
+            ClientTransactionContext.disassociate();
+            pinger.ping();
+
+            long second = Long.parseLong(timeoutHeader(transport.requestHeaders.get(1)));
+            assertEquals(1, transaction.enlisted, "the second call must restore the branch, not enlist again");
+            assertTrue(second <= 99, "the restored branch restarted its clock: " + second);
+        } finally {
+            System.clearProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY);
+            AmbientTransactionTest.BOUND.clear();
+            AmbientTransaction.forget();
+        }
     }
 
     @Test

@@ -16,6 +16,8 @@
 
 package org.glassfish.orb.http.server;
 
+import java.lang.reflect.Method;
+
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
@@ -83,6 +85,39 @@ public interface TransactionBridge {
      * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
      */
     void recreate(Xid xid, long timeoutSeconds) throws TransactionException;
+
+    /**
+     * Admits an invocation whose caller's transaction can only roll back.
+     *
+     * <p>The caller sent {@code x-gf-txn-rollback-only}: its transaction is
+     * marked rollback-only or already rolling back. The container must treat
+     * the invocation as it treats an IIOP call arriving in such a client
+     * transaction, by the invoked method's transaction attribute. Returning
+     * normally means the call may run: the attribute does not use the caller's
+     * transaction (REQUIRES_NEW, NOT_SUPPORTED, ...), and the bridge has left
+     * the thread associated with whatever transaction the call should see, none
+     * for the first two. Throwing a {@link TransactionException} with
+     * {@link XAException#XA_RBROLLBACK} refuses it, which is what REQUIRED,
+     * MANDATORY and SUPPORTS do (the client sees a
+     * {@code TransactionRolledbackException}).
+     *
+     * <p>A successful return is paired with {@link #release} when {@code xid}
+     * is not null, exactly as for {@link #recreate}; when it is null there is
+     * nothing to release. A refusal leaves nothing associated.
+     *
+     * <p>The default refuses, the safe side for a bridge that cannot apply
+     * attributes: running the method inside a doomed transaction, or outside
+     * one the caller believes it is in, are both wrong.
+     *
+     * @param xid the caller's branch, or null if it had none to send
+     * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
+     * @param method the business method about to be invoked, whose attribute decides
+     */
+    default void recreateRollbackOnly(Xid xid, long timeoutSeconds, Method method)
+            throws TransactionException {
+        throw new TransactionException("the caller's transaction is marked rollback-only",
+                XAException.XA_RBROLLBACK);
+    }
 
     /** Disassociates the transaction imported by {@link #recreate}. */
     void release(Xid xid) throws TransactionException;

@@ -113,6 +113,19 @@ public final class Protocol {
     public static final String H_TXN_TIMEOUT = "x-gf-txn-timeout";
 
     /**
+     * Sent with {@code true} on an invocation made inside a transaction that
+     * can only roll back (marked rollback-only, or already rolling back). The
+     * transaction xid travels as usual when the caller has a branch, and is
+     * absent when it has none. The server does not refuse the call: it applies
+     * the invoked method's transaction attribute as it would for a client
+     * transaction arriving over IIOP, so a method that requires the caller's
+     * transaction (REQUIRED, MANDATORY, SUPPORTS) fails with a rollback
+     * exception while one that does not (REQUIRES_NEW, NOT_SUPPORTED) runs
+     * outside it.
+     */
+    public static final String H_TXN_ROLLBACK_ONLY = "x-gf-txn-rollback-only";
+
+    /**
      * Session affinity cookie. Deliberately {@code JSESSIONID}: it makes every
      * off-the-shelf HTTP load balancer able to pin a stateful conversation
      * without knowing anything about this protocol - which is what replaces

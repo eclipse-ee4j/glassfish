@@ -274,18 +274,22 @@ public final class HttpEjbClient implements AutoCloseable {
         }
     }
 
-    /** Joins the caller's transaction unless this client was configured not to. */
-    private void joinAmbientTransaction() {
-        if (config.joinAmbientTransaction()) {
-            AmbientTransaction.join(config, transport);
-        }
+    /**
+     * Joins the caller's transaction unless this client was configured not to.
+     *
+     * @return whether the caller's transaction can only roll back, in which
+     *         case the invocation must say so
+     */
+    private boolean joinAmbientTransaction() {
+        return config.joinAmbientTransaction() && AmbientTransaction.join(config, transport);
     }
 
     Object invoke(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) throws Throwable {
         // Before the request is built, because building it reads the thread's
         // transaction and joining is what puts one there.
-        joinAmbientTransaction();
-        HttpTransport.Request request = buildInvocation(locator, viewClass, method, args, newInvocationId());
+        boolean rollbackOnly = joinAmbientTransaction();
+        HttpTransport.Request request = buildInvocation(locator, viewClass, method, args, newInvocationId(),
+                rollbackOnly);
         HttpTransport.Response response;
         try {
             response = transport.exchange(request);
@@ -297,7 +301,7 @@ public final class HttpEjbClient implements AutoCloseable {
                 // can do nothing about.
                 drain(response.body());
                 downgrade();
-                request = buildInvocation(locator, viewClass, method, args, newInvocationId());
+                request = buildInvocation(locator, viewClass, method, args, newInvocationId(), rollbackOnly);
                 response = transport.exchange(request);
             }
         } catch (InterruptedException e) {
@@ -340,8 +344,9 @@ public final class HttpEjbClient implements AutoCloseable {
     }
 
     CompletableFuture<Object> invokeAsync(EjbLocator locator, Class<?> viewClass, Method method, Object[] args) {
+        boolean rollbackOnly;
         try {
-            joinAmbientTransaction();
+            rollbackOnly = joinAmbientTransaction();
         } catch (RuntimeException e) {
             // Nothing was sent, and the caller asked for a future: it fails
             // like any other call rather than throwing from the call site.
@@ -350,7 +355,7 @@ public final class HttpEjbClient implements AutoCloseable {
         final String invocationId = newInvocationId();
         final HttpTransport.Request request;
         try {
-            request = buildInvocation(locator, viewClass, method, args, invocationId);
+            request = buildInvocation(locator, viewClass, method, args, invocationId, rollbackOnly);
         } catch (IOException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -370,7 +375,8 @@ public final class HttpEjbClient implements AutoCloseable {
                                                   Class<?> viewClass,
                                                   Method method,
                                                   Object[] args,
-                                                  String invocationId) throws IOException {
+                                                  String invocationId,
+                                                  boolean rollbackOnly) throws IOException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         String[] parameterTypeNames = new String[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -395,6 +401,9 @@ public final class HttpEjbClient implements AutoCloseable {
 
         Map<String, String> headers = new HashMap<>(4);
         headers.put(Protocol.H_INVOCATION_ID, invocationId);
+        if (rollbackOnly) {
+            headers.put(Protocol.H_TXN_ROLLBACK_ONLY, "true");
+        }
         if (transaction != null) {
             long timeout = ClientTransactionContext.currentTimeoutSeconds();
             if (timeout > 0) {

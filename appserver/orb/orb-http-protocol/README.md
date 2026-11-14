@@ -76,7 +76,20 @@ environment.put("org.glassfish.orb.http.ambientTransaction", "false");
 Only the value `false` changes anything. With joining off the remote call runs
 and commits on its own, whatever the caller's transaction does afterwards, so
 use it to reach a server that cannot import transactions, not to hide a failure
-to join. A transaction begun through `HttpUserTransaction` is not affected.
+to join. A transaction begun through `HttpUserTransaction` is not affected. The
+same property can also be set as a system property; the JNDI environment wins.
+
+A call made inside a transaction that is already marked rollback-only (or is
+rolling back) is not refused by the client. It is sent with the header
+`x-gf-txn-rollback-only: true`, carrying the transaction's xid when the caller
+had already joined it and no xid otherwise. The server applies the invoked
+method's transaction attribute as it does for a client transaction arriving
+over IIOP: a method that needs the caller's transaction (REQUIRED, MANDATORY,
+SUPPORTS) fails with `EJBTransactionRolledbackException`, a method that does not
+(REQUIRES_NEW, NOT_SUPPORTED) runs outside it. A server whose transaction
+bridge does not implement this refuses the call with a rollback exception,
+which is the safe side. A call made from `afterCompletion`, when the caller's
+transaction has completed, is sent without a transaction.
 
 ### What is supported
 

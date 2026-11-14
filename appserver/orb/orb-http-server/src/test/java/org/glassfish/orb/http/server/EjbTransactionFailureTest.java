@@ -85,7 +85,12 @@ class EjbTransactionFailureTest {
 
     /** Invokes greet(String,int) carrying {@link #CARRIED} and the given extra request headers. */
     private static Loopback.InMemoryExchange invokeCarryingTransaction(
-            FakeTransactions transactions, Map<String, String> extraHeaders) throws IOException {
+            TransactionBridge transactions, Map<String, String> extraHeaders) throws IOException {
+        return invoke(transactions, extraHeaders, true);
+    }
+
+    private static Loopback.InMemoryExchange invoke(TransactionBridge transactions,
+            Map<String, String> extraHeaders, boolean carryTransaction) throws IOException {
         FakeContainer container = new FakeContainer();
         container.registerStateless("GreeterBean", new TestBeans.GreeterBean());
         EjbDispatcher dispatcher = new EjbDispatcher(container, SecurityBridge.NONE, transactions,
@@ -95,7 +100,8 @@ class EjbTransactionFailureTest {
                 "GreeterBean", null, TestBeans.Greeter.class.getName(), "greet",
                 new String[] { String.class.getName(), int.class.getName() });
         ByteArrayOutputStream body = new ByteArrayOutputStream();
-        InvocationEnvelope.writeTxContext(body, Xids.toContext(CARRIED, TxContext.TYPE_REMOTE));
+        InvocationEnvelope.writeTxContext(body, carryTransaction
+                ? Xids.toContext(CARRIED, TxContext.TYPE_REMOTE) : TxContext.NONE);
         try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(body)) {
             writer.writeObject("Ada");
             writer.writeObject(1);
@@ -110,21 +116,41 @@ class EjbTransactionFailureTest {
         return exchange;
     }
 
-    @Test
-    @DisplayName("a timeout header that is negative, oversized or not a number is a 400 and reaches nobody")
-    void aNonsenseTimeoutIsRefused() throws IOException {
-        for (String bad : List.of("-5", "99999999999", "abc", "9223372036854775807")) {
-            FakeTransactions transactions = new FakeTransactions();
-            Loopback.InMemoryExchange exchange = invokeCarryingTransaction(transactions,
-                    Map.of(Protocol.H_TXN_TIMEOUT, bad));
+    private void assertTimeoutRefused(String bad) throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        Loopback.InMemoryExchange exchange = invokeCarryingTransaction(transactions,
+                Map.of(Protocol.H_TXN_TIMEOUT, bad));
 
-            assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status(), "timeout " + bad);
-            assertEquals(List.of(), transactions.calls, "recreate must not see timeout " + bad);
-        }
+        assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status(), "timeout " + bad);
+        assertEquals(List.of(), transactions.calls, "recreate must not see timeout " + bad);
     }
 
     @Test
-    @DisplayName("a sensible timeout still reaches recreate unchanged")
+    @DisplayName("a negative timeout header is a 400 and reaches nobody")
+    void aNegativeTimeoutIsRefused() throws IOException {
+        assertTimeoutRefused("-5");
+    }
+
+    @Test
+    @DisplayName("a timeout header larger than an int is a 400 and reaches nobody")
+    void anOversizedTimeoutIsRefused() throws IOException {
+        assertTimeoutRefused("99999999999");
+    }
+
+    @Test
+    @DisplayName("a timeout header that is Long.MAX_VALUE is a 400 and reaches nobody")
+    void aMaximalTimeoutIsRefused() throws IOException {
+        assertTimeoutRefused("9223372036854775807");
+    }
+
+    @Test
+    @DisplayName("a timeout header that is not a number is a 400 and reaches nobody")
+    void aNonNumericTimeoutIsRefused() throws IOException {
+        assertTimeoutRefused("abc");
+    }
+
+    @Test
+    @DisplayName("guard: a sensible timeout still reaches recreate unchanged")
     void aSensibleTimeoutIsPassedOn() throws IOException {
         FakeTransactions transactions = new FakeTransactions();
         Loopback.InMemoryExchange exchange = invokeCarryingTransaction(transactions,
@@ -146,5 +172,81 @@ class EjbTransactionFailureTest {
         // A manager that fails halfway may have associated the thread already,
         // and a branch that was never returned is never released.
         assertEquals(List.of("recreate(" + Xids.key(CARRIED) + ",0)", "detach"), transactions.calls);
+    }
+
+    private static Map<String, String> rollbackOnly() {
+        return Map.of(Protocol.H_TXN_ROLLBACK_ONLY, "true");
+    }
+
+    @Test
+    @DisplayName("a bridge that does not know rollback-only refuses with a rollback code, and the bean is not called")
+    void aBridgeWithoutRollbackOnlySupportRefuses() throws IOException {
+        Loopback.InMemoryExchange exchange = invoke(TransactionBridge.NONE, rollbackOnly(), true);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.toResponse().status());
+        assertEquals(List.of(Integer.toString(XAException.XA_RBROLLBACK)),
+                exchange.toResponse().headers().get(TransactionDispatcher.H_ERROR_CODE));
+    }
+
+    @Test
+    @DisplayName("a rollback-only call whose method does not need the transaction runs, and its branch is released")
+    void aRollbackOnlyCallThatMayRunRuns() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), true);
+
+        assertEquals(Protocol.SC_OK, exchange.toResponse().status());
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet)",
+                "release(" + Xids.key(CARRIED) + ")"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a rollback-only call the container refuses answers a rollback code and detaches the thread")
+    void aRefusedRollbackOnlyCallAnswersARollbackCode() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        transactions.refuseRollbackOnly = true;
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), true);
+
+        assertEquals(Protocol.SC_EXCEPTION, exchange.toResponse().status());
+        assertEquals(List.of(Integer.toString(XAException.XA_RBROLLBACK)),
+                exchange.toResponse().headers().get(TransactionDispatcher.H_ERROR_CODE));
+        assertEquals(List.of("recreateRollbackOnly(" + Xids.key(CARRIED) + ",0,greet)", "detach"),
+                transactions.calls);
+    }
+
+    @Test
+    @DisplayName("a rollback-only call with no branch to import still reaches the bridge, with no xid")
+    void aRollbackOnlyCallWithoutABranchReachesTheBridge() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        Loopback.InMemoryExchange exchange = invoke(transactions, rollbackOnly(), false);
+
+        assertEquals(Protocol.SC_OK, exchange.toResponse().status());
+        assertEquals(List.of("detach", "recreateRollbackOnly(none,0,greet)"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("guard: only the value true is a rollback-only marker")
+    void onlyTrueIsTheMarker() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+
+        invoke(transactions, Map.of(Protocol.H_TXN_ROLLBACK_ONLY, "false"), true);
+
+        assertEquals("recreate(" + Xids.key(CARRIED) + ",0)", transactions.calls.get(0));
+    }
+
+    @Test
+    @DisplayName("a detach that fails while cleaning up after a failed import does not hide the first failure")
+    void aFailingDetachIsSuppressed() throws IOException {
+        FakeTransactions transactions = new FakeTransactions();
+        transactions.recreateThrows = new IllegalStateException("manager is broken");
+        transactions.detachThrows = new IllegalArgumentException("detach is broken too");
+
+        IllegalStateException thrown = org.junit.jupiter.api.Assertions.assertThrows(IllegalStateException.class,
+                () -> invoke(transactions, Map.of(), true));
+
+        assertEquals(1, thrown.getSuppressed().length);
+        assertEquals("detach is broken too", thrown.getSuppressed()[0].getMessage());
     }
 }

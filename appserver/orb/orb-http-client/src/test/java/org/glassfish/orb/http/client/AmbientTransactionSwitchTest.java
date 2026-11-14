@@ -82,7 +82,7 @@ class AmbientTransactionSwitchTest {
     }
 
     @Test
-    @DisplayName("by default a call made inside a container transaction joins it")
+    @DisplayName("guard: by default a call made inside a container transaction joins it")
     void joinsByDefault() {
         ping(ClientConfiguration.builder(URI.create(PROVIDER)).build());
 
@@ -110,6 +110,19 @@ class AmbientTransactionSwitchTest {
         assertTrue(joins("flase"));
         assertTrue(joins("no"));
         assertTrue(joins("true"));
+    }
+
+    @Test
+    @DisplayName("the property can also be a system property, and the JNDI environment wins over it")
+    void thePropertyIsAlsoASystemProperty() throws Exception {
+        System.setProperty(HttpInitialContextFactory.PROP_AMBIENT_TRANSACTION, "false");
+        try {
+            assertFalse(joins(null));
+            assertTrue(joins("true"), "the environment must win");
+        } finally {
+            System.clearProperty(HttpInitialContextFactory.PROP_AMBIENT_TRANSACTION);
+        }
+        assertTrue(joins(null));
     }
 
     private static boolean joins(String value) throws Exception {

@@ -209,7 +209,7 @@ public final class EjbDispatcher {
 
                 // Import before resolving the target, so the container sees the
                 // transaction while it sets the invocation up rather than after.
-                imported = importTransaction(txContext, exchange);
+                imported = importTransaction(txContext, exchange, method);
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
@@ -369,9 +369,11 @@ public final class EjbDispatcher {
      *
      * @return the branch that was imported, or null if there was none
      */
-    private Xid importTransaction(TxContext txContext, ServerExchange exchange)
+    private Xid importTransaction(TxContext txContext, ServerExchange exchange, Method method)
             throws TransactionBridge.TransactionException, BadTimeoutException {
-        if (!txContext.isPresent()) {
+        String marker = exchange.requestHeader(Protocol.H_TXN_ROLLBACK_ONLY);
+        boolean rollbackOnly = marker != null && "true".equalsIgnoreCase(marker.trim());
+        if (!txContext.isPresent() && !rollbackOnly) {
             // Deliberately outside a transaction, so make that true: this
             // thread has served other requests, and one of them may have left
             // a branch on it.
@@ -380,13 +382,26 @@ public final class EjbDispatcher {
         }
         Xid xid = Xids.fromContext(txContext);
         long timeout = requestedTimeout(exchange);
+        if (xid == null) {
+            // A rollback-only call with no branch to import: whatever a
+            // previous request left on this thread must not be seen.
+            transactions.detach();
+        }
         try {
-            transactions.recreate(xid, timeout);
+            if (rollbackOnly) {
+                transactions.recreateRollbackOnly(xid, timeout, method);
+            } else {
+                transactions.recreate(xid, timeout);
+            }
         } catch (TransactionBridge.TransactionException | RuntimeException e) {
             // A manager that fails halfway may already have associated the
             // thread, and nothing will release a branch that was never
             // returned. Leave the thread with no transaction instead.
-            transactions.detach();
+            try {
+                transactions.detach();
+            } catch (RuntimeException detachFailure) {
+                e.addSuppressed(detachFailure);
+            }
             throw e;
         }
         return xid;

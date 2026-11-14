@@ -98,7 +98,13 @@ public final class ClientTransactionContext {
      * @param ambient whether a foreign transaction manager asked for this
      */
     static void associate(Xid xid, long timeoutSeconds, boolean ambient) {
-        associate(xid, timeoutSeconds, ambient, System.nanoTime() + timeoutSeconds * 1_000_000_000L);
+        long clamped = clamp(timeoutSeconds);
+        associate(xid, clamped, ambient, System.nanoTime() + clamped * 1_000_000_000L);
+    }
+
+    /** A timeout is an int number of seconds in JTA; more would overflow the deadline arithmetic. */
+    private static long clamp(long timeoutSeconds) {
+        return Math.max(0, Math.min(timeoutSeconds, Integer.MAX_VALUE));
     }
 
     /**
@@ -111,7 +117,7 @@ public final class ClientTransactionContext {
         if (xid == null) {
             disassociate();
         } else {
-            CURRENT.set(new Association(xid, timeoutSeconds, ambient, deadlineNanos));
+            CURRENT.set(new Association(xid, clamp(timeoutSeconds), ambient, deadlineNanos));
         }
     }
 

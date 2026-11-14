@@ -17,7 +17,6 @@
 package org.glassfish.orb.http.client;
 
 import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 import jakarta.transaction.SystemException;
@@ -30,6 +29,7 @@ import java.lang.System.Logger.Level;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.LongSupplier;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -65,6 +65,12 @@ import javax.transaction.xa.Xid;
  * {@link #join} throws it. The alternative, calling anyway, runs the remote
  * work outside the caller's transaction and commits it there whatever the
  * caller decides next - the one outcome a transactional caller cannot detect.
+ * <p>
+ * A transaction that can only roll back is not refused here. The call is sent
+ * with a marker and the server applies the method's transaction attribute, as
+ * it does for an IIOP caller in that state. A transaction that has already
+ * completed - the caller is in {@code afterCompletion} - is no transaction at
+ * all, and the call is sent without one.
  */
 final class AmbientTransaction {
 
@@ -75,8 +81,10 @@ final class AmbientTransaction {
      * standard name; the manager does not, so the container-specific names
      * are tried in turn and the answer is cached either way.
      */
+    private static final String MANAGER_PROPERTY = "org.glassfish.orb.http.transactionManager";
+
     private static final List<String> MANAGER_NAMES = List.of(
-            System.getProperty("org.glassfish.orb.http.transactionManager", "java:appserver/TransactionManager"),
+            System.getProperty(MANAGER_PROPERTY, "java:appserver/TransactionManager"),
             "java:comp/TransactionManager",
             "java:/TransactionManager",
             "java:jboss/TransactionManager");
@@ -101,6 +109,16 @@ final class AmbientTransaction {
     /** Set once a lookup failure that was not final has been reported, so a broken one is said once. */
     private static final AtomicBoolean LOOKUP_FAILURE_REPORTED = new AtomicBoolean();
 
+    /** How long a failed registry lookup is believed before it is tried again. */
+    private static final long RETRY_AFTER_NANOS = 30_000_000_000L;
+
+    /** The clock the retry delay is measured with; replaced in tests. */
+    static volatile LongSupplier clock = System::nanoTime;
+
+    private static volatile boolean retryArmed;
+
+    private static volatile long retryAtNanos;
+
     private static volatile TransactionManager manager;
 
     private static volatile TransactionSynchronizationRegistry registry;
@@ -121,6 +139,25 @@ final class AmbientTransaction {
         registry = null;
         UNAVAILABLE.set(false);
         LOOKUP_FAILURE_REPORTED.set(false);
+        retryArmed = false;
+        clock = System::nanoTime;
+    }
+
+    /** What the state of the caller's transaction means for an invocation. */
+    private enum Standing { ACTIVE, ROLLBACK_ONLY, NONE, REFUSED }
+
+    private static Standing standing(int status) {
+        return switch (status) {
+            case Status.STATUS_ACTIVE -> Standing.ACTIVE;
+            case Status.STATUS_MARKED_ROLLBACK, Status.STATUS_ROLLING_BACK -> Standing.ROLLBACK_ONLY;
+            // Completed: a call from afterCompletion. The transaction is over
+            // and whatever the caller does now is not part of it, exactly as
+            // when no transaction was ever there.
+            case Status.STATUS_COMMITTED, Status.STATUS_ROLLEDBACK, Status.STATUS_NO_TRANSACTION -> Standing.NONE;
+            // Preparing, prepared, committing, unknown: work done now would
+            // either miss the decision or contradict it.
+            default -> Standing.REFUSED;
+        };
     }
 
     /**
@@ -131,17 +168,17 @@ final class AmbientTransaction {
      *                  branches: two calls to the same server in one
      *                  transaction are one branch, to different servers are two
      * @param transport how the branch will be driven
-     * @throws EJBTransactionRolledbackException if the caller's transaction can
-     *         no longer commit, or the manager refused the enlistment because
-     *         it cannot
-     * @throws EJBException if a transaction is active and could not be joined
-     *         for any other reason
+     * @return true if the caller's transaction can only roll back, so the
+     *         invocation must carry that marker; the branch, if there is one,
+     *         is associated with the thread as usual
+     * @throws EJBException if a transaction is active, or in a state the call
+     *         must not be made in, and could not be joined
      */
-    static void join(ClientConfiguration config, HttpTransport transport) {
+    static boolean join(ClientConfiguration config, HttpTransport transport) {
         if (UNAVAILABLE.get()) {
             // No transaction manager here to ask, and nothing this class did
             // can be stale, because it never ran.
-            return;
+            return false;
         }
 
         TransactionSynchronizationRegistry synchronizations = registry();
@@ -149,12 +186,12 @@ final class AmbientTransaction {
             // No container here, so there is nothing to join - and nothing to
             // judge either: an association in a JVM with no transaction
             // manager belongs to whoever made it.
-            return;
+            return false;
         }
         if (ClientTransactionContext.current() != null && !ClientTransactionContext.isAmbient()) {
             // Begun through this transport's own UserTransaction: not ours to
             // judge, and not ours to replace.
-            return;
+            return false;
         }
 
         if (synchronizations.getTransactionKey() == null) {
@@ -167,8 +204,21 @@ final class AmbientTransaction {
                 LOG.log(Level.DEBUG, "dropping a branch left on this thread by a transaction that has ended");
                 ClientTransactionContext.disassociate();
             }
-            return;
+            return false;
         }
+
+        String endpoint = String.valueOf(config.baseUri());
+        int status = synchronizations.getTransactionStatus();
+        Standing standing = standing(status);
+        if (standing == Standing.NONE) {
+            ClientTransactionContext.disassociate();
+            return false;
+        }
+        if (standing == Standing.REFUSED) {
+            throw new EJBException("the caller's transaction is not in a state a remote call can join (status "
+                    + status + "), so the call to " + endpoint + " was not made");
+        }
+        boolean rollbackOnly = standing == Standing.ROLLBACK_ONLY;
 
         // A transaction is active, and the branch to carry is the one enlisted
         // for this endpoint in this transaction - never whatever the thread
@@ -185,25 +235,29 @@ final class AmbientTransaction {
                 ClientTransactionContext.associate(joined.xid(), joined.timeoutSeconds(), true,
                         joined.deadlineNanos());
             }
-            return;
+            return rollbackOnly;
         }
         // Not joined in this transaction yet, so anything on the thread
         // belongs to another one.
         ClientTransactionContext.disassociate();
+        if (rollbackOnly) {
+            // A manager will not enlist a resource in a transaction that can
+            // only roll back, so there is no branch to send. The marker alone
+            // lets the server apply the method's transaction attribute.
+            return true;
+        }
 
-        String endpoint = String.valueOf(config.baseUri());
         TransactionManager transactions = manager();
         if (transactions == null) {
             throw new EJBException("a transaction is active but no transaction manager was found, so the call to "
-                    + endpoint + " cannot carry it; the call was not made. Set "
+                    + endpoint + " cannot carry it; the call was not made. Name where it is bound with the "
+                    + "system property " + MANAGER_PROPERTY + ", or set "
                     + HttpInitialContextFactory.PROP_AMBIENT_TRANSACTION
-                    + "=false to send calls without the caller's transaction");
+                    + "=false (JNDI environment or system property) to send calls without the caller's transaction");
         }
         Transaction current;
-        int status;
         try {
             current = transactions.getTransaction();
-            status = current == null ? Status.STATUS_NO_TRANSACTION : current.getStatus();
         } catch (SystemException e) {
             throw new EJBException("could not read the caller's transaction, so the call to " + endpoint
                     + " was not made", e);
@@ -212,26 +266,16 @@ final class AmbientTransaction {
             throw new EJBException("the transaction registry reports an active transaction but the transaction"
                     + " manager has none, so the call to " + endpoint + " was not made");
         }
-        if (status != Status.STATUS_ACTIVE) {
-            String message = "the caller's transaction is not active (status " + status
-                    + "), so the call to " + endpoint + " was not made";
-            if (status == Status.STATUS_MARKED_ROLLBACK || status == Status.STATUS_ROLLING_BACK
-                    || status == Status.STATUS_ROLLEDBACK) {
-                // Calling anyway would run the remote work and commit it
-                // outside a transaction that can only roll back.
-                throw new EJBTransactionRolledbackException(message);
-            }
-            throw new EJBException(message);
-        }
         try {
             // Enlisting is what makes the server a participant: the caller's
             // coordinator will drive prepare and commit on this resource.
             current.enlistResource(new HttpXAResource(config, transport));
         } catch (RollbackException e) {
-            // The manager may have started the branch before it refused.
+            // The transaction became rollback-only between the status read and
+            // the enlistment, which is the same state. The manager may have
+            // started the branch before it refused.
             ClientTransactionContext.disassociate();
-            throw new EJBTransactionRolledbackException("the caller's transaction cannot commit, so the call to "
-                    + endpoint + " was not made", e);
+            return true;
         } catch (SystemException | RuntimeException e) {
             ClientTransactionContext.disassociate();
             throw new EJBException("could not join the caller's transaction, so the call to " + endpoint
@@ -242,6 +286,7 @@ final class AmbientTransaction {
         synchronizations.putResource(marker, new Joined(ClientTransactionContext.current(),
                 ClientTransactionContext.configuredTimeoutSeconds(),
                 ClientTransactionContext.currentDeadlineNanos()));
+        return false;
     }
 
     /**
@@ -271,12 +316,24 @@ final class AmbientTransaction {
         if (known != null) {
             return known;
         }
+        if (retryArmed && clock.getAsLong() - retryAtNanos < 0) {
+            // A lookup failed a moment ago. Believing that for a while costs a
+            // call that could have joined, and asking again on every call
+            // costs a JNDI lookup on every call.
+            return null;
+        }
         // Only a lookup that cannot succeed here at all latches UNAVAILABLE,
-        // and it does so itself. A miss for any other reason is just a miss.
+        // and it does so itself. A miss for any other reason is a miss to be
+        // believed for RETRY_AFTER_NANOS and then tried again.
         Object found = lookup(REGISTRY_NAME);
         if (found instanceof TransactionSynchronizationRegistry resolved) {
             registry = resolved;
+            retryArmed = false;
             return resolved;
+        }
+        if (!UNAVAILABLE.get()) {
+            retryAtNanos = clock.getAsLong() + RETRY_AFTER_NANOS;
+            retryArmed = true;
         }
         return null;
     }

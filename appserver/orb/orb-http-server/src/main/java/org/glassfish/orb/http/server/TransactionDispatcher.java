@@ -102,7 +102,21 @@ public final class TransactionDispatcher {
         if (request.isUserTransaction()) {
             switch (request.operation()) {
                 case TxRoutes.OP_BEGIN -> {
-                    Xid xid = transactions.begin(longParameter(exchange, TxRoutes.PARAM_TIMEOUT));
+                    long timeout = 0;
+                    String named = exchange.queryParameter(TxRoutes.PARAM_TIMEOUT);
+                    if (named != null && !named.isEmpty()) {
+                        try {
+                            timeout = Long.parseLong(named.trim());
+                        } catch (NumberFormatException e) {
+                            fail(exchange, Protocol.SC_BAD_REQUEST, "timeout must be a number of seconds");
+                            return;
+                        }
+                        if (timeout < 0 || timeout > Integer.MAX_VALUE) {
+                            fail(exchange, Protocol.SC_BAD_REQUEST, "timeout is out of range");
+                            return;
+                        }
+                    }
+                    Xid xid = transactions.begin(timeout);
                     exchange.setResponseHeader(TxRoutes.H_XID, Xids.toPathSegment(xid));
                     exchange.setStatus(Protocol.SC_NO_CONTENT);
                 }

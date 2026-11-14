@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -242,21 +243,40 @@ class AmbientTransactionTest {
     }
 
     @Test
-    @DisplayName("one lookup that fails does not turn joining off for the rest of the JVM")
-    void aFailedLookupIsNotRemembered() {
-        // Nothing bound yet, as on a thread that cannot see the component
-        // environment: the lookup fails, and that is all it says.
+    @DisplayName("a failed lookup is believed for a while, so a burst of calls makes one lookup")
+    void aFailedLookupIsNotRepeatedOnEveryCall() {
+        AtomicLong now = new AtomicLong();
+        AmbientTransaction.clock = now::get;
+
+        // Nothing bound, as on a thread that cannot see the component environment.
+        for (int i = 0; i < 20; i++) {
+            AmbientTransaction.join(config, transport);
+            now.addAndGet(1_000_000_000L);
+        }
+
+        assertEquals(1, OPENED.get(), "every call looked the registry up again");
+    }
+
+    @Test
+    @DisplayName("a failed lookup is tried again after the delay, and joining then works")
+    void aFailedLookupIsRetriedAfterTheDelay() {
+        AtomicLong now = new AtomicLong();
+        AmbientTransaction.clock = now::get;
         AmbientTransaction.join(config, transport);
-        assertNull(ClientTransactionContext.current());
+        assertEquals(1, OPENED.get());
 
         FakeTransaction transaction = new FakeTransaction();
         BOUND.put("java:comp/TransactionSynchronizationRegistry", new FakeRegistry(transaction));
         BOUND.put("java:appserver/TransactionManager", new FakeManager(transaction));
 
-        // No forget(): the earlier miss must not have been cached.
+        // Bound now, but the earlier miss is still believed.
+        now.addAndGet(29_000_000_000L);
         AmbientTransaction.join(config, transport);
+        assertEquals(0, transaction.enlisted, "retried before the delay was over");
 
-        assertEquals(1, transaction.enlisted, "an earlier failed lookup disabled joining");
+        now.addAndGet(2_000_000_000L);
+        AmbientTransaction.join(config, transport);
+        assertEquals(1, transaction.enlisted, "never retried: one failed lookup disabled joining");
     }
 
     @Test
@@ -341,6 +361,9 @@ class AmbientTransactionTest {
         /** What {@link #getStatus()} answers. */
         int status = Status.STATUS_ACTIVE;
 
+        /** When positive, the timeout the manager gives the resource before starting its branch. */
+        int timeout;
+
         /** When set, enlisting throws this. */
         Exception enlistFailure;
 
@@ -369,6 +392,9 @@ class AmbientTransactionTest {
                 // A new branch per enlistment, as a real manager mints them;
                 // a fixed one would make a stale branch look current.
                 Xid xid = new Xids.SimpleXid(0x4A5441, new byte[] { 1, (byte) ++branches }, new byte[] { 3 });
+                if (timeout > 0) {
+                    resource.setTransactionTimeout(timeout);
+                }
                 resource.start(xid, XAResource.TMNOFLAGS);
                 started = xid;
             } catch (Exception e) {
@@ -482,7 +508,11 @@ class AmbientTransactionTest {
 
         @Override
         public int getTransactionStatus() {
-            return Status.STATUS_ACTIVE;
+            try {
+                return transaction == null ? Status.STATUS_NO_TRANSACTION : transaction.getStatus();
+            } catch (jakarta.transaction.SystemException e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         @Override

@@ -174,21 +174,72 @@ class HttpUserTransactionTest {
     }
 
     @Test
-    @DisplayName("an unknown transaction on commit, or on the rollback of a marked one, is a RollbackException")
-    void anUnknownTransactionIsARollback() throws Exception {
+    @DisplayName("an unknown transaction on commit is a RollbackException")
+    void anUnknownTransactionOnCommitIsARollback() throws Exception {
         transport.answer("/ut/commit/", 500, xaError(XAException.XAER_NOTA));
         transaction.begin();
-        assertThrows(RollbackException.class, transaction::commit);
 
-        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_NOTA));
-        transaction.begin();
-        transaction.setRollbackOnly();
         assertThrows(RollbackException.class, transaction::commit);
         assertNull(ClientTransactionContext.current());
     }
 
     @Test
-    @DisplayName("a failure that says nothing about the outcome stays a SystemException")
+    @DisplayName("an unknown transaction on the rollback of a marked one is a RollbackException")
+    void anUnknownTransactionOnMarkedRollbackIsARollback() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_NOTA));
+        transaction.begin();
+        transaction.setRollbackOnly();
+
+        assertThrows(RollbackException.class, transaction::commit);
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("a rollback code or heuristic rollback on the rollback of a marked transaction is a RollbackException")
+    void aRollbackCodeOnMarkedRollbackIsARollback() throws Exception {
+        for (int code : new int[] { XAException.XA_RBROLLBACK, XAException.XA_RBTIMEOUT, XAException.XA_HEURRB }) {
+            transport.answer("/ut/rollback/", 500, xaError(code));
+            transaction.begin();
+            transaction.setRollbackOnly();
+
+            assertThrows(RollbackException.class, transaction::commit, "XA code " + code);
+        }
+    }
+
+    @Test
+    @DisplayName("a marked transaction that completed heuristically in whole or part is a HeuristicMixedException")
+    void aHeuristicCommitOnMarkedRollbackIsMixed() throws Exception {
+        for (int code : new int[] { XAException.XA_HEURCOM, XAException.XA_HEURMIX, XAException.XA_HEURHAZ }) {
+            transport.answer("/ut/rollback/", 500, xaError(code));
+            transaction.begin();
+            transaction.setRollbackOnly();
+
+            assertThrows(HeuristicMixedException.class, transaction::commit, "XA code " + code);
+        }
+    }
+
+    @Test
+    @DisplayName("rollback of a transaction the server no longer knows succeeds, and clears the thread")
+    void rollbackOfAnUnknownTransactionSucceeds() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_NOTA));
+        transaction.begin();
+
+        transaction.rollback();
+
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("rollback that fails for any other reason is a SystemException")
+    void anOrdinaryRollbackFailureIsASystemException() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_RMFAIL));
+        transaction.begin();
+
+        assertThrows(SystemException.class, transaction::rollback);
+    }
+
+    @Test
+    @DisplayName("guard: a failure that says nothing about the outcome stays a SystemException")
     void anOrdinaryFailureIsASystemException() throws Exception {
         transport.answer("/ut/commit/", 500, xaError(XAException.XAER_RMFAIL));
         transaction.begin();

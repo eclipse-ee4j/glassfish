@@ -89,10 +89,19 @@ public final class HttpUserTransaction implements UserTransaction {
         } catch (XAException e) {
             int code = e.errorCode;
             if (markedRollbackOnly) {
-                // The server no longer knows the transaction, which is what a
-                // rollback was asking for: the outcome is the one reported.
-                if (code == XAException.XAER_NOTA) {
+                // A rollback was what was asked for. A server that no longer
+                // knows the transaction, or rolled it back itself, has done it.
+                if (code == XAException.XAER_NOTA || code == XAException.XA_HEURRB
+                        || (code >= XAException.XA_RBBASE && code <= XAException.XA_RBEND)) {
                     throw rolledBack("the transaction was marked rollback only", e);
+                }
+                // It was decided the other way, wholly or in part.
+                if (code == XAException.XA_HEURCOM || code == XAException.XA_HEURMIX
+                        || code == XAException.XA_HEURHAZ) {
+                    HeuristicMixedException mixed = new HeuristicMixedException(
+                            "a transaction marked rollback only completed heuristically: " + e.getMessage());
+                    mixed.initCause(e);
+                    throw mixed;
                 }
                 throw systemException("rollback of a transaction marked rollback only failed", e);
             }
@@ -136,6 +145,13 @@ public final class HttpUserTransaction implements UserTransaction {
         try {
             client.rollbackUserTransaction(xid);
         } catch (XAException e) {
+            int code = e.errorCode;
+            if (code == XAException.XAER_NOTA || code == XAException.XA_HEURRB
+                    || (code >= XAException.XA_RBBASE && code <= XAException.XA_RBEND)) {
+                // The transaction is already gone or already rolled back,
+                // which is the state a rollback is asking for.
+                return;
+            }
             throw systemException("rollback failed", e);
         } finally {
             clear();
@@ -161,6 +177,10 @@ public final class HttpUserTransaction implements UserTransaction {
         // Only a transaction begun through this object is its business. One a
         // container's manager started is not active here: committing it from
         // here would send the server a commit for a branch the container owns.
+        // So inside a container transaction getStatus() answers
+        // STATUS_NO_TRANSACTION while begin() refuses, because a thread cannot
+        // carry two transactions: the answers describe this object's own
+        // transaction and the thread's association respectively.
         AmbientTransaction.dropStaleBranch();
         if (ownTransaction() == null) {
             return Status.STATUS_NO_TRANSACTION;

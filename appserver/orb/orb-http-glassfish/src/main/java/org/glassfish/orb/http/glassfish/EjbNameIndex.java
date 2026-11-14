@@ -25,8 +25,11 @@ import jakarta.inject.Singleton;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
+import java.util.function.LongSupplier;
 
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
@@ -49,6 +52,17 @@ import org.jvnet.hk2.annotations.Service;
  * that is merely usually populated fails as a 404 indistinguishable from a
  * misspelled bean name. A miss here refreshes and retries, so the worst case
  * is a slow first call rather than a wrong answer.
+ *
+ * <p>The refresh on a miss is rate limited. A miss is something any caller can
+ * cause, including one that has not authenticated, and a rebuild walks every
+ * deployed application; without a limit a stream of requests for a bean that
+ * does not exist is a stream of full rebuilds. A bean deployed within
+ * {@link #MIN_REFRESH_INTERVAL_NANOS} of the last rebuild is therefore found by
+ * the first miss after that interval, not by the miss that happens to come
+ * first.
+ *
+ * <p>A rebuild is published whole. Readers see either the previous index or
+ * the new one, never the empty map a clear-then-fill would show in between.
  */
 @Service
 @Singleton
@@ -56,23 +70,45 @@ public class EjbNameIndex {
 
     private static final Logger LOG = System.getLogger(EjbNameIndex.class.getName());
 
+    /** How long after a rebuild a miss is answered without rebuilding again. */
+    static final long MIN_REFRESH_INTERVAL_NANOS = 1_000_000_000L;
+
     @Inject
     private ApplicationRegistry applications;
 
-    private final Map<String, Long> byName = new ConcurrentHashMap<>();
+    private final LongSupplier clock;
+    private final long minRefreshIntervalNanos;
+
+    private volatile Snapshot current = Snapshot.EMPTY;
+
+    /** Guarded by {@code this}: when the last rebuild finished, valid once {@code rebuilt} is set. */
+    private long lastRebuildNanos;
+    private boolean rebuilt;
+
+    public EjbNameIndex() {
+        this(null, System::nanoTime, MIN_REFRESH_INTERVAL_NANOS);
+    }
+
+    /** For tests: a registry, a clock and a refresh interval of their own. */
+    EjbNameIndex(ApplicationRegistry applications, LongSupplier clock, long minRefreshIntervalNanos) {
+        this.applications = applications;
+        this.clock = clock;
+        this.minRefreshIntervalNanos = minRefreshIntervalNanos;
+    }
 
     /**
      * @param appName the application name
      * @param moduleName the module within it, or null if the caller does not know it
      * @param beanName the bean's ejb-name
-     * @return the container's id for that bean, or null if there is no such bean
+     * @return the container's id for that bean, or null if there is no such
+     *         bean, or if the name does not single one out
      */
     public Long lookup(String appName, String moduleName, String beanName) {
         Long id = find(appName, moduleName, beanName);
         if (id != null) {
             return id;
         }
-        refresh();
+        refreshIfDue();
         return find(appName, moduleName, beanName);
     }
 
@@ -88,25 +124,52 @@ public class EjbNameIndex {
      * turns a deployed bean into a 404, which is what happened the first time
      * this ran against a real server.
      *
-     * <p>The ambiguous key is only ever populated when one bean of that name
-     * exists in the application, so the fallback cannot silently pick the
-     * wrong one.
+     * <p>The fallback only answers when exactly one bean of that name exists in
+     * the application. When two modules each have one, the module-less key is
+     * ambiguous and resolves to nothing: guessing would run the call on
+     * whichever bean happened to be indexed first, and a caller that named the
+     * wrong module would be answered by the other module's bean.
      */
     private Long find(String appName, String moduleName, String beanName) {
-        Long id = byName.get(key(appName, moduleName, beanName));
-        return id != null ? id : byName.get(key(appName, null, beanName));
+        Snapshot snapshot = current;
+        String exact = key(appName, moduleName, beanName);
+        if (snapshot.ambiguous().contains(exact)) {
+            // Only a module-less key can be ambiguous, and this caller named
+            // no module.
+            return null;
+        }
+        Long id = snapshot.ids().get(exact);
+        if (id != null) {
+            return id;
+        }
+        String unqualified = key(appName, null, beanName);
+        return snapshot.ambiguous().contains(unqualified) ? null : snapshot.ids().get(unqualified);
+    }
+
+    /** A miss: rebuild unless the index was rebuilt a moment ago. */
+    private synchronized void refreshIfDue() {
+        if (rebuilt && clock.getAsLong() - lastRebuildNanos < minRefreshIntervalNanos) {
+            return;
+        }
+        rebuild();
     }
 
     /**
-     * Rebuilds the index from what is deployed right now.
+     * Rebuilds the index from what is deployed right now, whatever the last
+     * rebuild was. For a caller that knows the index is stale: a bean it named
+     * is gone.
      *
-     * <p>Logs what it found. A miss here presents as a 404 on an invocation,
-     * which is indistinguishable from a bean that was never deployed and from
-     * a name spelled wrong, so the only way to tell the three apart from the
-     * outside is for this to say what it saw.
+     * <p>Says what it found at debug level. A miss here presents as a 404 on
+     * an invocation, which is indistinguishable from a bean that was never
+     * deployed and from a name spelled wrong, so the way to tell the three
+     * apart from the outside is for this to say what it saw.
      */
-    public void refresh() {
-        Map<String, Long> rebuilt = new ConcurrentHashMap<>();
+    public synchronized void refresh() {
+        rebuild();
+    }
+
+    private void rebuild() {
+        Entries entries = new Entries();
         for (String name : applications.getAllApplicationNames()) {
             ApplicationInfo info = applications.get(name);
             if (info == null) {
@@ -118,32 +181,30 @@ public class EjbNameIndex {
                 LOG.log(Level.DEBUG, "application {0} carries no Application metadata", name);
                 continue;
             }
-            int before = rebuilt.size();
-            index(application, rebuilt);
-            LOG.log(Level.INFO, "indexed {0} bean key(s) for application {1} (registration name {2})",
-                    rebuilt.size() - before, name, application.getRegistrationName());
+            int before = entries.size();
+            index(application, entries);
+            LOG.log(Level.DEBUG, "indexed {0} bean key(s) for application {1} (registration name {2})",
+                    entries.size() - before, name, application.getRegistrationName());
         }
-        byName.clear();
-        byName.putAll(rebuilt);
-        LOG.log(Level.INFO, "EJB name index rebuilt: {0}", rebuilt.keySet());
+        publish(entries);
+        LOG.log(Level.DEBUG, "EJB name index rebuilt: {0}", current.ids().keySet());
     }
 
-    private void index(Application application, Map<String, Long> into) {
+    /** Swaps the whole index in one write. */
+    synchronized void publish(Entries entries) {
+        current = entries.build();
+        lastRebuildNanos = clock.getAsLong();
+        rebuilt = true;
+    }
+
+    private void index(Application application, Entries into) {
         var bundles = application.getBundleDescriptors(EjbBundleDescriptor.class);
-        LOG.log(Level.INFO, "application {0} has {1} EJB bundle(s)",
+        LOG.log(Level.DEBUG, "application {0} has {1} EJB bundle(s)",
                 application.getRegistrationName(), bundles.size());
         for (EjbBundleDescriptor bundle : bundles) {
             String moduleName = bundle.getModuleDescriptor().getModuleName();
             for (EjbDescriptor ejb : bundle.getEjbs()) {
-                into.put(key(application.getRegistrationName(), moduleName, ejb.getName()),
-                        ejb.getUniqueId());
-                // Also index without the module, so a client that knows only
-                // the application and the bean is still served when the name is
-                // unambiguous. putIfAbsent rather than put: on a collision the
-                // ambiguous key should resolve to nothing in particular rather
-                // than to whichever bean happened to be indexed last.
-                into.putIfAbsent(key(application.getRegistrationName(), null, ejb.getName()),
-                        ejb.getUniqueId());
+                into.add(application.getRegistrationName(), moduleName, ejb.getName(), ejb.getUniqueId());
             }
         }
     }
@@ -152,8 +213,43 @@ public class EjbNameIndex {
         return appName + '/' + (moduleName == null ? "*" : moduleName) + '/' + beanName;
     }
 
-    /** @return how many beans are currently indexed, for diagnostics */
+    /** @return how many keys are currently indexed, for diagnostics */
     public int size() {
-        return byName.size();
+        return current.ids().size();
+    }
+
+    /** What an index holds: the keys that name one bean, and the module-less keys that name several. */
+    private record Snapshot(Map<String, Long> ids, Set<String> ambiguous) {
+        static final Snapshot EMPTY = new Snapshot(Map.of(), Set.of());
+    }
+
+    /** The beans of one rebuild, collected before anything is published. */
+    static final class Entries {
+
+        private final Map<String, Long> ids = new HashMap<>();
+        private final Set<String> ambiguous = new HashSet<>();
+
+        /**
+         * Records a bean under its module, and under the application alone so a
+         * client that knows only the application and the bean is still served.
+         * When a second bean of the same name turns up in the application, the
+         * module-less key stops naming either.
+         */
+        void add(String appName, String moduleName, String beanName, long ejbId) {
+            ids.put(key(appName, moduleName, beanName), ejbId);
+            String unqualified = key(appName, null, beanName);
+            Long first = ids.putIfAbsent(unqualified, ejbId);
+            if (first != null && first != ejbId) {
+                ambiguous.add(unqualified);
+            }
+        }
+
+        int size() {
+            return ids.size();
+        }
+
+        private Snapshot build() {
+            return new Snapshot(Map.copyOf(ids), Set.copyOf(ambiguous));
+        }
     }
 }

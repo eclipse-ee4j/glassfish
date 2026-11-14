@@ -29,8 +29,11 @@ import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.glassfish.orb.http.protocol.ChunkedInput;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
@@ -44,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -54,7 +58,20 @@ class ForyMarshallerTest {
     private static final String STREAMING = "org.glassfish.orb.http.codec.fory.streaming";
     private static final String THRESHOLD = ForyMarshaller.STREAMING_THRESHOLD_PROPERTY;
 
+    private static final String DECODE = ForyMarshaller.STREAMING_DECODE_THRESHOLD_PROPERTY;
+
     private final Marshaller marshaller = new ForyMarshaller();
+
+    /** Runs the body with the decode threshold set, or cleared when null, and restores it. */
+    private static void withDecodeThreshold(String decode, Body body) throws Exception {
+        String previous = System.getProperty(DECODE);
+        try {
+            setOrClear(DECODE, decode);
+            body.run();
+        } finally {
+            setOrClear(DECODE, previous);
+        }
+    }
 
     private static void restore(String previous) {
         if (previous == null) {
@@ -254,7 +271,7 @@ class ForyMarshallerTest {
 
         try (Marshaller.ObjectReader reader = marshaller.newReader(
                 new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
-            assertThrows(IOException.class, reader::readObject);
+            assertThrows(EOFException.class, reader::readObject);
         }
     }
 
@@ -553,8 +570,11 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("the streaming threshold property: negative disables, zero streams everything, junk means the default")
+    @DisplayName("[guard] the streaming threshold property: negative disables, zero streams everything, junk means the default")
     void thresholdPropertyIsInterpreted() throws Exception {
+        // GUARD / characterization test of the writer threshold: it documents
+        // behaviour the change under review did not alter, so it is not
+        // expected to fail on a revert.
         withProperties(null, "-1", () -> {
             assertEquals(0, streamedFramesFor(new byte[100_000]));
         });
@@ -639,10 +659,12 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("frames decode the same whether they take the array path or the stream path")
+    @DisplayName("[guard] frames decode the same whether they take the array path or the stream path")
     void bothDecodePathsAgree() throws Exception {
-        for (String threshold : new String[] {"-1", "0", "4096", "100000"}) {
-            withProperties(null, threshold, () -> {
+        // GUARD / characterization test: both paths must give the same
+        // objects; it is not expected to fail on a revert.
+        for (String threshold : new String[] {null, "-1", "0", "4096", "100000"}) {
+            withDecodeThreshold(threshold, () -> {
                 byte[] blob = new byte[30_000];
                 new Random(8L).nextBytes(blob);
                 String big = "z".repeat(10_000);
@@ -671,9 +693,10 @@ class ForyMarshallerTest {
     }
 
     @Test
-    @DisplayName("a large streamed frame over many small chunks decodes from the stream")
+    @DisplayName("[guard] a large streamed frame over many small chunks decodes from the stream")
     void largeStreamedFrameRoundTrips() throws Exception {
-        withProperties(null, null, () -> {
+        // GUARD / characterization test: the round trip works on both paths.
+        withDecodeThreshold("0", () -> {
             byte[] value = new byte[100_000];
             new Random(2L).nextBytes(value);
             ChunkedOutput out = new ChunkedOutput(1_000);
@@ -685,17 +708,19 @@ class ForyMarshallerTest {
             }
             ChunkedInput in = new ChunkedInput(out.toByteBuffers());
             assertEquals(7, in.readNBytes(7).length);
+            long before = ForyMarshaller.streamedDecodeCount();
             try (Marshaller.ObjectReader r = marshaller.newReader(in, getClass().getClassLoader(), ALLOW_ALL)) {
                 assertArrayEquals(value, (byte[]) r.readObject());
                 assertEquals("tail", r.readObject());
             }
+            assertEquals(before + 2, ForyMarshaller.streamedDecodeCount());
         });
     }
 
     @Test
     @DisplayName("a large frame that is cut short is reported as an IOException")
     void truncatedLargeFrameIsAnIOException() throws Exception {
-        withProperties(null, null, () -> {
+        withDecodeThreshold("0", () -> {
             byte[] value = new byte[10_000];
             new Random(6L).nextBytes(value);
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -720,16 +745,24 @@ class ForyMarshallerTest {
         private final byte[] data;
         private final int failAt;
         private int position;
+        /** The exceptions this stream threw. */
+        final List<IOException> thrown = new ArrayList<>();
 
         Flaky(byte[] data, int failAt) {
             this.data = data;
             this.failAt = failAt;
         }
 
+        private IOException fail() {
+            IOException e = new IOException("connection reset");
+            thrown.add(e);
+            return e;
+        }
+
         @Override
         public int read() throws IOException {
             if (position >= failAt) {
-                throw new IOException("connection reset");
+                throw fail();
             }
             return data[position++] & 0xFF;
         }
@@ -737,7 +770,7 @@ class ForyMarshallerTest {
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
             if (position >= failAt) {
-                throw new IOException("connection reset");
+                throw fail();
             }
             int n = Math.min(len, failAt - position);
             System.arraycopy(data, position, b, off, n);
@@ -749,18 +782,234 @@ class ForyMarshallerTest {
     @Test
     @DisplayName("a connection that fails in the middle of a large frame surfaces its own IOException")
     void deliveryFailureKeepsItsType() throws Exception {
-        withProperties(null, null, () -> {
+        withDecodeThreshold("0", () -> {
             byte[] value = new byte[10_000];
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
                 w.writeObject(value);
                 w.flush();
             }
+            Flaky flaky = new Flaky(out.toByteArray(), 6_000);
             try (Marshaller.ObjectReader r = marshaller.newReader(
-                    new Flaky(out.toByteArray(), 6_000), getClass().getClassLoader(), ALLOW_ALL)) {
+                    flaky, getClass().getClassLoader(), ALLOW_ALL)) {
                 IOException e = assertThrows(IOException.class, r::readObject);
                 assertEquals("connection reset", e.getMessage());
+                assertTrue(e.getClass() == IOException.class, e.getClass().getName());
+
+                // The exception is a new one with the connection's as its cause;
+                // the connection's own exception is left as it was thrown.
+                assertEquals(1, flaky.thrown.size());
+                IOException original = flaky.thrown.get(0);
+                assertNotSame(original, e);
+                assertSame(original, e.getCause());
+                assertEquals(0, original.getSuppressed().length, "the original is not modified");
+                assertEquals(1, e.getSuppressed().length, "Fory's exception hangs off the new one");
+                assertNoCycle(e);
             }
         });
+    }
+
+    /** Fails if walking causes and suppressed exceptions from the root ever returns to one on the current path. */
+    private static void assertNoCycle(Throwable root) {
+        Set<Throwable> onPath = Collections.newSetFromMap(new IdentityHashMap<>());
+        walk(root, onPath);
+    }
+
+    private static void walk(Throwable t, Set<Throwable> onPath) {
+        assertTrue(onPath.add(t), "exception graph has a cycle through " + t);
+        if (t.getCause() != null) {
+            walk(t.getCause(), onPath);
+        }
+        for (Throwable suppressed : t.getSuppressed()) {
+            walk(suppressed, onPath);
+        }
+        onPath.remove(t);
+    }
+
+    @Test
+    @DisplayName("a cut stream gives a new EOFException with the recorded one as its cause and no cycle")
+    void truncatedStreamedFrameHasNoCyclicGraph() throws Exception {
+        withDecodeThreshold("0", () -> {
+            byte[] value = new byte[10_000];
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (Marshaller.ObjectWriter w = marshaller.newWriter(out)) {
+                w.writeObject(value);
+                w.flush();
+            }
+            byte[] full = out.toByteArray();
+            try (Marshaller.ObjectReader r = marshaller.newReader(
+                    new ByteArrayInputStream(Arrays.copyOf(full, full.length - 5_000)),
+                    getClass().getClassLoader(), ALLOW_ALL)) {
+                EOFException e = assertThrows(EOFException.class, r::readObject);
+                assertTrue(e.getCause() instanceof EOFException, "cause " + e.getCause());
+                assertNotSame(e, e.getCause());
+                assertEquals(0, e.getCause().getSuppressed().length);
+                assertEquals(1, e.getSuppressed().length);
+                assertNoCycle(e);
+            }
+        });
+    }
+
+    private static int frameLength(byte[] encoded) {
+        return ByteBuffer.wrap(encoded, 1, 4).getInt();
+    }
+
+    private static byte[] encodeOne(Marshaller m, Object value) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (Marshaller.ObjectWriter w = m.newWriter(out)) {
+            w.writeObject(value);
+            w.flush();
+        }
+        return out.toByteArray();
+    }
+
+    private long streamedDecodesFor(byte[] encoded) throws Exception {
+        long before = ForyMarshaller.streamedDecodeCount();
+        try (Marshaller.ObjectReader r = marshaller.newReader(
+                new ByteArrayInputStream(encoded), getClass().getClassLoader(), ALLOW_ALL)) {
+            r.readObject();
+        }
+        return ForyMarshaller.streamedDecodeCount() - before;
+    }
+
+    @Test
+    @DisplayName("a frame is decoded from the stream when its length is at least the decode threshold, not when it is shorter")
+    void decodeThresholdBoundaryIsInclusive() throws Exception {
+        byte[] encoded = encodeOne(marshaller, new byte[10_000]);
+        int length = frameLength(encoded);
+        withDecodeThreshold(Integer.toString(length), () -> assertEquals(1, streamedDecodesFor(encoded)));
+        withDecodeThreshold(Integer.toString(length - 1), () -> assertEquals(1, streamedDecodesFor(encoded)));
+        withDecodeThreshold(Integer.toString(length + 1), () -> assertEquals(0, streamedDecodesFor(encoded)));
+    }
+
+    @Test
+    @DisplayName("the decode threshold property: off when unset, blank, junk or negative; zero streams every Fory frame")
+    void decodeThresholdPropertyIsInterpreted() throws Exception {
+        byte[] encoded = encodeOne(marshaller, new byte[10_000]);
+        for (String off : new String[] {null, "", "  ", "abc", "-1", "-5"}) {
+            withDecodeThreshold(off, () -> assertEquals(0, streamedDecodesFor(encoded), "value '" + off + "'"));
+        }
+        withDecodeThreshold("0", () -> assertEquals(1, streamedDecodesFor(encoded)));
+        withDecodeThreshold(" 100 ", () -> assertEquals(1, streamedDecodesFor(encoded)));
+        // The writer's threshold does not turn the reader's path on.
+        withProperties(null, "0", () -> withDecodeThreshold(null, () -> assertEquals(0, streamedDecodesFor(encoded))));
+    }
+
+    @Test
+    @DisplayName("by default even a large frame is decoded from an array")
+    void largeFramesDecodeFromAnArrayByDefault() throws Exception {
+        withProperties(null, null, () -> withDecodeThreshold(null, () -> {
+            byte[] encoded = encodeOne(marshaller, new byte[1 << 20]);
+            assertEquals(0, streamedDecodesFor(encoded));
+        }));
+    }
+
+    private static com.sun.management.ThreadMXBean allocationBean() {
+        java.lang.management.ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        Assumptions.assumeTrue(bean instanceof com.sun.management.ThreadMXBean
+                && ((com.sun.management.ThreadMXBean) bean).isThreadAllocatedMemorySupported());
+        return (com.sun.management.ThreadMXBean) bean;
+    }
+
+    @Test
+    @DisplayName("a header that promises far more than arrives allocates only what arrived")
+    void promisedLengthIsNotAllocated() throws Exception {
+        com.sun.management.ThreadMXBean allocation = allocationBean();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        java.io.DataOutputStream data = new java.io.DataOutputStream(bytes);
+        data.writeByte(0);
+        data.writeInt(1_000_000_000);
+        data.write(new byte[10]);
+        byte[] cut = bytes.toByteArray();
+        withDecodeThreshold(null, () -> {
+            for (int attempt = 0; attempt < 6; attempt++) {
+                try (Marshaller.ObjectReader r = marshaller.newReader(
+                        new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
+                    long before = allocation.getCurrentThreadAllocatedBytes();
+                    assertThrows(EOFException.class, r::readObject);
+                    long used = allocation.getCurrentThreadAllocatedBytes() - before;
+                    if (attempt >= 3) {
+                        assertTrue(used < 40_000, "allocated " + used + " bytes for 10 received");
+                    }
+                }
+            }
+        });
+    }
+
+    @Test
+    @DisplayName("a streamed decode of a 1 MiB byte[] frame allocates the value, one small buffer and no more")
+    void streamedDecodeOfLargeFrameStaysBounded() throws Exception {
+        com.sun.management.ThreadMXBean allocation = allocationBean();
+        byte[] value = new byte[1 << 20];
+        byte[] encoded = encodeOne(marshaller, value);
+        withDecodeThreshold("0", () -> {
+            long best = Long.MAX_VALUE;
+            for (int i = 0; i < 12; i++) {
+                try (Marshaller.ObjectReader r = marshaller.newReader(
+                        new ByteArrayInputStream(encoded), getClass().getClassLoader(), ALLOW_ALL)) {
+                    long before = allocation.getCurrentThreadAllocatedBytes();
+                    assertEquals(value.length, ((byte[]) r.readObject()).length);
+                    best = Math.min(best, allocation.getCurrentThreadAllocatedBytes() - before);
+                }
+            }
+            // Measured in CI: 2.23 MB with the override, 5.24 MB without it,
+            // because without available() the decoder grows its buffer by
+            // doubling and copies it each time.
+            assertTrue(best < 3 * (1 << 20), "a 1 MiB frame allocated " + best + " bytes");
+        });
+    }
+
+    @Test
+    @DisplayName("a streamed decode of a header that promises 1 GB allocates only a small start buffer")
+    void streamedDecodeDoesNotAllocateThePromisedLength() throws Exception {
+        com.sun.management.ThreadMXBean allocation = allocationBean();
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        java.io.DataOutputStream data = new java.io.DataOutputStream(bytes);
+        data.writeByte(0);
+        data.writeInt(1_000_000_000);
+        data.write(new byte[10]);
+        byte[] cut = bytes.toByteArray();
+        byte[] warm = encodeOne(marshaller, new byte[100]);
+        withDecodeThreshold("0", () -> {
+            for (int i = 0; i < 3; i++) {
+                streamedDecodesFor(warm);
+            }
+            try (Marshaller.ObjectReader r = marshaller.newReader(
+                    new ByteArrayInputStream(cut), getClass().getClassLoader(), ALLOW_ALL)) {
+                long before = allocation.getCurrentThreadAllocatedBytes();
+                assertThrows(IOException.class, r::readObject);
+                long used = allocation.getCurrentThreadAllocatedBytes() - before;
+                assertTrue(used < (1 << 20), "allocated " + used + " bytes for 10 received");
+            }
+        });
+    }
+
+    @Test
+    @DisplayName("the stream decoder starts with at most 64 KiB, and at least 16 bytes")
+    void streamBufferIsCapped() {
+        assertEquals(16, ForyMarshaller.streamBufferSize(0));
+        assertEquals(100, ForyMarshaller.streamBufferSize(100));
+        assertEquals(64 * 1024, ForyMarshaller.streamBufferSize(1 << 20));
+        assertEquals(64 * 1024, ForyMarshaller.streamBufferSize(Integer.MAX_VALUE));
+    }
+
+    @Test
+    @DisplayName("the limiting stream reports what is left, caps reads at the frame and returns 0 for a zero length read")
+    void limitedInputStreamContract() throws IOException {
+        ForyMarshaller.LimitedInputStream limited = new ForyMarshaller.LimitedInputStream(
+                new ByteArrayInputStream(new byte[100]), 10);
+        assertEquals(10, limited.available());
+        byte[] b = new byte[50];
+        assertEquals(0, limited.read(b, 0, 0));
+        assertEquals(4, limited.read(b, 0, 4));
+        assertEquals(6, limited.available());
+        assertEquals(6, limited.read(b, 0, 50));
+        assertEquals(0, limited.available());
+        assertEquals(0, limited.read(b, 0, 0), "a zero length read returns 0 even at the end of the frame");
+        assertEquals(-1, limited.read(b, 0, 1));
+
+        ForyMarshaller.LimitedInputStream shortSource = new ForyMarshaller.LimitedInputStream(
+                new ByteArrayInputStream(new byte[3]), 10);
+        assertEquals(3, shortSource.available(), "bounded by what the source has");
     }
 }

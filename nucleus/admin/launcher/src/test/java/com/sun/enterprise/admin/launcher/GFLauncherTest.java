@@ -197,6 +197,26 @@ public class GFLauncherTest {
         }
     }
 
+    /**
+     * A {@code --module-path} jvm-option must not replace the launcher's bootstrap module path
+     * (issue #26252), its entries are appended to it.
+     */
+    @Test
+    public void userModulePathAppendedToBootstrap() throws Exception {
+        launchParams.setDomainName("domain3");
+        launcher.setup();
+        launcher.launch();
+        List<String> command = launcher.getCommandLine().toList();
+        assertEquals(1, command.stream().filter(s -> s.startsWith("--module-path")).count(),
+            "single --module-path expected in " + command);
+        File libDir = new File(domainsDir, "domain3/lib");
+        String expected = String.join(File.pathSeparator,
+            new File(installDir, "lib/bootstrap").getAbsolutePath(),
+            new File(libDir, "provider1.jar").getAbsolutePath(),
+            new File(libDir, "provider2.jar").getAbsolutePath());
+        assertEquals(expected, command.get(command.indexOf("--module-path") + 1));
+    }
+
     /** @return the value of the {@code -cp} argument */
     private static String getClasspath(CommandLine cmdline) {
         List<String> command = cmdline.toList();

@@ -28,6 +28,7 @@ import jakarta.inject.Singleton;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Set;
+import java.util.function.LongFunction;
 
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
 import org.glassfish.orb.http.protocol.EjbKey;
@@ -90,6 +91,23 @@ public class GlassFishContainerBridge implements ContainerBridge {
      */
     private final ThreadLocal<EjbContainerFacade> currentFacade = new ThreadLocal<>();
 
+    /** Where a bean's container is found by id; the server's own registry unless a test says otherwise. */
+    private final LongFunction<EjbContainerFacade> containers;
+
+    public GlassFishContainerBridge() {
+        this(id -> util().getContainer(id));
+    }
+
+    /** For tests: the same bridge over containers that are not the server's. */
+    GlassFishContainerBridge(LongFunction<EjbContainerFacade> containers) {
+        this.containers = containers;
+    }
+
+    /** For tests: the name index the bridge consults. */
+    void useIndex(EjbNameIndex index) {
+        this.index = index;
+    }
+
     @Override
     public EjbKey resolve(String appName, String moduleName, String distinctName,
                           String beanName, byte[] sessionId) throws NoSuchTargetException {
@@ -101,7 +119,7 @@ public class GlassFishContainerBridge implements ContainerBridge {
         if (sessionId != null) {
             return new EjbKey(ejbId, sessionId);
         }
-        if (isStateful(ejbId)) {
+        if (isStateful(containers.apply(ejbId))) {
             // The shared key is four bytes that mean "the one instance". A
             // stateful container reads an instance key as a session key and
             // runs off the end of it, which surfaces as an
@@ -144,18 +162,41 @@ public class GlassFishContainerBridge implements ContainerBridge {
         return loader != null ? loader : getClass().getClassLoader();
     }
 
+    /**
+     * Opens a session on the named bean.
+     *
+     * <p>This does not go through {@link #resolve}. That method answers a
+     * stateful bean with "this call needs a session, and none was named",
+     * which is the right answer for an invocation and a wrong one here: the
+     * session is what this call is asking for. Going through it made every
+     * open fail, so the bean is looked up in the index and the container's own
+     * {@code createSession} is called, which is also what
+     * {@code GlassFishNamingBridge} does for a stateful lookup.
+     *
+     * @throws NoSuchTargetException if no such bean is deployed, or it has no
+     *         remote view
+     * @throws SessionRefusedException if the bean is deployed but is not
+     *         stateful, or the container refused to create the session
+     */
     @Override
     public byte[] createSession(String appName, String moduleName, String distinctName,
-                                String beanName) throws NoSuchTargetException {
-        EjbKey key = resolve(appName, moduleName, distinctName, beanName, null);
-        EjbContainerFacade facade = facade(key);
+                                String beanName) throws NoSuchTargetException, SessionRefusedException {
+        Long ejbId = index.lookup(appName, moduleName, beanName);
+        if (ejbId == null) {
+            throw new NoSuchTargetException("no bean " + beanName
+                    + " in " + appName + '/' + moduleName);
+        }
+        EjbContainerFacade facade = facade(ejbId);
+        if (!isStateful(facade)) {
+            // The container would refuse as well, but with a RemoteException
+            // that reads as a transport failure. Say what is actually wrong.
+            throw new SessionRefusedException(beanName
+                    + " is not a stateful session bean, so it has no sessions to open");
+        }
         try {
             return facade.createSession(remoteViewFor(facade));
         } catch (CreateException | RemoteException e) {
-            // The container refuses this for anything that is not a stateful
-            // session bean, which is the honest answer: there is no
-            // conversation to start.
-            throw new NoSuchTargetException("cannot create a session for "
+            throw new SessionRefusedException("cannot create a session for "
                     + beanName + ": " + e.getMessage());
         }
     }
@@ -223,19 +264,26 @@ public class GlassFishContainerBridge implements ContainerBridge {
      * @return whether its container keeps a conversation per client
      */
     static boolean isStateful(long ejbId) {
-        EjbContainerFacade facade = util().getContainer(ejbId);
+        return isStateful(util().getContainer(ejbId));
+    }
+
+    static boolean isStateful(EjbContainerFacade facade) {
         return facade != null
                 && facade.getEjbDescriptor() instanceof EjbSessionDescriptor session
                 && session.isStateful();
     }
 
     private EjbContainerFacade facade(EjbKey key) throws NoSuchTargetException {
-        EjbContainerFacade facade = util().getContainer(key.ejbId());
+        return facade(key.ejbId());
+    }
+
+    private EjbContainerFacade facade(long ejbId) throws NoSuchTargetException {
+        EjbContainerFacade facade = containers.apply(ejbId);
         if (facade == null) {
             // The index named a bean the container no longer has - an
             // application undeployed between the lookup and the call.
             index.refresh();
-            throw new NoSuchTargetException("no container for ejbId " + key.ejbId());
+            throw new NoSuchTargetException("no container for ejbId " + ejbId);
         }
         return facade;
     }

@@ -396,23 +396,30 @@ public final class EjbDispatcher {
             fail(exchange, Protocol.SC_BAD_REQUEST, "malformed open path");
             return;
         }
-        try {
-            byte[] sessionId = container.createSession(
-                    path.segment(EjbRoutes.IDX_APP),
-                    path.segment(EjbRoutes.IDX_MODULE),
-                    path.optionalSegment(EjbRoutes.IDX_DISTINCT),
-                    path.segment(EjbRoutes.IDX_BEAN));
-            exchange.setResponseHeader(Protocol.H_SESSION_ID, EjbRoutes.encodeSessionId(sessionId));
-            // Pin the conversation here as well as at the affinity endpoint.
-            // The session lives in this instance's memory, so every later
-            // invocation quoting this id has to come back to this node; a
-            // client that never called the affinity endpoint would otherwise
-            // have nothing telling the load balancer that.
-            affinity.applyTo(exchange, AffinityDispatcher.contextPathOf(path));
-            exchange.setStatus(Protocol.SC_NO_CONTENT);
-        } catch (ContainerBridge.NoSuchTargetException e) {
-            fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
-        }
+        asCaller(exchange, () -> {
+            try {
+                byte[] sessionId = container.createSession(
+                        path.segment(EjbRoutes.IDX_APP),
+                        path.segment(EjbRoutes.IDX_MODULE),
+                        path.optionalSegment(EjbRoutes.IDX_DISTINCT),
+                        path.segment(EjbRoutes.IDX_BEAN));
+                exchange.setResponseHeader(Protocol.H_SESSION_ID, EjbRoutes.encodeSessionId(sessionId));
+                // Pin the conversation here as well as at the affinity endpoint.
+                // The session lives in this instance's memory, so every later
+                // invocation quoting this id has to come back to this node; a
+                // client that never called the affinity endpoint would otherwise
+                // have nothing telling the load balancer that.
+                affinity.applyTo(exchange, AffinityDispatcher.contextPathOf(path));
+                exchange.setStatus(Protocol.SC_NO_CONTENT);
+            } catch (ContainerBridge.NoSuchTargetException e) {
+                fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
+            } catch (ContainerBridge.SessionRefusedException e) {
+                // The bean is there but will not open a session. Not a 404:
+                // that status means no such EJB or view, and a client acting
+                // on it would look for the wrong thing.
+                fail(exchange, Protocol.SC_EXCEPTION, e.getMessage());
+            }
+        });
     }
 
     // ---- remove ----------------------------------------------------------
@@ -426,26 +433,28 @@ public final class EjbDispatcher {
             fail(exchange, Protocol.SC_BAD_REQUEST, "malformed remove path");
             return;
         }
-        try {
-            byte[] sessionId = EjbRoutes.decodeSessionId(path.segment(EjbRoutes.IDX_SESSION));
-            if (sessionId == null) {
-                fail(exchange, Protocol.SC_BAD_REQUEST, "remove requires a session id");
-                return;
+        asCaller(exchange, () -> {
+            try {
+                byte[] sessionId = EjbRoutes.decodeSessionId(path.segment(EjbRoutes.IDX_SESSION));
+                if (sessionId == null) {
+                    fail(exchange, Protocol.SC_BAD_REQUEST, "remove requires a session id");
+                    return;
+                }
+                EjbKey key = container.resolve(
+                        path.segment(EjbRoutes.IDX_APP),
+                        path.segment(EjbRoutes.IDX_MODULE),
+                        path.optionalSegment(EjbRoutes.IDX_DISTINCT),
+                        path.segment(EjbRoutes.IDX_BEAN),
+                        sessionId);
+                container.removeSession(key);
+                exchange.setStatus(Protocol.SC_NO_CONTENT);
+            } catch (ContainerBridge.NoSuchTargetException e) {
+                // Removing something already gone is the outcome the caller wanted.
+                exchange.setStatus(Protocol.SC_NO_CONTENT);
+            } catch (ProtocolException e) {
+                fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
             }
-            EjbKey key = container.resolve(
-                    path.segment(EjbRoutes.IDX_APP),
-                    path.segment(EjbRoutes.IDX_MODULE),
-                    path.optionalSegment(EjbRoutes.IDX_DISTINCT),
-                    path.segment(EjbRoutes.IDX_BEAN),
-                    sessionId);
-            container.removeSession(key);
-            exchange.setStatus(Protocol.SC_NO_CONTENT);
-        } catch (ContainerBridge.NoSuchTargetException e) {
-            // Removing something already gone is the outcome the caller wanted.
-            exchange.setStatus(Protocol.SC_NO_CONTENT);
-        } catch (ProtocolException e) {
-            fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
-        }
+        });
     }
 
     // ---- cancel ----------------------------------------------------------
@@ -462,10 +471,43 @@ public final class EjbDispatcher {
         }
         boolean interrupt = Boolean.parseBoolean(path.segment(last));
         String invocationId = path.segment(last - 1);
-        registry.cancel(invocationId, interrupt);
-        // Always 204: whether the invocation was still running is a race the
-        // client cannot act on, and reporting 404 would invite a pointless retry.
-        exchange.setStatus(Protocol.SC_NO_CONTENT);
+        asCaller(exchange, () -> {
+            registry.cancel(invocationId, interrupt);
+            // Always 204: whether the invocation was still running is a race the
+            // client cannot act on, and reporting 404 would invite a pointless retry.
+            exchange.setStatus(Protocol.SC_NO_CONTENT);
+        });
+    }
+
+    /** What runs while the caller is the current identity. */
+    @FunctionalInterface
+    private interface CallerAction {
+        void run() throws IOException;
+    }
+
+    /**
+     * Runs {@code action} as the caller, the way {@link #invoke} does.
+     *
+     * <p>The container reads the identity from the thread, and a Grizzly worker
+     * keeps whatever the request before it left there, so an operation that
+     * reaches the container without establishing its caller runs as a stranger
+     * and ignores a credential that was offered and refused. A refused
+     * credential answers 403 with a fixed reason and the action never runs.
+     * Whatever the action does, even throwing, the thread is cleared again.
+     */
+    private void asCaller(ServerExchange exchange, CallerAction action) throws IOException {
+        Object securityToken;
+        try {
+            securityToken = security.establish(exchange.authenticatedUser());
+        } catch (SecurityException e) {
+            fail(exchange, Protocol.SC_FORBIDDEN, "not authorized");
+            return;
+        }
+        try {
+            action.run();
+        } finally {
+            security.clear(securityToken);
+        }
     }
 
     // ---- responses --------------------------------------------------------

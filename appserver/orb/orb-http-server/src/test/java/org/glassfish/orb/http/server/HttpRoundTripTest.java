@@ -164,9 +164,10 @@ class HttpRoundTripTest {
     }
 
     @Test
-    void openingASessionOnAStatelessBeanIsNotFound() {
-        assertThrows(java.io.IOException.class, () ->
+    void openingASessionOnAStatelessBeanIsRefused() {
+        java.io.IOException refused = assertThrows(java.io.IOException.class, () ->
                 client.openSession(new EjbLocator("myapp", "mymodule", null, "GreeterBean")));
+        assertTrue(refused.getMessage().contains("not a stateful"), refused.getMessage());
     }
 
     @Test

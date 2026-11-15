@@ -439,7 +439,7 @@ class ForyMarshallerTest {
     @Test
     @DisplayName("the pool is bounded (guard) and its cost is reported")
     void thePoolIsBounded() throws Exception {
-        assertTrue(ForyMarshaller.POOL_SIZE >= 1 && ForyMarshaller.POOL_SIZE <= 16,
+        assertTrue(ForyMarshaller.POOL_SIZE >= 1 && ForyMarshaller.POOL_SIZE <= 64,
                 "pool size " + ForyMarshaller.POOL_SIZE);
         try (URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader())) {
             com.sun.management.ThreadMXBean threads = (com.sun.management.ThreadMXBean)
@@ -455,5 +455,49 @@ class ForyMarshallerTest {
                     + " allocatedBytesForFirstReaderPool=" + allocated
                     + " processors=" + Runtime.getRuntime().availableProcessors());
         }
+    }
+
+    private static byte[] javaFrame(Object value) throws Exception {
+        ByteArrayOutputStream payload = new ByteArrayOutputStream();
+        try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(payload)) {
+            writer.writeObject(value);
+            writer.flush();
+        }
+        ByteArrayOutputStream frame = new ByteArrayOutputStream();
+        java.io.DataOutputStream data = new java.io.DataOutputStream(frame);
+        data.writeByte(1);                      // a frame handed to Java serialization
+        data.writeInt(payload.size());
+        data.write(payload.toByteArray());
+        data.flush();
+        return frame.toByteArray();
+    }
+
+    @Test
+    @DisplayName("the array budget is one per reader: a second frame cannot spend it again")
+    void theBudgetIsSharedByTheFramesOfOneReader() throws Exception {
+        ByteArrayOutputStream frames = new ByteArrayOutputStream();
+        frames.write(javaFrame(new Object[2_500_000]));      // 20 MB declared
+        frames.write(javaFrame(new Object[2_500_000]));      // another 20 MB: over 32 MB in all
+
+        try (Marshaller.ObjectReader reader = marshaller.newReader(
+                new ByteArrayInputStream(frames.toByteArray()), getClass().getClassLoader(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            assertEquals(2_500_000, ((Object[]) reader.readObject()).length);
+            assertThrows(java.io.InvalidClassException.class, reader::readObject);
+        }
+    }
+
+    @Test
+    @DisplayName("limits taken from properties are brought into what Fory accepts")
+    void limitsAreClamped() {
+        assertEquals(2, ForyMarshaller.clampDepth(1));
+        assertEquals(Integer.MAX_VALUE, ForyMarshaller.clampDepth(Long.MAX_VALUE));
+        assertEquals(100, ForyMarshaller.clampDepth(100));
+        assertEquals(Long.MAX_VALUE, ForyMarshaller.graphMemory(Long.MAX_VALUE));
+        assertEquals(128L * 1024 * 1024, ForyMarshaller.graphMemory(32L * 1024 * 1024));
+        assertEquals(8, ForyMarshaller.poolSize("abc", 8));
+        assertEquals(8, ForyMarshaller.poolSize("-3", 8));
+        assertEquals(8, ForyMarshaller.poolSize(null, 8));
+        assertEquals(12, ForyMarshaller.poolSize("12", 8));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2022, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
  *
@@ -125,20 +125,18 @@ class ReferenceCleaner {
 
             // How this works - expunge and check iterate over the same map,
             // so the check verifies the result. See logs.
-            Thread[] threads = getThreads();
+            final Thread[] threads = getThreads();
             for (Thread thread : threads) {
                 if (thread == null) {
                     continue;
                 }
                 final Object threadLocalMap = threadLocalsField.get(thread);
                 if (threadLocalMap != null) {
-                    expungeStaleEntries(expungeStaleEntriesMethod, threadLocalMap);
-                    checkThreadLocalMapForLeaks(threadLocalMap, tableField);
+                    checkThreadLocalsForLeaks(expungeStaleEntriesMethod, threadLocalMap, tableField);
                 }
                 final Object inheritableMap = inheritableThreadLocalsField.get(thread);
                 if (inheritableMap != null) {
-                    expungeStaleEntries(expungeStaleEntriesMethod, inheritableMap);
-                    checkThreadLocalMapForLeaks(inheritableMap, tableField);
+                    checkThreadLocalsForLeaks(expungeStaleEntriesMethod, inheritableMap, tableField);
                 }
             }
         } catch (InaccessibleObjectException e) {
@@ -176,41 +174,32 @@ class ReferenceCleaner {
         return threads;
     }
 
-
-    private void expungeStaleEntries(final Method expungeStaleEntriesMethod, final Object threadLocalMap)
-        throws ReflectiveOperationException {
-        try {
-            expungeStaleEntriesMethod.invoke(threadLocalMap);
-        } catch (NullPointerException e) {
-            // tab[staleSlot] can be null in ThreadLocalMap.expungeStaleEntry, seen in test logs
-            LOG.log(WARNING, "Detected NPE caused by the JDK code, cleanup of thread locals failed.", e);
-        }
-    }
-
-
     /**
      * Analyzes the given thread local map object. Also pass in the field that
      * points to the internal table to save re-calculating it on every
      * call to this method.
      */
-    private void checkThreadLocalMapForLeaks(Object threadLocalMap, Field internalTableField)
-        throws IllegalAccessException, NoSuchFieldException {
-        Object[] table = (Object[]) internalTableField.get(threadLocalMap);
-        // See Thread's code, it can be null as of JDK17
+    private void checkThreadLocalsForLeaks(Method expungeStaleEntriesMethod, Object threadLocalMap, Field tableField)
+        throws ReflectiveOperationException, SecurityException {
+        // read the array reference once
+        Object[] table = (Object[]) tableField.get(threadLocalMap);
         if (table == null) {
             return;
         }
+        // each slot is read once into a local
         for (Object element : table) {
             if (element == null) {
                 continue;
             }
-            final Object key = ((Reference<?>) element).get();
+            @SuppressWarnings("unchecked")
+            final ThreadLocal<?> key = ((Reference<ThreadLocal<?>>) element).get();
             final boolean keyLeak = isLeaked(key);
 
             final Field valueField = element.getClass().getDeclaredField("value");
             setAccessible(valueField);
             final Object value = valueField.get(element);
             final boolean valueLeak = isLeaked(value);
+
             if (!keyLeak && !valueLeak) {
                 continue;
             }
@@ -221,6 +210,7 @@ class ReferenceCleaner {
             if (valueLeak) {
                 LOG.log(ERROR, CHECK_THREAD_LOCALS_FOR_LEAKS, loader.getName(), keyDescription, describe(value));
             }
+            valueField.set(element, null);
         }
     }
 
@@ -291,9 +281,8 @@ class ReferenceCleaner {
 
 
     /**
-     * @param object object to test, may be null
-     * @return <code>true</code> if o has been loaded by the current classloader
-     * or one of its descendants.
+     * @param threadLocal threadLocal to test, may be null
+     * @return <code>true</code> if o has been loaded by the current classloader or one of its descendants.
      */
     private boolean isLeaked(Object object) {
         if (object == null) {

@@ -44,19 +44,37 @@ import java.io.OutputStream;
  * application's classes.
  *
  * <h3>What is bounded, and what an anonymous request can still cost</h3>
- * Every reader, whatever filter it is given, also runs a per-stream budget of
- * declared array memory (length times element size, a reference counting as 8,
- * including the arrays that collections allocate while being read). A
- * collection or array allocates before it reads its elements, so a limit on
- * each array alone is not a limit: nested arrays that each pass it can hold
- * gigabytes live, which the round-2 version of this filter allowed.
- * {@link #defaultFilter()} adds limits on depth, objects and bytes per stream.
- * With the defaults one stream can still retain: up to
- * {@code maxArrayBytes} (32 MB) of arrays, up to {@code maxRefs} (200,000)
- * objects, and strings or other leaf data up to {@code maxBytes} (100 MB) of
- * wire bytes; in practice well under 200 MB, and an attacker has to send what
- * it wants retained for the strings and objects. The byte limit is the
- * remaining soft spot and can be lowered with the property below.
+ * <b>The decisive limit first.</b> The default filter ends with {@code ;*}, so
+ * every {@code Serializable} class is allowed for an anonymous caller, and the
+ * array budget below only covers what the JDK reports through its filter hook:
+ * arrays, and the JDK collections that call {@code checkArray} before
+ * allocating. A library class on the class path whose {@code readObject}
+ * allocates from a size it reads from the stream is not bounded by anything
+ * here.
+ *
+ * <p>Within that: every reader, whatever filter it is given, also runs a
+ * per-stream budget of declared array memory (length times element size, a
+ * reference counting as 8, including the arrays that collections allocate while
+ * being read). A collection or array allocates before it reads its elements,
+ * so a limit on each array alone is not a limit: nested arrays that each pass
+ * it can hold gigabytes live, which an earlier version of this filter
+ * allowed. {@link #defaultFilter()} adds limits on depth, objects and bytes
+ * per stream, and the transport caps the request body at {@code maxBytes}
+ * with a {@link LimitedInputStream} (the filter itself is never called for a
+ * string or for block data, so {@code maxbytes} alone does not bound them).
+ *
+ * <p>The budget counts declared arrays, not everything the JDK allocates
+ * while reading them: some classes copy (immutable sets and maps, {@code
+ * Vector}, {@code StringBuilder}, atomic arrays). The 32 MB budget is
+ * therefore up to about 96 MB transient and 64 MB retained, which is the
+ * figure to plan with; it is not scaled by a factor.
+ *
+ * <p>Known limits. The budget, object and depth limits are per stream, i.e.
+ * per request for this codec, with no bound across concurrent requests; a
+ * quota over all requests is not part of this class. A custom
+ * {@code jdk.serialFilterFactory} is applied by
+ * {@code ObjectInputStream.setObjectInputFilter} and may drop the budget:
+ * installing one takes responsibility for the limits.
  */
 public final class JavaSerializationMarshaller implements Marshaller {
 
@@ -93,8 +111,17 @@ public final class JavaSerializationMarshaller implements Marshaller {
      */
     static final long MAX_REFS = limit("maxRefs", 200_000L);
 
-    /** Bytes in one stream (default 100 MB), {@code org.glassfish.orb.http.filter.maxBytes}. */
-    static final long MAX_BYTES = limit("maxBytes", 100L * 1024 * 1024);
+    /**
+     * Bytes in one request body (default 32 MB),
+     * {@code org.glassfish.orb.http.filter.maxBytes}. It is the filter's
+     * {@code maxbytes} and also the cap the dispatchers put on the body.
+     */
+    static final long MAX_BYTES = limit("maxBytes", 32L * 1024 * 1024);
+
+    /** @return the most bytes a request or response body may have */
+    public static long maxBytes() {
+        return MAX_BYTES;
+    }
 
     /**
      * The one filter {@link #defaultFilter()} returns. It is immutable and
@@ -172,7 +199,16 @@ public final class JavaSerializationMarshaller implements Marshaller {
 
     @Override
     public ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter) throws IOException {
-        return newReader(in, loader, filter, ObjectInputFilter.Config.getSerialFilter());
+        return open(in, loader, filter, ObjectInputFilter.Config.getSerialFilter(), new Budget());
+    }
+
+    /**
+     * Like {@link #newReader} but charging an existing budget, for a codec that
+     * reads one request as several streams.
+     */
+    public ObjectReader newReaderSharing(InputStream in, ClassLoader loader, ObjectInputFilter filter,
+                                         Budget budget) throws IOException {
+        return open(in, loader, filter, ObjectInputFilter.Config.getSerialFilter(), budget);
     }
 
     /**
@@ -181,6 +217,11 @@ public final class JavaSerializationMarshaller implements Marshaller {
      */
     ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter,
                            ObjectInputFilter jvmWide) throws IOException {
+        return open(in, loader, filter, jvmWide, new Budget());
+    }
+
+    private ObjectReader open(InputStream in, ClassLoader loader, ObjectInputFilter filter,
+                              ObjectInputFilter jvmWide, Budget budget) throws IOException {
         if (filter == null) {
             throw new IllegalArgumentException("a deserialization filter is required");
         }
@@ -188,7 +229,7 @@ public final class JavaSerializationMarshaller implements Marshaller {
         ObjectInputStream ois = new LoaderAwareObjectInputStream(in, resolved);
         // The budget goes around whatever filter the caller passed,
         // including an application's narrowed one.
-        ois.setObjectInputFilter(ObjectInputFilter.merge(new StreamBudget(),
+        ois.setObjectInputFilter(ObjectInputFilter.merge(budget,
                 withJvmWideFilter(filter, jvmWide)));
         return new ObjectReader() {
             @Override
@@ -218,11 +259,13 @@ public final class JavaSerializationMarshaller implements Marshaller {
     }
 
     /**
-     * Adds up the declared size of every array in one stream and refuses
-     * once the total passes the budget. One instance per stream: it carries
-     * state, and a stream is read by one thread.
+     * Adds up the declared size of every array it is asked about and refuses
+     * once the total passes the budget. It carries state and is not
+     * thread-safe: one instance per request, used by one thread at a time. A
+     * codec that reads a request as several streams shares one instance
+     * between them, so the budget is per request and not per frame.
      */
-    private static final class StreamBudget implements ObjectInputFilter {
+    public static final class Budget implements ObjectInputFilter {
 
         private long declared;
 

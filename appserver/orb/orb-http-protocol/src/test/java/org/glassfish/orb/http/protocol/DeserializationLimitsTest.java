@@ -184,8 +184,18 @@ class DeserializationLimitsTest {
                 ManagementFactory.getThreadMXBean();
         long id = Thread.currentThread().getId();
         long before = threads.getThreadAllocatedBytes(id);
-        assertThrows(InvalidClassException.class, () -> readWithDefaults(body));
-        return threads.getThreadAllocatedBytes(id) - before;
+        Throwable thrown = null;
+        try {
+            readWithDefaults(body);
+        } catch (Throwable t) {
+            thrown = t;
+        }
+        long allocated = threads.getThreadAllocatedBytes(id) - before;
+        // The allocation is measured first and asserted first: a reader that
+        // allocates and then fails for another reason must fail on the number.
+        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the stream was refused");
+        assertTrue(thrown instanceof InvalidClassException, String.valueOf(thrown));
+        return allocated;
     }
 
     private static final long SMALL = 64L * 1024 * 1024;
@@ -205,7 +215,6 @@ class DeserializationLimitsTest {
 
         long allocated = allocatedWhileReading(body);
 
-        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
     }
 
     @Test
@@ -222,7 +231,6 @@ class DeserializationLimitsTest {
 
         long allocated = allocatedWhileReading(body);
 
-        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
     }
 
     @Test
@@ -239,7 +247,6 @@ class DeserializationLimitsTest {
 
         long allocated = allocatedWhileReading(body);
 
-        assertTrue(allocated < SMALL, allocated + " bytes were allocated before the refusal");
     }
 
     @Test
@@ -301,5 +308,32 @@ class DeserializationLimitsTest {
         } finally {
             System.clearProperty(name);
         }
+    }
+
+    @Test
+    @DisplayName("the budget is shared by the top-level objects of one reader (guard)")
+    void theBudgetIsSharedAcrossTopLevelObjects() throws Exception {
+        java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+        try (Marshaller.ObjectWriter writer = marshaller.newWriter(bytes)) {
+            writer.writeObject(new Object[2_500_000]);   // 20 MB declared each
+            writer.writeObject(new Object[2_500_000]);
+            writer.flush();
+        }
+
+        try (Marshaller.ObjectReader reader = marshaller.newReader(new ByteArrayInputStream(bytes.toByteArray()),
+                getClass().getClassLoader(), JavaSerializationMarshaller.defaultFilter())) {
+            assertEquals(2_500_000, ((Object[]) reader.readObject()).length);
+            assertThrows(InvalidClassException.class, reader::readObject);
+        }
+    }
+
+    @Test
+    @DisplayName("a body is cut off once it is longer than the limit")
+    void aLimitedStreamFailsPastItsLimit() throws Exception {
+        java.io.InputStream within = new LimitedInputStream(new ByteArrayInputStream(new byte[10]), 10);
+        assertEquals(10, within.readAllBytes().length);
+
+        java.io.InputStream beyond = new LimitedInputStream(new ByteArrayInputStream(new byte[11]), 10);
+        assertThrows(ProtocolException.class, beyond::readAllBytes);
     }
 }

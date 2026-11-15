@@ -47,6 +47,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -90,6 +91,18 @@ class RequestHardeningTest {
                 writer.writeObject(arg);
             }
             writer.writeObject(new HashMap<String, Object>());
+            writer.flush();
+        }
+        return out.toByteArray();
+    }
+
+    /** The shape that slips past the filter: one string, then a null where the attachments go. */
+    private static byte[] bodyWithNullAttachments(String only) throws IOException {
+        ChunkedOutput out = new ChunkedOutput();
+        InvocationEnvelope.writeTxContext(out, TxContext.NONE);
+        try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(out)) {
+            writer.writeObject(only);
+            writer.writeObject(null);
             writer.flush();
         }
         return out.toByteArray();
@@ -587,6 +600,172 @@ class RequestHardeningTest {
         } finally {
             Thread.interrupted();
         }
+    }
+
+    // ---- body cap, initialiser failures, finish() on the 404 paths --------
+
+    @Test
+    @DisplayName("a String argument longer than the body limit is refused, however the rest of the body looks")
+    void anOversizedStringIsRefused() throws Exception {
+        String huge = "x".repeat((int) (JavaSerializationMarshaller.maxBytes() + 1024 * 1024));
+        Loopback.InMemoryExchange exchange = invocation(TestBeans.Greeter.class, "GreeterBean", "echoLarge",
+                new String[] { String.class.getName() }, bodyWithNullAttachments(huge), Map.of());
+
+        dispatcherWithGreeter().dispatch(exchange);
+
+        assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status());
+    }
+
+    @Test
+    @DisplayName("a payload below the limit still passes (guard)")
+    void aStringBelowTheLimitPasses() throws Exception {
+        Loopback.InMemoryExchange exchange = invocation(TestBeans.Greeter.class, "GreeterBean", "echoLarge",
+                new String[] { String.class.getName() }, body("x".repeat(1024 * 1024)), Map.of());
+
+        dispatcherWithGreeter().dispatch(exchange);
+
+        assertEquals(Protocol.SC_OK, exchange.toResponse().status());
+    }
+
+    /** Serializes fine, and names a twin whose static initialiser fails. */
+    static final class Safe1 implements Serializable {
+        private static final long serialVersionUID = 1L;
+    }
+
+    static final class Boom1 implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        static {
+            if (Boolean.TRUE) {
+                throw new IllegalStateException("cannot initialise");
+            }
+        }
+    }
+
+    private static byte[] renamedToBoom(byte[] bytes) {
+        byte[] name = Safe1.class.getName().getBytes(StandardCharsets.US_ASCII);
+        int at = indexOf(bytes, name);
+        assertTrue(at >= 0, "the class name should be in the stream");
+        byte[] boom = "Boom1".getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(boom, 0, bytes, at + name.length - boom.length, boom.length);
+        return bytes;
+    }
+
+    @Test
+    @DisplayName("a class that cannot initialise is not reported as a malformed body (invocation)")
+    void anInitialiserFailureIsNotABadRequestForAnInvocation() throws Exception {
+        Loopback.InMemoryExchange exchange = invocation(TestBeans.Greeter.class, "GreeterBean", "greet",
+                GREET_TYPES, renamedToBoom(body(new Safe1(), 1)), Map.of());
+
+        try {
+            dispatcherWithGreeter().dispatch(exchange);
+        } catch (Error expected) {
+            // propagating is one of the acceptable answers
+        }
+
+        assertNotEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status(), reason(exchange));
+    }
+
+    @Test
+    @DisplayName("a class that cannot initialise is not reported as a malformed body (naming)")
+    void anInitialiserFailureIsNotABadRequestForNaming() throws Exception {
+        ChunkedOutput out = new ChunkedOutput();
+        try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(out)) {
+            writer.writeObject(new Safe1());
+            writer.flush();
+        }
+        Loopback.InMemoryExchange exchange = naming(Protocol.OP_BIND, "java:global/x", VALUE_TYPE,
+                renamedToBoom(out.toByteArray()));
+
+        try {
+            new NamingDispatcher(new HttpRoundTripTest.FakeNaming()).dispatch(exchange);
+        } catch (Error expected) {
+            // propagating is one of the acceptable answers
+        }
+
+        assertNotEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status());
+    }
+
+    /** Cancels, with an interrupt, the first time the application's class loader is asked for a class. */
+    private static final class CancellingLoaderContainer implements ContainerBridge {
+
+        private final FakeContainer delegate = new FakeContainer();
+        private final ClassLoader loader;
+
+        CancellingLoaderContainer(InvocationRegistry registry, String id) {
+            delegate.registerStateless("GreeterBean", new TestBeans.GreeterBean());
+            this.loader = new ClassLoader(getClass().getClassLoader()) {
+                @Override
+                protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                    registry.cancel(id, true);
+                    return super.loadClass(name, resolve);
+                }
+            };
+        }
+
+        @Override
+        public org.glassfish.orb.http.protocol.EjbKey resolve(String appName, String moduleName,
+                String distinctName, String beanName, byte[] sessionId) throws NoSuchTargetException {
+            return delegate.resolve(appName, moduleName, distinctName, beanName, sessionId);
+        }
+
+        @Override
+        public Object getTargetObject(org.glassfish.orb.http.protocol.EjbKey key, String viewClassName)
+                throws NoSuchTargetException {
+            return delegate.getTargetObject(key, viewClassName);
+        }
+
+        @Override
+        public void releaseTargetObject(Object target) {
+        }
+
+        @Override
+        public ClassLoader classLoader(org.glassfish.orb.http.protocol.EjbKey key) {
+            return loader;
+        }
+
+        @Override
+        public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
+                throws NoSuchTargetException {
+            return delegate.createSession(appName, moduleName, distinctName, beanName);
+        }
+
+        @Override
+        public void removeSession(org.glassfish.orb.http.protocol.EjbKey key) throws NoSuchTargetException {
+            delegate.removeSession(key);
+        }
+    }
+
+    private void cancelledWhileResolvingTheMethod(String view, String method, String id) throws Exception {
+        InvocationRegistry registry = new InvocationRegistry();
+        EjbDispatcher dispatcher = new EjbDispatcher(new CancellingLoaderContainer(registry, id),
+                SecurityBridge.NONE, new JavaSerializationMarshaller(), registry);
+        String path = EjbRoutes.invokePath(Protocol.CONTEXT_PATH, "myapp", "mymodule", null,
+                "GreeterBean", null, view, method, GREET_TYPES);
+        Map<String, String> headers = Map.of("Content-Type", INVOKE_TYPE, Protocol.H_INVOCATION_ID, id);
+        InterruptRecordingExchange exchange = new InterruptRecordingExchange(new Loopback.InMemoryExchange(
+                "POST", path.getBytes(StandardCharsets.UTF_8), null, headers, body("a", 1)));
+
+        try {
+            dispatcher.dispatch(exchange);
+
+            assertEquals(Protocol.SC_NOT_FOUND, exchange.delegate.toResponse().status());
+            assertFalse(exchange.interruptedDuringWrite, "the 404 was written with an interrupt pending");
+        } finally {
+            Thread.interrupted();
+        }
+    }
+
+    @Test
+    @DisplayName("no interrupt is pending when a missing view class is answered 404")
+    void noInterruptIsPendingOnAMissingClass() throws Exception {
+        cancelledWhileResolvingTheMethod("no.such.View", "greet", "fin-3");
+    }
+
+    @Test
+    @DisplayName("no interrupt is pending when a missing method is answered 404")
+    void noInterruptIsPendingOnAMissingMethod() throws Exception {
+        cancelledWhileResolvingTheMethod(TestBeans.Greeter.class.getName(), "nope", "fin-4");
     }
 
     // ---- registry ---------------------------------------------------------

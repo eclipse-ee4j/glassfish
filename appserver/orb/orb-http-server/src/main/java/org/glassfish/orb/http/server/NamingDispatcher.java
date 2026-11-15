@@ -28,6 +28,7 @@ import javax.naming.NoPermissionException;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
@@ -218,15 +219,17 @@ public final class NamingDispatcher {
             throws IOException, ClassNotFoundException {
         ObjectInputFilter filter = JavaSerializationMarshaller.defaultFilter();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try (Marshaller.ObjectReader reader = codec.newReader(exchange.requestBody(), loader, filter)) {
+        try (Marshaller.ObjectReader reader = codec.newReader(
+                LimitedInputStream.bound(exchange.requestBody()), loader, filter)) {
             return reader.readObject();
         } catch (ProtocolException | ClassNotFoundException e) {
             throw e;
         } catch (IOException | RuntimeException | LinkageError e) {
-            if (e instanceof ExceptionInInitializerError initializer) {
-                // A class that cannot initialise is the server's problem, not
-                // a malformed body; the dispatcher reports it as a failure.
-                throw initializer;
+            if (e instanceof ExceptionInInitializerError || e instanceof NoClassDefFoundError) {
+                // A class that cannot initialise (the first time) or is known
+                // not to (every time after) is the server's problem, not a
+                // malformed body; the dispatcher reports it as a failure.
+                throw (Error) e;
             }
             // A body that does not decode is the caller's mistake, not a
             // server failure; see EjbDispatcher for the same rule.

@@ -33,6 +33,7 @@ import org.glassfish.orb.http.protocol.EjbKey;
 import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.PathScanner;
@@ -48,6 +49,11 @@ import org.glassfish.orb.http.protocol.TxContext;
  * afterwards is {@link ContainerBridge}, which is the container's own
  * {@code EjbContainerFacade}. What is left here is decoding a path, decoding a
  * body, reflecting a method and encoding a reply.
+ *
+ * <p>The server accepts every codec it can find, the Fory codec included,
+ * whenever its jar is present: there is no class-registration requirement and
+ * no opt-in, and Fory's limits are approximate (see {@code ForyMarshaller}).
+ * Every request body is capped at the transport's {@code maxBytes}.
  */
 public final class EjbDispatcher {
 
@@ -199,6 +205,13 @@ public final class EjbDispatcher {
                     failRead(exchange, registration, "unknown class in the request body: " + e.getMessage());
                     return;
                 } catch (IOException | RuntimeException | LinkageError e) {
+                    if (e instanceof ExceptionInInitializerError || e instanceof NoClassDefFoundError) {
+                        // A class that cannot initialise (the first time) or is
+                        // known not to (every time after) is the server's
+                        // problem, not a malformed body; the same rule as the
+                        // naming dispatcher.
+                        throw (Error) e;
+                    }
                     // A body that does not decode - truncated, corrupt, refused by
                     // the filter, or written by another codec. The caller's fault,
                     // so not a 500 with a stack trace - unless the caller cancelled
@@ -339,6 +352,9 @@ public final class EjbDispatcher {
 
     private Object[] readArguments(Marshaller codec, InputStream body, ClassLoader loader, int count)
             throws IOException, ClassNotFoundException {
+        // Capped: the filter is never asked about a string or about block data,
+        // so a body of one enormous string would otherwise be read whole.
+        body = LimitedInputStream.bound(body);
         TxContext tx = InvocationEnvelope.readTxContext(body);
         if (tx.isPresent()) {
             // Reserved on the wire, not yet honoured. Refusing loudly is

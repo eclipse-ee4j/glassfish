@@ -871,10 +871,13 @@ class RequestHardeningTest {
     }
 
     @Test
-    @DisplayName("a failure message with a carriage return never reaches a header as one")
+    @DisplayName("a name with a carriage return never reaches the failure reason header as one, and the cause stays out")
     void aNamingReasonCarriesNoCarriageReturn() throws Exception {
         NamingDispatcher dispatcher = new NamingDispatcher(new FailingNaming());
-        Loopback.InMemoryExchange exchange = naming(Protocol.OP_LOOKUP, "java:global/x", null, new byte[0]);
+        // The reason names the operation and the name the caller sent, which is
+        // caller-controlled text; the cause's own text is no longer sent at all.
+        Loopback.InMemoryExchange exchange = naming(Protocol.OP_LOOKUP, "java:global/x\r\nX-Injected: 1", null,
+                new byte[0]);
 
         dispatcher.dispatch(exchange);
 
@@ -882,6 +885,7 @@ class RequestHardeningTest {
         assertFalse(reason(exchange).contains("\r"), reason(exchange));
         assertFalse(reason(exchange).contains("\n"), reason(exchange));
         assertTrue(reason(exchange).contains("X-Injected"), reason(exchange));
+        assertFalse(reason(exchange).contains("bad"), reason(exchange));
     }
 
     // ---- affinity ---------------------------------------------------------

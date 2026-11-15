@@ -113,7 +113,7 @@ class ApplicationLoaderReleaseTest {
         info.setAppClassLoader(loader());
 
         listener.event(new EventListener.Event<>(Deployment.APPLICATION_STARTED, info));
-        listener.event(new EventListener.Event<>(Deployment.UNDEPLOYMENT_SUCCESS, info));
+        listener.event(new EventListener.Event<>(Deployment.UNDEPLOYMENT_SUCCESS, null));
         listener.event(new EventListener.Event<>(Deployment.APPLICATION_UNLOADED, null));
 
         assertTrue(released.isEmpty(), "released: " + released);

@@ -71,6 +71,16 @@ class RequestUriTest {
     }
 
     @Test
+    @DisplayName("a base URI without a usable host is refused rather than built as 'null'")
+    void aBaseWithoutAHostIsRefused() {
+        // An underscore is not legal in a host name, so URI reads this
+        // authority as registry-based and getHost() is null.
+        URI base = URI.create("https://my_host:8181/glassfish-services");
+
+        assertThrows(IllegalArgumentException.class, () -> RequestUri.build(base, "/x", null));
+    }
+
+    @Test
     void theQueryIsAppendedWhenPresentAndOmittedWhenNot() {
         assertEquals("new=b", RequestUri.build(BASE, "/x", "new=b").getRawQuery());
         assertEquals(null, RequestUri.build(BASE, "/x", null).getRawQuery());

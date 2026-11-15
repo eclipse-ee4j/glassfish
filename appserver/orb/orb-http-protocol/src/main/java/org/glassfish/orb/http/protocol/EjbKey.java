@@ -111,7 +111,7 @@ public final class EjbKey {
         }
         long id = (long) LONG_BE.get(buf, off + EJBID_OFFSET);
         int keyLen = (int) INT_BE.get(buf, off + INSTANCEKEYLEN_OFFSET);
-        if (keyLen < 0 || HEADER_LENGTH + keyLen > len) {
+        if (keyLen < 0 || keyLen > len - HEADER_LENGTH) {
             throw new ProtocolException("EJB key declares instance key of " + keyLen
                     + " bytes but only " + (len - HEADER_LENGTH) + " remain");
         }

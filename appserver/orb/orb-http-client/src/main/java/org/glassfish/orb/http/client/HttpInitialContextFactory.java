@@ -85,6 +85,8 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_AMBIENT_TRANSACTION = "org.glassfish.orb.http.ambientTransaction";
 
+    private static final java.util.Set<String> WARNED_PLAIN_TOKEN = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Object url = environment == null ? null : environment.get(Context.PROVIDER_URL);
@@ -107,6 +109,11 @@ public class HttpInitialContextFactory implements InitialContextFactory {
 
         ClientConfiguration.Builder builder = ClientConfiguration.builder(baseUri);
 
+        if (baseUri.getHost() == null) {
+            throw new ConfigurationException(Context.PROVIDER_URL + " has no usable host; a host name may not "
+                    + "contain characters such as '_'");
+        }
+
         Object principal = environment.get(Context.SECURITY_PRINCIPAL);
         Object credentials = environment.get(Context.SECURITY_CREDENTIALS);
         if (principal != null) {
@@ -124,6 +131,13 @@ public class HttpInitialContextFactory implements InitialContextFactory {
 
         Object token = environment.get(PROP_BEARER_TOKEN);
         if (token != null) {
+            if (!"https".equalsIgnoreCase(scheme) && WARNED_PLAIN_TOKEN.add(baseUri.toString())) {
+                // A bearer token is a password in all but name. Once per URL:
+                // an application opens contexts in a loop.
+                System.getLogger(HttpInitialContextFactory.class.getName())
+                        .log(System.Logger.Level.WARNING,
+                             "a bearer token will be sent over plain HTTP to {0}; use https", baseUri);
+            }
             builder.bearerToken(token.toString());
         }
 

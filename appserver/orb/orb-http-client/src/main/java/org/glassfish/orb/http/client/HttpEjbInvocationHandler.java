@@ -61,16 +61,20 @@ final class HttpEjbInvocationHandler implements InvocationHandler {
         if (method.getDeclaringClass() == Object.class) {
             return invokeObjectMethod(method, args);
         }
-        if (method.getDeclaringClass() == EJBObject.class) {
-            return invokeComponentMethod(method, args);
+        try {
+            if (method.getDeclaringClass() == EJBObject.class) {
+                return invokeComponentMethod(method, args);
+            }
+            // An EJB asynchronous method is declared to return Future<V>. Dispatch
+            // it without blocking and let the caller decide when to join.
+            if (Future.class.isAssignableFrom(method.getReturnType())) {
+                CompletableFuture<Object> future = client.invokeAsync(locator, viewClass, method, args);
+                return future;
+            }
+            return client.invoke(locator, viewClass, method, args);
+        } catch (java.io.IOException e) {
+            throw TransportErrors.translate(e, method, viewClass);
         }
-        // An EJB asynchronous method is declared to return Future<V>. Dispatch
-        // it without blocking and let the caller decide when to join.
-        if (Future.class.isAssignableFrom(method.getReturnType())) {
-            CompletableFuture<Object> future = client.invokeAsync(locator, viewClass, method, args);
-            return future;
-        }
-        return client.invoke(locator, viewClass, method, args);
     }
 
     /** The {@link EJBObject} operations, which the container owns. */

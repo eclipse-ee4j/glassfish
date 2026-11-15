@@ -36,6 +36,7 @@ import org.glassfish.orb.http.protocol.EjbKey;
 import org.glassfish.orb.http.protocol.EjbRoutes;
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.PathScanner;
@@ -52,6 +53,11 @@ import org.glassfish.orb.http.protocol.Xids;
  * afterwards is {@link ContainerBridge}, which is the container's own
  * {@code EjbContainerFacade}. What is left here is decoding a path, decoding a
  * body, reflecting a method and encoding a reply.
+ *
+ * <p>The server accepts every codec it can find, the Fory codec included,
+ * whenever its jar is present: there is no class-registration requirement and
+ * no opt-in, and Fory's limits are approximate (see {@code ForyMarshaller}).
+ * Every request body is capped at the transport's {@code maxBytes}.
  */
 public final class EjbDispatcher {
 
@@ -204,9 +210,39 @@ public final class EjbDispatcher {
             try {
                 Method method = resolveMethod(loader, invocation);
                 invokedMethod = method;
-                InputStream body = exchange.requestBody();
-                TxContext txContext = InvocationEnvelope.readTxContext(body);
-                Object[] args = readArguments(codec, body, loader, method.getParameterCount());
+                // Capped: the filter is never asked about a string or about block data,
+                // so a body of one enormous string would otherwise be read whole.
+                InputStream body = LimitedInputStream.bound(exchange.requestBody());
+                TxContext txContext;
+                Object[] args;
+                try {
+                    txContext = InvocationEnvelope.readTxContext(body);
+                    args = readArguments(codec, body, loader, method.getParameterCount());
+                } catch (ProtocolException e) {
+                    // Already a statement about the protocol; dispatch answers 400.
+                    throw e;
+                } catch (ClassNotFoundException e) {
+                    // The caller sent a class this application does not have.
+                    // That is a bad request, not a missing bean.
+                    registration.finish();
+                    failRead(exchange, registration, "unknown class in the request body: " + e.getMessage());
+                    return;
+                } catch (IOException | RuntimeException | LinkageError e) {
+                    if (e instanceof ExceptionInInitializerError || e instanceof NoClassDefFoundError) {
+                        // A class that cannot initialise (the first time) or is
+                        // known not to (every time after) is the server's
+                        // problem, not a malformed body; the same rule as the
+                        // naming dispatcher.
+                        throw (Error) e;
+                    }
+                    // A body that does not decode - truncated, corrupt, refused by
+                    // the filter, or written by another codec. The caller's fault,
+                    // so not a 500 with a stack trace - unless the caller cancelled
+                    // while it was being read, which is what interrupted the read.
+                    registration.finish();
+                    failRead(exchange, registration, "malformed request body: " + e.getClass().getSimpleName());
+                    return;
+                }
 
                 // Import before resolving the target, so the container sees the
                 // transaction while it sets the invocation up rather than after.
@@ -214,6 +250,9 @@ public final class EjbDispatcher {
 
                 target = container.getTargetObject(key, invocation.viewClass());
                 Object result = unwrapAsyncResult(callTarget(target, method, args));
+                // Over: a cancel arriving now must not leave an interrupt on
+                // this thread while the response is written.
+                registration.finish();
 
                 if (registration.isCancelled()) {
                     // The result is discarded on purpose: the caller has said
@@ -226,17 +265,29 @@ public final class EjbDispatcher {
             } catch (BadTimeoutException e) {
                 fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
             } catch (ContainerBridge.NoSuchTargetException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_NOT_FOUND, e.getMessage());
             } catch (InvocationTargetException e) {
-                // The bean threw. Whether the caller sees that exception or an
-                // EJBException is not ours to choose: the specification decides,
-                // and getting it wrong would change the exception contract of an
-                // application that was only meant to change transport.
-                Throwable thrown = e.getCause() != null ? e.getCause() : e;
-                writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
+                registration.finish();
+                if (registration.isCancelled()) {
+                    // The caller cancelled and this is what the cancellation did
+                    // to the bean - typically an InterruptedException. Reporting
+                    // it as the bean's own failure would be a lie, exactly as
+                    // reporting a result would be.
+                    fail(exchange, Protocol.SC_CANCELLED, "invocation cancelled");
+                } else {
+                    // The bean threw. Whether the caller sees that exception or an
+                    // EJBException is not ours to choose: the specification decides,
+                    // and getting it wrong would change the exception contract of an
+                    // application that was only meant to change transport.
+                    Throwable thrown = e.getCause() != null ? e.getCause() : e;
+                    writeException(codec, exchange, EjbExceptions.toClientException(thrown, invokedMethod));
+                }
             } catch (ClassNotFoundException | NoSuchMethodException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_NOT_FOUND, e.toString());
             } catch (IllegalAccessException e) {
+                registration.finish();
                 fail(exchange, Protocol.SC_FORBIDDEN, e.toString());
             } catch (TransactionBridge.TransactionException e) {
                 exchange.setStatus(Protocol.SC_EXCEPTION);
@@ -290,7 +341,7 @@ public final class EjbDispatcher {
     }
 
     private Object callTarget(Object target, Method method, Object[] args)
-            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
+            throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ProtocolException {
         Method callable = method;
         if (!method.getDeclaringClass().isInstance(target)) {
             // The container handed back an object that implements the view
@@ -298,7 +349,15 @@ public final class EjbDispatcher {
             callable = target.getClass().getMethod(method.getName(), method.getParameterTypes());
         }
         callable.setAccessible(true);
-        return callable.invoke(target, args);
+        try {
+            return callable.invoke(target, args);
+        } catch (IllegalArgumentException e) {
+            // Method.invoke refusing the arguments it was given - a wrong
+            // number or a wrong type - before the method body was entered.
+            // Only this call is mapped: an IllegalArgumentException from
+            // anywhere else in the dispatch is not the caller's arguments.
+            throw new ProtocolException("arguments do not match the method");
+        }
     }
 
     /**
@@ -644,6 +703,15 @@ public final class EjbDispatcher {
             writer.flush();
         }
         return out.toByteBuffers();
+    }
+
+    private static void failRead(ServerExchange exchange, InvocationRegistry.Registration registration,
+                                 String reason) {
+        if (registration.isCancelled()) {
+            fail(exchange, Protocol.SC_CANCELLED, "invocation cancelled");
+        } else {
+            fail(exchange, Protocol.SC_BAD_REQUEST, reason);
+        }
     }
 
     private static void fail(ServerExchange exchange, int status, String reason) {

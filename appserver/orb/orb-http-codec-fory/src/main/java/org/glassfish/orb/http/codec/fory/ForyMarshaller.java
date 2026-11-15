@@ -47,11 +47,33 @@ import org.glassfish.orb.http.protocol.Marshaller;
  * and remote calls already rely on all three. Fory is configured to match
  * rather than to be fast in ways that would silently alter what an
  * application observes - see the settings in {@link #newFory}.
+ *
+ * <p><b>Policy.</b> A server accepts this codec whenever this jar is present:
+ * there is no class-registration requirement and no opt-in. Its limits are
+ * therefore the weakest of the two codecs and are approximate.
+ *
+ * <p>What is bounded when decoding: which classes may be instantiated (the
+ * transport's filter, see {@code FilterBackedTypeChecker}), the depth of the
+ * graph (configured here), the whole request body (the dispatchers cap it at
+ * {@code maxBytes}), and the arrays inside a throwable frame, which is read by
+ * Java serialization with one budget shared by every frame of the request.
+ * Fory's own gates apply to the other frames and are Fory's defaults: an
+ * approximate memory gate per root deserialization (128 MB;
+ * {@code withMaxGraphMemoryBytes} is set explicitly, to four times the array
+ * budget, which is the same number until that budget is changed) and a limit
+ * of 8192 collection elements not backed by input bytes (not configured
+ * here). The memory gate is per root deserialization, so a request with several
+ * parameters can materialise that much for each. What is not enforced: the
+ * filter's reference limit and array budget for Fory-encoded frames, which
+ * Fory's type check cannot see. These gates rely on Fory 1.7.1 and are not
+ * exercised by a test of ours.
  */
 public final class ForyMarshaller implements Marshaller {
 
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
+
+    private static final System.Logger LOG = System.getLogger(ForyMarshaller.class.getName());
 
     /**
      * Whether Fory may compile a serializer per type.
@@ -75,6 +97,73 @@ public final class ForyMarshaller implements Marshaller {
      */
     private static final boolean CODEGEN =
             Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
+
+    /**
+     * How deeply nested a graph may be, on the way in and on the way out: the
+     * same value as the default deserialization filter's depth
+     * ({@code org.glassfish.orb.http.filter.maxDepth}, default 100). Fory's own
+     * default of 50 refused a 65-level graph that Java serialization accepts.
+     */
+    private static final int MAX_DEPTH = clampDepth(JavaSerializationMarshaller.maxDepth());
+
+    /**
+     * Fory's approximate gate on the memory one root deserialization may
+     * materialise, four times the array budget (128 MB by default, which is
+     * Fory's own default, so this changes nothing until the budget does). It
+     * is an estimate, not a hard limit.
+     */
+    private static final long MAX_GRAPH_MEMORY = graphMemory(JavaSerializationMarshaller.maxArrayBytes());
+
+    /**
+     * Fory refuses a depth below 2 and the shared property is a long, so the
+     * value is brought into range here rather than failing the class.
+     */
+    static int clampDepth(long configured) {
+        int depth = (int) Math.max(2, Math.min(Integer.MAX_VALUE, configured));
+        if (depth != configured) {
+            LOG.log(System.Logger.Level.WARNING, "the depth limit {0} is outside what Fory accepts; using {1}",
+                    configured, depth);
+        }
+        return depth;
+    }
+
+    /** Four times the array budget, saturating instead of overflowing. */
+    static long graphMemory(long arrayBudget) {
+        return arrayBudget > Long.MAX_VALUE / 4 ? Long.MAX_VALUE : 4 * arrayBudget;
+    }
+
+    /**
+     * Instances in each pool. A pool builds this many Fory instances eagerly
+     * for every (loader, filter) pair, so it is bounded: Fory's default of four
+     * per processor is hundreds on a large machine. Set
+     * {@code org.glassfish.orb.http.codec.fory.poolSize} to change it.
+     */
+    static final int POOL_SIZE = poolSize(System.getProperty("org.glassfish.orb.http.codec.fory.poolSize"),
+            Math.max(1, Math.min(4 * Runtime.getRuntime().availableProcessors(), 64)));
+
+    /**
+     * A pool is measured at about 120 KB per instance (about 7.5 MB at the cap
+     * of 64) for each (loader, filter) pair, which is what the cap of 64 is
+     * chosen against. A value that is not a positive number is logged and
+     * ignored.
+     */
+    static int poolSize(String raw, int fallback) {
+        if (raw == null) {
+            return fallback;
+        }
+        try {
+            int value = Integer.parseInt(raw.trim());
+            if (value > 0) {
+                return value;
+            }
+        } catch (NumberFormatException e) {
+            // reported below
+        }
+        LOG.log(System.Logger.Level.WARNING,
+                "ignoring org.glassfish.orb.http.codec.fory.poolSize={0}: it must be a positive number; using {1}",
+                raw, fallback);
+        return fallback;
+    }
 
     /**
      * @return whether generated serializers are in use
@@ -112,8 +201,8 @@ public final class ForyMarshaller implements Marshaller {
      * reader has never been warmed by anything this process chose to send.
      * <p>
      * Keyed weakly, but the value is a serializer that references its key's
-     * loader, so an entry keeps its loader reachable: the loader stays pinned
-     * for the life of this class.
+     * loader, so an entry keeps its loader reachable. {@link #release} is what
+     * removes the entry when the application goes away.
      */
     private static final Map<ClassLoader, ThreadSafeFory> WRITERS =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -178,6 +267,9 @@ public final class ForyMarshaller implements Marshaller {
         }
         ThreadSafeFory fory = readerFor(loader, filter);
         DataInputStream data = new DataInputStream(in);
+        // One budget for the whole reader: a request is several frames, and a
+        // budget per frame would multiply the allowance by the parameter count.
+        JavaSerializationMarshaller.Budget budget = new JavaSerializationMarshaller.Budget();
         return new ObjectReader() {
 
             @Override
@@ -198,7 +290,7 @@ public final class ForyMarshaller implements Marshaller {
                 }
 
                 return kind == KIND_JAVA
-                        ? javaDecode(encoded, loader, filter)
+                        ? javaDecode(encoded, loader, filter, budget)
                         : fory.deserialize(encoded);
             }
 
@@ -221,10 +313,11 @@ public final class ForyMarshaller implements Marshaller {
         return bytes.toByteArray();
     }
 
-    private static Object javaDecode(byte[] encoded, ClassLoader loader, ObjectInputFilter filter)
+    private static Object javaDecode(byte[] encoded, ClassLoader loader, ObjectInputFilter filter,
+                                     JavaSerializationMarshaller.Budget budget)
             throws IOException, ClassNotFoundException {
-        try (Marshaller.ObjectReader reader =
-                BUILT_IN.newReader(new java.io.ByteArrayInputStream(encoded), loader, filter)) {
+        try (Marshaller.ObjectReader reader = BUILT_IN.newReaderSharing(
+                new java.io.ByteArrayInputStream(encoded), loader, filter, budget)) {
             return reader.readObject();
         }
     }
@@ -251,6 +344,23 @@ public final class ForyMarshaller implements Marshaller {
                 materialiseStackTraces(suppressed);
             }
         }
+    }
+
+    /**
+     * Drops the writer and every reader built for {@code loader}. Both hold
+     * the loader strongly, so an undeployed application is only collectable
+     * once this has run.
+     *
+     * @param loader the loader of the application that is gone
+     */
+    @Override
+    public void release(ClassLoader loader) {
+        if (loader == null) {
+            return;
+        }
+        ClassLoader key = resolve(loader);
+        WRITERS.remove(key);
+        READERS.remove(key);
     }
 
     private static ThreadSafeFory writerFor(ClassLoader loader) {
@@ -304,11 +414,13 @@ public final class ForyMarshaller implements Marshaller {
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
+                .withMaxDepth(MAX_DEPTH)
+                .withMaxGraphMemoryBytes(MAX_GRAPH_MEMORY)
                 .withCodegen(CODEGEN)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
             builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));
         }
-        return builder.buildThreadSafeFory();
+        return builder.buildThreadSafeForyPool(Math.max(1, POOL_SIZE));
     }
 }

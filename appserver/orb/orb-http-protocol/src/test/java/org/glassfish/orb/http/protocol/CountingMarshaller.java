@@ -31,9 +31,17 @@ public class CountingMarshaller implements Marshaller {
 
     static final String CODEC = "counting";
 
+    /** The loaders this codec was told to let go of. */
+    static final java.util.List<ClassLoader> RELEASED = new java.util.concurrent.CopyOnWriteArrayList<>();
+
     @Override
     public String codec() {
         return CODEC;
+    }
+
+    @Override
+    public void release(ClassLoader loader) {
+        RELEASED.add(loader);
     }
 
     @Override

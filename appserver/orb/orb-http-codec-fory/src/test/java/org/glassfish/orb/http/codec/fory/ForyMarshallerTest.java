@@ -20,10 +20,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputFilter;
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 import org.glassfish.orb.http.protocol.Marshaller;
@@ -32,6 +35,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -292,5 +296,208 @@ class ForyMarshallerTest {
             assertEquals(1, ForyMarshaller.readerCount(loader),
                     "one reader per (loader, filter), not one per request");
         }
+    }
+
+    @Test
+    @DisplayName("what the JVM-wide filter denies is denied to this codec too")
+    void theJvmWideFilterAppliesToForyToo() {
+        ObjectInputFilter denyDate = info -> info.serialClass() == Date.class
+                ? ObjectInputFilter.Status.REJECTED
+                : ObjectInputFilter.Status.UNDECIDED;
+        ClassLoader loader = getClass().getClassLoader();
+
+        assertFalse(new FilterBackedTypeChecker(loader, ALLOW_ALL, denyDate).checkType(null, Date.class.getName()));
+        assertTrue(new FilterBackedTypeChecker(loader, ALLOW_ALL, null).checkType(null, Date.class.getName()));
+    }
+
+    @Test
+    @DisplayName("the default filter's limits do not refuse ordinary large payloads on this codec either")
+    void largePayloadsPassTheDefaultFilter() throws Exception {
+        ObjectInputFilter defaults = JavaSerializationMarshaller.defaultFilter();
+
+        byte[] bytes = new byte[200_000];
+        bytes[199_999] = 7;
+        assertEquals(7, ((byte[]) roundTrip(bytes, defaults))[199_999]);
+
+        List<Integer> numbers = new ArrayList<>();
+        for (int i = 0; i < 150_000; i++) {
+            numbers.add(i);
+        }
+        assertEquals(numbers, roundTrip(numbers, defaults));
+
+        Node head = new Node("0");
+        Node tail = head;
+        for (int i = 1; i <= 64; i++) {
+            tail.peer = new Node(Integer.toString(i));
+            tail = tail.peer;
+        }
+        Node decoded = (Node) roundTrip(head, defaults);
+        int length = 1;
+        for (Node n = decoded; n.peer != null; n = n.peer) {
+            length++;
+        }
+        assertEquals(65, length);
+    }
+
+    @Test
+    @DisplayName("an application's class loader can be collected once the codec has been told it is gone")
+    void aReleasedLoaderCanBeCollected() throws Exception {
+        AtomicReference<WeakReference<ClassLoader>> reference = new AtomicReference<>();
+        AtomicReference<Throwable> failure = new AtomicReference<>();
+        // A thread of its own, so that nothing the codec cached per thread
+        // outlives the work and keeps the loader reachable from here.
+        Thread worker = new Thread(() -> {
+            try {
+                URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader());
+                Thread.currentThread().setContextClassLoader(loader);
+                try {
+                    Marshallers.preferred(loader);
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                        writer.writeObject(new Node("a"));
+                        writer.flush();
+                    }
+                    try (Marshaller.ObjectReader reader = marshaller.newReader(
+                            new ByteArrayInputStream(out.toByteArray()), loader, ALLOW_ALL)) {
+                        assertNotNull(reader.readObject());
+                    }
+                    Marshallers.release(loader);
+                } finally {
+                    Thread.currentThread().setContextClassLoader(null);
+                }
+                reference.set(new WeakReference<>(loader));
+            } catch (Throwable t) {
+                failure.set(t);
+            }
+        });
+        worker.start();
+        worker.join();
+        if (failure.get() != null) {
+            throw new AssertionError(failure.get());
+        }
+
+        for (int i = 0; i < 100 && reference.get().get() != null; i++) {
+            System.gc();
+            Thread.sleep(50);
+        }
+        assertNull(reference.get().get(), "the loader is still reachable after release");
+    }
+
+    private WeakReference<ClassLoader> useAndReleaseOnThisThread() throws Exception {
+        URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader());
+        Thread.currentThread().setContextClassLoader(loader);
+        try {
+            Marshallers.preferred(loader);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                writer.writeObject(new Node("a"));
+                writer.flush();
+            }
+            try (Marshaller.ObjectReader reader = marshaller.newReader(
+                    new ByteArrayInputStream(out.toByteArray()), loader, ALLOW_ALL)) {
+                assertNotNull(reader.readObject());
+            }
+            Marshallers.release(loader);
+        } finally {
+            Thread.currentThread().setContextClassLoader(null);
+        }
+        return new WeakReference<>(loader);
+    }
+
+    @Test
+    @DisplayName("the loader is collectable when the work and the release ran on a long-lived pooled thread")
+    void aLoaderUsedOnAPooledThreadIsCollectable() throws Exception {
+        java.util.concurrent.ExecutorService executor = java.util.concurrent.Executors.newSingleThreadExecutor();
+        try {
+            // The thread stays alive for the whole check, as a container's worker
+            // thread does: per-thread state it keeps would pin the loader.
+            WeakReference<ClassLoader> reference = executor.submit(this::useAndReleaseOnThisThread).get();
+            for (int i = 0; i < 100 && reference.get() != null; i++) {
+                System.gc();
+                Thread.sleep(50);
+            }
+            assertNull(reference.get(), "the loader is still reachable after release");
+        } finally {
+            executor.shutdownNow();
+        }
+    }
+
+    @Test
+    @DisplayName("a graph deeper than the shared depth limit is refused on this codec too")
+    void aTooDeepGraphIsRefused() {
+        Node head = new Node("0");
+        Node tail = head;
+        for (int i = 1; i <= 150; i++) {
+            tail.peer = new Node(Integer.toString(i));
+            tail = tail.peer;
+        }
+        Node deep = head;
+
+        assertThrows(Exception.class, () -> roundTrip(deep, JavaSerializationMarshaller.defaultFilter()));
+    }
+
+    @Test
+    @DisplayName("the pool is bounded (guard) and its cost is reported")
+    void thePoolIsBounded() throws Exception {
+        assertTrue(ForyMarshaller.POOL_SIZE >= 1 && ForyMarshaller.POOL_SIZE <= 64,
+                "pool size " + ForyMarshaller.POOL_SIZE);
+        try (URLClassLoader loader = new URLClassLoader(new URL[0], getClass().getClassLoader())) {
+            com.sun.management.ThreadMXBean threads = (com.sun.management.ThreadMXBean)
+                    java.lang.management.ManagementFactory.getThreadMXBean();
+            long id = Thread.currentThread().getId();
+            long before = threads.getThreadAllocatedBytes(id);
+            try (Marshaller.ObjectReader reader = marshaller.newReader(
+                    new ByteArrayInputStream(new byte[0]), loader, JavaSerializationMarshaller.defaultFilter())) {
+                assertNotNull(reader);
+            }
+            long allocated = threads.getThreadAllocatedBytes(id) - before;
+            System.out.println("FORY-POOL poolSize=" + ForyMarshaller.POOL_SIZE
+                    + " allocatedBytesForFirstReaderPool=" + allocated
+                    + " processors=" + Runtime.getRuntime().availableProcessors());
+        }
+    }
+
+    private static byte[] javaFrame(Object value) throws Exception {
+        ByteArrayOutputStream payload = new ByteArrayOutputStream();
+        try (Marshaller.ObjectWriter writer = new JavaSerializationMarshaller().newWriter(payload)) {
+            writer.writeObject(value);
+            writer.flush();
+        }
+        ByteArrayOutputStream frame = new ByteArrayOutputStream();
+        java.io.DataOutputStream data = new java.io.DataOutputStream(frame);
+        data.writeByte(1);                      // a frame handed to Java serialization
+        data.writeInt(payload.size());
+        data.write(payload.toByteArray());
+        data.flush();
+        return frame.toByteArray();
+    }
+
+    @Test
+    @DisplayName("the array budget is one per reader: a second frame cannot spend it again")
+    void theBudgetIsSharedByTheFramesOfOneReader() throws Exception {
+        ByteArrayOutputStream frames = new ByteArrayOutputStream();
+        frames.write(javaFrame(new Object[2_500_000]));      // 20 MB declared
+        frames.write(javaFrame(new Object[2_500_000]));      // another 20 MB: over 32 MB in all
+
+        try (Marshaller.ObjectReader reader = marshaller.newReader(
+                new ByteArrayInputStream(frames.toByteArray()), getClass().getClassLoader(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            assertEquals(2_500_000, ((Object[]) reader.readObject()).length);
+            assertThrows(java.io.InvalidClassException.class, reader::readObject);
+        }
+    }
+
+    @Test
+    @DisplayName("limits taken from properties are brought into what Fory accepts")
+    void limitsAreClamped() {
+        assertEquals(2, ForyMarshaller.clampDepth(1));
+        assertEquals(Integer.MAX_VALUE, ForyMarshaller.clampDepth(Long.MAX_VALUE));
+        assertEquals(100, ForyMarshaller.clampDepth(100));
+        assertEquals(Long.MAX_VALUE, ForyMarshaller.graphMemory(Long.MAX_VALUE));
+        assertEquals(128L * 1024 * 1024, ForyMarshaller.graphMemory(32L * 1024 * 1024));
+        assertEquals(8, ForyMarshaller.poolSize("abc", 8));
+        assertEquals(8, ForyMarshaller.poolSize("-3", 8));
+        assertEquals(8, ForyMarshaller.poolSize(null, 8));
+        assertEquals(12, ForyMarshaller.poolSize("12", 8));
     }
 }

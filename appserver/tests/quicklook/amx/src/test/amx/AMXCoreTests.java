@@ -39,7 +39,7 @@ import org.glassfish.admin.amx.util.ExceptionUtil;
 Basic AMXProxy tests that verify connectivity and ability to
 traverse the AMXProxy hierarchy and fetch all attributes.
  */
-//@Test(groups={"amx"}, description="AMXProxy tests", sequential=false, threadPoolSize=5)
+//@Test(groups={"amx"}, description="AMXProxy tests", threadPoolSize=5)
 @Test(groups =
 {
     "amx"

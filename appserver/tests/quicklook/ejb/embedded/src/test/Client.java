@@ -23,8 +23,7 @@ import jakarta.ejb.embeddable.EJBContainer;
 import javax.naming.Context;
 import javax.naming.NamingException;
 
-import org.testng.annotations.Configuration;
-import org.testng.annotations.ExpectedExceptions;
+
 import org.testng.annotations.Test;
 import org.testng.annotations.*;
 import org.testng.Assert;

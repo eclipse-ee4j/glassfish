@@ -68,7 +68,7 @@
 
     <taskdef name="testng" classname="org.testng.TestNGAntTask">
         <classpath>
-        <pathelement path="${plugin_classpath}"/>
+            <pathelement path="${plugin_classpath}"/>
         </classpath>
     </taskdef>
 
@@ -292,7 +292,7 @@
     <testng outputdir="${result.output}"
     suitename="${testsuite.name}"
     testname="${testng.test.name}"
-            classpathref="${plugin.classpath}">
+            classpathref="plugin.classpath">
         <xmlfileset dir="." includes="testng.xml"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />

@@ -28,7 +28,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-internal-tck-rest-cdi</artifactId>
+    <artifactId>tck-rest-cdi</artifactId>
     <packaging>war</packaging>
 
     <name>TCK: REST CDI (optional)</name>

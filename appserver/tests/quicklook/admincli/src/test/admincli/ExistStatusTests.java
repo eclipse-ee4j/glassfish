@@ -20,7 +20,6 @@ import org.testng.annotations.Test;
 import org.testng.Assert;
 import test.admincli.util.*;
 
-//@Test(sequential = true)
 public class ExistStatusTests {
     private boolean execReturn = false;
     private String ASADMIN = System.getProperty("ASADMIN");

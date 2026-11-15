@@ -29,7 +29,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-servlet</artifactId>
+    <artifactId>tck-servlet</artifactId>
 
     <name>TCK: Servlet</name>
     <description>Aggregates dependencies and runs the Servlet TCK on GlassFish</description>

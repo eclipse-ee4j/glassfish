@@ -62,11 +62,9 @@
             <include name="webservices-osgi.jar" />
             <include name="xmlsec.jar" />
         </fileset>
-        <fileset dir="${maven.repo.local}/com/beust/jcommander">
-            <include name="**/1.72/jcommander-1.72.jar" />
-        </fileset>
         <pathelement location="${class.output}" />
         <pathelement location="${test.class.output}" />
+        <pathelement path="${plugin_classpath}" />
     </path>
 
     <!-- classpath at QuickLook build time for building testing apps -->
@@ -341,6 +339,7 @@
         <pathelement location="${glassfish.home}/modules/webservices-api-osgi.jar" />
         <pathelement location="${glassfish.home}/modules/webservices-osgi.jar" />
         <pathelement location="${java.home}/../lib/tools.jar" />
+        <pathelement path="${plugin_classpath}" />
     </path>
 
     <condition property="wsjar.available">

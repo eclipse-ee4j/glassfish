@@ -76,10 +76,10 @@ def mvn_jobs = [
     "application-tests",
     "application-tests-individual",
     "embedded-tests",
-    "glassfish-external-tck-microprofile-config",
-    "glassfish-external-tck-microprofile-health",
-    "glassfish-external-tck-microprofile-jwt",
-    "glassfish-external-tck-microprofile-rest-client"
+    "tck-microprofile-config",
+    "tck-microprofile-health",
+    "tck-microprofile-jwt",
+    "tck-microprofile-rest-client"
 ]
 
 def podYamlConfigurationTemplate = """

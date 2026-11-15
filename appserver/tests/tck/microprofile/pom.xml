@@ -26,7 +26,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile</artifactId>
+    <artifactId>tck-microprofile</artifactId>
     <packaging>pom</packaging>
     <name>TCK: MicroProfile</name>
 

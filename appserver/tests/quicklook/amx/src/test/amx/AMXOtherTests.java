@@ -42,9 +42,9 @@ import org.glassfish.admin.amx.annotation.*;
 
 /**
  */
-//@Test(groups={"amx"}, description="AMXProxy tests", sequential=false, threadPoolSize=5)
+//@Test(groups={"amx"}, description="AMXProxy tests", threadPoolSize=5)
 @Test(
-    sequential=false, threadPoolSize=10,
+    threadPoolSize=10,
     groups =
     {
         "amx"

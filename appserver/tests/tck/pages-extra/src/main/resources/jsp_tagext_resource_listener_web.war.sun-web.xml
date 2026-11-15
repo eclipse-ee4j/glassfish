@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sun-web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Application Server 9.0 Servlet 2.5//EN" "http://www.sun.com/software/sunone/appserver/dtds/sun-web-app_2_5-0.dtd">
+<!--
+
+    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+
+    This program and the accompanying materials are made available under the
+    terms of the Eclipse Public License v. 2.0, which is available at
+    http://www.eclipse.org/legal/epl-2.0.
+
+    This Source Code may also be made available under the following Secondary
+    Licenses when the conditions for such availability set forth in the
+    Eclipse Public License v. 2.0 are satisfied: GNU General Public License,
+    version 2 with the GNU Classpath Exception, which is available at
+    https://www.gnu.org/software/classpath/license.html.
+
+    SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
+
+-->
+
+<sun-web-app>
+    <resource-ref>
+      <res-ref-name>DB1</res-ref-name>
+      <jndi-name>jdbc/DB1</jndi-name>
+      <default-resource-principal>
+        <name>user1</name>
+        <password>password1</password>
+      </default-resource-principal>
+    </resource-ref>
+    <resource-ref>
+      <res-ref-name>qcFactory</res-ref-name>
+      <jndi-name>jms/QueueConnectionFactory</jndi-name>
+      <default-resource-principal>
+        <name>j2ee</name>
+        <password>j2ee</password>
+      </default-resource-principal>
+    </resource-ref>
+    <resource-ref>
+      <res-ref-name>tcFactory</res-ref-name>
+      <jndi-name>jms/TopicConnectionFactory</jndi-name>
+      <default-resource-principal>
+        <name>j2ee</name>
+        <password>j2ee</password>
+      </default-resource-principal>
+    </resource-ref>
+    <resource-ref>
+      <res-ref-name>cFactory</res-ref-name>
+      <jndi-name>jms/ConnectionFactory</jndi-name>
+      <default-resource-principal>
+        <name>j2ee</name>
+        <password>j2ee</password>
+      </default-resource-principal>
+    </resource-ref>
+    <resource-ref>
+      <res-ref-name>mailSession</res-ref-name>
+      <jndi-name>mail/Session</jndi-name>
+    </resource-ref>
+    <resource-ref>
+      <res-ref-name>myUrl</res-ref-name>
+      <jndi-name>http://localhost:8080</jndi-name>
+    </resource-ref>
+    <message-destination-ref>
+      <message-destination-ref-name>myQueue</message-destination-ref-name>
+      <jndi-name>MY_QUEUE</jndi-name>
+    </message-destination-ref>
+    <message-destination-ref>
+      <message-destination-ref-name>myTopic</message-destination-ref-name>
+      <jndi-name>MY_TOPIC</jndi-name>
+    </message-destination-ref>
+</sun-web-app>

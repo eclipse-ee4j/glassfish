@@ -24,7 +24,6 @@ import java.rmi.*;
 import pe.ejb.ejb30.persistence.toplinksample.ejb.*;
 
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 

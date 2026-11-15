@@ -22,7 +22,6 @@ import oracle.toplink.essentials.testing.models.cmp3.advanced.Employee;
 import oracle.toplink.essentials.testing.models.cmp3.advanced.ModelExamples;
 
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 import jakarta.persistence.EntityManager;

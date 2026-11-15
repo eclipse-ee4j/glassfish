@@ -20,7 +20,6 @@ import jakarta.jms.*;
 import javax.naming.*;
 
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 public class SimpleMessageClient {

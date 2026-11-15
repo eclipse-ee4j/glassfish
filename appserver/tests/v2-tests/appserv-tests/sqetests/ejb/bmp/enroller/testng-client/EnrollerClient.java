@@ -23,7 +23,6 @@ import java.util.*;
 import com.sun.s1peqe.ejb.bmp.enroller.ejb.*;
 
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 

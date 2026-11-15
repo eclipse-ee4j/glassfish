@@ -16,8 +16,7 @@
  */
 
 package test.web.jsfinjection;
-import org.testng.annotations.Configuration;
-import org.testng.annotations.ExpectedExceptions;
+
 import org.testng.annotations.Test;
 import org.testng.annotations.*;
 import org.testng.Assert;

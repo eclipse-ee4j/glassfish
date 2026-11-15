@@ -50,7 +50,7 @@ import org.glassfish.admin.amx.annotation.*;
     Miscellaneous tests should go into this file, or another one like it.
  */
 @Test(
-    sequential=false, threadPoolSize=16,
+    threadPoolSize=16,
     groups =
     {
         "amx"

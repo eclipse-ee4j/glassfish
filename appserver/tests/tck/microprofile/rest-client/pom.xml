@@ -24,11 +24,11 @@
 
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>glassfish-external-tck-microprofile</artifactId>
+        <artifactId>tck-microprofile</artifactId>
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>glassfish-external-tck-microprofile-rest-client</artifactId>
+    <artifactId>tck-microprofile-rest-client</artifactId>
     <packaging>jar</packaging>
 
     <name>TCK: MicroProfile Rest Client</name>

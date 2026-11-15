@@ -22,7 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.Parameters;
 import test.admincli.util.*;
 
-@Test(sequential = true)
 public class MDBTests {
     private boolean execReturn = false;
     private String APPCLIENT = System.getProperty("APPCLIENT");

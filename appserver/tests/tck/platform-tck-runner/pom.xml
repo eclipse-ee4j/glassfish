@@ -26,7 +26,7 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>platform-tck-runner</artifactId>
+    <artifactId>tck-jakartaee-platform</artifactId>
     <packaging>jar</packaging>
 
     <name>TCK: TCK Runner for the Platform Tests</name>
@@ -41,7 +41,7 @@
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.tests.tck</groupId>
-            <artifactId>jakarta-platform-tck</artifactId>
+            <artifactId>tck-jakartaee-platform-download</artifactId>
             <version>${tck.version}</version>
             <type>zip</type>
             <scope>runtime</scope>

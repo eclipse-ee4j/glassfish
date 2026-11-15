@@ -27,9 +27,9 @@
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-    <artifactId>jakarta-pages-debugging-tck</artifactId>
+    <artifactId>tck-debugging-download</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Install Jakarta Pages Debugging (DSOL) TCK</name>
+    <name>TCK: Install Jakarta Debugging (DSOL) TCK</name>
 
     <properties>
         <tck.artifactFileName>jakarta-debugging-tck-2.0.0.zip</tck.artifactFileName>
@@ -43,7 +43,7 @@
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>download-pages-debugging-tck</id>
+                        <id>download-debugging-tck</id>
                         <phase>generate-resources</phase>
                     </execution>
                 </executions>

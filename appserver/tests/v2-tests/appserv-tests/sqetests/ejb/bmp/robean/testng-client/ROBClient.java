@@ -26,7 +26,6 @@ import com.sun.ejb.containers.ReadOnlyBeanHelper;
 
 import static org.testng.Assert.*;
 import org.testng.Assert;
-import org.testng.annotations.Configuration;
 import org.testng.annotations.Test;
 
 public class ROBClient {

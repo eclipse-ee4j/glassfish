@@ -32,6 +32,7 @@
     <target name="all" depends="build,deploy,run,report,undeploy"/>
 
     <path id="tng-compile.cp">
+       <pathelement location="${mvn.lib.dir}/testng-ant.jar"/>
        <pathelement location="${mvn.lib.dir}/testng.jar"/>
     </path>
 

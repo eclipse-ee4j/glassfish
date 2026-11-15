@@ -52,7 +52,7 @@ mvn clean install -Drun.test="WebSocketSigTestIT#signatureTest" -Dglassfish.susp
         <version>8.0.6-SNAPSHOT</version>
     </parent>
 
-   <artifactId>glassfish-external-tck-websocket</artifactId>
+   <artifactId>tck-websocket</artifactId>
 
    <name>Jakarta WebSocket TCK run on glassfish</name>
    <description>This verifies the compliance of Eclipse Glassfish using the Jakarta WebSocket standalone TCK</description>

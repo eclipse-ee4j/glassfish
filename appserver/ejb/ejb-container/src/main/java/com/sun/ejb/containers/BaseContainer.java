@@ -1585,7 +1585,7 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
 
     /** Refused here, for the same reason as {@link #createSession}. */
     @Override
-    public void removeSession(byte[] instanceKey) throws RemoteException {
+    public void removeSession(byte[] instanceKey) throws RemoteException, RemoveException {
         throw new RemoteException(ejbDescriptor.getName()
                 + " is not a stateful session bean, so it has no sessions to remove");
     }

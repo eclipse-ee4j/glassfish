@@ -16,18 +16,24 @@
 
 package org.glassfish.orb.http.glassfish;
 
+import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.ejb.containers.EjbContainerUtil;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 
 import jakarta.ejb.CreateException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.Set;
+import java.util.function.LongFunction;
 
 import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
 import org.glassfish.orb.http.protocol.EjbKey;
@@ -58,6 +64,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @Singleton
 public class GlassFishContainerBridge implements ContainerBridge {
+
+    private static final Logger LOG = System.getLogger(GlassFishContainerBridge.class.getName());
 
     /**
      * The instance key every stateless and singleton reference carries.
@@ -90,18 +98,32 @@ public class GlassFishContainerBridge implements ContainerBridge {
      */
     private final ThreadLocal<EjbContainerFacade> currentFacade = new ThreadLocal<>();
 
+    /** Where a bean's container is found by id; the server's own registry unless a test says otherwise. */
+    private final LongFunction<EjbContainerFacade> containers;
+
+    public GlassFishContainerBridge() {
+        this(id -> util().getContainer(id));
+    }
+
+    /** For tests: the same bridge over containers that are not the server's. */
+    GlassFishContainerBridge(LongFunction<EjbContainerFacade> containers) {
+        this.containers = containers;
+    }
+
+    /** For tests: the name index the bridge consults. */
+    void useIndex(EjbNameIndex index) {
+        this.index = index;
+    }
+
     @Override
     public EjbKey resolve(String appName, String moduleName, String distinctName,
                           String beanName, byte[] sessionId) throws NoSuchTargetException {
-        Long ejbId = index.lookup(appName, moduleName, beanName);
-        if (ejbId == null) {
-            throw new NoSuchTargetException("no bean " + beanName
-                    + " in " + appName + '/' + moduleName);
-        }
+        Located located = locate(appName, moduleName, beanName);
+        long ejbId = located.ejbId();
         if (sessionId != null) {
             return new EjbKey(ejbId, sessionId);
         }
-        if (isStateful(ejbId)) {
+        if (isStateful(located.facade())) {
             // The shared key is four bytes that mean "the one instance". A
             // stateful container reads an instance key as a session key and
             // runs off the end of it, which surfaces as an
@@ -144,30 +166,123 @@ public class GlassFishContainerBridge implements ContainerBridge {
         return loader != null ? loader : getClass().getClassLoader();
     }
 
+    /**
+     * Opens a session on the named bean.
+     *
+     * <p>This does not go through {@link #resolve}. That method answers a
+     * stateful bean with "this call needs a session, and none was named",
+     * which is the right answer for an invocation and a wrong one here: the
+     * session is what this call is asking for. Going through it made every
+     * open fail, so the bean is looked up in the index and the container's own
+     * {@code createSession} is called, which is also what
+     * {@code GlassFishNamingBridge} does for a stateful lookup.
+     *
+     * @throws NoSuchTargetException if no such bean is deployed, or it has no
+     *         remote view
+     * @throws SessionRefusedException if the bean is deployed but is not
+     *         stateful, or the container refused to create the session
+     */
     @Override
     public byte[] createSession(String appName, String moduleName, String distinctName,
-                                String beanName) throws NoSuchTargetException {
-        EjbKey key = resolve(appName, moduleName, distinctName, beanName, null);
-        EjbContainerFacade facade = facade(key);
+                                String beanName) throws NoSuchTargetException, SessionRefusedException {
+        EjbContainerFacade facade = locate(appName, moduleName, beanName).facade();
+        if (!isStateful(facade)) {
+            // The container would refuse as well, but with a RemoteException
+            // that reads as a transport failure. Say what is actually wrong.
+            throw new SessionRefusedException(beanName
+                    + " is not a stateful session bean, so it has no sessions to open");
+        }
         try {
             return facade.createSession(remoteViewFor(facade));
         } catch (CreateException | RemoteException e) {
-            // The container refuses this for anything that is not a stateful
-            // session bean, which is the honest answer: there is no
-            // conversation to start.
-            throw new NoSuchTargetException("cannot create a session for "
-                    + beanName + ": " + e.getMessage());
+            // What the caller is told is fixed: the container's own text can
+            // name the bean's internals. The cause is kept and logged.
+            LOG.log(Level.DEBUG, "cannot create a session for " + beanName, e);
+            SessionRefusedException refused = new SessionRefusedException(
+                    "cannot create a session for " + beanName);
+            refused.initCause(e);
+            throw refused;
         }
     }
 
+    /**
+     * Removes a session, and treats one that is already gone as removed.
+     *
+     * <p>The facade's contract is that removal is idempotent, because a client
+     * that retries after a timeout must not be told its own cleanup failed. The
+     * stateful container answers an unknown or expired key with
+     * {@code NoSuchObjectLocalException}, and without this that reached the
+     * endpoint as a 500 with a stack trace in the log for a second remove or
+     * for any session id at all.
+     *
+     * <p>A bean that has no sessions, or a session the container will not
+     * remove now, is a refusal and not a success: the caller must not be told
+     * its cleanup worked when it did not.
+     */
     @Override
-    public void removeSession(EjbKey key) throws NoSuchTargetException {
+    public void removeSession(EjbKey key) throws NoSuchTargetException, SessionRefusedException {
         EjbContainerFacade facade = facade(key);
+        if (!isStateful(facade)) {
+            throw new SessionRefusedException("this bean has no sessions to remove");
+        }
         try {
             facade.removeSession(key.instanceKey());
-        } catch (RemoteException e) {
-            throw new NoSuchTargetException("cannot remove session for " + key + ": " + e.getMessage());
+        } catch (NoSuchObjectLocalException gone) {
+            LOG.log(Level.DEBUG, "session already gone for " + key, gone);
+        } catch (RemoveException | RemoteException e) {
+            // The container's own wording is not the caller's business.
+            LOG.log(Level.DEBUG, "cannot remove session for " + key, e);
+            SessionRefusedException refused = new SessionRefusedException(
+                    "the session cannot be removed now");
+            refused.initCause(e);
+            throw refused;
         }
+    }
+
+    /** A bean's id and the container that answers to it, found together. */
+    private record Located(long ejbId, EjbContainerFacade facade) {
+    }
+
+    /**
+     * Finds a bean by name, and the live container it belongs to.
+     *
+     * <p>The index can name a bean whose container is already gone: an
+     * application redeployed under the same name gets new ids, and the index
+     * still holds the old ones until something makes it look again. That is a
+     * <em>hit</em> in the index, not a miss, so nothing would refresh it, and
+     * the first call after every redeploy would fail with "no container" - the
+     * second would succeed, because the failure drops the stale entries. So an
+     * id with no container is treated as the miss it is: the entries for it
+     * are dropped and the name is looked up once more, which makes the index
+     * rebuild if the deployed applications changed. An id that is still the
+     * same after that is not tried again: the bean really is gone.
+     */
+    private Located locate(String appName, String moduleName, String beanName) throws NoSuchTargetException {
+        Long ejbId = index.lookup(appName, moduleName, beanName);
+        EjbContainerFacade facade = ejbId == null ? null : containers.apply(ejbId);
+        if (ejbId != null && facade == null) {
+            index.forget(ejbId);
+            Long again = index.lookup(appName, moduleName, beanName);
+            if (again != null && !again.equals(ejbId)) {
+                ejbId = again;
+                facade = containers.apply(again);
+                if (facade == null) {
+                    index.forget(again);
+                }
+            } else if (again == null) {
+                ejbId = null;
+            }
+        }
+        if (ejbId == null || facade == null) {
+            if (ejbId != null) {
+                // The index named a bean the container does not have, and a
+                // second look found nothing better.
+                throw new NoSuchTargetException("no container for ejbId " + ejbId);
+            }
+            throw new NoSuchTargetException("no bean " + beanName
+                    + " in " + appName + '/' + moduleName);
+        }
+        return new Located(ejbId, facade);
     }
 
     /**
@@ -211,10 +326,10 @@ public class GlassFishContainerBridge implements ContainerBridge {
             return null;
         }
         try {
-            return com.sun.ejb.codegen.RemoteGenerator.getGeneratedRemoteIntfName(viewClassName);
+            return RemoteGenerator.getGeneratedRemoteIntfName(viewClassName);
         } catch (RuntimeException e) {
-            throw new NoSuchTargetException("cannot derive the generated interface for "
-                    + viewClassName + ": " + e);
+            LOG.log(Level.DEBUG, "cannot derive the generated interface for " + viewClassName, e);
+            throw new NoSuchTargetException("cannot derive the generated interface for " + viewClassName);
         }
     }
 
@@ -223,19 +338,26 @@ public class GlassFishContainerBridge implements ContainerBridge {
      * @return whether its container keeps a conversation per client
      */
     static boolean isStateful(long ejbId) {
-        EjbContainerFacade facade = util().getContainer(ejbId);
+        return isStateful(util().getContainer(ejbId));
+    }
+
+    static boolean isStateful(EjbContainerFacade facade) {
         return facade != null
                 && facade.getEjbDescriptor() instanceof EjbSessionDescriptor session
                 && session.isStateful();
     }
 
     private EjbContainerFacade facade(EjbKey key) throws NoSuchTargetException {
-        EjbContainerFacade facade = util().getContainer(key.ejbId());
+        return facade(key.ejbId());
+    }
+
+    private EjbContainerFacade facade(long ejbId) throws NoSuchTargetException {
+        EjbContainerFacade facade = containers.apply(ejbId);
         if (facade == null) {
             // The index named a bean the container no longer has - an
             // application undeployed between the lookup and the call.
-            index.refresh();
-            throw new NoSuchTargetException("no container for ejbId " + key.ejbId());
+            index.forget(ejbId);
+            throw new NoSuchTargetException("no container for ejbId " + ejbId);
         }
         return facade;
     }

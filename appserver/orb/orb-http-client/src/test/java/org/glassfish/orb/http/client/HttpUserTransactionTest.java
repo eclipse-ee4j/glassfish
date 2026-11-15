@@ -16,14 +16,19 @@
 
 package org.glassfish.orb.http.client;
 
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
 import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.Context;
+import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
 
 import org.glassfish.orb.http.protocol.TxRoutes;
@@ -67,6 +72,8 @@ class HttpUserTransactionTest {
         // The association is thread scoped; leaving one behind would make the
         // next test in this thread start inside a transaction.
         ClientTransactionContext.disassociate();
+        System.clearProperty(Context.INITIAL_CONTEXT_FACTORY);
+        AmbientTransaction.forget();
     }
 
     @Test
@@ -126,6 +133,151 @@ class HttpUserTransactionTest {
         transaction.setRollbackOnly();
         assertThrows(RollbackException.class, transaction::commit);
         assertNull(ClientTransactionContext.current());
+    }
+
+    private static Map<String, List<String>> xaError(int code) {
+        return Map.of(HttpTransactionClient.H_ERROR_CODE, List.of(Integer.toString(code)));
+    }
+
+    @Test
+    @DisplayName("a heuristic mix or hazard on commit is reported as HeuristicMixedException")
+    void heuristicMixedIsReported() throws Exception {
+        for (int code : new int[] { XAException.XA_HEURMIX, XAException.XA_HEURHAZ }) {
+            transport.answer("/ut/commit/", 500, xaError(code));
+            transaction.begin();
+
+            assertThrows(HeuristicMixedException.class, transaction::commit, "XA code " + code);
+            assertNull(ClientTransactionContext.current());
+        }
+    }
+
+    @Test
+    @DisplayName("a heuristic rollback on commit is reported as HeuristicRollbackException")
+    void heuristicRollbackIsReported() throws Exception {
+        transport.answer("/ut/commit/", 500, xaError(XAException.XA_HEURRB));
+        transaction.begin();
+
+        assertThrows(HeuristicRollbackException.class, transaction::commit);
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("a heuristic commit is the outcome asked for, so commit returns normally")
+    void heuristicCommitIsNotAFailure() throws Exception {
+        transport.answer("/ut/commit/", 500, xaError(XAException.XA_HEURCOM));
+        transaction.begin();
+
+        transaction.commit();
+
+        assertNull(ClientTransactionContext.current());
+        assertEquals(Status.STATUS_NO_TRANSACTION, transaction.getStatus());
+    }
+
+    @Test
+    @DisplayName("an unknown transaction on commit is a RollbackException")
+    void anUnknownTransactionOnCommitIsARollback() throws Exception {
+        transport.answer("/ut/commit/", 500, xaError(XAException.XAER_NOTA));
+        transaction.begin();
+
+        assertThrows(RollbackException.class, transaction::commit);
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("an unknown transaction on the rollback of a marked one is a RollbackException")
+    void anUnknownTransactionOnMarkedRollbackIsARollback() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_NOTA));
+        transaction.begin();
+        transaction.setRollbackOnly();
+
+        assertThrows(RollbackException.class, transaction::commit);
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("a rollback code or heuristic rollback on the rollback of a marked transaction is a RollbackException")
+    void aRollbackCodeOnMarkedRollbackIsARollback() throws Exception {
+        for (int code : new int[] { XAException.XA_RBROLLBACK, XAException.XA_RBTIMEOUT, XAException.XA_HEURRB }) {
+            transport.answer("/ut/rollback/", 500, xaError(code));
+            transaction.begin();
+            transaction.setRollbackOnly();
+
+            assertThrows(RollbackException.class, transaction::commit, "XA code " + code);
+        }
+    }
+
+    @Test
+    @DisplayName("a marked transaction that completed heuristically in whole or part is a HeuristicMixedException")
+    void aHeuristicCommitOnMarkedRollbackIsMixed() throws Exception {
+        for (int code : new int[] { XAException.XA_HEURCOM, XAException.XA_HEURMIX, XAException.XA_HEURHAZ }) {
+            transport.answer("/ut/rollback/", 500, xaError(code));
+            transaction.begin();
+            transaction.setRollbackOnly();
+
+            assertThrows(HeuristicMixedException.class, transaction::commit, "XA code " + code);
+        }
+    }
+
+    @Test
+    @DisplayName("rollback of a transaction the server no longer knows succeeds, and clears the thread")
+    void rollbackOfAnUnknownTransactionSucceeds() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_NOTA));
+        transaction.begin();
+
+        transaction.rollback();
+
+        assertNull(ClientTransactionContext.current());
+    }
+
+    @Test
+    @DisplayName("rollback that fails for any other reason is a SystemException")
+    void anOrdinaryRollbackFailureIsASystemException() throws Exception {
+        transport.answer("/ut/rollback/", 500, xaError(XAException.XAER_RMFAIL));
+        transaction.begin();
+
+        assertThrows(SystemException.class, transaction::rollback);
+    }
+
+    @Test
+    @DisplayName("guard: a failure that says nothing about the outcome stays a SystemException")
+    void anOrdinaryFailureIsASystemException() throws Exception {
+        transport.answer("/ut/commit/", 500, xaError(XAException.XAER_RMFAIL));
+        transaction.begin();
+
+        assertThrows(SystemException.class, transaction::commit);
+    }
+
+    @Test
+    @DisplayName("a container's transaction on this thread is not this UserTransaction's to commit")
+    void anAmbientBranchIsNotOurTransaction() throws Exception {
+        ClientTransactionContext.associate(XID, 0, true);
+
+        assertEquals(Status.STATUS_NO_TRANSACTION, transaction.getStatus());
+        assertThrows(IllegalStateException.class, transaction::commit);
+        assertThrows(IllegalStateException.class, transaction::rollback);
+        assertThrows(IllegalStateException.class, transaction::setRollbackOnly);
+        assertFalse(transport.called(TxRoutes.OP_COMMIT), "committed the container's branch");
+        assertFalse(transport.called(TxRoutes.OP_ROLLBACK), "rolled back the container's branch");
+        // And it is still the container's: nothing here may drop it.
+        assertEquals(XID, ClientTransactionContext.current());
+        assertThrows(NotSupportedException.class, transaction::begin);
+    }
+
+    @Test
+    @DisplayName("a branch left behind by a container transaction that has ended does not block begin")
+    void aStaleAmbientBranchDoesNotBlockBegin() throws Exception {
+        AmbientTransactionTest.BOUND.clear();
+        AmbientTransactionTest.BOUND.put("java:comp/TransactionSynchronizationRegistry",
+                new AmbientTransactionTest.FakeRegistry(null));
+        AmbientTransaction.forget();
+        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, AmbientTransactionTest.Factory.class.getName());
+        ClientTransactionContext.associate(XID, 0, true);
+
+        assertEquals(Status.STATUS_NO_TRANSACTION, transaction.getStatus());
+        transaction.begin();
+
+        assertEquals(Status.STATUS_ACTIVE, transaction.getStatus());
+        assertTrue(transport.called(TxRoutes.OP_BEGIN));
     }
 
     @Test

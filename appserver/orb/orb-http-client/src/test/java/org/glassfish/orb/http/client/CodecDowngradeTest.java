@@ -54,6 +54,10 @@ class CodecDowngradeTest {
         String greet(String name);
     }
 
+    public interface AsyncGreeter {
+        java.util.concurrent.Future<String> greetLater(String name);
+    }
+
     /**
      * Wraps the built-in encoding but announces a different token, so the
      * bytes stay readable while the negotiation is exercised.
@@ -114,7 +118,11 @@ class CodecDowngradeTest {
 
         @Override
         public CompletableFuture<Response> exchangeAsync(Request request) {
-            return CompletableFuture.failedFuture(new UnsupportedOperationException());
+            try {
+                return CompletableFuture.completedFuture(exchange(request));
+            } catch (IOException e) {
+                return CompletableFuture.failedFuture(e);
+            }
         }
 
         @Override
@@ -241,5 +249,43 @@ class CodecDowngradeTest {
             assertEquals(3, transport.offered.size());
             assertTrue(transport.offered.get(2).contains(ContentType.CODEC_JSER));
         }
+    }
+
+    @Test
+    @DisplayName("an asynchronous call is retried with the built-in codec, like a synchronous one")
+    void anAsynchronousCallIsDowngradedToo() throws Throwable {
+        PickyTransport transport = new PickyTransport(EXOTIC);
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+
+        try (HttpEjbClient client = new HttpEjbClient(config, transport, new ExoticMarshaller(),
+                JavaSerializationMarshaller.defaultFilter())) {
+            EjbLocator locator = new EjbLocator("app", "module", "", "GreeterBean");
+            Method greetLater = AsyncGreeter.class.getMethod("greetLater", String.class);
+
+            Object result = client.invokeAsync(locator, AsyncGreeter.class, greetLater, new Object[] { "world" })
+                    .get(30, java.util.concurrent.TimeUnit.SECONDS);
+
+            assertEquals("hello", result);
+            assertEquals(2, transport.offered.size(), "expected exactly one retry");
+            assertTrue(transport.offered.get(1).contains(ContentType.CODEC_JSER));
+        }
+    }
+
+    @Test
+    @DisplayName("a naming write refused for its codec is sent again with the built-in one")
+    void aNamingWriteIsDowngraded() throws Exception {
+        PickyTransport transport = new PickyTransport(EXOTIC);
+        ClientConfiguration config = ClientConfiguration.builder(URI.create("http://localhost:8080")).build();
+
+        HttpNamingContext context = new HttpNamingContext(config, transport, new ExoticMarshaller(),
+                new java.util.Hashtable<>());
+        context.bind("java:global/x", "value");
+        context.bind("java:global/y", "value");
+
+        // Refused once, then sent in jser, and the second bind goes straight to jser.
+        assertEquals(3, transport.offered.size());
+        assertTrue(transport.offered.get(0).contains(EXOTIC));
+        assertTrue(transport.offered.get(1).contains(ContentType.CODEC_JSER));
+        assertTrue(transport.offered.get(2).contains(ContentType.CODEC_JSER));
     }
 }

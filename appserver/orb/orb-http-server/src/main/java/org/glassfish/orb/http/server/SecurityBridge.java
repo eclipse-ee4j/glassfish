@@ -31,7 +31,8 @@ package org.glassfish.orb.http.server;
  * {@code SecurityContextUtil.java:218}.
  * <p>
  * Over HTTP the identity arrives already established by the container's own
- * authentication - Basic over TLS, a client certificate, or a bearer token -
+ * authentication - in the GlassFish binding, HTTP Basic checked against the
+ * realm; any other scheme, and a client certificate, is treated as anonymous -
  * so all that remains is that same call. This is why Payara's HTTP transport
  * documenting "Security Propagation is not supported" is a decision rather
  * than a constraint: the insertion point is downstream of the transport.

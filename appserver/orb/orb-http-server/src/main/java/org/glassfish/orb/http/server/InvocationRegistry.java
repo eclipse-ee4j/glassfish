@@ -19,6 +19,8 @@ package org.glassfish.orb.http.server;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import org.glassfish.orb.http.protocol.ProtocolException;
+
 /**
  * Tracks in-flight invocations so that a later {@code DELETE .../cancel/...}
  * can reach them.
@@ -42,6 +44,10 @@ public final class InvocationRegistry {
         private final String id;
         private final Thread thread;
         private volatile boolean cancelled;
+        // Both guarded by this: whether the invocation is over, and whether a
+        // cancel interrupted its thread.
+        private boolean closed;
+        private boolean interruptedByCancel;
 
         private Registration(String id, Thread thread) {
             this.id = id;
@@ -57,6 +63,37 @@ public final class InvocationRegistry {
             if (id != null) {
                 inFlight.remove(id, this);
             }
+            synchronized (this) {
+                closed = true;
+                if (interruptedByCancel && thread == Thread.currentThread()) {
+                    // The interrupt was meant for this invocation. The thread
+                    // belongs to a pool and runs someone else's request next;
+                    // handing it over interrupted would fail that one instead.
+                    Thread.interrupted();
+                }
+            }
+        }
+
+        /**
+         * The work is over: a cancel arriving from now on marks it cancelled
+         * but interrupts nothing, and an interrupt already delivered is
+         * cleared before the response is written.
+         */
+        public void finish() {
+            synchronized (this) {
+                closed = true;
+                if (interruptedByCancel && thread == Thread.currentThread()) {
+                    Thread.interrupted();
+                }
+            }
+        }
+
+        private synchronized void cancel(boolean interrupt) {
+            cancelled = true;
+            if (interrupt && !closed) {
+                interruptedByCancel = true;
+                thread.interrupt();
+            }
         }
     }
 
@@ -65,10 +102,12 @@ public final class InvocationRegistry {
      *                     did not send one - in which case the invocation is
      *                     simply not cancellable
      */
-    public Registration register(String invocationId) {
+    public Registration register(String invocationId) throws ProtocolException {
         Registration registration = new Registration(invocationId, Thread.currentThread());
-        if (invocationId != null) {
-            inFlight.put(invocationId, registration);
+        if (invocationId != null && inFlight.putIfAbsent(invocationId, registration) != null) {
+            // Overwriting would let one caller take over another's
+            // cancellation.
+            throw new ProtocolException("an invocation with this id is already in flight");
         }
         return registration;
     }
@@ -85,10 +124,7 @@ public final class InvocationRegistry {
             // that loses the race is not an error.
             return false;
         }
-        registration.cancelled = true;
-        if (interrupt) {
-            registration.thread.interrupt();
-        }
+        registration.cancel(interrupt);
         return true;
     }
 

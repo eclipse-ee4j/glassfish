@@ -83,6 +83,18 @@ class XidsAndTxRoutesTest {
     }
 
     @Test
+    @DisplayName("bytes after the branch qualifier are refused, so one xid has one spelling")
+    void trailingBytesAreRejected() throws Exception {
+        byte[] exact = Xids.toBytes(xid(1, 4, 4));
+        byte[] padded = java.util.Arrays.copyOf(exact, exact.length + 1);
+
+        assertTrue(Xids.sameXid(xid(1, 4, 4), Xids.fromBytes(exact)));
+        assertThrows(ProtocolException.class, () -> Xids.fromBytes(padded));
+        assertThrows(ProtocolException.class, () -> Xids.fromPathSegment(
+                java.util.Base64.getUrlEncoder().withoutPadding().encodeToString(padded)));
+    }
+
+    @Test
     @DisplayName("Xid has no equals of its own, so comparison must be by value")
     void xidsAreComparedByValue() {
         Xid mine = new Xids.SimpleXid(1, new byte[] { 1, 2 }, new byte[] { 3 });
@@ -149,6 +161,18 @@ class XidsAndTxRoutesTest {
     void anOperationThatNeedsAnXidIsRejectedWithout() {
         String path = Protocol.CONTEXT_PATH + "/txn/v1/xa/prep";
         assertThrows(ProtocolException.class, () -> TxRoutes.parse(PathScanner.scan(path)));
+    }
+
+    @Test
+    void aPathNamingMoreThanTheOperationTakesIsRejected() {
+        String xid = Xids.toPathSegment(xid(3, 16, 8));
+        // begin and recover take no xid, and the others take exactly one.
+        assertThrows(ProtocolException.class,
+                () -> TxRoutes.parse(PathScanner.scan(Protocol.CONTEXT_PATH + "/txn/v1/ut/begin/" + xid)));
+        assertThrows(ProtocolException.class,
+                () -> TxRoutes.parse(PathScanner.scan(Protocol.CONTEXT_PATH + "/txn/v1/xa/recover/" + xid)));
+        assertThrows(ProtocolException.class,
+                () -> TxRoutes.parse(PathScanner.scan(Protocol.CONTEXT_PATH + "/txn/v1/xa/prep/" + xid + "/extra")));
     }
 
     @Test

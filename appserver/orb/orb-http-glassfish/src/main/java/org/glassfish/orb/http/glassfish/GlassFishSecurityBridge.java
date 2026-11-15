@@ -34,8 +34,9 @@ import org.jvnet.hk2.annotations.Service;
  * components, mechanism selection, client and server request interceptors. But
  * the container does not consume any of that - it consumes
  * {@code SecurityContext}, and all of that apparatus exists to arrive here.
- * Over HTTP the identity has already been established by the container's own
- * authentication, so only the last step remains.
+ * Over HTTP the identity arrives with the request - HTTP Basic, checked
+ * against the realm by {@link RealmAuthenticator}; any other scheme and a
+ * client certificate are treated as anonymous - so only the last step remains.
  */
 @Service
 @Singleton
@@ -45,8 +46,13 @@ public class GlassFishSecurityBridge implements SecurityBridge {
     public Object establish(String userName) {
         SecurityContext previous = SecurityContext.getCurrent();
         if (userName == null) {
-            // Unauthenticated: leave whatever was current alone rather than
-            // installing an empty identity over it.
+            // Unauthenticated: say so, rather than inheriting. This is a
+            // pooled thread, and whatever identity earlier code left on it is
+            // not the identity of the call that is arriving. Running an
+            // anonymous request as that identity would hand it somebody
+            // else's authority, so the unauthenticated context is installed
+            // explicitly and clear() puts the previous one back.
+            SecurityContext.setUnauthenticatedContext();
             return previous;
         }
         // The subject the realm produced, not an empty one: it carries the

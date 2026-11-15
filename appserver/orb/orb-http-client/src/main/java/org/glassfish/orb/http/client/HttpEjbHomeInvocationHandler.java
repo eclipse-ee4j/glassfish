@@ -81,7 +81,11 @@ final class HttpEjbHomeInvocationHandler implements InvocationHandler {
         // method. The 2.x specification allows create(...) with arguments and
         // several overloads; all of them mean "give me a reference".
         if (method.getName().startsWith("create")) {
-            return create();
+            try {
+                return create();
+            } catch (java.io.IOException e) {
+                throw TransportErrors.translate(e, method, homeClass);
+            }
         }
 
         throw new RemoteException("unsupported home method: " + method.getName()

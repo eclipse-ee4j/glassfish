@@ -102,7 +102,21 @@ public final class TransactionDispatcher {
         if (request.isUserTransaction()) {
             switch (request.operation()) {
                 case TxRoutes.OP_BEGIN -> {
-                    Xid xid = transactions.begin(longParameter(exchange, TxRoutes.PARAM_TIMEOUT));
+                    long timeout = 0;
+                    String named = exchange.queryParameter(TxRoutes.PARAM_TIMEOUT);
+                    if (named != null && !named.isEmpty()) {
+                        try {
+                            timeout = Long.parseLong(named.trim());
+                        } catch (NumberFormatException e) {
+                            fail(exchange, Protocol.SC_BAD_REQUEST, "timeout must be a number of seconds");
+                            return;
+                        }
+                        if (timeout < 0 || timeout > Integer.MAX_VALUE) {
+                            fail(exchange, Protocol.SC_BAD_REQUEST, "timeout is out of range");
+                            return;
+                        }
+                    }
+                    Xid xid = transactions.begin(timeout);
                     exchange.setResponseHeader(TxRoutes.H_XID, Xids.toPathSegment(xid));
                     exchange.setStatus(Protocol.SC_NO_CONTENT);
                 }
@@ -154,8 +168,20 @@ public final class TransactionDispatcher {
 
     private void writeRecoverListing(ServerExchange exchange)
             throws IOException, TransactionBridge.TransactionException {
-        int flags = (int) longParameter(exchange, TxRoutes.PARAM_FLAGS);
-        Xid[] branches = transactions.recover(flags == 0 ? XAResource.TMSTARTRSCAN : flags);
+        // A scan that names no flags starts one. A scan that names TMNOFLAGS
+        // (0) asks to continue the previous one, which is not the same thing,
+        // so only an absent parameter gets the default.
+        String named = exchange.queryParameter(TxRoutes.PARAM_FLAGS);
+        int flags = XAResource.TMSTARTRSCAN;
+        if (named != null && !named.isEmpty()) {
+            try {
+                flags = Integer.parseInt(named.trim());
+            } catch (NumberFormatException e) {
+                fail(exchange, Protocol.SC_BAD_REQUEST, "flags must be an integer");
+                return;
+            }
+        }
+        Xid[] branches = transactions.recover(flags);
 
         StringBuilder sb = new StringBuilder();
         if (branches != null) {

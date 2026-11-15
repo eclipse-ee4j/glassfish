@@ -16,6 +16,7 @@
 
 package org.glassfish.orb.http.server;
 
+import jakarta.ejb.EJBException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.Status;
 
@@ -284,7 +285,13 @@ class HttpTransactionRoundTripTest {
                     new EjbLocator("myapp", "mymodule", null, "GreeterBean"));
             // Silently running outside the caller's transaction and reporting
             // success is the one outcome a transactional client cannot detect.
-            assertThrows(Exception.class, () -> bean.greet("Ada", 1));
+            EJBException refused = assertThrows(EJBException.class, () -> bean.greet("Ada", 1));
+            // The refusal is a code in a header with no body to read, and the
+            // client has to turn it into something that names it.
+            assertTrue(refused.getMessage().contains("XA error code " + XAException.XAER_RMERR),
+                    refused.getMessage());
+            assertTrue(refused.getMessage().contains("does not support transaction propagation"),
+                    refused.getMessage());
         } finally {
             ClientTransactionContext.disassociate();
         }

@@ -53,6 +53,25 @@ public interface Marshaller {
         return 0;
     }
 
+    /**
+     * Drops whatever this codec holds for a class loader, so that the loader
+     * can be collected once its application is undeployed. A codec that
+     * caches per loader overrides this; the default holds nothing.
+     *
+     * <p>Who calls it: the container adapter, when an application is
+     * undeployed. Nothing in the transport calls it, so a container that does
+     * not will keep every undeployed application's loader reachable. It is
+     * keyed on the exact loader object that was passed to {@code newReader}
+     * (or was the context loader for {@code newWriter}); a different loader
+     * is a different entry. It may run while another thread is still using
+     * {@code newReader} or {@code newWriter} for that loader: those calls
+     * simply build a new entry.
+     *
+     * @param loader the loader of an application that is going away
+     */
+    default void release(ClassLoader loader) {
+    }
+
     ObjectWriter newWriter(OutputStream out) throws IOException;
 
     /**

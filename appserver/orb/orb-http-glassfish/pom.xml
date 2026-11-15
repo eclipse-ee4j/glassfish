@@ -34,7 +34,7 @@
     <description>
         Binds the transport-neutral dispatch in orb-http-server to this
         container: ContainerBridge onto EjbContainerFacade, NamingBridge onto
-        the naming service's TransientContext, SecurityBridge onto
+        the naming service's SerialContextProvider, SecurityBridge onto
         SecurityContext. This is the only module in the transport that depends
         on GlassFish internals, which is why it is a module of its own.
     </description>

@@ -157,6 +157,13 @@ public final class Xids {
         int branchLength = getInt(buf, branchOffset);
         checkLength(branchLength, buf.length - branchOffset - 4, "branch qualifier");
         byte[] branch = Arrays.copyOfRange(buf, branchOffset + 4, branchOffset + 4 + branchLength);
+        int end = branchOffset + 4 + branchLength;
+        if (end != buf.length) {
+            // Two byte strings must not name one branch: bytes after the
+            // branch qualifier are ignored by the decoder, so accepting them
+            // would give a single xid many spellings on the wire.
+            throw new ProtocolException("xid has " + (buf.length - end) + " bytes after the branch qualifier");
+        }
 
         return new SimpleXid(formatId, global, branch);
     }

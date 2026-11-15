@@ -23,7 +23,10 @@ import java.util.List;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
+import org.glassfish.orb.http.protocol.EjbRoutes;
+import org.glassfish.orb.http.protocol.PathScanner;
 import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.protocol.ProtocolException;
 import org.glassfish.orb.http.server.AffinityDispatcher;
 import org.glassfish.orb.http.server.EjbDispatcher;
 import org.glassfish.orb.http.server.NamingDispatcher;
@@ -68,14 +71,11 @@ final class OrbHttpHandler extends HttpHandler {
                     return;
                 }
             }
-            if (path.contains('/' + Protocol.SVC_NAMING + '/')) {
-                naming.dispatch(exchange);
-            } else if (path.contains('/' + Protocol.SVC_TXN + '/')) {
-                transactions.dispatch(exchange);
-            } else if (path.contains('/' + Protocol.SVC_COMMON + '/')) {
-                affinity.dispatch(exchange);
-            } else {
-                ejb.dispatch(exchange);
+            switch (route(path)) {
+                case NAMING -> naming.dispatch(exchange);
+                case TXN -> transactions.dispatch(exchange);
+                case COMMON -> affinity.dispatch(exchange);
+                default -> ejb.dispatch(exchange);
             }
         } catch (Exception e) {
             // A failure that reached here is the transport's, not the
@@ -85,5 +85,43 @@ final class OrbHttpHandler extends HttpHandler {
             LOG.log(Level.WARNING, "dispatch failed for " + path, e);
             response.setStatus(Protocol.SC_EXCEPTION);
         }
+    }
+
+    /** Which dispatcher a request belongs to. */
+    enum Route {
+        EJB, NAMING, TXN, COMMON
+    }
+
+    /**
+     * Chooses the dispatcher from the service segment of the path, and from
+     * nothing else.
+     *
+     * <p>The segment is the one every route layout puts directly after the
+     * context path. Looking for the service word anywhere in the path instead
+     * sends an invocation to the wrong dispatcher whenever an application,
+     * module, bean or method is called {@code naming}, {@code txn} or
+     * {@code common}.
+     *
+     * @param uri the request URI, without the query
+     * @return the route; anything that is not another service, including a path
+     *         that cannot be scanned, is left to the EJB dispatcher to answer
+     */
+    static Route route(String uri) {
+        PathScanner path;
+        try {
+            path = PathScanner.scan(uri);
+        } catch (ProtocolException e) {
+            return Route.EJB;
+        }
+        if (path.segmentEquals(EjbRoutes.IDX_SERVICE, Protocol.SVC_NAMING)) {
+            return Route.NAMING;
+        }
+        if (path.segmentEquals(EjbRoutes.IDX_SERVICE, Protocol.SVC_TXN)) {
+            return Route.TXN;
+        }
+        if (path.segmentEquals(EjbRoutes.IDX_SERVICE, Protocol.SVC_COMMON)) {
+            return Route.COMMON;
+        }
+        return Route.EJB;
     }
 }

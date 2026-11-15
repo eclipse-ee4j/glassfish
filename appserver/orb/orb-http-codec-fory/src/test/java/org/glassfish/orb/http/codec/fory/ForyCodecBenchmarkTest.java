@@ -10,92 +10,208 @@
 
 package org.glassfish.orb.http.codec.fory;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputFilter;
+import java.lang.management.ManagementFactory;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 
 /**
- * Small in-process comparison of the old byte-array path and the framed
- * streaming path. It is deliberately a measurement test rather than a pass
- * or fail performance gate: the CI runner publishes the numbers, while the
- * round-trip tests remain the correctness gate.
+ * In-process comparison of the byte-array path and the framed streaming path,
+ * for encoding and for decoding.
+ * <p>
+ * It is a measurement, not a pass or fail gate, and it takes a few seconds, so
+ * it does not run with the unit tests. Run it with
+ * {@code -Dorb.benchmark=true -Dtest=ForyCodecBenchmarkTest}; the results are
+ * printed as {@code RESULT} lines. Each line also gives the bytes the thread
+ * allocated per operation, measured exactly in a separate pass.
+ * <p>
+ * Both encoding modes write into a fresh {@link ChunkedOutput}, so the sink,
+ * and the 16 KB chunk it allocates, cost the same in both; only the way the
+ * codec fills it differs. The two modes alternate round by round so a change
+ * in the machine's speed during the run affects both alike. A single JVM and
+ * a handful of rounds give an indication of the direction, not a precise
+ * ratio.
  */
+@EnabledIfSystemProperty(named = "orb.benchmark", matches = "true")
 class ForyCodecBenchmarkTest {
-    private static final int WARMUP = 1_000;
-    private static final int ITERATIONS = 5_000;
-    private static final int ROUNDS = 5;
+    private static final String STREAMING = "org.glassfish.orb.http.codec.fory.streaming";
+    private static final String THRESHOLD = ForyMarshaller.STREAMING_THRESHOLD_PROPERTY;
+    private static final ObjectInputFilter ALLOW_ALL = info -> ObjectInputFilter.Status.ALLOWED;
+
+    private static final String DECODE_THRESHOLD = ForyMarshaller.STREAMING_DECODE_THRESHOLD_PROPERTY;
+    private static final int ROUNDS = 9;
+
+    /** How many operations make a timing sample, scaled so that big payloads stay quick. */
+    private static int iterations(long size) {
+        return size <= 64 * 1024 ? 5_000 : size <= 2 * 1024 * 1024 ? 150 : 10;
+    }
+
+    /** Applies one mode's properties; the codec reads them when a writer or reader is created. */
+    private enum Mode {
+        /** Encode through the byte array and copy it in. Decode from an array. */
+        ARRAY("false", "-1", null),
+        /** Encode through the framed stream. Decode from the stream. */
+        STREAM("true", null, "0");
+
+        private final String streaming;
+        private final String encodeThreshold;
+        private final String decodeThreshold;
+
+        Mode(String streaming, String encodeThreshold, String decodeThreshold) {
+            this.streaming = streaming;
+            this.encodeThreshold = encodeThreshold;
+            this.decodeThreshold = decodeThreshold;
+        }
+
+        void forEncode() {
+            System.setProperty(STREAMING, streaming);
+            restore(THRESHOLD, encodeThreshold);
+            System.clearProperty(DECODE_THRESHOLD);
+        }
+
+        void forDecode() {
+            System.clearProperty(STREAMING);
+            restore(THRESHOLD, null);
+            restore(DECODE_THRESHOLD, decodeThreshold);
+        }
+    }
 
     @Test
-    void compareByteArrayAndStreamingForSmallMessages() throws Exception {
-        System.setProperty("org.glassfish.orb.http.codec.fory.streaming", "true");
+    void compareArrayAndStreamingPaths() throws Exception {
+        String previousStreaming = System.getProperty(STREAMING);
+        String previousThreshold = System.getProperty(THRESHOLD);
+        String previousDecode = System.getProperty(DECODE_THRESHOLD);
         try {
             Marshaller marshaller = new ForyMarshaller();
             Map<String, Object> graph = new HashMap<>();
             graph.put("message", "small");
             graph.put("number", 42);
 
-            measure(marshaller, "small", "hello");
-            measure(marshaller, "graph", graph);
-            measure(marshaller, "large", "x".repeat(64 * 1024));
-        } finally {
-            System.clearProperty("org.glassfish.orb.http.codec.fory.streaming");
-        }
-    }
-
-    private static void measure(Marshaller marshaller, String name, Object value) throws Exception {
-        for (int i = 0; i < WARMUP; i++) {
-            encodeLegacy(marshaller, value);
-            encodeStreaming(marshaller, value);
-        }
-
-        long legacyNanos = median(marshaller, value, false);
-        long streamingNanos = median(marshaller, value, true);
-        long legacyBytes = encodeLegacy(marshaller, value);
-        long streamingBytes = encodeStreaming(marshaller, value);
-        double legacyOps = (double) ITERATIONS * 1_000_000_000L / legacyNanos;
-        double streamingOps = (double) ITERATIONS * 1_000_000_000L / streamingNanos;
-        System.out.printf("RESULT payload=%s mode=legacy ops/s=%.0f bytes=%d%n",
-                name, legacyOps, legacyBytes);
-        System.out.printf("RESULT payload=%s mode=streaming ops/s=%.0f bytes=%d speedup=%.3fx%n",
-                name, streamingOps, streamingBytes, streamingOps / legacyOps);
-    }
-
-    private static long median(Marshaller marshaller, Object value, boolean streaming) throws Exception {
-        long[] samples = new long[ROUNDS];
-        for (int round = 0; round < ROUNDS; round++) {
-            long start = System.nanoTime();
-            long bytes = 0;
-            for (int i = 0; i < ITERATIONS; i++) {
-                bytes += streaming
-                        ? encodeStreaming(marshaller, value)
-                        : encodeLegacy(marshaller, value);
+            Map<String, Object> payloads = new LinkedHashMap<>();
+            payloads.put("small", "hello");
+            payloads.put("graph", graph);
+            payloads.put("large", "x".repeat(64 * 1024));
+            for (int size : new int[] {1024, 2048, 4096, 8192, 16384}) {
+                payloads.put("bytes-" + size, new byte[size]);
             }
-            if (bytes == 0) throw new AssertionError("empty encoded payload");
-            samples[round] = System.nanoTime() - start;
+            payloads.put("bytes-1MiB", new byte[1 << 20]);
+            payloads.put("string-1MiB", "x".repeat(1 << 20));
+            payloads.put("bytes-16MiB", new byte[16 << 20]);
+            payloads.put("string-16MiB", "x".repeat(16 << 20));
+            for (Map.Entry<String, Object> payload : payloads.entrySet()) {
+                measure(marshaller, "encode", payload.getKey(), payload.getValue());
+                measure(marshaller, "decode", payload.getKey(), payload.getValue());
+            }
+        } finally {
+            restore(STREAMING, previousStreaming);
+            restore(THRESHOLD, previousThreshold);
+            restore(DECODE_THRESHOLD, previousDecode);
         }
-        java.util.Arrays.sort(samples);
-        return samples[samples.length / 2];
     }
 
-    private static long encodeLegacy(Marshaller marshaller, Object value) throws Exception {
+    private static void restore(String name, String value) {
+        if (value == null) {
+            System.clearProperty(name);
+        } else {
+            System.setProperty(name, value);
+        }
+    }
+
+    private static void measure(Marshaller marshaller, String operation, String name, Object value)
+            throws Exception {
+        boolean encode = operation.equals("encode");
+        byte[] encoded = encodeArray(marshaller, value);
+        int iterations = iterations(encoded.length);
+        int warmup = Math.max(3, Math.min(2_000, iterations * 2));
+        for (Mode mode : Mode.values()) {
+            for (int i = 0; i < warmup; i++) {
+                run(marshaller, mode, encode, value, encoded);
+            }
+        }
+
+        long[][] samples = new long[Mode.values().length][ROUNDS];
+        long bytes = 0;
+        for (int round = 0; round < ROUNDS; round++) {
+            for (Mode mode : Mode.values()) {
+                long start = System.nanoTime();
+                for (int i = 0; i < iterations; i++) {
+                    bytes += run(marshaller, mode, encode, value, encoded);
+                }
+                samples[mode.ordinal()][round] = System.nanoTime() - start;
+            }
+        }
+        if (bytes == 0) {
+            throw new AssertionError("nothing was processed");
+        }
+        double[] opsPerSecond = new double[Mode.values().length];
+        long[] allocated = new long[Mode.values().length];
+        for (Mode mode : Mode.values()) {
+            long[] sorted = samples[mode.ordinal()].clone();
+            Arrays.sort(sorted);
+            opsPerSecond[mode.ordinal()] = (double) iterations * 1_000_000_000L / sorted[ROUNDS / 2];
+            allocated[mode.ordinal()] = allocatedPerOperation(marshaller, mode, encode, value, encoded);
+        }
+        double array = opsPerSecond[Mode.ARRAY.ordinal()];
+        double stream = opsPerSecond[Mode.STREAM.ordinal()];
+        System.out.printf("RESULT op=%s payload=%s mode=array ops/s=%.0f bytes=%d alloc/op=%d%n",
+                operation, name, array, encoded.length, allocated[Mode.ARRAY.ordinal()]);
+        System.out.printf("RESULT op=%s payload=%s mode=stream ops/s=%.0f bytes=%d alloc/op=%d"
+                        + " stream/array=%.3fx alloc stream/array=%.3fx%n",
+                operation, name, stream, encoded.length, allocated[Mode.STREAM.ordinal()], stream / array,
+                (double) allocated[Mode.STREAM.ordinal()] / allocated[Mode.ARRAY.ordinal()]);
+    }
+
+    /** Bytes the current thread allocates per operation, averaged over a few warm operations. */
+    private static long allocatedPerOperation(Marshaller marshaller, Mode mode, boolean encode, Object value,
+            byte[] encoded) throws Exception {
+        java.lang.management.ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+        if (!(bean instanceof com.sun.management.ThreadMXBean)
+                || !((com.sun.management.ThreadMXBean) bean).isThreadAllocatedMemorySupported()) {
+            return -1;
+        }
+        com.sun.management.ThreadMXBean allocation = (com.sun.management.ThreadMXBean) bean;
+        int operations = encoded.length > 2 * 1024 * 1024 ? 4 : 50;
+        long before = allocation.getCurrentThreadAllocatedBytes();
+        for (int i = 0; i < operations; i++) {
+            run(marshaller, mode, encode, value, encoded);
+        }
+        return (allocation.getCurrentThreadAllocatedBytes() - before) / operations;
+    }
+
+    private static long run(Marshaller marshaller, Mode mode, boolean encode, Object value, byte[] encoded)
+            throws Exception {
+        if (encode) {
+            mode.forEncode();
+            ChunkedOutput out = new ChunkedOutput();
+            try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
+                writer.writeObject(value);
+                writer.flush();
+            }
+            return out.size();
+        }
+        mode.forDecode();
+        try (Marshaller.ObjectReader reader = marshaller.newReader(
+                new ByteArrayInputStream(encoded), ForyCodecBenchmarkTest.class.getClassLoader(), ALLOW_ALL)) {
+            return reader.readObject() == null ? 0 : encoded.length;
+        }
+    }
+
+    private static byte[] encodeArray(Marshaller marshaller, Object value) throws Exception {
+        Mode.ARRAY.forEncode();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
             writer.writeObject(value);
             writer.flush();
         }
-        return out.size();
-    }
-
-    private static long encodeStreaming(Marshaller marshaller, Object value) throws Exception {
-        ChunkedOutput out = new ChunkedOutput();
-        try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
-            writer.writeObject(value);
-            writer.flush();
-        }
-        return out.size();
+        return out.toByteArray();
     }
 }

@@ -18,6 +18,7 @@ package org.glassfish.orb.http.client;
 
 import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.NoSuchEJBException;
 
 import java.io.ByteArrayInputStream;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CancellationException;
+
+import javax.transaction.xa.XAException;
 
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
@@ -100,6 +103,26 @@ class ResponseDecoderTest {
                         response(Protocol.SC_EXCEPTION, ContentType.KIND_EXCEPTION, thrown),
                         getClass().getClassLoader()));
         assertEquals("business rule", caught.getMessage());
+    }
+
+    @Test
+    @DisplayName("a bridge refusal arrives as a code in a header, and is told apart by it")
+    void aTransactionFailureIsDecodedFromItsCode() {
+        HttpTransport.Response rolledBack = new HttpTransport.Response(Protocol.SC_EXCEPTION, null,
+                Map.of(HttpTransactionClient.H_ERROR_CODE, List.of(Integer.toString(XAException.XA_RBROLLBACK)),
+                        "X-GF-Reason", List.of("branch was rolled back")),
+                new ByteArrayInputStream(new byte[0]));
+        EJBTransactionRolledbackException gone = assertThrows(EJBTransactionRolledbackException.class,
+                () -> decoder.decodeInvocationResult(rolledBack, getClass().getClassLoader()));
+        assertTrue(gone.getMessage().contains("branch was rolled back"), gone.getMessage());
+
+        HttpTransport.Response refused = new HttpTransport.Response(Protocol.SC_EXCEPTION, null,
+                Map.of(HttpTransactionClient.H_ERROR_CODE, List.of(Integer.toString(XAException.XAER_RMERR))),
+                new ByteArrayInputStream(new byte[0]));
+        EJBException failed = assertThrows(EJBException.class,
+                () -> decoder.decodeInvocationResult(refused, getClass().getClassLoader()));
+        assertEquals(EJBException.class, failed.getClass(), "only a rollback code is a rollback");
+        assertTrue(failed.getMessage().contains("XA error code " + XAException.XAER_RMERR), failed.getMessage());
     }
 
     @Test

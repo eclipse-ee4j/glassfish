@@ -57,17 +57,21 @@ class GlassFishSecurityBridgeTest {
     }
 
     @Test
-    @DisplayName("an anonymous call does not install an empty identity over what was there")
-    void anonymousLeavesTheContextAlone() {
+    @DisplayName("an anonymous call does not run as an identity left on the thread, and gives it back afterwards")
+    void anonymousDoesNotInheritTheThreadsIdentity() {
         SecurityContext before = new SecurityContext("existing", new javax.security.auth.Subject());
         SecurityContext.setCurrent(before);
 
         Object token = bridge.establish(null);
 
-        // Installing an empty identity here would silently demote whatever the
-        // thread was already carrying.
-        assertSame(before, SecurityContext.getCurrent());
+        // The pooled thread was carrying "existing". An anonymous request must
+        // not run as that: it gets the unauthenticated context.
+        assertSame(SecurityContext.getDefaultSecurityContext(), SecurityContext.getCurrent());
+
         bridge.clear(token);
+
+        // Not ours to discard: the identity the thread was carrying is back.
+        assertSame(before, SecurityContext.getCurrent());
     }
 
     @Test

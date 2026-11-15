@@ -137,12 +137,21 @@ final class GrizzlyServerExchange implements ServerExchange {
             response.setTrailers(() -> sent);
         }
 
+        // ChunkedOutput hands out array-backed, writable views, so the normal
+        // path below wraps them without a copy. A read-only or direct
+        // ByteBuffer reports hasArray() false and refuses array(); the wrap
+        // below is not relied on to handle such a buffer, so anything that
+        // will not show its array is copied into one that will. The
+        // Content-Length is set from remaining() above, so a buffer that
+        // contributed fewer bytes than that would leave the client waiting
+        // for the rest.
+        //
+        // That is a copy this class was written to avoid, and it is taken
+        // only for the buffers that need it, which are the ones other callers
+        // supply.
         for (ByteBuffer buffer : body) {
             ByteBuffer writable = buffer;
             if (!buffer.hasArray()) {
-                // ChunkedOutput supplies array-backed views, so the normal
-                // path below is zero-copy. Keep a compatibility fallback for
-                // callers that provide direct or read-only buffers.
                 writable = ByteBuffer.allocate(buffer.remaining());
                 writable.put(buffer.duplicate()).flip();
             }

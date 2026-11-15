@@ -18,6 +18,7 @@ package org.glassfish.orb.http.codec.fory;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
@@ -27,6 +28,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
+import java.util.concurrent.atomic.LongAdder;
 
 import org.apache.fory.Fory;
 import org.apache.fory.ThreadSafeFory;
@@ -51,20 +53,112 @@ import org.glassfish.orb.http.protocol.Marshaller;
  * and remote calls already rely on all three. Fory is configured to match
  * rather than to be fast in ways that would silently alter what an
  * application observes - see the settings in {@link #newFory}.
+ *
+ * <h2>Properties</h2>
+ * All three are read when a writer or a reader is created, not for every
+ * object, so a change applies to the next one.
+ * <ul>
+ *   <li>{@code org.glassfish.orb.http.codec.fory.streaming} (writer): when
+ *       {@code true}, every object written to a {@link ChunkedOutput} (other
+ *       than a throwable) is encoded through the framed stream, whatever its
+ *       size. Default {@code false}: the size heuristic below decides.</li>
+ *   <li>{@link #STREAMING_THRESHOLD_PROPERTY} (writer): the <em>estimated</em>
+ *       size in bytes from which an object is encoded through the framed
+ *       stream. It is an estimate made before encoding (two bytes per
+ *       character of a string, the element size times the length of an array,
+ *       16 bytes per element of a collection or map; any other object is never
+ *       large), not the encoded length. Default 4096. A negative value turns
+ *       the heuristic off; 0 streams every object that is not a throwable.
+ *       A blank or non numeric value means the default. It has no effect on
+ *       reading.</li>
+ *   <li>{@link #STREAMING_DECODE_THRESHOLD_PROPERTY} (reader): the <em>encoded
+ *       frame length</em> in bytes, as read from the frame header, from which a
+ *       Fory frame is decoded straight from the input stream instead of from
+ *       an array. Off by default, and it is independent of the encode
+ *       threshold. A negative, blank or non numeric value leaves it off; 0
+ *       decodes every Fory frame from the stream. Frames of the Java
+ *       serialization kind are always read into an array. The decoder starts
+ *       with a buffer of at most 64 KiB, so a frame just over 64 KiB overflows
+ *       it and reallocates: in the benchmark a 64 KiB string (a 65,547 byte
+ *       frame) decoded at 0.56x to 1.12x the throughput of the array path and
+ *       allocated 1.66x as much. The benchmark also reads from a
+ *       {@code ByteArrayInputStream}, whose {@code available()} reports the
+ *       whole frame, which is the best case for the stream decoder; on a
+ *       socket that holds only part of the frame, Fory grows its buffer by
+ *       doubling (5.24 MB instead of 2.23 MB for a 1 MiB frame in a test).</li>
+ * </ul>
+ *
+ * <p><b>Policy.</b> A server accepts this codec whenever this jar is present:
+ * there is no class-registration requirement and no opt-in. Its limits are
+ * therefore the weakest of the two codecs and are approximate.
+ *
+ * <p>What is bounded when decoding: which classes may be instantiated (the
+ * transport's filter, see {@code FilterBackedTypeChecker}), the depth of the
+ * graph (configured here), the whole request body (the dispatchers cap it at
+ * {@code maxBytes}), and the arrays inside a throwable frame, which is read by
+ * Java serialization with one budget shared by every frame of the request.
+ * Fory's own gates apply to the other frames and are Fory's defaults: an
+ * approximate memory gate per root deserialization (128 MB;
+ * {@code withMaxGraphMemoryBytes} is set explicitly, to four times the array
+ * budget, which is the same number until that budget is changed) and a limit
+ * of 8192 collection elements not backed by input bytes (not configured
+ * here). The memory gate is per root deserialization, so a request with several
+ * parameters can materialise that much for each. What is not enforced: the
+ * filter's reference limit and array budget for Fory-encoded frames, which
+ * Fory's type check cannot see. These gates rely on Fory 1.7.1 and are not
+ * exercised by a test of ours.
  */
 public final class ForyMarshaller implements Marshaller {
 
     private static final int DEFAULT_STREAMING_THRESHOLD = 4 * 1024;
 
+    /** The largest buffer a streamed decode starts with; bigger frames grow it. */
+    private static final int MAX_STREAM_BUFFER = 64 * 1024;
+
+    /** Frames decoded from the stream; read by tests. */
+    private static final LongAdder STREAMED_DECODES = new LongAdder();
+
+    /**
+     * @return how many frames this codec has decoded straight from the input
+     *         stream since the class was loaded
+     */
+    static long streamedDecodeCount() {
+        return STREAMED_DECODES.sum();
+    }
+
+    /** Frames written through {@link ChunkedOutput#beginFrame}; read by tests. */
+    private static final LongAdder STREAMED_FRAMES = new LongAdder();
+
+    /**
+     * @return how many frames this codec has written through the streaming
+     *         path since the class was loaded
+     */
+    static long streamedFrameCount() {
+        return STREAMED_FRAMES.sum();
+    }
+
     /** Enables direct framed streaming after it has been validated for a deployment. */
     private static final String STREAMING_PROPERTY =
             "org.glassfish.orb.http.codec.fory.streaming";
-    /** Overrides the automatic large-payload threshold; bytes are estimated. */
+    /**
+     * Writer: the estimated size in bytes from which an object is encoded
+     * through the framed stream. Default 4096; negative never; see the class
+     * documentation.
+     */
     public static final String STREAMING_THRESHOLD_PROPERTY =
             "org.glassfish.orb.http.codec.fory.streaming.threshold";
+    /**
+     * Reader: the encoded frame length in bytes from which a Fory frame is
+     * decoded from the stream rather than from an array. Off unless set to a
+     * non negative number; see the class documentation.
+     */
+    public static final String STREAMING_DECODE_THRESHOLD_PROPERTY =
+            "org.glassfish.orb.http.codec.fory.streaming.decode.threshold";
 
     /** The codec token that travels in the content type. */
     public static final String CODEC = "fory";
+
+    private static final System.Logger LOG = System.getLogger(ForyMarshaller.class.getName());
 
     /**
      * Whether Fory may compile a serializer per type.
@@ -88,6 +182,73 @@ public final class ForyMarshaller implements Marshaller {
      */
     private static final boolean CODEGEN =
             Boolean.getBoolean("org.glassfish.orb.http.codec.fory.codegen");
+
+    /**
+     * How deeply nested a graph may be, on the way in and on the way out: the
+     * same value as the default deserialization filter's depth
+     * ({@code org.glassfish.orb.http.filter.maxDepth}, default 100). Fory's own
+     * default of 50 refused a 65-level graph that Java serialization accepts.
+     */
+    private static final int MAX_DEPTH = clampDepth(JavaSerializationMarshaller.maxDepth());
+
+    /**
+     * Fory's approximate gate on the memory one root deserialization may
+     * materialise, four times the array budget (128 MB by default, which is
+     * Fory's own default, so this changes nothing until the budget does). It
+     * is an estimate, not a hard limit.
+     */
+    private static final long MAX_GRAPH_MEMORY = graphMemory(JavaSerializationMarshaller.maxArrayBytes());
+
+    /**
+     * Fory refuses a depth below 2 and the shared property is a long, so the
+     * value is brought into range here rather than failing the class.
+     */
+    static int clampDepth(long configured) {
+        int depth = (int) Math.max(2, Math.min(Integer.MAX_VALUE, configured));
+        if (depth != configured) {
+            LOG.log(System.Logger.Level.WARNING, "the depth limit {0} is outside what Fory accepts; using {1}",
+                    configured, depth);
+        }
+        return depth;
+    }
+
+    /** Four times the array budget, saturating instead of overflowing. */
+    static long graphMemory(long arrayBudget) {
+        return arrayBudget > Long.MAX_VALUE / 4 ? Long.MAX_VALUE : 4 * arrayBudget;
+    }
+
+    /**
+     * Instances in each pool. A pool builds this many Fory instances eagerly
+     * for every (loader, filter) pair, so it is bounded: Fory's default of four
+     * per processor is hundreds on a large machine. Set
+     * {@code org.glassfish.orb.http.codec.fory.poolSize} to change it.
+     */
+    static final int POOL_SIZE = poolSize(System.getProperty("org.glassfish.orb.http.codec.fory.poolSize"),
+            Math.max(1, Math.min(4 * Runtime.getRuntime().availableProcessors(), 64)));
+
+    /**
+     * A pool is measured at about 120 KB per instance (about 7.5 MB at the cap
+     * of 64) for each (loader, filter) pair, which is what the cap of 64 is
+     * chosen against. A value that is not a positive number is logged and
+     * ignored.
+     */
+    static int poolSize(String raw, int fallback) {
+        if (raw == null) {
+            return fallback;
+        }
+        try {
+            int value = Integer.parseInt(raw.trim());
+            if (value > 0) {
+                return value;
+            }
+        } catch (NumberFormatException e) {
+            // reported below
+        }
+        LOG.log(System.Logger.Level.WARNING,
+                "ignoring org.glassfish.orb.http.codec.fory.poolSize={0}: it must be a positive number; using {1}",
+                raw, fallback);
+        return fallback;
+    }
 
     /**
      * @return whether generated serializers are in use
@@ -125,8 +286,8 @@ public final class ForyMarshaller implements Marshaller {
      * reader has never been warmed by anything this process chose to send.
      * <p>
      * Keyed weakly, but the value is a serializer that references its key's
-     * loader, so an entry keeps its loader reachable: the loader stays pinned
-     * for the life of this class.
+     * loader, so an entry keeps its loader reachable. {@link #release} is what
+     * removes the entry when the application goes away.
      */
     private static final Map<ClassLoader, ThreadSafeFory> WRITERS =
             Collections.synchronizedMap(new WeakHashMap<>());
@@ -157,24 +318,36 @@ public final class ForyMarshaller implements Marshaller {
         ThreadSafeFory fory = writerFor(Thread.currentThread().getContextClassLoader());
         DataOutputStream data = new DataOutputStream(out);
         ChunkedOutput framed = out instanceof ChunkedOutput ? (ChunkedOutput) out : null;
+        // Read once per writer, that is once per request, rather than once per
+        // object. Changing a property therefore applies to the next writer.
+        boolean forceStreaming = framed != null && Boolean.getBoolean(STREAMING_PROPERTY);
+        int threshold = streamingThreshold();
         return new ObjectWriter() {
 
             @Override
             public void writeObject(Object o) throws IOException {
                 boolean java = o instanceof Throwable;
-                if (!java && framed != null
-                        && (Boolean.getBoolean(STREAMING_PROPERTY) || isLargePayload(o))) {
-                    // ChunkedOutput reserves the five-byte header in-place.
-                    // Fory writes the object directly into the same chunks,
-                    // then close() patches the length. This avoids the
-                    // serialize-to-byte[] allocation and the second copy into
-                    // the transport, including for small objects.
+                if (!java && framed != null && (forceStreaming || isLargePayload(o, threshold))) {
+                    // ChunkedOutput reserves the five-byte header in place and
+                    // close() patches the length once the payload is in.
+                    // Fory 1.7.1 still builds the whole object in its own
+                    // buffer before it writes to the stream, so nothing is
+                    // streamed while the object is being encoded. What this
+                    // saves is the byte[] that serialize(Object) would return
+                    // and the copy of it into the transport.
                     ChunkedOutput.Frame frame = framed.beginFrame(KIND_FORY);
                     try {
                         fory.serialize(out, o);
-                    } finally {
                         frame.close();
+                    } catch (Throwable failure) {
+                        // Take the header back out. Left behind it would be a
+                        // well-formed frame of length zero in front of
+                        // whatever is written next, and the reader would
+                        // treat it as a frame like any other.
+                        frame.abort();
+                        throw failure;
                     }
+                    STREAMED_FRAMES.increment();
                     return;
                 }
                 byte[] encoded = java ? javaEncode(o) : fory.serialize(o);
@@ -200,13 +373,24 @@ public final class ForyMarshaller implements Marshaller {
     }
 
     /**
-     * Avoid the stream writer's per-write overhead for the small messages that
-     * Fory's byte-array serializer handles best. These are conservative size
-     * estimates: unknown object graphs stay on the allocation-free legacy path
-     * unless the benchmark/deployment explicitly enables streaming.
+     * Whether the value is estimated to be large enough to be written into the
+     * chunked output directly.
+     * <p>
+     * The 4 KiB default has no measured justification: in repeated runs of
+     * {@code ForyCodecBenchmarkTest} (both modes write into a fresh
+     * {@link ChunkedOutput}) there was no size below it at which the
+     * byte-array path was consistently faster, and no consistent crossover
+     * at which streaming starts to win. The threshold is a guess about where
+     * the saved copy starts to matter, and it is left as it is because a
+     * different value would need evidence those runs do not give. The sizes
+     * are estimates, and an unknown object graph is never estimated as
+     * large, so it takes the byte-array path unless the deployment enables
+     * streaming explicitly.
+     *
+     * @param threshold the estimated size in bytes from which a value counts
+     *                  as large; negative never does
      */
-    private static boolean isLargePayload(Object value) {
-        int threshold = streamingThreshold();
+    private static boolean isLargePayload(Object value, int threshold) {
         if (threshold < 0) {
             return false;
         }
@@ -242,6 +426,18 @@ public final class ForyMarshaller implements Marshaller {
         }
     }
 
+    private static int streamingDecodeThreshold() {
+        String configured = System.getProperty(STREAMING_DECODE_THRESHOLD_PROPERTY);
+        if (configured == null || configured.isBlank()) {
+            return -1;
+        }
+        try {
+            return Integer.parseInt(configured.trim());
+        } catch (NumberFormatException ignored) {
+            return -1;
+        }
+    }
+
     private static int elementSize(Class<?> type) {
         if (type == byte.class || type == boolean.class) return 1;
         if (type == short.class || type == char.class) return 2;
@@ -258,6 +454,13 @@ public final class ForyMarshaller implements Marshaller {
         }
         ThreadSafeFory fory = readerFor(loader, filter);
         DataInputStream data = new DataInputStream(in);
+        // Opt-in: frames at least this long are decoded from the stream. By
+        // default every frame is read into an array, bounded by the bytes that
+        // actually arrive, and decoded from it.
+        int streamFrom = streamingDecodeThreshold();
+        // One budget for the whole reader: a request is several frames, and a
+        // budget per frame would multiply the allowance by the parameter count.
+        JavaSerializationMarshaller.Budget budget = new JavaSerializationMarshaller.Budget();
         return new ObjectReader() {
 
             @Override
@@ -271,20 +474,19 @@ public final class ForyMarshaller implements Marshaller {
                 if (length < 0) {
                     throw new IOException("negative frame length " + length);
                 }
-                if (kind == KIND_FORY) {
-                    LimitedInputStream limited = new LimitedInputStream(data, length);
-                    Object value = fory.deserialize(new ForyInputStream(limited));
-                    limited.drain();
-                    return value;
+                if (kind == KIND_FORY && streamFrom >= 0 && length >= streamFrom) {
+                    return readStreamed(fory, data, length);
                 }
+                // readNBytes grows with the bytes received, so a header that
+                // promises more than the peer sends does not allocate it.
                 byte[] encoded = data.readNBytes(length);
                 if (encoded.length != length) {
-                    throw new IOException("truncated frame: expected " + length
+                    throw new EOFException("truncated frame: expected " + length
                             + " bytes but read " + encoded.length);
                 }
 
                 return kind == KIND_JAVA
-                        ? javaDecode(encoded, loader, filter)
+                        ? javaDecode(encoded, loader, filter, budget)
                         : fory.deserialize(encoded);
             }
 
@@ -295,30 +497,111 @@ public final class ForyMarshaller implements Marshaller {
         };
     }
 
-    /** Prevent a streaming Fory decoder from consuming the next frame. */
-    private static final class LimitedInputStream extends InputStream {
-        private final InputStream delegate;
-        private int remaining;
+    /**
+     * The buffer a streamed decode starts with: the frame length, but at most
+     * {@link #MAX_STREAM_BUFFER}, so a header that promises a lot does not
+     * allocate it before the bytes arrive.
+     */
+    static int streamBufferSize(int length) {
+        return Math.max(16, Math.min(length, MAX_STREAM_BUFFER));
+    }
 
-        private LimitedInputStream(InputStream delegate, int remaining) {
+    /**
+     * Decodes one frame straight from the stream.
+     * <p>
+     * Fory reports a stream that ends early, or fails, as an unchecked
+     * exception from deep inside its buffer, and that exception has the
+     * recorded failure as its cause. The caller reads from a socket and
+     * expects the {@link IOException} the socket threw, so the recorded
+     * exception itself is rethrown, unmodified and with its own type (a
+     * timeout stays a timeout). Fory's exception is dropped: attaching it to
+     * the recorded one would make the recorded exception reachable from
+     * itself.
+     */
+    private static Object readStreamed(ThreadSafeFory fory, InputStream in, int length)
+            throws IOException {
+        STREAMED_DECODES.increment();
+        LimitedInputStream limited = new LimitedInputStream(in, length);
+        try {
+            Object value = fory.deserialize(new ForyInputStream(limited, streamBufferSize(length)));
+            limited.drain();
+            return value;
+        } catch (RuntimeException e) {
+            if (limited.failure != null) {
+                throw limited.failure;
+            }
+            throw e;
+        }
+    }
+
+    /**
+     * Prevent a streaming Fory decoder from consuming the next frame, and
+     * remember why the frame could not be read to its end.
+     */
+    static final class LimitedInputStream extends InputStream {
+        private final InputStream delegate;
+        private final int length;
+        private int remaining;
+        /** The reason the declared length could not be read, if that happened. */
+        private IOException failure;
+
+        LimitedInputStream(InputStream delegate, int length) {
             this.delegate = delegate;
-            this.remaining = remaining;
+            this.length = length;
+            this.remaining = length;
         }
 
         @Override
         public int read() throws IOException {
             if (remaining == 0) return -1;
-            int value = delegate.read();
-            if (value >= 0) remaining--;
+            int value;
+            try {
+                value = delegate.read();
+            } catch (IOException e) {
+                failure = e;
+                throw e;
+            }
+            if (value >= 0) {
+                remaining--;
+            } else {
+                truncated();
+            }
             return value;
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
+            java.util.Objects.checkFromIndexSize(off, len, b.length);
+            if (len == 0) return 0;
             if (remaining == 0) return -1;
-            int count = delegate.read(b, off, Math.min(len, remaining));
-            if (count > 0) remaining -= count;
+            int count;
+            try {
+                count = delegate.read(b, off, Math.min(len, remaining));
+            } catch (IOException e) {
+                failure = e;
+                throw e;
+            }
+            if (count > 0) {
+                remaining -= count;
+            } else if (count < 0) {
+                truncated();
+            }
             return count;
+        }
+
+        @Override
+        public int available() throws IOException {
+            // Without this the default of 0 makes the decoder grow its buffer
+            // by doubling, copying it each time. It helps only when the
+            // delegate already holds the bytes; reporting the frame's remaining
+            // length instead would let a hostile header make the decoder
+            // allocate what it promises.
+            return Math.min(remaining, delegate.available());
+        }
+
+        private void truncated() {
+            failure = new EOFException("truncated Fory frame: expected " + length
+                    + " bytes but the stream ended after " + (length - remaining));
         }
 
         private void drain() throws IOException {
@@ -327,7 +610,7 @@ public final class ForyMarshaller implements Marshaller {
                 // consume trailing bytes in the declared frame
             }
             if (remaining != 0) {
-                throw new IOException("truncated Fory frame");
+                throw failure != null ? failure : new EOFException("truncated Fory frame");
             }
         }
     }
@@ -344,10 +627,11 @@ public final class ForyMarshaller implements Marshaller {
         return bytes.toByteArray();
     }
 
-    private static Object javaDecode(byte[] encoded, ClassLoader loader, ObjectInputFilter filter)
+    private static Object javaDecode(byte[] encoded, ClassLoader loader, ObjectInputFilter filter,
+                                     JavaSerializationMarshaller.Budget budget)
             throws IOException, ClassNotFoundException {
-        try (Marshaller.ObjectReader reader =
-                BUILT_IN.newReader(new java.io.ByteArrayInputStream(encoded), loader, filter)) {
+        try (Marshaller.ObjectReader reader = BUILT_IN.newReaderSharing(
+                new java.io.ByteArrayInputStream(encoded), loader, filter, budget)) {
             return reader.readObject();
         }
     }
@@ -374,6 +658,23 @@ public final class ForyMarshaller implements Marshaller {
                 materialiseStackTraces(suppressed);
             }
         }
+    }
+
+    /**
+     * Drops the writer and every reader built for {@code loader}. Both hold
+     * the loader strongly, so an undeployed application is only collectable
+     * once this has run.
+     *
+     * @param loader the loader of the application that is gone
+     */
+    @Override
+    public void release(ClassLoader loader) {
+        if (loader == null) {
+            return;
+        }
+        ClassLoader key = resolve(loader);
+        WRITERS.remove(key);
+        READERS.remove(key);
     }
 
     private static ThreadSafeFory writerFor(ClassLoader loader) {
@@ -427,11 +728,13 @@ public final class ForyMarshaller implements Marshaller {
                 .withRefTracking(true)
                 .withCompatibleMode(CompatibleMode.COMPATIBLE)
                 .requireClassRegistration(false)
+                .withMaxDepth(MAX_DEPTH)
+                .withMaxGraphMemoryBytes(MAX_GRAPH_MEMORY)
                 .withCodegen(CODEGEN)
                 .suppressClassRegistrationWarnings(true);
         if (filter != null) {
             builder = builder.withTypeChecker(new FilterBackedTypeChecker(loader, filter));
         }
-        return builder.buildThreadSafeFory();
+        return builder.buildThreadSafeForyPool(Math.max(1, POOL_SIZE));
     }
 }

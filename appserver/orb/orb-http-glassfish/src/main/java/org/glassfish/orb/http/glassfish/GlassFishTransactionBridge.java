@@ -21,9 +21,12 @@ import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.resource.spi.XATerminator;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.Transaction;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,6 +35,7 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import org.glassfish.orb.http.protocol.EjbKey;
 import org.glassfish.orb.http.protocol.Xids;
 import org.glassfish.orb.http.server.TransactionBridge;
 import org.jvnet.hk2.annotations.Service;
@@ -97,6 +101,114 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         } finally {
             detach();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Always a <em>local</em> transaction, never the caller's own branch,
+     * whether or not {@code xid} is null. The caller sent the marker because
+     * its transaction can only roll back, which means its coordinator may be
+     * rolling that branch back at this very moment; recreating it here would
+     * put it back on a thread of this server while the coordinator is
+     * finishing it. A transaction of this server's own, marked rollback-only,
+     * gives the container what it needs - a client transaction that can only
+     * roll back, to which it applies the bean's attribute - and touches
+     * nothing the coordinator owns. The {@code xid} is therefore not used
+     * beyond diagnostics.
+     *
+     * <p>Begun with {@code begin(timeout)}, not {@code setTransactionTimeout}:
+     * the latter is per thread and would carry over to later requests on the
+     * same pooled thread.
+     *
+     * @return a {@link Local} naming the transaction to roll back afterwards
+     */
+    @Override
+    public Object recreateRollbackOnly(Xid xid, long timeoutSeconds, EjbKey key, Method method)
+            throws TransactionException {
+        if (transactions == null) {
+            throw new TransactionException("this server has no transaction manager",
+                    XAException.XAER_RMFAIL);
+        }
+        // A stray transaction would make begin() a nested one, which is refused.
+        detach();
+        Transaction tx = null;
+        try {
+            transactions.begin((int) Math.max(0, Math.min(timeoutSeconds, Integer.MAX_VALUE)));
+            tx = transactions.getTransaction();
+            if (tx == null) {
+                throw new IllegalStateException("begin left no transaction on this thread");
+            }
+            transactions.setRollbackOnly();
+            return new Local(tx);
+        } catch (Exception | Error e) {
+            // Nothing may stay on the thread, and nothing may be left running
+            // that nobody will end.
+            if (tx != null) {
+                try {
+                    rollBackLocal(tx);
+                } catch (Exception | Error suppressed) {
+                    e.addSuppressed(suppressed);
+                }
+            }
+            detach();
+            if (e instanceof Error error) {
+                throw error;
+            }
+            throw failure("cannot prepare a rollback-only transaction for "
+                    + (method == null ? "an invocation" : method.getName()), XAException.XAER_RMERR, e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Never rolls back a transaction that is not the one on the thread: if
+     * something else is there it is suspended first and the handle's
+     * transaction resumed, so the rollback reaches the right one, and the
+     * detach in the {@code finally} leaves the thread empty either way.
+     */
+    @Override
+    public void releaseRollbackOnly(Object handle) throws TransactionException {
+        try {
+            if (handle instanceof Local local) {
+                rollBackLocal(local.tx());
+            } else if (handle instanceof Xid xid) {
+                try {
+                    transactions.release(xid);
+                } catch (Exception e) {
+                    // Marked rollback-only on purpose: nothing to complain about.
+                    LOG.log(Level.DEBUG, "released rollback-only branch " + Xids.key(xid), e);
+                }
+            }
+        } catch (Exception e) {
+            throw failure("cannot end the rollback-only transaction", XAException.XAER_RMERR, e);
+        } finally {
+            detach();
+        }
+    }
+
+    /** Rolls {@code tx} back, putting it on the thread first if it is not there. */
+    private void rollBackLocal(Transaction tx) throws Exception {
+        if (current() != tx) {
+            transactions.suspend();
+            try {
+                transactions.resume(tx);
+            } catch (InvalidTransactionException | IllegalStateException gone) {
+                // Already completed by the container: nothing left to roll back.
+                LOG.log(Level.DEBUG, "the rollback-only transaction is already over", gone);
+                return;
+            }
+        }
+        try {
+            transactions.rollback();
+        } catch (IllegalStateException gone) {
+            LOG.log(Level.DEBUG, "the rollback-only transaction is already over", gone);
+        }
+    }
+
+    /** What {@link #recreateRollbackOnly} hands back: the local transaction to roll back. */
+    record Local(Transaction tx) {
     }
 
     /**
@@ -167,10 +279,26 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         try {
             vote = terminator().prepare(xid);
         } catch (XAException e) {
-            discard(xid);
+            if (votedToRollBack(e)) {
+                discard(xid);
+            }
             throw failure("prepare failed for " + Xids.key(xid), e.errorCode, e);
         }
         return vote;
+    }
+
+    /**
+     * Whether a failed prepare was the branch's own vote to roll back.
+     *
+     * <p>Only the rollback codes are a vote ({@code XA_RBROLLBACK} through
+     * {@code XA_RBEND}). Any other failure - {@code XAER_PROTO} for a branch
+     * that was already prepared, {@code XAER_NOTA} for one that is not known -
+     * says the prepare was refused for a reason about the call and not about
+     * the work, and rolling the branch back on that evidence would destroy a
+     * prepared branch the coordinator has promised to commit.
+     */
+    private static boolean votedToRollBack(XAException e) {
+        return e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND;
     }
 
     /**
@@ -276,6 +404,11 @@ public class GlassFishTransactionBridge implements TransactionBridge {
      */
     @Override
     public Xid begin(long timeoutSeconds) throws TransactionException {
+        if (timeoutSeconds < 0) {
+            // 0 means the server's default. A negative number means nothing,
+            // and what the manager does with one is its own business.
+            throw new TransactionException("a transaction timeout cannot be negative", XAException.XAER_INVAL);
+        }
         Xid xid = newXid();
         recreate(xid, timeoutSeconds);
         release(xid);
@@ -360,9 +493,20 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         }
     }
 
+    /**
+     * The failure the caller is told about.
+     *
+     * <p>The message travels to the client in a response header, so it names
+     * the operation, the branch and the XA error code - what a coordinator can
+     * act on - and not the cause's own text, which is whatever the transaction
+     * manager chose to say about its internals. The cause stays on the
+     * exception and is logged at debug level, where the server's own log can
+     * have it.
+     */
     private static TransactionException failure(String message, int errorCode, Throwable cause) {
-        return new TransactionException(message + ": " + cause, errorCode == 0
-                ? XAException.XAER_RMERR : errorCode, cause);
+        int code = errorCode == 0 ? XAException.XAER_RMERR : errorCode;
+        LOG.log(Level.DEBUG, message, cause);
+        return new TransactionException(message + " (XA error " + code + ")", code, cause);
     }
 
     /** Exposed so the endpoint can report what it wired without reflection. */

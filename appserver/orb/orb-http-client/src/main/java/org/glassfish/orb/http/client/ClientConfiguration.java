@@ -40,6 +40,7 @@ public final class ClientConfiguration {
     private final SSLContext sslContext;
     private final boolean preferHttp2;
     private final String codec;
+    private final boolean ambientTransaction;
 
     private ClientConfiguration(Builder b) {
         this.baseUri = Objects.requireNonNull(b.baseUri, "baseUri");
@@ -51,6 +52,7 @@ public final class ClientConfiguration {
         this.sslContext = b.sslContext;
         this.preferHttp2 = b.preferHttp2;
         this.codec = b.codec;
+        this.ambientTransaction = b.ambientTransaction;
     }
 
     public URI baseUri() {
@@ -112,6 +114,27 @@ public final class ClientConfiguration {
         return codec;
     }
 
+    /**
+     * Whether an invocation made inside a transaction that someone else began
+     * - typically a container's - joins that transaction.
+     * <p>
+     * On by default: the remote call then becomes a branch of the caller's
+     * transaction and is prepared, committed or rolled back with it. Turning
+     * it off makes every invocation travel without a transaction, as if the
+     * caller had none, and a remote call made inside a container transaction
+     * then runs and commits on its own whatever the caller's transaction does
+     * afterwards. It is an escape hatch for a deployment whose server cannot
+     * import transactions, not a substitute for one: the remote work is no
+     * longer atomic with the caller's.
+     * <p>
+     * It does not affect a transaction begun through {@link HttpUserTransaction}.
+     *
+     * @return {@code true} to join the caller's transaction, the default
+     */
+    public boolean joinAmbientTransaction() {
+        return ambientTransaction;
+    }
+
     public boolean hasCredentials() {
         return username != null || bearerToken != null;
     }
@@ -132,6 +155,7 @@ public final class ClientConfiguration {
         private String bearerToken;
         private SSLContext sslContext;
         private boolean preferHttp2 = true;
+        private boolean ambientTransaction = true;
 
         private Builder(URI baseUri) {
             this.baseUri = baseUri;
@@ -186,6 +210,17 @@ public final class ClientConfiguration {
          */
         public Builder codec(String codec) {
             this.codec = codec == null || codec.isBlank() ? null : codec.trim();
+            return this;
+        }
+
+        /**
+         * @param join {@code false} to stop invocations from joining a
+         *             transaction this client did not begin; see
+         *             {@link ClientConfiguration#joinAmbientTransaction()}
+         * @return this builder
+         */
+        public Builder joinAmbientTransaction(boolean join) {
+            this.ambientTransaction = join;
             return this;
         }
 

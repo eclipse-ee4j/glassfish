@@ -71,6 +71,22 @@ public class HttpInitialContextFactory implements InitialContextFactory {
      */
     public static final String PROP_CODEC = "org.glassfish.orb.http.codec";
 
+    /**
+     * Set to {@code false} to stop invocations from joining a transaction the
+     * caller's container began. The default, joining, makes a remote call made
+     * inside a container transaction a branch of it, and needs a server that
+     * can import transactions. It may also be set as a system property, and
+     * the JNDI environment wins. Anything other than {@code false} keeps the
+     * default, so a misspelt value cannot turn atomicity off by accident.
+     * <p>
+     * With joining off, a remote call inside a transaction runs and commits on
+     * its own whatever the caller's transaction does later. It does not affect
+     * a transaction begun through {@link HttpUserTransaction}.
+     */
+    public static final String PROP_AMBIENT_TRANSACTION = "org.glassfish.orb.http.ambientTransaction";
+
+    private static final java.util.Set<String> WARNED_PLAIN_TOKEN = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
     @Override
     public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException {
         Object url = environment == null ? null : environment.get(Context.PROVIDER_URL);
@@ -93,6 +109,11 @@ public class HttpInitialContextFactory implements InitialContextFactory {
 
         ClientConfiguration.Builder builder = ClientConfiguration.builder(baseUri);
 
+        if (baseUri.getHost() == null) {
+            throw new ConfigurationException(Context.PROVIDER_URL + " has no usable host; a host name may not "
+                    + "contain characters such as '_'");
+        }
+
         Object principal = environment.get(Context.SECURITY_PRINCIPAL);
         Object credentials = environment.get(Context.SECURITY_CREDENTIALS);
         if (principal != null) {
@@ -110,6 +131,13 @@ public class HttpInitialContextFactory implements InitialContextFactory {
 
         Object token = environment.get(PROP_BEARER_TOKEN);
         if (token != null) {
+            if (!"https".equalsIgnoreCase(scheme) && WARNED_PLAIN_TOKEN.add(baseUri.toString())) {
+                // A bearer token is a password in all but name. Once per URL:
+                // an application opens contexts in a loop.
+                System.getLogger(HttpInitialContextFactory.class.getName())
+                        .log(System.Logger.Level.WARNING,
+                             "a bearer token will be sent over plain HTTP to {0}; use https", baseUri);
+            }
             builder.bearerToken(token.toString());
         }
 
@@ -128,6 +156,16 @@ public class HttpInitialContextFactory implements InitialContextFactory {
         Object codec = environment.get(PROP_CODEC);
         if (codec != null) {
             builder.codec(codec.toString());
+        }
+
+        Object ambient = environment.get(PROP_AMBIENT_TRANSACTION);
+        if (ambient == null) {
+            // As org.glassfish.orb.http.transactionManager is: a deployment
+            // can set it for every client in the JVM without touching code.
+            ambient = System.getProperty(PROP_AMBIENT_TRANSACTION);
+        }
+        if (ambient != null && "false".equalsIgnoreCase(ambient.toString().trim())) {
+            builder.joinAmbientTransaction(false);
         }
 
         return new HttpNamingContext(builder.build(), environment);

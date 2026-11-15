@@ -95,10 +95,13 @@ public interface ServerExchange {
     }
 
     /**
-     * @return the authenticated caller's name, or {@code null} if the request
-     *         carries no credential at all. Established by the container's own
-     *         authentication - Basic against a realm, a client certificate, a
-     *         bearer token - rather than re-implemented here.
+     * @return the authenticated caller's name, or {@code null} if the call is
+     *         anonymous. That is the case when the request carries no
+     *         credential, and also when it carries one this transport does not
+     *         check: an implementation may check HTTP Basic against the
+     *         server's realm (the GlassFish one does), and a bearer token,
+     *         {@code Negotiate} or a client certificate are treated as
+     *         anonymous rather than refused.
      * @throws SecurityException if a credential is present and does not pass.
      *         A rejected credential is not the same as an absent one: an
      *         anonymous call is what an unsecured bean expects, while

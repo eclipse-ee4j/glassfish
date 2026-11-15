@@ -118,15 +118,12 @@ public class GlassFishContainerBridge implements ContainerBridge {
     @Override
     public EjbKey resolve(String appName, String moduleName, String distinctName,
                           String beanName, byte[] sessionId) throws NoSuchTargetException {
-        Long ejbId = index.lookup(appName, moduleName, beanName);
-        if (ejbId == null) {
-            throw new NoSuchTargetException("no bean " + beanName
-                    + " in " + appName + '/' + moduleName);
-        }
+        Located located = locate(appName, moduleName, beanName);
+        long ejbId = located.ejbId();
         if (sessionId != null) {
             return new EjbKey(ejbId, sessionId);
         }
-        if (isStateful(containers.apply(ejbId))) {
+        if (isStateful(located.facade())) {
             // The shared key is four bytes that mean "the one instance". A
             // stateful container reads an instance key as a session key and
             // runs off the end of it, which surfaces as an
@@ -188,12 +185,7 @@ public class GlassFishContainerBridge implements ContainerBridge {
     @Override
     public byte[] createSession(String appName, String moduleName, String distinctName,
                                 String beanName) throws NoSuchTargetException, SessionRefusedException {
-        Long ejbId = index.lookup(appName, moduleName, beanName);
-        if (ejbId == null) {
-            throw new NoSuchTargetException("no bean " + beanName
-                    + " in " + appName + '/' + moduleName);
-        }
-        EjbContainerFacade facade = facade(ejbId);
+        EjbContainerFacade facade = locate(appName, moduleName, beanName).facade();
         if (!isStateful(facade)) {
             // The container would refuse as well, but with a RemoteException
             // that reads as a transport failure. Say what is actually wrong.
@@ -245,6 +237,52 @@ public class GlassFishContainerBridge implements ContainerBridge {
             refused.initCause(e);
             throw refused;
         }
+    }
+
+    /** A bean's id and the container that answers to it, found together. */
+    private record Located(long ejbId, EjbContainerFacade facade) {
+    }
+
+    /**
+     * Finds a bean by name, and the live container it belongs to.
+     *
+     * <p>The index can name a bean whose container is already gone: an
+     * application redeployed under the same name gets new ids, and the index
+     * still holds the old ones until something makes it look again. That is a
+     * <em>hit</em> in the index, not a miss, so nothing would refresh it, and
+     * the first call after every redeploy would fail with "no container" - the
+     * second would succeed, because the failure drops the stale entries. So an
+     * id with no container is treated as the miss it is: the entries for it
+     * are dropped and the name is looked up once more, which makes the index
+     * rebuild if the deployed applications changed. An id that is still the
+     * same after that is not tried again: the bean really is gone.
+     */
+    private Located locate(String appName, String moduleName, String beanName) throws NoSuchTargetException {
+        Long ejbId = index.lookup(appName, moduleName, beanName);
+        EjbContainerFacade facade = ejbId == null ? null : containers.apply(ejbId);
+        if (ejbId != null && facade == null) {
+            index.forget(ejbId);
+            Long again = index.lookup(appName, moduleName, beanName);
+            if (again != null && !again.equals(ejbId)) {
+                ejbId = again;
+                facade = containers.apply(again);
+                if (facade == null) {
+                    index.forget(again);
+                }
+            } else if (again == null) {
+                ejbId = null;
+            }
+        }
+        if (ejbId == null || facade == null) {
+            if (ejbId != null) {
+                // The index named a bean the container does not have, and a
+                // second look found nothing better.
+                throw new NoSuchTargetException("no container for ejbId " + ejbId);
+            }
+            throw new NoSuchTargetException("no bean " + beanName
+                    + " in " + appName + '/' + moduleName);
+        }
+        return new Located(ejbId, facade);
     }
 
     /**

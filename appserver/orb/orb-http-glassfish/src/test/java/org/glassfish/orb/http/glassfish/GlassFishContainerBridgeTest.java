@@ -70,6 +70,8 @@ class GlassFishContainerBridgeTest {
 
     private static final long COUNTER = 11;
     private static final long GREETER = 12;
+    private static final long BEFORE_REDEPLOY = 30;
+    private static final long AFTER_REDEPLOY = 31;
     private static final byte[] SESSION = { 9, 8, 7, 6 };
 
     private final List<String> createCalls = new ArrayList<>();
@@ -77,6 +79,8 @@ class GlassFishContainerBridgeTest {
     private final List<Long> forgotten = new ArrayList<>();
     private final List<String> removeCalls = new ArrayList<>();
     private Exception removeFails;
+    /** What the index says for {@code RedeployedBean}: the id from before the redeploy until it is dropped. */
+    private long redeployed = BEFORE_REDEPLOY;
     private final Map<Long, EjbContainerFacade> containers = new HashMap<>();
     private final GlassFishContainerBridge bridge = new GlassFishContainerBridge(containers::get);
 
@@ -88,6 +92,7 @@ class GlassFishContainerBridgeTest {
                     case "CounterBean", "BusinessCounterBean", "BrokenCounterBean" -> COUNTER;
                     case "GreeterBean" -> GREETER;
                     case "GoneBean" -> 99L;
+                    case "RedeployedBean" -> redeployed;
                     default -> null;
                 };
             }
@@ -100,6 +105,10 @@ class GlassFishContainerBridgeTest {
             @Override
             void forget(long ejbId) {
                 forgotten.add(ejbId);
+                if (ejbId == BEFORE_REDEPLOY) {
+                    // What the real index does: the next look finds the new deployment.
+                    redeployed = AFTER_REDEPLOY;
+                }
             }
         });
     }
@@ -220,6 +229,28 @@ class GlassFishContainerBridgeTest {
         assertThrows(ContainerBridge.NoSuchTargetException.class,
                 () -> bridge.createSession("myapp", "mymodule", null, "NoSuchBean"));
         assertTrue(createCalls.isEmpty());
+    }
+
+    @Test
+    @DisplayName("a bean redeployed under the same name is found on the first call, under its new id")
+    void aRedeployedBeanIsFoundAtOnce() throws Exception {
+        // The index still holds the id from before the redeploy, which has no container any more.
+        containers.put(AFTER_REDEPLOY, facade(descriptor("RedeployedBean", false, true, Set.of()), null));
+
+        EjbKey key = bridge.resolve("myapp", "mymodule", null, "RedeployedBean", null);
+
+        assertEquals(AFTER_REDEPLOY, key.ejbId());
+        assertEquals(List.of(BEFORE_REDEPLOY), forgotten);
+    }
+
+    @Test
+    @DisplayName("a session on a redeployed bean is opened on the first call too")
+    void aSessionOnARedeployedBeanOpensAtOnce() throws Exception {
+        containers.put(AFTER_REDEPLOY, facade(descriptor("RedeployedBean", true, true, Set.of()), null));
+
+        byte[] id = bridge.createSession("myapp", "mymodule", null, "RedeployedBean");
+
+        assertArrayEquals(SESSION, id);
     }
 
     @Test

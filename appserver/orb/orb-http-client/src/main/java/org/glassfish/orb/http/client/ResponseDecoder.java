@@ -27,6 +27,7 @@ import java.util.concurrent.CancellationException;
 
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.Protocol;
@@ -105,7 +106,7 @@ final class ResponseDecoder {
         if (!expectedKind.equals(contentType.kind())) {
             throw new ProtocolException("expected a " + expectedKind + " body, got " + contentType.kind());
         }
-        InputStream body = response.body();
+        InputStream body = LimitedInputStream.bound(response.body());
         try (Marshaller.ObjectReader reader = codecFor(contentType).newReader(body, loader, filter)) {
             return reader.readObject();
         }

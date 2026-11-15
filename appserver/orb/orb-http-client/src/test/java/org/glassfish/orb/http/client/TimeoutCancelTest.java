@@ -47,6 +47,15 @@ class TimeoutCancelTest {
         String hello() throws java.rmi.RemoteException;
     }
 
+    /** RMI style, and declares only IOException: RemoteException is assignable to it. */
+    public interface RemoteThing extends java.rmi.Remote {
+        String slow() throws java.io.IOException;
+    }
+
+    public interface Later {
+        java.util.concurrent.Future<String> later();
+    }
+
     public interface CartHome extends jakarta.ejb.EJBHome {
         Cart create() throws jakarta.ejb.CreateException, java.rmi.RemoteException;
     }
@@ -61,14 +70,19 @@ class TimeoutCancelTest {
         final List<Request> requests = new java.util.concurrent.CopyOnWriteArrayList<>();
         final List<Request> asyncRequests = new java.util.concurrent.CopyOnWriteArrayList<>();
         final boolean badRequest;
+        volatile boolean asyncTimesOut;
+        volatile boolean interrupts;
 
         TimingOutTransport(boolean badRequest) {
             this.badRequest = badRequest;
         }
 
         @Override
-        public Response exchange(Request request) throws IOException {
+        public Response exchange(Request request) throws IOException, InterruptedException {
             requests.add(request);
+            if (interrupts) {
+                throw new InterruptedException("interrupted");
+            }
             if (badRequest) {
                 return new Response(Protocol.SC_BAD_REQUEST, null, Map.of("X-GF-Reason", List.of("malformed")),
                         new ByteArrayInputStream(new byte[0]));
@@ -79,6 +93,9 @@ class TimeoutCancelTest {
         @Override
         public CompletableFuture<Response> exchangeAsync(Request request) {
             asyncRequests.add(request);
+            if (asyncTimesOut && "POST".equals(request.method())) {
+                return CompletableFuture.failedFuture(new HttpTimeoutException("request timed out"));
+            }
             return CompletableFuture.completedFuture(
                     new Response(Protocol.SC_NO_CONTENT, null, Map.of(), new ByteArrayInputStream(new byte[0])));
         }
@@ -187,6 +204,46 @@ class TimeoutCancelTest {
                     new EjbLocator("app", "module", "", "CartBean", new byte[] { 1 }), null);
 
             assertThrows(java.rmi.RemoteException.class, cart::remove);
+        }
+    }
+
+    @Test
+    @DisplayName("a Remote view whose method declares IOException still receives a RemoteException")
+    void aRemoteViewDeclaringIoExceptionGetsARemoteException() throws Exception {
+        try (HttpEjbClient client = clientOver(new TimingOutTransport(false))) {
+            RemoteThing thing = client.createProxy(RemoteThing.class, new EjbLocator("app", "module", "", "Bean"));
+
+            assertThrows(java.rmi.RemoteException.class, thing::slow);
+        }
+    }
+
+    @Test
+    @DisplayName("an asynchronous call that times out fails its future with an EJBException")
+    void anAsynchronousTimeoutIsAnEjbException() throws Exception {
+        TimingOutTransport transport = new TimingOutTransport(false);
+        transport.asyncTimesOut = true;
+        try (HttpEjbClient client = clientOver(transport)) {
+            Later later = client.createProxy(Later.class, new EjbLocator("app", "module", "", "Bean"));
+
+            java.util.concurrent.ExecutionException thrown = assertThrows(
+                    java.util.concurrent.ExecutionException.class,
+                    () -> later.later().get(30, java.util.concurrent.TimeUnit.SECONDS));
+            assertTrue(thrown.getCause() instanceof EJBException, String.valueOf(thrown.getCause()));
+        }
+    }
+
+    @Test
+    @DisplayName("an interrupted call through a component interface is a RemoteException")
+    void anInterruptedCallThroughAComponentIsARemoteException() throws Exception {
+        TimingOutTransport transport = new TimingOutTransport(false);
+        transport.interrupts = true;
+        try (HttpEjbClient client = clientOver(transport)) {
+            Cart cart = client.createComponentProxy(Cart.class,
+                    new EjbLocator("app", "module", "", "CartBean", new byte[] { 1 }), null);
+
+            assertThrows(java.rmi.RemoteException.class, cart::hello);
+        } finally {
+            Thread.interrupted();
         }
     }
 }

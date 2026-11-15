@@ -16,8 +16,6 @@
 
 package org.glassfish.orb.http.client;
 
-import jakarta.ejb.EJBException;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputFilter;
@@ -299,7 +297,10 @@ public final class HttpEjbClient implements AutoCloseable {
             throw e;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new EJBException("interrupted while invoking " + method.getName(), e);
+            java.io.InterruptedIOException interrupted =
+                    new java.io.InterruptedIOException("interrupted while invoking " + method.getName());
+            interrupted.initCause(e);
+            throw TransportErrors.translate(interrupted, method, viewClass);
         }
         return decoder.decodeInvocationResult(response, viewClass.getClassLoader());
     }
@@ -369,7 +370,7 @@ public final class HttpEjbClient implements AutoCloseable {
         try {
             request = buildInvocation(locator, viewClass, method, args, invocationId);
         } catch (IOException e) {
-            return CompletableFuture.failedFuture(e);
+            return CompletableFuture.failedFuture(TransportErrors.translate(e, method, viewClass));
         }
         return transport.exchangeAsync(request).thenCompose(response -> {
             if (!isUnsupportedCodec(response)) {
@@ -386,14 +387,22 @@ public final class HttpEjbClient implements AutoCloseable {
                 return CompletableFuture.<HttpTransport.Response>failedFuture(e);
             }
         }).handle((response, error) -> {
-            if (error != null) {
-                throw new java.util.concurrent.CompletionException(error);
+            Throwable failure = error;
+            if (failure == null) {
+                try {
+                    return decoder.decodeInvocationResult(response, viewClass.getClassLoader());
+                } catch (Throwable t) {
+                    failure = t;
+                }
             }
-            try {
-                return decoder.decodeInvocationResult(response, viewClass.getClassLoader());
-            } catch (Throwable t) {
-                throw new java.util.concurrent.CompletionException(t);
+            Throwable cause = failure instanceof java.util.concurrent.CompletionException && failure.getCause() != null
+                    ? failure.getCause() : failure;
+            if (cause instanceof IOException io) {
+                // The same contract as a synchronous call: what the caller's
+                // interface can carry, not a raw transport exception.
+                cause = TransportErrors.translate(io, method, viewClass);
             }
+            throw new java.util.concurrent.CompletionException(cause);
         });
     }
 

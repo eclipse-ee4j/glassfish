@@ -44,19 +44,22 @@ final class TransportErrors {
      * @return what to throw to that caller
      */
     static Exception translate(IOException failure, Method method, Class<?> view) {
-        for (Class<?> declared : method.getExceptionTypes()) {
-            if (declared.isInstance(failure)) {
-                return failure;
-            }
-        }
+        // The RMI-style test comes first: RemoteException is assignable to any
+        // declared supertype (IOException, Exception), so a method of a Remote
+        // view that declares one of those still has to receive a RemoteException.
         boolean rmiStyle = Remote.class.isAssignableFrom(view);
         for (Class<?> declared : method.getExceptionTypes()) {
-            if (declared.isAssignableFrom(RemoteException.class)) {
+            if (RemoteException.class.isAssignableFrom(declared)) {
                 rmiStyle = true;
             }
         }
         if (rmiStyle) {
-            return new RemoteException(failure.getMessage(), failure);
+            return failure instanceof RemoteException ? failure : new RemoteException(failure.getMessage(), failure);
+        }
+        for (Class<?> declared : method.getExceptionTypes()) {
+            if (declared.isInstance(failure)) {
+                return failure;
+            }
         }
         return new EJBException(failure.getMessage(), failure);
     }

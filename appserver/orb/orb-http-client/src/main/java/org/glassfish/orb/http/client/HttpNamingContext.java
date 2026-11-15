@@ -37,6 +37,7 @@ import javax.naming.OperationNotSupportedException;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
@@ -176,11 +177,10 @@ public class HttpNamingContext implements Context {
                     return client.createHomeProxy(view, component, locator);
                 }
                 return client.createProxy(view, locator);
-            } catch (ClassNotFoundException | IllegalArgumentException e) {
-                // The view interface is not on this client's classpath, or is
-                // an interface Proxy cannot implement (non-public in another
-                // loader, say). Hand back the reference rather than failing:
-                // the caller may only want to inspect or re-bind it.
+            } catch (ClassNotFoundException e) {
+                // The view interface is not on this client's classpath. Hand
+                // back the reference rather than failing: the caller may only
+                // want to inspect or re-bind it.
                 return ref;
             }
         }
@@ -283,7 +283,8 @@ public class HttpNamingContext implements Context {
             throw new ProtocolException("server replied with protocol version " + type.version());
         }
         try (Marshaller.ObjectReader reader =
-                codecFor(type).newReader(response.body(), contextClassLoader(), filter)) {
+                codecFor(type).newReader(LimitedInputStream.bound(response.body()),
+                        contextClassLoader(), filter)) {
             return reader.readObject();
         }
     }

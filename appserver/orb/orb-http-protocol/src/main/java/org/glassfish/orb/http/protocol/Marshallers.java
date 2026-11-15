@@ -18,12 +18,14 @@ package org.glassfish.orb.http.protocol;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -142,6 +144,47 @@ public final class Marshallers {
      */
     public static List<String> codecs() {
         return List.copyOf(discover(contextLoader()).keySet());
+    }
+
+    /**
+     * Lets go of everything the codecs hold for a class loader.
+     *
+     * <p>Call this when an application is undeployed. The container adapter
+     * is the caller; nothing in the transport does it. It may run
+     * concurrently with codec calls for the same loader, which then rebuild
+     * what they need, and it matches the exact loader object only. Discovery results and a
+     * codec's own per-loader state are both keyed by the loader, but the
+     * values refer back to it, so a weak key alone never lets it go: without
+     * this call every undeployed application keeps its class loader alive.
+     *
+     * @param loader the loader of the application that is gone; may be
+     *               {@code null}, which does nothing
+     */
+    public static void release(ClassLoader loader) {
+        if (loader == null) {
+            return;
+        }
+        // Every provider seen so far is told, not only the ones found through
+        // this loader: a codec keeps its state in one place, and the instance
+        // that was discovered through another loader reaches the same place.
+        Set<Marshaller> known = Collections.newSetFromMap(new IdentityHashMap<>());
+        known.add(BUILT_IN);
+        known.addAll(REGISTERED);
+        List<Map<String, Marshaller>> cached;
+        synchronized (CACHE) {
+            cached = new ArrayList<>(CACHE.values());
+        }
+        for (Map<String, Marshaller> byToken : cached) {
+            known.addAll(byToken.values());
+        }
+        CACHE.remove(loader);
+        for (Marshaller marshaller : known) {
+            try {
+                marshaller.release(loader);
+            } catch (RuntimeException e) {
+                // A codec that cannot clean up must not stop the others.
+            }
+        }
     }
 
     private static ClassLoader contextLoader() {

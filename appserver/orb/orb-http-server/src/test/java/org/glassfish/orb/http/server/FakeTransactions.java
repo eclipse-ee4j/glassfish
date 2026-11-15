@@ -56,6 +56,18 @@ final class FakeTransactions implements TransactionBridge {
     int failWith;
     /** When set, the failure carries this reason instead of the default one. */
     String failReason;
+    /** When set, a rollback-only import is refused the way REQUIRED, MANDATORY and SUPPORTS refuse it. */
+    boolean refuseRollbackOnly;
+    /** When set, recreate throws this instead of importing. */
+    RuntimeException recreateThrows;
+    /** When set, recreateRollbackOnly returns null, as a broken bridge would. */
+    boolean returnNullHandle;
+    /** When set, releaseRollbackOnly throws this after recording. */
+    RuntimeException releaseRollbackOnlyThrows;
+    /** Run inside recreateRollbackOnly once it has succeeded, to stand in for something happening mid-call. */
+    Runnable afterRecreateRollbackOnly;
+    /** When set, detach throws this. */
+    RuntimeException detachThrows;
 
     private void record(String call) {
         calls.add(call);
@@ -83,12 +95,46 @@ final class FakeTransactions implements TransactionBridge {
     @Override
     public void recreate(Xid xid, long timeoutSeconds) throws TransactionException {
         record("recreate(" + Xids.key(xid) + "," + timeoutSeconds + ")");
+        if (recreateThrows != null) {
+            throw recreateThrows;
+        }
         maybeFail("recreate");
         imported.put(Xids.key(xid), timeoutSeconds);
         // Importing is how a server learns about a branch it did not begin,
         // which is the whole of the XA case: the coordinator mints the xid and
         // this side hears about it when work arrives for it.
         live.putIfAbsent(Xids.key(xid), xid);
+    }
+
+    @Override
+    public Object recreateRollbackOnly(Xid xid, long timeoutSeconds, org.glassfish.orb.http.protocol.EjbKey key,
+            java.lang.reflect.Method method) throws TransactionException {
+        record("recreateRollbackOnly(" + (xid == null ? "none" : Xids.key(xid)) + "," + timeoutSeconds
+                + "," + method.getName() + ",key=" + (key != null) + ")");
+        if (refuseRollbackOnly) {
+            throw new TransactionException("the caller's transaction is marked rollback-only",
+                    XAException.XA_RBROLLBACK);
+        }
+        // What a real bridge does: a recreated branch, or a local transaction
+        // for a caller that sent none, either marked rollback-only.
+        if (returnNullHandle) {
+            return null;
+        }
+        String handle = xid == null ? "local" : Xids.key(xid);
+        imported.put(handle, timeoutSeconds);
+        if (afterRecreateRollbackOnly != null) {
+            afterRecreateRollbackOnly.run();
+        }
+        return handle;
+    }
+
+    @Override
+    public void releaseRollbackOnly(Object handle) throws TransactionException {
+        record("releaseRollbackOnly(" + handle + ")");
+        imported.remove(String.valueOf(handle));
+        if (releaseRollbackOnlyThrows != null) {
+            throw releaseRollbackOnlyThrows;
+        }
     }
 
     @Override
@@ -100,6 +146,9 @@ final class FakeTransactions implements TransactionBridge {
     @Override
     public void detach() {
         record("detach");
+        if (detachThrows != null) {
+            throw detachThrows;
+        }
     }
 
     @Override

@@ -130,11 +130,23 @@ public final class TxRoutes {
         }
         String operation = path.segment(IDX_OPERATION);
 
+        boolean takesXid = !OP_BEGIN.equals(operation) && !OP_RECOVER.equals(operation);
+        int expected = takesXid ? IDX_XID + 1 : IDX_XID;
+        if (path.count() > expected) {
+            // A path that names more than the operation takes is not this
+            // route: ignoring the surplus would make begin and recover accept
+            // an xid they never use, and any route accept trailing junk.
+            throw new ProtocolException(operation + (takesXid
+                    ? " takes exactly one xid segment"
+                    : " takes no xid"));
+        }
+
         Xid xid = null;
-        if (path.count() > IDX_XID) {
+        if (takesXid) {
+            if (path.count() < expected) {
+                throw new ProtocolException(operation + " requires an xid in the path");
+            }
             xid = Xids.fromPathSegment(path.rawSegment(IDX_XID));
-        } else if (!OP_BEGIN.equals(operation) && !OP_RECOVER.equals(operation)) {
-            throw new ProtocolException(operation + " requires an xid in the path");
         }
         return new Request(family, operation, xid);
     }

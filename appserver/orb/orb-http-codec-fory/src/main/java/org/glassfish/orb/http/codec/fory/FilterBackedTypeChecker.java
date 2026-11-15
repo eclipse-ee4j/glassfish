@@ -20,6 +20,7 @@ import java.io.ObjectInputFilter;
 
 import org.apache.fory.resolver.TypeChecker;
 import org.apache.fory.resolver.TypeResolver;
+import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
 
 /**
  * Applies the transport's deserialization filter to Fory.
@@ -34,6 +35,17 @@ import org.apache.fory.resolver.TypeResolver;
  * So the same {@link ObjectInputFilter} that guards Java serialization guards
  * this codec too. One policy, two codecs: changing the codec changes the
  * encoding and nothing about what is allowed to be decoded.
+ *
+ * <p>Limits of this check. Fory asks only "is this class acceptable", so the
+ * filter sees depth, reference count and stream length as zero and an array
+ * length of -1: the filter's {@code maxarray}, {@code maxrefs} and
+ * {@code maxbytes} do not apply to Fory, and neither does the array budget of
+ * the default filter. Only the class allow/deny decision, the JVM-wide
+ * {@code jdk.serialFilter}, Fory's own depth limit and its memory gates (see
+ * {@code ForyMarshaller}) are enforced. A custom
+ * {@code jdk.serialFilterFactory} is not consulted: only the filter itself
+ * is. The array budget and reference limit of the Java serialization
+ * filter do not apply to this codec.
  */
 final class FilterBackedTypeChecker implements TypeChecker {
 
@@ -42,8 +54,18 @@ final class FilterBackedTypeChecker implements TypeChecker {
     private final ObjectInputFilter filter;
 
     FilterBackedTypeChecker(ClassLoader loader, ObjectInputFilter filter) {
+        this(loader, filter, ObjectInputFilter.Config.getSerialFilter());
+    }
+
+    /**
+     * @param jvmWide the JVM-wide filter ({@code jdk.serialFilter}), or
+     *                {@code null}. Java serialization honours it, and so does
+     *                this codec: an operator's deny list must not depend on
+     *                which codec the client happened to choose.
+     */
+    FilterBackedTypeChecker(ClassLoader loader, ObjectInputFilter filter, ObjectInputFilter jvmWide) {
         this.loader = loader;
-        this.filter = filter;
+        this.filter = JavaSerializationMarshaller.withJvmWideFilter(filter, jvmWide);
     }
 
     @Override

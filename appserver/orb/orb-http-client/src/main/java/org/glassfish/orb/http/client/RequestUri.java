@@ -36,6 +36,15 @@ final class RequestUri {
     }
 
     static URI build(URI base, String encodedPath, String encodedQuery) {
+        if (base.getHost() == null) {
+            // A registry-based authority such as "my_host" has no host as far
+            // as java.net.URI is concerned. Appending it anyway produced
+            // "https://null:8181/...", which fails far from the cause.
+            String authority = base.getRawAuthority();
+            int at = authority == null ? -1 : authority.lastIndexOf('@');
+            throw new IllegalArgumentException("the base URI has no usable host: " + base.getScheme()
+                    + "://" + (at < 0 ? authority : authority.substring(at + 1)));
+        }
         StringBuilder sb = new StringBuilder(128);
         sb.append(base.getScheme()).append("://").append(base.getHost());
         if (base.getPort() != -1) {

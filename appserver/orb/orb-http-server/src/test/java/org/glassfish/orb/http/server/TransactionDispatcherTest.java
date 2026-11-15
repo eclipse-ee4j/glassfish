@@ -131,6 +131,92 @@ class TransactionDispatcherTest {
         assertEquals(List.of("establish(alice)", "clear(token-alice)"), security.events);
     }
 
+    private static Loopback.InMemoryExchange recoverWith(String flags) {
+        return new Loopback.InMemoryExchange("GET",
+                TxRoutes.recoverPath(Protocol.CONTEXT_PATH).getBytes(StandardCharsets.UTF_8),
+                flags == null ? null : TxRoutes.PARAM_FLAGS + "=" + flags, Map.of(), new byte[0]);
+    }
+
+    @Test
+    @DisplayName("recover with flags=0 (TMNOFLAGS) continues the scan: the flag reaches the bridge as 0")
+    void recoverKeepsTmNoFlags() {
+        FakeTransactions transactions = new FakeTransactions();
+        Loopback.InMemoryExchange continued = recoverWith("0");
+
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(continued));
+
+        assertEquals(Protocol.SC_OK, continued.toResponse().status());
+        assertEquals(List.of("recover(0)"), transactions.calls);
+    }
+
+    @Test
+    @DisplayName("guard: recover with no flags parameter starts a scan")
+    void recoverWithoutFlagsStartsAScan() {
+        FakeTransactions transactions = new FakeTransactions();
+
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(recoverWith(null)));
+
+        assertEquals(List.of("recover(" + javax.transaction.xa.XAResource.TMSTARTRSCAN + ")"),
+                transactions.calls);
+    }
+
+    @Test
+    @DisplayName("recover with flags that are not an integer is a 400 and reaches nobody")
+    void recoverWithMalformedFlagsIs400() {
+        FakeTransactions transactions = new FakeTransactions();
+        Loopback.InMemoryExchange malformed = recoverWith("abc");
+
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(malformed));
+
+        assertEquals(Protocol.SC_BAD_REQUEST, malformed.toResponse().status());
+        assertEquals(List.of(), transactions.calls);
+    }
+
+    private static Loopback.InMemoryExchange beginWith(String timeout) {
+        return new Loopback.InMemoryExchange("POST",
+                TxRoutes.beginPath(Protocol.CONTEXT_PATH).getBytes(StandardCharsets.UTF_8),
+                timeout == null ? null : TxRoutes.PARAM_TIMEOUT + "=" + timeout, Map.of(), new byte[0]);
+    }
+
+    private static void assertBeginRefused(String timeout) {
+        FakeTransactions transactions = new FakeTransactions();
+        Loopback.InMemoryExchange exchange = beginWith(timeout);
+
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(exchange));
+
+        assertEquals(Protocol.SC_BAD_REQUEST, exchange.toResponse().status(), "timeout " + timeout);
+        assertEquals(List.of(), transactions.calls, "begin must not see timeout " + timeout);
+    }
+
+    @Test
+    @DisplayName("ut/begin with a negative timeout is a 400")
+    void beginWithANegativeTimeoutIs400() {
+        assertBeginRefused("-5");
+    }
+
+    @Test
+    @DisplayName("ut/begin with a timeout larger than an int is a 400")
+    void beginWithAnOversizedTimeoutIs400() {
+        assertBeginRefused("99999999999");
+    }
+
+    @Test
+    @DisplayName("ut/begin with a timeout that is not a number is a 400")
+    void beginWithANonNumericTimeoutIs400() {
+        assertBeginRefused("abc");
+    }
+
+    @Test
+    @DisplayName("guard: ut/begin passes a sensible timeout on, and none as 0")
+    void beginPassesASensibleTimeoutOn() {
+        FakeTransactions transactions = new FakeTransactions();
+
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(beginWith("30")));
+        assertDoesNotThrow(() -> new TransactionDispatcher(transactions).dispatch(beginWith(null)));
+
+        assertEquals(List.of("begin(30)", "begin(0)"), transactions.calls);
+    }
+
     private static void assertReasonIsFixed(Loopback.InMemoryExchange exchange) {
         List<String> reasons = exchange.toResponse().headers().get("X-GF-Reason");
         assertEquals(1, reasons == null ? 0 : reasons.size(), "reason header: " + reasons);

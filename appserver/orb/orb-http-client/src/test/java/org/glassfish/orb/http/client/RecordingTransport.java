@@ -36,7 +36,13 @@ final class RecordingTransport implements HttpTransport {
     /** Every request URI, in order, as "METHOD path?query". */
     final List<String> calls = new ArrayList<>();
 
+    /** The headers of every request, in the same order as {@link #calls}. */
+    final List<Map<String, String>> requestHeaders = new ArrayList<>();
+
     private final Map<String, Response> canned = new HashMap<>();
+
+    /** How many of the next exchanges are refused with 406 "unsupported codec", to provoke a downgrade. */
+    int refuseUnsupportedCodec;
 
     private int status = Protocol_SC_NO_CONTENT;
 
@@ -57,15 +63,26 @@ final class RecordingTransport implements HttpTransport {
 
     @Override
     public Response exchange(Request request) throws IOException {
-        String uri = request.uri().getPath()
-                + (request.uri().getRawQuery() == null ? "" : "?" + request.uri().getRawQuery());
-        calls.add(request.method() + ' ' + uri);
+        String uri = record(request);
+        if (refuseUnsupportedCodec > 0) {
+            refuseUnsupportedCodec--;
+            return new Response(406, null, Map.of("X-GF-Reason", List.of("unsupported codec exotic")),
+                    new ByteArrayInputStream(new byte[0]));
+        }
         for (Map.Entry<String, Response> entry : canned.entrySet()) {
             if (uri.contains(entry.getKey())) {
                 return entry.getValue();
             }
         }
         return new Response(status, null, headers, new ByteArrayInputStream(new byte[0]));
+    }
+
+    private String record(Request request) {
+        String uri = request.uri().getPath()
+                + (request.uri().getRawQuery() == null ? "" : "?" + request.uri().getRawQuery());
+        calls.add(request.method() + ' ' + uri);
+        requestHeaders.add(request.headers());
+        return uri;
     }
 
     /** @return whether any recorded call's URI contains this fragment */
@@ -75,6 +92,7 @@ final class RecordingTransport implements HttpTransport {
 
     @Override
     public CompletableFuture<Response> exchangeAsync(Request request) {
+        record(request);
         return CompletableFuture.failedFuture(new UnsupportedOperationException());
     }
 

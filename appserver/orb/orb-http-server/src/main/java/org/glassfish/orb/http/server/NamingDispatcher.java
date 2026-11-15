@@ -28,6 +28,7 @@ import javax.naming.NoPermissionException;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
@@ -59,8 +60,7 @@ public final class NamingDispatcher {
             path = PathScanner.scan(exchange.pathBytes(), exchange.pathOffset(), exchange.pathLength());
             request = NamingRoutes.parse(path);
         } catch (ProtocolException e) {
-            exchange.setStatus(Protocol.SC_BAD_REQUEST);
-            exchange.setResponseHeader("X-GF-Reason", e.getMessage());
+            fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
             return;
         }
 
@@ -68,25 +68,30 @@ public final class NamingDispatcher {
         try {
             expectedMethod = NamingRoutes.methodFor(request.operation());
         } catch (IllegalArgumentException e) {
-            exchange.setStatus(Protocol.SC_NOT_FOUND);
-            exchange.setResponseHeader("X-GF-Reason", "unknown naming operation");
+            fail(exchange, Protocol.SC_NOT_FOUND, "unknown naming operation");
             return;
         }
         if (!expectedMethod.equals(exchange.method())) {
-            exchange.setStatus(Protocol.SC_BAD_REQUEST);
-            exchange.setResponseHeader("X-GF-Reason",
-                    request.operation() + " must be a " + expectedMethod);
+            fail(exchange, Protocol.SC_BAD_REQUEST, request.operation() + " must be a " + expectedMethod);
             return;
         }
 
         Marshaller codec = codecFor(exchange);
+        if (codec == null) {
+            // A body in a codec this server lacks cannot be read, and reading
+            // it with another codec is not a fallback but a guess. Saying so
+            // lets the client drop to a codec both ends have.
+            fail(exchange, Protocol.SC_NOT_ACCEPTABLE, "unsupported codec "
+                    + contentTypeCodec(exchange) + "; this server speaks " + marshaller.codec()
+                    + ", " + String.join(", ", Marshallers.codecs()));
+            return;
+        }
 
         Object securityToken;
         try {
             securityToken = security.establish(exchange.authenticatedUser());
         } catch (SecurityException e) {
-            exchange.setStatus(Protocol.SC_FORBIDDEN);
-            exchange.setResponseHeader("X-GF-Reason", e.getMessage());
+            fail(exchange, Protocol.SC_FORBIDDEN, e.getMessage());
             return;
         }
         try {
@@ -95,11 +100,12 @@ public final class NamingDispatcher {
             exchange.setStatus(Protocol.SC_NOT_FOUND);
         } catch (NoPermissionException e) {
             exchange.setStatus(Protocol.SC_FORBIDDEN);
+        } catch (ProtocolException e) {
+            fail(exchange, Protocol.SC_BAD_REQUEST, e.getMessage());
         } catch (NamingException e) {
             writeException(codec, exchange, e);
         } catch (ClassNotFoundException e) {
-            exchange.setStatus(Protocol.SC_BAD_REQUEST);
-            exchange.setResponseHeader("X-GF-Reason", "cannot resolve a class in the request body");
+            fail(exchange, Protocol.SC_BAD_REQUEST, "cannot resolve a class in the request body");
         } catch (RuntimeException | LinkageError e) {
             // Most often the codec refusing a value it cannot encode. Left to
             // propagate it becomes a bare 500 with no body, and the client is
@@ -109,12 +115,11 @@ public final class NamingDispatcher {
             // cannot initialise throws ExceptionInInitializerError, which is
             // not a RuntimeException, and letting that escape takes the
             // connection down instead of answering.
-            exchange.setStatus(Protocol.SC_EXCEPTION);
             // The cause is the server's business: its text can name internals,
             // so the caller is told which operation failed and nothing else.
             System.getLogger(NamingDispatcher.class.getName()).log(System.Logger.Level.DEBUG,
                     operationLabel(request) + " failed", e);
-            exchange.setResponseHeader("X-GF-Reason", operationLabel(request) + " failed");
+            fail(exchange, Protocol.SC_EXCEPTION, operationLabel(request) + " failed");
         } finally {
             security.clear(securityToken);
         }
@@ -145,8 +150,7 @@ public final class NamingDispatcher {
             case Protocol.OP_RENAME -> {
                 String newName = exchange.queryParameter(NamingRoutes.PARAM_NEW_NAME);
                 if (newName == null) {
-                    exchange.setStatus(Protocol.SC_BAD_REQUEST);
-                    exchange.setResponseHeader("X-GF-Reason",
+                    fail(exchange, Protocol.SC_BAD_REQUEST,
                             "rename requires the " + NamingRoutes.PARAM_NEW_NAME + " parameter");
                     return;
                 }
@@ -161,10 +165,7 @@ public final class NamingDispatcher {
                 naming.destroySubcontext(name);
                 exchange.setStatus(Protocol.SC_NO_CONTENT);
             }
-            default -> {
-                exchange.setStatus(Protocol.SC_NOT_FOUND);
-                exchange.setResponseHeader("X-GF-Reason", "unknown naming operation");
-            }
+            default -> fail(exchange, Protocol.SC_NOT_FOUND, "unknown naming operation");
         }
     }
 
@@ -179,11 +180,18 @@ public final class NamingDispatcher {
      * sent no preference, keeps working unchanged.
      *
      * @param exchange the request being served
-     * @return the codec to use in both directions, never {@code null}
+     * <p>The two headers are not alike. {@code Accept} is a preference, so an
+     * unknown codec there falls back to the server's own. {@code Content-Type}
+     * says how the body was written, so an unknown codec there cannot be
+     * honoured and is not guessed at.
+     *
+     * @return the codec to use in both directions, or {@code null} if the
+     *         request body is in a codec this server does not have
      */
     private Marshaller codecFor(ServerExchange exchange) {
         String header = exchange.requestHeader("Content-Type");
-        if (header == null || header.isBlank()) {
+        boolean describesBody = header != null && !header.isBlank();
+        if (!describesBody) {
             header = exchange.requestHeader("Accept");
         }
         if (header == null || header.isBlank()) {
@@ -194,7 +202,7 @@ public final class NamingDispatcher {
             if (marshaller.codec().equals(requested.codec())) {
                 return marshaller;
             }
-            return Marshallers.find(requested.codec()).orElse(marshaller);
+            return Marshallers.find(requested.codec()).orElse(describesBody ? null : marshaller);
         } catch (ProtocolException | IllegalArgumentException e) {
             // An Accept header we cannot parse is a preference we cannot
             // honour, not a reason to refuse the lookup.
@@ -202,12 +210,34 @@ public final class NamingDispatcher {
         }
     }
 
+    /** @return the codec token the request's Content-Type names, for the refusal message */
+    private static String contentTypeCodec(ServerExchange exchange) {
+        try {
+            return ContentType.parse(exchange.requestHeader("Content-Type")).codec();
+        } catch (ProtocolException | IllegalArgumentException e) {
+            return "(unreadable)";
+        }
+    }
+
     private Object readValue(Marshaller codec, ServerExchange exchange)
             throws IOException, ClassNotFoundException {
         ObjectInputFilter filter = JavaSerializationMarshaller.defaultFilter();
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        try (Marshaller.ObjectReader reader = codec.newReader(exchange.requestBody(), loader, filter)) {
+        try (Marshaller.ObjectReader reader = codec.newReader(
+                LimitedInputStream.bound(exchange.requestBody()), loader, filter)) {
             return reader.readObject();
+        } catch (ProtocolException | ClassNotFoundException e) {
+            throw e;
+        } catch (IOException | RuntimeException | LinkageError e) {
+            if (e instanceof ExceptionInInitializerError || e instanceof NoClassDefFoundError) {
+                // A class that cannot initialise (the first time) or is known
+                // not to (every time after) is the server's problem, not a
+                // malformed body; the dispatcher reports it as a failure.
+                throw (Error) e;
+            }
+            // A body that does not decode is the caller's mistake, not a
+            // server failure; see EjbDispatcher for the same rule.
+            throw new ProtocolException("malformed request body: " + e.getClass().getSimpleName(), e);
         }
     }
 
@@ -233,14 +263,22 @@ public final class NamingDispatcher {
             // The failure could not be encoded. Say so in a header, which needs
             // no codec to read, rather than committing a body that is not
             // coming.
-            exchange.setStatus(Protocol.SC_EXCEPTION);
-            exchange.setResponseHeader("X-GF-Reason", reasonFor(thrown, e));
+            fail(exchange, Protocol.SC_EXCEPTION, reasonFor(thrown, e));
             return;
         }
         exchange.setStatus(Protocol.SC_EXCEPTION);
         exchange.setResponseHeader("Content-Type",
                 ContentType.of(codec.codec(), ContentType.KIND_EXCEPTION).toHeaderValue());
         exchange.writeBody(body);
+    }
+
+    private static void fail(ServerExchange exchange, int status, String reason) {
+        exchange.setStatus(status);
+        if (reason != null) {
+            // A header value must not carry a line break: a path segment or a
+            // message built from the request would otherwise end the header.
+            exchange.setResponseHeader("X-GF-Reason", reason.replace('\n', ' ').replace('\r', ' '));
+        }
     }
 
     private static String operationLabel(NamingRoutes.Request request) {
@@ -253,7 +291,7 @@ public final class NamingDispatcher {
      * @return a single line naming both, safe to put in a header
      */
     private static String reasonFor(Throwable thrown, Throwable encoding) {
-        return (thrown + " (and encoding it failed: " + encoding + ')').replace('\n', ' ');
+        return thrown + " (and encoding it failed: " + encoding + ')';
     }
 
     private ByteBuffer[] marshal(Marshaller codec, Object value) throws IOException {

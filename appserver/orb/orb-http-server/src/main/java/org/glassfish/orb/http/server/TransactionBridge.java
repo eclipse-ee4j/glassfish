@@ -16,8 +16,12 @@
 
 package org.glassfish.orb.http.server;
 
+import java.lang.reflect.Method;
+
 import javax.transaction.xa.XAException;
 import javax.transaction.xa.Xid;
+
+import org.glassfish.orb.http.protocol.EjbKey;
 
 /**
  * The seam onto the transaction manager.
@@ -83,6 +87,109 @@ public interface TransactionBridge {
      * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
      */
     void recreate(Xid xid, long timeoutSeconds) throws TransactionException;
+
+    /**
+     * Prepares an invocation whose caller's transaction can only roll back.
+     *
+     * <p>The caller sent {@code x-gf-txn-rollback-only}: its transaction is
+     * marked rollback-only or already rolling back. The bridge does not decide
+     * what that means for the call. It makes the thread look to the container
+     * as an IIOP client in such a transaction does, and the <em>container</em>
+     * applies the invoked bean's transaction attribute (in GlassFish,
+     * {@code EJBContainerTransactionManager.preInvokeTx} /
+     * {@code BaseContainer.useClientTx}):
+     * <ul>
+     * <li>REQUIRED, MANDATORY, SUPPORTS: the call fails with a transaction
+     *     rolled back exception, which reaches the client as
+     *     {@code EJBTransactionRolledbackException};</li>
+     * <li>REQUIRES_NEW, NOT_SUPPORTED and bean-managed transactions: the
+     *     caller's transaction is suspended and the method runs;</li>
+     * <li>NEVER: the call fails with {@code EJBException}, as for any client
+     *     transaction.</li>
+     * </ul>
+     * For an {@code @Asynchronous} method the container does not propagate the
+     * client's transaction at all, so REQUIRED behaves like REQUIRES_NEW there.
+     *
+     * <p>Contract of a normal return: the calling thread is associated with a
+     * transaction that is <em>marked rollback-only</em>. That is all the
+     * container needs: it need not be the caller's own transaction. For a
+     * non-null {@code xid} the bridge may recreate that branch and mark it, or
+     * - and for a coordinator that may already be rolling the branch back this
+     * is the better choice - begin a <em>local</em> transaction and mark that.
+     * For a null {@code xid} it is always a local transaction. The returned
+     * handle says what to undo, and the dispatcher passes it to
+     * {@link #releaseRollbackOnly} exactly once, in a {@code finally}, on every
+     * path after a normal return: the call ran, the bean threw, the container
+     * refused it, the invocation was cancelled, the target could not be
+     * released or the response could not be written. It is never combined with
+     * {@link #release}. A bridge that returns null is broken: the dispatcher
+     * detaches the thread and refuses the call with {@link XAException#XAER_RMERR}.
+     *
+     * <p>Contract of a failure: when this throws, nothing is left associated
+     * with the thread (the dispatcher also calls {@link #detach}) and no handle
+     * exists. Throwing {@link TransactionException} with
+     * {@link XAException#XA_RBROLLBACK} refuses the call with a rollback code,
+     * which the client reports as {@code EJBTransactionRolledbackException}.
+     *
+     * <p>The default refuses, the safe side for a bridge that cannot do this:
+     * running the method in a transaction of its own would commit work the
+     * caller's transaction is about to roll back.
+     *
+     * <h3>What the GlassFish bridge must do</h3>
+     * <ul>
+     * <li>{@code xid != null}: recreate the branch and mark it rollback-only
+     *     (or, per the note above, begin a local transaction instead). If
+     *     marking throws, release the branch quietly, detach and throw. The
+     *     handle is the {@code xid}.</li>
+     * <li>{@code xid == null}: {@code begin(timeoutSeconds)} - not
+     *     {@code setTransactionTimeout}, which is per thread and would carry
+     *     over to later requests - mark it rollback-only and return a
+     *     {@code Local(tx)} record. On any failure roll the transaction back
+     *     quietly, detach, then throw.</li>
+     * <li>{@link #releaseRollbackOnly}, handle an {@code Xid}: {@code
+     *     release(xid)}, catching everything and logging at DEBUG only, and
+     *     detach in a {@code finally}.</li>
+     * <li>{@link #releaseRollbackOnly}, handle a {@code Local}: if
+     *     {@code getTransaction() != handle.tx} suspend what is on the thread
+     *     and {@code resume(handle.tx)}; then {@code rollback()}, swallowing
+     *     {@code IllegalStateException}; detach in a {@code finally}. Never call
+     *     {@code rollback()} on a transaction that is not on the thread.</li>
+     * <li>The integration test must check that {@code isNullTransaction()} is
+     *     false on a Grizzly request thread during the call.</li>
+     * </ul>
+     *
+     * @param xid the caller's branch, or null if it had none to send
+     * @param timeoutSeconds the caller's remaining timeout, or 0 for the default
+     * @param key the bean the invocation is addressed to, as resolved. The
+     *     container decides the attribute, so a GlassFish bridge need not use
+     *     it; it is passed so that a bridge for a container that cannot apply
+     *     attributes itself has the bean's identity to do so, and for
+     *     diagnostics
+     * @param method the business method about to be invoked; informational only
+     * @return an opaque, non-null handle for {@link #releaseRollbackOnly}
+     */
+    default Object recreateRollbackOnly(Xid xid, long timeoutSeconds, EjbKey key, Method method)
+            throws TransactionException {
+        throw new TransactionException("the caller's transaction is marked rollback-only",
+                XAException.XA_RBROLLBACK);
+    }
+
+    /**
+     * Undoes what {@link #recreateRollbackOnly} associated.
+     *
+     * <p>For a recreated branch that means letting it go as {@link #release}
+     * does, but without complaint: the branch is marked rollback-only on
+     * purpose, and releasing it must neither throw nor log a warning on every
+     * call. For a local transaction it means rolling that transaction back,
+     * never committing it. When this throws, the dispatcher logs, detaches the
+     * thread and leaves the response as it was. The default does nothing,
+     * matching the default of {@link #recreateRollbackOnly}, which never
+     * returns normally.
+     *
+     * @param handle what {@link #recreateRollbackOnly} returned
+     */
+    default void releaseRollbackOnly(Object handle) throws TransactionException {
+    }
 
     /** Disassociates the transaction imported by {@link #recreate}. */
     void release(Xid xid) throws TransactionException;

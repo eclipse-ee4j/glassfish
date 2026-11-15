@@ -30,7 +30,9 @@ import javax.transaction.xa.Xid;
  * <p>The timeout travels with it. A branch imported by the server under the
  * server's own default rather than the coordinator's remaining time can
  * outlive the transaction it belongs to, which turns a clean rollback into a
- * heuristic outcome someone has to resolve by hand.
+ * heuristic outcome someone has to resolve by hand. What travels is the time
+ * left, not the time the transaction was given: the association remembers when
+ * it was made and each invocation reports what remains of the timeout.
  */
 public final class ClientTransactionContext {
 
@@ -39,8 +41,10 @@ public final class ClientTransactionContext {
      *                transaction manager that is not this transport's - which
      *                is also what makes it safe to drop when that manager's
      *                transaction turns out to be over
+     * @param deadlineNanos {@link System#nanoTime()} at which the timeout runs
+     *                out, meaningless when {@code timeoutSeconds} is 0
      */
-    private record Association(Xid xid, long timeoutSeconds, boolean ambient) {
+    private record Association(Xid xid, long timeoutSeconds, boolean ambient, long deadlineNanos) {
     }
 
     private static final ThreadLocal<Association> CURRENT = new ThreadLocal<>();
@@ -54,10 +58,32 @@ public final class ClientTransactionContext {
         return association == null ? null : association.xid();
     }
 
-    /** @return the remaining timeout in seconds, or 0 if unknown */
+    /**
+     * @return the seconds left of the timeout the transaction was given, never
+     *         less than 1 while one is set, or 0 if there is none or it is unknown
+     */
     public static long currentTimeoutSeconds() {
         Association association = CURRENT.get();
+        if (association == null || association.timeoutSeconds() <= 0) {
+            return 0;
+        }
+        long remaining = association.deadlineNanos() - System.nanoTime();
+        long seconds = Math.floorDiv(remaining + 999_999_999L, 1_000_000_000L);
+        // A transaction at or past its deadline still has a timeout: 0 would
+        // tell the server there is none and let it apply its own, longer one.
+        return Math.max(seconds, 1);
+    }
+
+    /** @return the timeout the association was made with, not what is left of it */
+    static long configuredTimeoutSeconds() {
+        Association association = CURRENT.get();
         return association == null ? 0 : association.timeoutSeconds();
+    }
+
+    /** @return when the timeout runs out, see {@link System#nanoTime()}; meaningless without one */
+    static long currentDeadlineNanos() {
+        Association association = CURRENT.get();
+        return association == null ? 0 : association.deadlineNanos();
     }
 
     public static void associate(Xid xid, long timeoutSeconds) {
@@ -72,10 +98,26 @@ public final class ClientTransactionContext {
      * @param ambient whether a foreign transaction manager asked for this
      */
     static void associate(Xid xid, long timeoutSeconds, boolean ambient) {
+        long clamped = clamp(timeoutSeconds);
+        associate(xid, clamped, ambient, System.nanoTime() + clamped * 1_000_000_000L);
+    }
+
+    /** A timeout is an int number of seconds in JTA; more would overflow the deadline arithmetic. */
+    private static long clamp(long timeoutSeconds) {
+        return Math.max(0, Math.min(timeoutSeconds, Integer.MAX_VALUE));
+    }
+
+    /**
+     * Associates a branch whose clock started earlier, so that putting a branch
+     * back does not give its transaction a fresh timeout.
+     *
+     * @param deadlineNanos when the timeout runs out, see {@link System#nanoTime()}
+     */
+    static void associate(Xid xid, long timeoutSeconds, boolean ambient, long deadlineNanos) {
         if (xid == null) {
             disassociate();
         } else {
-            CURRENT.set(new Association(xid, timeoutSeconds, ambient));
+            CURRENT.set(new Association(xid, clamp(timeoutSeconds), ambient, deadlineNanos));
         }
     }
 

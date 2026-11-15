@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -37,6 +38,7 @@ import javax.naming.OperationNotSupportedException;
 import org.glassfish.orb.http.protocol.ChunkedOutput;
 import org.glassfish.orb.http.protocol.ContentType;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.LimitedInputStream;
 import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Marshallers;
 import org.glassfish.orb.http.protocol.NamingRoutes;
@@ -60,7 +62,6 @@ public class HttpNamingContext implements Context {
     private final HttpEjbClient client;
     private final HttpTransport transport;
     private final ClientConfiguration config;
-    private final Marshaller marshaller;
     private final ObjectInputFilter filter;
     private final Hashtable<Object, Object> environment;
     private final String contextPath;
@@ -69,17 +70,25 @@ public class HttpNamingContext implements Context {
      * Whether a proxy has been built from this context's transport. Once one
      * has, closing the context must not close the transport underneath it.
      */
-    private final java.util.concurrent.atomic.AtomicBoolean lentToProxies =
-            new java.util.concurrent.atomic.AtomicBoolean();
+    private final AtomicBoolean lentToProxies = new AtomicBoolean();
+
+    /** @return the settings this context was built with; visible for tests */
+    ClientConfiguration configuration() {
+        return config;
+    }
 
     public HttpNamingContext(ClientConfiguration config, Hashtable<?, ?> environment) {
         this(config, new JdkHttpTransport(config), environment);
     }
 
     public HttpNamingContext(ClientConfiguration config, HttpTransport transport, Hashtable<?, ?> environment) {
+        this(config, transport, HttpEjbClient.codecFor(config), environment);
+    }
+
+    HttpNamingContext(ClientConfiguration config, HttpTransport transport, Marshaller marshaller,
+                      Hashtable<?, ?> environment) {
         this.config = config;
         this.transport = transport;
-        this.marshaller = HttpEjbClient.codecFor(config);
         this.filter = JavaSerializationMarshaller.defaultFilter();
         this.client = new HttpEjbClient(config, transport, marshaller, filter);
         this.environment = environment == null ? new Hashtable<>() : new Hashtable<>(environment);
@@ -163,19 +172,31 @@ public class HttpNamingContext implements Context {
     private Object resolve(Object value) {
         if (value instanceof RemoteEjbReference ref) {
             try {
-                // From here the client outlives this context: the proxy about
-                // to be returned will use it long after close().
-                lentToProxies.set(true);
                 Class<?> view = Class.forName(ref.viewClassName(), false, contextClassLoader());
+                if (!view.isInterface()) {
+                    // Cannot be proxied; same answer as a view that is not here.
+                    return ref;
+                }
                 EjbLocator locator = new EjbLocator(ref.appName(), ref.moduleName(),
                         ref.distinctName(), ref.beanName(), ref.sessionId());
+                Object proxy;
                 if (ref.isHome()) {
                     // EJB 2.x: what the client narrows and calls create() on.
                     Class<?> component =
                             Class.forName(ref.componentClassName(), false, contextClassLoader());
-                    return client.createHomeProxy(view, component, locator);
+                    if (!component.isInterface()) {
+                        return ref;
+                    }
+                    proxy = client.createHomeProxy(view, component, locator);
+                } else {
+                    proxy = client.createProxy(view, locator);
                 }
-                return client.createProxy(view, locator);
+                // From here the client outlives this context: the proxy being
+                // returned will use it long after close(). Only now, once there
+                // is a proxy: a lookup that fails or hands back the bare
+                // reference lends nothing, and close() must still release.
+                lentToProxies.set(true);
+                return proxy;
             } catch (ClassNotFoundException e) {
                 // The view interface is not on this client's classpath. Hand
                 // back the reference rather than failing: the caller may only
@@ -205,24 +226,17 @@ public class HttpNamingContext implements Context {
             String path = NamingRoutes.path(contextPath, operation, name);
             URI uri = RequestUri.build(config.baseUri(), path, query);
 
-            ByteBuffer[] body = null;
-            String contentType = null;
-            if (payload != null) {
-                ChunkedOutput out = new ChunkedOutput();
-                try (Marshaller.ObjectWriter writer = marshaller.newWriter(out)) {
-                    writer.writeObject(payload);
-                    writer.flush();
-                }
-                body = out.toByteBuffers();
-                contentType = ContentType.of(marshaller.codec(), ContentType.KIND_VALUE).toHeaderValue();
+            HttpTransport.Response first = transport.exchange(buildRequest(operation, uri, payload));
+            if (client.isUnsupportedCodec(first)) {
+                // The same fallback an invocation has: the server cannot read
+                // the codec the body was written in, so use the one every peer
+                // has and send it again.
+                first.close();
+                client.downgrade();
+                first = transport.exchange(buildRequest(operation, uri, payload));
             }
 
-            HttpTransport.Request request = new HttpTransport.Request(
-                    NamingRoutes.methodFor(operation), uri, contentType,
-                    ContentType.of(marshaller.codec(), ContentType.KIND_VALUE).toHeaderValue(),
-                    Map.of(), body);
-
-            try (HttpTransport.Response response = transport.exchange(request)) {
+            try (HttpTransport.Response response = first) {
                 if (response.status() == Protocol.SC_NOT_FOUND) {
                     throw new javax.naming.NameNotFoundException(name);
                 }
@@ -255,6 +269,25 @@ public class HttpNamingContext implements Context {
         }
     }
 
+    private HttpTransport.Request buildRequest(String operation, URI uri, Object payload) throws IOException {
+        Marshaller codec = client.marshaller();
+        ByteBuffer[] body = null;
+        String contentType = null;
+        if (payload != null) {
+            ChunkedOutput out = new ChunkedOutput();
+            try (Marshaller.ObjectWriter writer = codec.newWriter(out)) {
+                writer.writeObject(payload);
+                writer.flush();
+            }
+            body = out.toByteBuffers();
+            contentType = ContentType.of(codec.codec(), ContentType.KIND_VALUE).toHeaderValue();
+        }
+        return new HttpTransport.Request(
+                NamingRoutes.methodFor(operation), uri, contentType,
+                ContentType.of(codec.codec(), ContentType.KIND_VALUE).toHeaderValue(),
+                Map.of(), body);
+    }
+
     private Object readBody(HttpTransport.Response response, String expectedKind) throws IOException, ClassNotFoundException {
         if (response.contentType() == null || response.contentType().isBlank()) {
             // No body to decode. The server says why in a header when it could
@@ -270,7 +303,8 @@ public class HttpNamingContext implements Context {
             throw new ProtocolException("server replied with protocol version " + type.version());
         }
         try (Marshaller.ObjectReader reader =
-                codecFor(type).newReader(response.body(), contextClassLoader(), filter)) {
+                codecFor(type).newReader(LimitedInputStream.bound(response.body()),
+                        contextClassLoader(), filter)) {
             return reader.readObject();
         }
     }
@@ -292,8 +326,9 @@ public class HttpNamingContext implements Context {
      */
     private Marshaller codecFor(ContentType type) throws ProtocolException {
         String replied = type.codec();
-        if (marshaller.codec().equals(replied)) {
-            return marshaller;
+        Marshaller current = client.marshaller();
+        if (current.codec().equals(replied)) {
+            return current;
         }
         String required = config.codec();
         if (required != null) {

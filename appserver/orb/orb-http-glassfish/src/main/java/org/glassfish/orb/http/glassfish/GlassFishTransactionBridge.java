@@ -21,9 +21,12 @@ import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.resource.spi.XATerminator;
+import jakarta.transaction.InvalidTransactionException;
+import jakarta.transaction.Transaction;
 
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
+import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
@@ -32,6 +35,7 @@ import javax.transaction.xa.XAException;
 import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
+import org.glassfish.orb.http.protocol.EjbKey;
 import org.glassfish.orb.http.protocol.Xids;
 import org.glassfish.orb.http.server.TransactionBridge;
 import org.jvnet.hk2.annotations.Service;
@@ -97,6 +101,114 @@ public class GlassFishTransactionBridge implements TransactionBridge {
         } finally {
             detach();
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Always a <em>local</em> transaction, never the caller's own branch,
+     * whether or not {@code xid} is null. The caller sent the marker because
+     * its transaction can only roll back, which means its coordinator may be
+     * rolling that branch back at this very moment; recreating it here would
+     * put it back on a thread of this server while the coordinator is
+     * finishing it. A transaction of this server's own, marked rollback-only,
+     * gives the container what it needs - a client transaction that can only
+     * roll back, to which it applies the bean's attribute - and touches
+     * nothing the coordinator owns. The {@code xid} is therefore not used
+     * beyond diagnostics.
+     *
+     * <p>Begun with {@code begin(timeout)}, not {@code setTransactionTimeout}:
+     * the latter is per thread and would carry over to later requests on the
+     * same pooled thread.
+     *
+     * @return a {@link Local} naming the transaction to roll back afterwards
+     */
+    @Override
+    public Object recreateRollbackOnly(Xid xid, long timeoutSeconds, EjbKey key, Method method)
+            throws TransactionException {
+        if (transactions == null) {
+            throw new TransactionException("this server has no transaction manager",
+                    XAException.XAER_RMFAIL);
+        }
+        // A stray transaction would make begin() a nested one, which is refused.
+        detach();
+        Transaction tx = null;
+        try {
+            transactions.begin((int) Math.max(0, Math.min(timeoutSeconds, Integer.MAX_VALUE)));
+            tx = transactions.getTransaction();
+            if (tx == null) {
+                throw new IllegalStateException("begin left no transaction on this thread");
+            }
+            transactions.setRollbackOnly();
+            return new Local(tx);
+        } catch (Exception | Error e) {
+            // Nothing may stay on the thread, and nothing may be left running
+            // that nobody will end.
+            if (tx != null) {
+                try {
+                    rollBackLocal(tx);
+                } catch (Exception | Error suppressed) {
+                    e.addSuppressed(suppressed);
+                }
+            }
+            detach();
+            if (e instanceof Error error) {
+                throw error;
+            }
+            throw failure("cannot prepare a rollback-only transaction for "
+                    + (method == null ? "an invocation" : method.getName()), XAException.XAER_RMERR, e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * <p>Never rolls back a transaction that is not the one on the thread: if
+     * something else is there it is suspended first and the handle's
+     * transaction resumed, so the rollback reaches the right one, and the
+     * detach in the {@code finally} leaves the thread empty either way.
+     */
+    @Override
+    public void releaseRollbackOnly(Object handle) throws TransactionException {
+        try {
+            if (handle instanceof Local local) {
+                rollBackLocal(local.tx());
+            } else if (handle instanceof Xid xid) {
+                try {
+                    transactions.release(xid);
+                } catch (Exception e) {
+                    // Marked rollback-only on purpose: nothing to complain about.
+                    LOG.log(Level.DEBUG, "released rollback-only branch " + Xids.key(xid), e);
+                }
+            }
+        } catch (Exception e) {
+            throw failure("cannot end the rollback-only transaction", XAException.XAER_RMERR, e);
+        } finally {
+            detach();
+        }
+    }
+
+    /** Rolls {@code tx} back, putting it on the thread first if it is not there. */
+    private void rollBackLocal(Transaction tx) throws Exception {
+        if (current() != tx) {
+            transactions.suspend();
+            try {
+                transactions.resume(tx);
+            } catch (InvalidTransactionException | IllegalStateException gone) {
+                // Already completed by the container: nothing left to roll back.
+                LOG.log(Level.DEBUG, "the rollback-only transaction is already over", gone);
+                return;
+            }
+        }
+        try {
+            transactions.rollback();
+        } catch (IllegalStateException gone) {
+            LOG.log(Level.DEBUG, "the rollback-only transaction is already over", gone);
+        }
+    }
+
+    /** What {@link #recreateRollbackOnly} hands back: the local transaction to roll back. */
+    record Local(Transaction tx) {
     }
 
     /**

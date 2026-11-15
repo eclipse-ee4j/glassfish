@@ -74,6 +74,16 @@ public class OrbHttpEndpoint implements PostConstruct, PreDestroy {
     @Inject
     private GlassFishTransactionBridge transactions;
 
+    /**
+     * Not called from here: asking for it is what creates it, and creating it
+     * is what registers it for the deployment events. It lives as long as the
+     * endpoint, so the codecs' state for an application is let go of whenever
+     * the endpoint could have picked it up.
+     */
+    @Inject
+    @SuppressWarnings("unused")
+    private ApplicationLoaderRelease loaderRelease;
+
     /** Whether the endpoint is registered, so that only a registration is ever undone. */
     private volatile boolean mounted;
 

@@ -407,7 +407,7 @@ public final class HttpEjbClient implements AutoCloseable {
                 drain(response.body());
                 downgrade();
                 return transport.exchangeAsync(
-                        buildInvocation(locator, viewClass, method, args, newInvocationId()));
+                        buildInvocation(locator, viewClass, method, args, newInvocationId(), rollbackOnly));
             } catch (IOException e) {
                 return CompletableFuture.<HttpTransport.Response>failedFuture(e);
             }

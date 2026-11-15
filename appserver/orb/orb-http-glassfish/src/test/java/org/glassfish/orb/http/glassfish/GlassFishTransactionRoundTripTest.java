@@ -16,7 +16,7 @@
 
 package org.glassfish.orb.http.glassfish;
 
-import jakarta.transaction.SystemException;
+import jakarta.transaction.RollbackException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -133,7 +133,9 @@ class GlassFishTransactionRoundTripTest {
         // The caller's own coordinator owns this branch; a UT end must not complete it.
         ClientTransactionContext.associate(CLIENT, 30);
 
-        SystemException thrown = assertThrows(SystemException.class, transaction::commit);
+        // The client reports XAER_NOTA on a commit as a rollback (for a transaction it
+        // began, that is a timeout); the refusal is still visible as the cause.
+        RollbackException thrown = assertThrows(RollbackException.class, transaction::commit);
 
         XAException cause = assertInstanceOf(XAException.class, thrown.getCause());
         assertEquals(XAException.XAER_NOTA, cause.errorCode);

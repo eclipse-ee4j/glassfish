@@ -404,7 +404,7 @@ class RequestHardeningTest {
 
         @Override
         public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
-                throws NoSuchTargetException {
+                throws NoSuchTargetException, SessionRefusedException {
             return delegate.createSession(appName, moduleName, distinctName, beanName);
         }
 
@@ -552,7 +552,7 @@ class RequestHardeningTest {
 
         @Override
         public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
-                throws NoSuchTargetException {
+                throws NoSuchTargetException, SessionRefusedException {
             return delegate.createSession(appName, moduleName, distinctName, beanName);
         }
 
@@ -726,7 +726,7 @@ class RequestHardeningTest {
 
         @Override
         public byte[] createSession(String appName, String moduleName, String distinctName, String beanName)
-                throws NoSuchTargetException {
+                throws NoSuchTargetException, SessionRefusedException {
             return delegate.createSession(appName, moduleName, distinctName, beanName);
         }
 

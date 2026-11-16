@@ -28,6 +28,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.System.Logger;
 import java.lang.System.Logger.Level;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -99,6 +101,20 @@ public abstract class PayloadFilesManager {
         return targetDir;
     }
 
+    /**
+     * Indicates whether this manager must confine every resolved output file
+     * to {@link #getTargetDir()}, rejecting any part (file-xfer, file-remove
+     * or file-replace) whose resolved location would fall outside it -
+     * including one that uses an absolute or escaping file-xfer-root.
+     * Managers are confined by default; only a manager explicitly created for
+     * a trusted, caller-directed destination (see
+     * {@link Perm#unconfined(File, ActionReport, ActionReportHandler)})
+     * returns false.
+     */
+    protected boolean isConfined() {
+        return true;
+    }
+
     protected URI getParentURI(Part part) throws UnsupportedEncodingException {
             /*
              * parentURI and parentFile start as the target extraction directory for this
@@ -157,8 +173,41 @@ public abstract class PayloadFilesManager {
      * targetDir and the file-xfer-root setting.  If the output name is
      * relative then it will be resolved
      * against the targetDir plus file-xfer-root URI to derive the URI for the output file.
+     * <p>
+     * Whatever the file-xfer-root or output name, a Perm manager created by
+     * any of the constructors is confined: it rejects any part whose resolved
+     * location falls outside the targetDir. Only a manager created with
+     * {@link #unconfined(File, ActionReport, ActionReportHandler)} honours
+     * locations outside the targetDir.
      */
     public static class Perm extends PayloadFilesManager {
+
+        private final boolean confined;
+
+        /**
+         * Creates a Perm manager that honours a part's absolute or escaping
+         * file-xfer-root (or output name), and so may write, remove or replace
+         * files anywhere the process can. Use this only when the inbound
+         * payload comes from a trusted source that is directing files to a
+         * location the caller itself requested - for example the admin
+         * client receiving the files of {@code deploy --retrieve <dir>} from
+         * the DAS it has authenticated to. Never use it for a payload received
+         * from an untrusted source such as an HTTP request body.
+         * @param targetDir directory against which relative locations are resolved; the caller's current directory if null
+         * @param report result report to which extraction results will be appended
+         * @param reportHandler handler to invoke for each ActionReport in the payload
+         * @return an unconfined Perm manager
+         */
+        public static Perm unconfined(final File targetDir, final ActionReport report,
+                final ActionReportHandler reportHandler) {
+            return new Perm(targetDir, report, reportHandler, false);
+        }
+
+        private Perm(final File targetDir, final ActionReport report,
+                final ActionReportHandler reportHandler, final boolean confined) {
+            super(targetDir != null ? targetDir : new File(System.getProperty("user.dir")), report, reportHandler);
+            this.confined = confined;
+        }
 
         /**
          * Creates a new PayloadFilesManager for dealing with permanent files that
@@ -178,7 +227,7 @@ public abstract class PayloadFilesManager {
          * @param reportHandler handler to invoke for each ActionReport in the payload
          */
         public Perm(final File targetDir, final ActionReport report, final ActionReportHandler reportHandler) {
-            super(targetDir != null ? targetDir : new File(System.getProperty("user.dir")), report, reportHandler);
+            this(targetDir, report, reportHandler, true);
         }
 
         /**
@@ -198,7 +247,7 @@ public abstract class PayloadFilesManager {
          * @param reportHandler handler to invoke for each ActionReport in the payload
          */
         public Perm(final ActionReport report, final ActionReportHandler reportHandler) {
-            super(new File(System.getProperty("user.dir")), report, reportHandler);
+            this(null, report, reportHandler, true);
         }
 
         /**
@@ -211,6 +260,11 @@ public abstract class PayloadFilesManager {
 
         public Perm(final ActionReportHandler reportHandler) {
             this(null, reportHandler);
+        }
+
+        @Override
+        protected boolean isConfined() {
+            return confined;
         }
 
         @Override
@@ -307,6 +361,62 @@ public abstract class PayloadFilesManager {
         return targetURI;
     }
 
+    private File resolveOutputFile(final Part part, final String name) throws IOException {
+        final File candidate = new File(getOutputFileURI(part, name));
+        if (isConfined()) {
+            verifyWithinTargetDir(candidate, name);
+        }
+        return candidate;
+    }
+
+    /**
+     * Verifies that {@code candidate} resolves to a location inside
+     * {@link #getTargetDir()}, throwing an {@link IOException} naming the
+     * offending part if it would escape.
+     * <p>
+     * Compares resolved (symlink-aware) paths rather than merely normalized
+     * ones: normalize() only collapses "." and ".." segments and does not
+     * follow symlinks, so a symlink sitting anywhere under the target
+     * directory and pointing outside it could otherwise defeat a purely
+     * lexical comparison. The candidate file (and possibly some of its
+     * parent directories) does not exist yet, so toRealPath() is applied to
+     * the nearest existing ancestor and the remaining, not-yet-created
+     * segments are appended back on top of that resolved path.
+     */
+    private void verifyWithinTargetDir(final File candidate, final String name) throws IOException {
+        final Path targetDirPath = getTargetDir().toPath().toRealPath();
+        final Path candidatePath = toRealOrNearestExistingAncestorPath(candidate.toPath());
+        if (!candidatePath.startsWith(targetDirPath)) {
+            throw new IOException(strings.getLocalString("payload.partOutsideTargetDir",
+                "Rejecting part {0}: resolved location {1} is outside the allowed directory {2}",
+                name, candidatePath, targetDirPath));
+        }
+    }
+
+    /**
+     * Resolves {@code path} to its real, symlink-free form as far as the
+     * filesystem allows: the nearest ancestor that already exists is
+     * resolved with {@link Path#toRealPath}, and any trailing segments that
+     * do not exist yet (because they are about to be created) are appended,
+     * normalized, on top of that real path.
+     */
+    private static Path toRealOrNearestExistingAncestorPath(final Path path) throws IOException {
+        Path absolutePath = path.toAbsolutePath();
+        Path existingAncestor = absolutePath;
+        Path remainder = null;
+        while (existingAncestor != null && !Files.exists(existingAncestor)) {
+            final Path segment = existingAncestor.getFileName();
+            remainder = (remainder == null) ? segment : segment.resolve(remainder);
+            existingAncestor = existingAncestor.getParent();
+        }
+        if (existingAncestor == null) {
+            // Should not normally happen (a filesystem root always exists), but fail safe.
+            return absolutePath.normalize();
+        }
+        final Path realAncestor = existingAncestor.toRealPath();
+        return (remainder == null) ? realAncestor : realAncestor.resolve(remainder).normalize();
+    }
+
     private File removeFile(final Payload.Part part) throws IOException {
         final File result = removeFileWithoutConsumingPartBody(part);
         consumePartBody(part);
@@ -314,7 +424,13 @@ public abstract class PayloadFilesManager {
     }
 
     private File removeFileWithoutConsumingPartBody(final Payload.Part part) throws IOException {
-        File targetFile = new File(getOutputFileURI(part, part.getName()));
+        final File targetFile;
+        try {
+            targetFile = resolveOutputFile(part, part.getName());
+        } catch (IOException e) {
+            reportDeletionFailure(part.getName(), e);
+            throw e;
+        }
         if (targetFile.exists()) {
             final boolean isRemovalRecursive = targetFile.isDirectory() && part.isRecursive();
             if (isRemovalRecursive ? FileUtils.whack(targetFile) : targetFile.delete()) {
@@ -371,7 +487,7 @@ public abstract class PayloadFilesManager {
         // directory for the file.  If there is none there then use the
         // target directory for this manager.
         try {
-            File extractedFile = new File(getOutputFileURI(part, outputName));
+            File extractedFile = resolveOutputFile(part, outputName);
 
             // Create the required directory tree under the target directory.
             File immediateParent = extractedFile.getParentFile();

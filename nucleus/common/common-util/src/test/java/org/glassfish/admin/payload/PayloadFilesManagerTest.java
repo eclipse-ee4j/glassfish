@@ -31,6 +31,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -43,11 +44,14 @@ import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Inbound;
 import org.glassfish.api.admin.Payload.Outbound;
 import org.glassfish.api.admin.Payload.Part;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -985,6 +989,273 @@ public class PayloadFilesManagerTest {
         }
     }
 
+    /*
+     * PayloadFilesManager must refuse to write, remove or replace a file
+     * outside the manager's target directory, whether the escape comes from
+     * a relative traversal in the part name or from an absolute (or
+     * escaping) file-xfer-root part property.
+     */
+
+    @Test
+    public void testTempRejectsPartOutsideTargetDir() throws Exception {
+        final File escaped = new File(new File(System.getProperty("java.io.tmpdir")).getCanonicalFile().getParentFile(),
+                "pfm-confinement-should-not-exist.txt");
+
+        new CommonTempTest() {
+
+            @Override
+            protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                ob.addPart("application/octet-stream", "../../pfm-confinement-should-not-exist.txt", fileXferProps(),
+                        "content that must never be written outside the staging directory");
+            }
+
+            @Override
+            protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                final IOException e = assertThrows(IOException.class, () -> instance.processParts(ib),
+                        "Expected an IOException rejecting a part that resolves outside the target directory");
+                assertTrue(e.getMessage() != null && e.getMessage().contains("outside"),
+                        "Unexpected exception message: " + e.getMessage());
+                assertFalse(escaped.exists(), "File must not have been written outside the target directory");
+            }
+
+            @Override
+            protected void doCleanup() {
+                PayloadFilesManagerTest.cleanup(escaped);
+            }
+
+        }.run("testTempRejectsPartOutsideTargetDir");
+    }
+
+    @Test
+    public void testTempRejectsAbsoluteFileXferRoot() throws Exception {
+        final File outsideDir = File.createTempFile("pfm-confinement-outside", "");
+        outsideDir.delete();
+
+        new CommonTempTest() {
+
+            @Override
+            protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                final Properties props = fileXferProps();
+                props.setProperty("file-xfer-root", outsideDir.getAbsolutePath());
+                ob.addPart("application/octet-stream", "pfm-confinement-should-not-exist.txt", props,
+                        "content that must never be written outside the staging directory");
+            }
+
+            @Override
+            protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                assertThrows(IOException.class, () -> instance.processParts(ib),
+                        "Expected an IOException rejecting an absolute file-xfer-root");
+                assertFalse(new File(outsideDir, "pfm-confinement-should-not-exist.txt").exists(),
+                        "File must not have been written via an absolute file-xfer-root");
+            }
+
+            @Override
+            protected void doCleanup() {
+                PayloadFilesManagerTest.cleanup(outsideDir);
+            }
+
+        }.run("testTempRejectsAbsoluteFileXferRoot");
+    }
+
+    @Test
+    public void testTempRejectsFileRemovalOutsideTargetDir() throws Exception {
+        final File victimDir = File.createTempFile("pfm-confinement-victim-dir", "");
+        victimDir.delete();
+        victimDir.mkdir();
+        final File victim = new File(victimDir, "do-not-delete.txt");
+        writeFile(victim, "must survive the confined file-remove attempt");
+
+        new CommonTempTest() {
+
+            @Override
+            protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                final Properties props = new Properties();
+                props.setProperty("data-request-type", "file-remove");
+                props.setProperty("file-xfer-root", victimDir.getAbsolutePath());
+                ob.addPart("application/octet-stream", victim.getName(), props, "placeholder");
+            }
+
+            @Override
+            protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                assertThrows(IOException.class, () -> instance.processParts(ib),
+                        "Expected an IOException rejecting a file-remove part targeting an absolute file-xfer-root");
+                assertTrue(victim.exists(), "Victim file outside the target directory must not have been deleted");
+            }
+
+            @Override
+            protected void doCleanup() {
+                PayloadFilesManagerTest.cleanup(victimDir);
+            }
+
+        }.run("testTempRejectsFileRemovalOutsideTargetDir");
+    }
+
+    @Test
+    public void testTempRejectsFileReplacementOutsideTargetDir() throws Exception {
+        final File victimDir = File.createTempFile("pfm-confinement-replace-victim-dir", "");
+        victimDir.delete();
+        victimDir.mkdir();
+        final File victim = new File(victimDir, "do-not-overwrite.txt");
+        writeFile(victim, "must survive the confined file-replace attempt");
+        final byte[] originalContent = Files.readAllBytes(victim.toPath());
+
+        new CommonTempTest() {
+
+            @Override
+            protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                final Properties props = new Properties();
+                props.setProperty("data-request-type", "file-replace");
+                props.setProperty("file-xfer-root", victimDir.getAbsolutePath());
+                ob.addPart("application/octet-stream", victim.getName(), props, "replacement content");
+            }
+
+            @Override
+            protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                assertThrows(IOException.class, () -> instance.processParts(ib),
+                        "Expected an IOException rejecting a file-replace part targeting an absolute file-xfer-root");
+                assertTrue(victim.exists(), "Victim file outside the target directory must not have been deleted");
+                assertArrayEquals(originalContent, Files.readAllBytes(victim.toPath()),
+                        "Victim file outside the target directory must not have been overwritten");
+            }
+
+            @Override
+            protected void doCleanup() {
+                PayloadFilesManagerTest.cleanup(victimDir);
+            }
+
+        }.run("testTempRejectsFileReplacementOutsideTargetDir");
+    }
+
+    /**
+     * Confirms resolveOutputFile compares real (symlink-resolved) paths
+     * rather than merely normalized ones.
+     */
+    @Test
+    public void testTempRejectsSymlinkOutsideTargetDir() throws Exception {
+        final PayloadFilesManager.Temp instance = new PayloadFilesManager.Temp();
+        final File outsideDir = File.createTempFile("pfm-confinement-symlink-outside", "");
+        outsideDir.delete();
+        outsideDir.mkdir();
+
+        try {
+            final File linkFile = new File(instance.getTargetDir(), "evil-link");
+            try {
+                Files.createSymbolicLink(linkFile.toPath(), outsideDir.toPath());
+            } catch (UnsupportedOperationException | IOException e) {
+                Assumptions.assumeTrue(false, "Symlinks are not creatable in this test environment: " + e);
+            }
+
+            final Properties props = fileXferProps();
+            final Payload.Outbound ob = PayloadImpl.Outbound.newInstance();
+            ob.addPart("application/octet-stream", "evil-link/pfm-confinement-escaped.txt", props,
+                    "must not land outside the target directory via the symlink");
+
+            final File tempZipFile = File.createTempFile("testzip", ".zip");
+            try {
+                final OutputStream os = new BufferedOutputStream(new FileOutputStream(tempZipFile));
+                ob.writeTo(os);
+                os.close();
+
+                final Payload.Inbound ib = PayloadImpl.Inbound.newInstance(
+                        "application/zip", new BufferedInputStream(new FileInputStream(tempZipFile)));
+                assertThrows(IOException.class, () -> instance.processParts(ib),
+                        "Expected an IOException rejecting a part that escapes the target directory via a symlink");
+            } finally {
+                tempZipFile.delete();
+            }
+
+            assertFalse(new File(outsideDir, "pfm-confinement-escaped.txt").exists(),
+                    "File must not have been written outside the target directory via the symlink");
+        } finally {
+            instance.cleanup();
+            PayloadFilesManagerTest.cleanup(outsideDir);
+        }
+    }
+
+    @Test
+    public void testConfinedPermRejectsAbsoluteFileXferRoot() throws Exception {
+        final File targetDir = File.createTempFile("pfm-confinement-confined-tgt", "");
+        targetDir.delete();
+        targetDir.mkdir();
+
+        final File outsideDir = File.createTempFile("pfm-confinement-confined-outside", "");
+        outsideDir.delete();
+        outsideDir.mkdir();
+
+        try {
+            new CommonPermTest() {
+
+                @Override
+                protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                    final Properties props = fileXferProps();
+                    props.setProperty("file-xfer-root", outsideDir.getAbsolutePath());
+                    ob.addPart("application/octet-stream", "pfm-confinement-should-not-exist.txt", props,
+                            "content that must never escape a confined Perm manager");
+                }
+
+                @Override
+                protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                    assertThrows(IOException.class, () -> instance.processParts(ib),
+                            "Expected an IOException: a confined Perm manager must reject an absolute file-xfer-root");
+                    assertFalse(new File(outsideDir, "pfm-confinement-should-not-exist.txt").exists(),
+                            "File must not have been written outside the confined Perm's target directory");
+                }
+
+                @Override
+                protected void cleanup() {
+                }
+
+            }.init(targetDir, true).run("testConfinedPermRejectsAbsoluteFileXferRoot");
+        } finally {
+            FileUtils.whack(targetDir);
+            FileUtils.whack(outsideDir);
+        }
+    }
+
+    /**
+     * Confirms the explicit opt-out, Perm.unconfined, keeps the original
+     * behavior for admin client-side downloads (e.g. deploy --retrieve),
+     * which legitimately rely on an absolute file-xfer-root.
+     */
+    @Test
+    public void testUnconfinedPermStillHonoursAbsoluteFileXferRoot() throws Exception {
+        final File targetDir = File.createTempFile("pfm-confinement-unconfined-tgt", "");
+        targetDir.delete();
+        targetDir.mkdir();
+
+        final File outsideDir = File.createTempFile("pfm-confinement-unconfined-outside", "");
+        outsideDir.delete();
+        outsideDir.mkdir();
+
+        try {
+            new CommonPermTest() {
+
+                @Override
+                protected void addParts(Outbound ob, PayloadFilesManager instance) throws Exception {
+                    final Properties props = fileXferProps();
+                    props.setProperty("file-xfer-root", outsideDir.getAbsolutePath());
+                    ob.addPart("application/octet-stream", "legitimate-retrieve.txt", props,
+                            "trusted client-directed content");
+                }
+
+                @Override
+                protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
+                    instance.processParts(ib);
+                    assertTrue(new File(outsideDir, "legitimate-retrieve.txt").exists(),
+                            "A non-confined Perm manager must still honour an absolute file-xfer-root");
+                }
+
+                @Override
+                protected void cleanup() {
+                }
+
+            }.init(targetDir, false).run("testUnconfinedPermStillHonoursAbsoluteFileXferRoot");
+        } finally {
+            FileUtils.whack(targetDir);
+            FileUtils.whack(outsideDir);
+        }
+    }
+
     private static void cleanup(final File... files) {
         boolean ok = true;
         for (File f : files) {
@@ -1092,7 +1363,19 @@ public class PayloadFilesManagerTest {
         protected File myTargetDir;
 
         protected CommonPermTest init(final File targetDir) {
-            permInstance = new PayloadFilesManager.Perm(targetDir, null);
+            return init(targetDir, true);
+        }
+
+        /**
+         * @param confined if true (the default for {@link #init(File)}), builds
+         * a regular Perm manager, which rejects any part resolving outside
+         * targetDir; if false, builds one with
+         * {@link PayloadFilesManager.Perm#unconfined}, which does not.
+         */
+        protected CommonPermTest init(final File targetDir, final boolean confined) {
+            permInstance = confined
+                    ? new PayloadFilesManager.Perm(targetDir, null)
+                    : PayloadFilesManager.Perm.unconfined(targetDir, null, null);
             myTargetDir = targetDir;
             return this;
         }

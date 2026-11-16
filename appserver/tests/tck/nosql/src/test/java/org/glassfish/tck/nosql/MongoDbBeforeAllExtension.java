@@ -41,7 +41,8 @@ public class MongoDbBeforeAllExtension implements BeforeAllCallback, AfterAllCal
         assumeTrue(dockerAvailable, "Docker is not available on this environment");
 
         if (mongodb == null) {
-            mongodb = new MongoDBContainer("mongo:latest");
+            String mongoVersion = System.getProperty("mongodb.version", "latest");
+            mongodb = new MongoDBContainer("mongo:" + mongoVersion);
             mongodb.start();
 
             String mongoDbHost = mongodb.getHost() + ":" + mongodb.getFirstMappedPort();

@@ -199,6 +199,7 @@
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.systemProperties>junit.jupiter.extensions.autodetection.enabled=true</glassfish.systemProperties>
                         <jnosql.mongo.artifacts>${project.build.directory}/jnosql-mongo-deps</jnosql.mongo.artifacts>
+                        <mongodb.version>${mongodb.version}</mongodb.version>
                         <junit.jupiter.extensions.autodetection.enabled>true</junit.jupiter.extensions.autodetection.enabled>
                     </systemPropertyVariables>
                     <includes>

@@ -30,6 +30,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.persistence.jpa.JPADeployer;
+import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -41,6 +42,7 @@ import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getDeploymentConte
  *
  * @author Ondro Mihalyi
  */
+@Service
 public class GlassFishJakartaPersistenceClassScanner extends BaseGlassFishClassScanner implements JakartaPersistenceClassScanner {
 
     public static final String JPA_DATA_ENABLED_META_DATA_KEY = "JPADataEnabled";

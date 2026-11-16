@@ -28,6 +28,7 @@ import org.glassfish.hk2.classmodel.reflect.ClassModel;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.main.jnosql.hk2types.GeneralInterfaceModel;
 import org.glassfish.main.jnosql.jakartapersistence.BaseGlassFishClassScanner;
+import org.jvnet.hk2.annotations.Service;
 
 import static java.lang.System.Logger.Level.DEBUG;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -40,6 +41,7 @@ import static org.glassfish.main.jnosql.hk2types.Hk2TypesUtil.getTypes;
  *
  * @author Ondro Mihalyi
  */
+@Service
 public class GlassFishNoSqlClassScanner extends BaseGlassFishClassScanner implements ClassScanner {
 
     public static final String NOSQL_DATA_ENABLED_META_DATA_KEY = "NoSqlDataEnabled";

@@ -1,0 +1,3 @@
+org.eclipse.jnosql.communication.writer.EnumValueWriter
+org.eclipse.jnosql.communication.writer.OptionalValueWriter
+org.eclipse.jnosql.communication.writer.TemporalValueWriter

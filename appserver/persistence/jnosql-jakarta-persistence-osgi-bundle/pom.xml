@@ -84,6 +84,7 @@
                             !org.eclipse.jnosql.mapping.reflection.*,
                             *
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                         <Embed-Dependency>
                             !jakarta.data-api.*,
                             !jakarta.persistence-api.*,
@@ -96,7 +97,9 @@
                         </Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Embed-StripVersion>true</Embed-StripVersion>
-                        <Export-Package>org.eclipse.jnosql.jakartapersistence.communication,*</Export-Package>
+                        <SPI-Consumer>*</SPI-Consumer>
+                        <SPI-Provider>*</SPI-Provider>
+                        <Export-Package>org.eclipse.jnosql.jakartapersistence.*,org.eclipse.jnosql.mapping.*,org.eclipse.jnosql.communication.*</Export-Package>
                     </instructions>
                 </configuration>
                 <executions>

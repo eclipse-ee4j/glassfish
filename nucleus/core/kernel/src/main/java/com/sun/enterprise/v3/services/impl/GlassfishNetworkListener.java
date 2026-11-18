@@ -60,7 +60,6 @@ import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.grizzly.V3Mapper;
-import org.glassfish.kernel.KernelLoggerInfo;
 import org.jvnet.hk2.config.types.Property;
 
 public class GlassfishNetworkListener extends GenericGrizzlyListener {

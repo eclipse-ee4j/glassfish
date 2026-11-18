@@ -381,16 +381,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency><!-- webservices-osgi depends on ant -->
-            <groupId>org.glassfish.external</groupId>
-            <artifactId>ant-osgi</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>

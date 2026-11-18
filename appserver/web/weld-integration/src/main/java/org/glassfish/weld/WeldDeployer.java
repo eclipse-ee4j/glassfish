@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025, 2026 Contributors to the Eclipse Foundation.
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -323,9 +323,10 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                     }
 
                     subBeanDeploymentArchive.getServices().add(InjectionServices.class, injectionServices);
-                    eeModuleDescriptor = getEEModuleDescriptor(beanDeploymentArchive);
+                    // Sub-archives belong to the module of their parent. Without the descriptor Weld puts them
+                    // into its default non-web module and fires their Startup event before the web module starts.
                     if (eeModuleDescriptor != null) {
-                        beanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
+                        subBeanDeploymentArchive.getServices().add(EEModuleDescriptor.class, eeModuleDescriptor);
                     }
                 }
                 LOG.log(CONFIG,

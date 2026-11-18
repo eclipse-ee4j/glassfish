@@ -21,6 +21,7 @@ import com.sun.appserv.management.client.prefs.LoginInfo;
 import com.sun.appserv.management.client.prefs.LoginInfoStore;
 import com.sun.appserv.management.client.prefs.LoginInfoStoreFactory;
 import com.sun.appserv.management.client.prefs.StoreException;
+import com.sun.enterprise.admin.cli.AsadminOutput;
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.DirectoryClassLoader;
 import com.sun.enterprise.admin.cli.Environment;
@@ -590,10 +591,10 @@ public class RemoteCLICommand extends CLICommand {
              */
             commandModel = rac.getCommandModel();
         } catch (CommandException e) {
-            logger.log(Level.SEVERE, "RemoteCLICommand.prepare throws exception.", e);
+            logger.log(Level.FINER, "RemoteCLICommand.prepare throws exception.", e);
             throw e;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "RemoteCLICommand.prepare throws exception.", e);
+            logger.log(Level.FINER, "RemoteCLICommand.prepare throws exception.", e);
             throw new CommandException(e.getMessage(), e);
         }
     }
@@ -692,9 +693,7 @@ public class RemoteCLICommand extends CLICommand {
             }
             ar = rac.getActionReport();
             if (!returnActionReport && !returnOutput) {
-                if (output != null && !output.isEmpty()) {
-                    logger.info(output);
-                }
+                AsadminOutput.result(output);
             }
         } catch (CommandValidationException cve) {
             reExecuteAfterMetadataUpdate();

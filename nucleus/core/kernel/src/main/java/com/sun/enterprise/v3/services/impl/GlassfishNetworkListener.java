@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 2025 Contributors to the Eclipse Foundation
+ * Copyright (c) 2021, 2026 Contributors to the Eclipse Foundation
  * Copyright (c) 2007, 2022 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -263,7 +263,8 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 keepAlive,
                 delayedExecutor,
                 maxRequestHeaders,
-                maxResponseHeaders);
+                maxResponseHeaders,
+                logger);
 
         if (http != null) { // could be null for HTTP redirect
             httpCodecFilter.setMaxPayloadRemainderToSkip(
@@ -354,6 +355,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
     private static class GlassfishHttpCodecFilter extends org.glassfish.grizzly.http.HttpServerFilter {
         private final String serverVersion;
         private final String xPoweredBy;
+        private final Logger logger;
 
         GlassfishHttpCodecFilter(
                 final boolean isXPoweredByEnabled,
@@ -361,7 +363,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 final int maxHeadersSize,
                 final String defaultResponseContentType,
                 final KeepAlive keepAlive, final DelayedExecutor executor,
-                final int maxRequestHeaders, final int maxResponseHeaders) {
+                final int maxRequestHeaders, final int maxResponseHeaders, Logger logger) {
             super(chunkingEnabled, maxHeadersSize, defaultResponseContentType,
                     keepAlive, executor, maxRequestHeaders, maxResponseHeaders);
 
@@ -394,6 +396,8 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
             } else {
                 xPoweredBy = null;
             }
+
+            this.logger = logger;
         }
 
         @Override
@@ -401,10 +405,19 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
                 final Buffer buffer,
                 final FilterChainContext ctx) {
 
-            final boolean result = super.onHttpHeaderParsed(httpHeader,
+            boolean result = super.onHttpHeaderParsed(httpHeader,
                     buffer, ctx);
 
             final HttpRequestPacket request = (HttpRequestPacket) httpHeader;
+
+            // Here we can add extra validation to prevent Http Server invalid use of headers
+            if (request.containsHeader(Header.ContentLength) && request.containsHeader(Header.TransferEncoding)) {
+                logger.log(Level.SEVERE,
+                        "Can't use both headers Content-Length and Transfer-Encoding from the same request");
+                request.getProcessingState().setError(true);
+                result = true;
+            }
+
             final HttpResponsePacket response = request.getResponse();
 
             // Set response "Server" header

@@ -457,6 +457,15 @@ public final class HttpEjbClient implements AutoCloseable {
         // headers, so an interceptor changing it mid-build cannot produce an
         // invocation whose prefix and timeout describe different transactions.
         Xid transaction = ClientTransactionContext.current();
+        if (transaction != null && !config.joinAmbientTransaction() && ClientTransactionContext.isAmbient()) {
+            // Joining is switched off for this client, so a branch that an
+            // earlier joining call (or an earlier transaction on this pooled
+            // thread) left associated is not this call's business: sending it
+            // would make the server import a branch nobody will complete there.
+            // A branch driven through HttpUserTransaction is not ambient and
+            // is still sent.
+            transaction = null;
+        }
         ByteBuffer[] body = marshalArguments(args, transaction);
 
         Map<String, String> headers = new HashMap<>(4);

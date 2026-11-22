@@ -135,28 +135,16 @@ public interface TransactionBridge {
      * running the method in a transaction of its own would commit work the
      * caller's transaction is about to roll back.
      *
-     * <h3>What the GlassFish bridge must do</h3>
-     * <ul>
-     * <li>{@code xid != null}: recreate the branch and mark it rollback-only
-     *     (or, per the note above, begin a local transaction instead). If
-     *     marking throws, release the branch quietly, detach and throw. The
-     *     handle is the {@code xid}.</li>
-     * <li>{@code xid == null}: {@code begin(timeoutSeconds)} - not
-     *     {@code setTransactionTimeout}, which is per thread and would carry
-     *     over to later requests - mark it rollback-only and return a
-     *     {@code Local(tx)} record. On any failure roll the transaction back
-     *     quietly, detach, then throw.</li>
-     * <li>{@link #releaseRollbackOnly}, handle an {@code Xid}: {@code
-     *     release(xid)}, catching everything and logging at DEBUG only, and
-     *     detach in a {@code finally}.</li>
-     * <li>{@link #releaseRollbackOnly}, handle a {@code Local}: if
-     *     {@code getTransaction() != handle.tx} suspend what is on the thread
-     *     and {@code resume(handle.tx)}; then {@code rollback()}, swallowing
-     *     {@code IllegalStateException}; detach in a {@code finally}. Never call
-     *     {@code rollback()} on a transaction that is not on the thread.</li>
-     * <li>The integration test must check that {@code isNullTransaction()} is
-     *     false on a Grizzly request thread during the call.</li>
-     * </ul>
+     * <h3>Releasing the handle</h3>
+     * {@link #releaseRollbackOnly} undoes what this method associated and, in
+     * a {@code finally}, leaves the thread with no transaction. A handle that
+     * stands for a local transaction is rolled back, never committed, and only
+     * while it is the one on the thread: if something else is there it is
+     * suspended first and the transaction resumed, so that the rollback cannot
+     * reach another transaction. A handle that stands for a recreated branch is
+     * released without complaint, since it was marked rollback-only on purpose.
+     * What the GlassFish bridge does is described on its own
+     * {@code recreateRollbackOnly}.
      *
      * @param xid the caller's branch, or null if it had none to send
      * @param timeoutSeconds the caller's remaining timeout, or 0 for the default

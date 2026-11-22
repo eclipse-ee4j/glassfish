@@ -23,6 +23,7 @@ import jakarta.ejb.TransactionRolledbackLocalException;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.Set;
 
 /**
  * Decides whether what a bean threw belongs to the caller or to the container.
@@ -57,6 +58,17 @@ import java.rmi.RemoteException;
  * which is the type a caller catches to tell "your transaction is doomed"
  * from "the bean failed". Wrapping it in a plain {@code EJBException} would
  * hide the one fact the caller needs.
+ *
+ * <p>The container does not always raise that exception as itself. For a call
+ * arriving on a remote view GlassFish passes what the container threw through
+ * its IIOP exception mapping, which turns it into a CORBA
+ * {@code TRANSACTION_ROLLEDBACK} carrying the original as its cause, or a
+ * {@code RuntimeException} wrapping either. So the whole cause chain is
+ * searched, by class name for the types this module cannot depend on.
+ *
+ * <p>A thin client may not be able to load CORBA classes, so none is shipped to
+ * it: where a CORBA type would travel as a cause, a plain copy of the chain
+ * (class names, messages and stack traces) travels instead.
  */
 public final class EjbExceptions {
 
@@ -75,17 +87,90 @@ public final class EjbExceptions {
         if (thrown instanceof EJBTransactionRolledbackException) {
             return thrown;
         }
-        if (thrown instanceof TransactionRolledbackLocalException) {
-            EJBTransactionRolledbackException rolledBack = new EJBTransactionRolledbackException(
-                    thrown.getClass().getName() + (thrown.getMessage() == null ? "" : ": " + thrown.getMessage()));
-            rolledBack.initCause(thrown);
+        Throwable rollback = findRollback(thrown);
+        if (rollback != null) {
+            EJBTransactionRolledbackException rolledBack = new EJBTransactionRolledbackException(describe(rollback));
+            Throwable cause = isCorba(rollback) ? safe(rollback.getCause()) : safe(rollback);
+            if (cause != null) {
+                rolledBack.initCause(cause);
+            }
             return rolledBack;
         }
         // EJBException carries the original as its "caused by", which is the
         // shape a client already expects to unwrap.
-        return new EJBException(thrown.getClass().getName()
-                + (thrown.getMessage() == null ? "" : ": " + thrown.getMessage()),
-                thrown instanceof Exception cause ? cause : new RuntimeException(thrown));
+        Throwable cause = safe(thrown);
+        return new EJBException(describe(thrown), cause instanceof Exception e ? e : new RuntimeException(cause));
+    }
+
+    /** How deep a cause chain is followed before it is taken to be a cycle. */
+    private static final int MAX_CAUSE_DEPTH = 32;
+
+    /** The classes, by name, that say a transaction was rolled back, none of which this module can depend on. */
+    private static final Set<String> ROLLBACK_TYPES = Set.of(
+            "org.omg.CORBA.TRANSACTION_ROLLEDBACK",
+            "jakarta.transaction.TransactionRolledbackException",
+            "javax.transaction.TransactionRolledbackException");
+
+    private static String describe(Throwable t) {
+        return t.getClass().getName() + (t.getMessage() == null ? "" : ": " + t.getMessage());
+    }
+
+    /** @return the first throwable in the cause chain that reports a rollback, or null */
+    private static Throwable findRollback(Throwable thrown) {
+        int depth = 0;
+        for (Throwable t = thrown; t != null && depth < MAX_CAUSE_DEPTH; t = t.getCause(), depth++) {
+            if (t instanceof TransactionRolledbackLocalException) {
+                return t;
+            }
+            for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
+                if (ROLLBACK_TYPES.contains(c.getName())) {
+                    return t;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean isCorba(Throwable t) {
+        for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
+            if (c.getName().startsWith("org.omg.CORBA.")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean hasCorba(Throwable thrown) {
+        int depth = 0;
+        for (Throwable t = thrown; t != null && depth < MAX_CAUSE_DEPTH; t = t.getCause(), depth++) {
+            if (isCorba(t)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** @return {@code t} if nothing in its chain is a CORBA type, else a plain copy of it */
+    private static Throwable safe(Throwable t) {
+        return t == null || !hasCorba(t) ? t : plainCopy(t);
+    }
+
+    /** A chain of plain exceptions that describes {@code t} and its causes without their classes. */
+    private static Throwable plainCopy(Throwable t) {
+        return plainCopy(t, 0);
+    }
+
+    private static Throwable plainCopy(Throwable t, int depth) {
+        if (t == null || depth >= MAX_CAUSE_DEPTH) {
+            return null;
+        }
+        RuntimeException copy = new RuntimeException(describe(t));
+        copy.setStackTrace(t.getStackTrace());
+        Throwable cause = plainCopy(t.getCause(), depth + 1);
+        if (cause != null) {
+            copy.initCause(cause);
+        }
+        return copy;
     }
 
     /**

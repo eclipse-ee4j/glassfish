@@ -204,6 +204,13 @@ public final class NamingDispatcher {
             }
             return Marshallers.find(requested.codec()).orElse(describesBody ? null : marshaller);
         } catch (ProtocolException | IllegalArgumentException e) {
+            if (describesBody) {
+                // The same rule as for a codec this server lacks: a
+                // Content-Type that cannot be read says nothing about how the
+                // body was written, and reading it with the server's codec
+                // would be a guess.
+                return null;
+            }
             // An Accept header we cannot parse is a preference we cannot
             // honour, not a reason to refuse the lookup.
             return marshaller;

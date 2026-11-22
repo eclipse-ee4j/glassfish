@@ -179,12 +179,12 @@ public final class NamingDispatcher {
      * default - which is how an older client, which knew only one codec and
      * sent no preference, keeps working unchanged.
      *
-     * @param exchange the request being served
      * <p>The two headers are not alike. {@code Accept} is a preference, so an
      * unknown codec there falls back to the server's own. {@code Content-Type}
      * says how the body was written, so an unknown codec there cannot be
      * honoured and is not guessed at.
      *
+     * @param exchange the request being served
      * @return the codec to use in both directions, or {@code null} if the
      *         request body is in a codec this server does not have
      */

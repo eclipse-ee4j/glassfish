@@ -243,7 +243,8 @@ public final class ChunkedOutput extends OutputStream {
      * data is copied; the returned buffers are invalidated by any further
      * write to this stream and by {@link Frame#abort()}, which rewinds it.
      * The buffers intentionally remain array-backed and writable so transports
-     * such as Grizzly can wrap them without creating a defensive copy. Callers must treat them as immutable transport views.
+     * such as Grizzly can wrap them without creating a defensive copy. Callers
+     * must treat them as immutable transport views.
      */
     public ByteBuffer[] toByteBuffers() {
         int n = chunks.size() + (currentPos > 0 ? 1 : 0);

@@ -16,12 +16,17 @@
 
 package org.glassfish.orb.http.client;
 
+import java.io.ByteArrayInputStream;
 import java.net.URI;
 import java.util.Hashtable;
+import java.util.concurrent.Future;
 
 import javax.naming.Context;
 
+import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.Protocol;
+import org.glassfish.orb.http.protocol.TxContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,6 +50,8 @@ class AmbientTransactionSwitchTest {
 
     public interface Pinger {
         void ping();
+
+        Future<String> pingLater();
     }
 
     private static final String PROVIDER = "http://localhost:8080/glassfish-services";
@@ -98,6 +106,45 @@ class AmbientTransactionSwitchTest {
         assertEquals(0, transaction.enlisted, "the caller's transaction was joined");
         assertNull(ClientTransactionContext.current());
         assertEquals(1, transport.calls.size(), "the call itself must still be made");
+    }
+
+    private TxContext sentTransaction(int call) throws Exception {
+        return InvocationEnvelope.readTxContext(new ByteArrayInputStream(transport.requestBodies.get(call)));
+    }
+
+    private void leaveAnAmbientBranchOnTheThread() throws Exception {
+        transaction.timeout = 30;
+        ping(ClientConfiguration.builder(URI.create(PROVIDER)).build());
+        assertNotNull(ClientTransactionContext.current(), "precondition: the joining call left its branch");
+        assertTrue(sentTransaction(0).isPresent(), "guard: the joining call carries its branch");
+        assertNotNull(transport.requestHeaders.get(0).get(Protocol.H_TXN_TIMEOUT), "guard: and its timeout");
+    }
+
+    @Test
+    @DisplayName("with joining switched off a branch left on the thread by a joining call is not sent")
+    void switchedOffDoesNotSendABranchLeftOnTheThread() throws Exception {
+        leaveAnAmbientBranchOnTheThread();
+
+        ping(ClientConfiguration.builder(URI.create(PROVIDER)).joinAmbientTransaction(false).build());
+
+        assertEquals(2, transport.calls.size());
+        assertFalse(sentTransaction(1).isPresent(), "the call carries a transaction it was told not to join");
+        assertNull(transport.requestHeaders.get(1).get(Protocol.H_TXN_TIMEOUT), "and its timeout");
+    }
+
+    @Test
+    @DisplayName("the same for an asynchronous call")
+    void switchedOffDoesNotSendABranchLeftOnTheThreadAsync() throws Exception {
+        leaveAnAmbientBranchOnTheThread();
+
+        HttpEjbClient client = new HttpEjbClient(
+                ClientConfiguration.builder(URI.create(PROVIDER)).joinAmbientTransaction(false).build(),
+                transport, new JavaSerializationMarshaller(), JavaSerializationMarshaller.defaultFilter());
+        client.createProxy(Pinger.class, new EjbLocator("app", "module", null, "PingerBean")).pingLater();
+
+        assertEquals(2, transport.calls.size());
+        assertFalse(sentTransaction(1).isPresent(), "the call carries a transaction it was told not to join");
+        assertNull(transport.requestHeaders.get(1).get(Protocol.H_TXN_TIMEOUT), "and its timeout");
     }
 
     @Test

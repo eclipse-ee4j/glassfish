@@ -17,7 +17,9 @@
 package org.glassfish.orb.http.client;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,6 +40,9 @@ final class RecordingTransport implements HttpTransport {
 
     /** The headers of every request, in the same order as {@link #calls}. */
     final List<Map<String, String>> requestHeaders = new ArrayList<>();
+
+    /** The body of every request, in the same order as {@link #calls}. */
+    final List<byte[]> requestBodies = new ArrayList<>();
 
     private final Map<String, Response> canned = new HashMap<>();
 
@@ -82,7 +87,21 @@ final class RecordingTransport implements HttpTransport {
                 + (request.uri().getRawQuery() == null ? "" : "?" + request.uri().getRawQuery());
         calls.add(request.method() + ' ' + uri);
         requestHeaders.add(request.headers());
+        requestBodies.add(bytes(request.body()));
         return uri;
+    }
+
+    private static byte[] bytes(ByteBuffer[] body) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        if (body != null) {
+            for (ByteBuffer buffer : body) {
+                ByteBuffer view = buffer.duplicate();
+                byte[] bytes = new byte[view.remaining()];
+                view.get(bytes);
+                out.write(bytes, 0, bytes.length);
+            }
+        }
+        return out.toByteArray();
     }
 
     /** @return whether any recorded call's URI contains this fragment */

@@ -41,6 +41,7 @@ public final class ForyGrpcServerAdapter {
     static final int STATUS_RESOURCE_EXHAUSTED = 8;
     static final int STATUS_UNIMPLEMENTED = 12;
     static final int STATUS_INTERNAL = 13;
+    static final int STATUS_UNAUTHENTICATED = 16;
 
     private static final char[] HEX = "0123456789ABCDEF".toCharArray();
 
@@ -161,6 +162,13 @@ public final class ForyGrpcServerAdapter {
             if (e instanceof ContainerBridge.NoSuchTargetException) {
                 LOG.log(Level.DEBUG, "no target for " + path, e);
                 answerWithStatus(exchange, STATUS_NOT_FOUND, "no such bean");
+            } else if (e instanceof SecurityException) {
+                // What the realm raises for a credential it refused: the
+                // caller's mistake, not a fault of the server, so it is not a
+                // warning and it is not an internal error. The text is the
+                // realm's and is not sent.
+                LOG.log(Level.DEBUG, "credential refused for " + path, e);
+                answerWithStatus(exchange, STATUS_UNAUTHENTICATED, "authentication failed");
             } else {
                 LOG.log(Level.WARNING, "cannot reach the bean for " + path, e);
                 answerWithStatus(exchange, STATUS_INTERNAL, "cannot reach the bean");

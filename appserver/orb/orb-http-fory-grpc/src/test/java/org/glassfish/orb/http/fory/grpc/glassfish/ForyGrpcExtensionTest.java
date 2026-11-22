@@ -14,6 +14,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Proxy;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.Events;
+import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.orb.http.fory.grpc.ForyGeneratedServiceRegistry;
@@ -36,6 +39,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -186,6 +190,72 @@ class ForyGrpcExtensionTest {
     }
 
     @Test
+    void answersAWrongCredentialAsUnauthenticated() throws Exception {
+        ForyGrpcExtension extension = extension(new Calc() {
+            @Override
+            public int twice(int value) {
+                return value;
+            }
+
+            @Override
+            public void ping() {
+                events.add("ping");
+            }
+
+            @Override
+            public String hello(String name) {
+                return name;
+            }
+        });
+        ForyGeneratedServiceRegistry.Binding binding = bindingOf(extension, "Ping");
+        Exchange exchange = new Exchange(wire("Ping"), frame(binding, binding.models().request()
+                .getConstructor().newInstance()));
+        exchange.rejectCredential = true;
+
+        extension.dispatch(exchange.path, exchange);
+
+        assertEquals("16", exchange.trailers.get("grpc-status"), exchange.trailers.toString());
+        assertFalse(events.contains("ping"), "the bean was called with a credential that was refused");
+        assertFalse(exchange.trailers.toString().contains("wrong password"), exchange.trailers.toString());
+    }
+
+    @Test
+    void stopsListeningToDeploymentEventsWhenItIsDestroyed() throws Exception {
+        ForyGrpcExtension extension = new ForyGrpcExtension();
+        List<String> calls = new ArrayList<>();
+        set(extension, "events", recordingEvents(calls, extension, false));
+
+        assertInstanceOf(PreDestroy.class, extension).preDestroy();
+
+        assertEquals(List.of("unregister:same"), calls);
+    }
+
+    @Test
+    void aFailureToUnregisterDoesNotReachTheContainerThatIsStoppingIt() throws Exception {
+        ForyGrpcExtension extension = new ForyGrpcExtension();
+        List<String> calls = new ArrayList<>();
+        set(extension, "events", recordingEvents(calls, extension, true));
+
+        assertInstanceOf(PreDestroy.class, extension).preDestroy();
+
+        assertEquals(List.of("unregister:same"), calls);
+    }
+
+    private static Events recordingEvents(List<String> calls, Object listener, boolean failing) {
+        return (Events) Proxy.newProxyInstance(Events.class.getClassLoader(), new Class<?>[] {Events.class},
+                (proxy, method, args) -> {
+                    if (method.getName().equals("unregister")) {
+                        calls.add("unregister:" + (args[0] == listener ? "same" : "other"));
+                        if (failing) {
+                            throw new IllegalStateException("registry is gone");
+                        }
+                        return null;
+                    }
+                    throw new UnsupportedOperationException(method.getName());
+                });
+    }
+
+    @Test
     void listsTheDocumentsItPublishes() throws Exception {
         ForyGrpcExtension extension = extension(null);
         Exchange exchange = new Exchange(ROOT + ForyGrpcCatalog.PREFIX, new byte[0]);
@@ -273,6 +343,7 @@ class ForyGrpcExtensionTest {
         private final String path;
         private final byte[] request;
         private String method = "POST";
+        private boolean rejectCredential;
         private int status;
         private final Map<String, String> trailers = new LinkedHashMap<>();
         private byte[] body = new byte[0];
@@ -354,6 +425,9 @@ class ForyGrpcExtensionTest {
 
         @Override
         public String authenticatedUser() {
+            if (rejectCredential) {
+                throw new SecurityException("authentication failed: wrong password");
+            }
             return "alice";
         }
     }

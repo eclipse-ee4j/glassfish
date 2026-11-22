@@ -20,10 +20,13 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 import java.io.IOException;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.internal.data.ApplicationInfo;
 import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.internal.deployment.Deployment;
@@ -49,7 +52,9 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @Singleton
-public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostConstruct {
+public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostConstruct, PreDestroy {
+
+    private static final Logger LOG = System.getLogger(ForyGrpcExtension.class.getName());
 
     private static final String CALLS = "/fory/";
 
@@ -89,6 +94,24 @@ public class ForyGrpcExtension implements OrbHttpExtension, EventListener, PostC
         // The index is rebuilt when something it does not have is asked for;
         // these tell it when what it has stopped being true.
         events.register(this);
+    }
+
+    /**
+     * Stops listening. The listener is held by the server's event registry for
+     * as long as that lives, so without this a stopped extension would still
+     * be called, and kept alive, by every later deployment event.
+     */
+    @Override
+    public void preDestroy() {
+        Events registered = events;
+        if (registered == null) {
+            return;
+        }
+        try {
+            registered.unregister(this);
+        } catch (RuntimeException e) {
+            LOG.log(Level.DEBUG, "could not unregister the Fory gRPC extension's deployment listener", e);
+        }
     }
 
     /** Publishes what is deployed now and starts serving it. */

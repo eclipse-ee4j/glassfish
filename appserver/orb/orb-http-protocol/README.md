@@ -70,7 +70,7 @@ h2 via ALPN.
 | --- | --- |
 | Stateless and singleton beans | supported |
 | Business interface and 2.x home/component views | supported |
-| Asynchronous methods returning `Future` | supported, including HTTP 202 |
+| Asynchronous methods returning `Future` | supported; the response carries the completed result with status 200 |
 | Application exceptions, including `inherited` | supported, semantics match IIOP |
 | JNDI lookup, list, bind and the rest | supported |
 | Distributed transactions | supported on a separate branch |
@@ -82,8 +82,9 @@ and what an application written against the EJB semantics expects. The
 session travels inside the reference the lookup returns, so the proxy is
 already addressed to its own instance.
 
-All of the above is exercised against a running GlassFish on every change,
-over both codecs, rather than asserted here.
+The tests of the modules cover the table above against an in-process
+server. A run against a real GlassFish has so far covered a remote call of a
+single business method, not every capability listed here.
 
 ## Choosing a codec without changing the application
 
@@ -142,15 +143,18 @@ reads them from there.
 
 An absent credential and a rejected one are different answers. Absent is
 anonymous, which is what an unsecured bean expects. Rejected is refused
-with a 403: continuing with fewer rights than were asked for is still an
+with a 403 by the EJB and naming endpoints (other transports, such as
+the gRPC one, answer in their own terms): continuing with fewer rights than were asked for is still an
 authorization decision, taken on a credential nobody accepted.
 
-Swapping the codec changes the encoding and nothing about what is
-allowed to be decoded. The same `ObjectInputFilter` that guards Java
-serialization guards Fory: one policy, both codecs. Class registration
-is deliberately not required - an application cannot reasonably be asked
-to enumerate its own types for a codec it never opted into - so the
-filter takes that duty instead.
+Swapping the codec changes the encoding, not which classes may be
+decoded: the class check of the same `ObjectInputFilter` that guards Java
+serialization is applied to Fory as well. Only the class check is: the
+filter's depth, reference and byte limits are not enforced for Fory, whose
+requests are bounded by the request body size cap and an array budget of
+its own. Class registration is deliberately not required - an application
+cannot reasonably be asked to enumerate its own types for a codec it never
+opted into - so the class check takes that duty instead.
 
 Reading and writing use separate codec instances, which is a security
 property rather than tidiness: a shared instance caches what it has
@@ -176,7 +180,7 @@ be the rebuilt ones, and the CI job replaces them for exactly that reason.
 
 The Fory codec is the only part of this work that introduces third-party
 code, and it is optional: nothing else here depends on it, and a build
-that leaves the module out has no new dependency at all.
+that leaves the module out adds no third-party artifact.
 
 | Artifact | Version | License | Why |
 | --- | --- | --- | --- |
@@ -201,9 +205,10 @@ licences, and the fact that all three are **embedded in the bundle** rather
 than referenced - none of the three publish OSGi bundles, so dropping them
 into `modules/` would leave them unresolvable.
 
-Nothing else depends on any of this. A build that omits
-`orb-http-codec-fory` has no new third-party dependency at all, and the
-transport keeps working on the built-in codec.
+Nothing else depends on any of this: the protocol, client and server
+modules do not depend on `orb-http-codec-fory`, and the transport keeps
+working on the built-in codec when it is absent. A distribution that does
+include the module carries the three embedded artifacts listed above.
 
 #### A limitation, stated plainly
 

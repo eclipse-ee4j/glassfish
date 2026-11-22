@@ -181,8 +181,7 @@ reads them from there.
 
 An absent credential and a rejected one are different answers. Absent is
 anonymous, which is what an unsecured bean expects. Rejected is refused
-with a 403 by the EJB, naming and transaction endpoints (other transports, such as
-the gRPC one, answer in their own terms): continuing with fewer rights than were asked for is still an
+with a 403 by the EJB, naming and transaction endpoints: continuing with fewer rights than were asked for is still an
 authorization decision, taken on a credential nobody accepted.
 
 Swapping the codec changes the encoding, not which classes may be

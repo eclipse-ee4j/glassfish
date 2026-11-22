@@ -23,11 +23,15 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.omg.CORBA.NO_PERMISSION;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * What a call refused because the caller's transaction can only roll back
@@ -61,6 +65,64 @@ class EjbExceptionsRollbackTest {
         Throwable thrown = new EJBTransactionRolledbackException("doomed");
 
         assertSame(thrown, EjbExceptions.toClientException(thrown, method()));
+    }
+
+    @Test
+    @DisplayName("a wrapped rollback refusal reaches the caller as EJBTransactionRolledbackException")
+    void aWrappedRolledBackRefusalKeepsItsFlavour() throws Exception {
+        Throwable local = new TransactionRolledbackLocalException("Client's transaction aborted");
+
+        Throwable toClient = EjbExceptions.toClientException(new RuntimeException("mapped", local), method());
+
+        assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
+        assertSame(local, toClient.getCause());
+    }
+
+    @Test
+    @DisplayName("the CORBA shape of the refusal is mapped too, and no CORBA type is sent to the client")
+    void theCorbaShapeIsMappedAndNotShipped() throws Exception {
+        Throwable local = new TransactionRolledbackLocalException("Client's transaction aborted");
+        Throwable corba = new TRANSACTION_ROLLEDBACK("rolled back", local);
+
+        Throwable toClient = EjbExceptions.toClientException(corba, method());
+
+        assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
+        assertSame(local, toClient.getCause());
+        assertFalse(hasCorbaInChain(toClient), "a CORBA type would travel to the client");
+        assertTrue(toClient.getMessage().contains("TRANSACTION_ROLLEDBACK"), toClient.getMessage());
+    }
+
+    @Test
+    @DisplayName("a CORBA rollback that carries nothing else is still a rollback, with a plain cause chain")
+    void aBareCorbaRollbackIsMapped() throws Exception {
+        Throwable corba = new TRANSACTION_ROLLEDBACK("rolled back", new IllegalStateException("inner"));
+
+        Throwable toClient = EjbExceptions.toClientException(corba, method());
+
+        assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
+        assertFalse(hasCorbaInChain(toClient));
+        assertTrue(toClient.getCause().getMessage().contains("inner"), String.valueOf(toClient.getCause()));
+    }
+
+    @Test
+    @DisplayName("another CORBA system exception is an EJBException without a CORBA cause")
+    void otherCorbaExceptionsAreNotShipped() throws Exception {
+        Throwable toClient = EjbExceptions.toClientException(
+                new NO_PERMISSION("denied", new java.rmi.AccessException("no")), method());
+
+        assertInstanceOf(EJBException.class, toClient);
+        assertNotSame(EJBTransactionRolledbackException.class, toClient.getClass());
+        assertFalse(hasCorbaInChain(toClient));
+        assertTrue(toClient.getMessage().contains("NO_PERMISSION"), toClient.getMessage());
+    }
+
+    private static boolean hasCorbaInChain(Throwable t) {
+        for (Throwable c = t; c != null; c = c.getCause()) {
+            if (c.getClass().getName().startsWith("org.omg.")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Characterization test: it passes without the change under test and pins

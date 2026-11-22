@@ -16,13 +16,25 @@
 
 package org.glassfish.orb.http.server;
 
+import jakarta.ejb.AccessLocalException;
 import jakarta.ejb.ApplicationException;
+import jakarta.ejb.EJBAccessException;
 import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBTransactionRequiredException;
 import jakarta.ejb.EJBTransactionRolledbackException;
+import jakarta.ejb.NoSuchEJBException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.TransactionRequiredLocalException;
 import jakarta.ejb.TransactionRolledbackLocalException;
 
 import java.lang.reflect.Method;
 import java.rmi.RemoteException;
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Deque;
+import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -51,26 +63,39 @@ import java.util.Set;
  *       system exception</li>
  * </ul>
  *
- * <p>One system exception is not flattened to {@link EJBException}: a call
- * refused because the caller's transaction can only roll back. The container
- * raises {@link TransactionRolledbackLocalException} for that, and the
- * specification gives a business client {@link EJBTransactionRolledbackException},
- * which is the type a caller catches to tell "your transaction is doomed"
- * from "the bean failed". Wrapping it in a plain {@code EJBException} would
- * hide the one fact the caller needs.
+ * <p>Four system exceptions are not flattened to {@link EJBException}. They are
+ * the ones GlassFish's IIOP business-view wrapper keeps apart, and each says
+ * something about the call rather than about the bean:
+ * <ul>
+ *   <li>a call refused because the caller's transaction can only roll back:
+ *       {@link EJBTransactionRolledbackException}</li>
+ *   <li>a call the caller may not make: {@link EJBAccessException}</li>
+ *   <li>a call that needs a transaction and has none:
+ *       {@link EJBTransactionRequiredException}</li>
+ *   <li>a call on a bean instance that no longer exists:
+ *       {@link NoSuchEJBException}</li>
+ * </ul>
+ * Wrapping them in a plain {@code EJBException} would hide the one fact the
+ * caller needs: "your transaction is doomed" and "you are not allowed" are not
+ * "the bean failed".
  *
- * <p>The container does not always raise that exception as itself. For a call
- * arriving on a remote view GlassFish passes what the container threw through
- * its IIOP exception mapping, which turns it into a CORBA
- * {@code TRANSACTION_ROLLEDBACK} carrying the original as its cause, or a
- * {@code RuntimeException} wrapping either. So the whole cause chain is
- * searched, by class name for the types this module cannot depend on.
+ * <p>On a remote view the container does not hand these over as themselves.
+ * Its IIOP exception mapping turns them into CORBA system exceptions
+ * ({@code TRANSACTION_ROLLEDBACK}, {@code NO_PERMISSION},
+ * {@code TRANSACTION_REQUIRED}, {@code OBJECT_NOT_EXIST}) that carry the
+ * original as their cause, and wraps a bean's system exception in the
+ * container-internal {@code InternalEJBContainerException}. The business-view
+ * wrapper undoes both, and so does this class: the internal wrapper is removed,
+ * and only the exception that is then at the top is looked at, as the IIOP
+ * mapping does. A bean's own system exception that merely wraps one of the four
+ * is therefore still an {@code EJBException}. Types this module cannot depend
+ * on are recognised by class name.
  *
- * <p>A thin client may not be able to load CORBA classes, so none is shipped to
- * it: where a CORBA type would travel as a cause, a plain copy of the chain
- * (class names, messages and stack traces) travels instead.
- */
-public final class EjbExceptions {
+ * <p>A thin client cannot be expected to load container or CORBA classes, so
+ * none is shipped to it: where such a type would travel in a cause chain, or as
+ * a suppressed exception, a plain copy (class names, messages and stack traces)
+ * travels instead.
+ */public final class EjbExceptions {
 
     private EjbExceptions() {
     }
@@ -84,91 +109,186 @@ public final class EjbExceptions {
         if (isApplicationException(thrown, method)) {
             return thrown;
         }
-        if (thrown instanceof EJBTransactionRolledbackException) {
-            return thrown;
+        Throwable top = unwrap(thrown);
+        if (top instanceof EJBTransactionRolledbackException || top instanceof EJBAccessException
+                || top instanceof EJBTransactionRequiredException || top instanceof NoSuchEJBException) {
+            return top;
         }
-        Throwable rollback = findRollback(thrown);
-        if (rollback != null) {
-            EJBTransactionRolledbackException rolledBack = new EJBTransactionRolledbackException(describe(rollback));
-            Throwable cause = isCorba(rollback) ? safe(rollback.getCause()) : safe(rollback);
-            if (cause != null) {
-                rolledBack.initCause(cause);
+        if (isRollback(top)) {
+            return typed(new EJBTransactionRolledbackException(describe(top)), top);
+        }
+        if (isAccessDenied(top)) {
+            return typed(new EJBAccessException(describe(top)), top);
+        }
+        if (isTransactionRequired(top)) {
+            return typed(new EJBTransactionRequiredException(describe(top)), top);
+        }
+        if (isNoSuchObject(top)) {
+            return typed(new NoSuchEJBException(describe(top)), top);
+        }
+        if (top != thrown && top instanceof EJBException ejb) {
+            // The bean's own system exception, which is what the container
+            // wrapped for the transport and what the IIOP wrapper hands over.
+            if (!containsInternal(ejb)) {
+                return ejb;
             }
-            return rolledBack;
+            EJBException clean = new EJBException(ejb.getMessage());
+            Throwable cause = safe(ejb.getCause());
+            if (cause != null) {
+                clean.initCause(cause);
+            }
+            return clean;
         }
         // EJBException carries the original as its "caused by", which is the
         // shape a client already expects to unwrap.
-        Throwable cause = safe(thrown);
-        return new EJBException(describe(thrown), cause instanceof Exception e ? e : new RuntimeException(cause));
+        Throwable cause = safe(top);
+        return new EJBException(describe(top), cause instanceof Exception e ? e : new RuntimeException(cause));
     }
 
     /** How deep a cause chain is followed before it is taken to be a cycle. */
     private static final int MAX_CAUSE_DEPTH = 32;
 
-    /** The classes, by name, that say a transaction was rolled back, none of which this module can depend on. */
+    /** How many throwables are examined or copied for one exception, cause chains and suppressed ones together. */
+    private static final int MAX_NODES = 256;
+
+    /** The classes, by exact name, that only carry another exception across the container or the transport. */
+    private static final Set<String> TRANSPORT_WRAPPERS = Set.of(
+            "com.sun.ejb.containers.InternalEJBContainerException",
+            "java.lang.reflect.UndeclaredThrowableException",
+            "java.lang.reflect.InvocationTargetException");
+
     private static final Set<String> ROLLBACK_TYPES = Set.of(
             "org.omg.CORBA.TRANSACTION_ROLLEDBACK",
             "jakarta.transaction.TransactionRolledbackException",
             "javax.transaction.TransactionRolledbackException");
 
-    private static String describe(Throwable t) {
-        return t.getClass().getName() + (t.getMessage() == null ? "" : ": " + t.getMessage());
+    private static final Set<String> ACCESS_TYPES = Set.of("org.omg.CORBA.NO_PERMISSION");
+
+    private static final Set<String> TRANSACTION_REQUIRED_TYPES = Set.of(
+            "org.omg.CORBA.TRANSACTION_REQUIRED",
+            "jakarta.transaction.TransactionRequiredException",
+            "javax.transaction.TransactionRequiredException");
+
+    private static final Set<String> NO_SUCH_OBJECT_TYPES = Set.of("org.omg.CORBA.OBJECT_NOT_EXIST");
+
+    /** Packages whose classes belong to the container or the ORB and mean nothing to a thin client. */
+    private static final List<String> INTERNAL_PREFIXES = List.of(
+            "org.omg.", "com.sun.ejb.", "com.sun.corba.", "com.sun.enterprise.",
+            "org.glassfish.enterprise.", "org.glassfish.ejb.");
+
+    private static boolean isRollback(Throwable t) {
+        return t instanceof TransactionRolledbackLocalException || named(t, ROLLBACK_TYPES);
     }
 
-    /** @return the first throwable in the cause chain that reports a rollback, or null */
-    private static Throwable findRollback(Throwable thrown) {
-        int depth = 0;
-        for (Throwable t = thrown; t != null && depth < MAX_CAUSE_DEPTH; t = t.getCause(), depth++) {
-            if (t instanceof TransactionRolledbackLocalException) {
-                return t;
+    private static boolean isAccessDenied(Throwable t) {
+        return t instanceof java.rmi.AccessException || t instanceof AccessLocalException || named(t, ACCESS_TYPES);
+    }
+
+    private static boolean isTransactionRequired(Throwable t) {
+        return t instanceof TransactionRequiredLocalException || named(t, TRANSACTION_REQUIRED_TYPES);
+    }
+
+    private static boolean isNoSuchObject(Throwable t) {
+        return t instanceof java.rmi.NoSuchObjectException || t instanceof NoSuchObjectLocalException
+                || named(t, NO_SUCH_OBJECT_TYPES);
+    }
+
+    /** @return whether the class of {@code t}, or one of its superclasses, is one of these */
+    private static boolean named(Throwable t, Set<String> names) {
+        for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
+            if (names.contains(c.getName())) {
+                return true;
             }
-            for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
-                if (ROLLBACK_TYPES.contains(c.getName())) {
-                    return t;
+        }
+        return false;
+    }
+
+    private static boolean isInternal(Throwable t) {
+        for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
+            for (String prefix : INTERNAL_PREFIXES) {
+                if (c.getName().startsWith(prefix)) {
+                    return true;
                 }
             }
         }
-        return null;
-    }
-
-    private static boolean isCorba(Throwable t) {
-        for (Class<?> c = t.getClass(); c != null; c = c.getSuperclass()) {
-            if (c.getName().startsWith("org.omg.CORBA.")) {
-                return true;
-            }
-        }
         return false;
     }
 
-    private static boolean hasCorba(Throwable thrown) {
-        int depth = 0;
-        for (Throwable t = thrown; t != null && depth < MAX_CAUSE_DEPTH; t = t.getCause(), depth++) {
-            if (isCorba(t)) {
-                return true;
-            }
+    /** @return {@code thrown} with the wrappers that only carry another exception taken off */
+    private static Throwable unwrap(Throwable thrown) {
+        Throwable top = thrown;
+        for (int i = 0; i < MAX_CAUSE_DEPTH && top.getCause() != null
+                && TRANSPORT_WRAPPERS.contains(top.getClass().getName()); i++) {
+            top = top.getCause();
         }
-        return false;
+        return top;
     }
 
-    /** @return {@code t} if nothing in its chain is a CORBA type, else a plain copy of it */
+    private static String describe(Throwable t) {
+        String message = t.getMessage();
+        return t.getClass().getName() + (message == null || message.isEmpty() ? "" : ": " + message);
+    }
+
+    /**
+     * Gives the client exception the cause the IIOP wrapper gives it: the
+     * original. When the exception at the top is itself a container type, as the
+     * CORBA ones are, that is what it carried.
+     */
+    private static <T extends EJBException> T typed(T client, Throwable top) {
+        Throwable cause = isInternal(top) ? safe(top.getCause()) : safe(top);
+        if (cause != null) {
+            client.initCause(cause);
+        }
+        return client;
+    }
+
+    /**
+     * @return whether {@code root}, its causes or its suppressed exceptions
+     *         include a container or CORBA type; what cannot be examined within
+     *         the limits counts as including one
+     */
+    private static boolean containsInternal(Throwable root) {
+        Set<Throwable> seen = Collections.newSetFromMap(new IdentityHashMap<>());
+        Deque<Throwable> pending = new ArrayDeque<>();
+        pending.add(root);
+        while (!pending.isEmpty() && seen.size() < MAX_NODES) {
+            Throwable t = pending.poll();
+            if (!seen.add(t)) {
+                continue;
+            }
+            if (isInternal(t)) {
+                return true;
+            }
+            if (t.getCause() != null) {
+                pending.add(t.getCause());
+            }
+            pending.addAll(Arrays.asList(t.getSuppressed()));
+        }
+        return !pending.isEmpty();
+    }
+
+    /** @return {@code t} if nothing it carries is a container or CORBA type, else a plain copy of it */
     private static Throwable safe(Throwable t) {
-        return t == null || !hasCorba(t) ? t : plainCopy(t);
+        return t == null || !containsInternal(t) ? t : plainCopy(t, new int[1], 0);
     }
 
-    /** A chain of plain exceptions that describes {@code t} and its causes without their classes. */
-    private static Throwable plainCopy(Throwable t) {
-        return plainCopy(t, 0);
-    }
-
-    private static Throwable plainCopy(Throwable t, int depth) {
-        if (t == null || depth >= MAX_CAUSE_DEPTH) {
+    /** A tree of plain exceptions describing {@code t}, its causes and suppressed ones, without their classes. */
+    private static Throwable plainCopy(Throwable t, int[] copied, int depth) {
+        if (t == null || depth >= MAX_CAUSE_DEPTH || copied[0] >= MAX_NODES) {
             return null;
         }
+        copied[0]++;
         RuntimeException copy = new RuntimeException(describe(t));
         copy.setStackTrace(t.getStackTrace());
-        Throwable cause = plainCopy(t.getCause(), depth + 1);
+        Throwable cause = plainCopy(t.getCause(), copied, depth + 1);
         if (cause != null) {
             copy.initCause(cause);
+        }
+        for (Throwable suppressed : t.getSuppressed()) {
+            Throwable plain = plainCopy(suppressed, copied, depth + 1);
+            if (plain != null) {
+                copy.addSuppressed(plain);
+            }
         }
         return copy;
     }

@@ -123,15 +123,12 @@ public interface ContainerBridge {
      * does not decide what removal means, the container does, and after it the
      * reference is dead rather than merely idle.
      *
-     * <p><strong>SPI change.</strong> This method now declares the checked
-     * {@link SessionRefusedException}; it used to declare only
-     * {@link NoSuchTargetException}. A caller of the interface must handle it,
-     * and the dispatcher answers it with a 500, not with the 204 of a session
-     * that is gone and not with the 404 of an absent target. An implementation
-     * that reported "cannot be removed" as {@link NoSuchTargetException} until
-     * now must throw {@link SessionRefusedException} instead, or the caller is
-     * told that its cleanup worked. An implementation that never refuses
-     * needs no change: an overriding method may declare fewer exceptions.
+     * <p>A bridge that cannot remove a session because it is busy, in a
+     * transaction, or not stateful at all throws {@link SessionRefusedException}.
+     * It must not report that as {@link NoSuchTargetException}: the dispatcher
+     * answers an absent target with the 204 of a session that is gone, and the
+     * caller would be told that its cleanup worked. A refusal is answered with a
+     * 500.
      *
      * @param key the session to end
      * @throws NoSuchTargetException if there is no such bean

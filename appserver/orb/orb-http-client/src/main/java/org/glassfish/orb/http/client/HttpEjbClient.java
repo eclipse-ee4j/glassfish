@@ -288,7 +288,7 @@ public final class HttpEjbClient implements AutoCloseable {
         boolean rollbackOnly = joinAmbientTransaction();
         String invocationId = newInvocationId();
         HttpTransport.Request request = buildInvocation(locator, viewClass, method, args, invocationId,
-                rollbackOnly);
+                rollbackOnly, carried());
         HttpTransport.Response response;
         try {
             response = transport.exchange(request);
@@ -301,7 +301,8 @@ public final class HttpEjbClient implements AutoCloseable {
                 drain(response.body());
                 downgrade();
                 invocationId = newInvocationId();
-                request = buildInvocation(locator, viewClass, method, args, invocationId, rollbackOnly);
+                request = buildInvocation(locator, viewClass, method, args, invocationId, rollbackOnly,
+                        carried());
                 response = transport.exchange(request);
             }
         } catch (java.net.http.HttpConnectTimeoutException e) {
@@ -391,9 +392,13 @@ public final class HttpEjbClient implements AutoCloseable {
             return CompletableFuture.failedFuture(e);
         }
         final String invocationId = newInvocationId();
+        // Read here, on the caller's thread, and kept for the retry below: that
+        // runs on whichever thread completes the first exchange, where the
+        // thread-local association is not the caller's.
+        final Carried carried = carried();
         final HttpTransport.Request request;
         try {
-            request = buildInvocation(locator, viewClass, method, args, invocationId, rollbackOnly);
+            request = buildInvocation(locator, viewClass, method, args, invocationId, rollbackOnly, carried);
         } catch (IOException e) {
             return CompletableFuture.failedFuture(TransportErrors.translate(e, method, viewClass));
         }
@@ -407,7 +412,8 @@ public final class HttpEjbClient implements AutoCloseable {
                 drain(response.body());
                 downgrade();
                 return transport.exchangeAsync(
-                        buildInvocation(locator, viewClass, method, args, newInvocationId(), rollbackOnly));
+                        buildInvocation(locator, viewClass, method, args, newInvocationId(), rollbackOnly,
+                                carried));
             } catch (IOException e) {
                 return CompletableFuture.<HttpTransport.Response>failedFuture(e);
             }
@@ -431,12 +437,36 @@ public final class HttpEjbClient implements AutoCloseable {
         });
     }
 
+    /** The part of the caller's transaction that an invocation carries: the branch and the time left for it. */
+    private record Carried(Xid xid, long timeoutSeconds) {
+    }
+
+    /**
+     * Reads the thread's association once, so that the body and the headers
+     * describe the same transaction and an interceptor changing it mid-build
+     * cannot produce an invocation whose prefix and timeout differ.
+     *
+     * <p>Joining is switched off for this client, so a branch that an earlier
+     * joining call (or an earlier transaction on this pooled thread) left
+     * associated is not this call's business: sending it would make the server
+     * import a branch nobody will complete there. A branch driven through
+     * {@code HttpUserTransaction} is not ambient and is still sent.
+     */
+    private Carried carried() {
+        Xid transaction = ClientTransactionContext.current();
+        if (transaction != null && !config.joinAmbientTransaction() && ClientTransactionContext.isAmbient()) {
+            transaction = null;
+        }
+        return new Carried(transaction, transaction == null ? 0 : ClientTransactionContext.currentTimeoutSeconds());
+    }
+
     private HttpTransport.Request buildInvocation(EjbLocator locator,
                                                   Class<?> viewClass,
                                                   Method method,
                                                   Object[] args,
                                                   String invocationId,
-                                                  boolean rollbackOnly) throws IOException {
+                                                  boolean rollbackOnly,
+                                                  Carried carried) throws IOException {
         Class<?>[] parameterTypes = method.getParameterTypes();
         String[] parameterTypeNames = new String[parameterTypes.length];
         for (int i = 0; i < parameterTypes.length; i++) {
@@ -453,19 +483,7 @@ public final class HttpEjbClient implements AutoCloseable {
                 method.getName(),
                 parameterTypeNames);
 
-        // Read the association once and use it for both the body and the
-        // headers, so an interceptor changing it mid-build cannot produce an
-        // invocation whose prefix and timeout describe different transactions.
-        Xid transaction = ClientTransactionContext.current();
-        if (transaction != null && !config.joinAmbientTransaction() && ClientTransactionContext.isAmbient()) {
-            // Joining is switched off for this client, so a branch that an
-            // earlier joining call (or an earlier transaction on this pooled
-            // thread) left associated is not this call's business: sending it
-            // would make the server import a branch nobody will complete there.
-            // A branch driven through HttpUserTransaction is not ambient and
-            // is still sent.
-            transaction = null;
-        }
+        Xid transaction = carried.xid();
         ByteBuffer[] body = marshalArguments(args, transaction);
 
         Map<String, String> headers = new HashMap<>(4);
@@ -473,11 +491,8 @@ public final class HttpEjbClient implements AutoCloseable {
         if (rollbackOnly) {
             headers.put(Protocol.H_TXN_ROLLBACK_ONLY, "true");
         }
-        if (transaction != null) {
-            long timeout = ClientTransactionContext.currentTimeoutSeconds();
-            if (timeout > 0) {
-                headers.put(Protocol.H_TXN_TIMEOUT, Long.toString(timeout));
-            }
+        if (transaction != null && carried.timeoutSeconds() > 0) {
+            headers.put(Protocol.H_TXN_TIMEOUT, Long.toString(carried.timeoutSeconds()));
         }
 
         return new HttpTransport.Request(

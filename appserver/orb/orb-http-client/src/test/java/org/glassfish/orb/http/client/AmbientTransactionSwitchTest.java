@@ -17,16 +17,24 @@
 package org.glassfish.orb.http.client;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputFilter;
+import java.io.OutputStream;
 import java.net.URI;
 import java.util.Hashtable;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.naming.Context;
+import javax.transaction.xa.Xid;
 
 import org.glassfish.orb.http.protocol.InvocationEnvelope;
 import org.glassfish.orb.http.protocol.JavaSerializationMarshaller;
+import org.glassfish.orb.http.protocol.Marshaller;
 import org.glassfish.orb.http.protocol.Protocol;
 import org.glassfish.orb.http.protocol.TxContext;
+import org.glassfish.orb.http.protocol.Xids;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -145,6 +153,64 @@ class AmbientTransactionSwitchTest {
         assertEquals(2, transport.calls.size());
         assertFalse(sentTransaction(1).isPresent(), "the call carries a transaction it was told not to join");
         assertNull(transport.requestHeaders.get(1).get(Protocol.H_TXN_TIMEOUT), "and its timeout");
+    }
+
+    /** A branch begun the way {@code HttpUserTransaction} does: not through a foreign manager, so not ambient. */
+    private static Xid userTransactionBranch() {
+        return new Xids.SimpleXid(0x4A5441, new byte[] { 7, 7 }, new byte[] { 8 });
+    }
+
+    @Test
+    @DisplayName("with joining switched off a branch begun through HttpUserTransaction is still sent")
+    void switchedOffStillSendsAUserTransactionBranch() throws Exception {
+        ClientTransactionContext.associate(userTransactionBranch(), 30);
+
+        ping(ClientConfiguration.builder(URI.create(PROVIDER)).joinAmbientTransaction(false).build());
+
+        assertEquals(1, transport.calls.size());
+        assertTrue(sentTransaction(0).isPresent(), "the client's own transaction was dropped");
+        assertNotNull(transport.requestHeaders.get(0).get(Protocol.H_TXN_TIMEOUT), "and its timeout");
+    }
+
+    /** Announces a codec the server will refuse, over the built-in encoding. */
+    private static final class ExoticMarshaller implements Marshaller {
+        private final Marshaller delegate = new JavaSerializationMarshaller();
+
+        @Override
+        public String codec() {
+            return "exotic";
+        }
+
+        @Override
+        public ObjectWriter newWriter(OutputStream out) throws IOException {
+            return delegate.newWriter(out);
+        }
+
+        @Override
+        public ObjectReader newReader(InputStream in, ClassLoader loader, ObjectInputFilter filter)
+                throws IOException {
+            return delegate.newReader(in, loader, filter);
+        }
+    }
+
+    @Test
+    @DisplayName("the retry of an asynchronous call after a codec downgrade carries the first attempt's transaction")
+    void theAsynchronousRetryCarriesTheTransactionOfTheFirstAttempt() throws Exception {
+        ClientTransactionContext.associate(userTransactionBranch(), 30);
+        transport.refuseUnsupportedCodec = 1;
+        transport.asyncOnAnotherThread = true;
+        HttpEjbClient client = new HttpEjbClient(
+                ClientConfiguration.builder(URI.create(PROVIDER)).joinAmbientTransaction(false).build(),
+                transport, new ExoticMarshaller(), JavaSerializationMarshaller.defaultFilter());
+
+        client.invokeAsync(new EjbLocator("app", "module", null, "PingerBean"), Pinger.class,
+                Pinger.class.getMethod("ping"), new Object[0]).handle((value, error) -> null)
+                .get(30, TimeUnit.SECONDS);
+
+        assertEquals(2, transport.calls.size(), "expected the refused attempt and one retry");
+        assertTrue(sentTransaction(0).isPresent(), "guard: the first attempt carries the transaction");
+        assertTrue(sentTransaction(1).isPresent(), "the retry was sent without the transaction");
+        assertNotNull(transport.requestHeaders.get(1).get(Protocol.H_TXN_TIMEOUT), "and without its timeout");
     }
 
     @Test

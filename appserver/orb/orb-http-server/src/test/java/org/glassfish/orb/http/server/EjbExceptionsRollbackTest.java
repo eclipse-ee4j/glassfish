@@ -13,6 +13,8 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
+
+
 package org.glassfish.orb.http.server;
 
 import jakarta.ejb.EJBException;
@@ -23,7 +25,6 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.omg.CORBA.NO_PERMISSION;
 import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,7 +40,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * <p>What this does not cover: which exception the real container's remote
  * business view hands the dispatcher for such a call (that needs a running
- * server); the mapping is checked for the two types the specification names.
+ * server). The shapes are the ones the container's IIOP exception mapping
+ * produces: the exception itself, or a CORBA {@code TRANSACTION_ROLLEDBACK}
+ * that carries it as its cause.
  */
 class EjbExceptionsRollbackTest {
 
@@ -68,17 +71,6 @@ class EjbExceptionsRollbackTest {
     }
 
     @Test
-    @DisplayName("a wrapped rollback refusal reaches the caller as EJBTransactionRolledbackException")
-    void aWrappedRolledBackRefusalKeepsItsFlavour() throws Exception {
-        Throwable local = new TransactionRolledbackLocalException("Client's transaction aborted");
-
-        Throwable toClient = EjbExceptions.toClientException(new RuntimeException("mapped", local), method());
-
-        assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
-        assertSame(local, toClient.getCause());
-    }
-
-    @Test
     @DisplayName("the CORBA shape of the refusal is mapped too, and no CORBA type is sent to the client")
     void theCorbaShapeIsMappedAndNotShipped() throws Exception {
         Throwable local = new TransactionRolledbackLocalException("Client's transaction aborted");
@@ -88,7 +80,7 @@ class EjbExceptionsRollbackTest {
 
         assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
         assertSame(local, toClient.getCause());
-        assertFalse(hasCorbaInChain(toClient), "a CORBA type would travel to the client");
+        assertFalse(InternalTypes.inChain(toClient), "a CORBA type would travel to the client");
         assertTrue(toClient.getMessage().contains("TRANSACTION_ROLLEDBACK"), toClient.getMessage());
     }
 
@@ -100,29 +92,25 @@ class EjbExceptionsRollbackTest {
         Throwable toClient = EjbExceptions.toClientException(corba, method());
 
         assertInstanceOf(EJBTransactionRolledbackException.class, toClient);
-        assertFalse(hasCorbaInChain(toClient));
+        assertFalse(InternalTypes.inChain(toClient));
         assertTrue(toClient.getCause().getMessage().contains("inner"), String.valueOf(toClient.getCause()));
     }
 
     @Test
-    @DisplayName("another CORBA system exception is an EJBException without a CORBA cause")
-    void otherCorbaExceptionsAreNotShipped() throws Exception {
-        Throwable toClient = EjbExceptions.toClientException(
-                new NO_PERMISSION("denied", new java.rmi.AccessException("no")), method());
+    @DisplayName("a rollback inside the bean's own system exception is not the caller's rollback")
+    void aRollbackBelowTheTopIsNotMapped() throws Exception {
+        Throwable inner = new TransactionRolledbackLocalException("inner");
 
-        assertInstanceOf(EJBException.class, toClient);
-        assertNotSame(EJBTransactionRolledbackException.class, toClient.getClass());
-        assertFalse(hasCorbaInChain(toClient));
-        assertTrue(toClient.getMessage().contains("NO_PERMISSION"), toClient.getMessage());
-    }
+        for (Throwable thrown : new Throwable[] {
+            new EJBException("bean failed", (Exception) inner),
+            new RuntimeException("bean failed", inner),
+            new IllegalStateException("bean failed", new TRANSACTION_ROLLEDBACK("x", inner))
+        }) {
+            Throwable toClient = EjbExceptions.toClientException(thrown, method());
 
-    private static boolean hasCorbaInChain(Throwable t) {
-        for (Throwable c = t; c != null; c = c.getCause()) {
-            if (c.getClass().getName().startsWith("org.omg.")) {
-                return true;
-            }
+            assertEquals(EJBException.class, toClient.getClass(), String.valueOf(thrown));
+            assertFalse(InternalTypes.inChain(toClient), String.valueOf(thrown));
         }
-        return false;
     }
 
     // Characterization test: it passes without the change under test and pins

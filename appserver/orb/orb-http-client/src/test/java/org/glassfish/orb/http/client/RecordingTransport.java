@@ -19,12 +19,14 @@ package org.glassfish.orb.http.client;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Records what was asked of the server and answers what the test dictates.
@@ -43,6 +45,9 @@ final class RecordingTransport implements HttpTransport {
 
     /** The body of every request, in the same order as {@link #calls}. */
     final List<byte[]> requestBodies = new ArrayList<>();
+
+    /** Whether an asynchronous exchange completes later and on another thread, as a real transport's does. */
+    boolean asyncOnAnotherThread;
 
     private final Map<String, Response> canned = new HashMap<>();
 
@@ -111,6 +116,15 @@ final class RecordingTransport implements HttpTransport {
 
     @Override
     public CompletableFuture<Response> exchangeAsync(Request request) {
+        if (asyncOnAnotherThread) {
+            return CompletableFuture.supplyAsync(() -> {
+                try {
+                    return exchange(request);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }, CompletableFuture.delayedExecutor(100, TimeUnit.MILLISECONDS));
+        }
         record(request);
         return CompletableFuture.failedFuture(new UnsupportedOperationException());
     }

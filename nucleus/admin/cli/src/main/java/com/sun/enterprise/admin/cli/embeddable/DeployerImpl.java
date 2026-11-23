@@ -222,7 +222,9 @@ public class DeployerImpl implements Deployer {
 
             // Use the temp file's contents as the inbound payload to
             // correctly process the downloaded files.
-            final PayloadFilesManager pfm = new PayloadFilesManager.Perm(retrieveDir, null);
+            // Unconfined: retrieveDir is a caller-requested, trusted destination
+            // (--retrieve <dir>), not necessarily under any server-controlled root.
+            final PayloadFilesManager pfm = PayloadFilesManager.Perm.unconfined(retrieveDir, null, null);
             try (FileInputStream payloadInputStream = new FileInputStream(payloadZip)) {
                 PayloadImpl.Inbound inboundPayload = PayloadImpl.Inbound.newInstance("application/zip", payloadInputStream);
                 pfm.processParts(inboundPayload); // explodes the payloadZip.

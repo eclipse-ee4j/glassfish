@@ -139,7 +139,12 @@ public class ExecHttpCommand implements HttpCommand<ActionReport> {
                 }
                 LOG.log(TRACE, "---- END PAYLOAD ----");
             }
-            PayloadFilesManager downloadedFilesMgr = new PayloadFilesManager.Perm(fileOutputDir, null, null);
+            /*
+             * Unconfined: the DAS echoes back, as file-xfer-root, local
+             * paths the user asked for (e.g. deploy --retrieve <dir>), which
+             * need not be under fileOutputDir.
+             */
+            PayloadFilesManager downloadedFilesMgr = PayloadFilesManager.Perm.unconfined(fileOutputDir, null, null);
             try {
                 downloadedFilesMgr.processParts(inbound);
             } catch (CommandException cex) {

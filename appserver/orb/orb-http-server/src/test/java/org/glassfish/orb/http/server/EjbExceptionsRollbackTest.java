@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -74,7 +73,7 @@ class EjbExceptionsRollbackTest {
     @DisplayName("the CORBA shape of the refusal is mapped too, and no CORBA type is sent to the client")
     void theCorbaShapeIsMappedAndNotShipped() throws Exception {
         Throwable local = new TransactionRolledbackLocalException("Client's transaction aborted");
-        Throwable corba = new TRANSACTION_ROLLEDBACK("rolled back", local);
+        Throwable corba = Corba.rolledBack("rolled back", local);
 
         Throwable toClient = EjbExceptions.toClientException(corba, method());
 
@@ -87,7 +86,7 @@ class EjbExceptionsRollbackTest {
     @Test
     @DisplayName("a CORBA rollback that carries nothing else is still a rollback, with a plain cause chain")
     void aBareCorbaRollbackIsMapped() throws Exception {
-        Throwable corba = new TRANSACTION_ROLLEDBACK("rolled back", new IllegalStateException("inner"));
+        Throwable corba = Corba.rolledBack("rolled back", new IllegalStateException("inner"));
 
         Throwable toClient = EjbExceptions.toClientException(corba, method());
 
@@ -104,7 +103,7 @@ class EjbExceptionsRollbackTest {
         for (Throwable thrown : new Throwable[] {
             new EJBException("bean failed", (Exception) inner),
             new RuntimeException("bean failed", inner),
-            new IllegalStateException("bean failed", new TRANSACTION_ROLLEDBACK("x", inner))
+            new IllegalStateException("bean failed", Corba.rolledBack("x", inner))
         }) {
             Throwable toClient = EjbExceptions.toClientException(thrown, method());
 

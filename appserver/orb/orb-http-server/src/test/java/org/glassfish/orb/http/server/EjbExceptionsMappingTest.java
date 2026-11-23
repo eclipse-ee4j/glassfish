@@ -27,7 +27,6 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.NoSuchEJBException;
 import jakarta.ejb.NoSuchObjectLocalException;
 import jakarta.ejb.TransactionRequiredLocalException;
-import jakarta.ejb.TransactionRolledbackLocalException;
 
 import java.lang.reflect.Method;
 import java.rmi.AccessException;
@@ -35,9 +34,6 @@ import java.rmi.NoSuchObjectException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.omg.CORBA.NO_PERMISSION;
-import org.omg.CORBA.OBJECT_NOT_EXIST;
-import org.omg.CORBA.TRANSACTION_REQUIRED;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -73,7 +69,7 @@ class EjbExceptionsMappingTest {
     void aDeniedCallIsAnAccessException() throws Exception {
         AccessException denied = new AccessException("no role");
 
-        Throwable fromCorba = toClient(new NO_PERMISSION("denied", denied));
+        Throwable fromCorba = toClient(Corba.noPermission("denied", denied));
 
         assertInstanceOf(EJBAccessException.class, fromCorba);
         assertSame(denied, fromCorba.getCause());
@@ -87,7 +83,7 @@ class EjbExceptionsMappingTest {
     void aMissingTransactionIsATransactionRequiredException() throws Exception {
         Throwable original = new TransactionRequiredLocalException("mandatory");
 
-        Throwable fromCorba = toClient(new TRANSACTION_REQUIRED("required", original));
+        Throwable fromCorba = toClient(Corba.transactionRequired("required", original));
 
         assertInstanceOf(EJBTransactionRequiredException.class, fromCorba);
         assertSame(original, fromCorba.getCause());
@@ -99,7 +95,7 @@ class EjbExceptionsMappingTest {
     void aRemovedBeanIsANoSuchEjbException() throws Exception {
         Throwable original = new NoSuchObjectException("removed");
 
-        Throwable fromCorba = toClient(new OBJECT_NOT_EXIST("gone", original));
+        Throwable fromCorba = toClient(Corba.objectNotExist("gone", original));
 
         assertInstanceOf(NoSuchEJBException.class, fromCorba);
         assertSame(original, fromCorba.getCause());
@@ -110,7 +106,7 @@ class EjbExceptionsMappingTest {
     @Test
     @DisplayName("an empty CORBA message does not leave a dangling colon in the client's message")
     void anEmptyMessageHasNoDanglingColon() throws Exception {
-        Throwable toClient = toClient(new NO_PERMISSION("", null));
+        Throwable toClient = toClient(Corba.noPermission("", null));
 
         assertEquals("org.omg.CORBA.NO_PERMISSION", toClient.getMessage());
     }
@@ -129,30 +125,64 @@ class EjbExceptionsMappingTest {
     @Test
     @DisplayName("a container type inside the bean's exception is replaced by a plain copy")
     void aContainerTypeInsideTheBeansExceptionIsNotShipped() throws Exception {
-        EJBException bean = new EJBException("boom", new NO_PERMISSION("denied", new IllegalStateException("deep")));
+        EJBException bean = new EJBException("boom", Corba.noPermission("denied", new IllegalStateException("deep")));
+
+        bean.setStackTrace(new StackTraceElement[] {new StackTraceElement("demo.Bean", "call", "Bean.java", 7)});
 
         Throwable toClient = toClient(new InternalEJBContainerException("boom", bean));
 
         assertEquals(EJBException.class, toClient.getClass());
         assertEquals("boom", toClient.getMessage());
+        assertEquals("demo.Bean", toClient.getStackTrace()[0].getClassName(), "the bean's own stack trace was lost");
         assertTrue(toClient.getCause().getMessage().contains("NO_PERMISSION"), String.valueOf(toClient.getCause()));
         assertTrue(toClient.getCause().getCause().getMessage().contains("deep"));
     }
 
     @Test
-    @DisplayName("what the wrapper carries is still mapped when it is one of the four")
-    void aMappedTypeBehindTheWrapperIsMapped() throws Exception {
-        Throwable carried = new TransactionRolledbackLocalException("y");
+    @DisplayName("a rollback exception that a nested remote call delivered is passed on from behind the wrapper")
+    void aNestedRollbackBehindTheWrapperIsPassedOn() throws Exception {
+        EJBTransactionRolledbackException nested = new EJBTransactionRolledbackException("doomed");
 
-        assertInstanceOf(EJBTransactionRolledbackException.class,
-                toClient(new InternalEJBContainerException("x", carried)));
+        assertSame(nested, toClient(new InternalEJBContainerException(null, nested)));
+    }
+
+    @Test
+    @DisplayName("a type passed on from behind the wrapper loses a CORBA type it carries, and keeps its type")
+    void aPassedOnTypeCarryingACorbaTypeIsCleaned() throws Exception {
+        EJBAccessException denied = new EJBAccessException("denied");
+        denied.initCause(new AccessException("no", Corba.noPermission("", null)));
+        denied.setStackTrace(new StackTraceElement[] {new StackTraceElement("demo.Bean", "call", "Bean.java", 7)});
+
+        Throwable toClient = toClient(new InternalEJBContainerException(null, denied));
+
+        assertEquals(EJBAccessException.class, toClient.getClass());
+        assertEquals("denied", toClient.getMessage());
+        assertEquals("demo.Bean", toClient.getStackTrace()[0].getClassName());
+        assertTrue(toClient.getCause().getMessage().contains("AccessException"), String.valueOf(toClient.getCause()));
+    }
+
+    /** What a method that declares {@code throws Exception} looks like to the dispatcher. */
+    public interface Legacy {
+        String hello() throws Exception;
+    }
+
+    @Test
+    @DisplayName("the container's wrapper is removed also when the method declares throws Exception")
+    void theWrapperIsRemovedForAMethodThatDeclaresException() throws Exception {
+        EJBException bean = new EJBException("boom");
+
+        Throwable toClient = EjbExceptions.toClientException(new InternalEJBContainerException("boom", bean),
+                Legacy.class.getMethod("hello"));
+
+        assertSame(bean, toClient);
+        assertFalse(InternalTypes.inChain(toClient));
     }
 
     @Test
     @DisplayName("a container type among the suppressed exceptions is not shipped either")
     void aSuppressedContainerTypeIsNotShipped() throws Exception {
         IllegalStateException thrown = new IllegalStateException("boom");
-        thrown.addSuppressed(new NO_PERMISSION("denied", null));
+        thrown.addSuppressed(Corba.noPermission("denied", null));
 
         Throwable toClient = toClient(thrown);
 

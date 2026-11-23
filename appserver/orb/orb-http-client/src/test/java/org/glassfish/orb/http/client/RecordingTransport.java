@@ -49,6 +49,9 @@ final class RecordingTransport implements HttpTransport {
     /** Whether an asynchronous exchange completes later and on another thread, as a real transport's does. */
     boolean asyncOnAnotherThread;
 
+    /** How long such an exchange takes before it completes. */
+    long asyncDelayMillis = 100;
+
     private final Map<String, Response> canned = new HashMap<>();
 
     /** How many of the next exchanges are refused with 406 "unsupported codec", to provoke a downgrade. */
@@ -123,7 +126,7 @@ final class RecordingTransport implements HttpTransport {
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
-            }, CompletableFuture.delayedExecutor(100, TimeUnit.MILLISECONDS));
+            }, CompletableFuture.delayedExecutor(asyncDelayMillis, TimeUnit.MILLISECONDS));
         }
         record(request);
         return CompletableFuture.failedFuture(new UnsupportedOperationException());

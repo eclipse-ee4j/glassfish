@@ -54,6 +54,16 @@
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
         </dependency>
+        <!--
+            Test scope only: the CORBA system exceptions the container's IIOP
+            mapping produces, so that the exception mapping is tested against
+            the real classes. The server code itself recognises them by name.
+        -->
+        <dependency>
+            <groupId>org.glassfish.corba</groupId>
+            <artifactId>glassfish-corba-omgapi</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>

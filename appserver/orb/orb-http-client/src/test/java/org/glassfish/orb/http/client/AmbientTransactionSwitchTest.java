@@ -214,6 +214,27 @@ class AmbientTransactionSwitchTest {
     }
 
     @Test
+    @DisplayName("the retry of an asynchronous call reports the time left when it is sent, not when the first attempt was")
+    void theAsynchronousRetryReportsTheTimeLeftNow() throws Exception {
+        ClientTransactionContext.associate(userTransactionBranch(), 30, false, System.nanoTime() + 2_500_000_000L);
+        transport.refuseUnsupportedCodec = 1;
+        transport.asyncOnAnotherThread = true;
+        transport.asyncDelayMillis = 700;
+        HttpEjbClient client = new HttpEjbClient(
+                ClientConfiguration.builder(URI.create(PROVIDER)).joinAmbientTransaction(false).build(),
+                transport, new ExoticMarshaller(), JavaSerializationMarshaller.defaultFilter());
+
+        client.invokeAsync(new EjbLocator("app", "module", null, "PingerBean"), Pinger.class,
+                Pinger.class.getMethod("ping"), new Object[0]).handle((value, error) -> null)
+                .get(30, TimeUnit.SECONDS);
+
+        assertEquals(2, transport.calls.size(), "expected the refused attempt and one retry");
+        long first = Long.parseLong(transport.requestHeaders.get(0).get(Protocol.H_TXN_TIMEOUT));
+        long retry = Long.parseLong(transport.requestHeaders.get(1).get(Protocol.H_TXN_TIMEOUT));
+        assertTrue(retry < first, "the retry reported " + retry + " s left, the first attempt " + first + " s");
+    }
+
+    @Test
     @DisplayName("the JNDI property switches joining off, and only the value false does")
     void thePropertySwitchesJoiningOff() throws Exception {
         assertTrue(joins(null), "default");

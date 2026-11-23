@@ -16,6 +16,8 @@
 
 package org.glassfish.orb.http.glassfish;
 
+import com.sun.enterprise.security.auth.realm.Realm;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
@@ -24,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -40,6 +43,7 @@ class RealmAuthenticatorTest {
     @AfterEach
     void tearDown() {
         RealmAuthenticator.clear();
+        RealmAuthenticator.defaultRealm = Realm::getDefaultInstance;
     }
 
     private static String basic(String raw) {
@@ -89,6 +93,21 @@ class RealmAuthenticatorTest {
         // ":secret" parses, so it reaches the realm - and outside a container
         // there is none, which must be a refusal rather than a free pass.
         assertThrows(SecurityException.class, () -> RealmAuthenticator.authenticate(basic(":secret")));
+    }
+
+    @Test
+    @DisplayName("a realm that cannot be reached is refused with the reason, not without one")
+    void aRealmThatCannotBeReachedIsRefusedWithItsCause() {
+        IllegalStateException unreachable = new IllegalStateException("no realm configured");
+        RealmAuthenticator.defaultRealm = () -> {
+            throw unreachable;
+        };
+
+        SecurityException refused = assertThrows(SecurityException.class,
+                () -> RealmAuthenticator.authenticate(basic("alice:secret")));
+
+        assertSame(unreachable, refused.getCause(), "the reason the realm could not be reached was dropped");
+        assertNull(RealmAuthenticator.authenticatedSubject(), "no identity may survive a refusal");
     }
 
     @Test

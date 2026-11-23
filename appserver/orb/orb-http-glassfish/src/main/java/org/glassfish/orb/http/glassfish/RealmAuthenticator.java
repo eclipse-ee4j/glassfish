@@ -94,8 +94,17 @@ final class RealmAuthenticator {
         String user = decoded.substring(0, colon);
         char[] password = decoded.substring(colon + 1).toCharArray();
 
+        String realm;
         try {
-            Subject subject = LoginContextDriver.jmacLogin(new Subject(), user, password, realmName());
+            realm = realmName();
+        } catch (SecurityException e) {
+            // Before the login, so that its reason is not replaced by the
+            // generic refusal below.
+            Arrays.fill(password, '\0');
+            throw e;
+        }
+        try {
+            Subject subject = LoginContextDriver.jmacLogin(new Subject(), user, password, realm);
             AUTHENTICATED.set(subject);
             return user;
         } catch (Exception e) {
@@ -127,13 +136,26 @@ final class RealmAuthenticator {
         AUTHENTICATED.remove();
     }
 
+    /** Where the realm comes from; replaced by a test that needs it to fail. */
+    static volatile RealmSource defaultRealm = Realm::getDefaultInstance;
+
+    /** The way to the realm, which may fail. */
+    @FunctionalInterface
+    interface RealmSource {
+        Realm get() throws Exception;
+    }
+
     private static String realmName() {
         try {
-            Realm realm = Realm.getDefaultInstance();
+            Realm realm = defaultRealm.get();
             return realm == null ? null : realm.getName();
         } catch (Exception e) {
-            // No realm configured is not a reason to accept the credential.
-            throw new SecurityException("no realm is available to check this credential");
+            // No realm configured is not a reason to accept the credential. It
+            // is a fault of the server, not of the caller, so it is reported
+            // where an operator will see it, with its cause; the caller is
+            // refused like any other credential that could not be checked.
+            LOG.log(Level.WARNING, "no realm is available to check a credential", e);
+            throw new SecurityException("no realm is available to check this credential", e);
         }
     }
 }

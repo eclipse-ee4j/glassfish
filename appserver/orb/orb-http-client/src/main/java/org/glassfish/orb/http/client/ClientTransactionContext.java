@@ -64,10 +64,20 @@ public final class ClientTransactionContext {
      */
     public static long currentTimeoutSeconds() {
         Association association = CURRENT.get();
-        if (association == null || association.timeoutSeconds() <= 0) {
+        return association == null ? 0 : secondsLeft(association.timeoutSeconds(), association.deadlineNanos());
+    }
+
+    /**
+     * @param timeoutSeconds the timeout the transaction was given, 0 if none
+     * @param deadlineNanos when it runs out, see {@link System#nanoTime()}
+     * @return the seconds left of it now, never less than 1 while one is set,
+     *         or 0 if there is none
+     */
+    static long secondsLeft(long timeoutSeconds, long deadlineNanos) {
+        if (timeoutSeconds <= 0) {
             return 0;
         }
-        long remaining = association.deadlineNanos() - System.nanoTime();
+        long remaining = deadlineNanos - System.nanoTime();
         long seconds = Math.floorDiv(remaining + 999_999_999L, 1_000_000_000L);
         // A transaction at or past its deadline still has a timeout: 0 would
         // tell the server there is none and let it apply its own, longer one.

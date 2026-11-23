@@ -135,7 +135,7 @@ public interface TransactionBridge {
      * running the method in a transaction of its own would commit work the
      * caller's transaction is about to roll back.
      *
-     * <h3>Releasing the handle</h3>
+     * <p><b>Releasing the handle.</b>
      * {@link #releaseRollbackOnly} undoes what this method associated and, in
      * a {@code finally}, leaves the thread with no transaction. A handle that
      * stands for a local transaction is rolled back, never committed, and only

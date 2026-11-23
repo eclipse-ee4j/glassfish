@@ -507,6 +507,139 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
         }
     }
 
+    /**
+     * Creates a session and returns its key, for transports that cannot hide
+     * one inside a reference.
+     * <p>
+     * This is the same sequence the home's create path follows - make the
+     * instance, give it its remote view, publish it - and then answers the
+     * question IIOP never has to ask: which key names this session. The key is
+     * the same one {@link #getEJBRemoteBusinessObjectImpl} resolves, so a
+     * client that sends it back reaches the very instance created here.
+     */
+    @Override
+    public byte[] createSession(String generatedRemoteBusinessIntf) throws CreateException, RemoteException {
+        // The same bracket getTargetObject uses. Creating a session runs the
+        // bean's PostConstruct, which reads JNDI and expects the application's
+        // context class loader to be in place; called straight off a transport
+        // thread it is not, and the failure arrives as a bare EJBException
+        // from afterInstanceCreation with nothing in it to act on.
+        externalPreInvoke();
+        try {
+            SessionContextImpl context = createBeanInstance();
+            if (generatedRemoteBusinessIntf == null) {
+                createEJBObjectImpl(context);
+            } else {
+                createRemoteBusinessObjectImpl(context);
+            }
+            afterInstanceCreation(context);
+            return uuidGenerator.keyToByteArray(context.getInstanceKey());
+        } catch (CreateException | RemoteException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            _logger.log(WARNING, CREATE_EJBOBJECT_EXCEPTION, new Object[] { ejbDescriptor.getName(), ex });
+            // The cause is named in the message as well as chained: a remote
+            // caller sees the message and not the chain, and "ERROR creating
+            // stateful SessionBean" on its own says only that this method was
+            // reached.
+            CreateException ce = new CreateException("ERROR creating stateful SessionBean: " + ex);
+            ce.initCause(ex);
+            throw ce;
+        } finally {
+            externalPostInvoke();
+        }
+    }
+
+    /**
+     * Discards a session, running its pre-destroy callback first.
+     * <p>
+     * A session that is already gone is not an error. A client whose removal
+     * timed out will send it again, and telling it that its own cleanup failed
+     * would invite it to keep trying to remove something that no longer exists.
+     * The same goes for a key that names no session at all, whether it is
+     * unknown or too short to be a key.
+     * <p>
+     * A session that exists but cannot be removed now is refused, not skipped:
+     * one that is processing an invocation, one with a transaction in
+     * progress (EJB 2.0 section 7.6.4, the same rule {@code remove()} applies
+     * on the IIOP path), and any session while the container is not started.
+     * The caller is told, because the session is still there.
+     * <p>
+     * Bracketed like {@link #createSession}: the pre-destroy callback runs in
+     * the application's context class loader, which a transport thread does not
+     * have until the bracket puts it there. Every path leaves through
+     * {@code externalPostInvoke}.
+     * <p>
+     * The guards are checked under the session's monitor but the removal is
+     * not: an invocation that starts between the check and the destroy is not
+     * excluded, as on any path that does not hold the instance for the whole
+     * removal.
+     *
+     * @throws RemoveException if the session exists and cannot be removed now
+     */
+    @Override
+    public void removeSession(byte[] instanceKey) throws RemoveException {
+        externalPreInvoke();
+        try {
+            if (containerState != CONTAINER_STARTED) {
+                throw new RemoveException("Cannot remove session: the container is not started");
+            }
+
+            Serializable sessionKey;
+            try {
+                sessionKey = (Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1);
+            } catch (IndexOutOfBoundsException tooShort) {
+                // A key too short to decode runs off the end of its array. Only
+                // the decoding is excused: a failure in the lookup below is the
+                // container's own and must not be mistaken for "gone".
+                _logger.log(FINE, "[SFSBContainer] removeSession: not a session key", tooShort);
+                return;
+            }
+
+            SessionContextImpl context;
+            try {
+                context = _getContextForKey(sessionKey);
+            } catch (NoSuchObjectLocalException gone) {
+                // _getContextForKey never returns null: an unknown or expired
+                // key throws.
+                _logger.log(FINE, "[SFSBContainer] removeSession: no session for the key", gone);
+                return;
+            }
+
+            synchronized (context) {
+                if (context.getState() == BeanState.DESTROYED) {
+                    // Undeploy (removeBeansOnUndeploy) got there first; running
+                    // the pre-destroy callback twice is not removal.
+                    return;
+                }
+                if (context.getState() == BeanState.INVOKING) {
+                    throw new RemoveException("Cannot remove session: it is processing an invocation");
+                }
+                Transaction tc = context.getTransaction();
+                if (tc != null && tc.getStatus() != Status.STATUS_NO_TRANSACTION) {
+                    throw new RemoveException("Cannot remove session: transaction in progress");
+                }
+            }
+
+            EjbInvocation inv = super.createEjbInvocation(context.getEJB(), context);
+            context.setInEjbRemove(true);
+            try {
+                destroyBean(inv, context);
+            } catch (Throwable t) {
+                // Mirrors removeBean: a bean that fails its own pre-destroy still
+                // has to be destroyed, or the session leaks.
+                _logger.log(FINE, "exception thrown from SFSB PRE_DESTROY", t);
+            } finally {
+                context.setInEjbRemove(false);
+            }
+            forceDestroyBean(context);
+        } catch (SystemException e) {
+            throw new RemoveException("Cannot remove session: its transaction cannot be read");
+        } finally {
+            externalPostInvoke();
+        }
+    }
+
     @Override
     protected EJBObjectImpl createRemoteBusinessObjectImpl() throws CreateException, RemoteException {
         try {
@@ -1190,7 +1323,15 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
      * @throws NoSuchObjectLocalException if the target object does not exist
      */
     private SessionContextImpl _getContextForInstance(byte[] instanceKey) {
-        Serializable sessionKey = (Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1);
+        return _getContextForKey((Serializable) uuidGenerator.byteArrayToKey(instanceKey, 0, -1));
+    }
+
+    /**
+     * The context for an already decoded key.
+     *
+     * @throws NoSuchObjectLocalException if there is no such session
+     */
+    private SessionContextImpl _getContextForKey(Serializable sessionKey) {
         _logger.log(FINE, "[SFSBContainer] Got request for: {0}", sessionKey);
         while (true) {
             SessionContextImpl sc = (SessionContextImpl) sessionBeanCache.lookupEJB(sessionKey, this, null);

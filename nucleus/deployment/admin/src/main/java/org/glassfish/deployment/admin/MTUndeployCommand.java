@@ -62,7 +62,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
     Applications applications;
 
     private Application app;
-    private List<AppTenant> appTenants = null;
+    private List<AppTenant> appTenants;
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {

@@ -51,7 +51,7 @@ public final class WizardBranch extends WizardStep implements NamingContainer {
      * through the step.
      */
     @Property(name = "placeholderText")
-    private String placeholderText = null;
+    private String placeholderText;
 
     /**
      * The taken attribute is used to evaluate whether the steps of the branch
@@ -62,12 +62,12 @@ public final class WizardBranch extends WizardStep implements NamingContainer {
      * be followed.
      */
     @Property(name = "taken")
-    private boolean taken = false;
+    private boolean taken;
 
     /**
      * Taken set flag.
      */
-    private boolean takenSet = false;
+    private boolean takenSet;
 
     /**
      * Construct a new {@code WizardBranchBase}.

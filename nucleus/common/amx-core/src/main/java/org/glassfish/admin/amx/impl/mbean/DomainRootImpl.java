@@ -250,7 +250,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
         final Duration duration = new Duration(elapsed);
 
         return new Object[]{
-                    elapsed, duration.toString()
+                    elapsed, duration.toString(),
                 };
     }
 }

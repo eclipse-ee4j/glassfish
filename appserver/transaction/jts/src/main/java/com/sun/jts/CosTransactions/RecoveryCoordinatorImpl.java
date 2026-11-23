@@ -74,15 +74,15 @@ import org.omg.PortableServer.POA;
 
 class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
 
-    private static boolean recoverable = false;
-    private static POA poa = null;
-    private RecoveryCoordinator thisRef = null;
-    private int internalSeq = 0;
+    private static boolean recoverable;
+    private static POA poa;
+    private RecoveryCoordinator thisRef;
+    private int internalSeq;
     /*
         Logger to log transaction messages
     */
     static Logger _logger = LogDomains.getLogger(RecoveryCoordinatorImpl.class, LogDomains.TRANSACTION_LOGGER);
-    GlobalTID globalTID = null;
+    GlobalTID globalTID;
 
     RecoveryCoordinatorImpl() {}
 
@@ -544,8 +544,8 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
  *
  */
 class OrphanRollbackThread extends Thread {
-    Resource resource = null;
-    RecoveryCoordinatorImpl recovery = null;
+    Resource resource;
+    RecoveryCoordinatorImpl recovery;
 
     /**
      * OrphanRollbackThread constructor.

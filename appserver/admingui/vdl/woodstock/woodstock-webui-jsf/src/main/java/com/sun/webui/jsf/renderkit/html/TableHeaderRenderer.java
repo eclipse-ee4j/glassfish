@@ -36,12 +36,12 @@ import java.util.Iterator;
 
 /**
  * This class renders TableHeader components.
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableHeaderRenderer.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Renderer(
         @Renderer.Renders(componentFamily = "com.sun.webui.jsf.TableHeader"))
@@ -79,7 +79,7 @@ public final class TableHeaderRenderer extends jakarta.faces.render.Renderer {
         "scope",
         "style",
         "valign",
-        "width"
+        "width",
     };
 
     @Override

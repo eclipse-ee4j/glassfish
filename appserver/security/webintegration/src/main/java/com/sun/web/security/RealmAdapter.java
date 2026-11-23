@@ -171,7 +171,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
      */
     protected volatile WebSecurityManager webSecurityManager;
 
-    protected boolean isCurrentURIincluded = false;
+    protected boolean isCurrentURIincluded;
 
     private final static SecurityConstraint[] emptyConstraints = new SecurityConstraint[] {};
     /**
@@ -330,9 +330,9 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     /**
-     * Return <tt>true</tt> if Jakarta Authentication is available.
+     * Return <code>true</code> if Jakarta Authentication is available.
      *
-     * @return <tt>true</tt> if Jakarta Authentication is available.
+     * @return <code>true</code> if Jakarta Authentication is available.
      */
     @Override
     public boolean isSecurityExtensionEnabled(final ServletContext context) {
@@ -348,7 +348,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     /**
-     * @returns null
+     * @return null
      *          <ol>
      *          <li>if there are no security constraints defined on any of the web resources within
      *          the context
@@ -362,7 +362,7 @@ public final class RealmAdapter extends RealmBase implements RealmInitializer, P
     }
 
     /**
-     * @returns null
+     * @return null
      *          <ol>
      *          <li>if there are no security constraints defined on any of the web resources within
      *          the context

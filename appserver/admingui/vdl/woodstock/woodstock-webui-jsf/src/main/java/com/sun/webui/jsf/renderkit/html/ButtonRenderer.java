@@ -48,7 +48,7 @@ public final class ButtonRenderer extends AbstractRenderer {
      * The set of integer pass-through attributes to be rendered.
      */
     private static final String[] INT_ATTRIBUTES = {
-        "tabIndex"
+        "tabIndex",
     };
 
     /**
@@ -65,7 +65,7 @@ public final class ButtonRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseUp",
         "onMouseMove",
-        "style"
+        "style",
     };
 
     /**
@@ -73,7 +73,7 @@ public final class ButtonRenderer extends AbstractRenderer {
      */
     private static final String[] INPUT_ATTRIBUTES = {
         "alt",
-        "align"
+        "align",
     };
 
     @Override

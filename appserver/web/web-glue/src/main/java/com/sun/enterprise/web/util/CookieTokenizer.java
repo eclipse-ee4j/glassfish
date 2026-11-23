@@ -38,7 +38,7 @@ public class CookieTokenizer
     /**
      * Number of cookie tokens currently in the tokens[] array.
      */
-    private int numTokens = 0;
+    private int numTokens;
 
     /**
      * Parse a name=value pair from the Cookie: header.

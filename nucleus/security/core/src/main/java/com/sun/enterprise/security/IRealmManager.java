@@ -31,7 +31,7 @@ public interface IRealmManager extends java.rmi.Remote {
      * not running the call should not be made. This interface is obtained by looking up the {@link RealmsManager} from the Naming
      * service.
      *
-     * @param String realmName
+     * @param realmName realmName
      */
-    public void refreshRealms(String realmName) throws java.rmi.RemoteException;
+    void refreshRealms(String realmName) throws java.rmi.RemoteException;
 }

@@ -87,12 +87,12 @@ public class EjbInvocation extends ComponentInvocation
      * Local flag: true if this invocation was through the 2.x (or earlier) Local client view, the 3.x local client view or a
      * no-interface client view.
      */
-    public boolean isLocal = false;
+    public boolean isLocal;
 
     /**
      * True if this invocation was made through the 2.x (or earlier) Remote client view or the 3.x remote client view.
      */
-    public boolean isRemote = false;
+    public boolean isRemote;
 
     /**
      * InvocationInfo object caches information about the current method
@@ -107,22 +107,22 @@ public class EjbInvocation extends ComponentInvocation
     /**
      * true if this is a web service invocation
      */
-    public boolean isWebService = false;
+    public boolean isWebService;
 
     /**
      * true if this is an ejb timeout method invocation
      */
-    public boolean isTimerCallback = false;
+    public boolean isTimerCallback;
 
     /**
      * true if this is a message-driven bean invocation
      */
-    public boolean isMessageDriven = false;
+    public boolean isMessageDriven;
 
     /**
      * true if this is an invocation on the home object this is required for jacc.
      */
-    public boolean isHome = false;
+    public boolean isHome;
 
     /**
      * Home, Remote, LocalHome, Local, WebService, or business interface through which a synchronous ejb invocation was made.
@@ -199,12 +199,12 @@ public class EjbInvocation extends ComponentInvocation
     /**
      * Tells if a CMP2.x bean was found in the Tx cache. Applicable only for CMP2.x beans
      */
-    public boolean foundInTxCache = false;
+    public boolean foundInTxCache;
 
     /**
      * Tells if a fast path can be taken for a business method invocation.
      */
-    public boolean useFastPath = false;
+    public boolean useFastPath;
 
     private java.util.concurrent.locks.Lock cmcLock;
 
@@ -216,12 +216,12 @@ public class EjbInvocation extends ComponentInvocation
 
     private EjbFutureTask asyncFuture;
 
-    private boolean wasCancelCalled = false;
+    private boolean wasCancelCalled;
 
     private Method webServiceMethod;
 
     // True if lock is currently held for this invocation
-    private boolean holdingSFSBSerializedLock = false;
+    private boolean holdingSFSBSerializedLock;
 
     public ClassLoader getOriginalContextClassLoader() {
         return originalContextClassLoader;
@@ -410,7 +410,7 @@ public class EjbInvocation extends ComponentInvocation
     //FIXME: private Message message = null;
     private Object message;
 
-    private SOAPMessage soapMessage = null;
+    private SOAPMessage soapMessage;
 
     private Map contextData;
 

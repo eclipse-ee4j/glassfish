@@ -62,7 +62,7 @@ public final class ExtensionValidator {
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
 
-    private static volatile HashMap<String, Extension> containerAvailableExtensions = null;
+    private static volatile HashMap<String, Extension> containerAvailableExtensions;
     private static ArrayList<ManifestResource> containerManifestResources =
         new ArrayList<ManifestResource>();
 
@@ -116,7 +116,7 @@ public final class ExtensionValidator {
      * file in the /META-INF/ directory of the application and all
      * MANIFEST.MF files in each JAR file located in the WEB-INF/lib
      * directory and creates an <code>ArrayList</code> of
-     * <code>ManifestResorce<code> objects. These objects are then passed
+     * <code>ManifestResorce</code> objects. These objects are then passed
      * to the validateManifestResources method for validation.
      *
      * @param dirContext The JNDI root of the Web Application

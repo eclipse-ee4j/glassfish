@@ -25,7 +25,7 @@ package org.glassfish.flashlight.datatree;
  */
 public interface TreeElement {
 
-    public String getName();
-    public void setName(String name);
-    public Object getValue();
+    String getName();
+    void setName(String name);
+    Object getValue();
 }

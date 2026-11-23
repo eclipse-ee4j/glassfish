@@ -27,5 +27,5 @@ public interface SOAPMessageContext
      * If there is a SOAPMessage already, use getSOAPMessage(). Ignore all other methods
      * @return
      */
-    public boolean isAlreadySoap();
+    boolean isAlreadySoap();
 }

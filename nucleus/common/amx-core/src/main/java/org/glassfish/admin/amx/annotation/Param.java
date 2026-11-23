@@ -36,10 +36,10 @@ import static java.lang.annotation.ElementType.PARAMETER;
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
 @Documented
 public @interface Param {
-    public String name();
+    String name();
 
     /** true if null may be passed */
-    public boolean optional() default false;
+    boolean optional() default false;
 }
 
 

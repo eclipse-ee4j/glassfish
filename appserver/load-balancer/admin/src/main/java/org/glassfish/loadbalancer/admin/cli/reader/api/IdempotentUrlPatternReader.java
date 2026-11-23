@@ -29,12 +29,12 @@ public interface IdempotentUrlPatternReader extends BaseReader {
      * @return String           an url and regural expression matching multiple
      *                          urls
      */
-    public String getUrlPattern() throws LbReaderException;
+    String getUrlPattern() throws LbReaderException;
 
     /**
      * Number of retries, when an idempotent request fails.
      *
      * @return String           value must be > 0.
      */
-    public String getNoOfRetries() throws LbReaderException;
+    String getNoOfRetries() throws LbReaderException;
 }

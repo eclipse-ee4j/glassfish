@@ -142,7 +142,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
             // one call, so one trip to the server
             final AttributeList attrs = conn.getAttributes(objectName, new String[]
                     {
-                        ATTR_NAME, ATTR_PARENT
+                        ATTR_NAME, ATTR_PARENT,
                     });
             final Map<String, Object> m = JMXUtil.attributeListToValueMap(attrs);
 
@@ -168,7 +168,7 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
     private static final String STRING = String.class.getName();
     private static final String[] STRING_SIG = new String[]
     {
-        STRING
+        STRING,
     };
 
     protected <T extends AMXProxy> T getProxy(final ObjectName objectName, final Class<T> intf)
@@ -287,13 +287,13 @@ public final class AMXProxyHandler extends MBeanProxyHandler implements AMXProxy
 
     private final static Class[] NOTIFICATION_LISTENER_SIG1 = new Class[]
     {
-        NotificationListener.class
+        NotificationListener.class,
     };
     private final static Class[] NOTIFICATION_LISTENER_SIG2 = new Class[]
     {
         NotificationListener.class,
         NotificationFilter.class,
-        Object.class
+        Object.class,
     };
     /** Cached forever, parent ObjectName */
     private static final String GET_PARENT = GET + ATTR_PARENT;

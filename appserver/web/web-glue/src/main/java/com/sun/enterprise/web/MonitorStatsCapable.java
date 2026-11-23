@@ -28,6 +28,6 @@ package com.sun.enterprise.web;
  */
 public interface MonitorStatsCapable {
 
-    public void resetMonitorStats();
+    void resetMonitorStats();
 
 }

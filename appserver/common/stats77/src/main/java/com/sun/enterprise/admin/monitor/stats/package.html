@@ -85,8 +85,9 @@ org.glassfish.j2ee.statistics.Statististic interface.
 </ul>
 <p>Following are the implementations of various Statistic interfaces in org.glassfish.j2ee.statistics 
   package.</p>
-<table width="60%" border="1">
-  <tr bgcolor="#0066FF"> 
+<table border="1">
+  <caption>Statistics and their implementations</caption>
+  <tr> 
     <td>Interface</td>
     <td>Immutable Implementation (read-only -- for clients)</td>
     <td>Mutable Implementation (read-write -- for core components)</td>
@@ -115,7 +116,7 @@ org.glassfish.j2ee.statistics.Statististic interface.
 Following is a helper implementation done in this package: GenericStatsImpl.
 <p>
 This class is designed to facilitate the general implementation of {@link
-Stats} interface and all the classes that implement this interface can leverage
+org.glassfish.j2ee.statistics.Stats} interface and all the classes that implement this interface can leverage
 this class. The main idea is that this class implements:
 <ul>
     <li>getStatistic(String)</li>

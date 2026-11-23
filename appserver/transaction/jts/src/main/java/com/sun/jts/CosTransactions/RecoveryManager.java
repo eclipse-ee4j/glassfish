@@ -80,25 +80,25 @@ public class RecoveryManager {
     /**
      * list of XA Resources to be recovered.
      */
-    private static Enumeration uniqueRMSet = null;
+    private static Enumeration uniqueRMSet;
 
     /**
      * This attribute indicates whether initialisation has been started.
      */
-    private static boolean initialised = false;
+    private static boolean initialised;
 
     /**
      * This attribute indicates the number of Coordinator objects which require
      * resync.  This is set to the number of in-doubt transactions recovered
      * from the log, then decreased as transactions are resolved.
      */
-    private static int resyncCoords = 0;
+    private static int resyncCoords;
 
     /**
      * This attribute records the thread which is used to perform resync during
      * restart
      */
-    private static ResyncThread resyncThread = null;
+    private static ResyncThread resyncThread;
 
     /**
      * This attribute is used to block new requests while there are

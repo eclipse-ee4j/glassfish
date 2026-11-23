@@ -32,7 +32,7 @@ public interface WorkContextInput extends DataInput {
    * Reads an 8-bit, variable-length, ASCII string from the underlying
    * data stream.
    */
-  public String readASCII() throws IOException;
+  String readASCII() throws IOException;
 
   /**
    * Reads a {@link WorkContext} from the underlying
@@ -40,5 +40,5 @@ public interface WorkContextInput extends DataInput {
    * protocol-dependent fashion to allow remote java implementations
    * to decode it.
    */
-  public WorkContext readContext() throws IOException, ClassNotFoundException;
+  WorkContext readContext() throws IOException, ClassNotFoundException;
 }

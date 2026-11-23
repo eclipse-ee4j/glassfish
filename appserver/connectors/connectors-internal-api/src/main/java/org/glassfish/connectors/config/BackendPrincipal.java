@@ -41,7 +41,7 @@ public interface BackendPrincipal extends ConfigBeanProxy {
      */
     @Attribute(key=true)
     @NotNull
-    public String getUserName();
+    String getUserName();
 
     /**
      * Sets the value of the userName property.
@@ -49,7 +49,7 @@ public interface BackendPrincipal extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setUserName(String value) throws PropertyVetoException;
+    void setUserName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the password property.
@@ -58,7 +58,7 @@ public interface BackendPrincipal extends ConfigBeanProxy {
      *         {@link String }
      */
     @Attribute
-    public String getPassword();
+    String getPassword();
 
     /**
      * Sets the value of the password property.
@@ -66,7 +66,7 @@ public interface BackendPrincipal extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setPassword(String value) throws PropertyVetoException;
+    void setPassword(String value) throws PropertyVetoException;
 
 
 

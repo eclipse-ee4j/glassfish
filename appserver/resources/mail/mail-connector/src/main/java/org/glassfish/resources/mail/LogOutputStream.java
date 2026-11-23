@@ -30,7 +30,7 @@ public class LogOutputStream extends OutputStream {
 
     private int lastb = -1;
     private byte[] buf = new byte[80];
-    private int pos = 0;
+    private int pos;
 
     /**
      * Log to the specified facility at the default FINE level.

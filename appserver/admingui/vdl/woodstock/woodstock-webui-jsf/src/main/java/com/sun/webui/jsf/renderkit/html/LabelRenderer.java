@@ -62,7 +62,7 @@ public final class LabelRenderer extends jakarta.faces.render.Renderer {
         "onMouseUp",
         "onMouseOver",
         "onMouseMove",
-        "onMouseOut"
+        "onMouseOut",
     };
 
     @Override
@@ -92,7 +92,7 @@ public final class LabelRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Label.class.getName()
+                Label.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",
@@ -206,7 +206,7 @@ public final class LabelRenderer extends jakarta.faces.render.Renderer {
     /**
      * Returns an id suitable for the HTML label element's "for" attribute. This
      * implementation uses the following heuristic to obtain a suitable id.
-     * <p>
+     *
      * <ul>
      * <li>If {@code label.getFor} returns null, return the value of
      * {@code getLabeledChildId}.

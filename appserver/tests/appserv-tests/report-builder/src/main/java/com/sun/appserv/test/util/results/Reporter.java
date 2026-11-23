@@ -35,7 +35,7 @@ import java.util.List;
  */
 @SuppressWarnings({"IOResourceOpenedButNotSafelyClosed", "StaticNonFinalField"})
 public class Reporter implements Serializable {
-    private static Reporter reporterInstance = null;
+    private static Reporter reporterInstance;
     private String resultFile = "default.xml";
     transient public PrintWriter out = new PrintWriter(System.out);
     private List<TestSuite> suites = new ArrayList<TestSuite>();

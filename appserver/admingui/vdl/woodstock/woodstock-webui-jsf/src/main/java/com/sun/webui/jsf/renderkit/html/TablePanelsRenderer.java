@@ -36,12 +36,12 @@ import java.io.IOException;
 
 /**
  * This class renders TablePanels components.
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TablePanelsRenderer.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Renderer(
         @Renderer.Renders(componentFamily = "com.sun.webui.jsf.TablePanels"))
@@ -78,7 +78,7 @@ public final class TablePanelsRenderer extends jakarta.faces.render.Renderer {
         "onMouseOver",
         "style",
         "valign",
-        "width"
+        "width",
     };
 
     @Override

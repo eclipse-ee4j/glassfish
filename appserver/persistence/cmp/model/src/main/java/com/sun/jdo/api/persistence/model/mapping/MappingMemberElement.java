@@ -33,6 +33,6 @@ public interface MappingMemberElement extends MappingElement
      * @return the class that owns this member element, or <code>null</code>
      * if the element is not attached to any class
      */
-    public MappingClassElement getDeclaringClass ();
+    MappingClassElement getDeclaringClass ();
 }
 

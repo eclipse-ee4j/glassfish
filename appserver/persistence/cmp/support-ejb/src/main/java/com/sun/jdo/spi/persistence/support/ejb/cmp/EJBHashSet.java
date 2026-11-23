@@ -39,18 +39,18 @@ import static java.lang.System.Logger.Level.TRACE;
 public class EJBHashSet extends HashSet<Object> {
     // Reference to the PersistenceManager and Transaction that were active
     // at the time of this Set creation.
-    private PersistenceManager pm = null;
-    private Transaction tx = null;
+    private PersistenceManager pm;
+    private Transaction tx;
 
     // HashSet of the persistence-capable instances associated with this Set.
-    private HashSet<Object> pcSet = null;
+    private HashSet<Object> pcSet;
 
     // Helper instance for conversion of the persistence-capable instances
     // to the EJBLocalObject type and back.
-    private JDOEJB20Helper helper = null;
+    private JDOEJB20Helper helper;
 
     // Flag that indicates invalid state of this Set.
-    private boolean valid = false;
+    private boolean valid;
 
     private static final Logger LOG = System.getLogger(EJBHashSet.class.getName());
 
@@ -78,7 +78,7 @@ public class EJBHashSet extends HashSet<Object> {
      * present.
      *
      * @param o element to be added to this set.
-     * @return <tt>true</tt> if the set did not already contain the specified
+     * @return <code>true</code> if the set did not already contain the specified
      * element.
      * @see java.util.HashSet
      */
@@ -97,9 +97,9 @@ public class EJBHashSet extends HashSet<Object> {
      * Adds all of the elements in the specified collection to this collection
      *
      * @param c collection whose elements are to be added to this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      * call.
-     * @throws UnsupportedOperationException if the <tt>addAll</tt> method is
+     * @throws UnsupportedOperationException if the <code>addAll</code> method is
      *            not supported by this collection.
      *
      * @see java.util.AbstractCollection
@@ -118,7 +118,7 @@ public class EJBHashSet extends HashSet<Object> {
      * Removes the given element from this set if it is present.
      *
      * @param o object to be removed from this set, if present.
-     * @return <tt>true</tt> if the set contained the specified element.
+     * @return <code>true</code> if the set contained the specified element.
      * @see java.util.HashSet
      */
     @Override
@@ -138,7 +138,7 @@ public class EJBHashSet extends HashSet<Object> {
      * into #remove(Object).
      *
      * @param c elements to be removed from this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      * call.
      *
      * @throws    UnsupportedOperationException removeAll is not supported
@@ -160,10 +160,10 @@ public class EJBHashSet extends HashSet<Object> {
      * Retains only the elements in this collection that are contained in the
      * specified collection (optional operation).
      *
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      *         call.
      *
-     * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
+     * @throws UnsupportedOperationException if the <code>retainAll</code> method
      *            is not supported by this collection.
      *
      * @see java.util.HashSet
@@ -205,9 +205,9 @@ public class EJBHashSet extends HashSet<Object> {
     }
 
     /**
-     * Returns <tt>true</tt> if this set contains no elements.
+     * Returns <code>true</code> if this set contains no elements.
      *
-     * @return <tt>true</tt> if this set contains no elements.
+     * @return <code>true</code> if this set contains no elements.
      */
     @Override
     public boolean isEmpty() {
@@ -218,10 +218,10 @@ public class EJBHashSet extends HashSet<Object> {
     }
 
     /**
-     * Returns <tt>true</tt> if this set contains the specified element.
+     * Returns <code>true</code> if this set contains the specified element.
      *
      * @param o element whose presence in this set is to be tested.
-     * @return <tt>true</tt> if this set contains the specified element.
+     * @return <code>true</code> if this set contains the specified element.
      */
     @Override
     public boolean contains(Object o) {
@@ -234,16 +234,16 @@ public class EJBHashSet extends HashSet<Object> {
     }
 
     /**
-     * Returns <tt>true</tt> if this collection contains all of the elements
+     * Returns <code>true</code> if this collection contains all of the elements
      * in the specified collection. <p>
      *
      * This implementation iterates over the specified collection, checking
      * each element returned by the iterator in turn to see if it's
      * contained in this collection.  If all elements are so contained
-     * <tt>true</tt> is returned, otherwise <tt>false</tt>.
+     * <code>true</code> is returned, otherwise <code>false</code>.
      *
      * @param c collection to be checked for containment in this collection.
-     * @return <tt>true</tt> if this collection contains all of the elements
+     * @return <code>true</code> if this collection contains all of the elements
      *         in the specified collection.
      *
      * @see #contains(Object)
@@ -258,7 +258,7 @@ public class EJBHashSet extends HashSet<Object> {
     }
 
     /**
-     * Returns a shallow copy of this <tt>HashSet</tt> instance: the elements
+     * Returns a shallow copy of this <code>HashSet</code> instance: the elements
      * themselves are not cloned.
      *
      * @return a shallow copy of this set.
@@ -313,7 +313,7 @@ public class EJBHashSet extends HashSet<Object> {
     private class EJBHashIterator implements Iterator<Object> {
 
         Iterator<Object> _iterator;
-        Object lastReturned = null;
+        Object lastReturned;
 
         EJBHashIterator() {
             _iterator = pcSet.iterator();

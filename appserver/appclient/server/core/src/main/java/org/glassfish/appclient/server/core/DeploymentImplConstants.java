@@ -23,7 +23,7 @@ package org.glassfish.appclient.server.core;
  */
 public interface DeploymentImplConstants {
 
-    public static final String ClientJarSuffix = "Client.jar";
+    String ClientJarSuffix = "Client.jar";
     /*
      * Use this property to select the desired client jar genration senario.
      * Possible values are:
@@ -35,12 +35,12 @@ public interface DeploymentImplConstants {
      * "ear"        : use only the new ear appclient make
      * "original"   : use the original implementation (to verify regression)
      */
-    public static final String
+    String
         CLIENT_JAR_MAKER_CHOICE = "client.jar.maker.choice";
 
     /*
      * Internal implementation constant.  NOT a supported system property.
      */
-    public static final String
+    String
         USE_MODULE_CLIENT_JAR_MAKER = "use.module.client.jar.maker";
 }

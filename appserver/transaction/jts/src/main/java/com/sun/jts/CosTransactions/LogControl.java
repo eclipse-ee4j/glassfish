@@ -50,12 +50,12 @@ public class LogControl {
 
     /**Internal instance members
      */
-    boolean logInitialised = false;
-    boolean logReadOnly = false;
-    Vector  logHandles = null;
-    String  directoryPath = null;
-    File    controlFile = null;
-    File    cushionFile = null;
+    boolean logInitialised;
+    boolean logReadOnly;
+    Vector  logHandles;
+    String  directoryPath;
+    File    controlFile;
+    File    cushionFile;
 
     //static processSharedLog = GlobLock();
 

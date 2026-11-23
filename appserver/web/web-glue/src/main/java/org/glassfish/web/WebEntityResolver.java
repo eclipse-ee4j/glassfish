@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  *
  * <p>
  * This implementation assumes that those files are available in
- * <tt>$INSTALL_ROOT/lib/schemas</tt> and <tt>$INSTALL_ROOT/lib/dtds</tt>,
+ * <code>$INSTALL_ROOT/lib/schemas</code> and <code>$INSTALL_ROOT/lib/dtds</code>,
  * but in different environment, different implementation can be plugged in
  * to perform entirely different resolution.
  *

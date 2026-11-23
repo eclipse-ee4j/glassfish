@@ -641,7 +641,7 @@ public class ApplicationClientDescriptor extends CommonResourceBundleDescriptor
      * referenced by the appclient. An appclient can not use container
      * managed EM as there is no support for JTA in our ACC, so this method
      * only returns the list of PUs referenced via @PersistenceUnit or
-     * <persistence-unit-ref>.
+     * &lt;persistence-unit-ref>.
      *
      * @return list of PU that are actually referenced by the appclient.
      */

@@ -67,7 +67,7 @@ public abstract class BackupCommands extends LocalDomainCommand {
 
     BackupRequest request;
     private String description;
-    private int recycleLimit = 0;
+    private int recycleLimit;
 
     /**
      * A method that checks the options and operand that the user supplied. These tests are slightly different for different

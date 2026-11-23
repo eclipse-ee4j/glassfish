@@ -80,7 +80,7 @@ public abstract class UpdateNodeRemoteCommand implements AdminCommand  {
 
     private static final String NL = System.getProperty("line.separator");
 
-    private Logger logger = null;
+    private Logger logger;
     protected abstract void populateParameters();
     protected abstract RemoteType getType();
     protected abstract String getDefaultPort();

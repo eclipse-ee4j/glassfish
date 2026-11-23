@@ -37,10 +37,10 @@ public interface AnnotationConstants extends VMConstants {
      */
 
     /* "this" needs to be fetched *///NOI18N
-    public final static int FetchThis       = 0x0001;
+    int FetchThis       = 0x0001;
 
     /* "this" needs to be dirtied *///NOI18N
-    public final static int DirtyThis       = 0x0002;
+    int DirtyThis       = 0x0002;
 
     /* a java.lang.Object  needs to be fetched */
 //@olsen: disabled feature / not used anymore
@@ -55,10 +55,10 @@ public interface AnnotationConstants extends VMConstants {
 */
 
     /* an PersistenceCapable needs to be fetched */
-    public final static int FetchPersistent = 0x0010;
+    int FetchPersistent = 0x0010;
 
     /* an PersistenceCapable needs to be dirtied */
-    public final static int DirtyPersistent = 0x0020;
+    int DirtyPersistent = 0x0020;
 
     /* an array instance needs to be fetched */
 //@olsen: disabled feature
@@ -92,11 +92,11 @@ public interface AnnotationConstants extends VMConstants {
 
     /* the fetch/dirty is not mediated by the StateManager */
     //@olsen: added constant
-    public final static int DFGField        = 0x0800;
+    int DFGField        = 0x0800;
 
     /* the dirty is mediated by the StateManager */
     //@olsen: added constant
-    public final static int PKField         = 0x1000;
+    int PKField         = 0x1000;
 
     /* clear stateManager and flags fields in "this" *///NOI18N
 //@olsen: disabled feature
@@ -106,7 +106,7 @@ public interface AnnotationConstants extends VMConstants {
 
     /* needs to clear jdo fields after a call of super.clone() */
     //@olsen: added constant
-    public final static int SuperClone = 0x8000;
+    int SuperClone = 0x8000;
 
     /* a bit mask covering a field which describes the type of array
        being fetched or dirtied */

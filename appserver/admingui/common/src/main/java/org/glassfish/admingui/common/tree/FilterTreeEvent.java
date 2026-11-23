@@ -67,5 +67,5 @@ public class FilterTreeEvent extends EventObjectBase {
      */
     public static final String        EVENT_TYPE  = "filterTree";
 
-    private List _childObjects = null;
+    private List _childObjects;
 }

@@ -255,7 +255,7 @@ public class CMPBeanHelper {
      * @param beanName the name of the calling bean.
      * @param paramList the list of the concatenated parameters.
      * @param ex the JDOException.
-     * @throws DuplicateKeyException.
+     * @throws DuplicateKeyException
      */
     public static void handleJDODuplicateObjectIdAsDuplicateKeyException(
         String beanName, String paramList, JDOException ex)
@@ -276,7 +276,7 @@ public class CMPBeanHelper {
      * @param beanName the name of the calling bean.
      * @param paramList the list of the concatenated parameters.
      * @param ex the JDOException.
-     * @throws EJBException.
+     * @throws EJBException
      */
     public static void handleJDODuplicateObjectIdAsEJBException(
         String beanName, String paramList, JDOException ex) {
@@ -296,7 +296,7 @@ public class CMPBeanHelper {
      * @param primaryKey the PrimaryKey instance.
      * @param beanName the name of the calling bean.
      * @param ex the JDOException.
-     * @throws ObjectNotFoundException.
+     * @throws ObjectNotFoundException
      */
     public static void handleJDOObjectNotFoundException(
         Object primaryKey, String beanName, JDOException ex)
@@ -314,7 +314,7 @@ public class CMPBeanHelper {
      * Throws EJBException on attempted updates to the
      * calling bean.
      * @param beanName the name of the calling bean.
-     * @throws EJBException.
+     * @throws EJBException
      */
     public static void handleUpdateNotAllowedException(
         String beanName) {
@@ -333,7 +333,7 @@ public class CMPBeanHelper {
      * @param primaryKey the PrimaryKey instance.
      * @param beanName the name of the calling bean.
      * @param ex the Exception.
-     * @throws EJBException.
+     * @throws EJBException
      */
     public static void handleCloneException(
         Object primaryKey, String beanName, Exception ex) {

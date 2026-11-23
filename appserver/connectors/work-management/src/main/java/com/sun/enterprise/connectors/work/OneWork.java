@@ -43,7 +43,7 @@ public final class OneWork implements com.sun.corba.ee.spi.threadpool.Work {
     private static final Logger logger = LogFacade.getLogger();
 
     private String name = "Resource adapter work";
-    private boolean nameSet = false;
+    private boolean nameSet;
 
     // Store the client's TCC so that when the work is executed,
     // TCC is set appropriately.

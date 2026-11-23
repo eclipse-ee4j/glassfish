@@ -64,7 +64,7 @@ public class LoginCallbackHandler implements CallbackHandler {
      * This is the callback method called when authentication data is required. It either pops up a dialog box to request
      * authentication data or use text input.
      *
-     * @param the callback object instances supported by the login module.
+     * @param callbacks callback object instances supported by the login module.
      */
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {

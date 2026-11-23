@@ -154,12 +154,12 @@ abstract class XPathToDeveloperProvidedContentRefs<T extends Content> {
      */
     abstract void addToContentIfInApp(
             DeveloperContentHandler dch,
-            final AppClientDeployerHelper helper,
+            AppClientDeployerHelper helper,
             String referringDocument,
             URI codebase, String pathToContent,
             ClassLoader loader, Map<String, StaticContent> staticContent,
-            Map<String, DynamicContent> dynamicContent, final URI appRootURI,
-            final ReadableArchive appClientArchive)
+            Map<String, DynamicContent> dynamicContent, URI appRootURI,
+            ReadableArchive appClientArchive)
                 throws URISyntaxException, IOException;
 
 /**

@@ -84,7 +84,7 @@ public class ResourceManagerImpl implements ResourceManager {
     /**
      * Enlist the <code>ResourceHandle</code> in the transaction
      *
-     * @param h <code>ResourceHandle</code> object
+     * @param resourceHandle <code>ResourceHandle</code> object
      * @throws PoolingException
      */
     @Override

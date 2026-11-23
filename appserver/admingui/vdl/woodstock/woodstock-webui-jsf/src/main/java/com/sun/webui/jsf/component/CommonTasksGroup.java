@@ -43,7 +43,7 @@ public final class CommonTasksGroup
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -55,7 +55,7 @@ public final class CommonTasksGroup
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
     //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The title text to be displayed for the common tasks group.
@@ -67,7 +67,7 @@ public final class CommonTasksGroup
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
     //CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -81,12 +81,12 @@ public final class CommonTasksGroup
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of CommonTaskGroup.

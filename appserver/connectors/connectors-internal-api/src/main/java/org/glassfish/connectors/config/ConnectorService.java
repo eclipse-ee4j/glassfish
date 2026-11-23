@@ -48,7 +48,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      */
     @Attribute (defaultValue="30")
     @Min(value=1)
-    public String getShutdownTimeoutInSeconds();
+    String getShutdownTimeoutInSeconds();
 
     /**
      * Sets the value of the shutdownTimeoutInSeconds property.
@@ -56,7 +56,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      * @param value allowed object is
      *              {@link String }
      */
-    public void setShutdownTimeoutInSeconds(String value) throws PropertyVetoException;
+    void setShutdownTimeoutInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the connector-classloading-policy.<br>
@@ -69,7 +69,7 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      *         {@link String }
      */
     @Attribute (defaultValue="derived")
-    public String getClassLoadingPolicy();
+    String getClassLoadingPolicy();
 
     /**
      * Sets the value of the connector-classloading-policy.<br>
@@ -80,14 +80,14 @@ public interface ConnectorService extends ConfigExtension, ConfigBeanProxy, Prop
      * @param value allowed object is
      *              {@link String }
      */
-    public void setClassLoadingPolicy(String value) throws PropertyVetoException;
+    void setClassLoadingPolicy(String value) throws PropertyVetoException;
 
     /**
      *    Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      *
      *  Properties are used to override the ManagedConnectionFactory  javabean
      * configuration settings. When one or more of these properties are
-     * specified, they are passed as is using set<Name>(<Value>) methods to the
+     * specified, they are passed as is using set&lt;Name&gt;(&lt;Value&gt;) methods to the
      * Resource Adapter's ManagedConnectionfactory class (specified in ra.xml).
      *
      */

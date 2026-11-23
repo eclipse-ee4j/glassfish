@@ -129,7 +129,7 @@ public class AdminCommandContextImpl implements AdminCommandContext, Serializabl
          */
         private static final long serialVersionUID = 1L;
         private static final String EXC_MESSAGE = "@Progress annotation is not present.";
-        private String id = null;
+        private String id;
 
         @Override
         public void setTotalStepCount(int totalStepCount) {

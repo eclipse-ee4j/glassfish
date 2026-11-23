@@ -81,7 +81,7 @@ public abstract class ConnectionHolder implements Connection {
 
     private MethodExecutor executor;
 
-    public static enum ConnectionType {
+    public enum ConnectionType {
         LAZY_ENLISTABLE, LAZY_ASSOCIATABLE, STANDARD
     }
 

@@ -34,7 +34,7 @@ public class InterceptorNotifier {
     private boolean[] isAfterReported = initialIsReported();
 
     private Collection<ApplicationLifecycleInterceptor> interceptors;
-    private ExtendedDeploymentContext dc = null;
+    private ExtendedDeploymentContext dc;
 
     private static boolean[] initialIsReported() {
         final boolean[] result = new boolean[ExtendedDeploymentContext.Phase.values().length];

@@ -40,7 +40,7 @@ import java.util.List;
  *   ...
  * </pre>
  * when a pattern does not match any other rule, then rule alpha will be called.
- * </p>
+ *
  * <p><code>WithDefaultsRulesWrapper</code> follows the <em>Decorator</em> pattern.</p>
  *
  * @since 1.6

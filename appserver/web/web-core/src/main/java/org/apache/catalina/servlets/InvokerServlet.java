@@ -58,19 +58,19 @@ public final class InvokerServlet
     /**
      * The Context container associated with our web application.
      */
-    private Context context = null;
+    private Context context;
 
 
     /**
      * The debugging detail level for this servlet.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
      * The Wrapper container associated with this servlet.
      */
-    private Wrapper wrapper = null;
+    private Wrapper wrapper;
 
 
     // ----------------------------------------------- ContainerServlet Methods

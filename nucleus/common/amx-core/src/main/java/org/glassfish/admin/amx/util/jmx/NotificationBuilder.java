@@ -33,7 +33,7 @@ the Map--putMapData().
  */
 public class NotificationBuilder
 {
-    private long mSequenceNumber = 0;
+    private long mSequenceNumber;
 
     private final String mNotificationType;
 

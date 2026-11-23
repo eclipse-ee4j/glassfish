@@ -59,7 +59,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlAlignEditor")
             //CHECKSTYLE:ON
-    private String align = null;
+    private String align;
 
     /**
      * Alternative textual description of the image rendered by this component.
@@ -72,7 +72,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Specifies the width of the img border in pixels. The default value for
@@ -89,7 +89,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     /**
      * border set flag.
      */
-    private boolean borderSet = false;
+    private boolean borderSet;
 
     /**
      * When specified, the width and height attributes tell the client browser
@@ -107,7 +107,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     /**
      * height set flag.
      */
-    private boolean heightSet = false;
+    private boolean heightSet;
 
     /**
      * Specifies the amount of white space in pixels to be inserted to the left
@@ -125,7 +125,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     /**
      * hspace set flag.
      */
-    private boolean hspaceSet = false;
+    private boolean hspaceSet;
 
     /**
      * The identifier of the desired theme image.
@@ -136,7 +136,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ThemeIconsEditor")
             //CHECKSTYLE:ON
-    private String icon = null;
+    private String icon;
 
     /**
      * Absolute or relative URL to the image to be rendered.
@@ -147,7 +147,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageURL = null;
+    private String imageURL;
 
     /**
      * Specifies where the text will be placed relative to the image. The valid
@@ -159,7 +159,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlHorizontalAlignEditor")
             //CHECKSTYLE:ON
-    private String textPosition = null;
+    private String textPosition;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -173,12 +173,12 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Specifies the amount of white space in pixels to be inserted above and
@@ -196,7 +196,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     /**
      * vspace set flag.
      */
-    private boolean vspaceSet = false;
+    private boolean vspaceSet;
 
     /**
      * Image width override. When specified, the width and height attributes
@@ -214,7 +214,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
     /**
      * width set flag.
      */
-    private boolean widthSet = false;
+    private boolean widthSet;
 
     /**
      * Default constructor.
@@ -247,7 +247,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
      * an {@code Icon} component is returned. If both methods return null,
      * null is returned. The returned instance is initialized with the values
      * from
-     * <p>
+     *
      * <ul>
      * <li>{@code getImageURL()}</li>
      * <li>{@code getIcon()}</li>
@@ -261,7 +261,7 @@ public class ImageHyperlink extends Hyperlink implements NamingContainer {
      * <li>{@code getDisabled}</li>
      * <li>{@code getType()}</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * The returned {@code ImageComponent} or {@code Icon} component
      * is created every time this method is called.

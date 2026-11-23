@@ -333,12 +333,12 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     /**
      * Adds a Role object based on the supplied SecurityRoleDescriptor.
      *
-     * <p/>
+     * <p>
      * A change in SecurityRoleNode to fix bug 4933385 causes the DOL to use SecurityRoleDescriptor, rather than Role, to
      * contain information about security roles. To minimize the impact on BundleDescriptor, this method has been added for
      * use by the DOL as it processes security-role elements.
      *
-     * <p/>
+     * <p>
      * This method creates a new Role object based on the characteristics of the SecurityRoleDescriptor and then delegates
      * to addRole(Role) to preserve the rest of the behavior of this class.
      *
@@ -629,7 +629,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     }
 
     /**
-     * helper method: find all PUs referenced via @PersistenceUnit or <persistence-unit-ref>
+     * helper method: find all PUs referenced via @PersistenceUnit or &lt;persistence-unit-ref>
      */
     protected static Collection<? extends PersistenceUnitDescriptor> findReferencedPUsViaPURefs(JndiNameEnvironment component) {
         Collection<PersistenceUnitDescriptor> persistenceUnitDescriptors = new HashSet<>();
@@ -656,7 +656,7 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
     }
 
     /**
-     * helper method: find all PUs referenced via @PersistenceContext or <persistence-context-ref>
+     * helper method: find all PUs referenced via @PersistenceContext or &lt;persistence-context-ref>
      */
     protected static Collection<? extends PersistenceUnitDescriptor> findReferencedPUsViaPCRefs(JndiNameEnvironment component) {
         Collection<PersistenceUnitDescriptor> persistenceUnitDescriptors = new HashSet<>();
@@ -691,8 +691,8 @@ public abstract class BundleDescriptor extends RootDeploymentDescriptor implemen
      * all the PersistenceUnits that are defined in the scope of this bundle descriptor to see which one matches the give
      * name.
      *
-     * @param unitName as used in @PersistenceUnit, @PersistenceContext <persistence-context-ref> or
-     * <persistence-unit-name>. If null, this method returns the default persistence unit, if available. The reason it accepts null for
+     * @param unitName as used in @PersistenceUnit, @PersistenceContext &lt;persistence-context-ref> or
+     * &lt;persistence-unit-name>. If null, this method returns the default persistence unit, if available. The reason it accepts null for
      * default persistence unit is because "" gets converted to null in EntityManagerReferenceHandler.processNewEmRefAnnotation.
      * @return PersistenceUnitDescriptor that this unitName resolves to. Returns null, if unitName could not be resolved.
      */

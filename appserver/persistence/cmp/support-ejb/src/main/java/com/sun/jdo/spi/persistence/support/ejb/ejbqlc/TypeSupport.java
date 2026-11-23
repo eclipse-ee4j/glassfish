@@ -111,7 +111,7 @@ public class TypeSupport
     /** Meta data access. */
     protected Model model;
 
-    /** Name mapping EJB <-> JDO. */
+    /** Name mapping EJB &lt;-> JDO. */
     protected NameMapper nameMapper;
 
     /** I18N support. */
@@ -145,7 +145,7 @@ public class TypeSupport
 
     /**
      * Creates a new TypeSupport using the specified model instance to
-     * access meta data and the specified nameMapper for EJB <-> JDO
+     * access meta data and the specified nameMapper for EJB &lt;-> JDO
      * name mapping.
      */
     public TypeSupport(Model model, NameMapper nameMapper)

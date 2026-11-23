@@ -105,7 +105,7 @@ public class GrizzlyModuleDescriptor {
         String name ="";
         String value = "";
 
-        public GrizzlyProperty(String name, String value) {
+        GrizzlyProperty(String name, String value) {
             this.name = name;
             this.value = value;
         }

@@ -53,13 +53,13 @@ public class Resource {
     /**
      * Binary content.
      */
-    protected byte[] binaryContent = null;
+    protected byte[] binaryContent;
 
 
     /**
      * Input stream.
      */
-    protected InputStream inputStream = null;
+    protected InputStream inputStream;
 
 
     // ------------------------------------------------------------- Properties

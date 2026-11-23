@@ -304,7 +304,7 @@ public final class TabSetRenderer extends AbstractRenderer {
         }
 
         String[] styles = new String[]{
-            divStyle, tableStyle, linkStyle, selectedTdStyle, selectedTextStyle
+            divStyle, tableStyle, linkStyle, selectedTdStyle, selectedTextStyle,
         };
         return styles;
     }

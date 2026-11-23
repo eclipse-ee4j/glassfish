@@ -428,7 +428,7 @@ public class AppServerStartupTest {
         private final RunLevelController RunLevelController
         ;
 
-        public Results(RunLevelController rls) {
+        Results(RunLevelController rls) {
             this.RunLevelController = rls;
         }
 

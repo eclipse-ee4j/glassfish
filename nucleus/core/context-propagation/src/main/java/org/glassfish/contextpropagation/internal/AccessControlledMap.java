@@ -83,7 +83,7 @@ public class AccessControlledMap {
     throw new InsufficientCredentialException();
   }
 
-  public static enum ContextAccessLevel {
+  public enum ContextAccessLevel {
     CREATE,
     READ,
     UPDATE,

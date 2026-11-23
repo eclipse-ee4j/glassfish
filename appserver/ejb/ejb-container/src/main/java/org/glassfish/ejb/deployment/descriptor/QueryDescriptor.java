@@ -29,7 +29,7 @@ import org.glassfish.deployment.common.Descriptor;
 /**
  * This class contains information about EJB-QL queries for
  * finder/selector methods of EJB2.0 CMP EntityBeans.
- * It represents the <query> XML element.
+ * It represents the &lt;query&gt; XML element.
  *
  * @author Sanjeev Krishnan
  */

@@ -666,8 +666,8 @@ public class TimerBean implements TimerLocal {
      * on v2.x upgrade
      */
     public static class Blob implements Serializable {
-        private byte[] primaryKeyBytes_ = null;
-        private byte[] infoBytes_ = null;
+        private byte[] primaryKeyBytes_;
+        private byte[] infoBytes_;
 
         private static final long serialVersionUID = 9167806434435988868L;
 

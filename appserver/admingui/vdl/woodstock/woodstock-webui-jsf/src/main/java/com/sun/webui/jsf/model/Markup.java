@@ -130,7 +130,7 @@ public class Markup {
         "uuml",
         "yacute",
         "thorn",
-        "yuml"
+        "yuml",
     };
 
     /**
@@ -148,7 +148,7 @@ public class Markup {
     /**
      * Flag indicating that an element is currently open.
      */
-    private boolean open = false;
+    private boolean open;
 
     /**
      * Return the character encoding assumed to be used when the

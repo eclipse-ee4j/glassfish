@@ -332,41 +332,41 @@ public final class InstanceEvent
      * by this event (AFTER_INIT_EVENT, AFTER_SERVICE_EVENT,
      * AFTER_DESTROY_EVENT, AFTER_DISPATCH_EVENT, and AFTER_FILTER_EVENT only).
      */
-    private Throwable exception = null;
+    private Throwable exception;
 
 
     /**
      * The Filter instance for which this event occurred (BEFORE_FILTER_EVENT
      * and AFTER_FILTER_EVENT only).
      */
-    private transient Filter filter = null;
+    private transient Filter filter;
 
 
     /**
      * The servlet request being processed (BEFORE_FILTER_EVENT,
      * AFTER_FILTER_EVENT, BEFORE_SERVICE_EVENT, and AFTER_SERVICE_EVENT).
      */
-    private transient ServletRequest request = null;
+    private transient ServletRequest request;
 
 
     /**
      * The servlet response being processed (BEFORE_FILTER_EVENT,
      * AFTER_FILTER_EVENT, BEFORE_SERVICE_EVENT, and AFTER_SERVICE_EVENT).
      */
-    private transient ServletResponse response = null;
+    private transient ServletResponse response;
 
 
     /**
      * The Servlet instance for which this event occurred (not present on
      * BEFORE_FILTER_EVENT or AFTER_FILTER_EVENT events).
      */
-    private transient Servlet servlet = null;
+    private transient Servlet servlet;
 
 
     /**
      * The event type this instance represents.
      */
-    private EventType type = null;
+    private EventType type;
 
 
     // ------------------------------------------------------------- Properties

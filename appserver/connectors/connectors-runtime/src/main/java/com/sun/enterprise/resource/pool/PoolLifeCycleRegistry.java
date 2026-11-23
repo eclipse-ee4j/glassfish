@@ -55,7 +55,6 @@ public class PoolLifeCycleRegistry implements PoolLifeCycle {
     /**
      * Add a listener to the list of pool life cycle listeners maintained by this registry for the <code>poolName</code>.
      *
-     * @param poolName
      * @param listener
      */
     public void registerPoolLifeCycle(PoolLifeCycle listener) {

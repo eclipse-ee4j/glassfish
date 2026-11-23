@@ -100,13 +100,13 @@ public class CreateApplicationRefCommand implements AdminCommand, AdminCommandSe
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateApplicationRefCommand.class);
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=true)
     String target = "server";
 
     @Param(optional=true)
-    public String virtualservers = null;
+    public String virtualservers;
 
     @Param(optional=true, defaultValue="true")
     public Boolean enabled = true;

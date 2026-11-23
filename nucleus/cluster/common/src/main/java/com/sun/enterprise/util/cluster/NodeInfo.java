@@ -41,23 +41,23 @@ public final class NodeInfo {
     }
 
 
-    public final String getHost() {
+    public String getHost() {
         return host;
     }
 
-    public final String getType() {
+    public String getType() {
         return type;
     }
 
-    public final String getName() {
+    public String getName() {
         return name;
     }
 
-    public final String getInstallDir() {
+    public String getInstallDir() {
         return installDir;
     }
 
-    public final String getInstancesList() {
+    public String getInstancesList() {
         return instancesList;
     }
 

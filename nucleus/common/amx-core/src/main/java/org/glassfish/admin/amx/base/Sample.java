@@ -37,12 +37,12 @@ public interface Sample extends AMXProxy
     /**
     The type of Notification emitted by emitNotification().
      */
-    public static final String SAMPLE_NOTIFICATION_TYPE = "Sample";
+    String SAMPLE_NOTIFICATION_TYPE = "Sample";
 
     /**
     The key to access user data within the Map obtained from Notification.getUserData().
      */
-    public static final String USER_DATA_KEY = "UserData";
+    String USER_DATA_KEY = "UserData";
 
     /**
     Emit 'numNotifs' notifications of type
@@ -53,7 +53,7 @@ public interface Sample extends AMXProxy
     @param intervalMillis interval at which Notifications should be issued >= 0
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void emitNotifications(final Object data, final int numNotifs, final long intervalMillis);
+    void emitNotifications(Object data, int numNotifs, long intervalMillis);
 
     /**
     Add a new Attribute. After this, the MBeanInfo will contain an MBeanAttributeInfo
@@ -63,31 +63,31 @@ public interface Sample extends AMXProxy
     @param value
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void addAttribute(final String name, final Object value);
+    void addAttribute(String name, Object value);
 
     /**
     Remove an Attribute. After this, the MBeanInfo will no longer
     contain an MBeanAttributeInfo for this Attribute.
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void removeAttribute(final String name);
+    void removeAttribute(String name);
 
     /**
     For testing bandwidth...
      */
     @ManagedOperation(impact = MBeanOperationInfo.ACTION)
-    public void uploadBytes(final byte[] bytes);
+    void uploadBytes(byte[] bytes);
 
     @ManagedOperation(impact = MBeanOperationInfo.INFO)
-    public byte[] downloadBytes(final int numBytes);
+    byte[] downloadBytes(int numBytes);
 
     /** explicity getter using an array, must work through proxy code */
     @ManagedAttribute
-    public ObjectName[] getAllAMX();
+    ObjectName[] getAllAMX();
 
     /** Attribute whose values will have a variety of types that should pass the AMXValidtor */
     @ManagedAttribute
-    public Object[] getAllSortsOfStuff();
+    Object[] getAllSortsOfStuff();
 }
 
 

@@ -30,21 +30,21 @@ import java.util.List;
  */
 public class BaseSpecialDBOperation implements SpecialDBOperation {
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void initialize(DatabaseMetaData metaData,
         String identifier) throws SQLException {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void defineColumnTypeForResult(
         PreparedStatement ps, List columns) throws SQLException {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void bindFixedCharColumn(PreparedStatement ps,
          int index, String strVal, int length) throws SQLException {

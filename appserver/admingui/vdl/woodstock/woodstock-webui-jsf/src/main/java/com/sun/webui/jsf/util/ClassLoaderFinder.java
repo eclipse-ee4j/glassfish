@@ -28,7 +28,7 @@ public final class ClassLoaderFinder {
     /**
      * Optional Special ClassLoader to use.
      */
-    private static ClassLoader customClassLoader = null;
+    private static ClassLoader customClassLoader;
 
     /**
      * Cannot be instanciated.

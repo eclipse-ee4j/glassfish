@@ -40,73 +40,73 @@ public final class AlarmStatus extends ImageHyperlink {
      * prevent display of critical alarm count and icon.
      */
     @Property(name = "criticalAlarms", displayName = "Critical Alarms")
-    private boolean criticalAlarms = false;
+    private boolean criticalAlarms;
 
     /**
      * criticalArlams set flag.
      */
-    private boolean criticalAlarmsSet = false;
+    private boolean criticalAlarmsSet;
 
     /**
      * The key identifier for the theme image to use for the critical alarms
      * icon.
      */
     @Property(name = "criticalIcon", displayName = "Critical Icon")
-    private String criticalIcon = null;
+    private String criticalIcon;
 
     /**
      * Specify if the down alarm count should be displayed.
      * Set to false to prevent display of down alarm count and icon.
      */
     @Property(name = "downAlarms", displayName = "Down Alarms")
-    private boolean downAlarms = false;
+    private boolean downAlarms;
 
     /**
      * downAlarms set flag.
      */
-    private boolean downAlarmsSet = false;
+    private boolean downAlarmsSet;
 
     /**
      * The key identifier for the theme image to use for the down alarms icon.
      */
     @Property(name = "downIcon", displayName = "Down Icon")
-    private String downIcon = null;
+    private String downIcon;
 
     /**
      * Specify if the major alarm count should be displayed. Set to false to
      * prevent display of minor alarm count and icon.
      */
     @Property(name = "majorAlarms", displayName = "Major Alarms")
-    private boolean majorAlarms = false;
+    private boolean majorAlarms;
 
     /**
      * majorAlarms set flag.
      */
-    private boolean majorAlarmsSet = false;
+    private boolean majorAlarmsSet;
 
     /**
      * The key identifier for the theme image to use for the major alarms icon.
      */
     @Property(name = "majorIcon", displayName = "Major Icon")
-    private String majorIcon = null;
+    private String majorIcon;
 
     /**
      * Specify if the minor alarm count should be displayed. Set to false to
      * prevent display of minor alarm count and icon.
      */
     @Property(name = "minorAlarms", displayName = "Minor Alarms")
-    private boolean minorAlarms = false;
+    private boolean minorAlarms;
 
     /**
      * minorAlarms set flag.
      */
-    private boolean minorAlarmsSet = false;
+    private boolean minorAlarmsSet;
 
     /**
      * The key identifier for the theme image to use for the minor alarms icon.
      */
     @Property(name = "minorIcon", displayName = "Minor Icon")
-    private String minorIcon = null;
+    private String minorIcon;
 
     /**
      * The number of critical alarms, to display next to the appropriate icon.
@@ -118,7 +118,7 @@ public final class AlarmStatus extends ImageHyperlink {
     /**
      * numCriticalAlarams set flag.
      */
-    private boolean numCriticalAlarmsSet = false;
+    private boolean numCriticalAlarmsSet;
 
     /**
      * The number of down alarms, to display next to the appropriate icon.
@@ -129,7 +129,7 @@ public final class AlarmStatus extends ImageHyperlink {
     /**
      * numDownAlaramsSet flag.
      */
-    private boolean numDownAlarmsSet = false;
+    private boolean numDownAlarmsSet;
 
     /**
      * The number of major alarms, to display next to the appropriate icon.
@@ -140,7 +140,7 @@ public final class AlarmStatus extends ImageHyperlink {
     /**
      * numMajorAlarms set flag.
      */
-    private boolean numMajorAlarmsSet = false;
+    private boolean numMajorAlarmsSet;
 
     /**
      * The number of minor alarms, to display next to the appropriate icon.
@@ -151,21 +151,21 @@ public final class AlarmStatus extends ImageHyperlink {
     /**
      * numMinorAlarms set flag.
      */
-    private boolean numMinorAlarmsSet = false;
+    private boolean numMinorAlarmsSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "styleClass", displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -177,12 +177,12 @@ public final class AlarmStatus extends ImageHyperlink {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visibleSet flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of AlarmStatus.

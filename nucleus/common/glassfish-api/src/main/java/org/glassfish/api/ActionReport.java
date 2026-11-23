@@ -142,7 +142,7 @@ public abstract class ActionReport implements Serializable {
      * Gets a type that was set by the command implementation
      *
      * @param resultType the type requested
-     * @return <T> the actual instance that was set
+     * @return &lt;T&gt; the actual instance that was set
      */
     public <T> T getResultType(Class<T> resultType) {
         return (T) resultTypes.get(resultType);

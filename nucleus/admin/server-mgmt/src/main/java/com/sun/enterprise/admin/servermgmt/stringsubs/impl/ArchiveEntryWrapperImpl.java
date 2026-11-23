@@ -62,9 +62,9 @@ public class ArchiveEntryWrapperImpl implements ArchiveEntryWrapper {
     private static final byte[] _buffer = new byte[10000];
 
     private Archive _archive;
-    private ArchiveEntryWrapperImpl _parent = null;
-    private File _extractDir = null;
-    private JarFile _jar = null;
+    private ArchiveEntryWrapperImpl _parent;
+    private File _extractDir;
+    private JarFile _jar;
     //List of all substitutable archive entries including the entries from nested archive.
     private List<ArchiveMember> _allArchiveMembers;
     // Extracted entries from an archive, doesn't include entry from nested archive.

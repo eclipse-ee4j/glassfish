@@ -46,8 +46,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * <h3>NOT FOR DEVELOPER USE - base renderer class for {@code ui:calendar} and
- * {@code ui:scheduler}</h3>
+ * <h2>NOT FOR DEVELOPER USE - base renderer class for {@code ui:calendar} and
+ * {@code ui:scheduler}</h2>
  * <p>Do not release as API.</p>
  */
 @Component(type = "com.sun.webui.jsf.CalendarMonth",
@@ -114,12 +114,12 @@ public final class CalendarMonth extends UIOutput implements NamingContainer {
      * The {@code java.util.Calendar} object to use for this CalendarMonth
      * component.
      */
-    private java.util.Calendar calendar = null;
+    private java.util.Calendar calendar;
 
     /**
      * Holds value of property javaScriptObject.
      */
-    private String javaScriptObjectName = null;
+    private String javaScriptObjectName;
 
     /**
      * Flag determining whether the component should be rendered in its
@@ -129,12 +129,12 @@ public final class CalendarMonth extends UIOutput implements NamingContainer {
     @Property(name = "popup",
             displayName = "Popup Version",
             category = "Behavior")
-    private boolean popup = false;
+    private boolean popup;
 
     /**
      * popup set flag.
      */
-    private boolean popupSet = false;
+    private boolean popupSet;
 
     /**
      * Default constructor.
@@ -546,7 +546,7 @@ public final class CalendarMonth extends UIOutput implements NamingContainer {
             }
             int newMonth = month + 1;
             monthMenu.setSubmittedValue(new String[]{
-                String.valueOf(newMonth)
+                String.valueOf(newMonth),
             });
         } else if (showNextYear()) {
             if (DEBUG) {
@@ -565,11 +565,11 @@ public final class CalendarMonth extends UIOutput implements NamingContainer {
         if (month > 1) {
             int newMonth = month - 1;
             monthMenu.setSubmittedValue(new String[]{
-                String.valueOf(newMonth)
+                String.valueOf(newMonth),
             });
         } else if (showPreviousYear()) {
             monthMenu.setSubmittedValue(new String[]{
-                "12"
+                "12",
             });
         }
     }
@@ -589,7 +589,7 @@ public final class CalendarMonth extends UIOutput implements NamingContainer {
         Integer lastYear = (Integer) (options[options.length - 1].getValue());
         if (lastYear >= year) {
             yearMenu.setSubmittedValue(new String[]{
-                String.valueOf(year)
+                String.valueOf(year),
             });
             return true;
         }

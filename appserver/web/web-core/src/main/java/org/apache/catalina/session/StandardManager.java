@@ -130,14 +130,14 @@ public class StandardManager extends ManagerBase implements Lifecycle, PropertyC
     /**
      * Has this component been started yet?
      */
-    private boolean started = false;
+    private boolean started;
 
     /*
      * The absolute path name of the file where sessions are persisted.
      */
     private String absPathName;
 
-    long processingTime = 0;
+    long processingTime;
 
     // ------------------------------------------------------------- Properties
 
@@ -467,7 +467,7 @@ public class StandardManager extends ManagerBase implements Lifecycle, PropertyC
      * Save any currently active sessions in the appropriate persistence mechanism, if any. If persistence is not supported,
      * this method returns without doing anything.
      *
-     * @doExpire true if the unloaded sessions are to be expired, false otherwise
+     * @param doExpire true if the unloaded sessions are to be expired, false otherwise
      * @param isShutdown true if this manager is being stopped as part of a domain shutdown (as opposed to an undeployment),
      * and false otherwise
      *

@@ -108,7 +108,7 @@ public class MBeanProxyHandler extends MBeanServerInvocationHandler
 
     /**
     Normally created through MBeanProxyFactory.newProxyInstance().  Creates a new instance to be used
-    as a <i>handler<i> object for Proxy.newProxyInstance.
+    as a <i>handler</i> object for Proxy.newProxyInstance.
 
     @param conn         the connection
     @param objectName   the ObjectName of the proxied MBean

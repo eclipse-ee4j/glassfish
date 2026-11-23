@@ -52,7 +52,7 @@ public final class Extension {
     /**
      * The name of the optional package being made available, or required.
      */
-    private String extensionName = null;
+    private String extensionName;
 
 
     public String getExtensionName() {
@@ -77,7 +77,7 @@ public final class Extension {
      * The URL from which the most recent version of this optional package
      * can be obtained if it is not already installed.
      */
-    private String implementationURL = null;
+    private String implementationURL;
 
     public String getImplementationURL() {
         return (this.implementationURL);
@@ -92,7 +92,7 @@ public final class Extension {
      * The name of the company or organization that produced this
      * implementation of this optional package.
      */
-    private String implementationVendor = null;
+    private String implementationVendor;
 
     public String getImplementationVendor() {
         return (this.implementationVendor);
@@ -107,7 +107,7 @@ public final class Extension {
      * The unique identifier of the company that produced the optional
      * package contained in this JAR file.
      */
-    private String implementationVendorId = null;
+    private String implementationVendorId;
 
     public String getImplementationVendorId() {
         return (this.implementationVendorId);
@@ -122,7 +122,7 @@ public final class Extension {
      * The version number (dotted decimal notation) for this implementation
      * of the optional package.
      */
-    private String implementationVersion = null;
+    private String implementationVersion;
 
     public String getImplementationVersion() {
         return (this.implementationVersion);
@@ -139,7 +139,7 @@ public final class Extension {
      * The name of the company or organization that originated the
      * specification to which this optional package conforms.
      */
-    private String specificationVendor = null;
+    private String specificationVendor;
 
     public String getSpecificationVendor() {
         return (this.specificationVendor);
@@ -154,7 +154,7 @@ public final class Extension {
      * The version number (dotted decimal notation) of the specification
      * to which this optional package conforms.
      */
-    private String specificationVersion = null;
+    private String specificationVersion;
 
     public String getSpecificationVersion() {
         return (this.specificationVersion);
@@ -169,7 +169,7 @@ public final class Extension {
      * fulfilled is true if all the required extension dependencies have been
      * satisfied
      */
-    private boolean fulfilled = false;
+    private boolean fulfilled;
 
     public void setFulfilled(boolean fulfilled) {
         this.fulfilled = fulfilled;

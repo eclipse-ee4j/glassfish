@@ -75,7 +75,7 @@ import static com.sun.logging.LogDomains.SECURITY_LOGGER;
  * a service context element in the service context list in
  * an IIOP header.
  *
- * @author: Nithya Subramanian
+ * @author Nithya Subramanian
  */
 public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor {
 
@@ -578,11 +578,11 @@ class Counter {
 
     public int count;
 
-    public Counter(int count) {
+    Counter(int count) {
         this.count = count;
     }
 
-    public Counter() {
+    Counter() {
         count = 0;
     }
 

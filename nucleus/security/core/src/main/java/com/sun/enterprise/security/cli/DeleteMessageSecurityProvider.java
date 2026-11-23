@@ -84,10 +84,10 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
     @Inject
     private Domain domain;
 
-    ProviderConfig thePC = null;
+    ProviderConfig thePC;
 
     @AccessRequired.To("delete")
-    private MessageSecurityConfig msgSecCfg = null;
+    private MessageSecurityConfig msgSecCfg;
 
     private SecurityService secService;
 

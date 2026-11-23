@@ -107,7 +107,7 @@ public final class CollectionUtil
     /**
     @param c        the Collection
     @param elementClass         the type of the element, must be non-primitive
-    @return array of <elementClass>[] elements
+    @return array of &lt;elementClass&gt;[] elements
      */
     public static <T> T[] toArray(
             final Collection<? extends T> c,

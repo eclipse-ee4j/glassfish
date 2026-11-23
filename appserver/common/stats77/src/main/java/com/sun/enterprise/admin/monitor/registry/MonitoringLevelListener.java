@@ -32,7 +32,7 @@ public interface MonitoringLevelListener {
      * @deprecated
      */
     @Deprecated
-    public void setLevel(MonitoringLevel level);
+    void setLevel(MonitoringLevel level);
 
     /**
      * Method to convey the change in monitoring level. It is a usual practice that
@@ -47,7 +47,7 @@ public interface MonitoringLevelListener {
      * is guaranteed that it will be unchanged by monitoring framework.
      */
     @Deprecated
-    public void changeLevel(MonitoringLevel from, MonitoringLevel to,
+    void changeLevel(MonitoringLevel from, MonitoringLevel to,
         org.glassfish.j2ee.statistics.Stats handback);
 
     /**
@@ -74,6 +74,6 @@ public interface MonitoringLevelListener {
      * @param to        the MonitoringLevel after the change
      * @param type        the MonitoredObjectType that had the level changed
      */
-    public void changeLevel(MonitoringLevel from, MonitoringLevel to,
+    void changeLevel(MonitoringLevel from, MonitoringLevel to,
         MonitoredObjectType type);
 }

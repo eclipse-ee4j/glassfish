@@ -76,7 +76,7 @@ public class AdminLoginModule implements LoginModule {
     @Inject
     private RestSessionManager restSessionManager;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
     private boolean isAuthenticated;
 
@@ -239,7 +239,7 @@ public class AdminLoginModule implements LoginModule {
     */
     private static class SpecialAdminIndicatorChecker {
 
-        private static enum Result {
+        private enum Result {
             NOT_IN_REQUEST, MATCHED, MISMATCHED
         }
 

@@ -42,7 +42,7 @@ final class MeteredStream extends OutputStream {
      * @param out wrapped targed output stream
      * @param written initial value, usually size of the output file which already exists.
      */
-    public MeteredStream(final OutputStream out, final long written) {
+    MeteredStream(final OutputStream out, final long written) {
         this.out = out;
         this.written = written;
         this.isOpen = true;

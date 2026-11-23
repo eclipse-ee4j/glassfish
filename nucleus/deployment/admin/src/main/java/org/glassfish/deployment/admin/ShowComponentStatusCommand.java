@@ -71,7 +71,7 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
         AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=true)
     String target = "server";
@@ -90,7 +90,7 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
 
     private ActionReport report;
     private Logger logger;
-    private List<String> matchedVersions = null;
+    private List<String> matchedVersions;
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);
 

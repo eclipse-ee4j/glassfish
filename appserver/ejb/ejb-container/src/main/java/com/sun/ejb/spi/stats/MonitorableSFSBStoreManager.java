@@ -31,7 +31,7 @@ public interface MonitorableSFSBStoreManager
      *    Note that this includes the sessions passivated / checkpointed by
      *    ohter store maangers in the cluster
      */
-    public long getCurrentStoreSize();
+    long getCurrentStoreSize();
 
 
     /**
@@ -40,6 +40,6 @@ public interface MonitorableSFSBStoreManager
      * @param monitoringOn true if monitoring is either HIGH / LOW
      *    false otherwise
      */
-    public void monitoringLevelChanged(boolean monitoringOn);
+    void monitoringLevelChanged(boolean monitoringOn);
 
 }

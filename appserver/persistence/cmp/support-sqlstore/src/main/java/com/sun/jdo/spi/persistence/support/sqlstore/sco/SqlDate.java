@@ -76,8 +76,8 @@ public class SqlDate
     }
 
     /**
-     * Sets the <tt>SqlDate</tt> object to represent a point in time that is
-     * <tt>time</tt> milliseconds after January 1, 1970 00:00:00 GMT.
+     * Sets the <code>SqlDate</code> object to represent a point in time that is
+     * <code>time</code> milliseconds after January 1, 1970 00:00:00 GMT.
      *
      * @param   time   the number of milliseconds.
      * @see     java.sql.Date
@@ -108,7 +108,7 @@ public class SqlDate
     /** -----------Depricated Methods------------------*/
 
     /**
-     * Sets the year of this <tt>SqlDate</tt> object to be the specified
+     * Sets the year of this <code>SqlDate</code> object to be the specified
      * value plus 1900.
      *
      * @param   year    the year value.
@@ -136,7 +136,7 @@ public class SqlDate
     }
 
     /**
-     * Sets the day of the month of this <tt>SqlDate</tt> object to the
+     * Sets the day of the month of this <code>SqlDate</code> object to the
      * specified value.
      *
      * @param   date   the day of the month value between 1-31.
@@ -162,7 +162,7 @@ public class SqlDate
     }
 
     /**
-     * Sets the <tt>SqlDate</tt> object without notification of the Owner
+     * Sets the <code>SqlDate</code> object without notification of the Owner
      * field. Used internaly to populate date from DB
      *
      * @param   time   the number of milliseconds.
@@ -253,7 +253,7 @@ public class SqlDate
      * this object to the stream.
      *
      * @return java.sql.Date that represents the same value.
-     * @throws ObjectStreamException.
+     * @throws ObjectStreamException
      */
     Object writeReplace() throws ObjectStreamException
     {

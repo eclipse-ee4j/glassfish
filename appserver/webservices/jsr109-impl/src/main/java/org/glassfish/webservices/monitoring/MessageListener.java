@@ -29,5 +29,5 @@ public interface MessageListener {
      * @param request the jaxrpc request message trace, transport dependent.
      * @param response the jaxrpc response message trace, transport dependent.
      */
-    public void invocationProcessed(MessageTrace request, MessageTrace response);
+    void invocationProcessed(MessageTrace request, MessageTrace response);
 }

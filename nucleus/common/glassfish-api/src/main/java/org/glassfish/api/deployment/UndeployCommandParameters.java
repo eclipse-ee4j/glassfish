@@ -23,12 +23,12 @@ import org.glassfish.api.Param;
 /**
  * Parameters passed to a deployment command.
  *
- * @Author Jerome Dochez
+ * @author Jerome Dochez
  */
 public class UndeployCommandParameters extends OpsParams {
 
     @Param(primary = true)
-    public String name = null;
+    public String name;
 
     @Param(optional = true)
     public String target;
@@ -54,10 +54,10 @@ public class UndeployCommandParameters extends OpsParams {
     public Boolean _ignoreCascade = false;
 
     // used for internal purpose to carry the archive type information
-    public String _type = null;
+    public String _type;
 
     @Param(optional = true, separator = ':')
-    public Properties properties = null;
+    public Properties properties;
 
     public Properties getProperties() {
         return properties;

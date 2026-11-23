@@ -32,7 +32,7 @@ public class InvalidCommandException extends CommandException {
     /**
      * Constructs an <code>InvalidCommandException</code> with the specified detail message.
      *
-     * @param msg the detail message.
+     * @param cmdName the detail message.
      */
     public InvalidCommandException(String cmdName) {
         super(cmdName);

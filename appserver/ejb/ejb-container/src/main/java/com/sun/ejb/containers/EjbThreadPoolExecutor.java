@@ -86,7 +86,7 @@ public class EjbThreadPoolExecutor extends ThreadPoolExecutor {
         private AtomicInteger threadId = new AtomicInteger(0);
         private String threadPoolName;
 
-        public ThreadFactoryImpl(String threadPoolName) {
+        ThreadFactoryImpl(String threadPoolName) {
             this.threadPoolName = threadPoolName;
         }
 

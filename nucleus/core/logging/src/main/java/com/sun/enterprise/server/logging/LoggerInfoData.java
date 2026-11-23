@@ -34,9 +34,9 @@ class LoggerInfoData {
     /**
      * Default constructor
      */
-    public LoggerInfoData() {}
+    LoggerInfoData() {}
 
-    public LoggerInfoData(String subsystem, String description, boolean published) {
+    LoggerInfoData(String subsystem, String description, boolean published) {
         this.subsystem = subsystem;
         this.description = description;
         this.published = published;

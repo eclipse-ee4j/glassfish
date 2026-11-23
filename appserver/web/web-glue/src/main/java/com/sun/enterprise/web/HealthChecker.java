@@ -30,6 +30,6 @@ import org.apache.catalina.LifecycleException;
  */
 public interface HealthChecker {
 
-    public void start() throws LifecycleException;
-    public void stop() throws LifecycleException;
+    void start() throws LifecycleException;
+    void stop() throws LifecycleException;
 }

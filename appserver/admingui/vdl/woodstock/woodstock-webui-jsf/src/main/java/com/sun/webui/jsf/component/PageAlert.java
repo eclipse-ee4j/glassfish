@@ -79,7 +79,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Detailed message text for the alert. This message might include more
@@ -92,7 +92,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String detail = null;
+    private String detail;
 
     /**
      * Flag indicating that the message text should be escaped so that it is not
@@ -101,12 +101,12 @@ public final class PageAlert extends UIComponentBase
     @Property(name = "escape",
             displayName = "Escape",
             category = "Data")
-    private boolean escape = false;
+    private boolean escape;
 
     /**
      * escape set flag.
      */
-    private boolean escapeSet = false;
+    private boolean escapeSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -116,7 +116,7 @@ public final class PageAlert extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -128,7 +128,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * <b>Deprecated.</b>
@@ -141,7 +141,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String summary = null;
+    private String summary;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -160,7 +160,7 @@ public final class PageAlert extends UIComponentBase
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The text to display as the page title.
@@ -171,7 +171,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * The type or category of alert. The type attribute can be set to one of
@@ -184,7 +184,7 @@ public final class PageAlert extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.PageAlertTypesEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -198,12 +198,12 @@ public final class PageAlert extends UIComponentBase
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.
@@ -235,11 +235,11 @@ public final class PageAlert extends UIComponentBase
      * returned with the id
      * {@code getId() + "_pageAlertTitle"}. The {@code StaticText}
      * instance is * initialized with the values from
-     * <p>
+     *
      * <ul>
      * <li>{@code getSafeTitle()}
      * </ul>
-     * </p>
+     *
      * <p>
      * If a facet is not defined then the returned {@code StaticText}
      * component is created every time this method is called.

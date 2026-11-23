@@ -527,7 +527,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
 
         private Map<String, Long> startTimes = new HashMap<>();
         private LinkedHashMap<String, Long> recordedTimes = new LinkedHashMap<>();
-        private LinkedList<Future<Result<Thread>>> futures = null;
+        private LinkedList<Future<Result<Thread>>> futures;
 
         @Override
         public Filter getFilter() {
@@ -642,7 +642,7 @@ public class AppServerStartup implements PostConstruct, ModuleStartup {
     private class MasterRunLevelListener implements RunLevelListener {
         private final RunLevelController controller;
 
-        private boolean forcedShutdown = false;
+        private boolean forcedShutdown;
 
         private MasterRunLevelListener(RunLevelController controller) {
             this.controller = controller;

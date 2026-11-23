@@ -81,5 +81,5 @@ public class ClusterVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    Cluster _c = null;
+    Cluster _c;
 }

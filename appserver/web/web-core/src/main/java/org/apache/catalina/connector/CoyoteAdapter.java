@@ -784,7 +784,7 @@ public class CoyoteAdapter extends HttpHandler {
     }
 
     /**
-     * <tt>true</tt> if this class needs to be compatible with Tomcat Adapter class. Since Tomcat Adapter implementation
+     * <code>true</code> if this class needs to be compatible with Tomcat Adapter class. Since Tomcat Adapter implementation
      * doesn't support the afterService method, the afterService method must be invoked inside the service method.
      */
     public void setCompatWithTomcat(boolean compatWithTomcat) {

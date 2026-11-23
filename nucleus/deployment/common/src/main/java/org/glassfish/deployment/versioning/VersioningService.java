@@ -67,7 +67,7 @@ public class VersioningService {
      * @param target the target where we want to get all the versions
      * @return all the version(s) of the given application
      */
-    private final List<String> getAllversions(String untaggedName, String target) {
+    private List<String> getAllversions(String untaggedName, String target) {
         List<Application> allApplications = null;
         if (target != null) {
             allApplications = domain.getApplicationsInTarget(target);

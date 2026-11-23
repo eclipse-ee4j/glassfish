@@ -33,7 +33,7 @@ import java.util.Map;
  * selected. A checkbox can represent a {@code Boolean} value, a
  * {@code String} value, or a developer defined {@code Object} value.
  * </p>
- * <h3>Detecting a selected checkbox</h3>
+ * <h2>Detecting a selected checkbox</h2>
  * <p>
  * The {@code Checkbox} uses both the {@code selected} and
  * {@code selectedValue} properties to pass information about the
@@ -72,7 +72,7 @@ import java.util.Map;
  * will also contain the value of the {@code selectedValue} property of the
  * respective selected checkbox.
  * </p>
- * <h3>Using a {@code checkbox} tag as a boolean control</h3>
+ * <h2>Using a {@code checkbox} tag as a boolean control</h2>
  * <p>
  * If the {@code selectedValue} property is not specified or its value is
  * {@code null} then the checkbox behaves like a boolean control.
@@ -91,7 +91,7 @@ import java.util.Map;
  * request property will be an {@code ArrayList
  * } of indistinguishable {@code true} values.</em>
  * </p>
- * <h3>Using a {@code Checkbox} to represent a developer defined value</h3>
+ * <h2>Using a {@code Checkbox} to represent a developer defined value</h2>
  * <p>
  * The {@code selectedValue} property can be assigned a developer defined
  * object value to represent the value of a selected checkbox. If the checkbox
@@ -107,7 +107,7 @@ import java.util.Map;
  * property is compared to the {@code selected} property value in order to
  * detect a selected checkbox.
  * </p>
- * <h3>Using a {@code Checkbox} as one control in a group</h3>
+ * <h2>Using a {@code Checkbox} as one control in a group</h2>
  * <p>
  * The {@code name} property determines whether a checkbox is part of a
  * group. A checkbox is treated as part of a group of check-boxes if the
@@ -118,7 +118,7 @@ import java.util.Map;
  * check-boxes can be selected. The value of the name property must be unique
  * within the scope of the Form parent containing the check-boxes.
  * </p>
- * <h3>Facets</h3>
+ * <h2>Facets</h2>
  * <p>
  * The following facets are supported:
  * </p>
@@ -147,7 +147,7 @@ import java.util.Map;
  * {@link com.sun.webui.jsf.component.ImageComponent} for the image facet or
  * {@link com.sun.webui.jsf.component.Label} for the label facet.</em>
  * </p>
- * <h3>ImageComponent and Label sub-components</h3>
+ * <h2>ImageComponent and Label sub-components</h2>
  * <p>
  * An image and a label may be associated with the {@code Checkbox}.<br/>
  * If the {@code imageURL} property is not null and an image facet does not
@@ -168,7 +168,7 @@ import java.util.Map;
  * <li>this.isVisible() is assigned to the {@code visible} property.</li>
  * <li>this.isRendered() is assigned to the {@code renderer} property.</li>
  * </ul>
- * </p>
+ *
  * <p>
  * For the {@link com.sun.webui.jsf.component.Label} sub-component
  * <ul>
@@ -211,7 +211,7 @@ public final class Checkbox extends RbCbSelector {
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * Constructor for a {@code Checkbox}.

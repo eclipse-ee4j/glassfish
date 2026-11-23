@@ -24,7 +24,6 @@ import jakarta.transaction.NotSupportedException;
 import jakarta.transaction.RollbackException;
 import jakarta.transaction.SystemException;
 import jakarta.transaction.TransactionManager;
-import jakarta.transaction.TransactionRolledbackException;
 
 import java.util.logging.Logger;
 
@@ -73,9 +72,6 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
     /**
      * Complete the transaction associated with the current thread. When this
      * method completes, the thread becomes associated with no transaction.
-     *
-     * @exception TransactionRolledbackException Thrown to indicate that
-     *    the transaction has been rolled back rather than committed.
      *
      * @exception HeuristicMixedException Thrown to indicate that a heuristic
      *    decision was made and that some relevant updates have been committed

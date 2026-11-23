@@ -61,8 +61,8 @@ public class MessageSecurityNode extends DeploymentDescriptorNode<MessageSecurit
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for
-     * @param the descriptor to write
+     * @param nodeName name for
+     * @param messageSecurityDesc descriptor to write
      * @return the DOM tree top node
      */
     @Override

@@ -28,21 +28,21 @@ import org.jvnet.hk2.annotations.Contract;
 public interface Port {
 
     // default set of protocol we support
-    public final static String HTTP_PROTOCOL = "http";
-    public final static String HTTPS_PROTOCOL = "https";
-    public final static String IIOP_PROTOCOL = "iiop";
+    String HTTP_PROTOCOL = "http";
+    String HTTPS_PROTOCOL = "https";
+    String IIOP_PROTOCOL = "iiop";
 
     /**
      * Returns the port number occupied by this instance.
      *
      * @return port number
      */
-    public int getPortNumber();
+    int getPortNumber();
 
     /**
      * Unbinds (close) this port instance, releasing network resources at portNumber
      */
-    public void close();
+    void close();
 
     // todo : return a list of protocols bound to this port.
 }

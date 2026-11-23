@@ -22,7 +22,6 @@ import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.User;
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
-import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.util.IASSecurityException;
@@ -248,8 +247,6 @@ public final class FileRealm extends Realm {
      *
      * @param username Name of the user in this realm whose group listing is needed.
      * @return Enumeration of group names (strings).
-     * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm
-     * does not support this operation.
      */
     @Override
     public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
@@ -293,7 +290,7 @@ public final class FileRealm extends Realm {
      * Realm registry so future Realm.getInstance() calls will obtain the new data. Any existing references to this instance
      * (e.g. in active LoginModule sessions) are unaffected.
      *
-     * @param config
+     * @param configName
      * @exception BadRealmException if realm data structures are bad
      *
      */
@@ -344,7 +341,7 @@ public final class FileRealm extends Realm {
      * name which does not already exist as a user.
      * @param password Cleartext password for the user. If non-null the user password is changed to this value. If null, the
      * original password is retained.
-     * @param groupList List of groups to which user belongs.
+     * @param groups List of groups to which user belongs.
      *
      * @throws BadRealmException If there are problems adding user.
      * @throws NoSuchUserException If user does not exist.
@@ -365,9 +362,7 @@ public final class FileRealm extends Realm {
      *
      * @param user Name of user to authenticate.
      * @param password Password provided by client.
-     * @returns Array of group names the user belongs to, or null if authentication fails.
-     * @throws LoginException If there are errors during authentication.
-     *
+     * @return Array of group names the user belongs to, or null if authentication fails.
      */
     public String[] authenticate(String user, char[] password) {
         String groups[] = fileRealmHelper.authenticate(user, password);

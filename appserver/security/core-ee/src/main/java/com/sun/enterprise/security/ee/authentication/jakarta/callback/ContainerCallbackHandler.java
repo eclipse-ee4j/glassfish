@@ -41,7 +41,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @ContractsProvided({ ContainerCallbackHandler.class, CallbackHandler.class })
 public final class ContainerCallbackHandler implements CallbackHandler {
-    private CallbackHandler handler = null;
+    private CallbackHandler handler;
 
     public ContainerCallbackHandler() {
         if (Globals.getDefaultHabitat() == null || SecurityServicesUtil.getInstance().isACC()) {

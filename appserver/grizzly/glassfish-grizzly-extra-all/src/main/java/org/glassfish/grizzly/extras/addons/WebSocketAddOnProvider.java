@@ -83,7 +83,7 @@ public class WebSocketAddOnProvider extends WebSocketAddOn implements ConfigAwar
     private static class GlassfishWebSocketFilter extends WebSocketFilter {
         private final Mapper mapper;
 
-        public GlassfishWebSocketFilter(final Mapper mapper,
+        GlassfishWebSocketFilter(final Mapper mapper,
                 long wsTimeoutInSeconds) {
             super(wsTimeoutInSeconds);
             this.mapper = mapper;

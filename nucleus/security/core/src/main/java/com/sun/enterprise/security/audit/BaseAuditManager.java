@@ -70,7 +70,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // access to the specified audit modules which the subclass audit manager
     // deals with.
     protected List<T> typedModules = Collections.synchronizedList(new ArrayList<T>());
-    private Class<T> typedModuleClass = null; // typically set by postConstruct of a subclass invoking setTypeClass
+    private Class<T> typedModuleClass; // typically set by postConstruct of a subclass invoking setTypeClass
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
@@ -84,7 +84,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     private Map<String, BaseAuditModule> nameToModuleMap = new HashMap<String, BaseAuditModule>();
     // make this accessible to the containers so that the cost of non-audit case,
     // is just a comparision.
-    protected boolean auditOn = false;
+    protected boolean auditOn;
 
     @Inject
     private ServerContext serverContext;
@@ -159,8 +159,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
      * Add the given audit module to the list of loaded audit module. Adding the same name twice will override previous one.
      *
      * @param name of auditModule
-     * @param am an instance of a class extending BaseAuditModule that has been successfully loaded into the system.
-     * @exception
      */
     public BaseAuditModule addAuditModule(String name, String classname, Properties props) throws Exception {
         // make sure only a name corresponding to only one auditModule
@@ -251,7 +249,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     /**
      * logs the authentication call for all the loaded modules.
      *
-     * @see com.sun.appserv.security.BaseAuditModule.authentication
      */
     @Override
     public void authentication(final String user, final String realm, final boolean success) {

@@ -81,7 +81,7 @@ public interface ModuleMonitoringLevels extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the {@code ejbContainer} property.
      *
-     * <p>Various ejbs deployed to the server, ejb-pools, ejb-caches & ejb-methods.
+     * <p>Various ejbs deployed to the server, ejb-pools, ejb-caches &amp; ejb-methods.
      *
      * @return possible object is {@link String}
      */

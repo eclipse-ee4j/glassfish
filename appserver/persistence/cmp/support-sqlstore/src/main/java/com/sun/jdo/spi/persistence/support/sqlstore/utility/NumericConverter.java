@@ -34,7 +34,7 @@ public interface NumericConverter {
      /**
       * The default policy for NumericConverter.
       */
-     static final int DEFAULT_POLICY = 0;
+     int DEFAULT_POLICY = 0;
 
      /**
       * To convert BigInteger to BigDecimal.

@@ -104,9 +104,9 @@ public class TransactionScopedCDIUtil {
     /* Copied from JSF */
     private static class BeanWrapper implements Bean {
         private Class beanClass;
-        private InjectionTarget injectionTarget = null;
+        private InjectionTarget injectionTarget;
 
-        public BeanWrapper(Class beanClass) {
+        BeanWrapper(Class beanClass) {
             this.beanClass = beanClass;
 
         }

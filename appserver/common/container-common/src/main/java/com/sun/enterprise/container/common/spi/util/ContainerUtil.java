@@ -28,22 +28,22 @@ public interface ContainerUtil {
      * Utility method to get hold of InvocationManager
      * @return InvocationManager
      */
-    public InvocationManager getInvocationManager();
+    InvocationManager getInvocationManager();
 
     /**
      * Utility method to return ComponentEnvManager
      * @return ComponentEnvManager
      */
-    public ComponentEnvManager getComponentEnvManager();
+    ComponentEnvManager getComponentEnvManager();
 
-    public CallFlowAgent getCallFlowAgent();
+    CallFlowAgent getCallFlowAgent();
 
     /**
      * Utility method to return a JDK Timer. Containers must
      *  use this timer instead of creating their own
      * @return Timer
      */
-    public Timer getTimer();
+    Timer getTimer();
 
     /**
      * Utility method to schedule an asynchronous task. The
@@ -53,6 +53,6 @@ public interface ContainerUtil {
      *
      * @param runnable
      */
-    public void scheduleTask(Runnable runnable);
+    void scheduleTask(Runnable runnable);
 
 }

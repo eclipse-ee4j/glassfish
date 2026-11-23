@@ -62,7 +62,7 @@ public interface CometEvent {
      *  been processed, the request and response objects, as well as all their dependent
      *  objects will be recycled and used to process other requests.
      */
-    public enum EventType {BEGIN, READ, END, ERROR}
+    enum EventType {BEGIN, READ, END, ERROR}
 
 
     /**
@@ -75,7 +75,7 @@ public interface CometEvent {
      * SERVER_SHUTDOWN - the server is shutting down (sub type of END)
      * SESSION_END - the servlet ended the session (sub type of END)
      */
-    public enum EventSubType { TIMEOUT, CLIENT_DISCONNECT, IOEXCEPTION, WEBAPP_RELOAD, SERVER_SHUTDOWN, SESSION_END }
+    enum EventSubType { TIMEOUT, CLIENT_DISCONNECT, IOEXCEPTION, WEBAPP_RELOAD, SERVER_SHUTDOWN, SESSION_END }
 
 
     /**
@@ -83,28 +83,28 @@ public interface CometEvent {
      *
      * @return HttpServletRequest
      */
-    public HttpServletRequest getHttpServletRequest();
+    HttpServletRequest getHttpServletRequest();
 
     /**
      * Returns the HttpServletResponse.
      *
      * @return HttpServletResponse
      */
-    public HttpServletResponse getHttpServletResponse();
+    HttpServletResponse getHttpServletResponse();
 
     /**
      * Returns the event type.
      *
      * @return EventType
      */
-    public EventType getEventType();
+    EventType getEventType();
 
     /**
      * Returns the sub type of this event.
      *
      * @return EventSubType
      */
-    public EventSubType getEventSubType();
+    EventSubType getEventSubType();
 
     /**
      * Ends the Comet session. This signals to the container that
@@ -115,7 +115,7 @@ public interface CometEvent {
      *
      * @throws IOException if an IO exception occurs
      */
-    public void close() throws IOException;
+    void close() throws IOException;
 
     /**
      * Sets the timeout for this Comet connection. Please NOTE, that the implementation
@@ -136,7 +136,7 @@ public interface CometEvent {
      * @throws UnsupportedOperationException if per connection timeout is not supported, either at all or at this phase
      *         of the invocation.
      */
-    public void setTimeout(int timeout)
+    void setTimeout(int timeout)
         throws IOException, ServletException, UnsupportedOperationException;
 
 }

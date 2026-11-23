@@ -80,7 +80,7 @@ public class ServerSecurityPipeCreator extends ServerPipeCreator {
     /**
      * Checks to see whether WS-Security is enabled or not.
      *
-     * @param policyMap policy map for {@link this} assembler
+     * @param policyMap policy map for this assembler
      * @param wsdlPort wsdl:port
      * @return true if Security is enabled, false otherwise
      */

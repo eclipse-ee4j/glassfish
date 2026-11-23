@@ -65,16 +65,16 @@ class JDBCInfo {
     private int jdbcType;
 
     /** True iff a column of this type is nullable; default is false.  */
-    private boolean nullable = false;
+    private boolean nullable;
 
     /** Indicates precision of a fixed-point number column; default is null. */
-    private Integer precision = null;
+    private Integer precision;
 
     /** Indicates scale of a fixed-point number column; default is null. */
-    private Integer scale = null;
+    private Integer scale;
 
     /** Indicates length of a char, etc. column; default is null. */
-    private Integer length = null;
+    private Integer length;
 
 
     //
@@ -82,7 +82,7 @@ class JDBCInfo {
     //
 
     /** Indicates which fields in this instance have been set. */
-    private byte fieldsWithValues = 0;
+    private byte fieldsWithValues;
 
     /** Mask to indicate whether or not {@link #jdbcType} has a value. */
     private static final byte MASK_JDBC_TYPE =  1 << 0;

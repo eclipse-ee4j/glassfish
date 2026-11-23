@@ -396,7 +396,7 @@ public class PayloadImpl implements Payload {
          * @param os the OutputStream to which the Parts should be written
          * @throws java.io.IOException
          */
-        protected abstract void writePartsTo(final OutputStream os) throws IOException;
+        protected abstract void writePartsTo(OutputStream os) throws IOException;
 
         /**
          * Writes the Payload to the specified output stream and closes it.

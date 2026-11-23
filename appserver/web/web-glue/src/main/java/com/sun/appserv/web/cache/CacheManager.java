@@ -60,7 +60,7 @@ public class CacheManager {
     int defaultTimeout = DEFAULT_CACHE_TIMEOUT;
     String cacheClassName = DEFAULT_CACHE_CLASSNAME;
 
-    boolean enabled = false;
+    boolean enabled;
 
     // application servlet context
     ServletContext context;

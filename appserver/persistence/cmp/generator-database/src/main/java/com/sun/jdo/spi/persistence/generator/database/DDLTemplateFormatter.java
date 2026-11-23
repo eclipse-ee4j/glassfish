@@ -35,25 +35,25 @@ import java.text.MessageFormat;
 // if another generateDDL can happen simultaneously, we're in trouble.
 class DDLTemplateFormatter {
     /** Formatter for the start of "create table" DDL. */
-    private static MessageFormat createTableStart = null;
+    private static MessageFormat createTableStart;
 
     /** Formatter for the start of "create index" DDL. */
-    private static MessageFormat createIndex = null;
+    private static MessageFormat createIndex;
 
     /** Formatter for "add constraint" DDL. */
-    private static MessageFormat alterTableAddConstraintStart = null;
+    private static MessageFormat alterTableAddConstraintStart;
 
     /** Formatter for "drop constraing" DDL. */
-    private static MessageFormat alterTableDropConstraint = null;
+    private static MessageFormat alterTableDropConstraint;
 
     /** Formatter for DDL for adding a PK constraint. */
-    private static MessageFormat primaryKeyConstraint = null;
+    private static MessageFormat primaryKeyConstraint;
 
     /** Formatter for DDL for adding an FK constraint. */
-    private static MessageFormat foreignKeyConstraint = null;
+    private static MessageFormat foreignKeyConstraint;
 
     /** Formatter for "drop table" DDL. */
-    private static MessageFormat dropTable = null;
+    private static MessageFormat dropTable;
 
 
     /**

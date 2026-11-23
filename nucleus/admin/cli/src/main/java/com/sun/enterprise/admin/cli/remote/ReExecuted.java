@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.cli.remote;
 import org.glassfish.api.admin.CommandException;
 
 /**
- * This is a trick for {@link RemoteRestCommand} where command lifecycle must be restarted. One reason is potential
+ * This is a trick for {@code RemoteRestCommand} where command lifecycle must be restarted. One reason is potential
  * change of cached {@code CommandModel}.
  *
  * @author mmares

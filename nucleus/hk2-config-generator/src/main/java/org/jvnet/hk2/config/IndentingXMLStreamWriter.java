@@ -34,7 +34,7 @@ public class IndentingXMLStreamWriter extends DelegatingXMLStreamWriter {
     private Stack<Object> stateStack = new Stack<>();
 
     private String indentStep = "  ";
-    private int depth = 0;
+    private int depth;
 
     public IndentingXMLStreamWriter(XMLStreamWriter writer) {
         super(writer);

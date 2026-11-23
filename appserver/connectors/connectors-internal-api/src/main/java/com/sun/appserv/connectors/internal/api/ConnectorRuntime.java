@@ -322,7 +322,7 @@ public interface ConnectorRuntime extends ConnectorConstants {
     /**
      * Provides the list of built in custom resources by resource-type and factory-class-name pair.
      *
-     * @return map of resource-type & factory-class-name
+     * @return map of resource-type &amp; factory-class-name
      */
     Map<String, String> getBuiltInCustomResources();
 
@@ -495,8 +495,8 @@ public interface ConnectorRuntime extends ConnectorConstants {
      * corresponding message listener, null is returned.
      *
      * @param rarName name of the rar module.
-     * @param messageListenerType message listener type.It is uniqie across all <messagelistener>
-     *            sub-elements in <messageadapter> element in a given rar.
+     * @param messageListenerType message listener type.It is uniqie across all &lt;messagelistener&gt;
+     *            sub-elements in &lt;messageadapter&gt; element in a given rar.
      * @return Javabean properties with the property names and values of properties. The property
      *         values will be the values mentioned in ra.xml if present. Otherwise it will be the
      *         default values obtained by introspecting the javabean. In both the case if no value
@@ -513,8 +513,8 @@ public interface ConnectorRuntime extends ConnectorConstants {
      * value.
      *
      * @param rarName name of the rar module.
-     * @param messageListenerType message listener type.It is uniqie across all <messagelistener>
-     *            sub-elements in <messageadapter> element in a given rar.
+     * @param messageListenerType message listener type.It is uniqie across all &lt;messagelistener&gt;
+     *            sub-elements in &lt;messageadapter&gt; element in a given rar.
      * @return Properties object with the property names(key) and datatype of property(as value).
      * @throws ConnectorRuntimeException if either of the parameters are null. If corresponding rar
      *             is not deployed i.e moduleDir is invalid. If messagelistener type is not found in
@@ -552,7 +552,7 @@ public interface ConnectorRuntime extends ConnectorConstants {
     /**
      * Flush Connection pool by reinitializing the connections established in the pool.
      *
-     * @param PoolInfo connection pool info
+     * @param poolInfo connection pool info
      * @throws ConnectorRuntimeException
      */
     boolean flushConnectionPool(PoolInfo poolInfo) throws ConnectorRuntimeException;
@@ -586,7 +586,7 @@ public interface ConnectorRuntime extends ConnectorConstants {
      * Check if Ping attribute is on during pool creation. This is used for pinging the pool for
      * erroneous values during pool creation.
      *
-     * @param PoolInfo connection pool info
+     * @param poolInfo connection pool info
      * @return true if ping is on
      */
     boolean getPingDuringPoolCreation(PoolInfo poolInfo);

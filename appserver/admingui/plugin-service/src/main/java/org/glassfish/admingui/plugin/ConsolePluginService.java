@@ -413,7 +413,7 @@ public class ConsolePluginService {
     /**
      * Flag indicating intialization has already occured.
      */
-    private boolean initialized = false;
+    private boolean initialized;
 
     /**
      * This <code>Map</code> contains the {@link IntegrationPoint}s keyed by the <code>type</code> of integration.

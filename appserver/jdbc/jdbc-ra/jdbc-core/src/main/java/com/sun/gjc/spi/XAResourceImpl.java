@@ -194,7 +194,6 @@ public class XAResourceImpl implements XAResource {
      * Start work on behalf of a transaction branch specified in xid.
      *
      * @param xid A global transaction identifier to be associated with the resource
-     * @return flags One of TMNOFLAGS, TMJOIN, or TMRESUME
      */
     public void start(Xid xid, int flags) throws XAException {
         managedConnectionImpl.transactionStarted();

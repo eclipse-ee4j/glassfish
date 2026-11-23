@@ -40,7 +40,7 @@ public class CacheMappingNode extends RuntimeDescriptorNode<CacheMapping> {
             "addNewConstraintField");
     }
 
-    protected CacheMapping descriptor = null;
+    protected CacheMapping descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -114,8 +114,8 @@ public class CacheMappingNode extends RuntimeDescriptorNode<CacheMapping> {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name
-     * @param the descriptor to write
+     * @param nodeName name
+     * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
     @Override

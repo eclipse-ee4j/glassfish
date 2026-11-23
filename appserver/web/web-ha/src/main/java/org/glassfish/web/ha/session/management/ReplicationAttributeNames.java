@@ -19,18 +19,18 @@ package org.glassfish.web.ha.session.management;
 
 public interface ReplicationAttributeNames {
 
-    public static final String EXTRA_PARAM = "extraParam";
+    String EXTRA_PARAM = "extraParam";
 
-    public static final String STATE = "state";
+    String STATE = "state";
 
-    public static final String VERSION = "version";
+    String VERSION = "version";
 
-    public static final String OWNER_ID = "ownerId";
+    String OWNER_ID = "ownerId";
 
-    public static final String MAX_INACTIVE_INTERVAL = "maxInactiveInterval";
+    String MAX_INACTIVE_INTERVAL = "maxInactiveInterval";
 
-    public static final String LAST_ACCESS_TIME = "lastAccessTime";
+    String LAST_ACCESS_TIME = "lastAccessTime";
 
-    public static final String SESSION_ATTRIBUTES="sessionAttributes";
+    String SESSION_ATTRIBUTES="sessionAttributes";
 
 }

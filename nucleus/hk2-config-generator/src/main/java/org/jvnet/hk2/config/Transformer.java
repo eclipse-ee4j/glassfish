@@ -31,5 +31,5 @@ public interface Transformer {
      * @param source the source object to transform
      * @return the transformed view
      */
-    public <T extends ConfigBeanProxy> T transform(T source);
+    <T extends ConfigBeanProxy> T transform(T source);
 }

@@ -146,7 +146,7 @@ public class SimpleKeyGenerator
     }
 
 
-    private static final void swapBytes(byte[] a, byte[] b, int index1, int index2) {
+    private static void swapBytes(byte[] a, byte[] b, int index1, int index2) {
         byte temp = a[index1];
         a[index1] = b[index2];
         b[index2] = temp;

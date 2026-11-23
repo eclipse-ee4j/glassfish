@@ -48,7 +48,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String copyrightString = null;
+    private String copyrightString;
 
     /**
      * The description to use for the Product Name Image displayed in the
@@ -60,7 +60,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String productImageDescription = null;
+    private String productImageDescription;
 
     /**
      * The height to use for the Product Name Image.
@@ -76,7 +76,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
     /**
      * productImageHeight set flag.
      */
-    private boolean productImageHeightSet = false;
+    private boolean productImageHeightSet;
 
     /**
      * The URL to use for the Product Name Image.
@@ -87,7 +87,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String productImageURL = null;
+    private String productImageURL;
 
     /**
      * The width to use for the Product Name Image.
@@ -103,7 +103,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
     /**
      * productImageWidth set flag.
      */
-    private boolean productImageWidthSet = false;
+    private boolean productImageWidthSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -113,7 +113,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -125,7 +125,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The name of version information file containing the formatted application
@@ -138,7 +138,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor",
             //CHECKSTYLE:ON
             isHidden = true, isAttribute = false)
-    private String versionInformationFile = null;
+    private String versionInformationFile;
 
     /**
      * The application version.
@@ -149,7 +149,7 @@ public final class VersionPage extends UIOutput implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String versionString = null;
+    private String versionString;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -162,12 +162,12 @@ public final class VersionPage extends UIOutput implements NamingContainer {
      */
     @Property(name = "visible",
             displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Construct a new {@code VersionPage}.

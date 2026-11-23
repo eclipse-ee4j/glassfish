@@ -26,7 +26,7 @@ public interface ApplicationInfoProvider {
     /**
      * return the name for the given application
      */
-    public String getNameFor(ReadableArchive archive,
+    String getNameFor(ReadableArchive archive,
         DeploymentContext context);
 
 }

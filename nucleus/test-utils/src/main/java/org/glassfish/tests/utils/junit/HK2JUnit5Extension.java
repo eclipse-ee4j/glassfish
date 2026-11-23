@@ -260,12 +260,14 @@ public class HK2JUnit5Extension
     /**
      * Uses {@link ServiceLocatorUtilities#addOneConstant(ServiceLocator, Object)} calls to set
      * some useful implicit services:
+     * <ul>
      * <li><code>@Inject {@link Logger}</code> - named after the test.
      * <li><code>@Inject {@link MockGenerator}</code>
      * <li><code>@Inject {@link StartupContext}</code> - install root and instance root are set
      * to the root of test classpath; see {@link #getStartupContextProperties(ExtensionContext)}.
      * <li><code>@Inject {@link StaticModulesRegistry}</code>
      * <li><code>@Inject {@link TestDocument}</code>
+     * </ul>
      */
     protected void addConstantServices(final ExtensionContext context) {
         addOneConstant(locator, Logger.getLogger(context.getRequiredTestClass().getName()), "testLogger", Logger.class);

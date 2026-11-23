@@ -65,15 +65,15 @@ public class SecureAdminUpgradeHelper {
     @Inject
     protected StartupContext startupContext;
 
-    private Transaction t = null;
+    private Transaction t;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
-    private TopLevelContext topLevelContext = null;
-    private SecureAdminHelper secureAdminHelper = null;
-    private SSLUtils sslUtils = null;
+    private TopLevelContext topLevelContext;
+    private SecureAdminHelper secureAdminHelper;
+    private SSLUtils sslUtils;
 
-    private Properties startupArgs = null;
+    private Properties startupArgs;
 
     final protected Transaction transaction() {
         if (t == null) {

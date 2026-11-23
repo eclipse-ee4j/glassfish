@@ -649,7 +649,7 @@ public class WoodstockHandler {
         return jumpGroup3;
     }
 
-    private Option[] jumpMenuOptions = null;
+    private Option[] jumpMenuOptions;
 
 }
 

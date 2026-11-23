@@ -475,7 +475,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
          java.lang.ClassLoader classLoader;
 
          /** Creates new HelperObjectInputStream */
-         public HelperObjectInputStream(InputStream is, ClassLoader cl)
+         HelperObjectInputStream(InputStream is, ClassLoader cl)
           throws IOException, StreamCorruptedException {
              super(is);
              classLoader = cl;

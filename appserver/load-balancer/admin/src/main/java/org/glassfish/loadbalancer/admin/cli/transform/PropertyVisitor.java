@@ -46,5 +46,5 @@ public class PropertyVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    Property _prop = null;
+    Property _prop;
 }

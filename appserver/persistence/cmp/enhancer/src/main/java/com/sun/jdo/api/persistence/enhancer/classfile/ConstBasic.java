@@ -25,7 +25,7 @@ import java.io.IOException;
  */
 abstract public class ConstBasic implements VMConstants {
     /* The index of the constant entry in the constant pool */
-    protected int index = 0;
+    protected int index;
 
     /* public accessors */
 

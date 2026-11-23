@@ -32,19 +32,19 @@ import org.glassfish.deployment.common.DeploymentProperties;
 public class InstanceDeployCommandParameters extends DeployCommandParameters {
 
     @Param(name=ParameterNames.GENERATED_CONTENT, optional=true)
-    public File generatedcontent = null;
+    public File generatedcontent;
 
     @Param(name=ParameterNames.APP_PROPS, separator=':')
-    public Properties appprops = null;
+    public Properties appprops;
 
     @Param(name=ParameterNames.PRESERVED_CONTEXTROOT, optional=true)
-    public String preservedcontextroot = null;
+    public String preservedcontextroot;
 
     @Param(name=DeploymentProperties.PREVIOUS_VIRTUAL_SERVERS, separator=':', optional=true)
-    public Properties previousVirtualServers = null;
+    public Properties previousVirtualServers;
 
     @Param(name=DeploymentProperties.PREVIOUS_ENABLED_ATTRIBUTES, separator=':', optional=true)
-    public Properties previousEnabledAttributes = null;
+    public Properties previousEnabledAttributes;
 
     public static class ParameterNames {
         public static final String GENERATED_CONTENT = "generatedcontent";

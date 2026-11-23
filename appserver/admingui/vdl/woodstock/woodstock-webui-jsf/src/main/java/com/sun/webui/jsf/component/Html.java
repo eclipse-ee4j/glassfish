@@ -38,7 +38,7 @@ public final class Html extends UIComponentBase {
      * Sets the language code for this document.
      */
     @Property(name = "lang", displayName = "Lang", category = "Advanced")
-    private String lang = null;
+    private String lang;
 
     /**
      * Defines the XML namespace attribute. Default value is:
@@ -48,7 +48,7 @@ public final class Html extends UIComponentBase {
             displayName = "XML Namespace",
             category = "Advanced",
             isDefault = true)
-    private String xmlns = null;
+    private String xmlns;
 
     /**
      * Construct a new {@code Html}.

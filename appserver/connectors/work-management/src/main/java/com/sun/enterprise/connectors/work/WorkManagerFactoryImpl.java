@@ -41,12 +41,12 @@ import org.jvnet.hk2.annotations.Service;
  * to be plugged into the server.  The name of the customized
  * implementation class for the WorkManager has to be specified as
  * a system property "workmanager.class".
- * <p/>
+ * <p>
  * It is assumed that the implementation for WorkManager also provides
  * a public method called "getInstance" that returns a WorkManager object.
  * This frees the WorkManagerFactoryImpl from deciding whether WorkManager
  * is implemented as a Singleton in the server.
- * <p/>
+ *
  *
  * @author Qingqing Ouyang, Binod P.G.
  */

@@ -28,7 +28,7 @@ public class LifecycleEvent extends java.util.EventObject {
     private static final long serialVersionUID = 1L;
     private int eventType;
     private Object eventData;
-    private transient LifecycleEventContext ctx = null;
+    private transient LifecycleEventContext ctx;
 
     // Lifecycle event types
 

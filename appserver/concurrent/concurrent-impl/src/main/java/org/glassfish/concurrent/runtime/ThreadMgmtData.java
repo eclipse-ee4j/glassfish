@@ -46,7 +46,7 @@ class ThreadMgmtData implements Serializable {
     }
 
 
-    public ThreadMgmtData(List<ThreadContextSnapshot> snapshots) {
+    ThreadMgmtData(List<ThreadContextSnapshot> snapshots) {
         this(snapshots, emptyList());
     }
 

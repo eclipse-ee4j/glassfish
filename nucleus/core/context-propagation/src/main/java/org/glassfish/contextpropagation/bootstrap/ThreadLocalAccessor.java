@@ -27,10 +27,10 @@ public interface ThreadLocalAccessor {
    * Saves the ContextMap on the current thread.
    * @param contextMap
    */
-  public void set(AccessControlledMap contextMap);
+  void set(AccessControlledMap contextMap);
 
   /**
    * @return the ContextMap saved on the current thread.
    */
-  public AccessControlledMap get();
+  AccessControlledMap get();
 }

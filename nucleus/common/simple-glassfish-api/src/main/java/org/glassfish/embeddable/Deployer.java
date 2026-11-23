@@ -41,7 +41,7 @@ public interface Deployer {
      * to "asadmin deploy" command is also applicable here with same semantics. Please refer to GlassFish
      * deployment guide for all available options.
      *
-     * <p/>Examples:
+     * <p>Examples:
      * <pre>
      *
      *           deployer.deploy(new URI("http://acme.com/foo.war"));
@@ -57,7 +57,7 @@ public interface Deployer {
 
     /**
      * Deploys an application identified by a file. Invoking this method is equivalent to invoking
-     * {@link #deploy(URI, String...) <tt>deploy(file.toURI, params)</tt>}.
+     * {@link #deploy(URI, String...) <code>deploy(file.toURI, params)</code>}.
      *
      * @param file File or directory identifying the application to be deployed.
      * @param params Optional list of deployment options.
@@ -81,7 +81,7 @@ public interface Deployer {
      * to "asadmin undeploy" command is also applicable here with same semantics. Please refer to GlassFish
      * deployment guide for all available options.
      *
-     * <p/>Example:
+     * <p>Example:
      * <pre>
      *          deployer.undeploy("foo", "--drop-tables", "true");
      * </pre>

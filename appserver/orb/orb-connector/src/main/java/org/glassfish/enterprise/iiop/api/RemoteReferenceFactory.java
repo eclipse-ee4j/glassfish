@@ -77,17 +77,17 @@ public interface RemoteReferenceFactory {
      * Destroy the factory itself. Called during shutdown / undeploy.
      * The factory is expected to release all resources in this method.
      */
-    public void destroy();
+    void destroy();
 
 
-    public boolean hasSameContainerID(org.omg.CORBA.Object ref)
+    boolean hasSameContainerID(org.omg.CORBA.Object ref)
     throws Exception;
 
-    public void setRepositoryIds(Class homeIntf, Class remoteIntf);
+    void setRepositoryIds(Class homeIntf, Class remoteIntf);
 
-    public void cleanupClass(Class clazz);
+    void cleanupClass(Class clazz);
 
-    public int getCSIv2PolicyType();
+    int getCSIv2PolicyType();
 
 }
 

@@ -135,7 +135,7 @@ public class DummyUriInfo implements UriInfo {
 
     private static class UriBuilderImpl extends UriBuilder {
 
-        public UriBuilderImpl() {
+        UriBuilderImpl() {
         }
 
         @Override

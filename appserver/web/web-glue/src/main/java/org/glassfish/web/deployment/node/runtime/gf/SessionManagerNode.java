@@ -42,7 +42,7 @@ public class SessionManagerNode extends RuntimeDescriptorNode<SessionManager> {
                 StorePropertiesNode.class, "setStoreProperties");
     }
 
-    protected SessionManager descriptor = null;
+    protected SessionManager descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

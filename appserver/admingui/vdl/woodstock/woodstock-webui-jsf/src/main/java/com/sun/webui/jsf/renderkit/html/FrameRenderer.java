@@ -39,7 +39,7 @@ public class FrameRenderer extends AbstractRenderer {
      */
     private static final String[] STRING_ATTRIBUTES = {
         "name",
-        "scrolling"
+        "scrolling",
     };
 
     /**

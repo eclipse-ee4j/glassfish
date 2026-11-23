@@ -22,20 +22,20 @@ package com.sun.enterprise.security.auth.digest.api;
  * @author K.Venuopal@sun.com
  */
 public interface Password {
-    public static final int PLAIN_TEXT = 0;
-    public static final int HASHED = 1;
+    int PLAIN_TEXT = 0;
+    int HASHED = 1;
 
     /**
      * returns PLAIN_TEXT or HASHED.
      *
-     * @returns int
+     * @return int
      */
-    public int getType();
+    int getType();
 
     /**
      * returns password.
      *
-     * @returns byte[]
+     * @return byte[]
      */
-    public byte[] getValue();
+    byte[] getValue();
 }

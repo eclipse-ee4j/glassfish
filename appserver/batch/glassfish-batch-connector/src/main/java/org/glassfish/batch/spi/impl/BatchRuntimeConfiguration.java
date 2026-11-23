@@ -38,10 +38,10 @@ public interface BatchRuntimeConfiguration
     @Attribute
     String getJobRepositoryDatabaseSchemaName();
 
-    public void setDataSourceLookupName(String value);
+    void setDataSourceLookupName(String value);
 
-    public void setExecutorServiceLookupName(String value);
+    void setExecutorServiceLookupName(String value);
 
-    public void setJobRepositoryDatabaseSchemaName(String schemaName);
+    void setJobRepositoryDatabaseSchemaName(String schemaName);
 }
 

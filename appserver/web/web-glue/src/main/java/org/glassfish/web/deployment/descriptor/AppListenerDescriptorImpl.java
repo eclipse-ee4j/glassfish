@@ -22,7 +22,7 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Objects exhibiting this interface represent an event listener descriptor.
- * This represents the <listener-class> XML element defined in the
+ * This represents the &lt;listener-class> XML element defined in the
  * Servlet 2.3 spec.
  * @author Vivek Nagar
  */
@@ -38,7 +38,7 @@ public class AppListenerDescriptorImpl extends Descriptor implements AppListener
 
     /**
      * Create an instance of the descriptor with the specified listener class.
-     * @param the listener class name.
+     * @param clz listener class name.
      */
     public AppListenerDescriptorImpl(String clz) {
         this.listenerClass = clz;
@@ -58,7 +58,7 @@ public class AppListenerDescriptorImpl extends Descriptor implements AppListener
 
     /**
      * Sets the listener class.
-     * @param the listener class name.
+     * @param clz listener class name.
      */
     @Override
     public void setListener(String clz) {

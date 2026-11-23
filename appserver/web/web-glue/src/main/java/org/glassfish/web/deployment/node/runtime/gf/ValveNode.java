@@ -34,7 +34,7 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
                 WebPropertyNode.class, "addWebProperty");
     }
 
-    protected Valve descriptor = null;
+    protected Valve descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode
@@ -97,8 +97,8 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the array of descriptors to write
+     * @param nodeName name for the descriptor
+     * @param valves array of descriptors to write
      */
     public void writeDescriptor(Node parent, String nodeName, Valve[] valves) {
         if (valves == null) {

@@ -21,12 +21,12 @@ package org.glassfish.flashlight.client;
  */
 public interface ProbeClientMethodHandle {
 
-    public int getId();
+    int getId();
 
-    public boolean isEnabled();
+    boolean isEnabled();
 
-    public void enable();
+    void enable();
 
-    public void disable();
+    void disable();
 
 }

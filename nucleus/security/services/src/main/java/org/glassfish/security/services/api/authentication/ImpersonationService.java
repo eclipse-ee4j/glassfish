@@ -30,12 +30,12 @@ public interface ImpersonationService {
      * Impersonate a user, specifying the user and group principal names that
      * should be established in the resulting Subject.
      *
-     * Note that, that this method always behaves as if <bold>virtual</bold> were true in the case
+     * Note that, that this method always behaves as if <b>virtual</b> were true in the case
      * that the underlying user store provider does not support user lookup.
      *
      * @param user The username.
-     * @param groups An array of group names.  If <bold>virtual</bold> is true, group principals will be created
-     * using this array.  If <bold>virtual</bold> is false and groups is non-null, it will be used to filter the
+     * @param groups An array of group names.  If <b>virtual</b> is true, group principals will be created
+     * using this array.  If <b>virtual</b> is false and groups is non-null, it will be used to filter the
      * groups returned by the configured UserStoreProvider.
      * @param subject An optional Subject to receive principals and credentials for the logged in user.
      * If provided, it will be returned as the return value; if not, a new Subject will be returned.
@@ -47,6 +47,6 @@ public interface ImpersonationService {
      *
      * @throws LoginException
      */
-    public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
+    Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)
             throws LoginException;
 }

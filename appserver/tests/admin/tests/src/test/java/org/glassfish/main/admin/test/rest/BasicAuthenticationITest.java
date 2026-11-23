@@ -55,7 +55,7 @@ public class BasicAuthenticationITest extends SecuredRestTestBase {
 
     private static final class AnonymousClient extends DomainAdminRestClient {
 
-        public AnonymousClient() {
+        AnonymousClient() {
             super(new ClientWrapper(), managementClient.getBaseUrl(), APPLICATION_JSON);
         }
     }

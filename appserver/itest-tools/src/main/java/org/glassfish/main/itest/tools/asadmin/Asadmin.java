@@ -363,7 +363,7 @@ public class Asadmin {
     }
 
 
-    private static final String escape(String input) {
+    private static String escape(String input) {
         if (!IS_WINDOWS) {
             return input;
         }

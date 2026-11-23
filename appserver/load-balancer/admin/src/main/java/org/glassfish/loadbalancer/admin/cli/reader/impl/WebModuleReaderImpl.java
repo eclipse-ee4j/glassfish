@@ -93,8 +93,8 @@ public class WebModuleReaderImpl implements WebModuleReader {
     }
     // ---- VARIABLE(S) - PRIVATE -----------------------------
     private String _name;
-    private ApplicationRef _applicationRef = null;
-    private Application _application = null;
+    private ApplicationRef _applicationRef;
+    private Application _application;
     private WebBundleDescriptor _webBundleDescriptor;
     private SunWebApp _sunWebApp;
 }

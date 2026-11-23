@@ -169,7 +169,7 @@ public abstract class TemplateListOfResource extends AbstractResource {
     /**
      * allows for remote files to be put in a tmp area and we pass the local location of this file to the corresponding
      * command instead of the content of the file * Yu need to add enctype="multipart/form-data" in the form for ex:
-     * <form action="http://localhost:4848/management/domain/applications/application" method="post" enctype=
+     * &lt;form action="http://localhost:4848/management/domain/applications/application" method="post" enctype=
      * "multipart/form-data"> then any param of type="file" will be uploaded, stored locally and the param will use the
      * local location on the server side (ie. just the path)
      */

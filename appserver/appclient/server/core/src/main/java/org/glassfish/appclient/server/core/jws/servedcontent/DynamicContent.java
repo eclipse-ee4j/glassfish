@@ -41,7 +41,7 @@ public interface DynamicContent extends Content {
      * @param tokenValues maps placeholder tokens to values
      * @return matching Instance; null if no matching instance exists
      */
-    public Instance getExistingInstance(Properties tokenValues);
+    Instance getExistingInstance(Properties tokenValues);
 
     /**
      * Retrieves an existing "instance" of this dynamic content, with placeholders
@@ -50,43 +50,43 @@ public interface DynamicContent extends Content {
      * @return matching or newly-created Instance
      */
 
-    public Instance getOrCreateInstance(Properties tokenValues);
+    Instance getOrCreateInstance(Properties tokenValues);
     /**
      * Retrieve the MIME type for this dynamic content.
      * @return
      */
-    public String getMimeType();
+    String getMimeType();
 
     /**
      * Reports whether this dynamic content represents the main JNLP document
      * for an app client.
      * @return
      */
-    public boolean isMain();
+    boolean isMain();
 
     /**
      * Defines the contract for a given version of dynamic content at a single
      * moment in time.
      */
-    public interface Instance {
+    interface Instance {
 
         /**
          * Returns the text of the dynamic content instance.
          * @return
          */
-        public String getText();
+        String getText();
 
         /**
          * Returns the timestamp when the instance was created.
          * @return
          */
-        public Date getTimestamp();
+        Date getTimestamp();
     }
 
     /**
      * Convenience implementation of Instance.
      */
-    public static class InstanceAdapter implements Instance {
+    class InstanceAdapter implements Instance {
         /** when this instance was created */
         private final Date timestamp;
 

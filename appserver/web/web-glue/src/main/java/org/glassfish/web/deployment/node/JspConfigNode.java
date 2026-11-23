@@ -30,7 +30,7 @@ import org.glassfish.web.deployment.xml.WebTagNames;
 import org.w3c.dom.Node;
 
 /**
- * This node represents the <jsp-config> element in a web application.
+ * This node represents the &lt;jsp-config> element in a web application.
  */
 public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDefinitionDescriptor> {
 

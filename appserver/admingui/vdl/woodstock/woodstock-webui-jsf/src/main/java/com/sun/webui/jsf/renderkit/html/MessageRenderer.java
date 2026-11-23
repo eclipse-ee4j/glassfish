@@ -71,13 +71,13 @@ public final class MessageRenderer extends AbstractRenderer {
                         "com.sun.webui.jsf.renderkit.html.Bundle",
                         "Message.for.summary",
                         new String[]{
-                            forComponentId
+                            forComponentId,
                         });
                 String detail = MessageUtil.getMessage(context,
                         "com.sun.webui.jsf.renderkit.html.Bundle",
                         "Message.for.detail",
                         new String[]{
-                            forComponentId
+                            forComponentId,
                         });
 
                 renderMessage(context, component, writer,

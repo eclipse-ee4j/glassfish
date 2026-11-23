@@ -60,7 +60,7 @@ public class ListAppRefsCommand implements AdminCommand, AdminCommandSecurity.Ac
     String target = "server";
 
     @Param(optional=true)
-    String type = null;
+    String type;
 
     @Param(optional=true, defaultValue="all")
     String state;

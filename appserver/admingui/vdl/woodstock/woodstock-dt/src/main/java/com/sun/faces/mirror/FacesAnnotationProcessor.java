@@ -226,7 +226,7 @@ public final class FacesAnnotationProcessor extends AbstractProcessor {
     /**
      * Config option for the input JSP tag lib file.
      */
-    private String taglibDoc = null;
+    private String taglibDoc;
 
     /**
      * Config option for the output JSP tag lib file name.
@@ -251,17 +251,17 @@ public final class FacesAnnotationProcessor extends AbstractProcessor {
     /**
      * Config option to process {@code faces-config.xml}.
      */
-    private boolean processRunTime = false;
+    private boolean processRunTime;
 
     /**
      * Config option to turn on debug.
      */
-    private boolean debug = false;
+    private boolean debug;
 
     /**
      * Flag used to force a single pass.
      */
-    private volatile boolean done = false;
+    private volatile boolean done;
 
     @Override
     public boolean process(final Set<? extends TypeElement> annotations,
@@ -1504,12 +1504,12 @@ public final class FacesAnnotationProcessor extends AbstractProcessor {
         /**
          * Default property name.
          */
-        private String defaultPropName = null;
+        private String defaultPropName;
 
         /**
          * Default event name.
          */
-        private String defaultEventName = null;
+        private String defaultEventName;
 
         /**
          * Categories.

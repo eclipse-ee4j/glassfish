@@ -60,11 +60,11 @@ public class EjbMethodStatsProvider {
                 "TotalNumSuccess", "count",
                 "Provides the total number of successful invocations of the method.");
 
-    private TimeStatisticImpl methodStat = null;
+    private TimeStatisticImpl methodStat;
 
     private static ThreadLocal  execThreadLocal = new ThreadLocal();
-    private String mname = null;
-    private boolean registered = false;
+    private String mname;
+    private boolean registered;
 
     EjbMethodStatsProvider (String mname) {
         this.mname = mname;

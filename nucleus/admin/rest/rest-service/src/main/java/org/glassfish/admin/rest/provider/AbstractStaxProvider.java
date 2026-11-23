@@ -134,7 +134,7 @@ public abstract class AbstractStaxProvider<T> extends BaseProvider<T> {
      * @param wr STaX for marshaling
      * @throws XMLStreamException
      */
-    protected abstract void writeContentToStream(T proxy, final XMLStreamWriter wr) throws XMLStreamException;
+    protected abstract void writeContentToStream(T proxy, XMLStreamWriter wr) throws XMLStreamException;
 
     @Override
     public String getContent(T proxy) {

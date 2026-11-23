@@ -191,7 +191,7 @@ public class Arguments {
      * @param lineConsumer Called for every line
      */
     public void printHelp(Consumer<String> lineConsumer) {
-        try (final BufferedReader manPageReader = openManPageReader()) {
+        try (BufferedReader manPageReader = openManPageReader()) {
             manPageReader.lines()
                     .map(this::replaceArguments)
                     .map(this::replaceOptions)

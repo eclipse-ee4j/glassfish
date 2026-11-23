@@ -34,7 +34,7 @@ public final class GFSystemImpl {
      * Get the GFSystemImpl Properties
      * @return a snapshot copy of the current Properties
      */
-    public final Map<String,String> getProperties()
+    public Map<String,String> getProperties()
     {
         return Collections.unmodifiableMap(props);
     }
@@ -44,7 +44,7 @@ public final class GFSystemImpl {
      * @param key the name of the property
      * @return the value of the property
      */
-    public final String getProperty(String key)
+    public String getProperty(String key)
     {
         return props.get(key);
     }
@@ -54,7 +54,7 @@ public final class GFSystemImpl {
      * @param key the name of the property
      * @param value the value of the property
      */
-    public final void setProperty(String key, String value)
+    public void setProperty(String key, String value)
     {
         props.put(key, value);
     }

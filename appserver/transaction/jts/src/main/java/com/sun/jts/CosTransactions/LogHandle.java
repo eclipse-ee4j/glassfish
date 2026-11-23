@@ -172,20 +172,20 @@ class LogHandle {
 
     // Instance members
 
-    LogHandle            blockValid = null;
-    int                  restartDataLength = 0;
-    int                  recordsWritten = 0;
-    int                  chunkRemaining = 0;
-    int                  activeRestartVersion = 0;
-    LogUpcallTarget      upcallTarget = null;
-    ArrayList            cursors = null;
-    boolean              cushionExists = false;
-    boolean              upcallInProgress = false;
-    Hashtable            extentTable = null;
-    String               logFileName = null;
-    LogFileHandle        logFileHandle = null;
-    LogControlDescriptor logControlDescriptor = null;
-    LogControl           logControl = null;
+    LogHandle            blockValid;
+    int                  restartDataLength;
+    int                  recordsWritten;
+    int                  chunkRemaining;
+    int                  activeRestartVersion;
+    LogUpcallTarget      upcallTarget;
+    ArrayList            cursors;
+    boolean              cushionExists;
+    boolean              upcallInProgress;
+    Hashtable            extentTable;
+    String               logFileName;
+    LogFileHandle        logFileHandle;
+    LogControlDescriptor logControlDescriptor;
+    LogControl           logControl;
 
 
     /**Creates a LogHandle object for the given log instance.

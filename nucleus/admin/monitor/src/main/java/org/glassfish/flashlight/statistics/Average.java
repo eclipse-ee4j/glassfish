@@ -26,17 +26,17 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface Average extends RangeStatistic {
 
-    public void addDataPoint(long value);
+    void addDataPoint(long value);
 
-    public double getAverage();
+    double getAverage();
 
-    public long getSize();
+    long getSize();
 
-    public void setReset();
+    void setReset();
 
-    public long getMin();
+    long getMin();
 
-    public long getMax();
+    long getMax();
 
-    public long getTotal();
+    long getTotal();
 }

@@ -27,11 +27,11 @@ import org.glassfish.embeddable.spi.RuntimeBuilder;
 /**
  * This is the entry point API to bootstrap GlassFish.
  *
- * <p/>A GlassFishRuntime represents just the runtime environment,
+ * <p>A GlassFishRuntime represents just the runtime environment,
  * i.e., no active services yet. e.g., there won't be any web container
  * started just by creating a GlassFishRuntime object.
  *
- * <p/> The services will be activated when GlassFish instance is
+ * <p> The services will be activated when GlassFish instance is
  * started by doing omething like:
  *
  * <pre>

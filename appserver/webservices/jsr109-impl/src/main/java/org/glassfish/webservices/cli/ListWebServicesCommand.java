@@ -44,8 +44,8 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * CLI for listing all web services.
  * <p>
- * asadmin __list-webservices [--appname <appname> [--modulename <modulename> [--
-endpointname <endpointname>]]]
+ * asadmin __list-webservices [--appname &lt;appname&gt; [--modulename &lt;modulename&gt; [--
+endpointname &lt;endpointname&gt;]]]
  *
  * Will be executed on DAS
 

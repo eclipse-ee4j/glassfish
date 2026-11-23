@@ -48,9 +48,9 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 public class PortImpl implements Port {
     @Inject
-    CommandRunner runner = null;
+    CommandRunner runner;
     @Inject @Named("plain")
-    ActionReport report = null;
+    ActionReport report;
     @Inject
     PortsImpl ports;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)

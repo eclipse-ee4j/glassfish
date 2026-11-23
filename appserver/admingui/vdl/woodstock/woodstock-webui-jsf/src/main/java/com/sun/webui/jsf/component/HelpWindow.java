@@ -78,7 +78,7 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "helpFile",
             displayName = "Help File")
-    private String helpFile = null;
+    private String helpFile;
 
     /**
      * The context relative path to the help set to be displayed. This attribute
@@ -87,7 +87,7 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "helpSetPath",
             displayName = "Help Set Path")
-    private String helpSetPath = null;
+    private String helpSetPath;
 
     /**
      * Set linkIcon to true to display the default icon in front of the text for
@@ -95,12 +95,12 @@ public final class HelpWindow extends IconHyperlink {
      * window. By default the value is false.
      */
     @Property(name = "linkIcon", displayName = "Link Icon")
-    private boolean linkIcon = false;
+    private boolean linkIcon;
 
     /**
      * linkIcon set flag.
      */
-    private boolean linkIconSet = false;
+    private boolean linkIconSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -108,7 +108,7 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "style",
             displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -116,7 +116,7 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "styleClass",
             displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -129,12 +129,12 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "visible",
             displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * The text to display in the browser window frame for the help window. This
@@ -142,7 +142,7 @@ public final class HelpWindow extends IconHyperlink {
      */
     @Property(name = "windowTitle",
             displayName = "Help Window Title")
-    private String windowTitle = null;
+    private String windowTitle;
 
     /**
      * Creates a new instance of HelpWindow.

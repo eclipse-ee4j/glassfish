@@ -77,7 +77,7 @@ public class ApplicationSignedJARManager {
      * instance for that JAR.  In this map each served JAR is associated with
      * only one alias, even if a JAR is signed by multiple certs.
      */
-    private Map<String,Map<URI,StaticContent>> selectedAliasToContentMapping = null;
+    private Map<String,Map<URI,StaticContent>> selectedAliasToContentMapping;
 
     private final ArchiveFactory archiveFactory;
 
@@ -128,7 +128,7 @@ public class ApplicationSignedJARManager {
      * served.  This might be an auto-signed file if the original JAR is
      * unsigned.
      * @param uriWithinAnchor relative URI to the JAR within the anchor directory for the app
-     * @param jarURI URI to the JAR file in the app to be served
+     * @param absJARURI URI to the JAR file in the app to be served
      * @return URI to the JAR file to serve (either the original file or an auto-signed copy of the original)
      * @throws IOException
      */

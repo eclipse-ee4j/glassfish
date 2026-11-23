@@ -188,6 +188,6 @@ public class AdminCommandResponse {
     private List<NameValue<String,String>> mainKeys;
     private String  mainMessage;
     private String  cause;
-    private int exitCode = 0;   // 0=success, 1=failure
+    private int exitCode;   // 0=success, 1=failure
     private boolean isGeneratedHelp;
 }

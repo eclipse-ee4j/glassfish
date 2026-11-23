@@ -112,7 +112,7 @@ public class ProxyDirContext implements DirContext {
     /**
      * Cache.
      */
-    protected ResourceCache cache = null;
+    protected ResourceCache cache;
 
 
     /**

@@ -79,12 +79,12 @@ import java.util.Map;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.web.ui.component.TableRowGroup.level = FINE
  * </pre>
- * </p>
+ *
  * <p>
  * See TLD docs for more information.
  * </p>
@@ -184,52 +184,52 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * TableDataFilter object used to apply filter. This object is not part of
      * the saved and restored state of the component.
      */
-    private transient TableDataFilter filter = null;
+    private transient TableDataFilter filter;
 
     /**
      * TableDataSorter object used to apply sort. This object is not part of the
      * saved and restored state of the component.
      */
-    private transient TableDataSorter sorter = null;
+    private transient TableDataSorter sorter;
 
     /**
      * Flag indicating paginated state.
      */
-    private boolean paginated = false;
+    private boolean paginated;
 
     /**
      * paginated set flag.
      */
-    private boolean paginatedSet = false;
+    private boolean paginatedSet;
 
     /**
      * The TableRowDataProvider associated with this component, lazily
      * instantiated if requested. This object is not part of the saved and
      * restored state of the component.
      */
-    private TableRowDataProvider provider = null;
+    private TableRowDataProvider provider;
 
     /**
      * The Table ancestor enclosing this component.
      */
-    private Table tableAncestor = null;
+    private Table tableAncestor;
 
     /**
      * A List of TableColumn children found for this component.
      */
-    private List<TableColumn> tableColumnChildren = null;
+    private List<TableColumn> tableColumnChildren;
 
     /**
      * Array containing currently filtered RowKey objects.
      */
-    private RowKey[] filteredRowKeys = null;
+    private RowKey[] filteredRowKeys;
 
     /**
      * Array containing currently sorted RowKey objects. This sort will be
      * cached and used to iterate over children during the decode, validate, and
      * update phases.
      */
-    private RowKey[] sortedRowKeys = null;
+    private RowKey[] sortedRowKeys;
 
     /**
      * The number of columns to be rendered.
@@ -244,12 +244,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "aboveColumnFooter",
             displayName = "Is Above Column Footer",
             category = "Appearance")
-    private boolean aboveColumnFooter = false;
+    private boolean aboveColumnFooter;
 
     /**
      * aboveColumnFooter set flag.
      */
-    private boolean aboveColumnFooterSet = false;
+    private boolean aboveColumnFooterSet;
 
     /**
      * Set the {@code aboveColumnHeader} attribute to true to display the
@@ -259,12 +259,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "aboveColumnHeader",
             displayName = "Is Above Column Header",
             category = "Appearance")
-    private boolean aboveColumnHeader = false;
+    private boolean aboveColumnHeader;
 
     /**
      * aboveColumnHeader set flag.
      */
-    private boolean aboveColumnHeaderSet = false;
+    private boolean aboveColumnHeaderSet;
 
     /**
      * Use the {@code align} attribute to specify the horizontal alignment
@@ -283,7 +283,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.TableAlignEditor")
             //CHECKSTYLE:ON
-    private String align = null;
+    private String align;
 
     /**
      * The deprecated BGCOLOR attribute suggests a background color for the row.
@@ -298,7 +298,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             displayName = "Row Background Color",
             isHidden = true,
             isAttribute = false)
-    private String bgColor = null;
+    private String bgColor;
 
     /**
      * Use the {@code char} attribute to specify a character to use for
@@ -313,7 +313,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             displayName = "Alignment Character For Cells",
             isHidden = true,
             isAttribute = false)
-    private String charAttr = null;
+    private String charAttr;
 
     /**
      * Use the {@code charOff }attribute to specify the offset of the first
@@ -330,7 +330,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             displayName = "Alignment Character Offset",
             isHidden = true,
             isAttribute = false)
-    private String charOff = null;
+    private String charOff;
 
     /**
      * Use the collapsed attribute to initially render the group as collapsed,
@@ -340,12 +340,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "collapsed",
             displayName = "Is Collapsed",
             category = "Appearance")
-    private boolean collapsed = false;
+    private boolean collapsed;
 
     /**
      * collapsed set flag.
      */
-    private boolean collapsedSet = false;
+    private boolean collapsedSet;
 
     /**
      * The text to be displayed when the table does not contain data. The text
@@ -361,7 +361,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String emptyDataMsg = null;
+    private String emptyDataMsg;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;tr&gt;} HTML
@@ -376,7 +376,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraFooterHtml = null;
+    private String extraFooterHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;tr&gt;} HTML
@@ -391,7 +391,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraHeaderHtml = null;
+    private String extraHeaderHtml;
 
     /**
      * Use the {@code first} attribute to specify which row should be the
@@ -411,7 +411,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     /**
      * first set flag.
      */
-    private boolean firstSet = false;
+    private boolean firstSet;
 
     /**
      * The text to be displayed in the group footer.
@@ -422,7 +422,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String footerText = null;
+    private String footerText;
 
     /**
      * Use the {@code groupToggleButton} attribute to display a button in
@@ -431,12 +431,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "groupToggleButton",
             displayName = "Show Group Toggle Button",
             category = "Appearance")
-    private boolean groupToggleButton = false;
+    private boolean groupToggleButton;
 
     /**
      * groupToggleButton set flag.
      */
-    private boolean groupToggleButtonSet = false;
+    private boolean groupToggleButtonSet;
 
     /**
      * The text to be displayed in the group header.
@@ -447,7 +447,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String headerText = null;
+    private String headerText;
 
     /**
      * Use the {@code multipleColumnFooters} attribute when the
@@ -460,12 +460,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "multipleColumnFooters",
             displayName = "Show Multiple Column Footers",
             category = "Layout")
-    private boolean multipleColumnFooters = false;
+    private boolean multipleColumnFooters;
 
     /**
      * multiple column footers set flag.
      */
-    private boolean multipleColumnFootersSet = false;
+    private boolean multipleColumnFootersSet;
 
     /**
      * Use the {@code multipleTableColumnFooters} attribute when the
@@ -478,12 +478,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "multipleTableColumnFooters",
             displayName = "Show Nested Table Column Footers",
             category = "Layout")
-    private boolean multipleTableColumnFooters = false;
+    private boolean multipleTableColumnFooters;
 
     /**
      * multipleTableColumnFooters set flag.
      */
-    private boolean multipleTableColumnFootersSet = false;
+    private boolean multipleTableColumnFootersSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -494,7 +494,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -506,7 +506,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -518,7 +518,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -530,7 +530,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -542,7 +542,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -554,7 +554,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -566,7 +566,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -578,7 +578,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      *
@@ -591,7 +591,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -603,7 +603,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * The number of rows per page to be displayed for a paginated table.
@@ -620,7 +620,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     /**
      * rows set flag.
      */
-    private boolean rowsSet = false;
+    private boolean rowsSet;
 
     /**
      * Use the {@code selectMultipleToggleButton} attribute to display a
@@ -632,12 +632,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "selectMultipleToggleButton",
             displayName = "Show Select Multiple Button",
             category = "Appearance")
-    private boolean selectMultipleToggleButton = false;
+    private boolean selectMultipleToggleButton;
 
     /**
      * selectMultipleToggleButton set flag.
      */
-    private boolean selectMultipleToggleButtonSet = false;
+    private boolean selectMultipleToggleButtonSet;
 
     /**
      * Flag indicating that the current row is selected. If the value is set to
@@ -646,12 +646,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "selected",
             displayName = "Is Selected",
             category = "Appearance")
-    private boolean selected = false;
+    private boolean selected;
 
     /**
      * selected set flag.
      */
-    private boolean selectedSet = false;
+    private boolean selectedSet;
 
     /**
      * The {@code sourceData} attribute is used to specify the data source
@@ -667,7 +667,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "sourceData",
             displayName = "Source Data",
             category = "Data")
-    private Object sourceData = null;
+    private Object sourceData;
     /**
      * Use the {@code sourceVar} attribute to specify the name of the
      * request-scope attribute under which model data for the current row will
@@ -679,7 +679,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
     @Property(name = "sourceVar",
             displayName = "Source Variable",
             category = "Data")
-    private String sourceVar = null;
+    private String sourceVar;
 
     /**
      * Use the {@code styleClasses} attribute to specify a list of CSS
@@ -701,7 +701,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClasses = null;
+    private String styleClasses;
 
     /**
      * The {@code tableDataFilter} attribute is used to define filter
@@ -717,7 +717,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FieldKeyEditor")
             //CHECKSTYLE:ON
-    private TableDataFilter tableDataFilter = null;
+    private TableDataFilter tableDataFilter;
 
     /**
      * The {@code tableDataSorter} attribute is used to define sort criteria
@@ -734,7 +734,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FieldKeyEditor")
             //CHECKSTYLE:ON
-    private TableDataSorter tableDataSorter = null;
+    private TableDataSorter tableDataSorter;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -747,7 +747,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the {@code valign} attribute to specify the vertical alignment
@@ -764,7 +764,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlVerticalAlignEditor")
             //CHECKSTYLE:ON
-    private String valign = null;
+    private String valign;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -776,12 +776,12 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible", category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.
@@ -1688,7 +1688,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * <li>Reset the state information for all descendant components (as
      * described below).
      * </ul></li>
-     * </ul></p><p>
+     * </ul><p>
      * To save current state information for all descendant components,
      * TableRowGroup must maintain per-row information for each descendant as
      * follows:
@@ -1701,7 +1701,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * state of the valid property.</li>
      * <li>If the descendant is an instance of EditableValueHolder, save the
      * state of the submittedValue property.</li>
-     * </ul></p><p>
+     * </ul><p>
      * To restore current state information for all descendant components,
      * TableRowGroup must reference its previously stored information for the
      * current RowKey and call setters for each descendant as follows:
@@ -1714,7 +1714,7 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * state of the valid property.</li>
      * <li>If the descendant is an instance of EditableValueHolder, restore the
      * state of the submittedValue property.</li>
-     * </ul></p>
+     * </ul>
      *
      * @param rowKey The RowKey associated with the current row or null for no
      * association.
@@ -2489,8 +2489,8 @@ public class TableRowGroup extends UIComponentBase implements NamingContainer {
      * the sort and filter criteria should not automatically be cleared (e.g.,
      * there may be situations where one or both should be left as specified by
      * the user). In this scenario, pagination is set to the first page.
-     * <p>
-     * </p> @param name Name of the attribute or property for which to set a
+     *
+     * @param name Name of the attribute or property for which to set a
      * ValueExpression.
      * @param valueExpression The ValueExpression to set, or null to remove any
      * currently set ValueExpression.

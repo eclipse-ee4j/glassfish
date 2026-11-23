@@ -39,18 +39,18 @@ public abstract class BasePersistenceStrategyBuilder
 
     public static final ResourceBundle _rb = _logger.getResourceBundle();
 
-    protected String directory = null;
+    protected String directory;
     // START GLASSFISH-15745
     //protected static final String DEFAULT_SESSION_FILENAME = "SESSIONS.ser";
     protected static final String DEFAULT_SESSION_FILENAME = null;
     // END GLASSFISH-15745
     protected String sessionFilename = DEFAULT_SESSION_FILENAME;
     // START CR 6275709
-    protected String sessionIdGeneratorClassname = null;
+    protected String sessionIdGeneratorClassname;
     // END CR 6275709
-    protected String _persistenceFrequency = null;
-    protected String _persistenceScope = null;
-    protected String _passedInPersistenceType = null;
+    protected String _persistenceFrequency;
+    protected String _persistenceScope;
+    protected String _passedInPersistenceType;
     protected int maxSessions = -1;
     protected static final int DEFAULT_REAP_INTERVAL = 60;   // 1 minute
     protected int reapInterval = DEFAULT_REAP_INTERVAL;

@@ -44,7 +44,7 @@ public abstract class EJBObjectImpl
     implements EJBObject
 {
     private static Class[] NO_PARAMS = new Class[] {};
-    private static Method REMOVE_METHOD = null;
+    private static Method REMOVE_METHOD;
 
     static {
 
@@ -59,7 +59,7 @@ public abstract class EJBObjectImpl
     transient private java.rmi.Remote ejbObject;
     transient private Map businessStubs = new HashMap();
     transient private Map businessEJBObjects = new HashMap();
-    transient private boolean beingCreated=false;
+    transient private boolean beingCreated;
 
     // True if this object instance represents the RemoteHomeview
     // False if this object instance represents the RemoteBusiness view

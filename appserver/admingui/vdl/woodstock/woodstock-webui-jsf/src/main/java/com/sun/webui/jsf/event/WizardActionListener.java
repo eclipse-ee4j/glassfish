@@ -44,7 +44,7 @@ public final class WizardActionListener implements ActionListener, StateHolder {
     /**
      * Transient flag.
      */
-    private boolean isTransient = false;
+    private boolean isTransient;
 
     /**
      * Create a new instance of {@code WizardActionListener} identifying
@@ -70,7 +70,7 @@ public final class WizardActionListener implements ActionListener, StateHolder {
     /**
      * This method locates the Wizard listening for this event and sets the
      * event state, for eventual broadcast to
-     * {@link WizardEventListeners WizardListeners}.
+     * WizardListeners.
      *
      * @param actionEvent The ActionEvent generated
      */

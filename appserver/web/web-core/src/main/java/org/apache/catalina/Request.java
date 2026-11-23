@@ -45,13 +45,13 @@ public interface Request {
     /**
      * Return the authorization credentials sent with this request.
      */
-    public String getAuthorization();
+    String getAuthorization();
 
 
     /**
      * Return the Connector through which this Request was received.
      */
-    public Connector getConnector();
+    Connector getConnector();
 
 
     /**
@@ -59,13 +59,13 @@ public interface Request {
      *
      * @param connector The new connector
      */
-    public void setConnector(Connector connector);
+    void setConnector(Connector connector);
 
 
     /**
      * Return the Context within which this Request is being processed.
      */
-    public Context getContext();
+    Context getContext();
 
 
     /**
@@ -76,13 +76,13 @@ public interface Request {
      *
      * @param context The newly associated Context
      */
-    public void setContext(Context context);
+    void setContext(Context context);
 
 
     /**
      * Get filter chain associated with the request.
      */
-    public FilterChain getFilterChain();
+    FilterChain getFilterChain();
 
 
     /**
@@ -90,13 +90,13 @@ public interface Request {
      *
      * @param filterChain new filter chain
      */
-    public void setFilterChain(FilterChain filterChain);
+    void setFilterChain(FilterChain filterChain);
 
 
     /**
      * Return the Host within which this Request is being processed.
      */
-    public Host getHost();
+    Host getHost();
 
 
     /**
@@ -106,7 +106,7 @@ public interface Request {
      *
      * @param host The newly associated Host
      */
-    public void setHost(Host host);
+    void setHost(Host host);
 
 
     /**
@@ -114,14 +114,14 @@ public interface Request {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the <code>ServletRequest</code> for which this object
      * is the facade.
      */
-    public ServletRequest getRequest();
+    ServletRequest getRequest();
 
 
     /**
@@ -132,13 +132,13 @@ public interface Request {
      * received at the root context was mapped to a default-web-module will
      * be masked, false otherwise
      */
-    public ServletRequest getRequest(boolean maskDefaultContextMapping);
+    ServletRequest getRequest(boolean maskDefaultContextMapping);
 
 
     /**
      * Return the Response with which this Request is associated.
      */
-    public Response getResponse();
+    Response getResponse();
 
 
     /**
@@ -146,7 +146,7 @@ public interface Request {
      *
      * @param response The new associated response
      */
-    public void setResponse(Response response);
+    void setResponse(Response response);
 
 
     /**
@@ -155,7 +155,7 @@ public interface Request {
      * information about this Socket, such as the SSLSession associated with
      * an SSLSocket.
      */
-    public Socket getSocket();
+    Socket getSocket();
 
 
     /**
@@ -163,13 +163,13 @@ public interface Request {
      *
      * @param socket The socket through which this request was received
      */
-    public void setSocket(Socket socket);
+    void setSocket(Socket socket);
 
 
     /**
      * Return the input stream associated with this Request.
      */
-    public InputStream getStream();
+    InputStream getStream();
 
 
     /**
@@ -177,13 +177,13 @@ public interface Request {
      *
      * @param stream The new input stream
      */
-    public void setStream(InputStream stream);
+    void setStream(InputStream stream);
 
 
     /**
      * Return the Wrapper within which this Request is being processed.
      */
-    public Wrapper getWrapper();
+    Wrapper getWrapper();
 
 
     /**
@@ -193,7 +193,7 @@ public interface Request {
      *
      * @param wrapper The newly associated Wrapper
      */
-    public void setWrapper(Wrapper wrapper);
+    void setWrapper(Wrapper wrapper);
 
 
     // --------------------------------------------------------- Public Methods
@@ -205,7 +205,7 @@ public interface Request {
      *
      * @exception IOException if an input/output error occurs
      */
-    public ServletInputStream createInputStream() throws IOException;
+    ServletInputStream createInputStream() throws IOException;
 
 
     /**
@@ -214,7 +214,7 @@ public interface Request {
      *
      * @exception IOException if an input/output error occurs
      */
-    public void finishRequest() throws IOException;
+    void finishRequest() throws IOException;
 
 
     /**
@@ -223,21 +223,21 @@ public interface Request {
      *
      * @param name Name of the note to be returned
      */
-    public Object getNote(String name);
+    Object getNote(String name);
 
 
     /**
      * Return an Iterator containing the String names of all notes bindings
      * that exist for this request.
      */
-    public Iterator getNoteNames();
+    Iterator getNoteNames();
 
 
     /**
      * Release all object references, and initialize instance variables, in
      * preparation for reuse of this object.
      */
-    public void recycle();
+    void recycle();
 
 
     /**
@@ -246,7 +246,7 @@ public interface Request {
      *
      * @param name Name of the note to be removed
      */
-    public void removeNote(String name);
+    void removeNote(String name);
 
 
     /**
@@ -254,7 +254,7 @@ public interface Request {
      *
      * @param length The new content length
      */
-    public void setContentLength(int length);
+    void setContentLength(int length);
 
 
     /**
@@ -264,7 +264,7 @@ public interface Request {
      *
      * @param type The new content type
      */
-    public void setContentType(String type);
+    void setContentType(String type);
 
 
     /**
@@ -274,7 +274,7 @@ public interface Request {
      * @param name Name to which the object should be bound
      * @param value Object to be bound to the specified name
      */
-    public void setNote(String name, Object value);
+    void setNote(String name, Object value);
 
 
     /**
@@ -282,7 +282,7 @@ public interface Request {
      *
      * @param protocol Protocol name and version
      */
-    public void setProtocol(String protocol);
+    void setProtocol(String protocol);
 
 
     /**
@@ -292,7 +292,7 @@ public interface Request {
      *
      * @param remote The remote IP address
      */
-    public void setRemoteAddr(String remote);
+    void setRemoteAddr(String remote);
 
 
     /**
@@ -301,7 +301,7 @@ public interface Request {
      *
      * @param secure The new isSecure value
      */
-    public void setSecure(boolean secure);
+    void setSecure(boolean secure);
 
 
     /**
@@ -309,7 +309,7 @@ public interface Request {
      *
      * @param name The server name
      */
-    public void setServerName(String name);
+    void setServerName(String name);
 
 
     /**
@@ -317,7 +317,7 @@ public interface Request {
      *
      * @param port The server port
      */
-    public void setServerPort(int port);
+    void setServerPort(int port);
 
 
     // START CR 6415120
@@ -325,14 +325,14 @@ public interface Request {
      * Set whether or not access to resources under WEB-INF or META-INF
      * needs to be checked.
      */
-    public void setCheckRestrictedResources(boolean check);
+    void setCheckRestrictedResources(boolean check);
 
 
     /**
      * Return whether or not access to resources under WEB-INF or META-INF
      * needs to be checked.
      */
-    public boolean getCheckRestrictedResources();
+    boolean getCheckRestrictedResources();
     // END CR 6415120
 
 
@@ -345,7 +345,7 @@ public interface Request {
      * @return The jroute id of this request, or null if this request does not
      * carry any jroute id
      */
-    public String getJrouteId();
+    String getJrouteId();
     // END SJSAS 6346226
 
 
@@ -355,19 +355,19 @@ public interface Request {
      * This hook allows connectors to provide their own scalable session
      * ID generators.
      */
-    public String generateSessionId();
+    String generateSessionId();
 
 
     /**
      * Disables async support on this request.
      */
-    public void disableAsyncSupport();
+    void disableAsyncSupport();
 
 
     /**
      * Sets the requested session cookie path, see IT 7426
      */
-    public void setRequestedSessionCookiePath(String cookiePath);
+    void setRequestedSessionCookiePath(String cookiePath);
 
 
     /**
@@ -377,7 +377,7 @@ public interface Request {
      * @param create true if a new session is to be created if one does not
      * already exist, false otherwise
      */
-    public Session getSessionInternal(boolean create);
+    Session getSessionInternal(boolean create);
 
 
     /**
@@ -386,9 +386,9 @@ public interface Request {
      * between nodes in a cluster and session fixation prevention during the
      * authentication process.
      */
-    public String changeSessionId();
+    String changeSessionId();
 
-    public Session lockSession();
+    Session lockSession();
 
-    public void unlockSession();
+    void unlockSession();
 }

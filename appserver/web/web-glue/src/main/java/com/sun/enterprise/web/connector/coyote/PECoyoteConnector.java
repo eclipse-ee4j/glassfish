@@ -155,7 +155,7 @@ public class PECoyoteConnector extends Connector {
     /**
      * Set the number of <code>Selector</code> used by Grizzly.
      */
-    private int selectorReadThreadsCount = 0;
+    private int selectorReadThreadsCount;
 
     /**
      * The monitoring classes used to gather stats.

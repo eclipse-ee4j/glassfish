@@ -36,13 +36,13 @@ public interface WSEjbEndpointRegistry {
     /**
      * This method will register an endpoint the EjbEndpointRegistry
      */
-    public void registerEndpoint(WebServiceEndpoint webServiceEndpoint,
+    void registerEndpoint(WebServiceEndpoint webServiceEndpoint,
                                   EjbEndpointFacade ejbContainer,
                                   Object servant, Class tieClass);
 
     /**
      * This method will unregister an endpoint the EjbEndpointRegistry
      */
-    public void unregisterEndpoint (String addressUri) ;
+    void unregisterEndpoint (String addressUri) ;
 
 }

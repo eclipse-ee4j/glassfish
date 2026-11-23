@@ -64,7 +64,7 @@ public final class PropertySheetSection extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String label = null;
+    private String label;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -74,7 +74,7 @@ public final class PropertySheetSection extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -86,7 +86,7 @@ public final class PropertySheetSection extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -100,17 +100,17 @@ public final class PropertySheetSection extends UIComponentBase
     @com.sun.faces.annotation.Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Used to cache the visible children.
      */
-    private transient List<UIComponentBase> visibleChildren = null;
+    private transient List<UIComponentBase> visibleChildren;
 
     /**
      * Child count.

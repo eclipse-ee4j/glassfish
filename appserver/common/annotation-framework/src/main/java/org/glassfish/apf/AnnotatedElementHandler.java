@@ -34,7 +34,7 @@ public interface AnnotatedElementHandler {
      *
      * @param type the annotated element type (class, field, method...)
      * @param element the annotated element we are starting to visit.
-     * @throws AnnotationProcessorException;
+     * @throws AnnotationProcessorException
      */
     void startElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException;
 
@@ -44,7 +44,7 @@ public interface AnnotatedElementHandler {
      *
      * @param type the annotated element type (class, field, method...)
      * @param element the annotated element we are done visiting.
-     * @throws AnnotationProcessorException;
+     * @throws AnnotationProcessorException
      */
     void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException;
 

@@ -52,5 +52,5 @@ public @interface ServerSentEventContext {
     /**
      * The URL pattern/path of the source of server-sent events
      */
-    public String value() default "";
+    String value() default "";
 }

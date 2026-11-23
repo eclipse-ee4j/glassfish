@@ -66,7 +66,7 @@ public abstract class RestResponse {
      * This method abstracts the physical response to return a consistent data structure. For many responses, this data
      * structure may look like:
      * </p>
-     * <p/>
+     *
      * <p>
      * <code>
      * Map&lt;String, Object&gt;
@@ -103,9 +103,9 @@ public abstract class RestResponse {
 
 class JerseyRestResponse extends RestResponse {
     protected Response response;
-    private String body = null;
+    private String body;
 
-    public JerseyRestResponse(Response response) {
+    JerseyRestResponse(Response response) {
         this.response = response;
     }
 

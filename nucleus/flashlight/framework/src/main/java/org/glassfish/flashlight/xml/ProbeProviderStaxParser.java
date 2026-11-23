@@ -203,6 +203,6 @@ public class ProbeProviderStaxParser extends StaxParser{
         return new XmlProbeParam(atts.get(PROBE_PARAM_NAME), atts.get(PROBE_PARAM_TYPE));
     }
 
-    private List<Provider> providers = null;
+    private List<Provider> providers;
 }
 

@@ -117,6 +117,8 @@ public class GlassFishLogManagerLifeCycleTest {
      * by the test.
      * <p>
      * The logging should stay in {@link GlassFishLoggingStatus#CONFIGURING}.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     @Order(2)
@@ -140,6 +142,8 @@ public class GlassFishLogManagerLifeCycleTest {
      * Another step. We finish the custom reconfiguration action.
      * <p>
      * The logging should step into {@link GlassFishLoggingStatus#FLUSHING_BUFFERS}.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     @Order(3)
@@ -161,6 +165,8 @@ public class GlassFishLogManagerLifeCycleTest {
      * <p>
      * The logging shall step into {@link GlassFishLoggingStatus#FULL_SERVICE} and all records shall
      * end in our collector handler.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     @Order(4)
@@ -193,6 +199,8 @@ public class GlassFishLogManagerLifeCycleTest {
      * Yet another case, here we get into blocked state, and then we DISABLE resolving if the record
      * is loggable or not when we simply don't know. All records then go to the StartupQueue, which
      * means also some memory requirements.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     @Order(100)
@@ -226,6 +234,8 @@ public class GlassFishLogManagerLifeCycleTest {
      * and higher.
      * <p>
      * Which variant is better depend on what we need to see in logs.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     @Order(101)

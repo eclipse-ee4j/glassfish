@@ -51,7 +51,7 @@ public class GetSystemRarsAllowingPoolCreation implements AdminCommand {
     private ConnectorRuntime connectorRuntime;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

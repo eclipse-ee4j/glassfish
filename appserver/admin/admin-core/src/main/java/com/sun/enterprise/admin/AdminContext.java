@@ -61,86 +61,86 @@ public interface AdminContext {
     /**
      * Get MBeanServer in use for admin, runtime and monitoring MBeans.
      */
-    public MBeanServer getMBeanServer();
+    MBeanServer getMBeanServer();
 
     /**
      * Set MBeanServer used for admin, runtime and monitoring MBeans.
      * @param mbs the management bean server
      */
-    public void setMBeanServer(MBeanServer mbs);
+    void setMBeanServer(MBeanServer mbs);
 
     /**
      * Get domain name
      */
-    public String getDomainName();
+    String getDomainName();
 
     /**
      * Set domain name.
      * @param domainName name of the domain
      */
-    public void setDomainName(String domainName);
+    void setDomainName(String domainName);
 
     /**
      * Get server name.
      */
-    public String getServerName();
+    String getServerName();
 
     /**
      * Set server name.
      * @param serverName name of the server
      */
-    public void setServerName(String serverName);
+    void setServerName(String serverName);
 
     /**
      * Get Admin MBeanRegistry xml file location
      */
-    public URL getAdminMBeanRegistryURL();
+    URL getAdminMBeanRegistryURL();
 
 
     /**
      * Get Admin MBeanRegistry xml file location
      * @param url  URL of the Registry file
      */
-    public void setAdminMBeanRegistryURL(URL url);
+    void setAdminMBeanRegistryURL(URL url);
 
     /**
      * Get Admin MBeanRegistry xml file location
      */
-    public URL getRuntimeMBeanRegistryURL();
+    URL getRuntimeMBeanRegistryURL();
 
 
     /**
      * Get Runtime MBeanRegistry xml file location
      * @param url  URL of the Registry file
      */
-    public void setRuntimeMBeanRegistryURL(URL url);
+    void setRuntimeMBeanRegistryURL(URL url);
 
     /**
      * Get admin logger.
      */
-    public Logger getAdminLogger();
+    Logger getAdminLogger();
 
     /**
      * Set admin logger.
      * @param logger the logger for admin module
      */
-    public void setAdminLogger(Logger logger);
+    void setAdminLogger(Logger logger);
 
     /**
      * Get interceptor for mbean server used. In general, this method will
      * be used only while initializing MBeanServer to setup its interceptor.
      */
-    public Interceptor getMBeanServerInterceptor();
+    Interceptor getMBeanServerInterceptor();
 
     /**
      * Set interceptor. If set prior to creating an MBeanServer, the default
      * implementation of SunOneMBeanServer factory will apply the interceptor
      * to every MBeanServer call.
      */
-    public void setMBeanServerInterceptor(Interceptor interceptor);
+    void setMBeanServerInterceptor(Interceptor interceptor);
 
     /**
      * returns the appropriate dotted name mbean implementation class.
      */
-    public String getDottedNameMBeanImplClassName();
+    String getDottedNameMBeanImplClassName();
 }

@@ -55,7 +55,6 @@ public class UuidUtilPadded extends UuidUtil {
      *
      * @param args
      *
-     * @audience
      */
     public static void main(String[] args) {
         System.out.println(UuidUtilPadded.generateUuidMM());

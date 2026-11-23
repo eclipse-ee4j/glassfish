@@ -1046,10 +1046,10 @@ public class WebModule extends PwcWebModule implements Context {
     }
 
     /**
-     * Instantiates a <tt>Valve</tt> from the given <tt>className</tt> and adds it to the <tt>Pipeline</tt> of this
+     * Instantiates a <code>Valve</code> from the given <code>className</code> and adds it to the <code>Pipeline</code> of this
      * WebModule.
      *
-     * @param className the fully qualified class name of the <tt>Valve</tt>
+     * @param className the fully qualified class name of the <code>Valve</code>
      */
     protected void addValve(String className) {
         Object valve = loadInstance(className);
@@ -1063,7 +1063,7 @@ public class WebModule extends PwcWebModule implements Context {
     }
 
     /**
-     * Constructs a <tt>Valve</tt> from the given <tt>valveDescriptor</tt> and adds it to the <tt>Pipeline</tt> of this
+     * Constructs a <code>Valve</code> from the given <code>valveDescriptor</code> and adds it to the <code>Pipeline</code> of this
      * WebModule.
      *
      * @param valveDescriptor the object containing the information to create the valve.
@@ -2188,7 +2188,7 @@ class V3WebappLoader extends WebappLoader {
  */
 class WebServletRegistrationImpl extends ServletRegistrationImpl {
 
-    public WebServletRegistrationImpl(StandardWrapper wrapper, StandardContext context) {
+    WebServletRegistrationImpl(StandardWrapper wrapper, StandardContext context) {
         super(wrapper, context);
     }
 
@@ -2233,7 +2233,7 @@ class DynamicWebServletRegistrationImpl extends DynamicServletRegistrationImpl {
     private String runAsRoleName;
     private ServletSecurityElement servletSecurityElement;
 
-    public DynamicWebServletRegistrationImpl(StandardWrapper wrapper, WebModule webModule) {
+    DynamicWebServletRegistrationImpl(StandardWrapper wrapper, WebModule webModule) {
         super(wrapper, webModule);
         this.webModule = webModule;
 

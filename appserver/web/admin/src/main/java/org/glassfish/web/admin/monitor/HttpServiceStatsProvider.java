@@ -153,8 +153,8 @@ public class HttpServiceStatsProvider implements PostConstruct {
     private TimeStatisticImpl requestProcessTime = new TimeStatisticImpl(0L, 0L, 0L, 0L,
             "", "", "", System.currentTimeMillis(), -1L);
 
-    private String virtualServerName = null;
-    private String [] networkListeners = null;
+    private String virtualServerName;
+    private String [] networkListeners;
     private AtomicLong maxOpenConnectionsAtomic = new AtomicLong();
 
     private ThreadLocal<TimeStatData> individualData = new ThreadLocal<TimeStatData> (){

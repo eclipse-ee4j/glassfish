@@ -279,9 +279,9 @@ public final class ListClustersCommand implements AdminCommand {
     }
 
     private static class ClusterInfo {
-        private boolean atleastOneInstanceRunning = false;
+        private boolean atleastOneInstanceRunning;
         private boolean allInstancesRunning = true;
-        private boolean serversEmpty = false;
+        private boolean serversEmpty;
         private String name;
 
         public String getName() {

@@ -33,7 +33,7 @@ public class FilterMaps {
 
     private String[] urlPatterns = new String[0];
     private String[] servletNames = new String[0];
-    private String filterName = null;
+    private String filterName;
     private Set<DispatcherType> dispatcherTypes;
 
     // ------------------------------------------------------------ Properties

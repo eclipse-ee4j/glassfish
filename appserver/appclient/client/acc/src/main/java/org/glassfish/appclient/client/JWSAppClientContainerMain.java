@@ -73,7 +73,7 @@ public class JWSAppClientContainerMain {
 
     private static final String JWSACC_TEST_OUTPUT = "testOutput";
 
-    private static ExitManager exitManager = null;
+    private static ExitManager exitManager;
 
     private static long now;
 
@@ -222,11 +222,11 @@ public class JWSAppClientContainerMain {
         private final String propertyNameSuffix;
         private final Runner action;
 
-        private JWSACCSetting(final String propertyNameSuffix) {
+        JWSACCSetting(final String propertyNameSuffix) {
             this(propertyNameSuffix, new Runner());
         }
 
-        private JWSACCSetting(final String propertyNameSuffix, final Runner action) {
+        JWSACCSetting(final String propertyNameSuffix, final Runner action) {
             this.propertyNameSuffix = propertyNameSuffix;
             this.action = action;
         }
@@ -265,7 +265,7 @@ public class JWSAppClientContainerMain {
 
         private final PrintStream originalPS;
 
-        public SplitPrintStream(final PrintStream originalPS, final File newOutputFile) throws FileNotFoundException {
+        SplitPrintStream(final PrintStream originalPS, final File newOutputFile) throws FileNotFoundException {
             super(newOutputFile);
             this.originalPS = originalPS;
         }

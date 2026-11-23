@@ -52,5 +52,5 @@ public class CachedURLStreamHandler<T> extends URLStreamHandler {
         return new CachedURLConnection<>(url, weakRef);
     }
 
-    private WeakReference<T> weakRef = null;
+    private WeakReference<T> weakRef;
 }

@@ -78,7 +78,7 @@ public class ThreadPoolMonitoringTest {
         }
     };
     private ThreadPoolMetrics http1Baseline;
-    private static boolean useVirtualThreads = false;
+    private static boolean useVirtualThreads;
 
     @BeforeAll
     static void beforeAll() throws Exception {

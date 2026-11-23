@@ -63,7 +63,7 @@ public final class Table2RowGroupRenderer extends RendererBase {
         "onMouseOut",
         "onMouseOver",
         "style",
-        "valign"
+        "valign",
     };
 
     @Override
@@ -76,7 +76,7 @@ public final class Table2RowGroupRenderer extends RendererBase {
             };
         } else {
             return new String[]{
-                "table2RowGroup"
+                "table2RowGroup",
             };
         }
     }

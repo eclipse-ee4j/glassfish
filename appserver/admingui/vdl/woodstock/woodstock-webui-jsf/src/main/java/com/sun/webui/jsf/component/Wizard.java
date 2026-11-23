@@ -107,13 +107,13 @@ import java.util.List;
  * The events are then forwarded to the model based on the listener's response
  * to the event.
  * </p>
- * <h3>Wizard events</h3>
+ * <h2>Wizard events</h2>
  * The following events are broadcast by the wizard. There are two events
  * that are only broadcast to the
- * {@link wizardEventListener WizardEventListener} specified
+ * WizardEventListener specified
  * with the {@code eventListener} property on the {@code Wizard}
  * component:
- * <p>
+ *
  * <ul>
  * <li>{@code WizardEvent.START} is broadcast once, when the
  * wizard is first rendered during a wizard session. It is broadcast during
@@ -306,7 +306,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * See the <a href="#EventListeners">Event Listeners</a> section also.
      */
     @Property(name = "eventListener", displayName = "Wizard Event Listener")
-    private WizardEventListener eventListener = null;
+    private WizardEventListener eventListener;
 
     /**
      * The wizard is being targeted to a popup window. Default is {@code true}.
@@ -315,12 +315,12 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      */
     @Property(name = "isPopup", displayName = "isPopup",
             isHidden = true, isAttribute = false)
-    private boolean isPopup = false;
+    private boolean isPopup;
 
     /**
      * isPopup set flag.
      */
-    private boolean isPopupSet = false;
+    private boolean isPopupSet;
 
     /**
      * The {@code model} property is a value binding that resolves to an
@@ -329,37 +329,37 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * in the wizard.
      */
     @Property(name = "model", displayName = "Wizard Model", isHidden = true)
-    private com.sun.webui.jsf.model.WizardModel model = null;
+    private com.sun.webui.jsf.model.WizardModel model;
 
     /**
      * Scripting code executed when the Cancel button is clicked.
      */
     @Property(name = "onCancel", displayName = "Cancel Script")
-    private String onCancel = null;
+    private String onCancel;
 
     /**
      * Scripting code executed when the Close button is clicked.
      */
     @Property(name = "onClose", displayName = "Close Script")
-    private String onClose = null;
+    private String onClose;
 
     /**
      * Scripting code executed when the Finish button is clicked.
      */
     @Property(name = "onFinish", displayName = "Finish Script")
-    private String onFinish = null;
+    private String onFinish;
 
     /**
      * Scripting code executed when the Help tab is clicked.
      */
     @Property(name = "onHelpTab", displayName = "Help Tab Script")
-    private String onHelpTab = null;
+    private String onHelpTab;
 
     /**
      * Scripting code executed when the Next button is clicked.
      */
     @Property(name = "onNext", displayName = "Next Script")
-    private String onNext = null;
+    private String onNext;
 
     /**
      * Scripting code that is invoked when the wizard popup is dismissed. If the
@@ -371,25 +371,25 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * activities provide feedback to the user.
      */
     @Property(name = "onPopupDismiss", displayName = "onPopupDismiss")
-    private String onPopupDismiss = null;
+    private String onPopupDismiss;
 
     /**
      * Scripting code executed when the Previous button is clicked.
      */
     @Property(name = "onPrevious", displayName = "Previous Script")
-    private String onPrevious = null;
+    private String onPrevious;
 
     /**
      * Scripting code executed when a Step link is clicked.
      */
     @Property(name = "onStepLink", displayName = "Step Link Script")
-    private String onStepLink = null;
+    private String onStepLink;
 
     /**
      * Scripting code executed when the Steps tab is clicked.
      */
     @Property(name = "onStepsTab", displayName = "Steps Tab Script")
-    private String onStepsTab = null;
+    private String onStepsTab;
 
     /**
      * Use the steps attribute to specify the wizard steps programmatically,
@@ -404,21 +404,21 @@ public class Wizard extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private Object steps = null;
+    private Object steps;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "style", displayName = "CSS Style(s)")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
      * component is rendered.
      */
     @Property(name = "styleClass", displayName = "CSS Style Class(es)")
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The text to be displayed as the title for the wizard. The title is
@@ -428,7 +428,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * @see #getTitle()
      */
     @Property(name = "title", displayName = "Wizard Title")
-    private String title = null;
+    private String title;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -440,12 +440,12 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Construct a {@code Wizard} instance. Sets renderer type to
@@ -862,9 +862,9 @@ public class Wizard extends UIComponentBase implements NamingContainer {
     }
 
     /**
-     * Returns an iterator of {@link WizardStepListItem WizardStepListItem}
+     * Returns an iterator of WizardStepListItem
      * instances that represent the steps for this wizard.
-     * {@link WizardStepListItem WizardStepListItem} instances encapsulate
+     * WizardStepListItem instances encapsulate
      * information about a step that is useful for rendering a list of steps.
      *
      * @return Iterator
@@ -1678,7 +1678,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * the step list.
      * <p>
      * This {@code Wizard} implementation returns either:
-     * <p>
+     *
      * <ul>
      * <li>a {@link StaticText StaticText} component for the current and future
      * steps, created and initialized every time this method. The component id
@@ -1691,7 +1691,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * identify the step to navigate to.
      * </li>
      * </ul>
-     * </p>
+     *
      *
      * @param step The step being rendered.
      * @return UIComponent
@@ -1739,7 +1739,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * step list.
      * <p>
      * This {@code Wizard} implementation returns either:
-     * <p>
+     *
      * <ul>
      * <li>a {@link StaticText StaticText} component for the current and future
      * steps, created and initialized every time this method is called. The id
@@ -1753,7 +1753,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * step to navigate to.
      * </li>
      * </ul>
-     * </p>
+     *
      *
      * @param step The step being rendered.
      * @param numberString The step number.
@@ -1913,8 +1913,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * @param stepText The text to assign to the text property of a created
      * component.
      *
-     * @deprecated replaced by {@link #getStepStaticTextComponent(WizardStep,
-     * String) getStaticTextComponent}
+     * @deprecated replaced by {@code getStaticTextComponent(WizardStep, String)}
      * @return UIComponent
      */
     protected UIComponent getStepStaticTextComponent(final String id,
@@ -2075,7 +2074,7 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * information based on the navigation event and the wizard state,
      * including:
      * </p>
-     * <p>
+     *
      * <ul>
      * <li>the wizard instance as the source of the event
      * {@link WizardEvent#getSource() WizardEvent.getSource}</li>
@@ -2091,13 +2090,13 @@ public class Wizard extends UIComponentBase implements NamingContainer {
      * {@link WizardEvent#getGotoStepId() WizardEvent.getgetGotoStepId},
      * otherwise null.</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * The event is then broadcast to
      * {@link WizardEventListener WizardEventListeners} configured on the
      * current step and the wizard, and then forwarded to the wizard model in
      * the following manner:
-     * <p>
+     *
      * <ol>
      * <li>If the current step is not null and its
      * {@link WizardStep#getEventListener() getEventListener} method does not

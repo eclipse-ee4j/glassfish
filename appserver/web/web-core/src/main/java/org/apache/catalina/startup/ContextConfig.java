@@ -116,20 +116,20 @@ public class ContextConfig
     /**
      * The Context we are associated with.
      */
-    protected Context context = null;
+    protected Context context;
 
 
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
 
     // START GlassFish 2439
     /**
      * The default web application's context file location.
      */
-    protected String defaultContextXml = null;
+    protected String defaultContextXml;
     // END GlassFish 2439
 
 
@@ -138,14 +138,14 @@ public class ContextConfig
      */
     // BEGIN OF SJSAS 8.1 6172288
     // private String defaultWebXml = null;
-    protected String defaultWebXml = null;
+    protected String defaultWebXml;
 
 
     /**
      * Track any fatal errors during startup configuration processing.
      */
     // private boolean ok = false;
-    protected boolean ok = false;
+    protected boolean ok;
     // END OF SJSAS 8.1 6172288
 
 
@@ -153,7 +153,7 @@ public class ContextConfig
     /**
      * Any parse error which occurred while parsing XML descriptors.
      */
-    protected SAXParseException parseException = null;
+    protected SAXParseException parseException;
     // END GlassFish 2439
 
 
@@ -189,13 +189,13 @@ public class ContextConfig
     /**
      * Attribute value used to turn on/off XML validation
      */
-    private static boolean xmlValidation = false;
+    private static boolean xmlValidation;
 
 
     /**
      * Attribute value used to turn on/off XML namespace awarenes.
      */
-    private static boolean xmlNamespaceAware = false;
+    private static boolean xmlNamespaceAware;
 
 
     /**

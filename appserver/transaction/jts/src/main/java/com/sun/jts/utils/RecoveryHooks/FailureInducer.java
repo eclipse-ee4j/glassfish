@@ -76,11 +76,11 @@ public class FailureInducer {
 
     // static fields
 
-    private static boolean failureInducerIsActive = false;
-    private static boolean crash = false;
-    private static int waitPeriod = 0;
-    private static int waitCount = 0;
-    private static int recoveryWaitDuration = 0;
+    private static boolean failureInducerIsActive;
+    private static boolean crash;
+    private static int waitPeriod;
+    private static int waitCount;
+    private static int recoveryWaitDuration;
     private static Hashtable crashList = new Hashtable();
     private static Hashtable waitList = new Hashtable();
     private static Hashtable waitTime = new Hashtable();
@@ -147,7 +147,7 @@ public class FailureInducer {
      * Setting a wait point will cause the TM to wait at the
      * failure point, for the stipulated wait duration.
      *
-     * @param crashPoint pre-defined failure points
+     * @param waitPoint pre-defined failure points
      *  (PREPARING, PREPARED, COMMITTING, COMMITTED).
      * @param waitDuration time duration (seconds) for RM failure to happen.
      */
@@ -194,7 +194,7 @@ public class FailureInducer {
      * <em>Note:</em> Crash action takes precedence over wait actions for the
      * same failure point.
      *
-     * @param coord the coordinator object (which represents the transaction.
+     * @param gtid the coordinator object (which represents the transaction.
      * @param failPoint indicates the current failure point in coordinator code.
      */
     public static void waitForFailure(GlobalTID gtid, Integer failPoint) {

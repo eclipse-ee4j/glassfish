@@ -23,20 +23,20 @@ package com.sun.enterprise.deployment.xml;
  */
 
 public interface ApplicationTagNames extends TagNames {
-     public static String APPLICATION = "application";
-     public static String APPLICATION_NAME = "application-name";
-     public static String INITIALIZE_IN_ORDER = "initialize-in-order";
-     public static String MODULE = "module";
-     public static String EJB = "ejb";
-     public static String WEB = "web";
-     public static String APPLICATION_CLIENT = "java";
-     public static String CONNECTOR = "connector";
-     public static String ALTERNATIVE_DD = "alt-dd";
-     public static String SECUTIRY_ROLE = "security-role";
-     public static String ROLE_NAME = "role-name";
-     public static String CONTEXT_ROOT = "context-root";
-     public static String WEB_URI = "web-uri";
-     public static String LIBRARY_DIRECTORY = "library-directory";
+     String APPLICATION = "application";
+     String APPLICATION_NAME = "application-name";
+     String INITIALIZE_IN_ORDER = "initialize-in-order";
+     String MODULE = "module";
+     String EJB = "ejb";
+     String WEB = "web";
+     String APPLICATION_CLIENT = "java";
+     String CONNECTOR = "connector";
+     String ALTERNATIVE_DD = "alt-dd";
+     String SECUTIRY_ROLE = "security-role";
+     String ROLE_NAME = "role-name";
+     String CONTEXT_ROOT = "context-root";
+     String WEB_URI = "web-uri";
+     String LIBRARY_DIRECTORY = "library-directory";
 
 }
 

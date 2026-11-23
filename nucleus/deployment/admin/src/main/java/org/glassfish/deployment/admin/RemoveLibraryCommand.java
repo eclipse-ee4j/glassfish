@@ -60,7 +60,7 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 public class RemoveLibraryCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true, multiple=true)
-    String[] names = null;
+    String[] names;
 
     @Param(optional=true, acceptableValues="common, ext, app")
     String type = "common";

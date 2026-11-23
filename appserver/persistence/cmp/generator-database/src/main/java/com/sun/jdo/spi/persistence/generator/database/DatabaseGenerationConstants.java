@@ -25,35 +25,35 @@ package com.sun.jdo.spi.persistence.generator.database;
 interface DatabaseGenerationConstants {
 
     /** Separator between property name bases and indicators. */
-    static final char DOT = '.';
+    char DOT = '.';
 
     /** Indicator that property is for a maximum length. */
-    static final String INDICATOR_MAXIMUM_LENGTH = "maximum-length"; //NOI18N
+    String INDICATOR_MAXIMUM_LENGTH = "maximum-length"; //NOI18N
 
     /**
      * (Partial) indicator that property is for attributes of SQL.  The prefix
      * is recognized by alone by itself in MappingFile, and is used by other
      * DatabaseGenerationConstants.
      */
-    static final String INDICATOR_JDBC_PREFIX = "jdbc"; //NOI18N
+    String INDICATOR_JDBC_PREFIX = "jdbc"; //NOI18N
 
     /** Indicator that property designates the length of mapped SQL type. */
-    static final String INDICATOR_JDBC_LENGTH =
+    String INDICATOR_JDBC_LENGTH =
         INDICATOR_JDBC_PREFIX + "-" + INDICATOR_MAXIMUM_LENGTH; //NOI18N
 
     /** Indicator that property designates the nullability of mapped SQL type. */
-    static final String INDICATOR_JDBC_NULLABLE =
+    String INDICATOR_JDBC_NULLABLE =
         INDICATOR_JDBC_PREFIX + "-nullable"; //NOI18N
 
     /** Indicator that property designates the precision of mapped SQL type. */
-    static final String INDICATOR_JDBC_PRECISION =
+    String INDICATOR_JDBC_PRECISION =
         INDICATOR_JDBC_PREFIX + "-precision"; //NOI18N
 
     /** Indicator that property designates the scale of mapped SQL type. */
-    static final String INDICATOR_JDBC_SCALE =
+    String INDICATOR_JDBC_SCALE =
         INDICATOR_JDBC_PREFIX + "-scale"; //NOI18N
 
     /** Indicator that property designates the type of a mapped SQL type. */
-    static final String INDICATOR_JDBC_TYPE =
+    String INDICATOR_JDBC_TYPE =
         INDICATOR_JDBC_PREFIX + "-type"; //NOI18N
 }

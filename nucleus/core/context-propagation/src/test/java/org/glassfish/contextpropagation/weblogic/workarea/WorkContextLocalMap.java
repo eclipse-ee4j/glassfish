@@ -150,7 +150,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
     return new WorkContextKeys(this);
   }
 
-  private final WorkContextEntry getEntry(String key) {
+  private WorkContextEntry getEntry(String key) {
     WorkContextEntry wce;
     if (map.isEmpty() || (wce = (WorkContextEntry)map.get(key)) == null) {
       return WorkContextEntry.NULL_CONTEXT;

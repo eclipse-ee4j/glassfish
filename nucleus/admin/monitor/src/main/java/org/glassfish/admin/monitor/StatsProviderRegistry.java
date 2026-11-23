@@ -34,7 +34,7 @@ import org.glassfish.gmbal.ManagedObjectManager;
 public class StatsProviderRegistry {
     private Map<String, List<StatsProviderRegistryElement>> configToRegistryElementMap = new HashMap();
     private Map<Object, StatsProviderRegistryElement> statsProviderToRegistryElementMap = new HashMap();
-    private boolean isAMXReady = false;
+    private boolean isAMXReady;
     private boolean isMBeanEnabled = true;
 
     static final String[] defaultConfigLevels = new String[] { "LOW", "HIGH" };
@@ -129,18 +129,18 @@ public class StatsProviderRegistry {
         String configStr;
         PluginPoint pp;
         String subTreePath;
-        String parentTreeNodePath = null;
+        String parentTreeNodePath;
         String invokerId;
-        List<String> childTreeNodeNames = null;
-        Collection<ProbeClientMethodHandle> handles = null;
+        List<String> childTreeNodeNames;
+        Collection<ProbeClientMethodHandle> handles;
         Object statsProvider;
-        String mbeanName = null;
-        ManagedObjectManager mom = null;
-        Method resetMethod = null;
-        boolean isEnabled = false;
+        String mbeanName;
+        ManagedObjectManager mom;
+        Method resetMethod;
+        boolean isEnabled;
         int configLevel;
 
-        public StatsProviderRegistryElement(StatsProviderInfo spInfo) {
+        StatsProviderRegistryElement(StatsProviderInfo spInfo) {
 
             this.configStr = spInfo.getConfigElement();
             this.pp = spInfo.getPluginPoint();

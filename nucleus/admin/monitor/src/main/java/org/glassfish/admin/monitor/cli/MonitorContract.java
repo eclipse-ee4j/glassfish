@@ -26,7 +26,7 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface MonitorContract {
-    public ActionReport process(final ActionReport report, final String filter);
+    ActionReport process(ActionReport report, String filter);
 
-    public String getName();
+    String getName();
 }

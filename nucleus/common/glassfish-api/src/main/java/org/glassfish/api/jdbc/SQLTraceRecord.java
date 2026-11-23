@@ -277,7 +277,7 @@ public class SQLTraceRecord implements Serializable {
      * Get the stack frame for the method call in the application that triggered SQL execution, if the call comes from a deployed application.
      *
      * This returns a frame which returns a class from the {@link StackWalker.StackFrame#getDeclaringClass()} method
-     * ({@link StackWalker.Option.RETAIN_CLASS_REFERENCE} is enabled).
+     * ({@code StackWalker.Option.RETAIN_CLASS_REFERENCE} is enabled).
      *
      * @return Stack frame that represents a call to a server component that triggered SQL execution
      */

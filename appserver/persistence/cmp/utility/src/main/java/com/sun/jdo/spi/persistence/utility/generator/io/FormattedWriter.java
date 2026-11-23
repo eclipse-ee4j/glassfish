@@ -30,7 +30,7 @@ class FormattedWriter {
     static private final String indent = "    ";
 
     private StringBuffer _buffer;
-    private int _initialIndents = 0;
+    private int _initialIndents;
 
     /** Creates new FormattedWriter */
     FormattedWriter() {

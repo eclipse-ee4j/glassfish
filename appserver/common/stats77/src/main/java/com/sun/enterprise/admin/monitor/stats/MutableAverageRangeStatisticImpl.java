@@ -37,10 +37,10 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
     /** DEFAULT_UPPER_BOUND is maximum value Long can attain */
     public static final long DEFAULT_MAX_BOUND = java.lang.Long.MAX_VALUE;
 
-    private MutableBoundedRangeStatisticImpl    mutableBoundedRangeStat = null;
+    private MutableBoundedRangeStatisticImpl    mutableBoundedRangeStat;
     private long                                numberOfSamples;
     private long                                runningTotal;
-    private String                              description = null;
+    private String                              description;
 
     /** Constructs an instance of MutableAverageRangeStatisticImpl that encapsulates the given Statistic.
      * The only parameter denotes the initial state of this statistic. It is

@@ -86,7 +86,7 @@ public final class WorkCoordinator {
     private WorkManagementProbeProvider probeProvider;
 
     private ConnectorRuntime runtime;
-    private String raName = null;
+    private String raName;
 
     private WorkContextHandlerImpl contextHandler;
 

@@ -1224,7 +1224,7 @@ public abstract class Archivist<T extends BundleDescriptor> {
     }
 
     /**
-     * @returns an entry name unique amongst names in this archive based on the triel name.
+     * @return an entry name unique amongst names in this archive based on the triel name.
      */
     protected String getUniqueEntryFilenameFor(Archive archive, String trialName) throws IOException {
         Vector<String> entriesNames = new Vector<>();

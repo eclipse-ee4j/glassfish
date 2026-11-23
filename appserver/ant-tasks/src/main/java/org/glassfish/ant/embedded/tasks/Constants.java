@@ -18,8 +18,8 @@ package org.glassfish.ant.embedded.tasks;
 
 public interface Constants {
 
-    public static final String DEFAULT_SERVER_ID = "EmbeddedGlassFish";
+    String DEFAULT_SERVER_ID = "EmbeddedGlassFish";
 
-    public static final int DEFAULT_HTTP_PORT = 8080;
+    int DEFAULT_HTTP_PORT = 8080;
 
 }

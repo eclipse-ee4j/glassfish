@@ -58,12 +58,12 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             displayName = "Disabled",
             isHidden = true,
             isAttribute = false)
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Specify a theme key for an image to be displayed in front of the text for
@@ -77,7 +77,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ThemeIconsEditor")
             //CHECKSTYLE:ON
-    private String icon = null;
+    private String icon;
 
     /**
      * Specify the height in pixels of the image that is specified with the
@@ -94,7 +94,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
     /**
      * imageHeight set flag.
      */
-    private boolean imageHeightSet = false;
+    private boolean imageHeightSet;
 
     /**
      * The path to an image to be displayed in front of the text for the task.
@@ -107,7 +107,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageUrl = null;
+    private String imageUrl;
 
     /**
      * Specify the width in pixels of the image that is specified with the
@@ -124,7 +124,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
     /**
      * imageWidth set flag.
      */
-    private boolean imageWidthSet = false;
+    private boolean imageWidthSet;
 
     /**
      * Immediate.
@@ -133,12 +133,12 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             displayName = "Immediate",
             isHidden = true,
             isAttribute = false)
-    private boolean immediate = false;
+    private boolean immediate;
 
     /**
      * immediate set flag.
      */
-    private boolean immediateSet = false;
+    private boolean immediateSet;
 
     /**
      * Specify the text for the link that is displayed at the bottom of the
@@ -150,7 +150,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String infoLinkText = null;
+    private String infoLinkText;
 
     /**
      * Specify the URL for the link that is displayed at the bottom of the
@@ -162,7 +162,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String infoLinkUrl = null;
+    private String infoLinkUrl;
 
     /**
      * Specify the text to be displayed in the information panel for this task.
@@ -173,7 +173,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String infoText = null;
+    private String infoText;
 
     /**
      * Specify the title text to be displayed in the information panel for this
@@ -185,7 +185,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String infoTitle = null;
+    private String infoTitle;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -196,7 +196,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -208,7 +208,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -220,7 +220,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -233,7 +233,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -245,7 +245,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -257,7 +257,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -269,7 +269,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -281,7 +281,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while it is
@@ -293,7 +293,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when the user moves the mouse pointer off this
@@ -305,7 +305,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -317,7 +317,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -329,7 +329,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -339,7 +339,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -351,7 +351,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -370,7 +370,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The resource at the specified URL is displayed in the frame that is
@@ -384,7 +384,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FrameTargetsEditor")
             //CHECKSTYLE:ON
-    private String target = null;
+    private String target;
 
     /**
      * Title.
@@ -393,7 +393,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             displayName = "Title",
             isHidden = true,
             isAttribute = false)
-    private String title = null;
+    private String title;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -406,7 +406,7 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -420,12 +420,12 @@ public final class CommonTask extends com.sun.webui.jsf.component.WebuiCommand
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Creates a new instance of Task.

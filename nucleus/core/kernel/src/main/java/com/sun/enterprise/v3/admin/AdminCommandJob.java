@@ -95,17 +95,17 @@ public final class AdminCommandJob implements Job {
     }
 
     @Override
-    public final String getId() {
+    public String getId() {
         return this.id;
     }
 
     @Override
-    public final ActionReport getActionReport() {
+    public ActionReport getActionReport() {
         return this.actionReport;
     }
 
     @Override
-    public final State getState() {
+    public State getState() {
         return this.state;
     }
 
@@ -121,7 +121,7 @@ public final class AdminCommandJob implements Job {
     }
 
     @Override
-    public final AdminCommandEventBroker getEventBroker() {
+    public AdminCommandEventBroker getEventBroker() {
         return this.broker;
     }
 
@@ -151,7 +151,7 @@ public final class AdminCommandJob implements Job {
      * @param state must not be null.
      */
     @Override
-    public final void setState(State state) {
+    public void setState(State state) {
         Objects.requireNonNull(state, "state");
         if (!State.isAllowedTransition(this.state, state)) {
             throw new IllegalStateException("Illegal state transition: " + this.state + " -> " + state);

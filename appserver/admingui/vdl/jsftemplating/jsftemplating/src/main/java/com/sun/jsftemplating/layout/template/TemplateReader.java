@@ -975,7 +975,7 @@ public class TemplateReader {
     private Stack<String> _tagStack = new Stack<>();
     private Map<String, String> _nsMappings = new HashMap<>();
 
-    private TemplateParser _tpl = null;
+    private TemplateParser _tpl;
     private int _idNumber;
-    private String _id = null; // The id of the LayoutDefinition
+    private String _id; // The id of the LayoutDefinition
 }

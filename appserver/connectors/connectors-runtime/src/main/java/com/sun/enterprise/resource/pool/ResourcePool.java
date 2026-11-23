@@ -97,7 +97,7 @@ public interface ResourcePool {
      * Reconfigure the Pool's properties. The reconfigConnectorConnectionPool method in the ConnectorRuntime will use this
      * method (through PoolManager) if it needs to just change pool properties and not recreate the pool
      *
-     * @param poolResource - the ConnectorConnectionPool JavaBean that holds the new pool properties
+     * @param ccp - the ConnectorConnectionPool JavaBean that holds the new pool properties
      * @throws PoolingException if the pool resizing fails
      */
     void reconfigurePool(ConnectorConnectionPool ccp) throws PoolingException;

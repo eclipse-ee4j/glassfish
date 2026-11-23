@@ -20,8 +20,8 @@ import com.sun.faces.annotation.Property;
 public interface Interface03 extends Interface02 {
 
     @Property(displayName = "The Second")
-    public String getTwo();
+    String getTwo();
 
-    public void setTwo(String two);
+    void setTwo(String two);
 
 }

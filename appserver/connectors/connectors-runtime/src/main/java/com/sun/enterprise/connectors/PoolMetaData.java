@@ -36,16 +36,16 @@ import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 public class PoolMetaData {
 
-    private ManagedConnectionFactory mcf = null;
-    private PoolInfo poolInfo = null;
-    private Subject subj = null;
+    private ManagedConnectionFactory mcf;
+    private PoolInfo poolInfo;
+    private Subject subj;
     private ResourcePrincipalDescriptor prin_;
     private int txSupport_;
-    private boolean isPM_ = false;
-    private boolean isNonTx_ = false;
+    private boolean isPM_;
+    private boolean isNonTx_;
     private RuntimeSecurityMap runtimeSecurityMap;
-    private boolean lazyEnlistable_ = false;
-    private boolean lazyAssoc_ = false;
+    private boolean lazyEnlistable_;
+    private boolean lazyAssoc_;
     private boolean isAuthCredentialsDefinedInPool_ = true;
 
     public PoolMetaData(PoolInfo poolInfo, ManagedConnectionFactory mcf, Subject s, int txSupport, ResourcePrincipalDescriptor prin,

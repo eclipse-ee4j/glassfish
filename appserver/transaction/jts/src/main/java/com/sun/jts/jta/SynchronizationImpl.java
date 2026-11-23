@@ -49,8 +49,8 @@ public class SynchronizationImpl extends SynchronizationPOA implements org.omg.C
     private Vector syncs;
     private Vector interposedSyncs;
     private POA poa;
-    private org.omg.CosTransactions.Synchronization corbaRef = null;
-    private TransactionState state = null;
+    private org.omg.CosTransactions.Synchronization corbaRef;
+    private TransactionState state;
     /**
      * Logger to log transaction messages
      */

@@ -31,6 +31,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD})
 public @interface ProbeListener {
 
-    public abstract String value();
+    String value();
 
 }

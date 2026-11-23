@@ -182,7 +182,7 @@ public final class ExtendedAccessLogValve
     /**
      * The PrintWriter to which we are currently logging, if any.
      */
-    private PrintWriter writer = null;
+    private PrintWriter writer;
 
 
     private static final TimeZone GMT_TIME_ZONE = TimeZone.getTimeZone("GMT");
@@ -191,7 +191,7 @@ public final class ExtendedAccessLogValve
     /**
      * ThreadLocal for the formatter for the date contained in the file name.
      */
-    private volatile ThreadLocal<SimpleDateFormat> fileDateFormatter = null;
+    private volatile ThreadLocal<SimpleDateFormat> fileDateFormatter;
 
 
     /**
@@ -241,7 +241,7 @@ public final class ExtendedAccessLogValve
      * determine another reliable way to get server ip address since this
      * server may have many ip's.
      */
-    private String myIpAddress = null;
+    private String myIpAddress;
 
 
     /**
@@ -249,7 +249,7 @@ public final class ExtendedAccessLogValve
      * determine another reliable way to get server name address since this
      * server may have many ip's.
      */
-    private String myDNSName = null;
+    private String myDNSName;
 
 
     /**
@@ -262,7 +262,7 @@ public final class ExtendedAccessLogValve
      * The current log file we are writing to. Helpful when checkExists
      * is true.
      */
-    private File currentLogFile = null;
+    private File currentLogFile;
 
 
 
@@ -270,13 +270,13 @@ public final class ExtendedAccessLogValve
      * The system time when we last updated the Date that this valve
      * uses for log lines.
      */
-    private Date currentDate = null;
+    private Date currentDate;
 
 
     /**
      * Instant when the log daily rotation was last checked.
      */
-    private long rotationLastChecked = 0L;
+    private long rotationLastChecked;
 
 
     /**
@@ -288,7 +288,7 @@ public final class ExtendedAccessLogValve
     /**
      * The pattern used to format our access log lines.
      */
-    private String pattern = null;
+    private String pattern;
 
 
     /**
@@ -312,20 +312,20 @@ public final class ExtendedAccessLogValve
     /**
      * Are we doing conditional logging. default false.
      */
-    private String condition = null;
+    private String condition;
 
 
     /**
      * Do we check for log file existence? Helpful if an external
      * agent renames the log file so we can automagically recreate it.
      */
-    private boolean checkExists = false;
+    private boolean checkExists;
 
 
     /**
      * Date format to place in log file name. Use at your own risk!
      */
-    private String fileDateFormat = null;
+    private String fileDateFormat;
 
 
     // ------------------------------------------------------------- Properties
@@ -1505,6 +1505,6 @@ class FieldInfo {
     String value;
 
     /** Any white space after this field? Put it here. */
-    String postWhiteSpace = null;
+    String postWhiteSpace;
 
 }

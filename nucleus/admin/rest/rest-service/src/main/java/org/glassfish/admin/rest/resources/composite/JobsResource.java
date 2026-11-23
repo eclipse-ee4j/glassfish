@@ -38,7 +38,7 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * This resource queries for the system for all detached jobs.
  * <h2>Example Interactions</h2>
- * <h4>View the detached jobs</h4>
+ * <h3>View the detached jobs</h3>
  *
  * <div class="codeblock"> $ curl --user admin:admin123 -v \ -H Accept:application/vnd.oracle.glassfish+json \ -H
  * Content-Type:application/vnd.oracle.glassfish+json \ -H X-Requested-By:MyClient \
@@ -59,7 +59,7 @@ public class JobsResource extends CompositeResource {
      * this GlassFish instance.
      * <p>
      * Roles: PaasAdmin, TenantAdmin
-     * <p>
+     *
      *
      * @param currentUser Optional query parameter to restrict the set of returns {@link Job} objects to those for the
      * current user

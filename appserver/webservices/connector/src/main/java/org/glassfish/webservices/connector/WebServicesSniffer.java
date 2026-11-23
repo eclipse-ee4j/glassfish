@@ -38,7 +38,7 @@ public class WebServicesSniffer extends GenericSniffer {
 
     final String[] containers = {
         "org.glassfish.webservices.WebServicesContainer",
-        "org.glassfish.webservices.metroglue.MetroContainer"
+        "org.glassfish.webservices.metroglue.MetroContainer",
     };
 
     public WebServicesSniffer() {

@@ -42,12 +42,12 @@ public final class MessageGroup extends UIComponentBase {
     @Property(name = "showDetail",
             displayName = "Show Detail Message",
             category = "Appearance")
-    private boolean showDetail = false;
+    private boolean showDetail;
 
     /**
      * showDetail set flag.
      */
-    private boolean showDetailSet = false;
+    private boolean showDetailSet;
 
     /**
      * Use the showGlobalOnly attribute to display only those messages that are
@@ -58,12 +58,12 @@ public final class MessageGroup extends UIComponentBase {
     @Property(name = "showGlobalOnly",
             displayName = "Show Global Messages Only",
             category = "Behavior")
-    private boolean showGlobalOnly = false;
+    private boolean showGlobalOnly;
 
     /**
      * showGlobalOnly set flag.
      */
-    private boolean showGlobalOnlySet = false;
+    private boolean showGlobalOnlySet;
 
     /**
      * Set this attribute to true to display the summary message.
@@ -71,12 +71,12 @@ public final class MessageGroup extends UIComponentBase {
     @Property(name = "showSummary",
             displayName = "Show Summary Message",
             category = "Appearance")
-    private boolean showSummary = false;
+    private boolean showSummary;
 
     /**
      * showSummary set flag.
      */
-    private boolean showSummarySet = false;
+    private boolean showSummarySet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -86,7 +86,7 @@ public final class MessageGroup extends UIComponentBase {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -98,7 +98,7 @@ public final class MessageGroup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -111,7 +111,7 @@ public final class MessageGroup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -125,12 +125,12 @@ public final class MessageGroup extends UIComponentBase {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Sets the title of the message group. If this attribute is not specified,
@@ -142,7 +142,7 @@ public final class MessageGroup extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * Default constructor.

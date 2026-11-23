@@ -180,7 +180,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * driver shall submit a query on the connection or use some other mechanism
      * that positively verifies the connection is still valid when this method is
      * called.
-     * <p/>
+     * <p>
      * The query submitted by the driver to validate the connection shall be
      * executed in the context of the current transaction.
      *
@@ -188,13 +188,13 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * to validate the connection to complete. If the timeout period expires before
      * the operation completes, this method returns false. A value of 0 indicates a
      * timeout is not applied to the database operation.
-     * <p/>
+     *
      * @return true if the connection is valid, false otherwise
      * @throws java.sql.SQLException if the value supplied for <code>timeout</code>
      * is less then 0
      * @see java.sql.DatabaseMetaData#getClientInfoProperties
      * @since 1.6
-     * <p/>
+     *
      */
     @Override
     public boolean isValid(int timeout) throws SQLException {
@@ -205,12 +205,12 @@ public class ConnectionHolder40 extends ConnectionHolder {
     /**
      * Sets the value of the client info property specified by name to the value
      * specified by value.
-     * <p/>
+     * <p>
      * Applications may use the
      * <code>DatabaseMetaData.getClientInfoProperties</code> method to determine the
      * client info properties supported by the driver and the maximum length that
      * may be specified for each property.
-     * <p/>
+     * <p>
      * The driver stores the value specified in a suitable location in the database.
      * For example in a special register, session parameter, or system table column.
      * For efficiency the driver may defer setting the value in the database until
@@ -219,21 +219,21 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * shall not alter the behavior of the connection in anyway. The values supplied
      * to these methods are used for accounting, diagnostics and debugging purposes
      * only.
-     * <p/>
+     * <p>
      * The driver shall generate a warning if the client info name specified is not
      * recognized by the driver.
-     * <p/>
+     * <p>
      * If the value specified to this method is greater than the maximum length for
      * the property the driver may either truncate the value and generate a warning
      * or generate a <code>SQLClientInfoException</code>. If the driver generates a
      * <code>SQLClientInfoException</code>, the value specified was not set on the
      * connection.
-     * <p/>
+     * <p>
      * The following are standard client info properties. Drivers are not required
      * to support these properties however if the driver supports a client info
      * property that can be described by one of the standard properties, the
      * standard property name should be used.
-     * <p/>
+     *
      * <ul>
      * <li>ApplicationName - The name of the application currently utilizing the
      * connection</li>
@@ -243,16 +243,16 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * <li>ClientHostname - The hostname of the computer the application using the
      * connection is running on.</li>
      * </ul>
-     * <p/>
+     *
      *
      * @param name The name of the client info property to set
      * @param value The value to set the client info property to. If the value is
      * null, the current value of the specified property is cleared.
-     * <p/>
+     *
      * @throws java.sql.SQLClientInfoException if the database server returns an
      * error while setting the client info value on the database server or this
      * method is called on a closed connection
-     * <p/>
+     *
      * @since 1.6
      */
     @Override
@@ -276,7 +276,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * present in the properties list, that property is cleared. Specifying an empty
      * properties list will clear all of the properties on the connection. See
      * <code>setClientInfo (String, String)</code> for more information.
-     * <p/>
+     * <p>
      * If an error occurs in setting any of the client info properties, a
      * <code>SQLClientInfoException</code> is thrown. The
      * <code>SQLClientInfoException</code> contains information indicating which
@@ -284,18 +284,18 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * unknown because some databases do not allow multiple client info properties
      * to be set atomically. For those databases, one or more properties may have
      * been set before the error occurred.
-     * <p/>
+     *
      *
      * @param properties the list of client info properties to set
-     * <p/>
+     *
      * @throws java.sql.SQLClientInfoException if the database server returns an
      * error while setting the clientInfo values on the database server or this
      * method is called on a closed connection
-     * <p/>
+     *
      * @see java.sql.Connection#setClientInfo(String,String) setClientInfo(String,
      * String)
      * @since 1.6
-     * <p/>
+     *
      */
     @Override
     public void setClientInfo(Properties properties) throws SQLClientInfoException {
@@ -314,23 +314,23 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * may return null if the specified client info property has not been set and
      * does not have a default value. This method will also return null if the
      * specified client info property name is not supported by the driver.
-     * <p/>
+     * <p>
      * Applications may use the
      * <code>DatabaseMetaData.getClientInfoProperties</code> method to determine the
      * client info properties supported by the driver.
-     * <p/>
+     *
      *
      * @param name The name of the client info property to retrieve
-     * <p/>
+     *
      * @return The value of the client info property specified
-     * <p/>
+     *
      * @throws java.sql.SQLException if the database server returns an error when
      * fetching the client info value from the database or this method is called on
      * a closed connection
-     * <p/>
+     *
      * @see java.sql.DatabaseMetaData#getClientInfoProperties
      * @since 1.6
-     * <p/>
+     *
      */
     @Override
     public String getClientInfo(String name) throws SQLException {
@@ -342,15 +342,15 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * Returns a list containing the name and current value of each client info
      * property supported by the driver. The value of a client info property may be
      * null if the property has not been set and does not have a default value.
-     * <p/>
+     *
      *
      * @return A <code>Properties</code> object that contains the name and current
      * value of each of the client info properties supported by the driver.
-     * <p/>
+     *
      * @throws java.sql.SQLException if the database server returns an error when
      * fetching the client info values from the database or this method is called on
      * a closed connection
-     * <p/>
+     *
      * @since 1.6
      */
     @Override
@@ -451,7 +451,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
     /**
      * Returns an object that implements the given interface to allow access to
      * non-standard methods, or standard methods not exposed by the proxy.
-     * <p/>
+     * <p>
      * If the receiver implements the interface then the result is the receiver or a
      * proxy for the receiver. If the receiver is a wrapper and the wrapped object
      * implements the interface then the result is the wrapped object or a proxy for

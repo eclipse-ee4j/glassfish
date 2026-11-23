@@ -26,5 +26,5 @@ public interface TransportInfo {
     /**
      * Return the transport type
      */
-    public TransportType getTransportType();
+    TransportType getTransportType();
 }

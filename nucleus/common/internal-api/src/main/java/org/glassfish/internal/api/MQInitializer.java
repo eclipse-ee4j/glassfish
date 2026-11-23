@@ -28,6 +28,6 @@ public interface MQInitializer {
      This method initialises the MQ broker.
      The methods throws an exception if the broker or JMSRA cannot be initialized.
     */
-      public void initializeBroker() throws Exception;
+      void initializeBroker() throws Exception;
 }
 

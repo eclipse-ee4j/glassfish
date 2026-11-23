@@ -24,14 +24,14 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface PersistenceStrategyBuilder {
 
-    public void initializePersistenceStrategy(
+    void initializePersistenceStrategy(
             Context ctx,
             SessionManager smBean,
             ServerConfigLookup serverConfigLookup);
 
-    public void setPersistenceFrequency(String persistenceFrequency);
+    void setPersistenceFrequency(String persistenceFrequency);
 
-    public void setPersistenceScope(String persistenceScope);
+    void setPersistenceScope(String persistenceScope);
 
-    public void setPassedInPersistenceType(String persistenceType);
+    void setPassedInPersistenceType(String persistenceType);
 }

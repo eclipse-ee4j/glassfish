@@ -24,29 +24,29 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 public final class ContextRootInfo {
 
     /**
-     * The interface, which is responsible for holding <tt>ContextRootInfo</tt>,
-     * which makes possible to initialize <tt>ContextRootInfo<tt> lazily.
+     * The interface, which is responsible for holding <code>ContextRootInfo</code>,
+     * which makes possible to initialize <code>ContextRootInfo</code> lazily.
      */
-    public static interface Holder {
+    public interface Holder {
 
         /**
          * Gets the Grizzly {@link HttpHandler}, associated with the context.
          *
          * @return the Grizzly {@link HttpHandler}, associated with the context.
          */
-        public HttpHandler getHttpHandler();
+        HttpHandler getHttpHandler();
 
         /**
          * Gets the application container, associated with the context.
          *
          * @return the application container, associated with the context.
          */
-        public Object getContainer();
+        Object getContainer();
     }
     private final Holder holder;
 
     /**
-     * Create <tt>ContextRootInfo</tt> using prepared {@link HttpHandler} and
+     * Create <code>ContextRootInfo</code> using prepared {@link HttpHandler} and
      * application container parameters.
      *
      * @param handler Grizzly {@link HttpHandler}, associated with the context.
@@ -58,7 +58,7 @@ public final class ContextRootInfo {
     }
 
     /**
-     * Create <tt>ContextRootInfo</tt> using passed {@link Holder} object, which
+     * Create <code>ContextRootInfo</code> using passed {@link Holder} object, which
      * might be initialized lazily.
      *
      * @param holder context info {@link Holder}.
@@ -90,7 +90,7 @@ public final class ContextRootInfo {
         private final HttpHandler handler;
         private final Object container;
 
-        public SimpleHolder(HttpHandler handler, Object container) {
+        SimpleHolder(HttpHandler handler, Object container) {
             this.handler = handler;
             this.container = container;
         }

@@ -27,11 +27,11 @@ import java.lang.reflect.InvocationHandler;
  */
 public interface ConfigView extends InvocationHandler {
 
-    public ConfigView getMasterView();
+    ConfigView getMasterView();
 
-    public void setMasterView(ConfigView view);
+    void setMasterView(ConfigView view);
 
-    public <T extends ConfigBeanProxy> Class<T> getProxyType();
+    <T extends ConfigBeanProxy> Class<T> getProxyType();
 
-    public <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType);
+    <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType);
 }

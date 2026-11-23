@@ -37,7 +37,7 @@ import static com.sun.webui.jsf.util.ThemeUtilities.getTheme;
  * The {@code CheckboxRenderer} renders a
  * {@link com.sun.webui.jsf.component.Checkbox} component.
  *
- * <h3>Encoding</h3>
+ * <h2>Encoding</h2>
  * <p>
  * The {@code CheckboxRenderer} renders a {@code Checkbox} as:
  * <ul>
@@ -50,7 +50,7 @@ import static com.sun.webui.jsf.util.ThemeUtilities.getTheme;
  * from a call to {@code getLabelComponent()} on the component being
  * rendered. </li>
  * </ul>
- * </p>
+ *
  * <p>
  * The CSS selectors for the elements and components that comprise a
  * checkbox are identified by java
@@ -76,9 +76,9 @@ import static com.sun.webui.jsf.util.ThemeUtilities.getTheme;
  * a {@code Checkbox} component see the super class
  * {@link com.sun.webui.jsf.renderkit.html.RbCbRendererBase}
  * </p>
- * <p>
+ *
 
- * <h3>Decoding</h3>
+ * <h2>Decoding</h2>
  * <p>
  * If the INPUT element representing a checkbox is selected on the
  * the client, the submitted request will contain a request parameter
@@ -99,7 +99,7 @@ import static com.sun.webui.jsf.util.ThemeUtilities.getTheme;
  * property. If the {@code name} property is null, then a
  * request parameter exists that is equal to its {@code clientId}
  * property.
- * <li/>
+ * <li>
  * </ul>
  * <p>
  * And

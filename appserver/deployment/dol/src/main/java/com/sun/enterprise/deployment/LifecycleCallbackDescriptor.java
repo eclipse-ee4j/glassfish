@@ -74,7 +74,7 @@ public class LifecycleCallbackDescriptor extends Descriptor {
      * Given a classloader, find the Method object corresponding to this
      * lifecycle callback.
      *
-     * @throw Exception if no method found
+     * @throws Exception if no method found
      */
     public Method getLifecycleCallbackMethodObject(ClassLoader loader) throws Exception {
         Method method = null;

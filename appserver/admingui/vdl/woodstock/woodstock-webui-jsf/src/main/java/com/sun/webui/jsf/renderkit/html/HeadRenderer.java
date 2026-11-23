@@ -46,7 +46,7 @@ public final class HeadRenderer extends AbstractRenderer {
      * The set of String pass-through attributes to be rendered.
      */
     private static final String[] STRING_ATTRIBUTES = {
-        "profile"
+        "profile",
     };
 
     /**

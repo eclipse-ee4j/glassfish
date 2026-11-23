@@ -54,7 +54,7 @@ class LogRecordEnding implements Serializable {
 
     /**The log record ending contains the current LSN.
      */
-    LogLSN currentLSN = null;
+    LogLSN currentLSN;
 
     /**Default LogRecordEnding constructor.
      *

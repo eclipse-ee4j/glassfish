@@ -100,7 +100,7 @@ public class HealthCheckerReaderImpl implements HealthCheckerReader {
         }
     }
     //--- PRIVATE VARIABLES ------
-    HealthChecker _hc = null;
+    HealthChecker _hc;
     private static final HealthCheckerReader defaultHCR =
             new HealthCheckerReaderImpl();
     private static final String defaultURL = "/";

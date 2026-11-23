@@ -31,9 +31,9 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
  */
 public class DeployCommandSupplementalInfo implements Serializable{
 
-    private transient ExtendedDeploymentContext dc = null;
-    private List<String> previousTargets = null;
-    private Collection<? extends AccessCheck> accessChecks = null;
+    private transient ExtendedDeploymentContext dc;
+    private List<String> previousTargets;
+    private Collection<? extends AccessCheck> accessChecks;
 
     public void setDeploymentContext(final ExtendedDeploymentContext dc) {
         this.dc = dc;

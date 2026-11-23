@@ -33,11 +33,11 @@ final class Strings {
         // no instances allowed!
     }
 
-    static final String get(String indexString) {
+    static String get(String indexString) {
         return strings.get(indexString);
     }
 
-    static final String get(String indexString, Object... objects) {
+    static String get(String indexString, Object... objects) {
         return strings.get(indexString, objects);
     }
 }

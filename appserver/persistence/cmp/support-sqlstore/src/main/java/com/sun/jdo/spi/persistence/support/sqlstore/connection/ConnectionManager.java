@@ -103,7 +103,7 @@ import static java.lang.System.Logger.Level.TRACE;
  * define the partitions whose code defines the ConnectionManager
  * objects; the partitioning system will not help you.
  *
- * <H4>Starting a New Database Connection for Each Request (Client-based Security)</H4>
+ * <H2>Starting a New Database Connection for Each Request (Client-based Security)</H2>
  * <P>In this situation, the connection
  * manager establishes a new connection each time you request a connection.
  * By default, the connection manager does not establish and maintain a
@@ -118,7 +118,7 @@ import static java.lang.System.Logger.Level.TRACE;
  * You can also specify a user name, password, and database URL on the
  * getConnection method.
  *
- * <H5>Example of Using ConnectionManager without Pooling</H5>
+ * <H3>Example of Using ConnectionManager without Pooling</H3>
  * <pre>{@code
  * import java.sql.*;
  * import com.sun.jdo.api.persistence.support.*;
@@ -127,7 +127,7 @@ import static java.lang.System.Logger.Level.TRACE;
  * ResultSet rs = stmt.executeQuery("SELECT * FROM T1");
  * }</pre>
  *
- * <H4>Using a Pool of Database Connections (Application-based Security)</H4>
+ * <H2>Using a Pool of Database Connections (Application-based Security)</H2>
  * <P>When you create a connection manager using the
  * ConnectionManager class, you can have the connection manager
  * establish a pool of connections for a given user name and password
@@ -169,12 +169,12 @@ import static java.lang.System.Logger.Level.TRACE;
  * because the ConnectionManager
  * is a component.
  *
- * <H4>Using a Pool of Connections and Starting New Connections</H4>
+ * <H2>Using a Pool of Connections and Starting New Connections</H2>
  * <P>You can have the connection manager establish and maintain a
  * pool of connections and have the connection manager establish new
  * connections on a request-by-request basis.
  *
- * <H5>Example of Using ConnectionManager with Pooling</H5>
+ * <H3>Example of Using ConnectionManager with Pooling</H3>
  * <pre>{@code
  * import com.sun.jdo.api.persistence.support.*;
  * void getT1Data() {
@@ -338,7 +338,7 @@ public class ConnectionManager {
     /**
      * Free non-pooled connection to reduce time for getting a new connection.
      */
-    private transient ConnectionImpl freeConn = null;
+    private transient ConnectionImpl freeConn;
 
 
     /**
@@ -806,7 +806,7 @@ public class ConnectionManager {
     /**
      * Creates a new connection manager and loads the named
      * JDBC driver.
-     * <p>
+     *
      * @param      driverName  name of JDBC driver.
      * @exception  ClassNotFoundException if the driver cannot be found.
      * @exception  SQLException  if a SQL error is encountered.
@@ -827,7 +827,7 @@ public class ConnectionManager {
     /**
      * Creates a new connection manager, loads the named JDBC driver, and
      * sets the default database URL for the new connection manager.
-     * <p>
+     *
      * @param      driverName  the name of JDBC driver.
      * @param      url         the database URL for the data source.
      * @exception  ClassNotFoundException if the driver cannot be found.
@@ -1917,7 +1917,7 @@ public class ConnectionManager {
 
     /**
      * Returns a string representation of the current ConnectionManager object.
-     * <p>
+     *
      * @return  A <code>String</code> decribing the contents of the current
      * ConnectionManager object.
      */

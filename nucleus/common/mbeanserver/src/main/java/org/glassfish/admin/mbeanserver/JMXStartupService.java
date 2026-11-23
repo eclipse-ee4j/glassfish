@@ -326,7 +326,7 @@ public final class JMXStartupService implements PostConstruct {
         }
     }
 
-    public static final Set<ObjectName> getJMXConnectorServers(final MBeanServer server) {
+    public static Set<ObjectName> getJMXConnectorServers(final MBeanServer server) {
         try {
             final ObjectName queryPattern = new ObjectName(JMX_CONNECTOR_SERVER_PREFIX + ",*");
             return server.queryNames(queryPattern, null);

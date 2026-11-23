@@ -338,6 +338,6 @@ class Status {
         return msg;
     }
 
-    private File             statusFile = null;
+    private File             statusFile;
     private Properties       props;
 }

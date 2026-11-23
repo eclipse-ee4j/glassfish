@@ -40,8 +40,8 @@ public final class ConnectorMessageBeanClientFactory
     /**
      * Creates a <code>ConnectorMessageBeanClient</code>
      *
-     * @param descriptor <code>EjbMessageBeanDescriptor.
-     * @return <code>ConnectorMessageBeanClient<code>
+     * @param descriptor <code>EjbMessageBeanDescriptor</code>.
+     * @return <code>ConnectorMessageBeanClient</code>
      */
     public MessageBeanClient createMessageBeanClient(EjbMessageBeanDescriptor descriptor) {
         return new ConnectorMessageBeanClient(descriptor);

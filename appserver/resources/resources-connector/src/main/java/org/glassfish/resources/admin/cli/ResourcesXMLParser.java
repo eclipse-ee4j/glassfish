@@ -166,12 +166,12 @@ public class ResourcesXMLParser implements EntityResolver {
 
     private static final Logger LOG = System.getLogger(ResourcesXMLParser.class.getName());
 
-    private File resourceFile = null;
+    private File resourceFile;
     private Document document;
     private final List<org.glassfish.resources.api.Resource> vResources;
     private final Map<Resource, Node> resourceMap = new HashMap<>();
 
-    private boolean isDoctypePresent = false;
+    private boolean isDoctypePresent;
     /* list of resources that needs to be created prior to module deployment. This
      * includes all non-Connector resources and resource-adapter-config
      */

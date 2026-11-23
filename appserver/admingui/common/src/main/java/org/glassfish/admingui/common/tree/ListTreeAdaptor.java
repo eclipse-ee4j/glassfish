@@ -171,7 +171,7 @@ public class ListTreeAdaptor extends TreeAdaptorBase {
      *     node model object.</p>
      *
      * <p> Some useful options for the standard <code>TreeNode</code>
-     *     component include:<p>
+     *     component include:
      *
      * <ul><li>text</li>
      *     <li>url</li>
@@ -430,6 +430,6 @@ public class ListTreeAdaptor extends TreeAdaptorBase {
     /**
      * This sub-nodes of the top-level Node.
      */
-    private transient List<Object>            _children        =   null;
-    private transient Map<String, Object>   _childMap        =   null;
+    private transient List<Object>            _children;
+    private transient Map<String, Object>   _childMap;
 }

@@ -29,11 +29,11 @@ import org.glassfish.api.Param;
 public class InstanceRegisterInstanceCommandParameters extends RegisterInstanceCommandParameters {
 
     @Param(name = ParameterNames.PARAM_NODEDIR, optional = true)
-    public String nodedir = null;
+    public String nodedir;
     @Param(name = ParameterNames.PARAM_NODEHOST, optional = true)
-    public String nodehost = null;
+    public String nodehost;
     @Param(name = ParameterNames.PARAM_INSTALLDIR, optional = true)
-    public String installdir = null;
+    public String installdir;
     @Param(name = ParameterNames.PARAM_TYPE, optional = true, defaultValue = "CONFIG")
     public String type = "CONFIG";
     @Param(name = ParameterNames.PARAM_SYSTEMPROPERTIES, optional = true, separator = ':')

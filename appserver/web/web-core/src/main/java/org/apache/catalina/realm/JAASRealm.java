@@ -65,7 +65,7 @@ import static java.util.logging.Level.SEVERE;
  * </p>
  *
  * <ul>
- * <li>The JAAS <code>LoginModule</code> is assumed to return a <code>Subject with at least one <code>Principal</code>
+ * <li>The JAAS <code>LoginModule</code> is assumed to return a <code>Subject</code> with at least one <code>Principal</code>
  * instance representing the user himself or herself, and zero or more separate <code>Principals</code> representing the
  * security roles authorized for this user.</li>
  * <li>On the <code>Principal</code> representing the user, the Principal name is an appropriate value to return via the
@@ -122,7 +122,7 @@ public final class JAASRealm extends RealmBase {
     /**
      * Comma-delimited list of <code>javax.security.Principal</code> classes that represent security roles.
      */
-    protected String roleClassNames = null;
+    protected String roleClassNames;
 
     // ------------------------------------------------------------- Properties
 
@@ -193,7 +193,7 @@ public final class JAASRealm extends RealmBase {
     /**
      * Comma-delimited list of <code>javax.security.Principal</code> classes that represent individual users.
      */
-    protected String userClassNames = null;
+    protected String userClassNames;
 
     public String getUserClassNames() {
         return (this.userClassNames);

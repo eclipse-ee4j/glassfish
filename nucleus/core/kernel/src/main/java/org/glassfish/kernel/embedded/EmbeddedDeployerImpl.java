@@ -271,7 +271,7 @@ public class EmbeddedDeployerImpl implements EmbeddedDeployer {
         Properties appProps;
 
 
-        public EmbeddedDeployedInfo(ApplicationInfo appInfo, Map<String, Properties> map, Properties appProps,
+        EmbeddedDeployedInfo(ApplicationInfo appInfo, Map<String, Properties> map, Properties appProps,
                 boolean isDirectory) {
             this.appInfo = appInfo;
             this.map = map;

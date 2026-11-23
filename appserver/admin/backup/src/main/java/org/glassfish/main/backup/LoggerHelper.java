@@ -83,7 +83,7 @@ class LoggerHelper
 
     ///////////////////////////////////////////////////////////////////////////
 
-    private static Logger        logger = null;
+    private static Logger        logger;
 
     static
     {

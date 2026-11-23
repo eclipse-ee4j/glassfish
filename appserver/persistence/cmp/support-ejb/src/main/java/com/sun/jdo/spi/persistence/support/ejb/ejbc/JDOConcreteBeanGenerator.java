@@ -61,22 +61,22 @@ abstract class JDOConcreteBeanGenerator {
     private static final Logger LOG = System.getLogger(JDOConcreteBeanGenerator.class.getName());
 
     // used to transform b/w various ejb names and pc class names
-    NameMapper nameMapper = null;
+    NameMapper nameMapper;
 
-    Model model = null;        // used to look up various metadata
+    Model model;        // used to look up various metadata
 
-    String appName = null;
-    String beanName = null;
-    String helperName = null;
-    String concreteImplName = null;
-    String abstractBean = null;
-    String pkClass = null;
-    String pcname = null;
+    String appName;
+    String beanName;
+    String helperName;
+    String concreteImplName;
+    String abstractBean;
+    String pkClass;
+    String pcname;
     boolean hasLocalInterface;
     boolean hasRemoteInterface;
     boolean isUpdateable;
 
-    String setPKField = null;
+    String setPKField;
 
     // Name of the PC or PK Class as a single String parameter.
     String[] pcnameParam = new String[1];
@@ -98,7 +98,7 @@ abstract class JDOConcreteBeanGenerator {
     String[] queryParams = new String[10];
 
     // StringBuffer for loading nonDFG fields into read-only beans
-    StringBuffer loadNonDFGBody = null;
+    StringBuffer loadNonDFGBody;
 
     ClassLoader loader;
 

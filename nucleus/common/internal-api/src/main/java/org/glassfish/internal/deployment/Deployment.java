@@ -146,7 +146,7 @@ public interface Deployment {
     EventTypes<DeploymentContext> UNDEPLOYMENT_VALIDATION = EventTypes.create("Undeployment_Validation",
             DeploymentContext.class);
 
-    public interface DeploymentContextBuilder {
+    interface DeploymentContextBuilder {
 
         DeploymentContextBuilder source(File source);
 
@@ -186,34 +186,34 @@ public interface Deployment {
 
     ModuleInfo prepareModule(List<EngineInfo<?, ?>> sortedEngineInfos, String moduleName, DeploymentContext context, ProgressTracker tracker) throws Exception;
 
-    ApplicationInfo deploy(final ExtendedDeploymentContext context);
+    ApplicationInfo deploy(ExtendedDeploymentContext context);
 
-    ApplicationInfo deploy(final Collection<? extends Sniffer> sniffers, final ExtendedDeploymentContext context);
+    ApplicationInfo deploy(Collection<? extends Sniffer> sniffers, ExtendedDeploymentContext context);
 
     void undeploy(String appName, ExtendedDeploymentContext context);
 
-    Transaction prepareAppConfigChanges(final DeploymentContext context) throws TransactionFailure;
+    Transaction prepareAppConfigChanges(DeploymentContext context) throws TransactionFailure;
 
-    void registerAppInDomainXML(final ApplicationInfo applicationInfo, final DeploymentContext context, Transaction t) throws TransactionFailure;
+    void registerAppInDomainXML(ApplicationInfo applicationInfo, DeploymentContext context, Transaction t) throws TransactionFailure;
 
-    void unregisterAppFromDomainXML(final String appName, final String target) throws TransactionFailure;
+    void unregisterAppFromDomainXML(String appName, String target) throws TransactionFailure;
 
-    void registerAppInDomainXML(final ApplicationInfo applicationInfo, final DeploymentContext context, Transaction t,
+    void registerAppInDomainXML(ApplicationInfo applicationInfo, DeploymentContext context, Transaction t,
             boolean appRefOnly) throws TransactionFailure;
 
-    void unregisterAppFromDomainXML(final String appName, final String target, boolean appRefOnly) throws TransactionFailure;
+    void unregisterAppFromDomainXML(String appName, String target, boolean appRefOnly) throws TransactionFailure;
 
-    void registerTenantWithAppInDomainXML(final String appName, final ExtendedDeploymentContext context) throws TransactionFailure;
+    void registerTenantWithAppInDomainXML(String appName, ExtendedDeploymentContext context) throws TransactionFailure;
 
-    void unregisterTenantWithAppInDomainXML(final String appName, final String tenantName)
+    void unregisterTenantWithAppInDomainXML(String appName, String tenantName)
             throws TransactionFailure, RetryableException;
 
-    void updateAppEnabledAttributeInDomainXML(final String appName, final String target, final boolean enabled)
+    void updateAppEnabledAttributeInDomainXML(String appName, String target, boolean enabled)
             throws TransactionFailure;
 
     List<EngineInfo<?, ?>> setupContainerInfos(DeploymentContext context) throws Exception;
 
-    List<EngineInfo<?, ?>> setupContainerInfos(final ArchiveHandler handler, Collection<? extends Sniffer> sniffers,
+    List<EngineInfo<?, ?>> setupContainerInfos(ArchiveHandler handler, Collection<? extends Sniffer> sniffers,
             DeploymentContext context) throws Exception;
 
     boolean isRegistered(String appName);

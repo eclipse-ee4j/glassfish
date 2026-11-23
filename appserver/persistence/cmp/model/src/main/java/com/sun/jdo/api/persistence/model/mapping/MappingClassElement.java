@@ -30,19 +30,19 @@ import org.netbeans.modules.dbschema.TableElement;
 public interface MappingClassElement extends MappingElement
 {
     /** Constant representing mapping file extension. */
-    public static final String MAPPING_EXTENSION = "mapping";
+    String MAPPING_EXTENSION = "mapping";
 
     /** Constant representing Consistency level.
      * NONE_CONSISTENCY implies that no consistency semantics are enforced.
      */
-    public static final int NONE_CONSISTENCY = 0x0;
+    int NONE_CONSISTENCY = 0x0;
 
     /** Constant representing Consistency level.
      * CHECK_MODIFIED_AT_COMMIT_CONSISTENCY implies that at commit,
      * consistency check is enforced for all fetched fields of modified
      * objects.
      */
-    public static final int CHECK_MODIFIED_AT_COMMIT_CONSISTENCY  = 0x1;
+    int CHECK_MODIFIED_AT_COMMIT_CONSISTENCY  = 0x1;
 
     /** Constant representing Consistency level.
      * CHECK_ALL_AT_COMMIT_CONSISTENCY implies that at commit, consistency
@@ -50,7 +50,7 @@ public interface MappingClassElement extends MappingElement
      * level.
      * Please note that this level is not supported in the current release.
      */
-    public static final int CHECK_ALL_AT_COMMIT_CONSISTENCY  = 0x2;
+    int CHECK_ALL_AT_COMMIT_CONSISTENCY  = 0x2;
 
     /** Constant representing Consistency level.
      * LOCK_WHEN_MODIFIED_CONSISTENCY implies exclusive lock is obtained for
@@ -58,7 +58,7 @@ public interface MappingClassElement extends MappingElement
      * is made.
      * Please note that this level is not supported in the current release.
      */
-    public static final int LOCK_WHEN_MODIFIED_CONSISTENCY   = 0x4;
+    int LOCK_WHEN_MODIFIED_CONSISTENCY   = 0x4;
 
     /** Constant representing Consistency level.
      * LOCK_WHEN_MODIFIED_CHECK_ALL_AT_COMMIT_CONSISTENCY implies exclusive
@@ -67,20 +67,20 @@ public interface MappingClassElement extends MappingElement
      * enforced for all the fields of objects at this consistency level.
      * Please note that this level is not supported in the current release.
      */
-    public static final int LOCK_WHEN_MODIFIED_CHECK_ALL_AT_COMMIT_CONSISTENCY =
+    int LOCK_WHEN_MODIFIED_CHECK_ALL_AT_COMMIT_CONSISTENCY =
         CHECK_ALL_AT_COMMIT_CONSISTENCY | LOCK_WHEN_MODIFIED_CONSISTENCY;
 
     /** Constant representing Consistency level.
      * LOCK_WHEN_LOADED_CONSISTENCY implies that exclusive lock is
      * obtained for data corresponding to this object before accessing it.
      */
-    public static final int LOCK_WHEN_LOADED_CONSISTENCY    = 0x8;
+    int LOCK_WHEN_LOADED_CONSISTENCY    = 0x8;
 
     /** Constant representing Consistency level.
      * VERSION_CONSISTENCY implies that no lock is obtained for data
      * corresponding to this object until it will be updated.
      */
-    public static final int VERSION_CONSISTENCY    = 0x10;
+    int VERSION_CONSISTENCY    = 0x10;
 
     // TBD
 // clears out fields -- equiv to new, can take it out
@@ -93,34 +93,34 @@ public interface MappingClassElement extends MappingElement
      * the last save, NOT the version number of the memory representation.
      * @return version number
      */
-    public int getVersionNumber ();
+    int getVersionNumber ();
 
     /** Returns true if the version number of this MappingClassElement object
      * is older than the current version number of the archiving scheme.
      * @see #getVersionNumber
      * @return true if it is in need of updating, false otherwise
      */
-    public boolean hasOldVersionNumber ();
+    boolean hasOldVersionNumber ();
 
     /** This method is called after a MappingClassElement is unarchived
      * from a .mapping file.  This method provides a hook to do any checking
      * (version number checking) and conversion after unarchiving.
      * @exception ModelException if impossible
      */
-    public void postUnarchive () throws ModelException;
+    void postUnarchive () throws ModelException;
 
     /** This method is called prior to storing a MappingClassElement in a
      * .mapping file.  This method provides a hook to do any conversion
      * before archiving.
      * @exception ModelException if impossible
      */
-    public void preArchive () throws ModelException;
+    void preArchive () throws ModelException;
 
     /** Gets the modified flag for this mapping class.
      * @return <code>true</code> if there have been (property) changes to this
      * class, <code>false</code> otherwise.
      */
-    public boolean isModified ();
+    boolean isModified ();
 
     /** Set the modified flag for this mapping class to flag.  This is usually
      * set to <code>true</code> by property changes and <code>false</code>
@@ -128,7 +128,7 @@ public interface MappingClassElement extends MappingElement
      * @param flag if <code>true</code>, this class is marked as modified;
      * if <code>false</code>, it is marked as unmodified.
      */
-    public void setModified (boolean flag);
+    void setModified (boolean flag);
 
     /** Gets the consistency level of this mapping class.
      * @return the consistency level, one of {@link #NONE_CONSISTENCY},
@@ -139,7 +139,7 @@ public interface MappingClassElement extends MappingElement
      * {@link #LOCK_WHEN_LOADED_CONSISTENCY}, or
      * {@link #VERSION_CONSISTENCY}.
      */
-    public int getConsistencyLevel ();
+    int getConsistencyLevel ();
 
     /** Set the consistency level of this mapping class.
      * @param level an integer indicating the consistency level, one of:
@@ -151,7 +151,7 @@ public interface MappingClassElement extends MappingElement
      * {@link #VERSION_CONSISTENCY}.
      * @exception ModelException if impossible.
      */
-    public void setConsistencyLevel (int level)  throws ModelException;
+    void setConsistencyLevel (int level)  throws ModelException;
 
     //======================= schema handling ===========================
 
@@ -159,7 +159,7 @@ public interface MappingClassElement extends MappingElement
      * database used by the tables mapped to this mapping class element.
      * @return the name of the database root for this mapping class
      */
-    public String getDatabaseRoot ();
+    String getDatabaseRoot ();
 
     /** Set the database root for this MappingClassElement.
      * The root represents the database used by the tables mapped to
@@ -167,7 +167,7 @@ public interface MappingClassElement extends MappingElement
      * @param root the new database root
      * @exception ModelException if impossible
      */
-    public void setDatabaseRoot (SchemaElement root) throws ModelException;
+    void setDatabaseRoot (SchemaElement root) throws ModelException;
 
     //======================= table handling ===========================
 
@@ -175,14 +175,14 @@ public interface MappingClassElement extends MappingElement
      * class.
      * @return the meta data tables for this mapping class
      */
-    public List<MappingTableElement> getTables();
+    List<MappingTableElement> getTables();
 
     /** Scans through this mapping class looking for a table whose
      * name matches the name passed in.
      * @param name name of the table to find.
      * @return the meta data table whose name matches the name parameter
      */
-    public MappingTableElement getTable(String name);
+    MappingTableElement getTable(String name);
 
     /** Convenience method which accepts a table element and attempts to add
      * it as either a primary or secondary table depending on the existing list
@@ -191,13 +191,13 @@ public interface MappingClassElement extends MappingElement
      * table.
      * @exception ModelException if impossible
      */
-    public void addTable (TableElement table) throws ModelException;
+    void addTable (TableElement table) throws ModelException;
 
     /** Set the primary table for this mapping class to the supplied table.
      * @param table table element to be used as the primary table.
      * @exception ModelException if impossible
      */
-    public void setPrimaryTable (TableElement table) throws ModelException;
+    void setPrimaryTable (TableElement table) throws ModelException;
 
     /** Adds a reference to the supplied table as a secondary table for this
      * mapping class.  It creates a MappingReferenceKeyElement for the supplied
@@ -207,7 +207,7 @@ public interface MappingClassElement extends MappingElement
      * @param table table element to be used as a secondary table.
      * @exception ModelException if impossible
      */
-    public MappingReferenceKeyElement addSecondaryTable (MappingTableElement
+    MappingReferenceKeyElement addSecondaryTable (MappingTableElement
         parentTable, TableElement table) throws ModelException;
 
     /** Removes the reference to the supplied table as a mapped table for this
@@ -216,7 +216,7 @@ public interface MappingClassElement extends MappingElement
      * @param table mapping table element to be removed from this mapping class.
      * @exception ModelException if impossible
      */
-    public void removeTable (MappingTableElement table) throws ModelException;
+    void removeTable (MappingTableElement table) throws ModelException;
 
     //======================= field handling ===========================
 
@@ -224,40 +224,40 @@ public interface MappingClassElement extends MappingElement
      * class.  This list includes both local and relationship fields.
      * @return the mapping fields in this mapping class
      */
-    public List<MappingFieldElement> getFields ();
+    List<MappingFieldElement> getFields ();
 
     /** Scans through this mapping class looking for a field whose
      * name matches the name passed in.
      * @param name name of the field to find.
      * @return the mapping field whose name matches the name parameter
      */
-    public MappingFieldElement getField (String name);
+    MappingFieldElement getField (String name);
 
     /** Adds a field to the list of fields in this mapping class.
      * @param field field element to be added
      * @exception ModelException if impossible
      */
-    public void addField (MappingFieldElement field) throws ModelException;
+    void addField (MappingFieldElement field) throws ModelException;
 
     /** Removes a field from the list of fields in this mapping class.
      * @param field field element to be removed
      * @exception ModelException if impossible
      */
-    public void removeField (MappingFieldElement field) throws ModelException;
+    void removeField (MappingFieldElement field) throws ModelException;
 
     /** Returns the list of version fields (MappingFieldElements) in this
      * mapping class.  This list only includes fields if the consistency
      * level is {@link #VERSION_CONSISTENCY}.
      * @return the version fields in this mapping class
      */
-    public List<MappingFieldElement> getVersionFields ();
+    List<MappingFieldElement> getVersionFields ();
 
     /** Gets the navigable flag for this mapping class.
      * @return <code>true</code> if lazy initialization will be used,
      * <code>false</code> if access to a non-fetched field will result in an
      * exception.  The default is <code>true</code>.
      */
-    public boolean isNavigable ();
+    boolean isNavigable ();
 
     /** Set the navigable flag for this mapping class to flag.
      * @param flag if <code>true</code>, lazy initialization will be used;
@@ -265,5 +265,5 @@ public interface MappingClassElement extends MappingElement
      * exception.
      * @exception ModelException if impossible
      */
-    public void setNavigable (boolean flag) throws ModelException;
+    void setNavigable (boolean flag) throws ModelException;
 }

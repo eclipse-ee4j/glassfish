@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({ANNOTATION_TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, TYPE})
 @Documented
 public @interface ToDo {
-   public enum Priority{
+   enum Priority{
     /** Needs prompt attention, a stop-ship issue */
     CRITICAL,
     /** Needs attention soon, could have important side-effects if not addressed */
@@ -47,7 +47,7 @@ public @interface ToDo {
     /** Use of this value is discouraged, choose one of the above and details() */
     UNKNOWN
    };
-   public enum Kind{
+   enum Kind{
     /** Code needs modification. Code means annotations, but not javadoc. */
     CODE,
 

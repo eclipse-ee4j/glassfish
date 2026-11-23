@@ -49,7 +49,7 @@ import static org.glassfish.kernel.KernelLoggerInfo.exceptionDRS;
  * <p>
  * The module system will start this service during GlassFish start-up.  In turn
  * it will start the actual reload logic to run periodically.
- * <p>
+ *
  *
  * @author tjquinn
  */

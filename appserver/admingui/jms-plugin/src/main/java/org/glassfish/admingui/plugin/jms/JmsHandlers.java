@@ -234,7 +234,6 @@ public class JmsHandlers {
      * This handler creates a physical destination.
      * </p>
      *
-     * @param context The HandlerContext.
      */
     @Handler(id = "createPhysicalDestination",
     input = {
@@ -266,7 +265,6 @@ public class JmsHandlers {
      * This handler updates a physical destination.
      * </p>
      *
-     * @param context The HandlerContext.
      */
     @Handler(id = "updatePhysicalDestination",
     input = {
@@ -315,7 +313,6 @@ public class JmsHandlers {
      * <p>
      * This handler takes in selected rows, and removes selected config
      *
-     * @param context The HandlerContext.
      */
     @Handler(id = "flushJMSDestination",
     input = {
@@ -342,7 +339,6 @@ public class JmsHandlers {
      * If an orig map is passed in, the default value will be set to this orig map instead of creating a new one. This is
      * used for restoring back to the default value during edit.
      *
-     * @param context The HandlerContext.
      */
     @Handler(id = "getDefaultPhysicalDestinationValues",
     input = {

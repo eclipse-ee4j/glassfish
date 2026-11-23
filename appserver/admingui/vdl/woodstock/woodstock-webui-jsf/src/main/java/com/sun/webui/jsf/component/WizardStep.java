@@ -50,7 +50,7 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * the step does, or tell the user how to interact with the step.
      */
     @Property(name = "detail")
-    private String detail = null;
+    private String detail;
 
     /**
      * The eventListener attribute is used to specify an object to handle an
@@ -70,7 +70,7 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * </p>
      */
     @Property(name = "eventListener", displayName = "Wizard Event Listener")
-    private WizardEventListener eventListener = null;
+    private WizardEventListener eventListener;
 
     /**
      * Set the finish attribute to true when the wizard step represents the
@@ -80,12 +80,12 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * user clicks the Finish button.
      */
     @Property(name = "finish")
-    private boolean finish = false;
+    private boolean finish;
 
     /**
      * finish set flag.
      */
-    private boolean finishSet = false;
+    private boolean finishSet;
 
     /**
      * Descriptive text that provides detailed help to the user for this step.
@@ -96,55 +96,55 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * elements in the help text.
      */
     @Property(name = "help")
-    private String help = null;
+    private String help;
 
     /**
      * Scripting code executed when the Cancel button is clicked.
      */
     @Property(name = "onCancel", displayName = "Cancel Script")
-    private String onCancel = null;
+    private String onCancel;
 
     /**
      * Scripting code executed when the Close button is clicked.
      */
     @Property(name = "onClose", displayName = "Close Script")
-    private String onClose = null;
+    private String onClose;
 
     /**
      * Scripting code executed when the Finish button is clicked.
      */
     @Property(name = "onFinish", displayName = "Finish Script")
-    private String onFinish = null;
+    private String onFinish;
 
     /**
      * Scripting code executed when the Help tab is clicked.
      */
     @Property(name = "onHelpTab", displayName = "Help Tab Script")
-    private String onHelpTab = null;
+    private String onHelpTab;
 
     /**
      * Scripting code executed when the Next button is clicked.
      */
     @Property(name = "onNext", displayName = "Next Script")
-    private String onNext = null;
+    private String onNext;
 
     /**
      * Scripting code executed when the Next button is clicked.
      */
     @Property(name = "onPrevious", displayName = "Previous Script")
-    private String onPrevious = null;
+    private String onPrevious;
 
     /**
      * Scripting code executed when a Step link is clicked.
      */
     @Property(name = "onStepLink", displayName = "Step Link Script")
-    private String onStepLink = null;
+    private String onStepLink;
 
     /**
      * Scripting code executed when the Steps tab is clicked.
      */
     @Property(name = "onStepsTab", displayName = "Steps Tab Script")
-    private String onStepsTab = null;
+    private String onStepsTab;
 
     /**
      * Set the results attribute to true when the wizard step represents the
@@ -154,19 +154,19 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * displayed on the View Results page.
      */
     @Property(name = "results")
-    private boolean results = false;
+    private boolean results;
 
     /**
      * results set flag.
      */
-    private boolean resultsSet = false;
+    private boolean resultsSet;
 
     /**
      * A brief description of this step, to be used in the numbered list of
      * steps in the Steps pane.
      */
     @Property(name = "summary")
-    private String summary = null;
+    private String summary;
 
     /**
      * A descriptive title to be displayed as the Step Title in the Step Content
@@ -176,7 +176,7 @@ public class WizardStep extends UIComponentBase implements NamingContainer {
      * description.
      */
     @Property(name = "title")
-    private String title = null;
+    private String title;
 
     /**
      * Construct a new {@code WizardStep}.

@@ -17,7 +17,7 @@
 package com.sun.enterprise.admin.monitor.stats;
 
 /**
- * An interface that imparts mutability to a {@link CountStatistic} by the
+ * An interface that imparts mutability to a {@code CountStatistic} by the
  * virtue of extending MutableStatistic.
  *
  * @author Kedar Mhaswade

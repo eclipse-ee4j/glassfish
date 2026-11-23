@@ -60,7 +60,7 @@ public class GetConnectorConfigJavaBeans implements AdminCommand {
     private String javaBeanType;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

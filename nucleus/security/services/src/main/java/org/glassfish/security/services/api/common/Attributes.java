@@ -102,7 +102,7 @@ public interface Attributes {
      * Duplicate values are silently dropped.
      *
      * @param name The name of the attribute to add.
-     * @param value The Set of values to add.
+     * @param values The Set of values to add.
      * @param replace If true, replace the existing attribute and any existing values.  If false,
      * add the new values to those that are already present.
      */
@@ -114,7 +114,7 @@ public interface Attributes {
      * Duplicate values are silently dropped.
      *
      * @param name The name of the attribute to add.
-     * @param value The array of values to add.
+     * @param values The array of values to add.
      * @param replace If true, replace the existing attribute and any existing values.  If false,
      * add the new values to those that are already present.
      */
@@ -139,7 +139,7 @@ public interface Attributes {
      * Remove the specified values from the named attribute.
      *
      * @param name The name of the attribute from which to remove the values.
-     * @param value The Set of values to remove.  Only values that exactly match values in this Set will be removed.
+     * @param values The Set of values to remove.  Only values that exactly match values in this Set will be removed.
      */
     void removeAttributeValues(String name, Set<String> values);
 
@@ -147,7 +147,7 @@ public interface Attributes {
      * Remove the specified values from the named attribute.
      *
      * @param name The name of the attribute from which to remove the values.
-     * @param value The array of values to remove.  Only values that exactly match values in this array will be removed.
+     * @param values The array of values to remove.  Only values that exactly match values in this array will be removed.
      */
     void removeAttributeValues(String name, String[] values);
 

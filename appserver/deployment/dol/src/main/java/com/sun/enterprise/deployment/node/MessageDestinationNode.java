@@ -58,8 +58,8 @@ public class MessageDestinationNode extends DisplayableComponentNode<MessageDest
      * Write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName name for the root element of this xml fragment
+     * @param desc descriptor to write
      * @return the DOM tree top node
      */
     @Override

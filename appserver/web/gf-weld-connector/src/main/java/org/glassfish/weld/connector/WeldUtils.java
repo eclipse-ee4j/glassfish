@@ -615,7 +615,7 @@ public class WeldUtils {
     }
 
     private static class LocalDefaultHandler extends DefaultHandler {
-        String beanDiscoveryMode = null;
+        String beanDiscoveryMode;
 
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

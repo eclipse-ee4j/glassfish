@@ -33,34 +33,34 @@ import com.sun.jdo.spi.persistence.support.sqlstore.sql.generator.UpdateQueryPla
 /**
  */
 public interface Concurrency {
-    public static final int CUSTOM = 16;
+    int CUSTOM = 16;
 
-    public static final int DB_EXPLICIT = 2;
+    int DB_EXPLICIT = 2;
 
-    public static final int DB_NATIVE = 1;
+    int DB_NATIVE = 1;
 
-    public static final int NONE = 0;
+    int NONE = 0;
 
-    public static final int OPT_MASK = 1;
+    int OPT_MASK = 1;
 
-    public static final int OPT_UNIQUE_ID = 4;
+    int OPT_UNIQUE_ID = 4;
 
-    public static final int OPT_VERIFY = 3;
+    int OPT_VERIFY = 3;
 
-    public Transaction suspend();
+    Transaction suspend();
 
-    public void resume(Transaction t);
+    void resume(Transaction t);
 
-    public void commit(UpdateObjectDesc updateDesc,
+    void commit(UpdateObjectDesc updateDesc,
                        SQLStateManager beforeImage,
                        SQLStateManager afterImage,
                        int logReason);
 
-    public void configPersistence(ClassDesc config);
+    void configPersistence(ClassDesc config);
 
-    public void select(SelectQueryPlan plan);
+    void select(SelectQueryPlan plan);
 
-    public void update(UpdateQueryPlan plan);
+    void update(UpdateQueryPlan plan);
 
-    public Object clone();
+    Object clone();
 }

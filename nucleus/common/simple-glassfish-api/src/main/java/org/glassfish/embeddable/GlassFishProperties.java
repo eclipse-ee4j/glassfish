@@ -62,11 +62,11 @@ public class GlassFishProperties {
      * Create GlassFishProperties with custom properties.
      * This method does not take a copy of the passed in properties object; instead it just
      * maintains a reference to it, so all semantics of "pass-by-reference" applies.
-     * <p/>
+     * <p>
      * Custom properties can include values for all or some of the keys
      * defined as constants in this class. Eg., a value for com.sun.aas.instanceRoot
      * can be included in the custom properties.
-     * <p/>
+     * <p>
      * Custom properties can also include additional properties which are required
      * for the plugged in {@link GlassFishRuntime} (if any)
      *
@@ -79,7 +79,7 @@ public class GlassFishProperties {
 
     /**
      * Get the underlying Properties object which backs this GlassFishProperties.
-     * <p/>
+     * <p>
      * If getProperties().setProperty(key,value) is called, then it will
      * add a property to this GlassFishProperties.
      *
@@ -122,14 +122,14 @@ public class GlassFishProperties {
     /**
      * Optionally set the instance root (aka domain dir) using which the
      * GlassFish should run.
-     * <p/>
+     * <p>
      * Make sure to specify a valid GlassFish instance directory
      * (eg., GF_INSTALL_DIR/domains/domain1).
-     * <p/>
+     * <p>
      * By default, the config/domain.xml at the specified instance root is operated in
      * read only mode. To writeback changes to it, call
      * {@link #setConfigFileReadOnly(boolean)} by passing 'false'
-     * <p/>
+     * <p>
      * If the instance root is not specified, then a small sized temporary
      * instance directory is created in the current directory. The temporary
      * instance directory will get deleted when the glassfish.dispose() is called.
@@ -241,8 +241,8 @@ public class GlassFishProperties {
     /**
      * Mention whether or not the GlassFish should writeback any changes to specified
      * configuration file or config/domain.xml at the specified instance root.
-     * <p/>
-     * <p/> By default readOnly is true.
+     *
+     * <p> By default readOnly is true.
      *
      * @param readOnly false to writeback any changes.
      */
@@ -257,28 +257,28 @@ public class GlassFishProperties {
      * In the default configuration, all listeners are disabled. This method will enable the listener if it's disabled.
      * If the port is 0 or a negative value, it will disable the network listener.
      *
-     * <p/>
+     * <p>
      * Examples:
-     * <p/>
+     * <p>
      * 1. When the custom configuration file is not used, the ports can be set using:
-     * <p/>
+     *
      * <pre>
      *      setPort("http-listener", 8080); // GlassFish will listen on HTTP port 8080
      *      setPort("https-listener", 8181); // GlassFish will listen on HTTPS port 8181
      *      setPort("http-listener", 0); // GlassFish will disable the HTTP listener
      * </pre>
-     * <p/>
+     * <p>
      * 2. When the custom configuration file (domain.xml) is used, then the
      * name of the network listener specified here will point to the
      * network-listener element in the domain.xml. For example:
-     * <p/>
+     *
      * <pre>
      *      setPort("joe", 8080);
      * </pre>
-     * <p/>
+     * <p>
      * will point to server.network-config.network-listeners.network-listener.joe. Hence the
      * GlassFish server will use "joe" network listener with its port set to 8080.
-     * <p/>
+     * <p>
      * If there is no such network-listener by name "joe" in the supplied domain.xml,
      * then the server will throw an exception and fail to start.
      *

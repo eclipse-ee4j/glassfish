@@ -64,7 +64,7 @@ public class StopClusterCommand implements AdminCommand {
     private String clusterName;
 
     @Param(optional=true, defaultValue="false")
-    private boolean kill = false;
+    private boolean kill;
 
     @Inject
     private ServerEnvironment env;

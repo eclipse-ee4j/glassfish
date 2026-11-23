@@ -67,12 +67,12 @@ public class OutputBuffer extends Writer implements ByteChunk.ByteOutputChannel 
     /**
      * Number of bytes written.
      */
-    private int bytesWritten = 0;
+    private int bytesWritten;
 
     /**
      * Number of chars written.
      */
-    private int charsWritten = 0;
+    private int charsWritten;
 
     /**
      * Associated Coyote response.
@@ -82,14 +82,14 @@ public class OutputBuffer extends Writer implements ByteChunk.ByteOutputChannel 
     private org.glassfish.grizzly.http.server.Response grizzlyResponse;
     private org.glassfish.grizzly.http.io.OutputBuffer grizzlyOutputBuffer;
 
-    private WriteHandler writeHandler = null;
+    private WriteHandler writeHandler;
     private boolean prevIsReady = true;
     private static final ThreadLocal<Boolean> CAN_WRITE_SCOPE = new ThreadLocal<Boolean>();
 
     /**
      * Suspended flag. All output bytes will be swallowed if this is true.
      */
-    private boolean suspended = false;
+    private boolean suspended;
 
     private int size;
 
@@ -595,8 +595,8 @@ public class OutputBuffer extends Writer implements ByteChunk.ByteOutputChannel 
     }
 
     class WriteHandlerImpl implements WriteHandler {
-        private WriteListener writeListener = null;
-        private volatile boolean disable = false;
+        private WriteListener writeListener;
+        private volatile boolean disable;
 
         private WriteHandlerImpl(WriteListener listener) {
             writeListener = listener;

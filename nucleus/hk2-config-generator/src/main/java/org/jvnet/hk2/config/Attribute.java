@@ -37,7 +37,7 @@ public @interface Attribute {
     /**
      * Attribute name.
      *
-     * <h2>Default Name</h2>
+     * <h4>Default Name</h4>
      * <p>
      * If this value is omitted, the default name is inferred from the field/method name.
      * First, if this is a method and the name starts with "set", then "set" will be trimmed

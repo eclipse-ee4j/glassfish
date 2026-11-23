@@ -112,12 +112,12 @@ public final class Form extends UIForm {
     @Property(name = "autoComplete",
             displayName = "Auto Complete",
             category = "Behavior")
-    private boolean autoComplete = false;
+    private boolean autoComplete;
 
     /**
      * autocomplete set flag.
      */
-    private boolean autoCompleteSet = false;
+    private boolean autoCompleteSet;
 
     /**
      * Use this attribute to set the content-type of the HTTP request generated
@@ -129,7 +129,7 @@ public final class Form extends UIForm {
     @Property(name = "enctype",
             displayName = "Content Type of the Request",
             category = "Advanced")
-    private String enctype = null;
+    private String enctype;
 
     /**
      * The virtual forms used "internally" by components (such as Table).
@@ -145,7 +145,7 @@ public final class Form extends UIForm {
             category = "Advanced",
             isHidden = false,
             isAttribute = false)
-    private VirtualFormDescriptor[] internalVirtualForms = null;
+    private VirtualFormDescriptor[] internalVirtualForms;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -157,7 +157,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -169,7 +169,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -181,7 +181,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -193,7 +193,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -205,7 +205,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -217,7 +217,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -229,7 +229,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -241,7 +241,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -253,7 +253,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -265,7 +265,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Scripting code executed when this form is reset.
@@ -276,7 +276,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onReset = null;
+    private String onReset;
 
     /**
      * Scripting code executed when this form is submitted.
@@ -287,7 +287,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onSubmit = null;
+    private String onSubmit;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -297,7 +297,7 @@ public final class Form extends UIForm {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -309,7 +309,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Use this attribute to set the target of the XHTML form tag.
@@ -320,7 +320,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.FrameTargetsEditor")
             //CHECKSTYLE:ON
-    private String target = null;
+    private String target;
 
     /**
      * The virtual forms within this literal form, represented as an array of
@@ -332,7 +332,7 @@ public final class Form extends UIForm {
             category = "Advanced",
             isHidden = true,
             isAttribute = false)
-    private VirtualFormDescriptor[] virtualForms = null;
+    private VirtualFormDescriptor[] virtualForms;
 
     /**
      * The configuration of the virtual forms within this literal form,
@@ -350,7 +350,7 @@ public final class Form extends UIForm {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String virtualFormsConfig = null;
+    private String virtualFormsConfig;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -359,12 +359,12 @@ public final class Form extends UIForm {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.
@@ -1638,7 +1638,7 @@ public final class Form extends UIForm {
                         getMessage("supplyNonParticipatingInputField",
                                 new Object[]{
                                     uicInputField.getId(),
-                                    "discardSubmittedValue"
+                                    "discardSubmittedValue",
                                 }));
             }
         }
@@ -1665,7 +1665,7 @@ public final class Form extends UIForm {
         if (vfd == null) {
             throw new IllegalArgumentException(
                     getMessage("unrecognizedVfName", new Object[]{
-                        virtualFormName
+                        virtualFormName,
                     }));
         }
         if (vfd == submittedVirtualForm) {

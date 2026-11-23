@@ -64,7 +64,7 @@ public abstract class SimpleHttpClient {
     private int port = 8080;
 
     private String[] request;
-    private boolean useContinue = false;
+    private boolean useContinue;
     private int requestPause = 1000;
 
     private String responseLine;

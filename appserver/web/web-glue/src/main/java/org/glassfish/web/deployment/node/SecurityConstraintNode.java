@@ -54,7 +54,7 @@ public class SecurityConstraintNode extends DeploymentDescriptorNode<SecurityCon
             "addWebResourceCollection");
     }
 
-    protected SecurityConstraintImpl descriptor = null;
+    protected SecurityConstraintImpl descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

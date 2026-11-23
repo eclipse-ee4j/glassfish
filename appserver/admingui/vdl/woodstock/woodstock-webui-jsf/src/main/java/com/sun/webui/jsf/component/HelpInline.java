@@ -44,7 +44,7 @@ public final class HelpInline extends UIOutput {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -56,7 +56,7 @@ public final class HelpInline extends UIOutput {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The type of inline help to display. Valid values are "page" or "field".
@@ -68,7 +68,7 @@ public final class HelpInline extends UIOutput {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HelpTypesEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -82,7 +82,7 @@ public final class HelpInline extends UIOutput {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * Creates a new instance of HelpInline.
@@ -169,7 +169,7 @@ public final class HelpInline extends UIOutput {
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Get the style.

@@ -40,13 +40,13 @@ import org.glassfish.persistence.common.I18NHelper;
 public class PersistenceManagerWrapper implements PersistenceManager {
 
     // Previous  PersistenceManagerWrapper
-    private PersistenceManagerWrapper prev = null;
+    private PersistenceManagerWrapper prev;
 
     // Actual  PersistenceManager
-    private PersistenceManagerImpl pm = null;
+    private PersistenceManagerImpl pm;
 
     // Boolean flag that allows to use this wrapper
-    private boolean isValid = false;
+    private boolean isValid;
 
     /**
      * I18N message handler
@@ -460,8 +460,10 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * make those properties available to applications (for troubleshooting).
      *
      * <P>Standard properties include:
+     * <ul>
      * <li>VendorName</li>
      * <li>VersionNumber</li>
+     * </ul>
      * @return the Properties of this PersistenceManager
      */
     @Override

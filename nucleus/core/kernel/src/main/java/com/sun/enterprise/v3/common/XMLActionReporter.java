@@ -55,7 +55,7 @@ import org.w3c.dom.Element;
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;message-part message="xxx" type="xxx">
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;...
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/message-part>
- * <br>&nbsp;&nbsp;&lt/message-part>
+ * <br>&nbsp;&nbsp;&lt;/message-part>
  * <br>&nbsp;&nbsp;&lt;action-report ...> [for subactions]
  * <br>&nbsp;&nbsp;...
  * <br>&nbsp;&nbsp;&lt;/action-report>

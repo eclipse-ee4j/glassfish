@@ -27,7 +27,7 @@ package com.sun.jts.codegen.otsidl;
 //#-----------------------------------------------------------------------------
 public final class JCoordinatorHolder implements org.omg.CORBA.portable.Streamable
 {
-  public com.sun.jts.codegen.otsidl.JCoordinator value = null;
+  public com.sun.jts.codegen.otsidl.JCoordinator value;
 
   public JCoordinatorHolder ()
   {

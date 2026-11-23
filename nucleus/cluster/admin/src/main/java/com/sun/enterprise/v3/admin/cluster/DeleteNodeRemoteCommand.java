@@ -65,10 +65,10 @@ public abstract class DeleteNodeRemoteCommand implements AdminCommand {
     boolean uninstall;
     @Param(optional = true, defaultValue = "false")
     boolean force;
-    protected String remotepassword = null;
-    protected String sshkeypassphrase = null;
+    protected String remotepassword;
+    protected String sshkeypassphrase;
     private static final String NL = System.getProperty("line.separator");
-    protected Logger logger = null;
+    protected Logger logger;
 
     protected abstract List<String> getPasswords();
 

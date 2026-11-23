@@ -36,9 +36,9 @@ public interface ConnectorVisitor extends ComponentVisitor {
 
     /**
      * visits an connector descriptor
-     * @param an connector descriptor
+     * @param descriptor connector descriptor
      */
-    public void accept(ConnectorDescriptor descriptor);
+    void accept(ConnectorDescriptor descriptor);
 
 }
 

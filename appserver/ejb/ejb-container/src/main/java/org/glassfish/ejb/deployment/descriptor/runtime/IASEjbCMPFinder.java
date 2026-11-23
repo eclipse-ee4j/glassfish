@@ -20,11 +20,11 @@ import org.glassfish.deployment.common.Descriptor;
 
 public class IASEjbCMPFinder extends Descriptor {
 
-    private String method_name = null;
-    private String query_params = null;
-    private String query_filter = null;
-    private String query_variables = null;
-    private String query_ordering = null;
+    private String method_name;
+    private String query_params;
+    private String query_filter;
+    private String query_variables;
+    private String query_ordering;
 
     public IASEjbCMPFinder () {
     }

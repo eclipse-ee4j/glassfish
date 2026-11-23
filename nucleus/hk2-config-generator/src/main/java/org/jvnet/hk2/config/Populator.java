@@ -20,9 +20,9 @@ package org.jvnet.hk2.config;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Populates {@link Habitat}.
+ * Populates {@code Habitat}.
  *
- * {@link Populator} gets to run right after the {@link Habitat} is
+ * {@link Populator} gets to run right after the {@code Habitat} is
  * created. Implementations can use this timing to introduce
  * additional inhabitants, for example by loading some config file.
  *
@@ -31,6 +31,6 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface Populator {
 
-    public void run(ConfigParser parser) throws ConfigPopulatorException;
+    void run(ConfigParser parser) throws ConfigPopulatorException;
 
 }

@@ -110,7 +110,7 @@ public abstract class NotificationListenerBase
     Subclass should implement this routine.
      */
     @Override
-    public abstract void handleNotification(final Notification notif, final Object handback);
+    public abstract void handleNotification(Notification notif, Object handback);
 
     protected synchronized void listenToMBean(final ObjectName objectName)
             throws InstanceNotFoundException, IOException
@@ -190,7 +190,7 @@ public abstract class NotificationListenerBase
      */
     private final class RegistrationListener implements NotificationListener
     {
-        public RegistrationListener()
+        RegistrationListener()
         {
         }
 
@@ -277,7 +277,6 @@ public abstract class NotificationListenerBase
 
     /**
     @return the MBeanServerConnection in use.
-    @throws an Exception if no longer alive ( isAlive() returns false).
      */
     public final MBeanServerConnection getMBeanServerConnection()
     {

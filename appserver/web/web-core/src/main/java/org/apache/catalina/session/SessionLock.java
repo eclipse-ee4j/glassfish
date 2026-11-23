@@ -252,7 +252,7 @@ public class SessionLock {
         return sb.toString();
     }
 
-    private String _lockType = null;
-    private int _foregroundRefCount = 0;
-    private boolean _hasNonHttpLockOccurred = false;
+    private String _lockType;
+    private int _foregroundRefCount;
+    private boolean _hasNonHttpLockOccurred;
 }

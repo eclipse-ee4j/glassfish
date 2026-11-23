@@ -72,47 +72,47 @@ public final class RepeatInterval implements Serializable {
     /**
      * One time repeat interval.
      */
-    private static RepeatInterval onetimeRi = null;
+    private static RepeatInterval onetimeRi;
 
     /**
      * Hourly repeat interval.
      */
-    private static RepeatInterval hourlyRi = null;
+    private static RepeatInterval hourlyRi;
 
     /**
      * Daily repeat interval.
      */
-    private static RepeatInterval dailyRi = null;
+    private static RepeatInterval dailyRi;
 
     /**
      * Weekly repeat interval.
      */
-    private static RepeatInterval weeklyRi = null;
+    private static RepeatInterval weeklyRi;
 
     /**
      * Monthly repeat interval.
      */
-    private static RepeatInterval monthlyRi = null;
+    private static RepeatInterval monthlyRi;
 
     /**
      * Calendar field.
      */
-    private Integer calField = null;
+    private Integer calField;
 
     /**
      * The key.
      */
-    private String key = null;
+    private String key;
 
     /**
      * The representation.
      */
-    private String representation = null;
+    private String representation;
 
     /**
      * The default repeat unit string.
      */
-    private String defaultRepeatUnitString = null;
+    private String defaultRepeatUnitString;
 
     /**
      * Create a new instance.

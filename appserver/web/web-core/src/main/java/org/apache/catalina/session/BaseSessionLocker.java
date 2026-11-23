@@ -50,6 +50,6 @@ public class BaseSessionLocker implements SessionLocker {
     public void unlockSession(ServletRequest req) {
     }
 
-    protected Context _context = null;
+    protected Context _context;
 
 }

@@ -34,7 +34,7 @@ import org.apache.catalina.Valve;
 public class TomcatValveAdapter implements Valve {
 
     // The next valve in the pipeline to be invoked
-    private Valve next = null;
+    private Valve next;
 
     // The wrapped GlassFish-style valve to which to delegate
     private GlassFishValve gfValve;

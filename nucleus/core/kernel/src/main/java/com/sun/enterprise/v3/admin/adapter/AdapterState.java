@@ -56,7 +56,7 @@ enum AdapterState {
     private final String desc;
     private final String i18nKey;
 
-    private AdapterState(String i18nKey, String desc) {
+    AdapterState(String i18nKey, String desc) {
         this.i18nKey = i18nKey;
         this.desc = desc;
     }

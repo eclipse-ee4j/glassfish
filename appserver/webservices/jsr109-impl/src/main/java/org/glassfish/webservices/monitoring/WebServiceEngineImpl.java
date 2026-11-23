@@ -53,7 +53,7 @@ public final class WebServiceEngineImpl implements WebServiceEngine {
             new ArrayList<EndpointLifecycleListener>();
     private final List<AuthenticationListener> authListeners =
             new ArrayList<AuthenticationListener>();
-    private volatile GlobalMessageListener globalMessageListener = null;
+    private volatile GlobalMessageListener globalMessageListener;
 
     static final ThreadLocal servletThreadLocal = new ThreadLocal();
     public static final Logger sLogger = LogUtils.getLogger();

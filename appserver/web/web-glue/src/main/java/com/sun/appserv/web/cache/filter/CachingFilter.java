@@ -58,7 +58,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
     CacheHelper helper;
     Cache cache;
 
-    boolean isEnabled = false;
+    boolean isEnabled;
 
     private static final Logger _logger = LogFacade.getLogger();
 
@@ -104,7 +104,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
      * @param srequest the runtime request
      * @param sresponse the runtime response
      * @param chain the filter chain to in the request processing
-     * @throws IOException, ServletException
+     * @throws IOException
      *
      * - First check if this HTTP method permits caching (using helper)
      *   if not, call the downstream filter and return.

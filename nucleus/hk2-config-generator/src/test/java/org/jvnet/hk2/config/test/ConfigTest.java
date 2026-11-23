@@ -107,7 +107,7 @@ public class ConfigTest {
         final String[] expected = {
                 SimpleConnectorInjector.class.getName(), EjbContainerAvailabilityInjector.class.getName(),
                 WebContainerAvailabilityInjector.class.getName(), GenericContainerInjector.class.getName(),
-                GenericConfigInjector.class.getName()
+                GenericConfigInjector.class.getName(),
         };
         final List<ServiceHandle<ConfigInjector>> inhabitants = locator.getAllServiceHandles(ConfigInjector.class);
         final Set<String> inhabitantNames = new HashSet<>();

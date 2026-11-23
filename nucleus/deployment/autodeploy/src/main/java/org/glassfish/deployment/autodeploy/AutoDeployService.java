@@ -72,7 +72,7 @@ public class AutoDeployService implements PostConstruct, PreDestroy, ConfigListe
     @Inject
     ServerEnvironment env;
 
-    private AutoDeployer autoDeployer = null;
+    private AutoDeployer autoDeployer;
 
     private Timer autoDeployerTimer;
 
@@ -139,7 +139,7 @@ public class AutoDeployService implements PostConstruct, PreDestroy, ConfigListe
                                new Object[] {
                                  activeDasConfig.getAutodeployPollingIntervalInSeconds(),
                                  ex.getClass().getName(),
-                                 ex.getLocalizedMessage()
+                                 ex.getLocalizedMessage(),
                                });
             }
             if (isEnabled) {

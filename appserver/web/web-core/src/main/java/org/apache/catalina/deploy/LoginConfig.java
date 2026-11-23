@@ -75,7 +75,7 @@ public class LoginConfig implements Serializable {
      * The authentication method to use for application login.  Must be
      * BASIC, DIGEST, FORM, or CLIENT-CERT.
      */
-    private String authMethod = null;
+    private String authMethod;
 
     public String getAuthMethod() {
         return (this.authMethod);
@@ -89,7 +89,7 @@ public class LoginConfig implements Serializable {
     /**
      * The context-relative URI of the error page for form login.
      */
-    private String errorPage = null;
+    private String errorPage;
 
     public String getErrorPage() {
         return (this.errorPage);
@@ -106,7 +106,7 @@ public class LoginConfig implements Serializable {
     /**
      * The context-relative URI of the login page for form login.
      */
-    private String loginPage = null;
+    private String loginPage;
 
     public String getLoginPage() {
         return (this.loginPage);
@@ -124,7 +124,7 @@ public class LoginConfig implements Serializable {
      * The realm name used when challenging the user for authentication
      * credentials.
      */
-    private String realmName = null;
+    private String realmName;
 
     public String getRealmName() {
         return (this.realmName);

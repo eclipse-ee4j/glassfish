@@ -41,13 +41,13 @@ public final class IncludeInputStream extends FilterInputStream {
     /**
      * Redirected stream.
      */
-    private IncludeInputStream redirStream = null;
+    private IncludeInputStream redirStream;
 
     /**
      * Get real path parameter classes.
      */
     private static final Class[] GET_REAL_PATH_ARGS = new Class[]{
-        String.class
+        String.class,
     };
 
     /**

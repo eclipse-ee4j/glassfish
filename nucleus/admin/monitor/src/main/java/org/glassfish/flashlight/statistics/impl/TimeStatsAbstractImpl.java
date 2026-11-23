@@ -31,7 +31,7 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode implements 
     private Average average = AverageFactory.createAverage();
 
     private AtomicLong lastSampleTime = new AtomicLong(0);
-    protected long startTime = 0;
+    protected long startTime;
 
     private ThreadLocalTimeStatData individualData = new ThreadLocalTimeStatData();
 
@@ -130,9 +130,9 @@ public abstract class TimeStatsAbstractImpl extends AbstractTreeNode implements 
     }
 
     private static class TimeStatData {
-        private long entryTime = 0;
-        private long exitTime = 0;
-        private long totalTime = 0;
+        private long entryTime;
+        private long exitTime;
+        private long totalTime;
 
         public long getEntryTime() {
             return entryTime;

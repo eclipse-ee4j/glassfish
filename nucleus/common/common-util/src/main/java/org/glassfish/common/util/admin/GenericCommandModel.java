@@ -56,7 +56,7 @@ public class GenericCommandModel extends CommandModel {
      * @param localStrings        where to find strings for the command
      * @param document                the DomDocument for the command
      * @param commandName        the name of the command
-     * @param supportsProgress  {@code true} only if command working
+     * @param managedJob  {@code true} only if command working
      *                          with ProgressStatus
      * @param extraTypes        any extra types that might also define
      *                                 parameters for the command

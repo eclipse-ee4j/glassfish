@@ -52,8 +52,8 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     /**
      * This creates a new ClientSecurityContext object.
      *
-     * @param The name of the user.
-     * @param The Credentials of the user.
+     * @param userName name of the user.
+     * @param s Credentials of the user.
      */
     public ClientSecurityContext(String userName, Subject s) {
         this.initiator = new UserNameAndPassword(userName);
@@ -77,7 +77,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     /**
      * This method sets the SecurityContext to be stored here.
      *
-     * @param The Security Context that should be stored.
+     * @param sc Security Context that should be stored.
      */
     public static void setCurrent(ClientSecurityContext sc) {
         if (isPerThreadAuth) {

@@ -351,7 +351,7 @@ public class InstalledLibrariesResolver {
         private String implVersion = "";
         private String implVendor = "";
 
-        public Extension(String name) {
+        Extension(String name) {
             this.extensionName = name;
         }
 

@@ -59,7 +59,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  * [--readTimeoutMillis read_timeout][--writeTimeoutMillis write_timeout] [--byteBufferType buff_type]
  * [--selectorPollTimeoutMillis true|false] transport_name
  *
- * domain.xml element example <transports> <transport name="tcp" /> </transports>
+ * domain.xml element example &lt;transports&gt; &lt;transport name="tcp" /&gt; &lt;/transports&gt;
  *
  * @author Nandini Ektare
  */

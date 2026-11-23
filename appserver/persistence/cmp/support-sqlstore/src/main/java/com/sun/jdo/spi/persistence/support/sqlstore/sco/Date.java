@@ -72,8 +72,8 @@ public class Date
     }
 
     /**
-     * Sets the <tt>Date</tt> object to represent a point in time that is
-     * <tt>time</tt> milliseconds after January 1, 1970 00:00:00 GMT.
+     * Sets the <code>Date</code> object to represent a point in time that is
+     * <code>time</code> milliseconds after January 1, 1970 00:00:00 GMT.
      *
      * @param   time   the number of milliseconds.
      * @see     java.util.Date
@@ -104,7 +104,7 @@ public class Date
     /** -----------Depricated Methods------------------*/
 
     /**
-     * Sets the year of this <tt>Date</tt> object to be the specified
+     * Sets the year of this <code>Date</code> object to be the specified
      * value plus 1900.
      *
      * @param   year    the year value.
@@ -132,7 +132,7 @@ public class Date
     }
 
     /**
-     * Sets the day of the month of this <tt>Date</tt> object to the
+     * Sets the day of the month of this <code>Date</code> object to the
      * specified value.
      *
      * @param   date   the day of the month value between 1-31.
@@ -147,7 +147,7 @@ public class Date
     }
 
     /**
-     * Sets the hour of this <tt>Date</tt> object to the specified value.
+     * Sets the hour of this <code>Date</code> object to the specified value.
      *
      * @param   hours   the hour value.
      * @see     java.util.Calendar
@@ -161,7 +161,7 @@ public class Date
     }
 
     /**
-     * Sets the minutes of this <tt>Date</tt> object to the specified value.
+     * Sets the minutes of this <code>Date</code> object to the specified value.
      *
      * @param   minutes   the value of the minutes.
      * @see     java.util.Calendar
@@ -175,7 +175,7 @@ public class Date
     }
 
     /**
-     * Sets the seconds of this <tt>Date</tt> to the specified value.
+     * Sets the seconds of this <code>Date</code> to the specified value.
      *
      * @param   seconds   the seconds value.
      * @see     java.util.Calendar
@@ -200,7 +200,7 @@ public class Date
     }
 
     /**
-     * Sets the <tt>Date</tt> object without notification of the Owner
+     * Sets the <code>Date</code> object without notification of the Owner
      * field. Used internaly to populate date from DB
      *
      * @param   time   the number of milliseconds.
@@ -295,7 +295,7 @@ public class Date
      * this object to the stream.
      *
      * @return java.util.Date that represents the same value.
-     * @throws ObjectStreamException.
+     * @throws ObjectStreamException
      */
     Object writeReplace() throws ObjectStreamException
     {

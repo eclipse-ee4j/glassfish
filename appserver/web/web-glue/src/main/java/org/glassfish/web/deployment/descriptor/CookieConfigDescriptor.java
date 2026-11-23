@@ -27,11 +27,11 @@ import org.glassfish.deployment.common.Descriptor;
  */
 
 public class CookieConfigDescriptor extends Descriptor implements CookieConfig {
-    private String domain = null;
-    private String path = null;
-    private String comment = null;
+    private String domain;
+    private String path;
+    private String comment;
     private boolean httpOnly = true;
-    private boolean secure = false;
+    private boolean secure;
     private int maxAge = -1;
 
     public String getDomain() {

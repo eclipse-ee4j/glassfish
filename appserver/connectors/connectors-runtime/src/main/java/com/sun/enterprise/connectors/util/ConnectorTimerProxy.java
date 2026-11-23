@@ -30,7 +30,7 @@ public class ConnectorTimerProxy extends Timer {
 
     private volatile static ConnectorTimerProxy connectorTimer;
     private Timer timer;
-    private boolean timerException = false;
+    private boolean timerException;
     private final Object getTimerLock = new Object();
 
     private final static Logger _logger = LogDomains.getLogger(ConnectorTimerProxy.class,
@@ -116,7 +116,6 @@ public class ConnectorTimerProxy extends Timer {
      * is recreated and task is rescheduled.
      * @param task
      * @param delay
-     * @param period
      */
     @Override
     public void schedule(TimerTask task, long delay) {
@@ -134,8 +133,6 @@ public class ConnectorTimerProxy extends Timer {
      * The unchecked exceptions are caught here and in such cases, the timer
      * is recreated and task is rescheduled.
      * @param task
-     * @param delay
-     * @param period
      */
     @Override
     public void schedule(TimerTask task, Date time) {
@@ -174,7 +171,7 @@ public class ConnectorTimerProxy extends Timer {
      * The unchecked exceptions are caught here and in such cases, the timer
      * is recreated and task is rescheduled.
      * @param task
-     * @param delay
+     * @param firstTime
      * @param period
      */
     @Override
@@ -194,7 +191,7 @@ public class ConnectorTimerProxy extends Timer {
      * The unchecked exceptions are caught here and in such cases, the timer
      * is recreated and task is rescheduled.
      * @param task
-     * @param delay
+     * @param firstTime
      * @param period
      */
     @Override

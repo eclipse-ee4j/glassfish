@@ -115,7 +115,6 @@ public final class ObjectNameBuilder {
 
     @param parent
     @param type  type to be used in the ObjectName
-    @param pathType   type to be used in the path, null if to be the same as type
     @return ObjectName
      */
     public static ObjectName buildChildObjectName(

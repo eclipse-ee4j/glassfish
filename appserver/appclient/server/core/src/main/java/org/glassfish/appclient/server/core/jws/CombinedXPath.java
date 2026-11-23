@@ -90,8 +90,8 @@ abstract class CombinedXPath {
 
     private final static XPath xPath = xPathFactory.newXPath();
 
-    private static LSSerializer lsSerializer = null;
-    private static LSOutput lsOutput = null;
+    private static LSSerializer lsSerializer;
+    private static LSOutput lsOutput;
 
     private final String parentPath;
     private final String targetRelativePath;
@@ -104,7 +104,7 @@ abstract class CombinedXPath {
      */
     private final XPathExpression parentExpr;
 
-    private static enum Type {
+    private enum Type {
         OWNED(OWNED_PROPERTY_NAME) {
             CombinedXPath combinedXPath(String pathA, String pathB) {
                 return new OwnedXPath(xPath, pathA, pathB);
@@ -214,7 +214,7 @@ abstract class CombinedXPath {
      * @param generatedDOM
      * @throws XPathExpressionException
      */
-    abstract void process(final Document developerDOM, final Document generatedDOM) throws XPathExpressionException;
+    abstract void process(Document developerDOM, Document generatedDOM) throws XPathExpressionException;
 
     protected void insert(
             final Document originalDOM,

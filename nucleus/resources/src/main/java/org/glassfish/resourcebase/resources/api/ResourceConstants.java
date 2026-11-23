@@ -104,7 +104,7 @@ public interface ResourceConstants {
     String JMS_DESTINATION_DEFINITION_JNDINAME_PREFIX = "__jms_destination_definition/";
     String ADMINISTERED_OBJECT_DEFINITION_JNDINAME_PREFIX="__administered_object_definition/";
 
-    public enum TriState {
+    enum TriState {
         TRUE, FALSE, UNKNOWN
     }
 

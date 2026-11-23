@@ -33,12 +33,12 @@ public interface AuthenticationListener {
      * notification that a user properly authenticated while making
      * a web service invocation.
      */
-    public void authSucess(BundleDescriptor desc, Endpoint endpoint, Principal principal);
+    void authSucess(BundleDescriptor desc, Endpoint endpoint, Principal principal);
 
     /**
      * notification that a user authentication attempt has failed.
      * @param endpoint the endpoint selector
      * @param principal Optional principal that failed
      */
-    public void authFailure(BundleDescriptor desc, Endpoint endpoint, Principal principal);
+    void authFailure(BundleDescriptor desc, Endpoint endpoint, Principal principal);
 }

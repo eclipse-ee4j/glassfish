@@ -243,6 +243,6 @@ public interface InjectionManager {
      * @param invokePostConstruct if true, invoke any @PostConstruct methods
      * @throws InjectionException
      */
-    <T> void inject(final Class<? extends T> clazz, final T instance, JndiNameEnvironment envDescriptor,
+    <T> void inject(Class<? extends T> clazz, T instance, JndiNameEnvironment envDescriptor,
         String componentId, boolean invokePostConstruct) throws InjectionException;
 }

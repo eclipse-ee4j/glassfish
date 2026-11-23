@@ -69,7 +69,7 @@ import static com.sun.enterprise.naming.util.LogFacade.logger;
  * SerialContextProviderImpl object,  which is accessed directly in the
  * case that the client is collocated with the naming service impl or
  * remotely via RMI-IIOP if not collocated.
- * <p/>
+ * <p>
  * <b>NOT THREAD SAFE: mutable instance variables</b>
  */
 public final class SerialContext implements Context {
@@ -974,8 +974,8 @@ public final class SerialContext implements Context {
      */
     private static class ThreadLocalIC {
 
-        private Context ctx = null ;
-        private int count = 0;
+        private Context ctx;
+        private int count;
 
         Context getContext() {
             return ctx ;

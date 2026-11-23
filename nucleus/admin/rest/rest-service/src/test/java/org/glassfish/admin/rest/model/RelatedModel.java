@@ -17,9 +17,9 @@
 package org.glassfish.admin.rest.model;
 
 public interface RelatedModel {
-    public String getId();
-    public void setId(String id);
+    String getId();
+    void setId(String id);
 
-    public String getDescription();
-    public void setDescription(String desc);
+    String getDescription();
+    void setDescription(String desc);
 }

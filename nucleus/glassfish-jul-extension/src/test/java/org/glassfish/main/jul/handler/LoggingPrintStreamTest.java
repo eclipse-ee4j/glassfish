@@ -86,6 +86,8 @@ public class LoggingPrintStreamTest {
      * <p>
      * Test verifies that the stream is capable avoiding it so there will be just
      * a single log record created.
+     *
+     * @throws Exception if the test fails
      */
     @Test
     public void testPrintStacktrace() throws Exception {

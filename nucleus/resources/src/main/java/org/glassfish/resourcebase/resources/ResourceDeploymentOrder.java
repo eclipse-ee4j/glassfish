@@ -39,7 +39,7 @@ public enum ResourceDeploymentOrder {
 
     private int value;
 
-    private ResourceDeploymentOrder(int value) {
+    ResourceDeploymentOrder(int value) {
         this.value = value;
     }
 

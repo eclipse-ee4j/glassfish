@@ -37,7 +37,7 @@ import java.util.Map;
  * @version
  */
 public interface VersionUpgrade {
-  public enum UpgradeType {
+  enum UpgradeType {
     REMOVE_ELEMENT,
     REPLACE_ELEMENT
   }
@@ -46,34 +46,34 @@ public interface VersionUpgrade {
    * Return the kind of processing to do
    * @return the kind of processing to do
    */
-  public UpgradeType getUpgradeType();
+  UpgradeType getUpgradeType();
 
   /**
    * Initialize
    */
-  public void init();
+  void init();
 
   /**
    * Return the map of xml element to match
    * @return the map of xml element to match
    */
-  public Map<String,String> getMatchXPath();
+  Map<String,String> getMatchXPath();
 
   /**
    * Return the replacement element name
    * @return the replacement element name
    */
-  public String getReplacementElementName();
+  String getReplacementElementName();
 
   /**
    * Return the replacement element value
    * @return the replacement element value
    */
-  public String getReplacementElementValue();
+  String getReplacementElementValue();
 
   /**
    * Return whether the matched items are valid.
    * @return whether the matched items are valid.
    */
-  public boolean isValid();
+  boolean isValid();
 }

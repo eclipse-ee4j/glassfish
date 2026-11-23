@@ -61,7 +61,7 @@ public final class HomesUserDatabase
     /**
      * The UserConfig listener with which we are associated.
      */
-    private UserConfig userConfig = null;
+    private UserConfig userConfig;
 
 
     // ----------------------------------------------------------- Properties

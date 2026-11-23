@@ -102,7 +102,7 @@ public class JerseyMvcTldProvider implements TldProvider, PostConstruct {
                 }
             } else {
                 logger.log(Level.WARNING, LogFacade.UNABLE_TO_DETERMINE_TLD_RESOURCES, new Object[]{
-                        JerseyMvcTldProvider.class.getSimpleName(), classLoader, JerseyMvcTldProvider.class.getName()
+                        JerseyMvcTldProvider.class.getSimpleName(), classLoader, JerseyMvcTldProvider.class.getName(),
                 });
             }
         }

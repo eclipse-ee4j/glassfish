@@ -61,17 +61,17 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     /**
      * Wrapped web module.
      */
-    private VirtualServer vs = null;
+    private VirtualServer vs;
 
-    private List<WebListener> webListeners = null;
+    private List<WebListener> webListeners;
 
     // ----------------------------------------------------- embedded methods
 
 
     /**
-     * Sets the docroot of this <tt>VirtualServer</tt>.
+     * Sets the docroot of this <code>VirtualServer</code>.
      *
-     * @param docRoot the docroot of this <tt>VirtualServer</tt>.
+     * @param docRoot the docroot of this <code>VirtualServer</code>.
      */
     public void setDocRoot(File docRoot) {
         this.docRoot = docRoot;
@@ -81,7 +81,7 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Gets the docroot of this <tt>VirtualServer</tt>.
+     * Gets the docroot of this <code>VirtualServer</code>.
      */
     public File getDocRoot() {
         return docRoot;
@@ -107,11 +107,11 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Sets the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * Sets the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      *
-     * @param webListeners the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * @param webListeners the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      */
     public void setWebListeners(WebListener...  webListeners) {
         if (webListeners != null) {
@@ -120,22 +120,22 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Gets the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * Gets the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      *
-     * @return the collection of <tt>WebListener</tt> instances from which
-     * this <tt>VirtualServer</tt> receives requests.
+     * @return the collection of <code>WebListener</code> instances from which
+     * this <code>VirtualServer</code> receives requests.
      */
     public Collection<WebListener> getWebListeners() {
         return webListeners;
     }
 
     /**
-     * Registers the given <tt>Context</tt> with this <tt>VirtualServer</tt>
+     * Registers the given <code>Context</code> with this <code>VirtualServer</code>
      * at the given context root.
      *
-     * <p>If this <tt>VirtualServer</tt> has already been started, the
-     * given <tt>context</tt> will be started as well.
+     * <p>If this <code>VirtualServer</code> has already been started, the
+     * given <code>context</code> will be started as well.
      */
     public void addContext(Context context, String contextRoot)
         throws ConfigException, GlassFishException {
@@ -147,8 +147,8 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Stops the given <tt>context</tt> and removes it from this
-     * <tt>VirtualServer</tt>.
+     * Stops the given <code>context</code> and removes it from this
+     * <code>VirtualServer</code>.
      */
     public void removeContext(Context context)
             throws GlassFishException {
@@ -160,7 +160,7 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Finds the <tt>Context</tt> registered at the given context root.
+     * Finds the <code>Context</code> registered at the given context root.
      */
     public Context getContext(String contextRoot) {
         if (vs != null) {
@@ -171,8 +171,8 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Gets the collection of <tt>Context</tt> instances registered with
-     * this <tt>VirtualServer</tt>.
+     * Gets the collection of <code>Context</code> instances registered with
+     * this <code>VirtualServer</code>.
      */
     public Collection<Context> getContexts() {
         if (vs != null) {
@@ -183,11 +183,11 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Reconfigures this <tt>VirtualServer</tt> with the given
+     * Reconfigures this <code>VirtualServer</code> with the given
      * configuration.
      *
      * <p>In order for the given configuration to take effect, this
-     * <tt>VirtualServer</tt> may be stopped and restarted.
+     * <code>VirtualServer</code> may be stopped and restarted.
      */
     public void setConfig(VirtualServerConfig config)
         throws ConfigException {
@@ -198,7 +198,7 @@ public class VirtualServerFacade implements org.glassfish.embeddable.web.Virtual
     }
 
     /**
-     * Gets the current configuration of this <tt>VirtualServer</tt>.
+     * Gets the current configuration of this <code>VirtualServer</code>.
      */
     public VirtualServerConfig getConfig() {
         return config;

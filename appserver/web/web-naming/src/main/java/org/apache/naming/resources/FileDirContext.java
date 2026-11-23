@@ -103,7 +103,7 @@ public class FileDirContext extends BaseDirContext {
     /**
      * The document base directory.
      */
-    protected File base = null;
+    protected File base;
 
     // START S1AS8PE 4965170
     /**
@@ -125,7 +125,7 @@ public class FileDirContext extends BaseDirContext {
     /**
      * Absolute normalized filename of the base.
      */
-    protected String absoluteBase = null;
+    protected String absoluteBase;
 
 
     /**
@@ -137,7 +137,7 @@ public class FileDirContext extends BaseDirContext {
     /**
      * Allow linking.
      */
-    protected boolean allowLinking = false;
+    protected boolean allowLinking;
 
 
     // ------------------------------------------------------------- Properties
@@ -1121,10 +1121,10 @@ public class FileDirContext extends BaseDirContext {
         protected File file;
 
 
-        protected boolean accessed = false;
+        protected boolean accessed;
 
 
-        protected String canonicalPath = null;
+        protected String canonicalPath;
 
 
         // ----------------------------------------- ResourceAttributes Methods

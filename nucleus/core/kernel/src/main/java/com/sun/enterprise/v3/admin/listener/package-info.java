@@ -21,7 +21,7 @@
  *    <li> Registration of the config listener implementation with the @Configured interface </li>
  *  </ul>
  * Classes in this package should do the former, only.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  * @see com.sun.enterprise.config.serverbeans
  */

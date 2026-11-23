@@ -26,5 +26,5 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface ComponentPostVisitor extends ComponentVisitor {
-    public void setArchive(ReadableArchive archive);
+    void setArchive(ReadableArchive archive);
 }

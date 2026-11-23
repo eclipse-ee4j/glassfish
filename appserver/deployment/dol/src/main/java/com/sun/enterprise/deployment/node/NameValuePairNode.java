@@ -50,8 +50,8 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param the descriptor to write
+     * @param nodeName name for the root element of this xml fragment
+     * @param descriptor descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, NameValuePairDescriptor descriptor) {
@@ -65,9 +65,8 @@ public class NameValuePairNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node in the DOM tree
-     * @param node name for the root element of this xml fragment
-     * @param iterator on the descriptors to write
-     * @return the DOM tree top node
+     * @param nodeName name for the root element of this xml fragment
+     * @param props on the descriptors to write
      */
     public void writeDescriptor(Node parent, String nodeName, Iterator props) {
         if (props == null) {

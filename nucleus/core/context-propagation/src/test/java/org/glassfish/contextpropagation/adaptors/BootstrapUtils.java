@@ -42,7 +42,7 @@ public class BootstrapUtils {
 
         View view;
 
-        public MyViewCapable(View aView) {
+        MyViewCapable(View aView) {
             view = aView;
             view.put(".value", "a value", PropagationMode.defaultSet());
         }

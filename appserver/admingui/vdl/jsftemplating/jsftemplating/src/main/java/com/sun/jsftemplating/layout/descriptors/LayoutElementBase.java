@@ -588,7 +588,7 @@ public abstract class LayoutElementBase implements LayoutElement {
     /**
      * The parent LayoutElement. This will be null for the LayoutDefinition.
      */
-    private LayoutElement _parent = null;
+    private LayoutElement _parent;
 
     /**
      * <p>
@@ -600,7 +600,7 @@ public abstract class LayoutElementBase implements LayoutElement {
     /**
      * This stores the id for the LayoutElement
      */
-    private String _id = null;
+    private String _id;
 
     /**
      * <p>

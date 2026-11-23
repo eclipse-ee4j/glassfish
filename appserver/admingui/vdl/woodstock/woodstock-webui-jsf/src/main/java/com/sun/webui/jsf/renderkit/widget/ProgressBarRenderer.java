@@ -45,7 +45,7 @@ public final class ProgressBarRenderer extends RendererBase {
      * The set of pass-through attributes to be rendered.
      */
     private static final String[] ATTRIBUTES = {
-        "style"
+        "style",
     };
 
     @Override
@@ -54,11 +54,11 @@ public final class ProgressBarRenderer extends RendererBase {
         if (progressBar.isAjaxify()) {
             return new String[]{
                 "progressBar",
-                "jsfx/progressBar"
+                "jsfx/progressBar",
             };
         }
         return new String[]{
-            "progressBar"
+            "progressBar",
         };
     }
 

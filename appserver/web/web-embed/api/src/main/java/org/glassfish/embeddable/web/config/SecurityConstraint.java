@@ -25,7 +25,7 @@ import java.util.Set;
  * User Data Constraints (whether the web request needs to be received
  * over a protected transport such as TLS).
  *
- * <p/> Usage example:
+ * <p> Usage example:
  *
  * <pre>
  *      SecurityConstraint securityConstraint = new SecurityConstraint();
@@ -108,7 +108,7 @@ public class SecurityConstraint {
     /**
      * Gets the roles authorized to access the URL patterns and HTTP methods
      *
-     * @return an array of roles as a <tt>String</tt> authorized to access
+     * @return an array of roles as a <code>String</code> authorized to access
      * the URL patterns and HTTP methods.
      */
     public String[] getAuthConstraint() {

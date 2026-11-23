@@ -71,13 +71,13 @@ public class MiniXmlParser {
     private Map<String, String> javaConfig;
     private Map<String, String> profilerConfig = Collections.emptyMap();
     private final Map<String, String> profilerSysProps = new HashMap<>();
-    private boolean valid = false;
+    private boolean valid;
     private final List<HostAndPort> adminAddresses = new ArrayList<>();
     private String domainName;
     private static final LocalStringsImpl strings = new LocalStringsImpl(MiniXmlParser.class);
     private boolean monitoringEnabled = true; // Issue 12762 Absent <monitoring-service /> element means monitoring-enabled=true by default
-    private String adminRealm = null;
-    private Map<String,String> adminRealmProperties = null;
+    private String adminRealm;
+    private Map<String,String> adminRealmProperties;
     private final List<Map<String, String>> vsAttributes = new ArrayList<>();
     private final List<Map<String, String>> listenerAttributes = new ArrayList<>();
     private final List<Map<String, String>> protocolAttributes = new ArrayList<>();
@@ -85,8 +85,8 @@ public class MiniXmlParser {
     private boolean sawDefaultConfig;
     private boolean sawConfig;
     private final SysPropsHandler sysProps = new SysPropsHandler();
-    private List<ParsedCluster> clusters = null;
-    private boolean secureAdminEnabled = false;
+    private List<ParsedCluster> clusters;
+    private boolean secureAdminEnabled;
 
     public MiniXmlParser(File domainXml) throws MiniXmlParserException {
         this(domainXml, "server");  // default for a domain

@@ -68,7 +68,7 @@ public final class PasswdUserDatabase
     /**
      * The UserConfig listener with which we are associated.
      */
-    private UserConfig userConfig = null;
+    private UserConfig userConfig;
 
 
     // ----------------------------------------------------------- Properties

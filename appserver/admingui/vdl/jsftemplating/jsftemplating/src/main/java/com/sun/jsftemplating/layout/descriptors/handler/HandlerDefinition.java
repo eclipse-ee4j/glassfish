@@ -38,9 +38,9 @@ import java.util.Map;
  * The <strong>java method</strong> to be invoked must have the following method signature:
  * </p>
  *
- * <p>
+ *
  * <BLOCKQUOTE><CODE> public void beginDisplay(HandlerContext handlerCtx) </CODE></BLOCKQUOTE>
- * </p>
+ *
  *
  * <p>
  * <code>void</code> above can return a value. Depending on the type of event, return values may be handled differently.
@@ -84,9 +84,9 @@ public class HandlerDefinition implements java.io.Serializable {
      * "HandlerContext" Example:
      * </p>
      *
-     * <p>
+     *
      * <BLOCKQUOTE> public void beginDisplay(HandlerContext handlerCtx) </BLOCKQUOTE>
-     * </p>
+     *
      *
      * @param cls The full class name containing method
      * @param methodName The method name of the handler within class
@@ -312,15 +312,15 @@ public class HandlerDefinition implements java.io.Serializable {
 
     public static final Class[] EVENT_ARGS = new Class[] { HandlerContext.class };
 
-    private String _id = null;
-    private String _description = null;
-    private String _methodClass = null;
-    private String _methodName = null;
-    private transient Method _method = null;
+    private String _id;
+    private String _description;
+    private String _methodClass;
+    private String _methodName;
+    private transient Method _method;
     private Map<String, IODescriptor> _inputDefs = new HashMap<>(5);
     private Map<String, IODescriptor> _outputDefs = new HashMap<>(5);
     private List<Handler> _childHandlers = _emptyList;
-    private transient Boolean _static = null;
+    private transient Boolean _static;
 
     private static final List<Handler> _emptyList = new ArrayList<>(0);
     private static final long serialVersionUID = 0xA8B7C6D5E4F30211L;

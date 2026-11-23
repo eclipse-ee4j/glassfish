@@ -23,24 +23,24 @@ package com.sun.enterprise.deployment.web;
  */
 
 public interface CookieConfig {
-    public String getName();
-    public void setName(String name);
+    String getName();
+    void setName(String name);
 
-    public String getDomain();
-    public void setDomain(String domain);
+    String getDomain();
+    void setDomain(String domain);
 
-    public String getPath();
-    public void setPath(String path);
+    String getPath();
+    void setPath(String path);
 
-    public String getComment();
-    public void setComment(String comment);
+    String getComment();
+    void setComment(String comment);
 
-    public boolean isHttpOnly();
-    public void setHttpOnly(boolean httpOnly);
+    boolean isHttpOnly();
+    void setHttpOnly(boolean httpOnly);
 
-    public boolean isSecure();
-    public void setSecure(boolean secure);
+    boolean isSecure();
+    void setSecure(boolean secure);
 
-    public int getMaxAge();
-    public void setMaxAge(int maxAge);
+    int getMaxAge();
+    void setMaxAge(int maxAge);
 }

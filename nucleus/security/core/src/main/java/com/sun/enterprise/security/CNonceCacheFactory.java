@@ -25,8 +25,8 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface CNonceCacheFactory {
-    public static final String CLUSTER_NAME_PROP = "cluster_name";
-    public static final String INSTANCE_NAME_PROP = "instance_name";
+    String CLUSTER_NAME_PROP = "cluster_name";
+    String INSTANCE_NAME_PROP = "instance_name";
 
-    public CNonceCache createCNonceCache(String appName, String clusterName, String instanceName, String storeName);
+    CNonceCache createCNonceCache(String appName, String clusterName, String instanceName, String storeName);
 }

@@ -50,7 +50,7 @@ import org.apache.catalina.Response;
  *            pattern="combined" resolveHosts="false"
  *         /&gt;
  * </pre>
- * </p>
+ *
  * <p>
  * Many parameters can be configured, such as the database connection (with
  * <code>driverName</code> and <code>connectionURL</code>),

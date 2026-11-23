@@ -228,13 +228,13 @@ public class ConnectorDDTransformUtils {
 
     /**
      * Obtain all the ConnectionDefDescriptor(abstracts the
-     * <connector-definition> element in ra.xml) objects that are
+     * &lt;connector-definition> element in ra.xml) objects that are
      * present in given ra.xml file.
      *
      * @param connectorDesc ConnectorDescriptor object which
      *                      represents the ra.xml and sun-ra.xml
      * @return Array of ConnectionDefDescriptor objects which represent the
-     *         <connection-definition> element.
+     *         &lt;connection-definition> element.
      */
     public static ConnectionDefDescriptor[] getConnectionDefs(ConnectorDescriptor connectorDesc) {
         ConnectionDefDescriptor[] connectionDefDescs = new ConnectionDefDescriptor[0];

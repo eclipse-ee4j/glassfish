@@ -25,7 +25,6 @@ import org.jvnet.hk2.annotations.Contract;
  * A loader of AMX MBeans. Any module that wants automatic support for loading AMX MBeans should implement this
  * contract, choosing an appropriate name. The loader will be found and instantiated when AMX is loaded.
  *
- * @see AMXValues
  */
 @Contract
 @org.glassfish.external.arc.Taxonomy(stability = org.glassfish.external.arc.Stability.UNCOMMITTED)

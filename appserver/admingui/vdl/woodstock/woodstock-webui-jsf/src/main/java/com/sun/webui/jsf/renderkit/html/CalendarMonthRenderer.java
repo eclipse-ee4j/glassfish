@@ -113,7 +113,7 @@ public final class CalendarMonthRenderer extends AbstractRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                CalendarMonth.class.getName()
+                CalendarMonth.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

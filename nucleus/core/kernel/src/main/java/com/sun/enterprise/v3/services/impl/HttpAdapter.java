@@ -23,7 +23,7 @@ import com.sun.enterprise.config.serverbeans.VirtualServer;
  * @author oleksiys
  */
 public interface HttpAdapter {
-    public ContainerMapper getMapper();
-    public VirtualServer getVirtualServer();
-    public String getWebAppRootPath();
+    ContainerMapper getMapper();
+    VirtualServer getVirtualServer();
+    String getWebAppRootPath();
 }

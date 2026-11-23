@@ -46,7 +46,7 @@ import org.glassfish.hk2.api.Metadata;
  *
  * <pre>
  * <code>
- * &#64Service(name="randomCommand")
+ * &#64;Service(name="randomCommand")
  * public MyRandomCommand implements AdminCommand {
  * ...
  * }
@@ -57,8 +57,8 @@ import org.glassfish.hk2.api.Metadata;
  *
  * <pre>
  * <code>
- * &#64Service(name="mySupCommand")
- * &#64Supplemental("randomCommand")
+ * &#64;Service(name="mySupCommand")
+ * &#64;Supplemental("randomCommand")
  * public MySupplementalCommand implements AdminCommand {
  * ...
  * }
@@ -70,8 +70,8 @@ import org.glassfish.hk2.api.Metadata;
  *
  * <pre>
  * <code>
- * &#64Service(name="otherSupCommand")
- * &#64Supplemental(value="randomCommand" bridge=MyParameterMapper.class)
+ * &#64;Service(name="otherSupCommand")
+ * &#64;Supplemental(value="randomCommand" bridge=MyParameterMapper.class)
  * public OtherSupplementedCommand implements AdminCommand {
  * ...
  * }
@@ -87,8 +87,8 @@ import org.glassfish.hk2.api.Metadata;
  *
  * <pre>
  * <code>
- * &#64Service
- * &#64Supplemental("randomCommand")
+ * &#64;Service
+ * &#64;Supplemental("randomCommand")
  * public MySupplementalCommand implements AdminCommand {
  *  // can only be invoked as a supplemental command
  * }
@@ -120,7 +120,7 @@ public @interface Supplemental {
     /**
      * enumeration of when a supplemental command can be invoked with regards to the supplemented command execution.
      */
-    public enum Timing {
+    enum Timing {
         Before, After, AfterReplication
     }
 
@@ -131,9 +131,9 @@ public @interface Supplemental {
      * @return habitat registration name for the command
      */
     @Metadata("target")
-    public String value();
+    String value();
 
-    public Class<? extends ParameterBridge> bridge() default ParameterBridge.NoMapper.class;
+    Class<? extends ParameterBridge> bridge() default ParameterBridge.NoMapper.class;
 
     /**
      * Supplemental commands can be run before or after the supplemented command. Returns when this supplemental command is
@@ -142,7 +142,7 @@ public @interface Supplemental {
      * @return Before if it should be run before the supplemented method or After if it should run after the supplemented
      * method.
      */
-    public Timing on() default Timing.After;
+    Timing on() default Timing.After;
 
     /**
      * Indicates to the framework what type of action should be taken if the execution of this command was to return a
@@ -154,6 +154,6 @@ public @interface Supplemental {
      *
      * @return the action the framework is expected to invoke when this supplemental command execution failed.
      */
-    public FailurePolicy ifFailure() default FailurePolicy.Error;
+    FailurePolicy ifFailure() default FailurePolicy.Error;
 
 }

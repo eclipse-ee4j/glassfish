@@ -54,11 +54,11 @@ import org.omg.CosTransactions.otid_t;
 //   0.01  SAJH   Initial implementation.
 //-----------------------------------------------------------------------------
 public class GlobalTID extends Object {
-    otid_t realTID = null;
+    otid_t realTID;
 
-    private String stringForm = null;
-    private int hashCode = 0;
-    private boolean hashed = false;
+    private String stringForm;
+    private int hashCode;
+    private boolean hashed;
 
     /*
         Logger to log transaction messages
@@ -191,7 +191,7 @@ public class GlobalTID extends Object {
         return isSameTIDInternal(other);
     }
 
-    private final boolean isSameTIDInternal(Object other) {
+    private boolean isSameTIDInternal(Object other) {
         otid_t otherTID = null;
 
         if( other == null )

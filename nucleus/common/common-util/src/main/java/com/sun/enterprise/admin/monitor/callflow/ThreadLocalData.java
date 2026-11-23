@@ -27,7 +27,7 @@ package com.sun.enterprise.admin.monitor.callflow;
  * This interface provides access to the thread local call flow data.
  *
  * @author Ram Jeyaraman
- * @date August 21, 2005
+ * Date: August 21, 2005
  */
 public interface ThreadLocalData {
 

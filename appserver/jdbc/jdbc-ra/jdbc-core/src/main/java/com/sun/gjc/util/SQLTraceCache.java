@@ -122,7 +122,6 @@ public class SQLTraceCache {
      * added to the list.
      *
      * @param cacheObj
-     * @return
      */
     public void checkAndUpdateCache(SQLTrace cacheObj) {
         synchronized (list) {

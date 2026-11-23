@@ -59,7 +59,7 @@ public class DBStatement extends Object {
     private PreparedStatement preparedStmt;
 
     /** Current number of batched commands. */
-    private int batchCounter = 0;
+    private int batchCounter;
 
     /** The SQL text. */
     private String statementText;

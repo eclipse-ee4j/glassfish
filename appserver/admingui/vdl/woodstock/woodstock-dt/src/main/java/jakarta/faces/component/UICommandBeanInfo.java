@@ -126,24 +126,24 @@ public final class UICommandBeanInfo extends UIComponentBaseBeanInfo {
                                     ActionListener.class
                                             .getMethod("processAction",
                                                     new Class[]{
-                                                        ActionEvent.class
+                                                        ActionEvent.class,
                                                     })
                                 },
                                 UICommand.class
                                         .getMethod("addActionListener",
                                                 new Class[]{
-                                                    ActionListener.class
+                                                    ActionListener.class,
                                                 }),
                                 UICommand.class
                                         .getMethod("removeActionListener",
                                                 new Class[]{
-                                                    ActionListener.class
+                                                    ActionListener.class,
                                                 }),
                                 UICommand.class
                                         .getMethod("getActionListeners",
                                                 new Class[]{}));
                 eventSetDescriptors = new EventSetDescriptor[]{
-                    actionEventDescriptor
+                    actionEventDescriptor,
                 };
             } catch (IntrospectionException e) {
                 e.printStackTrace();

@@ -33,7 +33,7 @@ public class OrderingOrderingDescriptor extends Descriptor {
             new LocalStringManagerImpl(OrderingOrderingDescriptor.class);
 
     private Set<String> names = new TreeSet<String>();
-    private boolean others = false;
+    private boolean others;
 
     public void addName(String name) {
         if (name == null || name.length() == 0) {

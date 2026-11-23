@@ -78,9 +78,9 @@ import org.omg.CosTransactions.Unavailable;
 
 public class CurrentImpl extends org.omg.CORBA.LocalObject
 implements org.omg.CosTransactions.Current {
-    private int timeOut = 0;
+    private int timeOut;
     private static boolean active = true;
-    private TransactionFactory factory = null;
+    private TransactionFactory factory;
     /*
         Logger to log transaction messages
      */

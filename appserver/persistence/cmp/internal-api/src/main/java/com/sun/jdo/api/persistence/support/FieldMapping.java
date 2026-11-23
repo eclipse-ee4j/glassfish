@@ -25,15 +25,15 @@ public interface FieldMapping {
     /**
      * This method will return int corresponding to java.sql.Types.
      */
-    public int getColumnType();
+    int getColumnType();
 
     /**
      * This method will return the name of the column.
      */
-    public String getColumnName();
+    String getColumnName();
 
     /**
      * This method return -1 if column length is unknown.
      */
-    public int getColumnLength();
+    int getColumnLength();
 }

@@ -25,7 +25,7 @@
  * {@link org.jvnet.hk2.annotations.Service#name} attribute.
  *
  * <p>
- * Commands can be singleton or instantiated at each invocation depending on the {@link org.jvnet.hk2.annotations.Scope}
+ * Commands can be singleton or instantiated at each invocation depending on the {@code org.jvnet.hk2.annotations.Scope}
  * annotation. Singleton commands will be injected once for all {@link jakarta.inject.Inject} dependencies but will have
  * all @{link org.glassfish.api.admin.Param} dependencies injected for each invocation.
  *
@@ -53,22 +53,22 @@
  * A supplemental command usually run after the supplemented command has finished running successfully. If the
  * supplemented command fail to execute, none of the supplemental commands should be invoked. A supplemental command can
  * request to be invoked before the supplemented command. In such a case, these commands must have a
- * {@link UndoableCommand} annotation to undo any changes in case the supplemented command fail to execute successfully.
- * If a supplemental command is executing before and does not have {@link Rollbak} annotation, the system should flag
+ * {@code UndoableCommand} annotation to undo any changes in case the supplemented command fail to execute successfully.
+ * If a supplemental command is executing before and does not have {@code Rollbak} annotation, the system should flag
  * this as an error, and prevent the supplemental method execution.
  * <p>
  * It might be possible for a supplemental command to fail executing and since such commands execute usually after the
  * supplemented command has finished executing, a rollbacking mechanism can be described though the combination of the
- * {@link org.glassfish.api.admin.ExecuteOn#ifFailure()} annotation value and the {@link UndoableCommand}}. If a
+ * {@link org.glassfish.api.admin.ExecuteOn#ifFailure()} annotation value and the {@code UndoableCommand}}. If a
  * clustered command requires rollbacking when any of its supplemented command fail then it must be annotated with
- * {@link UndoableCommand} and all of its supplemented commands must also be annotated with {@link UndoableCommand},
+ * {@code UndoableCommand} and all of its supplemented commands must also be annotated with {@code UndoableCommand},
  * otherwise, it must be flagged by the system as an error.
  * <p>
  * Supplemental commands can be a wrapper for existing external commands, and therefore can use a very different set of
  * parameters than the ones provided to the supplemented command. Supplemental commands can use
  * {@link org.glassfish.api.admin.Supplemental#bridge()} annotation value to translate or bridge the parameters names
  * and values from the supplemented command to the supplemental ones.
- * <p>
+ *
  *
  * <h3>Clustering support</h3>
  *
@@ -85,7 +85,7 @@
  *
  * <pre>
  * <code>
- &#64ExecuteOn(RuntimeType.DAS)
+ &#64;ExecuteOn(RuntimeType.DAS)
  </code>
  * </pre>
  * <p>
@@ -95,7 +95,7 @@
  * <h3>Rollbacking</h3>
  *
  * Supplemental and clustered commands execute separately and can create issues when one of the invocation fails.
- * Commands can optionally implement the {@link UndoableCommand} interface to allow for roll-backing a previously
+ * Commands can optionally implement the {@code UndoableCommand} interface to allow for roll-backing a previously
  * successful execution of an administrative change.
  *
  * <p>

@@ -37,7 +37,7 @@ class GlassFishConfig implements Config {
     private Supplier<Config> configProducer;
     private volatile Config defaultConfigDelegate;
 
-    public GlassFishConfig(Supplier<Config> configProducer) {
+    GlassFishConfig(Supplier<Config> configProducer) {
         this.configProducer = configProducer;
     }
 

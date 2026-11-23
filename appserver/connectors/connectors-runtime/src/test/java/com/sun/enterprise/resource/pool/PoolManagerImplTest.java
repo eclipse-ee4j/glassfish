@@ -73,7 +73,7 @@ public class PoolManagerImplTest {
     private ManagedConnectionFactory managedConnectionFactory;
 
     // Regular fields
-    private ClientSecurityInfo clientSecurityInfo = null;
+    private ClientSecurityInfo clientSecurityInfo;
     private PoolManagerImpl poolManagerImpl = new MyPoolManagerImpl();
     private PoolInfo poolInfo = getPoolInfo();
     private JavaEETransaction javaEETransaction = new MyJavaEETransaction();
@@ -411,7 +411,7 @@ public class PoolManagerImplTest {
         private ProcessEnvironment processEnvironment = new ProcessEnvironment();
         private ResourceNamingService resourceNamingService = new ResourceNamingService();
 
-        public MyConnectorRuntime() throws Exception {
+        MyConnectorRuntime() throws Exception {
             // Force 'injection', unluckily ResourceNamingService is marked as final
             // otherwise we could mock it, or subclass it for this unit test.
             InjectionUtil.injectPrivateField(ResourceNamingService.class, resourceNamingService, "namingManager", glassfishNamingManager);

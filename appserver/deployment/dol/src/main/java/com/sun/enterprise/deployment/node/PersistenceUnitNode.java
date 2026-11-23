@@ -26,7 +26,7 @@ import java.util.Map;
 import org.xml.sax.Attributes;
 
 /**
- * This node is responsible for reading details about one <persistence-unit/>
+ * This node is responsible for reading details about one &lt;persistence-unit/>
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class PersistenceUnitNode extends DeploymentDescriptorNode {

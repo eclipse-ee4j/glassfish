@@ -40,7 +40,7 @@ public interface EmbeddedDeployer {
      *
      * @return the deployed application directory.
      */
-    public File getApplicationsDir();
+    File getApplicationsDir();
 
     /**
      * Returns the location of the auto-deploy directory.
@@ -48,14 +48,14 @@ public interface EmbeddedDeployer {
      * @return the auto-deploy directory
      *
      */
-    public File getAutoDeployDir();
+    File getAutoDeployDir();
 
     /**
      * Enables or disables the auto-deployment feature
      *
      * @param flag set to true to enable, false to disable
      */
-    public void setAutoDeploy(boolean flag);
+    void setAutoDeploy(boolean flag);
 
     /**
      * Deploys a file or directory to the servers passing the deployment command parameters
@@ -65,7 +65,7 @@ public interface EmbeddedDeployer {
      * @param params deployment command parameters
      * @return the deployed application name
      */
-    public String deploy(File archive, DeployCommandParameters params);
+    String deploy(File archive, DeployCommandParameters params);
 
     /**
      * Deploys an archive abstraction to the servers passing the deployment command parameters
@@ -74,7 +74,7 @@ public interface EmbeddedDeployer {
      * @param params deployment command parameters
      * @return the deployed application name
      */
-    public String deploy(ReadableArchive archive, DeployCommandParameters params);
+    String deploy(ReadableArchive archive, DeployCommandParameters params);
 
 
     // todo : add redeploy ?
@@ -85,10 +85,10 @@ public interface EmbeddedDeployer {
      * @param name name returned by {@link EmbeddedDeployer#deploy(File, DeployCommandParameters)}
      * @param params the undeployment parameters, can be null for default values
      */
-    public void undeploy(String name, UndeployCommandParameters params);
+    void undeploy(String name, UndeployCommandParameters params);
 
     /**
      * Undeploys all deployed applications.
      */
-    public void undeployAll();
+    void undeployAll();
 }

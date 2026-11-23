@@ -84,7 +84,7 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
     @Inject
     private AdminService adminService;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
     private Config config;
 

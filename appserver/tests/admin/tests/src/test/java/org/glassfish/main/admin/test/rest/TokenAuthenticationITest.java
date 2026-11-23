@@ -85,7 +85,7 @@ public class TokenAuthenticationITest extends SecuredRestTestBase {
 
         private final String sessionToken;
 
-        public TokenClient(final String sessionToken) {
+        TokenClient(final String sessionToken) {
             super(new ClientWrapper(), managementClient.getBaseUrl(), APPLICATION_JSON);
             this.sessionToken = sessionToken;
         }

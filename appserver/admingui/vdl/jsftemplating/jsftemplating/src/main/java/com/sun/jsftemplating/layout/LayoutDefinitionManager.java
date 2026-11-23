@@ -578,7 +578,7 @@ public abstract class LayoutDefinitionManager {
      *
      * <p>
      * This method will initialize the global {@link ComponentType}s if they are not initialized. It does this by finding
-     * all files in the classpath named: {@link UIComponentFactoryAPFactory#FACTORY_FILE}. It then reads each of these files
+     * all files in the classpath named: {@code UIComponentFactoryAPFactory#FACTORY_FILE}. It then reads each of these files
      * (which must be <code>Properties</code> files) and stores each identifier / fully qualified classname as an entry in
      * the <code>Map&lt;String, {@link ComponentType}&gt;</code>.
      * </p>
@@ -758,7 +758,7 @@ public abstract class LayoutDefinitionManager {
      *
      * <p>
      * This method will initialize the global {@link HandlerDefinition}s if they are not initialized. It does this by
-     * finding all files in the classpath named: {@link HandlerAPFactory#HANDLER_FILE}. It then reads each file (which must
+     * finding all files in the classpath named: {@code HandlerAPFactory#HANDLER_FILE}. It then reads each file (which must
      * be a valid <code>Properties</code> file) and stores the information for later retrieval.
      * </p>
      */
@@ -1143,7 +1143,7 @@ public abstract class LayoutDefinitionManager {
      * application.
      * </p>
      */
-    private static Map<String, ComponentType> _globalComponentTypes = null;
+    private static Map<String, ComponentType> _globalComponentTypes;
 
     private static final HandlerDefinition NOOP_HD = new HandlerDefinition("_NOOP_");
 

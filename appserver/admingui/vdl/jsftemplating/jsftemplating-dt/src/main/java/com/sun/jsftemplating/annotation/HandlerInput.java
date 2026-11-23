@@ -25,7 +25,7 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 /**
  * <p>
  * This is the <code>HandlerInput Annotation</code>. It is expected to exist on each
- * {@link com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
+ * {@code com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
  * <code>ComponentFactory</code> so that it may be referenced when defining <code>UIComponents</code> in your template
  * or code.
  * </p>
@@ -36,21 +36,21 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Target(METHOD)
 public @interface HandlerInput {
 
-    public String name();
+    String name();
 
-    public Class type() default Object.class;
+    Class type() default Object.class;
 
-    public boolean required() default DEFAULT_REQUIRED;
+    boolean required() default DEFAULT_REQUIRED;
 
     // Annotations don't allow Object, use String
     // Annotations don't allow null, use special String
-    public String defaultValue() default DEFAULT_DEFAULT_VALUE;
+    String defaultValue() default DEFAULT_DEFAULT_VALUE;
 
-    public static final String NAME = "name";
-    public static final String DEFAULT = "defaultValue";
-    public static final String TYPE = "type";
-    public static final String REQUIRED = "required";
+    String NAME = "name";
+    String DEFAULT = "defaultValue";
+    String TYPE = "type";
+    String REQUIRED = "required";
 
-    public static final boolean DEFAULT_REQUIRED = false;
-    public static final String DEFAULT_DEFAULT_VALUE = "jsfTempNULLString";
+    boolean DEFAULT_REQUIRED = false;
+    String DEFAULT_DEFAULT_VALUE = "jsfTempNULLString";
 }

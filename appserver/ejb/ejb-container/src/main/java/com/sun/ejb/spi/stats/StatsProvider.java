@@ -18,6 +18,6 @@ package com.sun.ejb.spi.stats;
 
 public interface StatsProvider {
 
-    public void appendStats(StringBuffer sbuf);
+    void appendStats(StringBuffer sbuf);
 
 }

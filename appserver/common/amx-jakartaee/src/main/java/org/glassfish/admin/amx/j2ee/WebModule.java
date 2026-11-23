@@ -25,7 +25,7 @@ import org.glassfish.admin.amx.core.AMXMBeanMetadata;
  * additional product-specific Attributes and operations.
  * <br>
  * The monitoring peer as returned from getMonitoringPeer() is
- * {@link org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor}
+ * {@code org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor}
  */
 
 @AMXMBeanMetadata(type = J2EETypes.WEB_MODULE, leaf = true)

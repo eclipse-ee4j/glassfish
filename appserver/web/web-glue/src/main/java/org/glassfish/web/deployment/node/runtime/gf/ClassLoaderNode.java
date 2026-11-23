@@ -36,7 +36,7 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
             WebPropertyNode.class, "addWebProperty");
     }
 
-    protected ClassLoader descriptor = null;
+    protected ClassLoader descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

@@ -30,7 +30,7 @@ public interface WebBundleVisitor extends ComponentVisitor {
     /**
      * visit a web bundle descriptor
      *
-     * @param the web bundle descriptor
+     * @param descriptor web bundle descriptor
      */
     void accept(WebBundleDescriptor descriptor);
 }

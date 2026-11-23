@@ -396,7 +396,7 @@ public class VersioningUtilsTest {
     private class ApplicationTest implements Application {
         private final String name;
 
-        public ApplicationTest(final String value){
+        ApplicationTest(final String value){
             this.name = value;
         }
 

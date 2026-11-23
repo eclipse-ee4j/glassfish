@@ -95,9 +95,9 @@ public abstract class ProgressStatusBase implements ProgressStatus, Serializable
     protected String name;
     protected String id;
     protected int totalStepCount = -1;
-    protected int currentStepCount = 0;
+    protected int currentStepCount;
     protected ProgressStatusBase parent;
-    protected boolean completed = false;
+    protected boolean completed;
     protected Set<ChildProgressStatus> children = new HashSet<>();
 
     /**

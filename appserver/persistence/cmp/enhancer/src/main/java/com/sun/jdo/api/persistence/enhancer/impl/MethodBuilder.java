@@ -124,7 +124,7 @@ class MethodBuilder
      */
     //@olsen: added constructor
     //@olsen: added parameter 'env' for association
-    public MethodBuilder(Environment env) {
+    MethodBuilder(Environment env) {
         this.env = env;
     }
 

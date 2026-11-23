@@ -39,7 +39,7 @@ public class StorePropertiesNode extends RuntimeDescriptorNode {
                 WebPropertyNode.class, "addWebProperty");
     }
 
-    protected StoreProperties descriptor = null;
+    protected StoreProperties descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

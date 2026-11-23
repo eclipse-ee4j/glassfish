@@ -332,7 +332,7 @@ public final class MethodDescriptor extends Descriptor {
             }
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
-                e.getMessage(), ejbDescriptor
+                e.getMessage(), ejbDescriptor,
             });
         }
         return method;
@@ -345,7 +345,7 @@ public final class MethodDescriptor extends Descriptor {
                 getJavaParameterClassNames());
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
-                declaringClass
+                declaringClass,
             });
             return null;
         }
@@ -370,7 +370,7 @@ public final class MethodDescriptor extends Descriptor {
             return getDeclaredMethod(ejbDescriptor, parameterTypes);
         } catch (Exception e) {
             LOG.log(Level.SEVERE, "enterprise.deployment.backend.methodClassLoadFailure", new Object[] {
-                e, ejbDescriptor
+                e, ejbDescriptor,
             });
         }
 

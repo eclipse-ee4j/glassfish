@@ -73,7 +73,7 @@ public class GetClientStubsCommand implements AdminCommand, AdminCommandSecurity
     private Applications apps;
 
     @Param(name = APPNAME, optional=false)
-    private String appname = null;
+    private String appname;
 
     @Param(primary=true)
     private String localDir;

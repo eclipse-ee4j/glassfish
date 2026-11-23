@@ -69,7 +69,7 @@ public final class CreateServiceCommand extends CLICommand {
     private File asadminScript;
     private static final LocalStringsImpl strings = new LocalStringsImpl(CreateServiceCommand.class);
     private ServerDirs dirs;
-    private ServerDirsSelector selector = null;
+    private ServerDirsSelector selector;
 
     /**
      */

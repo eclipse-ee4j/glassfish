@@ -31,7 +31,7 @@ import org.glassfish.external.arc.Taxonomy;
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
 @Documented
 public @interface Description {
-    public String value() default "";
+    String value() default "";
 }
 
 

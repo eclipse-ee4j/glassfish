@@ -51,7 +51,7 @@ import static org.glassfish.security.services.impl.ServiceLogging.SHARED_LOGMESS
  * <code>RoleMappingServiceImpl</code> implements
  * <code>{@link org.glassfish.security.services.api.authorization.RoleMappingService}</code>
  * by delegating role mapping decisions to configured
- * <code>{@link org.glassfish.security.services.spi.RoleMappingProvider}</code>
+ * <code>{@code org.glassfish.security.services.spi.RoleMappingProvider}</code>
  * instances.
  */
 @Service

@@ -38,7 +38,7 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
   private static final long serialVersionUID = 3485637846065994552L;
   private byte[] data;
   private transient Serializable object;
-  private transient boolean mutable = false;
+  private transient boolean mutable;
 
   private static class Carrier implements Serializable {
     //This class carries the Serializable object along with its associated
@@ -49,7 +49,7 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
     private boolean mutable;
 
     @SuppressWarnings("unused")
-    public Carrier() {
+    Carrier() {
     }
 
     /*package*/ Carrier(Serializable object) {

@@ -48,7 +48,7 @@ public final class Table2 extends Table implements NamingContainer, Widget {
     /**
      * A List containing Table2RowGroup children.
      */
-    private List<Table2RowGroup> table2RowGroupChildren = null;
+    private List<Table2RowGroup> table2RowGroupChildren;
 
     /**
      * Default constructor.

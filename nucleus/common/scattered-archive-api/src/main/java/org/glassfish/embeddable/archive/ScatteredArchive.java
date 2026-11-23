@@ -87,11 +87,11 @@ public class ScatteredArchive {
 
     /**
      * Construct a new scattered archive with all the contents from the rootDirectory.
-     * <p/>
+     * <p>
      * By default, a scattered archive is not different from any other
      * archive where all the files are located under a top level
      * directory (rootDirectory).
-     * <p/>
+     * <p>
      * For example, In case of a WAR type archive, the rootDirectory should look like this:
      * <pre>
      *      rootDirectory/WEB-INF/classes/org/myorg/FooServlet.class
@@ -104,7 +104,7 @@ public class ScatteredArchive {
      * </pre>
      * Some files can then be scattered in different locations and be specified
      * through the appropriate add methods of this class.
-     * <p/>
+     *
      *
      * @param name          name of the archive.
      * @param type          type of the archive
@@ -130,11 +130,11 @@ public class ScatteredArchive {
 
     /**
      * Add a directory or a JAR file to this scattered archive.
-     * <p/>
+     * <p>
      * The classpath that is added is considered as a plain Java CLASSPATH.
-     * <p/>
+     * <p>
      * <b>Case 1 : classpath is a directory:</b>
-     * <p/>
+     * <p>
      * Let us say there is TEMP/abc directory, which has following contents:
      * <pre>
      *      TEMP/abc/org/myorg/a/A.class
@@ -144,7 +144,7 @@ public class ScatteredArchive {
      *      TEMP/abc/image/1.png
      * </pre>
      * then addClassPath(new File("TEMP", "abc") will make:
-     * <p/>
+     * <p>
      * (a) The following classes available in the deployed scattered archive application:
      * <pre>
      *          org.myorg.a.A
@@ -153,15 +153,15 @@ public class ScatteredArchive {
      * </pre>
      * (b) LocalStrings.properties available in the deployed scattered archive application.
      * So, the deployed application can do ResourceBundle.getBundle("LocalStrings");
-     * <p/>
+     * <p>
      * (c) image/1.png available in the deployed scattered archive application.
      * So, the deployed application can load the image file via getClass().getClassLoader().getResource("image/1.png");
-     * <p/>
+     * <p>
      * If there is any other type of file under TEMP/abc then it will also be available
      * in the deployed scattered archive application's classloader.
-     * <p/>
+     * <p>
      * <b>Case 2: classpath is a JAR file</b>
-     * <p/>
+     * <p>
      * Let us say there is TEMP/xyz.jar, then addClassPath(new File("TEMP", "xyz.jar"))
      * will make all the classes and any random files inside TEMP/xyz.jar
      * available in the deployed scattered archive application.
@@ -185,12 +185,12 @@ public class ScatteredArchive {
      * using {@link #addClassPath(File)}.
      * Ignores Jakarta EE API and GlassFish Embedded JAR files (those that match the {@code jakarta.}
      * and {@code glassfish-embedded-} prefixes).
-     * <p/>
+     * <p>
      * Reads the current classpath from the {@code java.class.path} system property.
      * If it's not available, nothing is added to the classpath.
-     * <p/>
+     * <p>
      * The classpath that is added is considered as a plain Java CLASSPATH.
-     * <p/>
+     * <p>
      * If a classpath element is not found, a warning is logged using {@link Logger} and
      * the element is ignored.
      *
@@ -213,12 +213,12 @@ public class ScatteredArchive {
      * using {@link #addClassPath(java.io.File)}.
      * Ignores Jakarta EE API and GlassFish Embedded JAR files (those that match the {@code jakarta.}
      * and {@code glassfish-embedded-} prefixes).
-     * <p/>
+     * <p>
      * Reads the current classpath from the {@code java.class.path} system property.
      * If it's not available, nothing is added to the classpath.
-     * <p/>
+     * <p>
      * The classpath that is added is considered as a plain Java CLASSPATH.
-     * <p/>
+     * <p>
      * If a classpath element is not found, a warning is logged using {@link Logger} and
      * the element is ignored.
      *
@@ -258,12 +258,15 @@ public class ScatteredArchive {
 
     /**
      * Add a new metadata to this scattered archive.
-     * <p/>
+     * <p>
      * The addMetadata(metadata) method has the same effect as:
      * <pre>
      *      addMetadata(metadata, null)
      * </pre>
      * Follows the same semantics as {@link #addMetadata(File, String)} method.
+     *
+     * @param metadata location of the metadata
+     * @throws IOException if metadata does not exist.
      */
     public void addMetadata(File metadata) throws IOException {
         addMetadata(metadata, null);
@@ -271,9 +274,9 @@ public class ScatteredArchive {
 
     /**
      * Add a new metadata to this scattered archive.
-     * <p/>
+     * <p>
      * A metadata is identified by its name (e.g., META-INF/ejb.xml).
-     * <p/>
+     * <p>
      * If the specified name is null, then the metadata is considered as a
      * deployment descriptor metadata and the name is computed as:
      * <pre>
@@ -308,7 +311,7 @@ public class ScatteredArchive {
 
     /**
      * Get the deployable URI for this scattered archive.
-     * <p/>
+     * <p>
      * <i>Note : java.io.tmpdir is used while building the URI.</i>
      *
      * @return Deployable scattered archive URI.

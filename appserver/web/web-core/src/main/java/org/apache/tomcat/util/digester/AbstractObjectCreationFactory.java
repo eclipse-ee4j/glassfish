@@ -35,7 +35,7 @@ abstract public class AbstractObjectCreationFactory implements ObjectCreationFac
      * The associated <code>Digester</code> instance that was set up by
      * {@link FactoryCreateRule} upon initialization.
      */
-    protected Digester digester = null;
+    protected Digester digester;
 
 
     // --------------------------------------------------------- Public Methods

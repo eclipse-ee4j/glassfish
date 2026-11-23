@@ -51,6 +51,6 @@ public @interface ServerSentEvent {
     /**
      * The URL pattern of the source of server-sent events
      */
-    public String value();
+    String value();
 
 }

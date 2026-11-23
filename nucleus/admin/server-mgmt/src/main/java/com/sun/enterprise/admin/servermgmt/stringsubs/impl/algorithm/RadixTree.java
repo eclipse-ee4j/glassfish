@@ -37,7 +37,7 @@ class RadixTree {
     /**
      * Construct {@link RadixTree} with default root node.
      */
-    public RadixTree() {
+    RadixTree() {
         // Creating root node.
         _rootNode = new RadixTreeNode("", null);
     }

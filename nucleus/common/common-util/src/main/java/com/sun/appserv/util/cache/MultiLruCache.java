@@ -90,7 +90,7 @@ public class MultiLruCache<K, V> extends BaseCache<K, V> {
 
     /**
      * remove an lru item from one of the LRU lists
-     * @param the LRU segment index to trim
+     * @param segment LRU segment index to trim
      * @return the item that was successfully trimmed
      */
     protected CacheItem<K, V> trimLru(int segment) {

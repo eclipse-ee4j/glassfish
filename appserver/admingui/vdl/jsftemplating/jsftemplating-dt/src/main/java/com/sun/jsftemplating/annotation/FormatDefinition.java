@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This is the <code>FormatDefinition Annotation</code>. It is expected to exist on each
- * {@link com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
+ * {@code com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
  * <code>ComponentFactory</code> so that it may be referenced when defining <code>UIComponents</code> in your template
  * or code.
  * </p>

@@ -1663,7 +1663,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     }
 
     /**
-     * Enables or disables directory listings on this <tt>Context</tt>.
+     * Enables or disables directory listings on this <code>Context</code>.
      */
     public void setDirectoryListing(boolean directoryListing) {
         this.directoryListing = directoryListing;
@@ -1677,7 +1677,7 @@ public class StandardContext extends ContainerBase implements Context, ServletCo
     }
 
     /**
-     * @return true if directory listings are enabled on this <tt>Context</tt>.
+     * @return true if directory listings are enabled on this <code>Context</code>.
      */
     public boolean isDirectoryListing() {
         return directoryListing;

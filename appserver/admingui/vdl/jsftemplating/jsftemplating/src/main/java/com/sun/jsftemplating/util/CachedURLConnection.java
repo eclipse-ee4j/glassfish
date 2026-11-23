@@ -80,5 +80,5 @@ public class CachedURLConnection<T> extends URLConnection {
         // Do nothing.
     }
 
-    private WeakReference<T> weakRef = null;
+    private WeakReference<T> weakRef;
 }

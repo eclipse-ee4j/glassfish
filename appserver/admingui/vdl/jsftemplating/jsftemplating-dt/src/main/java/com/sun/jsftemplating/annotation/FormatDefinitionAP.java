@@ -49,8 +49,8 @@ import javax.tools.StandardLocation;
 public class FormatDefinitionAP extends AbstractProcessor {
 
     public static final String FACTORY_FILE = "META-INF/jsftemplating/FormatDefinition.map";
-    private PrintWriter writer = null;
-    private boolean _setup = false;
+    private PrintWriter writer;
+    private boolean _setup;
 
     private boolean setup() {
         if (_setup) {

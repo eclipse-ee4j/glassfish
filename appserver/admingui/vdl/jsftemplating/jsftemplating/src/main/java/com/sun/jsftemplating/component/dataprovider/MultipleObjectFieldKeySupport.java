@@ -234,5 +234,5 @@ public class MultipleObjectFieldKeySupport {
      * This list hold the child ObjectFieldKeySupport implementations.
      * </p>
      */
-    private List<ObjectFieldKeySupport> _children = null;
+    private List<ObjectFieldKeySupport> _children;
 }

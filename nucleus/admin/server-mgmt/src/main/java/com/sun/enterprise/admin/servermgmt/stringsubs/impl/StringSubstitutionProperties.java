@@ -31,7 +31,7 @@ public class StringSubstitutionProperties {
     private static final Logger LOG = System.getLogger(StringSubstitutionProperties.class.getName());
 
     private static final String STRINGSUBS_PROPERTIES = "/com/sun/enterprise/admin/servermgmt/stringsubs/stringsubs.properties";
-    private static Properties _properties = null;
+    private static Properties _properties;
 
     /**
      * Loads the string substitution properties i.e {@link StringSubstitutionProperties#STRINGSUBS_PROPERTIES} file

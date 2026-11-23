@@ -82,7 +82,7 @@ public interface WorkContextMapInterceptor {
    * utilized in this call. This is a hint to the runtime system.
    * @exception IOException if the data cannot be serialized.
    */
-  public void sendRequest(WorkContextOutput out, int propagationMode) throws IOException;
+  void sendRequest(WorkContextOutput out, int propagationMode) throws IOException;
 
   /**
    * Transfer {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContext}s from thread-local storage to
@@ -97,7 +97,7 @@ public interface WorkContextMapInterceptor {
    * utilized in this call. This is a hint to the runtime system.
    * @exception IOException if the data cannot be serialized.
    */
-  public void sendResponse(WorkContextOutput out, int propagationMode) throws IOException;
+  void sendResponse(WorkContextOutput out, int propagationMode) throws IOException;
 
   /**
    * Transfer the protocol-specific {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextInput} data
@@ -111,7 +111,7 @@ public interface WorkContextMapInterceptor {
    * read {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap} data from.
    * @exception IOException if the data cannot be read.
    */
-  public void receiveRequest(WorkContextInput in)
+  void receiveRequest(WorkContextInput in)
     throws IOException;
 
   /**
@@ -126,7 +126,7 @@ public interface WorkContextMapInterceptor {
    * read {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap} data from.
    * @exception IOException if the data cannot be read.
    */
-  public void receiveResponse(WorkContextInput in)
+  void receiveResponse(WorkContextInput in)
     throws IOException;
 
   /**
@@ -145,7 +145,7 @@ public interface WorkContextMapInterceptor {
    * will be copied. mode can
    * be a bit-wise OR of {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode}s
    */
-  public WorkContextMapInterceptor copyThreadContexts(int mode);
+  WorkContextMapInterceptor copyThreadContexts(int mode);
 
   /**
    * Restore thread-local contexts from <code>contexts</code> that
@@ -157,7 +157,7 @@ public interface WorkContextMapInterceptor {
    * @param contexts an {@link WorkContextMapInterceptor} obtained via
    * {@link #copyThreadContexts}.
    */
-  public void restoreThreadContexts(WorkContextMapInterceptor contexts);
+  void restoreThreadContexts(WorkContextMapInterceptor contexts);
 
   /**
    * Remove and return all the thread-local contexts from the current
@@ -172,7 +172,7 @@ public interface WorkContextMapInterceptor {
    * @return a {@link WorkContextMapInterceptor} that contains the
    * {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap} data to be saved.
   */
-  public WorkContextMapInterceptor suspendThreadContexts();
+  WorkContextMapInterceptor suspendThreadContexts();
 
   /**
    * Resume thread-local contexts from
@@ -185,7 +185,7 @@ public interface WorkContextMapInterceptor {
    * @param contexts a {@link WorkContextMapInterceptor} obtained via
    * {@link #suspendThreadContexts}.
    */
-  public void resumeThreadContexts(WorkContextMapInterceptor contexts);
+  void resumeThreadContexts(WorkContextMapInterceptor contexts);
 
   /**
    * Return a version indicator for the current {@link org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap}.
@@ -194,5 +194,5 @@ public interface WorkContextMapInterceptor {
    *
    * @return version indicator.
    */
-  public int version();
+  int version();
 }

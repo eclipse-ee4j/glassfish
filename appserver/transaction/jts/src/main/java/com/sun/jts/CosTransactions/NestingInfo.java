@@ -51,9 +51,9 @@ import org.omg.CosTransactions.Coordinator;
  *
  */
 class NestingInfo {
-    CoordinatorImpl[] ancestorSeq = null;
+    CoordinatorImpl[] ancestorSeq;
     Vector childSet = new Vector();
-    boolean removed = false;
+    boolean removed;
 
     /**
      * Default NestingInfo constructor.

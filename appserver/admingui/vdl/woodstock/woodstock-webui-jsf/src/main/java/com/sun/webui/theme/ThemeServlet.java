@@ -75,7 +75,7 @@ import java.util.Map;
  *         &lt;url-pattern&gt;/theme/*&lt;/url-pattern&gt;
  *     &lt;/servlet-mapping&gt;
  * </pre>
- * </p>
+ *
  * <p>
  * Note that the {@code url-pattern} must be specified in a slightly different
  * manner for the {@code ThemeContext} {@code context-param}
@@ -90,7 +90,7 @@ import java.util.Map;
  * </pre> The actual value of the url-pattern is does not have to be
  * {@code /theme/*} it just must be the same for the servlet-mapping and the
  * {@code THEME_SERVLET_CONTEXT} {@code context-param}.
- * </p>
+ *
  *
  * @see com.sun.webui.theme.ThemeContext
  * @see com.sun.webui.theme.Theme

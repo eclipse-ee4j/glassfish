@@ -179,10 +179,10 @@ public class WLWebServiceEndpointNode extends DeploymentDescriptorNode<WebServic
 
     /**
      * This node represents
-     * <wsdl>
-     * <exposed/>
-     * </wsdl>
-     * <p/>
+     * &lt;wsdl&gt;
+     * &lt;exposed/&gt;
+     * &lt;/wsdl&gt;
+     * <p>
      * inside port-component
      */
     public static class WSDLNode extends DeploymentDescriptorNode<WebServiceEndpoint> {
@@ -233,11 +233,11 @@ public class WLWebServiceEndpointNode extends DeploymentDescriptorNode<WebServic
 
     /**
      * This node represents
-     * <service-endpoint-address>
-     * <webservice-contextpath/>
-     * <webservice-serviceuri/>
-     * </service-endpoint-address>
-     * <p/>
+     * &lt;service-endpoint-address>
+     * &lt;webservice-contextpath/>
+     * &lt;webservice-serviceuri/>
+     * &lt;/service-endpoint-address>
+     * <p>
      * inside port-component
      */
     public static class ServiceEndpointAddressNode extends DeploymentDescriptorNode<WebServiceEndpoint> {

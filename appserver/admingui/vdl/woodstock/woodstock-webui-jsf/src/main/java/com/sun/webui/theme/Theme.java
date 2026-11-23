@@ -25,7 +25,7 @@ package com.sun.webui.theme;
  * files, image files, CSS stylesheets and JS files to render correctly. These
  * resources are collectively known as a "Theme" and are bundled together in a
  * Jar file. Themes are swappable, so you can switch from one Theme to another
- * by placing a different Theme jar in the web application's classpath.<p>
+ * by placing a different Theme jar in the web application's classpath.
  *
  * <p>
  * Themes consist of both of resources that are used directly by the Java
@@ -185,11 +185,11 @@ public interface Theme {
      * defined as {@code key} with the following suffixes: (i.e. key ==
      * "SMALL_ALERT", SMALL_ALERT_ALT)
      * <ul>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.ALT_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.TITLE_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.HEIGHT_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.WIDTH_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.UNITS_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.ALT_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.TITLE_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.HEIGHT_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.WIDTH_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.UNITS_SUFFIX}</li>
      * </ul>
      * If {@code key} is not defined {@code key} is returned.
      *

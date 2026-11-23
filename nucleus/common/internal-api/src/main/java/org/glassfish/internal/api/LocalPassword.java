@@ -36,12 +36,12 @@ public interface LocalPassword {
      * @param password the password to test
      * @return true if it is a local password, false otherwise
      */
-    public boolean isLocalPassword(String password);
+    boolean isLocalPassword(String password);
 
     /**
      * Get the local password.
      *
      * @return the local password
      */
-    public String getLocalPassword();
+    String getLocalPassword();
 }

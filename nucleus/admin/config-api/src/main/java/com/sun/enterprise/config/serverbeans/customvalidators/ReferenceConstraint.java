@@ -59,7 +59,7 @@ public @interface ReferenceConstraint {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Documented
-    public @interface RemoteKey {
+    @interface RemoteKey {
         String message() default "";
 
         /**

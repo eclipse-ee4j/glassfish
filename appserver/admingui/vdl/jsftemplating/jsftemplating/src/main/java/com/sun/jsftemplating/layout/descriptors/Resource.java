@@ -37,28 +37,28 @@ public class Resource implements java.io.Serializable {
      * This is the id for the Resource.
      * </p>
      */
-    private String _id = null;
+    private String _id;
 
     /**
      * <p>
      * This holds "extraInfo" for the Resource, such as a ResourceBundle baseName.
      * </p>
      */
-    private String _extraInfo = null;
+    private String _extraInfo;
 
     /**
      * <p>
      * This is a String className for the Factory.
      * </p>
      */
-    private String _factoryClass = null;
+    private String _factoryClass;
 
     /**
      * <p>
      * The Factory that produces the desired <code>UIComponent</code>.
      * </p>
      */
-    private transient ResourceFactory _factory = null;
+    private transient ResourceFactory _factory;
 
     /**
      * <p>

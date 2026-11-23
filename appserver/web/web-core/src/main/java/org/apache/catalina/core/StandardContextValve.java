@@ -57,7 +57,7 @@ final class StandardContextValve
         "org.apache.catalina.core.StandardContextValve/1.0";
 
 
-    private StandardContext context = null;
+    private StandardContext context;
 
 
     // ------------------------------------------------------------- Properties

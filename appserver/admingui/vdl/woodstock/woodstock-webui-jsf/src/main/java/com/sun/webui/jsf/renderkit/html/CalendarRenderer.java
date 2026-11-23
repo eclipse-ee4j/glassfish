@@ -80,7 +80,7 @@ public class CalendarRenderer extends FieldRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Calendar.class.getName()
+                Calendar.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

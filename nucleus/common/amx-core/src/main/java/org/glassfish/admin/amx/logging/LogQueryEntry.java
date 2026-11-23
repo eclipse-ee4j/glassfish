@@ -37,56 +37,56 @@ public interface LogQueryEntry
         The fields are indexed by the values found in
         {@link LogRecordFields}.  A field is always non-null.
      */
-    public Object[] getFields();
+    Object[] getFields();
 
     /**
         The record number within the log file (first one is 0).
      */
-    public long getRecordNumber();
+    long getRecordNumber();
 
     /**
         The name of the product.
      */
-    public String getProductName();
+    String getProductName();
 
 
     /**
         The Date that the log entry was emitted.
      */
-    public Date     getDate();
+    Date     getDate();
 
     /**
         The module or Logger that emitted the entry.
      */
-    public String   getModule();
+    String   getModule();
 
     /**
         The Level of the entry.
      */
-    public String    getLevel();
+    String    getLevel();
 
     /**
         The unique message ID identifying the entry.
      */
-    public String   getMessageID();
+    String   getMessageID();
 
     /**
         The free-form message.
      */
-    public String   getMessage();
+    String   getMessage();
 
 
     /**
         Key for the thread ID within the Map returned by {@link #getNameValuePairsMap}.
         Value is of type java.lang.String.
      */
-    public static final String  THREAD_ID_KEY   = "_ThreadID";
+    String  THREAD_ID_KEY   = "_ThreadID";
 
     /**
         Key for the ObjectName within the Map returned by {@link #getNameValuePairsMap}.
         Value is of type javax.management.ObjectName.
      */
-    public static final String  OBJECT_NAME_KEY   = "_ObjectName";
+    String  OBJECT_NAME_KEY   = "_ObjectName";
 
     /**
         A Map containing name/value pairs as parsed
@@ -97,18 +97,18 @@ public interface LogQueryEntry
         <li>{@link #OBJECT_NAME_KEY}</li>
         </ul>
      */
-    public Map<String,String>   getNameValuePairsMap();
+    Map<String,String>   getNameValuePairsMap();
 
     /**
         The raw name/value pair String for this log entry.  Each
         pair is separated by the ';' character.
      */
-    public String   getNameValuePairs();
+    String   getNameValuePairs();
 
     /**
         The ID of the thread that emitted the entry (may be null).
      */
-    public String   getThreadID();
+    String   getThreadID();
 }
 
 

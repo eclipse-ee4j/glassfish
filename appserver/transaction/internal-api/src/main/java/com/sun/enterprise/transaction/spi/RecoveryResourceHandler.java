@@ -37,12 +37,12 @@ public interface RecoveryResourceHandler {
      * @param connList  populate it with connections used to provide these xa-resources, if any.
      * Transaction-recovery will call close the connections in connList once recovery is over.
      */
-    public void loadXAResourcesAndItsConnections(List xaresList, List connList);
+    void loadXAResourcesAndItsConnections(List xaresList, List connList);
 
     /**
      * close the connections that were used to provide xa-resources for recovery
      *
      * @param connList list of connections
      */
-    public void closeConnections(List connList);
+    void closeConnections(List connList);
 }

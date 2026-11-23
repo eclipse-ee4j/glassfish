@@ -377,7 +377,7 @@ public class RWLockDataStructure implements DataStructure {
      */
     private static final class DataStructureSemaphore extends Semaphore {
 
-        public DataStructureSemaphore(int permits) {
+        DataStructureSemaphore(int permits) {
             super(permits);
         }
 

@@ -298,7 +298,7 @@ public class GlassfishNamingManagerImplTest {
         SimpleJndiName logicalName;
         Object value;
 
-        public Binding(String logicalName, Object value) {
+        Binding(String logicalName, Object value) {
             this.logicalName = SimpleJndiName.of(logicalName);
             this.value = value;
         }

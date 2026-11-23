@@ -21,7 +21,7 @@ package com.sun.enterprise.admin.util.proxy;
  */
 public interface Interceptor {
 
-    public void preInvoke(CallStack callStack);
+    void preInvoke(CallStack callStack);
 
-    public void postInvoke(CallStack callStack);
+    void postInvoke(CallStack callStack);
 }

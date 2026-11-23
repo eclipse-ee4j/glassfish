@@ -350,7 +350,7 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
      * Creates a MessageEndpoint. This method gets blocked either until start()
      * is called or until one minute. This is the time for completion
      * of MDB deployment.
-     * <p/>
+     * <p>
      * Internally this method creates a message bean listener from the MDB
      * container and a proxy object fo delivering messages.
      *
@@ -431,7 +431,6 @@ public final class ConnectorMessageBeanClient implements MessageBeanClient, Mess
     }
     /**
      * {@inheritDoc}
-     * @Override
      */
     @Override
     public String getActivationName() {

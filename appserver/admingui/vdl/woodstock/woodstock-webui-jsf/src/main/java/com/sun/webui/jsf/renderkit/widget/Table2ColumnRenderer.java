@@ -66,13 +66,13 @@ public final class Table2ColumnRenderer extends RendererBase {
         "onMouseOver",
         "style",
         "valign",
-        "width"
+        "width",
     };
 
     @Override
     protected String[] getModuleNames(final UIComponent component) {
         return new String[]{
-            "table2RowGroup"
+            "table2RowGroup",
         };
     }
 

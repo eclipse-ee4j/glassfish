@@ -109,7 +109,7 @@ public interface ExtendedJDOMetaData
      * The following holds:
      *   (String s = getKeyClass(classPath)) != null
      *       ==> !isPersistenceCapableClass(s)
-     *           && isPersistenceCapableClass(classPath)
+     *           &amp;&amp; isPersistenceCapableClass(classPath)
      * @param classPath the non-null JVM-qualified name of the class
      * @return the name of the key class or null if there is none
      * @see #isPersistenceCapableClass(String)
@@ -149,7 +149,7 @@ public interface ExtendedJDOMetaData
      * transient transactional or persistent.  The following holds:
      *   isManagedField(classPath, fieldName)
      *       ==> !isKnownNonManagedField(classPath, fieldName)
-     *           && (isPersistentField(classPath, fieldName)
+     *           &amp;&amp; (isPersistentField(classPath, fieldName)
      *               ^ isTransactionalField(classPath, fieldName))
      * <P>
      * This method requires the field having been declared by declareField().
@@ -171,7 +171,7 @@ public interface ExtendedJDOMetaData
      * The following holds:
      *   isKeyField(classPath, fieldName)
      *       ==> isPersistentField(classPath, fieldName)
-     *           && !isDefaultFetchGroupField(classPath, fieldName)
+     *           &amp;&amp; !isDefaultFetchGroupField(classPath, fieldName)
      * <P>
      * This method requires the field having been declared by declareField().
      * @param classPath the non-null JVM-qualified name of the class
@@ -190,26 +190,26 @@ public interface ExtendedJDOMetaData
      *   int f = getFieldFlags(classPath, fieldName);
      *
      *   !isManagedField(classPath, fieldName)
-     *       ==> (f & CHECK_READ == 0) && (f & MEDIATE_READ == 0) &&
-     *           (f & CHECK_WRITE == 0) && (f & MEDIATE_WRITE == 0)
+     *       ==> (f &amp; CHECK_READ == 0) &amp;&amp; (f &amp; MEDIATE_READ == 0) &amp;&amp;
+     *           (f &amp; CHECK_WRITE == 0) &amp;&amp; (f &amp; MEDIATE_WRITE == 0)
      *
      *   isTransientField(classPath, fieldName)
-     *       ==> (f & CHECK_READ == 0) && (f & MEDIATE_READ == 0) &&
-     *           (f & CHECK_WRITE != 0) && (f & MEDIATE_WRITE == 0)
+     *       ==> (f &amp; CHECK_READ == 0) &amp;&amp; (f &amp; MEDIATE_READ == 0) &amp;&amp;
+     *           (f &amp; CHECK_WRITE != 0) &amp;&amp; (f &amp; MEDIATE_WRITE == 0)
      *
      *   isKeyField(classPath, fieldName)
-     *       ==> (f & CHECK_READ == 0) && (f & MEDIATE_READ == 0) &&
-     *           (f & CHECK_WRITE == 0) && (f & MEDIATE_WRITE != 0)
+     *       ==> (f &amp; CHECK_READ == 0) &amp;&amp; (f &amp; MEDIATE_READ == 0) &amp;&amp;
+     *           (f &amp; CHECK_WRITE == 0) &amp;&amp; (f &amp; MEDIATE_WRITE != 0)
      *
      *   isDefaultFetchGroupField(classPath, fieldName)
-     *       ==> (f & CHECK_READ != 0) && (f & MEDIATE_READ != 0) &&
-     *           (f & CHECK_WRITE == 0) && (f & MEDIATE_WRITE == 0)
+     *       ==> (f &amp; CHECK_READ != 0) &amp;&amp; (f &amp; MEDIATE_READ != 0) &amp;&amp;
+     *           (f &amp; CHECK_WRITE == 0) &amp;&amp; (f &amp; MEDIATE_WRITE == 0)
      *
      *   isPersistentField(classPath, fieldName)
-     *   && isKeyField(classPath, fieldName)
-     *   && isDefaultFetchGroupField(classPath, fieldName)
-     *       ==> (f & CHECK_READ == 0) && (f & MEDIATE_READ == 0) &&
-     *           (f & CHECK_WRITE != 0) && (f & MEDIATE_WRITE != 0)
+     *   &amp;&amp; isKeyField(classPath, fieldName)
+     *   &amp;&amp; isDefaultFetchGroupField(classPath, fieldName)
+     *       ==> (f &amp; CHECK_READ == 0) &amp;&amp; (f &amp; MEDIATE_READ == 0) &amp;&amp;
+     *           (f &amp; CHECK_WRITE != 0) &amp;&amp; (f &amp; MEDIATE_WRITE != 0)
      * <P>
      * This method requires the field having been declared by declareField().
      * @param classPath the non-null JVM-qualified name of the class
@@ -277,7 +277,7 @@ public interface ExtendedJDOMetaData
      * The following holds:
      *   (String s = getPersistenceCapableSuperClass(classPath)) != null
      *       ==> isPersistenceCapableClass(classPath)
-     *           && !isPersistenceCapableRootClass(classPath)
+     *           &amp;&amp; !isPersistenceCapableRootClass(classPath)
      * @param classPath the non-null JVM-qualified name of the class
      * @return the name of the PC superclass or null if there is none
      * @see #isPersistenceCapableClass(String)
@@ -294,8 +294,8 @@ public interface ExtendedJDOMetaData
      * The following holds:
      *   (String s = getSuperKeyClass(classPath)) != null
      *       ==> !isPersistenceCapableClass(s)
-     *           && isPersistenceCapableClass(classPath)
-     *           && !isPersistenceCapableRootClass(classPath)
+     *           &amp;&amp; isPersistenceCapableClass(classPath)
+     *           &amp;&amp; !isPersistenceCapableRootClass(classPath)
      * @param classPath the non-null JVM-qualified name of the class
      * @return the name of the key class or null if there is none
      * @see #getKeyClass(String)

@@ -116,7 +116,7 @@ public class WeakHashSet<T> extends HashSet<Object> {
      * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
-    private final Object getReferenceObject(WeakReference<Object> ref) {
+    private Object getReferenceObject(WeakReference<Object> ref) {
         return ((ref != null) ? ref.get() : null);
     }
 
@@ -126,7 +126,7 @@ public class WeakHashSet<T> extends HashSet<Object> {
      * Since we don't know how much the ReferenceQueue.poll() operation
      * costs, we should call it only in the put() method.
      */
-    private final void processQueue() {
+    private void processQueue() {
         WeakElement wv = null;
         while ((wv = (WeakElement) this.queue.poll()) != null) {
             super.remove(wv);

@@ -99,8 +99,8 @@ import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBLocalHo
 import org.glassfish.persistence.ejb.entitybean.container.stats.EntityBeanStatsProvider;
 
 /**
- * This class implements the Container interface for EntityBeans. It is responsible for instance & lifecycle management
- * for BMP & CMP EntityBeans. The EntityContainer implements option B of the commit-time options described in the EJB2.0
+ * This class implements the Container interface for EntityBeans. It is responsible for instance &amp; lifecycle management
+ * for BMP &amp; CMP EntityBeans. The EntityContainer implements option B of the commit-time options described in the EJB2.0
  * spec section 10.5.9 It also implements optimistic concurrency (i.e. multiple non-exclusive bean instances per primary
  * key) when there are multiple concurrent transactions on a EntityBean.
  * <p>
@@ -182,16 +182,16 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     protected final int DEFAULT_CACHE_SIZE = 8192;
     protected int _maxBuckets = 8;
 
-    protected IASEjbExtraDescriptors iased = null;
-    protected BeanCacheDescriptor beanCacheDes = null;
-    protected BeanPoolDescriptor beanPoolDes = null;
+    protected IASEjbExtraDescriptors iased;
+    protected BeanCacheDescriptor beanCacheDes;
+    protected BeanPoolDescriptor beanPoolDes;
     protected EjbContainer ejbContainer;
-    boolean largeCache = false;
+    boolean largeCache;
 
-    CacheProperties cacheProp = null;
-    PoolProperties poolProp = null;
+    CacheProperties cacheProp;
+    PoolProperties poolProp;
     Object asyncTaskSemaphore = new Object();
-    boolean addedASyncTask = false;
+    boolean addedASyncTask;
 
     // a timer task to trim the beans idle in readyStore
     protected IdleBeansPassivator idleEJBObjectPassivator;
@@ -819,7 +819,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
 
     /**
      * Convert a collection of primary keys to a collection of EJBObjects. (special case: single primary key). Note: the
-     * order of input & output collections must be maintained. Null values are preserved in both the single primary key
+     * order of input &amp; output collections must be maintained. Null values are preserved in both the single primary key
      * return and collection-valued return cases.
      *
      * This is called from the generated "HelloEJBHomeImpl" find* method, after ejb.ejbFind**() has been called. Note:
@@ -1488,7 +1488,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     // Check if a method is a finder / home method.
     // Note: this method object is of the EJB's remote/home/local interfaces,
     // not the EJB class.
-    private final boolean isHomeFinder(Method method) {
+    private boolean isHomeFinder(Method method) {
         Class<?> methodClass = method.getDeclaringClass();
         if (isRemote) {
             if ((hasRemoteHomeView && methodClass.isAssignableFrom(homeIntf)) && (methodClass != EJBHome.class)
@@ -2085,7 +2085,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
         int poolResizeQuantity;
         int steadyPoolSize;
 
-        public PoolProperties(EntityContainer entityContainer) {
+        PoolProperties(EntityContainer entityContainer) {
 
             maxPoolSize = Integer.parseInt(entityContainer.ejbContainer.getMaxPoolSize());
             poolIdleTimeoutInSeconds = Integer.parseInt(entityContainer.ejbContainer.getPoolIdleTimeoutInSeconds());
@@ -2273,7 +2273,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     private class EntityContextFactory implements ObjectFactory {
         private final EntityContainer entityContainer;
 
-        public EntityContextFactory(EntityContainer entityContainer) {
+        EntityContextFactory(EntityContainer entityContainer) {
             this.entityContainer = entityContainer;
         }
 
@@ -2579,7 +2579,7 @@ public class EntityContainer extends BaseContainer implements CacheListener {
     protected class LocalEJBObjectCacheVictimHandler implements EJBObjectCacheListener, Runnable {
 
         protected Object lock = new Object();
-        protected boolean addedTask = false;
+        protected boolean addedTask;
         protected ArrayList<Object> keys = new ArrayList<>(16);
 
         protected LocalEJBObjectCacheVictimHandler() {
@@ -2809,7 +2809,7 @@ class ActiveTxCache {
         buckets = new EntityContextImpl[bucketMask + 1];
     }
 
-    private final int getIndex(int hashCode) {
+    private int getIndex(int hashCode) {
         return (hashCode & bucketMask);
     }
 }

@@ -44,12 +44,12 @@ import org.glassfish.api.admin.PasswordAliasStore;
  */
 public class RelativePathResolver {
 
-    private static RelativePathResolver _instance = null;
+    private static RelativePathResolver _instance;
 
     private static final String ALIAS_TOKEN = "ALIAS";
     private static final String ALIAS_DELIMITER = "=";
 
-    private static PasswordAliasStore domainPasswordAliasStore = null;
+    private static PasswordAliasStore domainPasswordAliasStore;
 
     private synchronized static PasswordAliasStore getDomainPasswordAliasStore() {
         if (domainPasswordAliasStore == null) {

@@ -80,7 +80,7 @@ class LogExtent extends Object {
 
     /**This value is used to validate the LogExtent object.
      */
-    LogExtent blockValid = null;
+    LogExtent blockValid;
 
     /**The extent number.
      */
@@ -88,19 +88,19 @@ class LogExtent extends Object {
 
     /**The file handle for the log extent file.
      */
-    LogFileHandle  fileHandle = null;
+    LogFileHandle  fileHandle;
 
     /**The file for the log extent file.
      */
-    File file = null;
+    File file;
 
     /**Indicates whether any information has been written since the last force.
      */
-    boolean writtenSinceLastForce = false;
+    boolean writtenSinceLastForce;
 
     /**The cursor position in the log extent.
      */
-    int cursorPosition = 0;
+    int cursorPosition;
 
     /**The last type of access to the extent.
      */

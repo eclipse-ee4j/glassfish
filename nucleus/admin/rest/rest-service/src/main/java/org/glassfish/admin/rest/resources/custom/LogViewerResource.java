@@ -57,12 +57,12 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Represents a large text data.
- * <p/>
- * <p/>
+ *
+ * <p>
  * This class defines methods for handling progressive text update.
- * <p/>
+ *
  * <h2>Usage</h2>
- * <p/>
+ *
  *
  * @author Kohsuke Kawaguchi
  */
@@ -335,7 +335,7 @@ public class LogViewerResource {
     private static final class ByteBuf {
 
         private final byte[] buf = new byte[8192];
-        private int size = 0;
+        private int size;
         private ByteBuf next;
 
         private ByteBuf(ByteBuf previous, Session f) throws IOException {

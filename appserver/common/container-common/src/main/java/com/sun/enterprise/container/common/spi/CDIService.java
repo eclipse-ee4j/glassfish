@@ -86,7 +86,7 @@ public interface CDIService {
      */
     CDIInjectionContext createEmptyCDIInjectionContext();
 
-    public interface CDIInjectionContext<T> {
+    interface CDIInjectionContext<T> {
         /**
          * @return The instance associated with this context.
          */

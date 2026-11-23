@@ -128,7 +128,7 @@ public class ListManager extends BackupRestoreManager
                               status.getBackupConfigName(),
                               status.getUserName(),
                               status.getTimeStamp(),
-                              filename
+                              filename,
                          });
                 }
             }

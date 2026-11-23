@@ -52,5 +52,5 @@ public class ParameterMetaData {
     }
 
     HashMap<String, String> __metaData;
-    boolean __isFileParameter = false;
+    boolean __isFileParameter;
 }

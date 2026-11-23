@@ -34,7 +34,7 @@ import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
  * DTD resolver used when parsing the domain.xml and resolve to local DTD copies
  *
  * @author Jerome Dochez
- * @Deprecated
+ * @deprecated
  */
 @Deprecated
 public class DomainResolver implements EntityResolver {

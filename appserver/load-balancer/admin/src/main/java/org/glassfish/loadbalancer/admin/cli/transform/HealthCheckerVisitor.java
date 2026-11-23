@@ -47,5 +47,5 @@ public class HealthCheckerVisitor implements Visitor {
         }
     }
     //--- PRIVATE VARS ----
-    Cluster _c = null;
+    Cluster _c;
 }

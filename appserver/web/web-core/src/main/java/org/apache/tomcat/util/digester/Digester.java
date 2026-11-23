@@ -177,13 +177,13 @@ public class Digester extends DefaultHandler {
      * used to load Digester itself, is used, based on the value of the
      * <code>useContextClassLoader</code> variable.
      */
-    protected ClassLoader classLoader = null;
+    protected ClassLoader classLoader;
 
 
     /**
      * Has this Digester been configured yet.
      */
-    protected boolean configured = false;
+    protected boolean configured;
 
 
     /**
@@ -203,13 +203,13 @@ public class Digester extends DefaultHandler {
      * The application-supplied error handler that is notified when parsing
      * warnings, errors, or fatal errors occur.
      */
-    protected ErrorHandler errorHandler = null;
+    protected ErrorHandler errorHandler;
 
 
     /**
      * The SAXParserFactory that is created the first time we need it.
      */
-    protected SAXParserFactory factory = null;
+    protected SAXParserFactory factory;
 
     /**
      * @deprecated This is now managed by {@link ParserFeatureSetterFactory}
@@ -222,7 +222,7 @@ public class Digester extends DefaultHandler {
     /**
      * The Locator associated with our parser.
      */
-    protected Locator locator = null;
+    protected Locator locator;
 
 
     /**
@@ -234,7 +234,7 @@ public class Digester extends DefaultHandler {
     /**
      * Do we want a "namespace aware" parser.
      */
-    protected boolean namespaceAware = false;
+    protected boolean namespaceAware;
 
 
     /**
@@ -259,27 +259,27 @@ public class Digester extends DefaultHandler {
     /**
      * The SAXParser we will use to parse the input stream.
      */
-    protected SAXParser parser = null;
+    protected SAXParser parser;
 
 
     /**
      * The public identifier of the DTD we are currently parsing under
      * (if any).
      */
-    protected String publicId = null;
+    protected String publicId;
 
 
     /**
      * The XMLReader used to parse digester rules.
      */
-    protected XMLReader reader = null;
+    protected XMLReader reader;
 
 
     /**
      * The "root" element of the stack (in other words, the last object
      * that was popped.
      */
-    protected Object root = null;
+    protected Object root;
 
 
     /**
@@ -288,7 +288,7 @@ public class Digester extends DefaultHandler {
      * established before the first rule is added, a default implementation
      * will be provided.
      */
-    protected Rules rules = null;
+    protected Rules rules;
 
    /**
      * The XML schema language to use for validating an XML instance. By
@@ -300,7 +300,7 @@ public class Digester extends DefaultHandler {
     /**
      * The XML schema to use for validating an XML instance.
      */
-    protected String schemaLocation = null;
+    protected String schemaLocation;
 
 
     /**
@@ -313,26 +313,26 @@ public class Digester extends DefaultHandler {
      * Do we want to use the Context ClassLoader when loading classes
      * for instantiating new objects.  Default is <code>false</code>.
      */
-    protected boolean useContextClassLoader = false;
+    protected boolean useContextClassLoader;
 
 
     /**
      * Do we want to use a validating parser.
      */
-    protected boolean validating = false;
+    protected boolean validating;
 
 
 
     /**
      * Warn on missing attributes and elements.
      */
-    protected boolean rulesValidation = false;
+    protected boolean rulesValidation;
 
 
     /**
      * Fake attributes map (attributes are often used for object creation).
      */
-    protected Map<Class<?>, List<String>> fakeAttributes = null;
+    protected Map<Class<?>, List<String>> fakeAttributes;
 
 
     /**

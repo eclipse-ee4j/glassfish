@@ -65,7 +65,7 @@ public class RbCbSelector extends Selector implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageURL = null;
+    private String imageURL;
 
     /**
      * Specifies the options that the web application user can choose from. The
@@ -78,7 +78,7 @@ public class RbCbSelector extends Selector implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private Object items = null;
+    private Object items;
 
     /**
      * Identifies the control as participating as part of a group. The
@@ -94,7 +94,7 @@ public class RbCbSelector extends Selector implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String name = null;
+    private String name;
 
     /**
      * Default constructor.
@@ -466,12 +466,12 @@ public class RbCbSelector extends Selector implements NamingContainer {
      * {@code getId() + "_image"}.
      * The {@code ImageComponent} instance is initialized with the values
      * from
-     * <p>
+     *
      * <ul>
      * <li>{@code getImageURL()}</li>
      * <li>{@code getToolTip()} for the toolTip and alt property</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * If a facet is not defined then the returned {@code ImageComponent}
      * component is created every time this method is called.
@@ -495,12 +495,12 @@ public class RbCbSelector extends Selector implements NamingContainer {
      * id
      * {@code getId() + "_label"}.
      * The {@code Label} instance is initialized with the values from
-     * <p>
+     *
      * <ul>
      * <li>{@code getLabel()}</li>
      * <li>{@code getLabelLevel()}</li>
      * </ul>
-     * </p>
+     *
      * <p>
      * If a facet is not defined then the returned {@code Label} component
      * is created every time this method is called.

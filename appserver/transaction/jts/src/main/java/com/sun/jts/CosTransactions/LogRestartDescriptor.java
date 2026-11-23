@@ -47,9 +47,9 @@ class LogRestartDescriptor implements Serializable {
      */
     final static int SIZEOF = 12;
 
-    int restartValid      = 0;
-    int restartDataLength = 0;
-    int timeStamp         = 0;
+    int restartValid;
+    int restartDataLength;
+    int timeStamp;
 
     /**
      * Default LogRestartDescriptor constructor.

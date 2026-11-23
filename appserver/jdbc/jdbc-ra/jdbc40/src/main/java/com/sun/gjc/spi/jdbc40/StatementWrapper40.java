@@ -62,22 +62,22 @@ public class StatementWrapper40 extends StatementWrapper {
      * specified is a hint to the statement pool implementation indicating whether
      * the application wants the statement to be pooled. It is up to the statement
      * pool manager as to whether the hint is used.
-     * <p/>
+     * <p>
      * The poolable value of a statement is applicable to both internal statement
      * caches implemented by the driver and external statement caches implemented by
      * application servers and other applications.
-     * <p/>
+     * <p>
      * By default, a <code>Statement</code> is not poolable when created, and a
      * <code>PreparedStatement</code> and <code>CallableStatement</code> are
      * poolable when created.
-     * <p/>
+     *
      *
      * @param poolable requests that the statement be pooled if true and that the
      * statement not be pooled if false
-     * <p/>
+     *
      * @throws SQLException if this method is called on a closed
      * <code>Statement</code>
-     * <p/>
+     *
      * @since 1.6
      */
     @Override
@@ -88,17 +88,17 @@ public class StatementWrapper40 extends StatementWrapper {
     /**
      * Returns a value indicating whether the <code>Statement</code> is poolable or
      * not.
-     * <p/>
+     *
      *
      * @throws SQLException if this method is called on a closed
      * <code>Statement</code>
-     * <p/>
+     *
      * @return <code>true</code> if the <code>Statement</code> is poolable;
      * <code>false</code> otherwise
-     * <p/>
+     *
      * @see java.sql.Statement#setPoolable(boolean) setPoolable(boolean)
      * @since 1.6
-     * <p/>
+     *
      */
     @Override
     public boolean isPoolable() throws SQLException {
@@ -108,7 +108,7 @@ public class StatementWrapper40 extends StatementWrapper {
     /**
      * Returns an object that implements the given interface to allow access to
      * non-standard methods, or standard methods not exposed by the proxy.
-     * <p/>
+     * <p>
      * If the receiver implements the interface then the result is the receiver or a
      * proxy for the receiver. If the receiver is a wrapper and the wrapped object
      * implements the interface then the result is the wrapped object or a proxy for
@@ -167,7 +167,7 @@ public class StatementWrapper40 extends StatementWrapper {
      * Retrieves any auto-generated keys created as a result of executing this
      * <code>Statement</code> object. If this <code>Statement</code> object did not
      * generate any keys, an empty <code>ResultSet</code> object is returned.
-     * <p/>
+     *
      * <p>
      * <B>Note:</B>If the columns which represent the auto-generated keys were not
      * specified, the JDBC driver implementation will determine the columns which

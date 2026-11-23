@@ -99,9 +99,9 @@ public class MappingGenerator extends
 
     private final EjbBundleDescriptorImpl bundle;
 
-    private String dbVendorName = null;
-    private boolean isJavaToDatabaseFlag = false;
-    private boolean isVerifyFlag = false;
+    private String dbVendorName;
+    private boolean isJavaToDatabaseFlag;
+    private boolean isVerifyFlag;
 
     /**
      * I18N message handler

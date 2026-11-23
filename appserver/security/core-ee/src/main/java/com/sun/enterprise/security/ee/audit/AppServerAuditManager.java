@@ -88,7 +88,6 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     /**
      * logs the web authorization call for all loaded modules
      *
-     * @see com.sun.appserv.security.AuditModule.webInvocation
      */
     public void webInvocation(final String user, final HttpServletRequest req, final String type, final boolean success) {
         if (auditOn) {
@@ -108,7 +107,6 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     /**
      * logs the ejb authorization call for all ejb modules
      *
-     * @see com.sun.appserv.security.AuditModule.ejbInvocation
      */
     public void ejbInvocation(final String user, final String ejb, final String method, final boolean success) {
         if (auditOn) {
@@ -128,7 +126,6 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     /**
      * This method is called for the web service calls with MLS set and the endpoints deployed as servlets
      *
-     * @see com.sun.appserv.security.AuditModule.webServiceInvocation
      */
     public void webServiceInvocation(final String uri, final String endpoint, final boolean validRequest) {
         if (auditOn) {
@@ -148,7 +145,6 @@ public final class AppServerAuditManager extends BaseAuditManager<AuditModule> {
     /**
      * This method is called for the web service calls with MLS set and the endpoints deployed as servlets
      *
-     * @see com.sun.appserv.security.AuditModule.webServiceInvocation
      */
     public void ejbAsWebServiceInvocation(final String endpoint, final boolean validRequest) {
         if (auditOn) {

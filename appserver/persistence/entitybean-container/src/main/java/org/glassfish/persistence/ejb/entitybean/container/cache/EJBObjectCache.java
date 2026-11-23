@@ -28,13 +28,13 @@ import java.util.Properties;
  */
 public interface EJBObjectCache<K, V> extends Cache<K, V> {
 
-    public Object get(K key, boolean incrementRefCount);
+    Object get(K key, boolean incrementRefCount);
 
-    public Object put(K key, V value, boolean incrementRefCount);
+    Object put(K key, V value, boolean incrementRefCount);
 
-    public Object remove(K key, boolean decrementRefCount);
+    Object remove(K key, boolean decrementRefCount);
 
-    public void init(int maxEntries, int numberOfVictimsToSelect, long timeout, float loadFactor, Properties props);
+    void init(int maxEntries, int numberOfVictimsToSelect, long timeout, float loadFactor, Properties props);
 
-    public void setEJBObjectCacheListener(EJBObjectCacheListener listener);
+    void setEJBObjectCacheListener(EJBObjectCacheListener listener);
 }

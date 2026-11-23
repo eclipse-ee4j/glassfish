@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * This is the <code>Handler Annotation</code>. It is expected to exist on each
- * {@link com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
+ * {@code com.sun.jsftemplating.component.factory.ComponentFactory}. It must specify an identifier for the
  * <code>ComponentFactory</code> so that it may be referenced when defining <code>UIComponents</code> in your template
  * or code.
  * </p>
@@ -34,13 +34,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 public @interface Handler {
-    public String id();
+    String id();
 
-    public HandlerInput[] input() default {};
+    HandlerInput[] input() default {};
 
-    public HandlerOutput[] output() default {};
+    HandlerOutput[] output() default {};
 
-    public static final String ID = "id";
-    public static final String INPUT = "input";
-    public static final String OUTPUT = "output";
+    String ID = "id";
+    String INPUT = "input";
+    String OUTPUT = "output";
 }

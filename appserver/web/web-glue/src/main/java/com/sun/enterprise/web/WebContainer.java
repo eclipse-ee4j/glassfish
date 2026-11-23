@@ -279,10 +279,10 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     /**
      * Controls the verbosity of the web container subsystem's debug messages.
-     * <p/>
+     * <p>
      * This value is non-zero only when the iAS level is one of FINE, FINER or FINEST.
      */
-    protected int _debug = 0;
+    protected int _debug;
 
     /**
      * Absolute path for location where all the deployed standalone modules are stored for this Server Instance.
@@ -1291,7 +1291,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     /**
      * Configures a default web module for each virtual server based on the virtual server's docroot if a virtual server
      * does not specify any default-web-module, and none of its web modules are loaded at "/"
-     * <p/>
+     * <p>
      * Needed in postConstruct before Deployment.ALL_APPLICATIONS_PROCESSED for "jsp from docroot before web container
      * start" scenario
      */
@@ -1458,7 +1458,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     /**
      * Creates and configures a web module for each virtual server that the web module is hosted under.
-     * <p/>
+     * <p>
      * If no virtual servers have been specified, then the web module will not be loaded.
      */
     public List<Result<WebModule>> loadWebModule(WebModuleConfig wmInfo, String j2eeApplication, Properties deploymentProperties) {
@@ -2860,7 +2860,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     }
 
     /**
-     * Reconfigures the access log valve of each virtual server with the updated attributes of the <access-log> element from
+     * Reconfigures the access log valve of each virtual server with the updated attributes of the &lt;access-log> element from
      * domain.xml.
      */
     public void updateAccessLog(HttpService httpService) {

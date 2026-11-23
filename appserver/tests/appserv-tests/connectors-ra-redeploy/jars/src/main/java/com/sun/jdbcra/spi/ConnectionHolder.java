@@ -50,13 +50,13 @@ public class ConnectionHolder implements Connection{
 
     private ManagedConnection mc;
 
-    private boolean wrappedAlready = false;
+    private boolean wrappedAlready;
 
-    private boolean isClosed = false;
+    private boolean isClosed;
 
     private boolean valid = true;
 
-    private boolean active = false;
+    private boolean active;
     /**
      * The active flag is false when the connection handle is
      * created. When a method is invoked on this object, it asks

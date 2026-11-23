@@ -44,7 +44,7 @@ public final class StringLengthValidator implements Validator, StateHolder {
      * The message to use in case the value is too short. May include {0} for
      * the minimum value.
      */
-    private String tooShortMessage = null;
+    private String tooShortMessage;
 
     /**
      * The message to use in case the value is too long. May include {0} for the
@@ -55,17 +55,17 @@ public final class StringLengthValidator implements Validator, StateHolder {
     /**
      * Minimum length.
      */
-    private int minLength = 0;
+    private int minLength;
 
     /**
      * Maximum length.
      */
-    private int maxLength = 0;
+    private int maxLength;
 
     /**
      * Is the minimum length set.
      */
-    private boolean minimumSet = false;
+    private boolean minimumSet;
 
     /**
      * Debug flag.

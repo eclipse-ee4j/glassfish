@@ -49,10 +49,10 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
     protected String name; // The node object itself
     protected String category;
     protected String description;
-    protected boolean enabled = false;
+    protected boolean enabled;
     private static String NAME_SEPARATOR = ".";
     private static String REGEX = "(?<!\\\\)\\.";
-    private TreeNode parent = null;
+    private TreeNode parent;
     // Special character Regex to be converted to .* for v2 compatibility
     private String STAR = "*";
 

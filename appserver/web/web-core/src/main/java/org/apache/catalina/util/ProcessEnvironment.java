@@ -43,34 +43,34 @@ public class ProcessEnvironment {
     private static final Logger log = LogFacade.getLogger();
 
     /** context of the enclosing servlet */
-    private ServletContext context = null;
+    private ServletContext context;
 
     /** real file system directory of the enclosing servlet's web app */
-    private String webAppRootDir = null;
+    private String webAppRootDir;
 
     /** context path of enclosing servlet */
-    private String contextPath = null;
+    private String contextPath;
 
     /** pathInfo for the current request */
-    protected String pathInfo = null;
+    protected String pathInfo;
 
     /** servlet URI of the enclosing servlet */
-    private String servletPath = null;
+    private String servletPath;
 
     /** derived process environment */
-    protected Hashtable<String, String> env = null;
+    protected Hashtable<String, String> env;
 
     /** command to be invoked */
-    protected String command = null;
+    protected String command;
 
     /** whether or not this object is valid or not */
-    protected boolean valid = false;
+    protected boolean valid;
 
     /** the debugging detail level for this instance. */
-    protected int debug = 0;
+    protected int debug;
 
     /** process' desired working directory */
-    protected File workingDirectory = null;
+    protected File workingDirectory;
 
 
     /**

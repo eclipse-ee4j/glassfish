@@ -783,14 +783,14 @@ class RecoveryStateHolder {
     /**
      * list of XA Resources to be recovered.
      */
-    Enumeration uniqueRMSet = null;
+    Enumeration uniqueRMSet;
 
     /**
      * This attribute indicates the number of Coordinator objects which require
      * resync.  This is set to the number of in-doubt transactions recovered
      * from the log, then decreased as transactions are resolved.
      */
-    int resyncCoords = 0;
+    int resyncCoords;
 
     /**
      * This attribute is used to block new requests while there are

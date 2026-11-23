@@ -80,7 +80,7 @@ public final class ServerSynchronizer implements PostConstruct {
     @Inject @Optional
     private Applications applications;
 
-    private static boolean syncArchive = false;
+    private static boolean syncArchive;
 
     private URI domainRootUri;  // URI of the domain's root directory
 

@@ -56,8 +56,8 @@ import org.jvnet.hk2.config.TransactionFailure;
  *
  * domain.xml element example
  *
- * <protocol name="http-listener-1"> <http max-connections="250" default-virtual-server="server" server-name="">
- * <file-cache enabled="false" /> </http> <ssl ssl3-enabled="false" cert-nickname="s1as" /> </protocol>
+ * &lt;protocol name="http-listener-1"&gt; &lt;http max-connections="250" default-virtual-server="server" server-name=""&gt;
+ * &lt;file-cache enabled="false" /> &lt;/http&gt; &lt;ssl ssl3-enabled="false" cert-nickname="s1as" /&gt; &lt;/protocol&gt;
  *
  * @author Nandini Ektare
  */

@@ -46,7 +46,7 @@ public interface StoreProperties extends ConfigBeanProxy, PropertyBag {
      *         {@link String }
      */
     @Attribute
-    public String getDirectory();
+    String getDirectory();
 
     /**
      * Sets the value of the directory property.
@@ -54,7 +54,7 @@ public interface StoreProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setDirectory(String value) throws PropertyVetoException;
+    void setDirectory(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the reapIntervalInSeconds property.
@@ -63,7 +63,7 @@ public interface StoreProperties extends ConfigBeanProxy, PropertyBag {
      *         {@link String }
      */
     @Attribute(dataType=Integer.class)
-    public String getReapIntervalInSeconds();
+    String getReapIntervalInSeconds();
 
     /**
      * Sets the value of the reapIntervalInSeconds property.
@@ -71,7 +71,7 @@ public interface StoreProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setReapIntervalInSeconds(String value) throws PropertyVetoException;
+    void setReapIntervalInSeconds(String value) throws PropertyVetoException;
 
     /**
         Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}

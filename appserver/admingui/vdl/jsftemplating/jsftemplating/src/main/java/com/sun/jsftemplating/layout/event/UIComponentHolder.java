@@ -21,7 +21,7 @@ import jakarta.faces.component.UIComponent;
 /**
  * <p>
  * This interface defines a method for obtaining a <code>UIComponent</code>. This is used by various
- * <code>EventObject<code> implementations which hold
+ * <code>EventObject</code> implementations which hold
  *    <code>UIComponent</code>. This allows event handling code to access the <code>UIComponent</code> related to the
  * event.
  * </p>

@@ -74,19 +74,19 @@ public final class LifecycleEvent
     /**
      * The event data associated with this event.
      */
-    private Object data = null;
+    private Object data;
 
 
     /**
      * The Lifecycle on which this event occurred.
      */
-    private transient Lifecycle lifecycle = null;
+    private transient Lifecycle lifecycle;
 
 
     /**
      * The event type this instance represents.
      */
-    private String type = null;
+    private String type;
 
 
     // ------------------------------------------------------------- Properties

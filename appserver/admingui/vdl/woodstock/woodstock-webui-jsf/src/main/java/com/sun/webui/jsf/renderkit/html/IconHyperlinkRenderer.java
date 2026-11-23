@@ -18,10 +18,10 @@ package com.sun.webui.jsf.renderkit.html;
 import com.sun.faces.annotation.Renderer;
 
 /**
- * This class is responsible for rendering the {@link IconHyperlink} component
+ * This class is responsible for rendering the {@code IconHyperlink} component
  * for the HTML Render Kit.
  * <p>
- * The {@link IconHyperlink} component can be used as an anchor, a plain
+ * The {@code IconHyperlink} component can be used as an anchor, a plain
  * hyperlink or a hyperlink that submits the form depending on how the
  * properties are filled out for the component.
  * </p>

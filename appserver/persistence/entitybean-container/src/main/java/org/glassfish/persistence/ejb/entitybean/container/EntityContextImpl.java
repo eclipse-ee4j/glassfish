@@ -42,15 +42,15 @@ public class EntityContextImpl
     implements EntityContext, CascadeDeleteNotifier
 {
     private int lastTxStatus=-1;
-    private boolean newlyActivated = false;
-    private int nCallsInProgress = 0;
-    private boolean dirty = false;
-    private boolean inUnsetEntityContext = false;
-    private boolean inEjbLoad = false;
-    private boolean inEjbStore = false;
+    private boolean newlyActivated;
+    private int nCallsInProgress;
+    private boolean dirty;
+    private boolean inUnsetEntityContext;
+    private boolean inEjbLoad;
+    private boolean inEjbStore;
 
-    private boolean cascadeDeleteBeforeEJBRemove = false;
-    private boolean cascadeDeleteAfterSuperEJBRemove = false;
+    private boolean cascadeDeleteBeforeEJBRemove;
+    private boolean cascadeDeleteAfterSuperEJBRemove;
 
     //The following member variables are used to directly cache
     //    the EntityContext instead of enclosing it within a wrapper class.
@@ -58,7 +58,7 @@ public class EntityContextImpl
     private int                _pkHashCode;
     private EntityContextImpl        _next;
 
-    transient private EntityContainer _container = null;
+    transient private EntityContainer _container;
 
     EntityContextImpl(Object ejb, BaseContainer container) {
         super(ejb, container);

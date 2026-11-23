@@ -99,7 +99,7 @@ public final class SecurityUtil{
      * be called.
      * @param targetType <code>Class</code> array used to instantiate a i
      * <code>Method</code> object.
-     * @param targetObject <code>Object</code> array contains the runtime
+     * @param targetArguments <code>Object</code> array contains the runtime
      * parameters instance.
      */
     public static void doAsPrivilege(final String methodName,

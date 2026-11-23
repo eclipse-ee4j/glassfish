@@ -49,7 +49,7 @@ public final class PageSeparatorRenderer extends AbstractRenderer {
         "onMouseDown",
         "onMouseMove",
         "onMouseOut",
-        "onMouseOver"
+        "onMouseOver",
     };
 
     @Override

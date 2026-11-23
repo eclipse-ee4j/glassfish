@@ -54,7 +54,6 @@ public abstract class ServerSentEventHandler {
      * connection is closed, but can be told to stop reconnecting by returning the appropriate status.
      *
      * @param connection Server-Sert event connection
-     * @return Status to accept, or don't reconnect etc
      */
     public void onConnected(ServerSentEventConnection connection) {
         this.connection = connection;

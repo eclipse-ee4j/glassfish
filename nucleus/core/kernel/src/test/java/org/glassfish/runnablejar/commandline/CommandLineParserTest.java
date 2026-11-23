@@ -86,7 +86,7 @@ class CommandLineParserTest {
                 "--stop",
                 "add-library",
                 "testLibrary.jar",
-                "testLibraryApp.war"
+                "testLibraryApp.war",
         };
         Arguments parse = new CommandLineParser().parse(arguments);
         String value = parse.glassFishProperties.getProperty("embedded-glassfish-config.server.network-config.network-listeners.network-listener.http-listener.enabled");

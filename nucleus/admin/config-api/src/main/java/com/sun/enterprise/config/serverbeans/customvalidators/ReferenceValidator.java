@@ -39,7 +39,7 @@ public class ReferenceValidator implements ConstraintValidator<ReferenceConstrai
         final Method method;
         final ReferenceConstraint.RemoteKey annotation;
 
-        public RemoteKeyInfo(Method method, ReferenceConstraint.RemoteKey annotation) {
+        RemoteKeyInfo(Method method, ReferenceConstraint.RemoteKey annotation) {
             this.method = method;
             this.annotation = annotation;
         }

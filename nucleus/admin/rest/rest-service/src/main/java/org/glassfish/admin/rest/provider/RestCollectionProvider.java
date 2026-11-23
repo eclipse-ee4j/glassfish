@@ -34,7 +34,7 @@ import org.glassfish.admin.rest.composite.metadata.RestModelMetadata;
 import org.glassfish.admin.rest.utils.JsonUtil;
 
 /**
- * @author: jdlee
+ * @author jdlee
  */
 @Provider
 @Produces({ Constants.MEDIA_TYPE_JSON })

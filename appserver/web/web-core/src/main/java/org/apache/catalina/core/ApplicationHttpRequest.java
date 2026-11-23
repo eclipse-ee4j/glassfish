@@ -130,18 +130,18 @@ public class ApplicationHttpRequest extends HttpServletRequestWrapper {
     /**
      * The context for this request.
      */
-    protected Context context = null;
+    protected Context context;
 
     /**
      * The context path for this request.
      */
-    protected String contextPath = null;
+    protected String contextPath;
 
     /**
      * If this request is cross context, since this changes session access
      * behavior.
      */
-    protected boolean crossContext = false;
+    protected boolean crossContext;
 
     private HttpServletMapping mappingForDispatch;
 
@@ -154,56 +154,56 @@ public class ApplicationHttpRequest extends HttpServletRequestWrapper {
      * The request parameters for this request.  This is initialized from the
      * wrapped request, but updates are allowed.
      */
-    protected Map<String, String[]> parameters = null;
+    protected Map<String, String[]> parameters;
 
     /**
      * Have the parameters for this request already been parsed?
      */
-    private boolean parsedParams = false;
+    private boolean parsedParams;
 
     /**
      * The path information for this request.
      */
-    protected String pathInfo = null;
+    protected String pathInfo;
 
     /**
      * The query parameters for the current request.
      */
-    private String queryParamString = null;
+    private String queryParamString;
 
     /**
      * The query string for this request.
      */
-    protected String queryString = null;
+    protected String queryString;
 
     /**
      * The current request dispatcher path.
      */
-    protected Object requestDispatcherPath = null;
+    protected Object requestDispatcherPath;
 
     /**
      * The request URI for this request.
      */
-    protected String requestURI = null;
+    protected String requestURI;
 
     /**
      * The servlet path for this request.
      */
-    protected String servletPath = null;
+    protected String servletPath;
 
     /**
      * The currently active session for this request.
      */
-    protected Session session = null;
+    protected Session session;
 
     /**
      * Special attributes.
      */
-    private HashMap<String, Object> specialAttributes = null;
+    private HashMap<String, Object> specialAttributes;
 
-    private String requestedSessionVersion = null;
+    private String requestedSessionVersion;
 
-    private boolean isSessionVersioningSupported = false;
+    private boolean isSessionVersioningSupported;
 
 
     // ------------------------------------------------- ServletRequest Methods
@@ -993,9 +993,9 @@ public class ApplicationHttpRequest extends HttpServletRequestWrapper {
      */
     protected class AttributeNamesEnumerator implements Enumeration<String> {
 
-        protected Enumeration<String> parentEnumeration = null;
-        protected String next = null;
-        private Iterator<String> specialNames = null;
+        protected Enumeration<String> parentEnumeration;
+        protected String next;
+        private Iterator<String> specialNames;
 
         public AttributeNamesEnumerator() {
             parentEnumeration = getRequest().getAttributeNames();

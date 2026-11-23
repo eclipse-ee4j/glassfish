@@ -27,8 +27,8 @@ import java.util.ArrayList;
 
 public interface EJBObjectCacheListener {
 
-    public void handleOverflow(Object key);
+    void handleOverflow(Object key);
 
-    public void handleBatchOverflow(ArrayList<Object> keys);
+    void handleBatchOverflow(ArrayList<Object> keys);
 
 }

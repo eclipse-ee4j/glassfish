@@ -55,11 +55,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Registers the OUT parameter in ordinal position <code>parameterIndex</code>
      * to the JDBC type <code>sqlType</code>. All OUT parameters must be registered
      * before a stored procedure is executed.
-     * <p/>
+     * <p>
      * The JDBC type specified by <code>sqlType</code> for an OUT parameter
      * determines the Java type that must be used in the <code>get</code> method to
      * read the value of that parameter.
-     * <p/>
+     * <p>
      * If the JDBC type expected to be returned to this output parameter is specific
      * to this particular database, <code>sqlType</code> should be
      * <code>java.sql.Types.OTHER</code>. The method {@link #getObject} retrieves
@@ -81,11 +81,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Registers the parameter in ordinal position <code>parameterIndex</code> to be
      * of JDBC type <code>sqlType</code>. This method must be called before a stored
      * procedure is executed.
-     * <p/>
+     * <p>
      * The JDBC type specified by <code>sqlType</code> for an OUT parameter
      * determines the Java type that must be used in the <code>get</code> method to
      * read the value of that parameter.
-     * <p/>
+     * <p>
      * This version of <code>registerOutParameter</code> should be used when the
      * parameter is of JDBC type <code>NUMERIC</code> or <code>DECIMAL</code>.
      *
@@ -118,7 +118,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Retrieves the value of the designated JDBC <code>CHAR</code>,
      * <code>VARCHAR</code>, or <code>LONGVARCHAR</code> parameter as a
      * <code>String</code> in the Java programming language.
-     * <p/>
+     * <p>
      * For the fixed-length type JDBC <code>CHAR</code>, the <code>String</code>
      * object returned has exactly the same value the JDBC <code>CHAR</code> value
      * had in the database, including any padding added by the database.
@@ -311,7 +311,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Retrieves the value of the designated parameter as an <code>Object</code> in
      * the Java programming language. If the value is an SQL <code>NULL</code>, the
      * driver returns a Java <code>null</code>.
-     * <p/>
+     * <p>
      * This method returns a Java object whose type corresponds to the JDBC type
      * that was registered for this parameter using the method
      * <code>registerOutParameter</code>. By registering the target JDBC type as
@@ -474,7 +474,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * <code>REF</code> output parameter. Examples of user-defined types include:
      * <code>STRUCT</code>, <code>DISTINCT</code>, <code>JAVA_OBJECT</code>, and
      * named array types.
-     * <p/>
+     * <p>
      * Before executing a stored procedure call, you must explicitly call
      * <code>registerOutParameter</code> to register the type from
      * <code>java.sql.Types</code> for each OUT parameter. For a user-defined
@@ -484,12 +484,12 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * the type code and type name information may ignore it. To be portable,
      * however, applications should always provide these values for user-defined and
      * <code>REF</code> parameters.
-     * <p/>
+     * <p>
      * Although it is intended for user-defined and <code>REF</code> parameters,
      * this method may be used to register a parameter of any JDBC type. If the
      * parameter does not have a user-defined or <code>REF</code> type, the
      * <i>typeName</i> parameter is ignored.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> When reading the value of an out parameter, you must use the
      * getter method whose Java type corresponds to the parameter's registered SQL
@@ -510,11 +510,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Registers the OUT parameter named <code>parameterName</code> to the JDBC type
      * <code>sqlType</code>. All OUT parameters must be registered before a stored
      * procedure is executed.
-     * <p/>
+     * <p>
      * The JDBC type specified by <code>sqlType</code> for an OUT parameter
      * determines the Java type that must be used in the <code>get</code> method to
      * read the value of that parameter.
-     * <p/>
+     * <p>
      * If the JDBC type expected to be returned to this output parameter is specific
      * to this particular database, <code>sqlType</code> should be
      * <code>java.sql.Types.OTHER</code>. The method {@link #getObject} retrieves
@@ -537,11 +537,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Registers the parameter named <code>parameterName</code> to be of JDBC type
      * <code>sqlType</code>. This method must be called before a stored procedure is
      * executed.
-     * <p/>
+     * <p>
      * The JDBC type specified by <code>sqlType</code> for an OUT parameter
      * determines the Java type that must be used in the <code>get</code> method to
      * read the value of that parameter.
-     * <p/>
+     * <p>
      * This version of <code>registerOutParameter</code> should be used when the
      * parameter is of JDBC type <code>NUMERIC</code> or <code>DECIMAL</code>.
      *
@@ -562,7 +562,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * <code>registerOutParameter</code> should be used for a user-named or REF
      * output parameter. Examples of user-named types include: STRUCT, DISTINCT,
      * JAVA_OBJECT, and named array types.
-     * <p/>
+     * <p>
      * Before executing a stored procedure call, you must explicitly call
      * <code>registerOutParameter</code> to register the type from
      * <code>java.sql.Types</code> for each OUT parameter. For a user-named
@@ -572,11 +572,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * and type name information may ignore it. To be portable, however,
      * applications should always provide these values for user-named and REF
      * parameters.
-     * <p/>
+     * <p>
      * Although it is intended for user-named and REF parameters, this method may be
      * used to register a parameter of any JDBC type. If the parameter does not have
      * a user-named or REF type, the typeName parameter is ignored.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> When reading the value of an out parameter, you must use the
      * <code>getXXX</code> method whose Java type XXX corresponds to the parameter's
@@ -627,7 +627,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
 
     /**
      * Sets the designated parameter to SQL <code>NULL</code>.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> You must specify the parameter's SQL type.
      *
@@ -845,7 +845,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * <code>java.io.InputStream</code>. Data will be read from the stream as needed
      * until end-of-file is reached. The JDBC driver will do any necessary
      * conversion from ASCII to the database char format.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -866,7 +866,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * <code>LONGVARBINARY</code> parameter, it may be more practical to send it via
      * a <code>java.io.InputStream</code> object. The data will be read from the
      * stream as needed until end-of-file is reached.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -885,11 +885,11 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Sets the value of the designated parameter with the given object. The second
      * argument must be an object type; for integral values, the
      * <code>java.lang</code> equivalent objects should be used.
-     * <p/>
+     *
      * <p>
      * The given Java object will be converted to the given targetSqlType before
      * being sent to the database.
-     * <p/>
+     * <p>
      * If the object has a custom mapping (is of a class implementing the interface
      * <code>SQLData</code>), the JDBC driver should call the method
      * <code>SQLData.writeSQL</code> to write it to the SQL data stream. If, on the
@@ -897,7 +897,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * <code>Blob</code>, <code>Clob</code>, <code>Struct</code>, or
      * <code>Array</code>, the driver should pass it to the database as a value of
      * the corresponding SQL type.
-     * <p/>
+     * <p>
      * Note that this method may be used to pass datatabase- specific abstract data
      * types.
      *
@@ -938,23 +938,23 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Sets the value of the designated parameter with the given object. The second
      * parameter must be of type <code>Object</code>; therefore, the
      * <code>java.lang</code> equivalent objects should be used for built-in types.
-     * <p/>
+     *
      * <p>
      * The JDBC specification specifies a standard mapping from Java
      * <code>Object</code> types to SQL types. The given argument will be converted
      * to the corresponding SQL type before being sent to the database.
-     * <p/>
+     *
      * <p>
      * Note that this method may be used to pass datatabase- specific abstract data
      * types, by using a driver-specific Java type.
-     * <p/>
+     * <p>
      * If the object is of a class implementing the interface <code>SQLData</code>,
      * the JDBC driver should call the method <code>SQLData.writeSQL</code> to write
      * it to the SQL data stream. If, on the other hand, the object is of a class
      * implementing <code>Ref</code>, <code>Blob</code>, <code>Clob</code>,
      * <code>Struct</code>, or <code>Array</code>, the driver should pass it to the
      * database as a value of the corresponding SQL type.
-     * <p/>
+     * <p>
      * This method throws an exception if there is an ambiguity, for example, if the
      * object is of a class implementing more than one of the interfaces named
      * above.
@@ -977,7 +977,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * send it via a <code>java.io.Reader</code> object. The data will be read from
      * the stream as needed until end-of-file is reached. The JDBC driver will do
      * any necessary conversion from UNICODE to the database char format.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> This stream object can either be a standard Java stream object
      * or your own subclass that implements the standard interface.
@@ -1064,7 +1064,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * method <code>setNull</code> should be used for user-defined types and REF
      * type parameters. Examples of user-defined types include: STRUCT, DISTINCT,
      * JAVA_OBJECT, and named array types.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> To be portable, applications must give the SQL type code and the
      * fully-qualified SQL type name when specifying a NULL user-defined or REF
@@ -1072,7 +1072,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * the parameter itself. For a REF parameter, the name is the type name of the
      * referenced type. If a JDBC driver does not need the type code or type name
      * information, it may ignore it.
-     * <p/>
+     * <p>
      * Although it is intended for user-defined and Ref parameters, this method may
      * be used to set a null parameter of any JDBC type. If the parameter does not
      * have a user-defined or REF type, the given typeName is ignored.
@@ -1092,7 +1092,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Retrieves the value of a JDBC <code>CHAR</code>, <code>VARCHAR</code>, or
      * <code>LONGVARCHAR</code> parameter as a <code>String</code> in the Java
      * programming language.
-     * <p/>
+     * <p>
      * For the fixed-length type JDBC <code>CHAR</code>, the <code>String</code>
      * object returned has exactly the same value the JDBC <code>CHAR</code> value
      * had in the database, including any padding added by the database.
@@ -1278,7 +1278,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
      * Retrieves the value of a parameter as an <code>Object</code> in the Java
      * programming language. If the value is an SQL <code>NULL</code>, the driver
      * returns a Java <code>null</code>.
-     * <p/>
+     * <p>
      * This method returns a Java object whose type corresponds to the JDBC type
      * that was registered for this parameter using the method
      * <code>registerOutParameter</code>. By registering the target JDBC type as
@@ -1455,7 +1455,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
     /**
      * Returns an object representing the value of OUT parameter <code>i</code> and
      * uses <code>map</code> for the custom mapping of the parameter value.
-     * <p/>
+     * <p>
      * This method returns a Java object whose type corresponds to the JDBC type
      * that was registered for this parameter using the method
      * <code>registerOutParameter</code>. By registering the target JDBC type as
@@ -1476,7 +1476,7 @@ public abstract class CallableStatementWrapper extends PreparedStatementWrapper 
     /**
      * Returns an object representing the value of OUT parameter <code>i</code> and
      * uses <code>map</code> for the custom mapping of the parameter value.
-     * <p/>
+     * <p>
      * This method returns a Java object whose type corresponds to the JDBC type
      * that was registered for this parameter using the method
      * <code>registerOutParameter</code>. By registering the target JDBC type as

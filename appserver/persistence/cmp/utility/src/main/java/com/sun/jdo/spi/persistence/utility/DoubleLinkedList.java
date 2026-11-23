@@ -276,7 +276,7 @@ public class DoubleLinkedList
 
     /**
      * Return a string representation of this DoubleLinkedList object.
-     * <p>
+     *
      * @return  String representation of this object.
      */
     public synchronized String toString()

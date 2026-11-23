@@ -62,7 +62,7 @@ public class RestMethodMetadata {
      * Specifies whether or not the return payload is a collection (in which case <code>returnPayload</code> gives the type
      * of the items in the collection) or not.
      */
-    private boolean isCollection = false;
+    private boolean isCollection;
     private String path;
     private String produces[];
     private String consumes[];

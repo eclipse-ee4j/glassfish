@@ -580,7 +580,7 @@ public class ContextFacade extends WebModule {
     // --------------------------------------------------------- embedded Methods
 
     /**
-     * Enables or disables directory listings on this <tt>Context</tt>.
+     * Enables or disables directory listings on this <code>Context</code>.
      */
     @Override
     public void setDirectoryListing(boolean directoryListing) {

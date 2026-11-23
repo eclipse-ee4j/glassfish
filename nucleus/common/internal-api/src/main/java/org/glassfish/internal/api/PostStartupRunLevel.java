@@ -36,5 +36,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Inherited
 @RunLevel(20)
 public @interface PostStartupRunLevel {
-    public static final int VAL = 20;
+    int VAL = 20;
 }

@@ -31,12 +31,12 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD })
 public @interface NamedResource {
     /** can appear as a top-level resource (if singleton) or in an implied top-level collection (if not a singleton) */
-    public boolean isPrimary() default false;
+    boolean isPrimary() default false;
 
     /** overides the default collection name for named resources of this type */
-    public String subpath() default "?";
+    String subpath() default "?";
 
-    public String collectionName() default "";
+    String collectionName() default "";
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.FIELD)

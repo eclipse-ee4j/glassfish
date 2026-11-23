@@ -37,7 +37,7 @@ public class SessionPropertiesNode extends RuntimeDescriptorNode {
                 WebPropertyNode.class, "addWebProperty");
     }
 
-    protected SessionProperties descriptor = null;
+    protected SessionProperties descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

@@ -65,7 +65,7 @@ import org.jvnet.hk2.config.DomDocument;
 
 /**
  * Generates a report containing lists of admin commands, and also a property file in user's home
- * directory named {@value #FILE}
+ * directory named {@code GlassFishI18NData.properties}
  *
  * @author Ludovic Champenois ludo@java.net
  */
@@ -304,7 +304,7 @@ public class StatusGenerator extends AbstractResource {
 
         private final String className;
 
-        public NOOPClassWriter(String className, String baseClassName, String resourcePath) {
+        NOOPClassWriter(String className, String baseClassName, String resourcePath) {
             this.className = className;
             if (baseClassName.equals("TemplateRestResource")) {
                 resourcesToDeleteCommands.put(className, ""); //init the map with empty values
@@ -405,7 +405,7 @@ public class StatusGenerator extends AbstractResource {
 
     class NOOPResourcesGenerator extends ResourcesGeneratorBase {
 
-        public NOOPResourcesGenerator(ServiceLocator h) {
+        NOOPResourcesGenerator(ServiceLocator h) {
             super(h);
 
         }

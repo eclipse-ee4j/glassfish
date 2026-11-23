@@ -67,8 +67,8 @@ import static javax.lang.model.SourceVersion.RELEASE_21;
 public class HandlerAP extends AbstractProcessor {
 
     public static final String HANDLER_FILE = "META-INF/jsftemplating/Handler.map";
-    private PrintWriter writer = null;
-    private boolean _setup = false;
+    private PrintWriter writer;
+    private boolean _setup;
     private Map handlers = new HashMap();
 
     private boolean setup() {

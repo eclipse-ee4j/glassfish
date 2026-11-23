@@ -33,7 +33,7 @@ final class ClassToClassMapping
 
     final Class mDest;
 
-    public ClassToClassMapping(Class src, Class dest)
+    ClassToClassMapping(Class src, Class dest)
     {
         mSrc = src;
         mDest = dest;
@@ -930,7 +930,7 @@ public final class ClassUtil
     {
         final Class[] signature = new Class[]
         {
-            String.class
+            String.class,
         };
         final Constructor<T> constructor = theClass.getConstructor(signature);
 
@@ -939,7 +939,7 @@ public final class ClassUtil
         {
             result = constructor.newInstance(new Object[]
                     {
-                        theString
+                        theString,
                     });
         }
         catch (java.lang.reflect.InvocationTargetException e)
@@ -1100,7 +1100,7 @@ public final class ClassUtil
 
     final static String[] sJavaLangTypes =
     {
-        "Character", "Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double", "String", "Object"
+        "Character", "Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double", "String", "Object",
     };
 
     final static int sNumBaseTypes = Array.getLength(sJavaLangTypes);

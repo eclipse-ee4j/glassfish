@@ -102,7 +102,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -113,7 +113,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -125,7 +125,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -137,7 +137,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -149,7 +149,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -161,7 +161,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -173,7 +173,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -185,7 +185,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -197,7 +197,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -209,7 +209,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -221,7 +221,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Specifies the severity of the alarm. Valid values are:
@@ -241,7 +241,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.AlertTypesEditor")
             //CHECKSTYLE:ON
-    private String severity = null;
+    private String severity;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -251,7 +251,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -263,14 +263,14 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The text description of the alarm.
      */
     @Property(name = "text",
             displayName = "Alarm Text")
-    private String text = null;
+    private String text;
 
     /**
      * Specifies where the text will be placed relative to the image. The valid
@@ -279,7 +279,7 @@ public final class Alarm extends ImageComponent implements Comparator {
      */
     @Property(name = "textPosition",
             displayName = "Text Position")
-    private String textPosition = null;
+    private String textPosition;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -292,7 +292,7 @@ public final class Alarm extends ImageComponent implements Comparator {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -306,12 +306,12 @@ public final class Alarm extends ImageComponent implements Comparator {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * Visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

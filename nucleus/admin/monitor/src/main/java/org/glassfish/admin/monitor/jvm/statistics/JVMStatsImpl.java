@@ -54,7 +54,7 @@ public class JVMStatsImpl implements MonitorContract {
     @Inject
     @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     @Optional
-    MonitoringService monitoringService = null;
+    MonitoringService monitoringService;
 
     private final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(JVMStatsImpl.class);
 

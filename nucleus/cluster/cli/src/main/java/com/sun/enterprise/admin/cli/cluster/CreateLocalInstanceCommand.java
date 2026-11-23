@@ -81,12 +81,12 @@ public final class CreateLocalInstanceCommand extends CreateLocalInstanceFilesys
     private boolean checkPorts = true;
 
     @Param(name = "savemasterpassword", optional = true, defaultValue = "false")
-    private boolean saveMasterPassword = false;
+    private boolean saveMasterPassword;
 
     @Param(name = "usemasterpassword", optional = true, defaultValue = "false")
-    private boolean useMasterPassword = false;
+    private boolean useMasterPassword;
 
-    private String masterPassword = null;
+    private String masterPassword;
 
     private static final String RENDEZVOUS_PROPERTY_NAME = "rendezvousOccurred";
     private String INSTANCE_DOTTED_NAME;

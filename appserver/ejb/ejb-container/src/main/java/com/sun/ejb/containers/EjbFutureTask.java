@@ -33,11 +33,11 @@ public class EjbFutureTask<V>
     private EjbAsyncTask ejbAsyncTask;
 
     // Used to remember if cancel() was called already
-    private boolean cancelCalled = false;
+    private boolean cancelCalled;
 
     // State which could be set from both the caller's thread and
     // the thread on which the task is executing.
-    private volatile boolean complete = false;
+    private volatile boolean complete;
     private volatile V resultValue;
     private volatile Throwable resultException;
 

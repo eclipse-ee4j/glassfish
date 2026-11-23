@@ -80,7 +80,7 @@ public class WebDirContext extends FileDirContext {
 
     // ----------------------------------------------------- Instance Variables
 
-    protected JarFileResourcesProvider jarFileResourcesProvider = null;
+    protected JarFileResourcesProvider jarFileResourcesProvider;
 
     protected String jarResourceBase = META_INF_RESOURCES;
 
@@ -408,8 +408,8 @@ public class WebDirContext extends FileDirContext {
 
     // ------------------------------------- JarFileEntry Inner Class
     protected static class JarFileEntry {
-        private JarFile jarFile = null;
-        private JarEntry jarEntry = null;
+        private JarFile jarFile;
+        private JarEntry jarEntry;
 
         protected JarFileEntry(JarFile jf, JarEntry je) {
             jarFile = jf;
@@ -507,7 +507,7 @@ public class WebDirContext extends FileDirContext {
         protected transient JarEntry jarEntry;
 
 
-        protected boolean accessed = false;
+        protected boolean accessed;
 
 
         // ----------------------------------------- ResourceAttributes Methods

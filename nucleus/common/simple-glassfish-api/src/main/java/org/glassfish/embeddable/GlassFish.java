@@ -146,7 +146,7 @@ public interface GlassFish {
         /**
          * Initial state of a newly created GlassFish.
          *
-         * <p/>This will be the state just after {@link GlassFishRuntime#newGlassFish()}
+         * <p>This will be the state just after {@link GlassFishRuntime#newGlassFish()}
          * before performing any lifecycle operations.
          */
         INIT,
@@ -154,7 +154,7 @@ public interface GlassFish {
         /**
          * GlassFish is being started.
          *
-         * <p/>This will be the state after {@link GlassFish#start()} has been called
+         * <p>This will be the state after {@link GlassFish#start()} has been called
          * until the GlassFish is fully started.
          */
         STARTING,
@@ -162,7 +162,7 @@ public interface GlassFish {
         /**
          * GlassFish is up and running.
          *
-         * <p/> This will be the state once {@link GlassFish#start()} has fully
+         * <p> This will be the state once {@link GlassFish#start()} has fully
          * started the GlassFish.
          */
         STARTED,
@@ -170,7 +170,7 @@ public interface GlassFish {
         /**
          * GlassFish is being stopped.
          *
-         * <p/> This will be the state after {@link GlassFish#stop()} has been
+         * <p> This will be the state after {@link GlassFish#stop()} has been
          * called until the GlassFish is fully stopped.
          */
         STOPPING,
@@ -178,7 +178,7 @@ public interface GlassFish {
         /**
          * GlassFish is stopped.
          *
-         * <p/>This will be the state after {@link GlassFish#stop()} has
+         * <p>This will be the state after {@link GlassFish#stop()} has
          * fully stopped the GlassFish.
          */
         STOPPED,
@@ -186,7 +186,7 @@ public interface GlassFish {
         /**
          * GlassFish is disposed and ready to be garbage collected.
          *
-         * <p/>This will be the state  after {@link GlassFish#dispose()} or
+         * <p>This will be the state  after {@link GlassFish#dispose()} or
          * {@link GlassFishRuntime#shutdown()} has been called.
          */
         DISPOSED

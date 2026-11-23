@@ -49,15 +49,15 @@ import static com.sun.logging.LogCleanerUtil.neutralizeForLog;
  */
 public class SSIServlet extends HttpServlet {
     /** Debug level for this servlet. */
-    protected int debug = 0;
+    protected int debug;
     /** Should the output be buffered. */
-    protected boolean buffered = false;
+    protected boolean buffered;
     /** Expiration time in seconds for the doc. */
-    protected Long expires = null;
+    protected Long expires;
     /** virtual path can be webapp-relative */
-    protected boolean isVirtualWebappRelative = false;
+    protected boolean isVirtualWebappRelative;
     /** Input encoding. If not specified, uses platform default */
-    protected String inputEncoding = null;
+    protected String inputEncoding;
     /** Output encoding. If not specified, uses platform default */
     protected String outputEncoding = "UTF-8";
 

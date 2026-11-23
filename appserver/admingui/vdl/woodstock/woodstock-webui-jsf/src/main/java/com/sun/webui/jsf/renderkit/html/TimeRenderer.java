@@ -58,7 +58,7 @@ public final class TimeRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Time.class.getName()
+                Time.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

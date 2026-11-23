@@ -41,26 +41,26 @@ public class ErrorPage implements Serializable {
     /**
      * The error (status) code for which this error page is active.
      */
-    private int errorCode = 0;
+    private int errorCode;
 
 
     /**
      * The exception type for which this error page is active.
      */
-    private String exceptionType = null;
+    private String exceptionType;
 
 
     /**
      * The context-relative location to handle this error or exception.
      */
-    private String location = null;
+    private String location;
 
 
     // START SJSAS 6324911
     /**
      * The reason string to be displayed with the error (status) code
      */
-    private String reason = null;
+    private String reason;
     // END SJSAS 6324911
 
 

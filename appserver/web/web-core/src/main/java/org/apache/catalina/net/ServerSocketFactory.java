@@ -63,7 +63,7 @@ public interface ServerSocketFactory {
      * @exception KeyManagementException     problem in the key management
      *                                       layer (SSL only)
      */
-    public ServerSocket createSocket (int port)
+    ServerSocket createSocket (int port)
     throws IOException, KeyStoreException, NoSuchAlgorithmException,
            CertificateException, UnrecoverableKeyException,
            KeyManagementException;
@@ -89,7 +89,7 @@ public interface ServerSocketFactory {
      * @exception KeyManagementException     problem in the key management
      *                                       layer (SSL only)
      */
-    public ServerSocket createSocket (int port, int backlog)
+    ServerSocket createSocket (int port, int backlog)
     throws IOException, KeyStoreException, NoSuchAlgorithmException,
            CertificateException, UnrecoverableKeyException,
            KeyManagementException;
@@ -116,7 +116,7 @@ public interface ServerSocketFactory {
      * @exception KeyManagementException     problem in the key management
      *                                       layer (SSL only)
      */
-    public ServerSocket createSocket (int port, int backlog,
+    ServerSocket createSocket (int port, int backlog,
                                       InetAddress ifAddress)
     throws IOException, KeyStoreException, NoSuchAlgorithmException,
            CertificateException, UnrecoverableKeyException,

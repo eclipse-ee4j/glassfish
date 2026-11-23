@@ -36,7 +36,7 @@ public class PropertiesDecoder {
       *  <li>xyz, null
       *  <li>hoo, ioo
       *  </ul>
-      * @param props The flattened string properties
+      * @param s The flattened string properties
       * @return A Map of the String keys and values.  It will return an
       */
 

@@ -239,7 +239,7 @@ public class HttpClient implements AutoCloseable {
     }
 
     private static class HttpContentInfo {
-        private HttpContent httpContent = null;
+        private HttpContent httpContent;
         private final Map<String, String> trailerMap = new HashMap<>();
 
         private HttpContentInfo(HttpContent httpContent) {
@@ -259,7 +259,7 @@ public class HttpClient implements AutoCloseable {
         private final BlockingQueue<HttpContentInfo> resultQueue;
         private final Map<Http2Stream, HttpContentInfo> remaindersMap = new HashMap<>();
 
-        public ClientAggregatorFilter(BlockingQueue<HttpContentInfo> resultQueue) {
+        ClientAggregatorFilter(BlockingQueue<HttpContentInfo> resultQueue) {
             this.resultQueue = resultQueue;
         }
 

@@ -143,26 +143,26 @@ public class ComponentType implements java.io.Serializable {
      * This is the id for the ComponentType.
      * </p>
      */
-    private String _id = null;
+    private String _id;
 
     /**
      * <p>
      * This is a String className for the Factory.
      * </p>
      */
-    private String _factoryClass = null;
+    private String _factoryClass;
 
     /**
      * <p>
      * The {@link ComponentFactory} that produces the desired <code>UIComponent</code>.
      * </p>
      */
-    private transient ComponentFactory _factory = null;
+    private transient ComponentFactory _factory;
 
     /**
      * <p>
      * Extra information associated with this ComponentType.
      * </p>
      */
-    private Serializable _extraInfo = null;
+    private Serializable _extraInfo;
 }

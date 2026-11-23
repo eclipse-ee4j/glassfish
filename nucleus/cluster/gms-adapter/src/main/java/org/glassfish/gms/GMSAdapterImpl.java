@@ -108,11 +108,11 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
     private final static String MEMBERTYPE_STRING = "MEMBER_TYPE";
 
     // all set in postConstruct
-    private String instanceName = null;
-    private boolean isDas = false;
-    private Cluster cluster = null;
-    private String clusterName = null;
-    private Config clusterConfig = null;
+    private String instanceName;
+    private boolean isDas;
+    private Cluster cluster;
+    private String clusterName;
+    private Config clusterConfig;
     //private long joinTime = 0L;
 
     private ConcurrentHashMap<CallBack, JoinNotificationActionFactory> callbackJoinActionFactoryMapping =
@@ -125,9 +125,9 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
             new ConcurrentHashMap<CallBack, FailureSuspectedActionFactory>();
     private ConcurrentHashMap<CallBack, PlannedShutdownActionFactory> callbackPlannedShutdownActionFactoryMapping =
             new ConcurrentHashMap<CallBack, PlannedShutdownActionFactory>();
-    private EventListener glassfishEventListener = null;
-    private boolean aliveAndReadyLoggingEnabled = false;
-    private boolean testFailureRecoveryHandler = false;
+    private EventListener glassfishEventListener;
+    private boolean aliveAndReadyLoggingEnabled;
+    private boolean testFailureRecoveryHandler;
 
     @Inject
     Events events;
@@ -980,7 +980,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
                         signal.getMemberToken(),
                         signal.getGroupName(),
                         current,
-                        previous
+                        previous,
                     });
             }
         }

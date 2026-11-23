@@ -97,7 +97,7 @@ public class MessageInterpolatorImpl implements MessageInterpolator {
      * Look-ups in user bundles is recursive whereas look-ups in default bundle are not!
      *
      * @param message the message to interpolate
-     * @param annotationParameters the parameters of the annotation for which to interpolate this message
+     * @param context the parameters of the annotation for which to interpolate this message
      * @param locale the {@code Locale} to use for the resource bundle.
      *
      * @return the interpolated message.

@@ -20,16 +20,16 @@ package com.sun.enterprise.deployment.web;
     ** @author Danny Coward
     */
 public interface UserDataConstraint {
-    public static String NONE_TRANSPORT = "NONE";
-    public static String INTEGRAL_TRANSPORT = "INTEGRAL";
-    public static String CONFIDENTIAL_TRANSPORT = "CONFIDENTIAL";
+    String NONE_TRANSPORT = "NONE";
+    String INTEGRAL_TRANSPORT = "INTEGRAL";
+    String CONFIDENTIAL_TRANSPORT = "CONFIDENTIAL";
     // JACC specific
-    public static String CLEAR = "CLEAR";
-    public String getDescription();
-    public void setDescription(String description);
+    String CLEAR = "CLEAR";
+    String getDescription();
+    void setDescription(String description);
 
-    public String getTransportGuarantee();
-    public String[] getUnacceptableTransportGuarantees();
-    public void setTransportGuarantee(String transportGuarantee);
+    String getTransportGuarantee();
+    String[] getUnacceptableTransportGuarantees();
+    void setTransportGuarantee(String transportGuarantee);
 }
 

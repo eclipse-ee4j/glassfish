@@ -264,7 +264,7 @@ public class TimerWrapper
 
         private TimerPrimaryKey timerId_;
 
-        public TimerHandleImpl(TimerPrimaryKey timerId) {
+        TimerHandleImpl(TimerPrimaryKey timerId) {
             timerId_ = timerId;
         }
 

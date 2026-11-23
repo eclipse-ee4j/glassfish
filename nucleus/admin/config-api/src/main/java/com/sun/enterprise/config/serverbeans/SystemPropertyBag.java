@@ -41,7 +41,7 @@ public interface SystemPropertyBag extends ConfigBeanProxy {
      * getSystemProperty().add(newItem);
      * </pre>
      *
-     * <p></p>Objects of the following type(s) are allowed in the list {@link SystemProperty}
+     * Objects of the following type(s) are allowed in the list {@link SystemProperty}
      */
     @Element("system-property")
     List<SystemProperty> getSystemProperty();

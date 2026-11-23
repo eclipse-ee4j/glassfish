@@ -42,7 +42,7 @@ public final class CNonceCacheImpl extends LinkedHashMap<String, NonceInfo> impl
 
     private static final long LOG_SUPPRESS_TIME = 5 * 60 * 1000;
 
-    private long lastLog = 0;
+    private long lastLog;
 
     private static final Logger log = Logger.getLogger(CNonceCacheImpl.class.getName());
 

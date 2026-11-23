@@ -29,7 +29,7 @@ import java.io.PrintWriter;
 public class TestServlet
   extends HttpServlet
 {
-  public String msg_listener = null;
+  public String msg_listener;
 
   public void init(ServletConfig config)
     throws ServletException

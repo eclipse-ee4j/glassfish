@@ -89,12 +89,12 @@ public abstract class StoreBase
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * Has this component been started yet?
      */
-    protected boolean started = false;
+    protected boolean started;
 
     /**
      * The lifecycle event support for this component.

@@ -34,7 +34,7 @@ public class MailLogOutputStream extends LogOutputStream {
     /**
      * All output except detained protocol traces starts with "DEBUG".
      * Log protocol traces at lower level.
-     * <p/>
+     * <p>
      * NOTE: protocol trace output can include lines that start with
      * "DEBUG" so this isn't perfect.
      */

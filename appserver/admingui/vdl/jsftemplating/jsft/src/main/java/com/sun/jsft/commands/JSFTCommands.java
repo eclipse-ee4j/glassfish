@@ -122,7 +122,7 @@ public class JSFTCommands {
      * This command writes using <code>FacesContext.getResponseWriter()</code>.
      * </p>
      *
-     * @param context The HandlerContext.
+     * @param text The text to write.
      */
     public static void write(String text) {
         if (text == null) {
@@ -141,7 +141,6 @@ public class JSFTCommands {
      * you've provided a response already and you don't want JSF to do it again (it may cause problems to do it 2x).
      * </p>
      *
-     * @param context The HandlerContext.
      */
     public static void responseComplete() {
         FacesContext.getCurrentInstance().responseComplete();
@@ -155,7 +154,6 @@ public class JSFTCommands {
      * (although if navigation has already occurred, the new page will be shown.
      * </p>
      *
-     * @param context The HandlerContext.
      */
     public void renderResponse() {
         FacesContext.getCurrentInstance().renderResponse();

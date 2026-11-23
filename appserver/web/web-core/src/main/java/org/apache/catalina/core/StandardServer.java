@@ -144,7 +144,7 @@ public final class StandardServer
         "org.apache.catalina.connector.CoyoteConnector",
         "org.apache.catalina.core.StandardEngine",
         "org.apache.catalina.core.StandardHost",
-        "org.apache.catalina.core.StandardContext"
+        "org.apache.catalina.core.StandardContext",
     };
 
 
@@ -177,19 +177,19 @@ public final class StandardServer
     /**
      * Debugging detail level.
      */
-    private int debug = 0;
+    private int debug;
 
 
     /**
      * Global naming resources context.
      */
-    private javax.naming.Context globalNamingContext = null;
+    private javax.naming.Context globalNamingContext;
 
 
     /**
      * Global naming resources.
      */
-    private NamingResources globalNamingResources = null;
+    private NamingResources globalNamingResources;
 
 
     /**
@@ -208,7 +208,7 @@ public final class StandardServer
     /**
      * The naming context listener for this web application.
      */
-    private NamingContextListener namingContextListener = null;
+    private NamingContextListener namingContextListener;
 
 
     /**
@@ -221,7 +221,7 @@ public final class StandardServer
      * A random number generator that is <strong>only</strong> used if
      * the shutdown command string is longer than 1024 characters.
      */
-    private SecureRandom random = null;
+    private SecureRandom random;
 
 
     /**
@@ -240,13 +240,13 @@ public final class StandardServer
     /**
      * Has this component been started?
      */
-    private boolean started = false;
+    private boolean started;
 
 
     /**
      * Has this component been initialized?
      */
-    private boolean initialized = false;
+    private boolean initialized;
 
 
     /**

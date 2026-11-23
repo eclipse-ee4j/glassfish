@@ -24,7 +24,7 @@ package com.sun.enterprise.util.uuid;
 
 public interface UuidGenerator {
 
-    public String generateUuid();
-    public String generateUuid(Object obj);
+    String generateUuid();
+    String generateUuid(Object obj);
 
 }

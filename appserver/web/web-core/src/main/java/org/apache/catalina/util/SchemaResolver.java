@@ -59,7 +59,7 @@ public class SchemaResolver implements EntityResolver {
     /**
      * Attribute value used to turn on/off network access of dtd/schema
      */
-    private static boolean forceLocalSchema = false;
+    private static boolean forceLocalSchema;
     // END PWC 6457880
 
     /**

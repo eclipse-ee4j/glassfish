@@ -72,10 +72,10 @@ public class EjbCacheStatsProvider {
     private static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
     private long beanId;
-    private String appName = null;
-    private String moduleName = null;
-    private String beanName = null;
-    private boolean registered = false;
+    private String appName;
+    private String moduleName;
+    private String beanName;
+    private boolean registered;
     private EjbCacheStatsProviderDelegate delegate;
 
     public EjbCacheStatsProvider(EjbCacheStatsProviderDelegate delegate, long beanId,

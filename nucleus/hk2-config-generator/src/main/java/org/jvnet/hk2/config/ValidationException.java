@@ -21,7 +21,7 @@ import org.glassfish.hk2.api.HK2Exception;
 
 /**
  *
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since hk2 0.3.10
  */
 public class ValidationException extends HK2Exception {

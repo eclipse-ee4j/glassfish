@@ -21,9 +21,9 @@ package org.glassfish.contextpropagation.bootstrap;
  * Implementor should forward the calls to the appropriate debug logger.
  */
 public interface LoggerAdapter {
-  public boolean isLoggable(Level level);
-  public void log(Level level, MessageID messageID, Object... args);
-  public void log(Level level, Throwable t, MessageID messageID, Object... args);
+  boolean isLoggable(Level level);
+  void log(Level level, MessageID messageID, Object... args);
+  void log(Level level, Throwable t, MessageID messageID, Object... args);
 
   enum Level {
     ERROR, WARN, DEBUG; // From most critical to least critical

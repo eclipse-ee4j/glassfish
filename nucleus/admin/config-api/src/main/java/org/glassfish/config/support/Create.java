@@ -37,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * A Create annotation is used on a method of a configured interface. The method identifies the setter of a type that
  * can be added to the configured interface.
  *
- * The annotated method must follow one of the two pattern : List<X> getXs(); or void setX(X x);
+ * The annotated method must follow one of the two pattern : List&lt;X&gt; getXs(); or void setX(X x);
  *
  * the name of the method is immaterial, only the generic type of the returned List or the single parameter of the
  * setter method are used to determine the type of configured instance the command will create.
@@ -69,7 +69,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * For instance, if you have a declaration like <code>
  *     public interface ParentContainer {
  *      &#64;Element("*)
- *      List<ParentConfigType> children();
+ *      List&lt;ParentConfigType&gt; children();
  *     }
  * </code>
  *

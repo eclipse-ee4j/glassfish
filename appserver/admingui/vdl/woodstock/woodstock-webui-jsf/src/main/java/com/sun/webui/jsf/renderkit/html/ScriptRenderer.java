@@ -38,7 +38,7 @@ public final class ScriptRenderer extends AbstractRenderer {
      */
     private static final String[] STRING_ATTRIBUTES = {
         "charset",
-        "type"
+        "type",
     };
 
     @Override

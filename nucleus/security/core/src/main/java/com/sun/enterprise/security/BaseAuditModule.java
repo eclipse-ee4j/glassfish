@@ -31,7 +31,7 @@ import java.util.Properties;
  * @version
  */
 public abstract class BaseAuditModule {
-    protected Properties props = null;
+    protected Properties props;
 
     /**
      * Method is invoked at server startup, during AuditModule initialization. If method returns without any exception then S1AS

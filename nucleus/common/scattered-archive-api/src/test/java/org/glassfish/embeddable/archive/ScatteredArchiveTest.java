@@ -52,15 +52,15 @@ public class ScatteredArchiveTest {
 
     @ParameterizedTest
     @CsvSource({
-                "path, '', path",
-                "path:path2, '', 'path,path2'",
-                "'jakarta.jakarta-api.jar:/folder/path2:/folder/glassfish-embedded-all.jar', '', /folder/path2",
-                "'jakarta.jakarta-api.jar:glassfish-embedded-all.jar', '', ''",
-                "path, 'path', ''",
-                "path111:/folder/path222, path.*, ''",
-                "path333:path111:/folder/path222, 'path1.* , path2.*', path333",
-                "jakarta.jakarta-api.jar:path2:/some/folder/path3:somepath, path., somepath",
-                "'', '', ''"
+        "path, '', path",
+        "path:path2, '', 'path,path2'",
+        "'jakarta.jakarta-api.jar:/folder/path2:/folder/glassfish-embedded-all.jar', '', /folder/path2",
+        "'jakarta.jakarta-api.jar:glassfish-embedded-all.jar', '', ''",
+        "path, 'path', ''",
+        "path111:/folder/path222, path.*, ''",
+        "path333:path111:/folder/path222, 'path1.* , path2.*', path333",
+        "jakarta.jakarta-api.jar:path2:/some/folder/path3:somepath, path., somepath",
+        "'', '', ''"
     })
     public void addCurrentClasspathUsingExcludes(String classpath,
             @ConvertWith(ConvertCSVToArrayOfStrings.class) String[] excludesPatterns,

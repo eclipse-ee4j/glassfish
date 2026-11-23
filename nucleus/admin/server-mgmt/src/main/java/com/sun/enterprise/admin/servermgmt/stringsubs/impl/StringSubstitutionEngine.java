@@ -62,9 +62,9 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionEngine.class);
 
     //Root of JAXB parsed string-subs configuration
-    private StringsubsDefinition _root = null;
-    private Map<String, Pair> _changePairsMap = null;
-    Map<String, Property> _defaultProperties = null;
+    private StringsubsDefinition _root;
+    private Map<String, Pair> _changePairsMap;
+    Map<String, Property> _defaultProperties;
     private SubstitutableFactory _substitutableFactory = new SubstituableFactoryImpl();
     private AttributePreprocessor _attrPreprocessor = new AttributePreprocessorImpl();
 

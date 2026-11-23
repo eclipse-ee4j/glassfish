@@ -36,10 +36,10 @@ abstract public class Insn implements VMConstants {
     private int insnOffset = NO_OFFSET;
 
     /* The next instruction in the code sequence */
-    private Insn nextInsn = null;
+    private Insn nextInsn;
 
     /* The previous instruction in the code sequence */
-    private Insn prevInsn = null;
+    private Insn prevInsn;
 
     /* public accessors */
 

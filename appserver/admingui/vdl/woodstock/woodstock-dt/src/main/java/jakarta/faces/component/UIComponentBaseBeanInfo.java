@@ -155,7 +155,7 @@ public class UIComponentBaseBeanInfo extends SimpleBeanInfo {
 
             propertyDescriptors = new PropertyDescriptor[]{
                 propId,
-                propRendered
+                propRendered,
             };
             return propertyDescriptors;
 

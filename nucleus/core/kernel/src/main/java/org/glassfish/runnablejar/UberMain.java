@@ -44,27 +44,27 @@ import static java.lang.System.Logger.Level.WARNING;
 /**
  * This is main class for the uber jars viz., glassfish-embedded-all.jar and
  * glassfish-embedded-web.jar, to be able to do:
- * <p/>
- * <p/>
+ *
+ * <p>
  * {@code java -jar glassfish-embedded-all.jar}
- * <p/>
+ * <p>
  * {@code java -jar glassfish-embedded-web.jar}
- * <p/>
- * <h3>Example of running an app from command line</h3>
- * <p/>
+ *
+ * <h2>Example of running an app from command line</h2>
+ * <p>
  * On port 8080 and root context by default
- * <p/>
+ * <p>
  * {@code java -jar glassfish-embedded-all.jar app.war}
- * <p/>
- * <h3>Example of running an app on a different port</h3>
- * <p/>
+ *
+ * <h2>Example of running an app on a different port</h2>
+ * <p>
  * {@code java -jar glassfish-embedded-all.jar --httpPort=8090 app.war}
- * <p/>
- * <h3>Example with a custom deploy command</h3>
- * <p/>
+ *
+ * <h2>Example with a custom deploy command</h2>
+ * <p>
  * Sets a custom root context (custom commands need to be enclosed in quotes
  * because they usually contain spaces)
- * <p/>
+ * <p>
  * {@code java -jar glassfish-embedded-all.jar "deploy --contextroot=/app app.war"}
  *
  * @author Ondro Mihalyi

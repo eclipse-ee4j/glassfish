@@ -34,7 +34,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class SimplePatternMatcher {
 
-    private Pattern regexPattern = null;
+    private Pattern regexPattern;
 
     private String pattern;
 

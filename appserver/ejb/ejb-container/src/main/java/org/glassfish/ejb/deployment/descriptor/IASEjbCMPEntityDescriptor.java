@@ -619,7 +619,7 @@ public  class IASEjbCMPEntityDescriptor extends EjbCMPEntityDescriptor {
 
     /**
      * Adds the given OneOneFinder to the HashMap
-     * @Param finder represents the EJB 1.1 Finder
+     * @param finder represents the EJB 1.1 Finder
      */
     public void addOneOneFinder(IASEjbCMPFinder finder) {
         arrOneOneFinders.add(finder);

@@ -32,14 +32,14 @@ class SSIConditionalState {
      * Set to true if the current conditional has already been completed, i.e.:
      * a branch was taken.
      */
-    boolean branchTaken = false;
+    boolean branchTaken;
     /**
      * Counts the number of nested false branches.
      */
-    int nestingCount = 0;
+    int nestingCount;
     /**
      * Set to true if only conditional commands ( if, elif, else, endif )
      * should be processed.
      */
-    boolean processConditionalCommandsOnly = false;
+    boolean processConditionalCommandsOnly;
 }

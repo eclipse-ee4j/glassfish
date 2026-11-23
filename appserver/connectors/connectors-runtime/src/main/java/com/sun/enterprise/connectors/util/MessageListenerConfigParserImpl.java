@@ -115,7 +115,7 @@ public class MessageListenerConfigParserImpl implements MessageListenerConfigPar
      *
      * @param desc ConnectorDescriptor pertaining to rar.
      * @param messageListenerType message listener type.It is uniqie
-     *            across all <messagelistener> sub-elements in <messageadapter>
+     *            across all &lt;messagelistener&gt; sub-elements in &lt;messageadapter&gt;
      *            element in a given rar.
      * @return Javabean properties with the property names and values
      *         of properties. The property values will be the values
@@ -198,7 +198,7 @@ public class MessageListenerConfigParserImpl implements MessageListenerConfigPar
      * key and datatype as the value.
      *
      * @param messageListenerType message listener type.It is uniqie
-     *            across all <messagelistener> sub-elements in <messageadapter>
+     *            across all &lt;messagelistener&gt; sub-elements in &lt;messageadapter&gt;
      *            element in a given rar.
      * @return Properties object with the property names(key) and datatype
      *         of property(as value).

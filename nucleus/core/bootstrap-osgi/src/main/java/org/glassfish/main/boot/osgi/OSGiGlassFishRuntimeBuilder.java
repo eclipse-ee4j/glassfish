@@ -60,7 +60,7 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
 
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
- * <p/>
+ * <p>
  * {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Felix},
  * {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Equinox},
  * and {@link com.sun.enterprise.glassfish.bootstrap.cfg.OsgiPlatform#Knopflerfish}.
@@ -75,7 +75,7 @@ import static org.osgi.framework.Constants.FRAMEWORK_STORAGE_CLEAN_ONFIRSTINIT;
  * <li>starting a configured list of bundles
  * <li>obtaining a reference to GlassFishRuntime OSGi service.
  * </ol>
- * Steps #b & #c are handled via {@link BundleProvisioner}.
+ * Steps #b &amp; #c are handled via {@link BundleProvisioner}.
  * We specify our provisioning bundle details in the properties object that's used to boostrap
  * the system. BundleProvisioner installs and starts such bundles,
  * <p>

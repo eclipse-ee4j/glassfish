@@ -95,7 +95,7 @@ import org.apache.catalina.Session;
  * <li><code>%{xxx}r</code> xxx is an attribute in the ServletRequest
  * <li><code>%{xxx}s</code> xxx is an attribute in the HttpSession
  * </ul>
- * </p>
+ *
  *
  * <p>
  * Conditional logging is also supported. This can be done with the
@@ -179,20 +179,20 @@ public final class AccessLogValve
      * format pattern, then we'll set this variable to true and log in
      * a more optimal and hard-coded way.
      */
-    private boolean common = false;
+    private boolean common;
 
 
     /**
      * For the combined format (common, plus useragent and referer), we do
      * the same
      */
-    private boolean combined = false;
+    private boolean combined;
 
 
     /**
      * The pattern used to format our access log lines.
      */
-    private String pattern = null;
+    private String pattern;
 
 
     /**
@@ -224,14 +224,14 @@ public final class AccessLogValve
     /**
      * The PrintWriter to which we are currently logging, if any.
      */
-    private PrintWriter writer = null;
+    private PrintWriter writer;
 
 
     /**
      * ThreadLocal for a date formatter to format a Date into a date in the format
      * "yyyy-MM-dd".
      */
-    private volatile ThreadLocal<SimpleDateFormat> dateFormatter = null;
+    private volatile ThreadLocal<SimpleDateFormat> dateFormatter;
 
     private static final TimeZone DEFAULT_TIME_ZONE = TimeZone.getDefault();
 
@@ -310,14 +310,14 @@ public final class AccessLogValve
     /**
      * The time zone relative to GMT.
      */
-    private String timeZone = null;
+    private String timeZone;
 
 
     /**
      * The system time when we last updated the Date that this valve
      * uses for log lines.
      */
-    private Date currentDate = null;
+    private Date currentDate;
 
 
     /**
@@ -329,25 +329,25 @@ public final class AccessLogValve
     /**
      * Resolve hosts.
      */
-    private boolean resolveHosts = false;
+    private boolean resolveHosts;
 
 
     /**
      * Instant when the log daily rotation was last checked.
      */
-    private volatile long rotationLastChecked = 0L;
+    private volatile long rotationLastChecked;
 
 
     /**
      * Are we doing conditional logging. default false.
      */
-    private String condition = null;
+    private String condition;
 
 
     /**
      * Date format to place in log file name. Use at your own risk!
      */
-    private String fileDateFormat = null;
+    private String fileDateFormat;
 
 
     // ------------------------------------------------------------- Properties

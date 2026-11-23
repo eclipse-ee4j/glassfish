@@ -53,7 +53,7 @@ public final class NotificationEmitterSupport
 {
     private final boolean mAsyncDelivery;
 
-    private static volatile SenderThread sSenderThread = null;
+    private static volatile SenderThread sSenderThread;
 
     private final Map<String, Integer> mListenerTypeCounts;
 
@@ -127,12 +127,12 @@ public final class NotificationEmitterSupport
 
     private static final String[] ALL_TYPES = new String[]
     {
-        WILDCARD_TYPE
+        WILDCARD_TYPE,
     };
 
     private static final String[] ATTRIBUTE_CHANGE_TYPES = new String[]
     {
-        AttributeChangeNotification.ATTRIBUTE_CHANGE
+        AttributeChangeNotification.ATTRIBUTE_CHANGE,
     };
 
     private static final String[] MBEAN_SERVER_NOTIFICATION_TYPES = new String[]
@@ -337,7 +337,7 @@ public final class NotificationEmitterSupport
 
             private final NotificationEmitterSupport mSender;
 
-            public QueueItem(final Notification notif, final NotificationEmitterSupport sender)
+            QueueItem(final Notification notif, final NotificationEmitterSupport sender)
             {
                 mNotif = notif;
                 mSender = sender;
@@ -345,7 +345,7 @@ public final class NotificationEmitterSupport
 
         }
 
-        public SenderThread()
+        SenderThread()
         {
             setDaemon(true);
             mQuit = false;

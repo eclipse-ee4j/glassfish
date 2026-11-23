@@ -279,7 +279,7 @@ public final class SFTPPath implements Path {
     @Override
     public Iterator<Path> iterator() {
         return new Iterator<>() {
-            private int i = 0;
+            private int i;
 
             @Override
             public boolean hasNext() {

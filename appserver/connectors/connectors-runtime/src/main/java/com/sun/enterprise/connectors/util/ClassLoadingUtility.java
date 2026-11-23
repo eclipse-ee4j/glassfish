@@ -38,9 +38,9 @@ public class ClassLoadingUtility {
     /**
      * Loads the class with the common class loader.
      *
-     * @param the class name
+     * @param className class name
      * @return the loaded class
-     * @throws if the class is not found.
+     * @throws ClassNotFoundException if the class is not found.
      * @see #getClassLoader()
      */
     public static Class loadClass(String className) throws ClassNotFoundException {

@@ -89,7 +89,7 @@ public class LoggingConfigImpl implements LoggingConfig, PostConstruct {
 
     LoggingProperties props = new LoggingProperties();
     String loggingPropertiesName;
-    File loggingConfigDir = null;
+    File loggingConfigDir;
 
     @Override
     public void postConstruct() {

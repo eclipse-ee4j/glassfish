@@ -17,5 +17,5 @@ package org.glassfish.tests.embedded.scatteredarchive.contextInitialized;
 
 public class ApplicationStatus {
 
-    static int contextInitializedCounter = 0;
+    static int contextInitializedCounter;
 }

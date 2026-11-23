@@ -197,7 +197,7 @@ public final class RequestUtil {
      * <strong>IMPLEMENTATION NOTE</strong>:  URL decoding is performed
      * individually on the parsed name and value elements, rather than on
      * the entire query string ahead of time, to properly deal with the case
-     * where the name or value includes an encoded "=" or "&" character
+     * where the name or value includes an encoded "=" or "&amp;" character
      * that would otherwise be interpreted as a delimiter.
      *
      * @param map Map that accumulates the resulting parameters
@@ -368,7 +368,7 @@ public final class RequestUtil {
      * <strong>IMPLEMENTATION NOTE</strong>:  URL decoding is performed
      * individually on the parsed name and value elements, rather than on
      * the entire query string ahead of time, to properly deal with the case
-     * where the name or value includes an encoded "=" or "&" character
+     * where the name or value includes an encoded "=" or "&amp;" character
      * that would otherwise be interpreted as a delimiter.
      *
      * NOTE: byte array data is modified by this method.  Caller beware.
@@ -436,7 +436,7 @@ public final class RequestUtil {
      * @return The mappings from context paths to session version numbers
      * that were parsed from the given session version string
      */
-    public static final HashMap<String, String> parseSessionVersionString(
+    public static HashMap<String, String> parseSessionVersionString(
                                                 String sessionVersion) {
         if (sessionVersion == null) {
             return null;

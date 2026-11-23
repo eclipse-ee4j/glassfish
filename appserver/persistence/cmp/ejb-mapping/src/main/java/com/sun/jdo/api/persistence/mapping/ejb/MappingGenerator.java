@@ -78,7 +78,7 @@ public class MappingGenerator {
     /** a boolean indicating whether the jdo model and mapping model should
      * contain generated fields
      */
-    private boolean skipGeneratedFields = false;
+    private boolean skipGeneratedFields;
 
     //hold strong reference to mapping class elements
     private List<MappingClassElement> strongRefs = new ArrayList<>();

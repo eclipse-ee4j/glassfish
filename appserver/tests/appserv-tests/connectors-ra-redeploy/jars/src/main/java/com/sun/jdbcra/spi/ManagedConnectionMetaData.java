@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class ManagedConnectionMetaData implements jakarta.resource.spi.ManagedConnectionMetaData {
 
-    private java.sql.DatabaseMetaData dmd = null;
+    private java.sql.DatabaseMetaData dmd;
     private ManagedConnection mc;
 
     private static Logger _logger;

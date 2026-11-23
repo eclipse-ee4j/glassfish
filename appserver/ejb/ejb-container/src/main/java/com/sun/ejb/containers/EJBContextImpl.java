@@ -74,10 +74,10 @@ public abstract class EJBContextImpl implements EJBContext, ComponentContext, Se
     transient protected Transaction transaction;
     transient protected Context initialContext;
     transient private ArrayList resources;
-    transient private int concInvokeCount = 0;
+    transient private int concInvokeCount;
 
     // the EJBObject's client-side RMI stub
-    transient protected EJBObject ejbStub = null;
+    transient protected EJBObject ejbStub;
     transient protected EJBObjectImpl ejbObjectImpl;
 
     transient protected EJBObjectImpl ejbRemoteBusinessObjectImpl;

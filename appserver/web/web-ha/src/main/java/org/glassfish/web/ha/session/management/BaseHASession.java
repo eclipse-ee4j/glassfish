@@ -45,7 +45,7 @@ public abstract class BaseHASession extends StandardSession
         implements HASession {
 
     protected String userName="";
-    protected boolean persistentFlag = false;
+    protected boolean persistentFlag;
 
     /** Creates a new instance of BaseHASession */
     public BaseHASession(Manager manager) {

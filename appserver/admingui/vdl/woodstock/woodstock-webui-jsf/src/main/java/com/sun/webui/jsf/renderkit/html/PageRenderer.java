@@ -55,7 +55,7 @@ public final class PageRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Page.class.getName()
+                Page.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

@@ -64,7 +64,7 @@ public enum TxIsolationLevel {
     /**
      * A constant indicating that dirty reads, non-repeatable reads and phantom reads are prevented.
      * <p>
-     * This level includes the prohibitions in {@link #TRANSACTION_REPEATABLE_READ} and further
+     * This level includes the prohibitions in {@code TRANSACTION_REPEATABLE_READ} and further
      * prohibits the situation where one transaction reads all rows that satisfy
      * a <code>WHERE</code> condition, a second transaction inserts a row that satisfies that
      * <code>WHERE</code> condition, and the first transaction rereads for the same condition,

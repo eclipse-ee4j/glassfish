@@ -57,8 +57,8 @@ import org.jvnet.hk2.config.types.Property;
  * 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile file_name] [--property (name=value) [:name=value]*] [--target
  * target(Default server)] audit_module_name
  *
- * domain.xml element example <audit-module classname="com.foo.security.Audit" name="AM">
- * <property name="auditOn" value="false"/> </audit-module>
+ * domain.xml element example &lt;audit-module classname="com.foo.security.Audit" name="AM">
+ * &lt;property name="auditOn" value="false"/&gt; &lt;/audit-module>
  *
  * @author Nandini Ektare
  */
@@ -95,7 +95,7 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     SecurityConfigListener securityConfigListener;
 
     @AccessRequired.NewChild(type = AuditModule.class)
-    private SecurityService securityService = null;
+    private SecurityService securityService;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

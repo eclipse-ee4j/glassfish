@@ -35,7 +35,7 @@ public interface TransactionListener {
      *
      * @param changes
      */
-    public void transactionCommited(List<PropertyChangeEvent> changes);
+    void transactionCommited(List<PropertyChangeEvent> changes);
 
     /**
      * Nofication of unprocessed events by ConfigListener, usually requiring a server
@@ -43,5 +43,5 @@ public interface TransactionListener {
      *
      * @param changes
      */
-    public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes);
+    void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes);
 }

@@ -175,7 +175,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * ajaxify set flag.
      */
-    private boolean ajaxifySet = false;
+    private boolean ajaxifySet;
 
    /**
      * Alternative HTML template to be used by this component.
@@ -183,7 +183,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "htmlTemplate",
             displayName = "HTML Template",
             category = "Appearance")
-    private String htmlTemplate = null;
+    private String htmlTemplate;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -193,7 +193,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "toolTip",
             displayName = "toolTip Text",
             category = "Behavior")
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Text to describe the operation that is monitored by the progress bar.
@@ -201,7 +201,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "description",
             displayName = "description",
             category = "Appearance")
-    private String description = null;
+    private String description;
 
     /**
      * Text to be displayed along with an icon when the task fails.
@@ -209,7 +209,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "failedStateText",
             displayName = "Failed State Text",
             category = "Appearance")
-    private String failedStateText = null;
+    private String failedStateText;
 
     /**
      * Number of pixels for the height of the progress bar animation. The
@@ -226,7 +226,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * height set flag.
      */
-    private boolean heightSet = false;
+    private boolean heightSet;
 
     /**
      * Text to be displayed in a text area at the bottom of the progress bar
@@ -235,7 +235,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "logMessage",
             displayName = "Log Message",
             category = "Appearance")
-    private String logMessage = null;
+    private String logMessage;
 
     /**
      * Set to true to display the operation progress text superimposed on the
@@ -244,12 +244,12 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "overlayAnimation",
             displayName = "Is overlayAnimation",
             category = "Advanced")
-    private boolean overlayAnimation = false;
+    private boolean overlayAnimation;
 
     /**
      * overlayAnimation set flag.
      */
-    private boolean overlayAnimationSet = false;
+    private boolean overlayAnimationSet;
 
     /**
      * An integer that indicates the completion percentage of the task.
@@ -265,7 +265,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * progress set flag.
      */
-    private boolean progressSet = false;
+    private boolean progressSet;
 
     /**
      * URL to an image to use instead of the default image for the progress
@@ -277,7 +277,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.SunWebUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String progressImageUrl = null;
+    private String progressImageUrl;
 
     /**
      * The number of milliseconds between updates to the progress bar.
@@ -293,7 +293,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * refreshRate set flag.
      */
-    private boolean refreshRateSet = false;
+    private boolean refreshRateSet;
 
     /**
      * Text to be displayed at the bottom of the progress bar, for the status of
@@ -302,7 +302,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     @Property(name = "status",
             displayName = "Status Text",
             category = "Appearance")
-    private String status = null;
+    private String status;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -312,7 +312,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -324,7 +324,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -343,7 +343,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * A string representing the state of the task associated with this progress
@@ -365,7 +365,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ProgressBarStatesTypeEditor")
             //CHECKSTYLE:ON
-    private String taskState = null;
+    private String taskState;
 
     /**
      * Type of progress bar. Value must be one of the following:<br>
@@ -379,7 +379,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ProgressBarTypesEditor")
             //CHECKSTYLE:ON
-    private String type = null;
+    private String type;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -391,12 +391,12 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Number of pixels for the width of the progress bar animation. The default
@@ -413,7 +413,7 @@ public final class ProgressBar extends jakarta.faces.component.UIOutput
     /**
      * width set flag.
      */
-    private boolean widthSet = false;
+    private boolean widthSet;
 
     /**
      * Creates a new instance of ProgressBar.

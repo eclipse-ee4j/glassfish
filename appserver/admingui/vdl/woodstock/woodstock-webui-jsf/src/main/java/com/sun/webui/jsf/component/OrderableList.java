@@ -49,7 +49,7 @@ import java.util.Iterator;
  * clicking the "moveUp" button, and remove them by selecting one or more items
  * from the list and clicking the "Remove" button.</p>
  *
- * <h4>Configuring the listbox tag</h4>
+ * <h2>Configuring the listbox tag</h2>
  *
  * <p>
  * Use the {@code list} attribute to bind the component to a model. The
@@ -65,7 +65,7 @@ import java.util.Iterator;
  * validate the contents of the list once the user has finished adding and
  * removing items, specify a {@code labelValidator}.</p>
  *
- * <h4>Facets</h4>
+ * <h2>Facets</h2>
  *
  * <ul>
  * <li>{@code fieldLabel}: use this facet to specify a custom component for
@@ -88,7 +88,7 @@ import java.util.Iterator;
  * table row below the component.</li>
  * </ul>
  *
- * <h4>Client-side JavaScript functions</h4>
+ * <h2>Client-side JavaScript functions</h2>
  *
  * <ul>
  * <li>NONE yet</li>
@@ -241,17 +241,17 @@ public final class OrderableList extends WebuiInput
     /**
      * Holds the ValueType of this component.
      */
-    private ValueTypeEvaluator valueTypeEvaluator = null;
+    private ValueTypeEvaluator valueTypeEvaluator;
 
     /**
      * list items.
      */
-    private ArrayList<Object> listItems = null;
+    private ArrayList<Object> listItems;
 
     /**
      * Theme.
      */
-    private transient Theme theme = null;
+    private transient Theme theme;
 
     /**
      * Debug flag.
@@ -265,12 +265,12 @@ public final class OrderableList extends WebuiInput
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * If set, a label is rendered adjacent to the component with the value of
@@ -282,7 +282,7 @@ public final class OrderableList extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String label = null;
+    private String label;
 
     /**
      * Sets the style level for the generated labels. Valid values are 1
@@ -299,7 +299,7 @@ public final class OrderableList extends WebuiInput
     /**
      * labelLevel set flag.
      */
-    private boolean labelLevelSet = false;
+    private boolean labelLevelSet;
 
     /**
      * If this attribute is true, the label is rendered above the component. If
@@ -309,12 +309,12 @@ public final class OrderableList extends WebuiInput
     @Property(name = "labelOnTop",
             displayName = "Label on Top",
             category = "Appearance")
-    private boolean labelOnTop = false;
+    private boolean labelOnTop;
 
     /**
      * labelOnTop set flag.
      */
-    private boolean labelOnTopSet = false;
+    private boolean labelOnTopSet;
 
     /**
      * If this attribute is true, the Move to Top and Move to Bottom buttons are
@@ -323,24 +323,24 @@ public final class OrderableList extends WebuiInput
     @Property(name = "moveTopBottom",
             displayName = "Move Top and Bottom",
             category = "Appearance")
-    private boolean moveTopBottom = false;
+    private boolean moveTopBottom;
 
     /**
      * moveTopBottom set flag.
      */
-    private boolean moveTopBottomSet = false;
+    private boolean moveTopBottomSet;
 
     /**
      * Flag indicating that the application user can make select more than one
      * option from the listbox.
      */
     @Property(name = "multiple", displayName = "Multiple", category = "Data")
-    private boolean multiple = false;
+    private boolean multiple;
 
     /**
      * multiple set flag.
      */
-    private boolean multipleSet = false;
+    private boolean multipleSet;
 
     /**
      * If this attribute is set to true, the value of the component is rendered
@@ -349,12 +349,12 @@ public final class OrderableList extends WebuiInput
     @Property(name = "readOnly",
             displayName = "Read-only",
             category = "Behavior")
-    private boolean readOnly = false;
+    private boolean readOnly;
 
     /**
      * readOnly set flag.
      */
-    private boolean readOnlySet = false;
+    private boolean readOnlySet;
 
     /**
      * The number of rows to display, which determines the length of the
@@ -371,7 +371,7 @@ public final class OrderableList extends WebuiInput
     /**
      * rows set flag.
      */
-    private boolean rowsSet = false;
+    private boolean rowsSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -381,7 +381,7 @@ public final class OrderableList extends WebuiInput
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -393,7 +393,7 @@ public final class OrderableList extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order for the current document.
@@ -412,7 +412,7 @@ public final class OrderableList extends WebuiInput
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -425,7 +425,7 @@ public final class OrderableList extends WebuiInput
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -439,12 +439,12 @@ public final class OrderableList extends WebuiInput
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

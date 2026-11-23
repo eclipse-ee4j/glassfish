@@ -47,7 +47,7 @@ public class Reporter extends Thread implements Serializable {
     /** testSuiteHash is a Hashtable holding info about different testsuites. */
     private static Hashtable<String, TestSuite> testSuiteHash = new Hashtable<>();
 
-    private static final String getMachineName() {
+    private static String getMachineName() {
         try (InputStream in = Runtime.getRuntime().exec("uname -n").getInputStream()) {
             return new String(in.readAllBytes()).strip();
         } catch (Exception me) {

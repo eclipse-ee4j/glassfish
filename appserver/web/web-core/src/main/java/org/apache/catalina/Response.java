@@ -44,7 +44,7 @@ public interface Response {
     /**
      * Return the Connector through which this Response is returned.
      */
-    public Connector getConnector();
+    Connector getConnector();
 
 
     /**
@@ -52,19 +52,19 @@ public interface Response {
      *
      * @param connector The new connector
      */
-    public void setConnector(Connector connector);
+    void setConnector(Connector connector);
 
 
     /**
      * Return the number of bytes actually written to the output stream.
      */
-    public int getContentCount();
+    int getContentCount();
 
 
     /**
      * Return the Context with which this Response is associated.
      */
-    public Context getContext();
+    Context getContext();
 
 
     /**
@@ -73,7 +73,7 @@ public interface Response {
      *
      * @param context The associated Context
      */
-    public void setContext(Context context);
+    void setContext(Context context);
 
 
     /**
@@ -81,19 +81,19 @@ public interface Response {
      *
      * @param appCommitted The new application committed flag value
      */
-    public void setAppCommitted(boolean appCommitted);
+    void setAppCommitted(boolean appCommitted);
 
 
     /**
      * Application commit flag accessor.
      */
-    public boolean isAppCommitted();
+    boolean isAppCommitted();
 
 
     /**
      * Return the "processing inside an include" flag.
      */
-    public boolean getIncluded();
+    boolean getIncluded();
 
 
     /**
@@ -102,7 +102,7 @@ public interface Response {
      * @param included <code>true</code> if we are currently inside a
      *  RequestDispatcher.include(), else <code>false</code>
      */
-    public void setIncluded(boolean included);
+    void setIncluded(boolean included);
 
 
     /**
@@ -110,13 +110,13 @@ public interface Response {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the Request with which this Response is associated.
      */
-    public Request getRequest();
+    Request getRequest();
 
 
     /**
@@ -124,20 +124,20 @@ public interface Response {
      *
      * @param request The new associated request
      */
-    public void setRequest(Request request);
+    void setRequest(Request request);
 
 
     /**
      * Return the <code>ServletResponse</code> for which this object
      * is the facade.
      */
-    public ServletResponse getResponse();
+    ServletResponse getResponse();
 
 
     /**
      * Return the output stream associated with this Response.
      */
-    public OutputStream getStream();
+    OutputStream getStream();
 
 
     /**
@@ -145,7 +145,7 @@ public interface Response {
      *
      * @param stream The new output stream
      */
-    public void setStream(OutputStream stream);
+    void setStream(OutputStream stream);
 
 
     /**
@@ -153,25 +153,25 @@ public interface Response {
      *
      * @param suspended The new suspended flag value
      */
-    public void setSuspended(boolean suspended);
+    void setSuspended(boolean suspended);
 
 
     /**
      * Suspended flag accessor.
      */
-    public boolean isSuspended();
+    boolean isSuspended();
 
 
     /**
      * Set the error flag.
      */
-    public void setError();
+    void setError();
 
 
     /**
      * Error flag accessor.
      */
-    public boolean isError();
+    boolean isError();
 
 
     // BEGIN S1AS 4878272
@@ -180,7 +180,7 @@ public interface Response {
      *
      * @param message detail error message
      */
-    public void setDetailMessage(String message);
+    void setDetailMessage(String message);
 
 
     /**
@@ -188,7 +188,7 @@ public interface Response {
      *
      * @return the detail error message
      */
-    public String getDetailMessage();
+    String getDetailMessage();
     // END S1AS 4878272
 
 
@@ -201,7 +201,7 @@ public interface Response {
      *
      * @exception IOException if an input/output error occurs
      */
-    public ServletOutputStream createOutputStream() throws IOException;
+    ServletOutputStream createOutputStream() throws IOException;
 
 
     /**
@@ -210,20 +210,20 @@ public interface Response {
      *
      * @exception IOException if an input/output error occurs
      */
-    public void finishResponse() throws IOException;
+    void finishResponse() throws IOException;
 
 
     /**
      * Return the content length that was set or calculated for this Response.
      */
-    public int getContentLength();
+    int getContentLength();
 
 
     /**
      * Return the content type that was set or calculated for this response,
      * or <code>null</code> if no content type was set.
      */
-    public String getContentType();
+    String getContentType();
 
 
     /**
@@ -238,27 +238,27 @@ public interface Response {
      *
      * @exception IOException if an input/output error occurs
      */
-    public PrintWriter getReporter() throws IOException;
+    PrintWriter getReporter() throws IOException;
 
 
     /**
      * Release all object references, and initialize instance variables, in
      * preparation for reuse of this object.
      */
-    public void recycle();
+    void recycle();
 
 
     /**
      * Reset the data buffer but not any status or header information.
      */
-    public void resetBuffer();
+    void resetBuffer();
 
 
     /**
      * Reset the data buffer and the using Writer/Stream flags but not any
      * status or header information.
      */
-    public void resetBuffer(boolean resetWriterStreamFlags);
+    void resetBuffer(boolean resetWriterStreamFlags);
 
 
     /**
@@ -266,7 +266,7 @@ public interface Response {
      *
      * @exception IOException if an input/output error occurs
      */
-    public void sendAcknowledgement()
+    void sendAcknowledgement()
         throws IOException;
 
 
@@ -276,5 +276,5 @@ public interface Response {
      *
      * @param url URL to be encoded
      */
-    public String encode(String url);
+    String encode(String url);
 }

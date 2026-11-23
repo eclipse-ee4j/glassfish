@@ -89,7 +89,7 @@ import static org.glassfish.main.jdke.props.SystemProperties.setProperty;
  * User interfaces should take a note of it. e.g. CLI does not make -Dfoo=bar and -Dfoo=bar1
  * as same properties being set to two different values since it is hard to distinguish it
  * in general case. Users should delete -Dfoo=bar and add -Dfoo=bar1explicitly in this case.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  * @see com.sun.enterprise.config.serverbeans.JavaConfig
  */

@@ -79,20 +79,20 @@ public final class StringParser {
      * parse off the end of the string.  This value is useful for extracting
      * substrings that include the end of the string.
      */
-    private int index = 0;
+    private int index;
 
 
     /**
      * The length of the String we are currently parsing.  Stored when the
      * string is first specified to avoid repeated recalculations.
      */
-    private int length = 0;
+    private int length;
 
 
     /**
      * The String we are currently parsing.
      */
-    private String string = null;
+    private String string;
 
 
     // ------------------------------------------------------------- Properties

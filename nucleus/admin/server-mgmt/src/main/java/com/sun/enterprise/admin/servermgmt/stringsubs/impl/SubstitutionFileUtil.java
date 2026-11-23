@@ -34,7 +34,7 @@ public class SubstitutionFileUtil {
 
     private static final String INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB = "inmemory.substitution.file.size.in.kb";
     private static final int DEFAULT_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_KB = 10240;
-    private static int PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES = 0;
+    private static int PROVIDED_INMEMORY_SUBSTITUTION_FILE_SIZE_IN_BYTES;
 
     /**
      * The maximum copy byte count.

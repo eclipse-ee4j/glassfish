@@ -46,7 +46,7 @@ public interface JobManager<T extends Job> {
     /**
      * Container for checkpoint related objects
      */
-    public class Checkpoint<T extends Job> implements Serializable {
+    class Checkpoint<T extends Job> implements Serializable {
 
         private static final long serialVersionUID = 1L;
 
@@ -169,7 +169,7 @@ public interface JobManager<T extends Job> {
 
     @FunctionalInterface
     interface AsyncAdminCommandExecution extends Runnable {
-        static final Logger LOG = System.getLogger(AsyncAdminCommandExecution.class.getName());
+        Logger LOG = System.getLogger(AsyncAdminCommandExecution.class.getName());
 
         void execute();
 

@@ -69,7 +69,7 @@ import static java.util.logging.Level.SEVERE;
 import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
 
 /**
- * Locates and parses the portion of <tt>domain.xml</tt> that we care.
+ * Locates and parses the portion of <code>domain.xml</code> that we care.
  *
  * @author Jerome Dochez
  * @author Kohsuke Kawaguchi
@@ -200,7 +200,7 @@ public abstract class DomainXml implements Populator {
     }
 
     /**
-     * Determines the alternative location of the <tt>domain.xml</tt> file
+     * Determines the alternative location of the <code>domain.xml</code> file
      */
     protected URL getAlternativeDomainXml(ServerEnvironmentImpl env) throws IOException {
         File domainXml = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileNameBackup);
@@ -222,7 +222,7 @@ public abstract class DomainXml implements Populator {
     }
 
     /**
-     * Determines the location of <tt>domain.xml</tt> to be parsed.
+     * Determines the location of <code>domain.xml</code> to be parsed.
      */
     protected URL getDomainXml(ServerEnvironmentImpl env) throws IOException {
         File domainXml = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kConfigXMLFileName);
@@ -233,7 +233,7 @@ public abstract class DomainXml implements Populator {
     }
 
     /**
-     * Parses <tt>domain.xml</tt>
+     * Parses <code>domain.xml</code>
      */
     protected void parseDomainXml(ConfigParser parser, final URL domainXml, final String serverName) {
         long startNano = System.nanoTime();

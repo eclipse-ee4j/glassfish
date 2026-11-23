@@ -49,9 +49,9 @@ public class ServerRemoteRestAdminCommand extends RemoteRestAdminCommand {
 
     private ServerEnvironment serverEnv;
 
-    private SSLUtils _sslUtils = null;
+    private SSLUtils _sslUtils;
 
-    private DomainScopedPasswordAliasStore domainPasswordAliasStore = null;
+    private DomainScopedPasswordAliasStore domainPasswordAliasStore;
 
     public ServerRemoteRestAdminCommand(ServiceLocator habitat, String name, String host, int port, boolean secure,
         String user, String password, Logger logger) throws CommandException {

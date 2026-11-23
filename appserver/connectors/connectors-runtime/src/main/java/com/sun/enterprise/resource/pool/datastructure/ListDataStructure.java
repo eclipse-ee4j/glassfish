@@ -180,7 +180,7 @@ public class ListDataStructure implements DataStructure {
     }
 
     /**
-     * remove & destroy all resources from the datastructure.
+     * remove &amp; destroy all resources from the datastructure.
      */
     @Override
     public void removeAll() {

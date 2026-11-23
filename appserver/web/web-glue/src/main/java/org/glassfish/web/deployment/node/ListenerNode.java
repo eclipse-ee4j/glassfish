@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  */
 public class ListenerNode extends DisplayableComponentNode<AppListenerDescriptorImpl> {
 
-    protected AppListenerDescriptorImpl descriptor = null;
+    protected AppListenerDescriptorImpl descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

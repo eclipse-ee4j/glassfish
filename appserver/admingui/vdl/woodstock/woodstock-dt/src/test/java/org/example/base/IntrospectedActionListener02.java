@@ -17,6 +17,6 @@ package org.example.base;
 
 public interface IntrospectedActionListener02 {
 
-    public void introspectedActionHappened(IntrospectedActionEvent02 event);
+    void introspectedActionHappened(IntrospectedActionEvent02 event);
 
 }

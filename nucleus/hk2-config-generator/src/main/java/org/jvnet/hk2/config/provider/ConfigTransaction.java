@@ -28,7 +28,7 @@ import org.jvnet.hk2.config.Configured;
  * Represents a configuration transaction from an outside
  * configuration system.
  *
- * <p/>
+ * <p>
  * In all of the methods that take configuration beans, it is
  * expected that those objects are annotated with
  * {@link Configured}.  Additionally, the object identity
@@ -80,7 +80,7 @@ public interface ConfigTransaction {
    * Same basic behavior as {@link #commit()} with the added ability to substitute configuration
    * beans used in the prepare phase with the final bean object replacements that should be managed.
    *
-   * <p/>
+   * <p>
    * This is an important variant when the configuration beans in the prepare phase are transient
    * in nature.
    *

@@ -26,7 +26,7 @@ final class ClassToClassMapping {
     final Class mSrc;
     final Class mDest;
 
-    public ClassToClassMapping(Class src, Class dest) {
+    ClassToClassMapping(Class src, Class dest) {
         mSrc = src;
         mDest = dest;
     }
@@ -47,7 +47,7 @@ public final class ClassUtil {
      * Test whether an Object is an array
      *
      * @param o object to test
-     * @returns true if the object is an array, false otherwise.
+     * @return true if the object is an array, false otherwise.
      */
     public static boolean objectIsArray(Object o) {
         return (classIsArray(o.getClass()));
@@ -58,7 +58,7 @@ public final class ClassUtil {
      * Test whether a Class is an array
      *
      * @param theClass class to test
-     * @returns true if the class is an array, false otherwise.
+     * @return true if the class is an array, false otherwise.
      */
     public static boolean classIsArray(Class theClass) {
         return (classnameIsArray(theClass.getName()));
@@ -69,7 +69,7 @@ public final class ClassUtil {
      * Test whether an Object is an array of primitive types
      *
      * @param o object to test
-     * @returns true if the object is an array, false otherwise.
+     * @return true if the object is an array, false otherwise.
      */
     public static boolean objectIsPrimitiveArray(Object o) {
         return (getPrimitiveArrayTypeCode(o.getClass()) != 0);
@@ -80,7 +80,7 @@ public final class ClassUtil {
      * Test whether a classname is an array
      *
      * @param classname classname string
-     * @returns true if the object is an array, false otherwise.
+     * @return true if the object is an array, false otherwise.
      */
     public static boolean classnameIsArray(String classname) {
         return (classname.startsWith("["));
@@ -91,7 +91,7 @@ public final class ClassUtil {
      * Test whether a classname is a primitive array
      *
      * @param classname classname string
-     * @returns true if the object is a primitive array, false otherwise.
+     * @return true if the object is a primitive array, false otherwise.
      */
     public static boolean classnameIsPrimitiveArray(String classname) {
         return (getPrimitiveArrayTypeCode(classname) != 0);
@@ -102,8 +102,8 @@ public final class ClassUtil {
      * Return the primitive element type code for an array of primitive types.
      * Same as getPrimitiveArrayTypeCode( theClass.getName() )
      *
-     * @param classname the Class object
-     * @returns the element type code; otherwise (char)0
+     * @param theClass the Class object
+     * @return the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(Class theClass) {
         char typeCode = 0;
@@ -120,7 +120,7 @@ public final class ClassUtil {
      * Return the primitive element type code for an array of primitive types.
      *
      * @param classname classname string
-     * @returns the element type code; otherwise (char)0
+     * @return the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(String classname) {
         char typeCode = 0;
@@ -155,7 +155,7 @@ public final class ClassUtil {
      * Get the classname for an array element.
      *
      * @param classname classname string
-     * @returns the classname for the array element
+     * @return the classname for the array element
      */
     public static String getArrayMemberClassName(String classname) {
         String result = null;
@@ -233,7 +233,7 @@ public final class ClassUtil {
      * this methods returns the correct Class for any type.
      *
      * @param classname classname string
-     * @returns the classname for the array element
+     * @return the classname for the array element
      */
     public static Class getClassFromName(final String classname) throws ClassNotFoundException {
         Class theClass = null;
@@ -267,7 +267,7 @@ public final class ClassUtil {
      * Map primitive class Classes to Object forms eg int.class to Integer.class
      *
      * @param theClass the class to map
-     * @returns the corresponding Object class or the original Class if not a primitive.
+     * @return the corresponding Object class or the original Class if not a primitive.
      */
     public static Class primitiveClassToObjectClass(final Class theClass) {
         Class result = theClass;
@@ -290,7 +290,7 @@ public final class ClassUtil {
      * Test whether a class is a primitive class.
      *
      * @param theClass the class to test
-     * @returns true if it's a primitive class, false otherwise.
+     * @return true if it's a primitive class, false otherwise.
      */
     public static boolean isPrimitiveClass(final Class theClass) {
         boolean isSimple = false;
@@ -378,7 +378,7 @@ public final class ClassUtil {
      * than the internal JVM representation.
      *
      * @param type
-     * @returns a friendlier string representing the type
+     * @return a friendlier string representing the type
      */
     final static String javaLang = "java.lang.";
 
@@ -665,7 +665,7 @@ public final class ClassUtil {
      * Primitive types are instantiated as their equivalent Object forms.
      * Any value is acceptable in the newly created object.
      *
-     * @param theClass the class from which an instance should be instantiated
+     * @param inClass the class from which an instance should be instantiated
      */
     public static Object instantiateDefault(final Class inClass) throws Exception {
         Object result = null;

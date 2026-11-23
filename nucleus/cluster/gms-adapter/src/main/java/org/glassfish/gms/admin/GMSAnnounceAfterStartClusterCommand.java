@@ -142,7 +142,7 @@ public class GMSAnnounceAfterStartClusterCommand implements AdminCommand {
                     default:
                 }
                 GMS_ADMIN_LOGGER.log(LogLevel.INFO, GMSADMIN_AFTER_START, new Object [] {
-                    report.getActionExitCode(), members, gmsInfo.clusterMembers
+                    report.getActionExitCode(), members, gmsInfo.clusterMembers,
                 });
                 try {
                     if (gmsInfo.gms != null) {

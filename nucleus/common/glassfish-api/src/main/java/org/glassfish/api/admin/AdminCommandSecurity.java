@@ -33,7 +33,7 @@ public interface AdminCommandSecurity {
      * {@link AccessCheck} objects, indicating additional authorization checking that secure admin should perform beyond
      * what is triggered by the annotations.
      */
-    public interface AccessCheckProvider {
+    interface AccessCheckProvider {
 
         /**
          * Returns the {@code AccessCheck}s the command has computed at runtime which should be included in the authorization,
@@ -45,7 +45,7 @@ public interface AdminCommandSecurity {
         Collection<? extends AccessRequired.AccessCheck> getAccessChecks();
     }
 
-    public interface Preauthorization {
+    interface Preauthorization {
         boolean preAuthorization(AdminCommandContext context);
     }
 }

@@ -88,7 +88,7 @@ public class StandardService implements Lifecycle, Service {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The property change support for this component.

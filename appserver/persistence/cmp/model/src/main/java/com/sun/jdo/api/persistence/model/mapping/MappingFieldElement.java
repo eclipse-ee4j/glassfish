@@ -31,15 +31,15 @@ public interface MappingFieldElement extends MappingMemberElement
     /** Constant representing the jdo default fetch group.
      * This is what used to be mandatory for SynerJ.
      */
-    public static final int GROUP_DEFAULT = 1;
+    int GROUP_DEFAULT = 1;
 
     /** Constant representing no fetch group. */
-    public static final int GROUP_NONE = 0;
+    int GROUP_NONE = 0;
 
     /** Constant representing an independent fetch group.  All independent
      * fetch groups must have a value less than or equal to this constant.
      */
-    public static final int GROUP_INDEPENDENT = -1;
+    int GROUP_INDEPENDENT = -1;
 
     // TBD:unmap all components, if remove from class remove here too
     //public void clear ();
@@ -48,40 +48,40 @@ public interface MappingFieldElement extends MappingMemberElement
      * @return <code>true</code> if the field is read only,
      * <code>false</code> otherwise
      */
-    public boolean isReadOnly ();
+    boolean isReadOnly ();
 
     /** Set whether this field element is read only or not.
      * @param flag - if <code>true</code>, the field element is marked as
      * read only; otherwise, it is not
      * @exception ModelException if impossible
      */
-    public void setReadOnly (boolean flag) throws ModelException;
+    void setReadOnly (boolean flag) throws ModelException;
 
     /** Determines whether this field element is in a concurrency check or not.
      * @return <code>true</code> if the field is in a concurrency check,
      * <code>false</code> otherwise
      */
-    public boolean isInConcurrencyCheck ();
+    boolean isInConcurrencyCheck ();
 
     /** Set whether this field element is in a concurrency check or not.
      * @param flag - if <code>true</code>, the field element is marked as
      * being in a concurrency check; otherwise, it is not
      * @exception ModelException if impossible
      */
-    public void setInConcurrencyCheck (boolean flag) throws ModelException;
+    void setInConcurrencyCheck (boolean flag) throws ModelException;
 
     /** Determines whether this field element is a version field or not.
      * @return <code>true</code> if the field is a version field,
      * <code>false</code> otherwise
      */
-    public boolean isVersion ();
+    boolean isVersion ();
 
     /** Set whether this field element is a version field or not.
      * @param flag - if <code>true</code>, the field element is marked
      * as a version field; otherwise, it is not
      * @exception ModelException if impossible
      */
-    public void setVersion (boolean flag) throws ModelException;
+    void setVersion (boolean flag) throws ModelException;
 
     //====================== fetch group handling ==========================
 
@@ -90,7 +90,7 @@ public interface MappingFieldElement extends MappingMemberElement
      * {@link #GROUP_NONE}, or anything less than or equal to
      * {@link #GROUP_INDEPENDENT}
      */
-    public int getFetchGroup ();
+    int getFetchGroup ();
 
     /** Set the fetch group of this field element.
      * @param group - an integer indicating the fetch group, one of:
@@ -98,7 +98,7 @@ public interface MappingFieldElement extends MappingMemberElement
      * equal to {@link #GROUP_INDEPENDENT}
      * @exception ModelException if impossible
      */
-    public void setFetchGroup (int group) throws ModelException;
+    void setFetchGroup (int group) throws ModelException;
 
     //======================= column handling ===========================
 
@@ -106,24 +106,24 @@ public interface MappingFieldElement extends MappingMemberElement
      * mapped.
      * @return the names of the columns mapped by this mapping field
      */
-    public List<String> getColumns ();
+    List<String> getColumns ();
 
     /** Adds a column to the list of columns mapped by this mapping field.
      * @param column column element to be added to the mapping
      * @exception ModelException if impossible
      */
-    public void addColumn (DBMemberElement column) throws ModelException;
+    void addColumn (DBMemberElement column) throws ModelException;
 
     /** Removes a column from the list of columns mapped by this mapping field.
      * @param columnName the relative name of the column to be removed from
      * the mapping
      * @exception ModelException if impossible
      */
-    public void removeColumn (String columnName) throws ModelException;
+    void removeColumn (String columnName) throws ModelException;
 
-    public boolean isMappedToTable(MappingTableElement table);
+    boolean isMappedToTable(MappingTableElement table);
 
-    public void stripSchemaName();
+    void stripSchemaName();
 
-    public List<? extends DBMemberElement> getColumnObjects();
+    List<? extends DBMemberElement> getColumnObjects();
 }

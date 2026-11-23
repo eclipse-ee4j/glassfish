@@ -43,19 +43,17 @@ import java.util.zip.ZipException;
 
 class Assembler {
 
+    private static final int BUFFER_SIZE = 8192;
+
     public URI assemble(ScatteredArchive archive) throws IOException {
-        switch (archive.type) {
-            case WAR:
-                return assembleWAR(archive.name, archive.rootDirectory,
-                        archive.classpaths, archive.metadatas);
-            case JAR:
-                return assembleJAR(archive.name, archive.rootDirectory,
-                        archive.classpaths, archive.metadatas);
-            case RAR:
-                return assembleRAR(archive.name, archive.rootDirectory,
-                        archive.classpaths, archive.metadatas);
-        }
-        return null; // will never come here.
+        return switch (archive.type) {
+            case WAR -> assembleWAR(archive.name, archive.rootDirectory,
+                    archive.classpaths, archive.metadatas);
+            case JAR -> assembleJAR(archive.name, archive.rootDirectory,
+                    archive.classpaths, archive.metadatas);
+            case RAR -> assembleRAR(archive.name, archive.rootDirectory,
+                    archive.classpaths, archive.metadatas);
+        };
     }
 
     public URI assemble(ScatteredEnterpriseArchive archive) throws IOException {
@@ -81,7 +79,7 @@ class Assembler {
             File archive = ame.getValue();
             if (archive.isDirectory()) {
                 archive = new File(assembleJAR(ame.getKey(), archive,
-                        Collections.EMPTY_LIST, Collections.EMPTY_MAP));
+                        Collections.emptyList(), Collections.emptyMap()));
             }
             tranferFile(archive, jos, ame.getKey(), false);
         }
@@ -140,7 +138,7 @@ class Assembler {
         }
 
         // Make a single connector jar out of all the classpath directories and add it to the RAR file.
-        List<File> classpathDirs = new ArrayList();
+        List<File> classpathDirs = new ArrayList<>();
         for (File classpath : classpaths) {
             if (classpath.isDirectory()) {
                 classpathDirs.add(classpath);
@@ -149,7 +147,7 @@ class Assembler {
         if (!classpathDirs.isEmpty()) {
             // Compute a unique connector jar name
             String connectorJarName = name;
-            List<String> topLevelFileNames = new ArrayList();
+            List<String> topLevelFileNames = new ArrayList<>();
             topLevelFileNames.addAll(getFileNames(classpaths));
             topLevelFileNames.addAll(getFileNames(rootDirectory));
             int count = 0;
@@ -158,7 +156,7 @@ class Assembler {
                 ++count;
             }
             File connectorJar = new File(assembleJAR(connectorJarName, null,
-                    classpathDirs, Collections.EMPTY_MAP));
+                    classpathDirs, Collections.emptyMap()));
             tranferFile(connectorJar, jos, connectorJar.getName(), false);
         }
 
@@ -257,7 +255,7 @@ class Assembler {
             return;
         }
         int read = 0;
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[BUFFER_SIZE];
         while ((read = fin.read(buffer, 0, buffer.length)) != -1) {
             jos.write(buffer, 0, read);
         }
@@ -268,11 +266,11 @@ class Assembler {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             return getFileNames(Arrays.asList(directory.listFiles()));
         }
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     private List<String> getFileNames(List<File> files) {
-        List<String> result = new ArrayList();
+        List<String> result = new ArrayList<>();
         for (File f : files) {
             if (!f.isDirectory()) {
                 result.add(f.getName());
@@ -281,7 +279,7 @@ class Assembler {
         return result;
     }
 
-    private static final List<Pattern> EXCLUDE_JAR_ENTRIES = new ArrayList();
+    private static final List<Pattern> EXCLUDE_JAR_ENTRIES = new ArrayList<>();
 
     static {
         EXCLUDE_JAR_ENTRIES.add(Pattern.compile("META-INF/MANIFEST\\.MF"));

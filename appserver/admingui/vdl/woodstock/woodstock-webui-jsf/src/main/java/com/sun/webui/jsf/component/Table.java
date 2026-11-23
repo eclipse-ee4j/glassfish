@@ -230,7 +230,7 @@ public class Table extends UIComponentBase implements NamingContainer {
     /**
      * A List containing TableRowGroup children.
      */
-    private List<TableRowGroup> tableRowGroupChildren = null;
+    private List<TableRowGroup> tableRowGroupChildren;
 
     /**
      * The number of TableRowGroup children.
@@ -259,7 +259,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String align = null;
+    private String align;
 
     /**
      * Flag indicating that the table title should be augmented with the range
@@ -272,12 +272,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "augmentTitle",
             displayName = "Show Augmented Title",
             category = "Appearance")
-    private boolean augmentTitle = false;
+    private boolean augmentTitle;
 
     /**
      * augmentTitle set flag.
      */
-    private boolean augmentTitleSet = false;
+    private boolean augmentTitleSet;
 
     /**
      * The deprecated BGCOLOR attribute suggests a background color for the
@@ -296,7 +296,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String bgColor = null;
+    private String bgColor;
 
     /**
      * The BORDER attribute specifies the width in pixels of the border around a
@@ -315,7 +315,7 @@ public class Table extends UIComponentBase implements NamingContainer {
     /**
      * borderSet flag.
      */
-    private boolean borderSet = false;
+    private boolean borderSet;
 
     /**
      * The amount of white space that should be placed between the cell contents
@@ -336,7 +336,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String cellPadding = null;
+    private String cellPadding;
 
     /**
      * The amount of white space that should be placed between cells, and
@@ -358,7 +358,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String cellSpacing = null;
+    private String cellSpacing;
 
     /**
      * In the View-Changing Controls area of the Action Bar, display a button
@@ -369,12 +369,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "clearSortButton",
             displayName = "Show Clear Sort Button",
             category = "Appearance")
-    private boolean clearSortButton = false;
+    private boolean clearSortButton;
 
     /**
      * clearSortButton set flag.
      */
-    private boolean clearSortButtonSet = false;
+    private boolean clearSortButtonSet;
 
     /**
      * In the Action Bar, display a deselect button for tables in which multiple
@@ -386,12 +386,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "deselectMultipleButton",
             displayName = "Show Deselect Multiple Button",
             category = "Appearance")
-    private boolean deselectMultipleButton = false;
+    private boolean deselectMultipleButton;
 
     /**
      * deselectMultipleButton set flag.
      */
-    private boolean deselectMultipleButtonSet = false;
+    private boolean deselectMultipleButtonSet;
 
     /**
      * Scripting code that is executed when the user clicks the deselect
@@ -405,7 +405,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String deselectMultipleButtonOnClick = null;
+    private String deselectMultipleButtonOnClick;
 
     /**
      * In the Action Bar, display a deselect button for tables in which only a
@@ -416,12 +416,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "deselectSingleButton",
             displayName = "Show Deselect Single Button",
             category = "Appearance")
-    private boolean deselectSingleButton = false;
+    private boolean deselectSingleButton;
 
     /**
      * deselectSingleButton set flag.
      */
-    private boolean deselectSingleButtonSet = false;
+    private boolean deselectSingleButtonSet;
 
     /**
      * Scripting code that is executed when the user clicks the deselect single
@@ -435,7 +435,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String deselectSingleButtonOnClick = null;
+    private String deselectSingleButtonOnClick;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt; }HTML element
@@ -450,7 +450,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraActionBottomHtml = null;
+    private String extraActionBottomHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt; }HTML element
@@ -465,7 +465,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraActionTopHtml = null;
+    private String extraActionTopHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt; }HTML element
@@ -480,7 +480,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraFooterHtml = null;
+    private String extraFooterHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;td&gt; }HTML element
@@ -494,7 +494,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraPanelHtml = null;
+    private String extraPanelHtml;
 
     /**
      * Extra HTML code to be appended to the {@code &lt;caption&gt;} HTML
@@ -509,7 +509,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String extraTitleHtml = null;
+    private String extraTitleHtml;
 
     /**
      * The element id to be applied to the outermost HTML element that is
@@ -529,7 +529,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String filterId = null;
+    private String filterId;
 
     /**
      * The element id used to set focus when the filter panel is open.
@@ -538,7 +538,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             displayName = "Filter Panel Focus ID",
             category = "Advanced",
             isHidden = true)
-    private String filterPanelFocusId = null;
+    private String filterPanelFocusId;
 
     /**
      * Text to be inserted into the table title bar when a filter is applied.
@@ -556,7 +556,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String filterText = null;
+    private String filterText;
 
     /**
      * The text to be displayed in the table footer, which expands across the
@@ -568,7 +568,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String footerText = null;
+    private String footerText;
 
     /**
      * The BORDER attribute specifies the width in pixels of the border around a
@@ -582,7 +582,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.IntegerPropertyEditor")
             //CHECKSTYLE:ON
-    private String frame = null;
+    private String frame;
 
     /**
      * Flag indicating that selected rows might be currently hidden from view.
@@ -610,12 +610,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "hiddenSelectedRows",
             displayName = "Is Hidden Selected Rows",
             category = "Advanced")
-    private boolean hiddenSelectedRows = false;
+    private boolean hiddenSelectedRows;
 
     /**
      * hiddenSelectedRows set flag.
      */
-    private boolean hiddenSelectedRowsSet = false;
+    private boolean hiddenSelectedRowsSet;
 
     /**
      * Flag indicating that this component should use a virtual form. A virtual
@@ -634,12 +634,12 @@ public class Table extends UIComponentBase implements NamingContainer {
             displayName = "Is Internal Virtual Form",
             category = "Advanced",
             isAttribute = false)
-    private boolean internalVirtualForm = false;
+    private boolean internalVirtualForm;
 
     /**
      * internalVirtualForm set flag.
      */
-    private boolean internalVirtualFormSet = false;
+    private boolean internalVirtualFormSet;
 
     /**
      * Text to add to the title of an unpaginated table. For example, if your
@@ -653,7 +653,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String itemsText = null;
+    private String itemsText;
 
     /**
      * Renders the table in a style that makes the table look lighter weight,
@@ -662,12 +662,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "lite",
             displayName = "Light Weight Table",
             category = "Appearance")
-    private boolean lite = false;
+    private boolean lite;
 
     /**
      * lite set flag.
      */
-    private boolean liteSet = false;
+    private boolean liteSet;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -678,7 +678,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -690,7 +690,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -702,7 +702,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -714,7 +714,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -726,7 +726,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -738,7 +738,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -750,7 +750,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -762,7 +762,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -774,7 +774,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -786,7 +786,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Show table paginate button to allow users to switch between viewing all
@@ -796,12 +796,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "paginateButton",
             displayName = "Show Paginate Button",
             category = "Appearance")
-    private boolean paginateButton = false;
+    private boolean paginateButton;
 
     /**
      * paginateButton set flag.
      */
-    private boolean paginateButtonSet = false;
+    private boolean paginateButtonSet;
 
     /**
      * Show the table pagination controls, which allow users to change which
@@ -812,12 +812,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "paginationControls",
             displayName = "Show Pagination Controls",
             category = "Appearance")
-    private boolean paginationControls = false;
+    private boolean paginationControls;
 
     /**
      * paginationControls set flag.
      */
-    private boolean paginationControlsSet = false;
+    private boolean paginationControlsSet;
 
     /**
      * The element id used to set focus when the preferences panel is open.
@@ -826,7 +826,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             displayName = "Preferences Panel Focus ID",
             category = "Advanced",
             isHidden = true)
-    private String preferencesPanelFocusId = null;
+    private String preferencesPanelFocusId;
 
     /**
      * The RULES attribute, poorly supported by browsers, specifies the borders
@@ -845,7 +845,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String rules = null;
+    private String rules;
 
     /**
      * Show the button that is used for selecting multiple rows. The button is
@@ -857,12 +857,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "selectMultipleButton",
             displayName = "Show Select Multiple Button",
             category = "Appearance")
-    private boolean selectMultipleButton = false;
+    private boolean selectMultipleButton;
 
     /**
      * selectMultipleButton set flag.
      */
-    private boolean selectMultipleButtonSet = false;
+    private boolean selectMultipleButtonSet;
 
     /**
      * Scripting code executed when the user clicks the mouse on the select
@@ -874,7 +874,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String selectMultipleButtonOnClick = null;
+    private String selectMultipleButtonOnClick;
 
     /**
      * The element id used to set focus when the sort panel is open.
@@ -883,7 +883,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             displayName = "Sort Panel Focus ID",
             category = "Advanced",
             isHidden = true)
-    private String sortPanelFocusId = null;
+    private String sortPanelFocusId;
 
     /**
      * Show the button that is used to open and close the sort panel.
@@ -891,12 +891,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "sortPanelToggleButton",
             displayName = "Show Sort Panel Toggle Button",
             category = "Appearance")
-    private boolean sortPanelToggleButton = false;
+    private boolean sortPanelToggleButton;
 
     /**
      * sortPanelToggleButton set flag.
      */
-    private boolean sortPanelToggleButtonSet = false;
+    private boolean sortPanelToggleButtonSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -908,7 +908,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -920,7 +920,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Text that describes this table's purpose and structure, for user agents
@@ -932,7 +932,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String summary = null;
+    private String summary;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -951,7 +951,7 @@ public class Table extends UIComponentBase implements NamingContainer {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * The text displayed for the table title.
@@ -962,7 +962,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -975,7 +975,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -989,12 +989,12 @@ public class Table extends UIComponentBase implements NamingContainer {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Use the {@code width} attribute to specify the width of the table. The
@@ -1008,7 +1008,7 @@ public class Table extends UIComponentBase implements NamingContainer {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String width = null;
+    private String width;
 
     /**
      * Default constructor.

@@ -38,7 +38,7 @@ import org.jvnet.hk2.config.Element;
  */
 abstract class Property {
 
-    private Boolean isKey = null;
+    private Boolean isKey;
 
     /**
      * Field/method declaration of this property.
@@ -105,7 +105,7 @@ abstract class Property {
          */
         final boolean getter;
 
-        public Method(ExecutableElement method) {
+        Method(ExecutableElement method) {
             this.method = method;
             this.getter = !method.getReturnType().toString().equals("void");
         }
@@ -135,7 +135,7 @@ abstract class Property {
     static final class Field extends Property {
         final VariableElement field;
 
-        public Field(VariableElement field) {
+        Field(VariableElement field) {
             this.field = field;
         }
 

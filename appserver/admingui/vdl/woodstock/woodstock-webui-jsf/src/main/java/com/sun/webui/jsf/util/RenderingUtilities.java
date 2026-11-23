@@ -346,8 +346,7 @@ public final class RenderingUtilities {
      *
      * @param context faces context
      * @deprecated
-     * @see
-     * com.sun.webui.jsf.component.Body#getRequestFocusElementId(FacesContext)
+     * @see com.sun.webui.jsf.util.FocusManager#getRequestFocusElementId(FacesContext)
      * @return String
      */
     public static String getLastClientID(final FacesContext context) {
@@ -360,7 +359,6 @@ public final class RenderingUtilities {
      * @param context faces context
      * @param clientId client id
      * @deprecated
-     * @see com.sun.webui.jsf.component.Body#setRequestFocusElementId()
      */
     public static void setLastClientID(final FacesContext context,
             final String clientId) {
@@ -443,7 +441,7 @@ public final class RenderingUtilities {
     /**
      * Returns an id suitable for the HTML label element's "for" attribute. The
      * returned id is obtained as follows.
-     * <p>
+     *
      * <ul>
      * <li>The value of "id" is expected to be an absolute id and not a relative
      * id and will be prepended with {@code NamingContainer.SEPARATOR_CHAR} and
@@ -457,7 +455,7 @@ public final class RenderingUtilities {
      * value of {@code getClientId} is returned.
      * </li>
      * </ul>
-     * </p>
+     *
      *
      * @param context The faces context
      * @param id The absolute client id of the component to be labeled.

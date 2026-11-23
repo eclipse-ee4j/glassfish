@@ -36,8 +36,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class ConnectionPoolProbeProviderUtil {
 
-    private ConnectionPoolProbeProvider jcaProbeProvider = null;
-    private ConnectionPoolProbeProvider jdbcProbeProvider = null;
+    private ConnectionPoolProbeProvider jcaProbeProvider;
+    private ConnectionPoolProbeProvider jdbcProbeProvider;
 
     @Inject
     private Provider<ConnectionPoolStatsProviderBootstrap> connectionPoolStatsProviderBootstrapProvider;

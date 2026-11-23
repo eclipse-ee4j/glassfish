@@ -166,7 +166,7 @@ public class ObjectNameQueryImpl implements ObjectNameQuery
 
     private class MatchAnyMatcher implements Matcher
     {
-        public MatchAnyMatcher()
+        MatchAnyMatcher()
         {
         }
 
@@ -179,7 +179,7 @@ public class ObjectNameQueryImpl implements ObjectNameQuery
 
     private class MatchAllMatcher implements Matcher
     {
-        public MatchAllMatcher()
+        MatchAllMatcher()
         {
         }
 

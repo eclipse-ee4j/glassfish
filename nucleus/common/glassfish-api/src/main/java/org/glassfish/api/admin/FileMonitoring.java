@@ -42,7 +42,7 @@ public interface FileMonitoring {
      */
     void fileModified(File file);
 
-    public interface FileChangeListener {
+    interface FileChangeListener {
         void changed(File changedFile);
 
         void deleted(File deletedFile);

@@ -79,7 +79,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     private Domain domain;
 
     @AccessRequired.To(value = "delete")
-    private AuditModule auditModule = null;
+    private AuditModule auditModule;
 
     @Inject
     SecurityConfigListener securityConfigListener;

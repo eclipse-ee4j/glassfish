@@ -158,7 +158,7 @@ public class StatefulContainerFactory extends BaseContainerFactory implements Po
 
     private BackingStore<Serializable, SimpleMetadata> backingStore;
 
-    private boolean HAEnabled = false;
+    private boolean HAEnabled;
 
     private boolean asyncReplication = true;
 
@@ -231,7 +231,7 @@ public class StatefulContainerFactory extends BaseContainerFactory implements Po
      * ***************************************************************
      */
 
-    private final void buildCheckpointPolicy(boolean haEnabled) {
+    private void buildCheckpointPolicy(boolean haEnabled) {
         sfsbContainer.setHAEnabled(haEnabled);
     }
 

@@ -214,11 +214,11 @@ public final class GFLauncherInfo {
         this.dropInterruptedCommands = dropInterruptedCommands;
     }
 
-    public final boolean isDomain() {
+    public boolean isDomain() {
         return type == RuntimeType.DAS;
     }
 
-    public final boolean isInstance() {
+    public boolean isInstance() {
         return type == RuntimeType.INSTANCE;
     }
 

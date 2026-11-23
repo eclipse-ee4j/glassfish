@@ -119,7 +119,7 @@ public class JNoSqlIntegrationExtension implements Extension {
             // jnosql-mapping-reflection
             DefaultEntitiesMetadata.class,
             ReflectionLifecycleEventHandler.class,
-            ReflectionRepositoriesMetadata.class
+            ReflectionRepositoriesMetadata.class,
     };
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {

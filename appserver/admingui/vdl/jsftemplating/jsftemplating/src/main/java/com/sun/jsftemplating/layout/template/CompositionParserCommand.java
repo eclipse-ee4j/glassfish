@@ -144,7 +144,7 @@ public class CompositionParserCommand implements CustomParserCommand {
      * </p>
      */
     private boolean trimming = true;
-    private String templateAttName = null;
+    private String templateAttName;
 
     public static final String REQUIRED_ATTRIBUTE = "required";
     /**

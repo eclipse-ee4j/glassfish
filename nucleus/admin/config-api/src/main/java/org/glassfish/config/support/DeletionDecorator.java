@@ -45,10 +45,10 @@ public interface DeletionDecorator<T extends ConfigBeanProxy, U extends ConfigBe
      * @param parent the parent instance the element was removed from
      * @param child the deleted instance
      */
-    public void decorate(AdminCommandContext context, T parent, U child) throws TransactionFailure, PropertyVetoException;
+    void decorate(AdminCommandContext context, T parent, U child) throws TransactionFailure, PropertyVetoException;
 
     @Service
-    public static class NoDecoration implements DeletionDecorator<ConfigBeanProxy, ConfigBeanProxy> {
+    class NoDecoration implements DeletionDecorator<ConfigBeanProxy, ConfigBeanProxy> {
         @Override
         public void decorate(AdminCommandContext context, ConfigBeanProxy parent, ConfigBeanProxy child)
                 throws TransactionFailure, PropertyVetoException {

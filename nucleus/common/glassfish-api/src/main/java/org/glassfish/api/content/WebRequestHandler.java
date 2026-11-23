@@ -39,5 +39,5 @@ public @interface WebRequestHandler {
      *
      * @return URL pattern
      */
-    public String urlPattern() default "";
+    String urlPattern() default "";
 }

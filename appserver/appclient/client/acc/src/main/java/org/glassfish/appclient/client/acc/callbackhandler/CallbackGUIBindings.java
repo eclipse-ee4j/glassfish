@@ -119,7 +119,7 @@ public class CallbackGUIBindings {
     protected static final int TEXT_COLUMNS = 20;
 
     public abstract class Binding<C extends Callback> implements GUI<C> {
-        private JComponent component = null;
+        private JComponent component;
 
         protected C callback;
 
@@ -444,12 +444,12 @@ public class CallbackGUIBindings {
         private int textOutputCallbackMessageType;
         private boolean mapsToCallback;
 
-        private MessageType(int optionPaneMessageType) {
+        MessageType(int optionPaneMessageType) {
             this.optionPaneMessageType = optionPaneMessageType;
             mapsToCallback = false;
         }
 
-        private MessageType(
+        MessageType(
                 int optionPaneMessageType,
                 int confirmationCallbackMessageType,
                 int textOutputCallbackMessageType) {

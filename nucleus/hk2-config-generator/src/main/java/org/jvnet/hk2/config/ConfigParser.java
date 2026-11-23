@@ -37,8 +37,8 @@ import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
 /**
- * Parses configuration files, builds {@link Inhabitant}s,
- * and add them to {@link Habitat}.
+ * Parses configuration files, builds {@code Inhabitant}s,
+ * and add them to {@code Habitat}.
  *
  * <p>
  * This class also maintains the model of various elements in the configuration file.
@@ -84,7 +84,7 @@ public class ConfigParser {
 
     /**
      * Parses the given source as a config file, and adds resulting
-     * {@link Dom}s into {@link Habitat} as {@link Inhabitant}s.
+     * {@link Dom}s into {@code Habitat} as {@code Inhabitant}s.
      */
     public DomDocument parse(URL source) {
         return parse(source, new DomDocument(habitat));

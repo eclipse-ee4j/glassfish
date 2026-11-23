@@ -46,7 +46,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Indicates that activation of this component by the user is not currently
@@ -56,12 +56,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Escape the HTML text so it won't be interpreted by the browser as HTML.
@@ -72,12 +72,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "escape",
             displayName = "Escape",
             category = "Appearance")
-    private boolean escape = false;
+    private boolean escape;
 
     /**
      * escape set flag.
      */
-    private boolean escapeSet = false;
+    private boolean escapeSet;
 
     /**
      * The identifier key of a theme image to be used for the button.
@@ -90,7 +90,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ThemeIconsEditor")
             //CHECKSTYLE:ON
-    private String icon = null;
+    private String icon;
 
     /**
      * Resource path of an image to be displayed to create the visual appearance
@@ -104,7 +104,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.ImageUrlPropertyEditor")
             //CHECKSTYLE:ON
-    private String imageURL = null;
+    private String imageURL;
 
     /**
      * Indicates that the button should be rendered using a different style than
@@ -115,12 +115,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "mini",
             displayName = "Is Mini",
             category = "Appearance")
-    private boolean mini = false;
+    private boolean mini;
 
     /**
      * mini set flag.
      */
-    private boolean miniSet = false;
+    private boolean miniSet;
 
     /**
      * Indicates that padding should not be applied to the button text. By
@@ -131,12 +131,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "noTextPadding",
             displayName = "No Text Padding",
             category = "Appearance")
-    private boolean noTextPadding = false;
+    private boolean noTextPadding;
 
     /**
      * noTextPadding set flag.
      */
-    private boolean noTextPaddingSet = false;
+    private boolean noTextPaddingSet;
 
     /**
      * Scripting code executed when this element loses focus.
@@ -147,7 +147,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onBlur = null;
+    private String onBlur;
 
     /**
      * Scripting code executed when a mouse click occurs over this component.
@@ -158,7 +158,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -170,7 +170,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when this component receives focus. An element
@@ -183,7 +183,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onFocus = null;
+    private String onFocus;
 
     /**
      * Scripting code executed when the user presses down on a key while the
@@ -195,7 +195,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyDown = null;
+    private String onKeyDown;
 
     /**
      * Scripting code executed when the user presses and releases a key while
@@ -207,7 +207,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyPress = null;
+    private String onKeyPress;
 
     /**
      * Scripting code executed when the user releases a key while the component
@@ -219,7 +219,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onKeyUp = null;
+    private String onKeyUp;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -231,7 +231,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -243,7 +243,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when the user moves the mouse pointer off this
@@ -255,7 +255,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -267,7 +267,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -279,7 +279,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * Indicates that the button is the most commonly used button within a
@@ -288,12 +288,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "primary",
             displayName = "Is Primary",
             category = "Appearance")
-    private boolean primary = false;
+    private boolean primary;
 
     /**
      * primary set flag.
      */
-    private boolean primarySet = false;
+    private boolean primarySet;
 
     /**
      * Indicates that the button should be a HTML reset button. By default, this
@@ -303,12 +303,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "reset",
             displayName = "Is Reset",
             category = "Behavior")
-    private boolean reset = false;
+    private boolean reset;
 
     /**
      * reset set flag.
      */
-    private boolean resetSet = false;
+    private boolean resetSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -318,7 +318,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -330,7 +330,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -349,7 +349,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -362,7 +362,7 @@ public final class Button extends WebuiCommand implements ComplexComponent {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -376,12 +376,12 @@ public final class Button extends WebuiCommand implements ComplexComponent {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

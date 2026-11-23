@@ -32,23 +32,22 @@ public interface AdminCache {
      * @param clazz Cache data will be converted to requested type using appropriate {@code AdminCacheObjectProvider}
      * @return Cached data converted to requested type or {@code null} if not cached
      */
-    public <A> A get(String key, Class<A> clazz);
+    <A> A get(String key, Class<A> clazz);
 
     /**
      * Puts data to cache.
      *
      * @param key in the cache
      * @param data Cached data will be converted to raw bytes using appropriate {@code AdminCacheObjectProvider}
-     * @return Cached data converted to requested type or {@code null} if not cached
      */
-    public void put(String key, Object data);
+    void put(String key, Object data);
 
     /**
      * Checked if content is in the cache.
      *
      * @param key in the cache
      */
-    public boolean contains(String key);
+    boolean contains(String key);
 
     /**
      * Date when was cached data last updated.
@@ -56,6 +55,6 @@ public interface AdminCache {
      * @param key in the cache
      * @return {@code Date} of last update or null if does not exist in cache
      */
-    public Date lastUpdated(String key);
+    Date lastUpdated(String key);
 
 }

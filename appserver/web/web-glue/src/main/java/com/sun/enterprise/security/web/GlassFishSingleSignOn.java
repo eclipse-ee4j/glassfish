@@ -71,12 +71,12 @@ public class GlassFishSingleSignOn
     /**
      * The background thread.
      */
-    private Thread thread = null;
+    private Thread thread;
 
     /**
      * The background thread completion semaphore.
      */
-    private boolean threadDone = false;
+    private boolean threadDone;
 
     /**
      * The interval (in seconds) between checks for expired sessions.

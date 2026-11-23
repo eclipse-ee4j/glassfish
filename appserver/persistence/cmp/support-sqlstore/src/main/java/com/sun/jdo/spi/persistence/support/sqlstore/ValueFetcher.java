@@ -31,6 +31,6 @@ public interface ValueFetcher
      * Returns a specific value from this ValueFetcher.
      * @param whichOne indicates which value to be returned
      */
-    public Object getValue(int whichOne);
+    Object getValue(int whichOne);
 
 }

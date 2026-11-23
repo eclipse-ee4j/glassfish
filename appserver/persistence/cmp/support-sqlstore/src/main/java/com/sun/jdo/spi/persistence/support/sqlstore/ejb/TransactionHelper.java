@@ -136,7 +136,7 @@ import jakarta.transaction.UserTransaction;
     *
     * @param jta the Transaction instance for the calling thread.
     * @param sync the internal Synchronization instance to register.
-    * @throws jakarta.transaction.RollbackException.
+    * @throws jakarta.transaction.RollbackException
     * @throws jakarta.transaction.SystemException
     */
     void registerSynchronization(Transaction jta, Synchronization sync)
@@ -151,7 +151,7 @@ import jakarta.transaction.UserTransaction;
      * without username and password validation.
      * @param password the password for the resource username.
      * @return a Connection.
-     * @throws java.sql.SQLException.
+     * @throws java.sql.SQLException
      */
     java.sql.Connection getConnection(Object resource, String username, char[] password)
         throws java.sql.SQLException;
@@ -165,7 +165,7 @@ import jakarta.transaction.UserTransaction;
      * without username and password validation.
      * @param password the password for the resource username.
      * @return a Connection.
-     * @throws java.sql.SQLException.
+     * @throws java.sql.SQLException
      */
     java.sql.Connection getNonTransactionalConnection(
         Object resource, String username, char[] password)

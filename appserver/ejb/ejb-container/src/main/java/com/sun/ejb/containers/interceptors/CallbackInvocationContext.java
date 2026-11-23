@@ -38,7 +38,7 @@ import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.Callback
 public class CallbackInvocationContext implements InvocationContext {
 
     private Map<String, Object> contextData;
-    private int callbackIndex = 0;
+    private int callbackIndex;
     private CallbackChainImpl callbackChain;
     private Object[] interceptorInstances;
     private Object targetObjectInstance;

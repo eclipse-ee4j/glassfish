@@ -24,7 +24,7 @@ import java.io.PrintStream;
  */
 public class InsnTarget extends Insn {
 
-    private boolean branchTarget = false;
+    private boolean branchTarget;
 
     public int nStackArgs() {
         return 0;

@@ -112,7 +112,7 @@ public final class CollectionUtils {
     /**
      * Convert a List of String into a space-delimited String
      *
-     * @param arr The String array to convert
+     * @param list The String array to convert
      * @return The pretty String
      */
     public static String toString(List<String> list) {

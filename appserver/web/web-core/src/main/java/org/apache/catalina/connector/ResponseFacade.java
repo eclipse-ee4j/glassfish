@@ -60,7 +60,7 @@ public class ResponseFacade implements HttpServletResponse {
 
         private String contentType;
 
-        public SetContentTypePrivilegedAction(String contentType) {
+        SetContentTypePrivilegedAction(String contentType) {
             this.contentType = contentType;
         }
 

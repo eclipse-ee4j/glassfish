@@ -29,5 +29,5 @@ public interface BaseReader {
      * Accepts a visitor and calls its visit
      * method
      */
-    public void accept(Visitor v) throws Exception;
+    void accept(Visitor v) throws Exception;
 }

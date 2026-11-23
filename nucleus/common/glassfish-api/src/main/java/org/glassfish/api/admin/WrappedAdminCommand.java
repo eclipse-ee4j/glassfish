@@ -18,7 +18,7 @@
 package org.glassfish.api.admin;
 
 /**
- * Represents command wrapped with {@link CommandWrapperImpl}.
+ * Represents command wrapped with {@code CommandWrapperImpl}.
  * It should be enough to wrap command without an overhead.
  * E.g.: <code>
  * new WrappedAdminCommand(command) {

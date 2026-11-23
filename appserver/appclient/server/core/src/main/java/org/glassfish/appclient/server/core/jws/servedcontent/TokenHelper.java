@@ -46,7 +46,7 @@ public abstract class TokenHelper {
 
     private final LocalStringsImpl localStrings = new LocalStringsImpl(TokenHelper.class);
 
-    private VendorInfo vendorInfo = null;
+    private VendorInfo vendorInfo;
 
     private String signingAlias;
 
@@ -229,7 +229,7 @@ public abstract class TokenHelper {
             "jws.appserver.information.title",
             "jws.appserver.information.vendor",
             "jws.appserver.information.description.one-line",
-            "jws.appserver.information.description.short"
+            "jws.appserver.information.description.short",
         };
 
         for (String tokenName : tokenNames) {

@@ -62,7 +62,7 @@ public class InputBuffer extends Reader implements ByteInputChannel, CharChunk.C
 
     private org.apache.catalina.connector.Request request;
 
-    private ReadHandler readHandler = null;
+    private ReadHandler readHandler;
     private boolean prevIsReady = true;
     private static final ThreadLocal<Boolean> IS_READY_SCOPE = new ThreadLocal<Boolean>();
 
@@ -317,8 +317,8 @@ public class InputBuffer extends Reader implements ByteInputChannel, CharChunk.C
     }
 
     class ReadHandlerImpl implements ReadHandler {
-        private ReadListener readListener = null;
-        private volatile boolean disable = false;
+        private ReadListener readListener;
+        private volatile boolean disable;
 
         private ReadHandlerImpl(ReadListener listener) {
             readListener = listener;

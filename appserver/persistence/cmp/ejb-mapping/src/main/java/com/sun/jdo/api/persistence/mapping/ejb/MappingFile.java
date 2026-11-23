@@ -107,7 +107,7 @@ public class MappingFile {
     private Map<String, Integer> namedGroups;
     private int groupCount = MappingFieldElement.GROUP_INDEPENDENT;
 
-    private ClassLoader classLoader = null;
+    private ClassLoader classLoader;
 
     private static int MINIMUM_PRECISION = 19;
 
@@ -116,7 +116,7 @@ public class MappingFile {
      * access data from other available sources to support the mapping
      * generation.
      */
-    private ConversionHelper helper = null;
+    private ConversionHelper helper;
 
     private HashMap<String, String> loadedSchema = new HashMap<>();
 

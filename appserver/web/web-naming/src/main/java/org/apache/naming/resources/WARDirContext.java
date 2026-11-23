@@ -106,13 +106,13 @@ public class WARDirContext extends BaseDirContext {
     /**
      * The WAR file.
      */
-    protected ZipFile base = null;
+    protected ZipFile base;
 
 
     /**
      * WAR entries.
      */
-    protected Entry entries = null;
+    protected Entry entries;
 
 
     // ------------------------------------------------------------- Properties
@@ -865,10 +865,10 @@ public class WARDirContext extends BaseDirContext {
         // --------------------------------------------------- Member Variables
 
 
-        protected String name = null;
+        protected String name;
 
 
-        protected ZipEntry entry = null;
+        protected ZipEntry entry;
 
 
         protected Entry children[] = new Entry[0];

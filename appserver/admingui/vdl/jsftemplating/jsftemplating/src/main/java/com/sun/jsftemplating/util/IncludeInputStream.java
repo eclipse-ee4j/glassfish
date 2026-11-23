@@ -206,7 +206,7 @@ public class IncludeInputStream extends FilterInputStream {
     }
 
     private boolean eol = true;
-    private IncludeInputStream redirStream = null;
+    private IncludeInputStream redirStream;
 
     private static final String INCLUDE = "include";
     private static final int INCLUDE_LEN = INCLUDE.length();

@@ -33,6 +33,6 @@ public interface LoggingRuntime {
      * Gets the current log file for the server.
      * @return
      */
-    public File getCurrentLogFile();
+    File getCurrentLogFile();
 
 }

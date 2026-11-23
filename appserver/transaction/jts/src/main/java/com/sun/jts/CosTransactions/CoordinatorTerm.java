@@ -66,12 +66,12 @@ import org.omg.CosTransactions.Vote;
 //------------------------------------------------------------------------------
 
 class CoordinatorTerm implements CompletionHandler {
-    private CoordinatorImpl coordinator = null;
-    private boolean         subtransaction = false;
-    private boolean         aborted = false;
-    private boolean         heuristicDamage = false;
-    private boolean         completed = false;
-    private boolean         completing = false;
+    private CoordinatorImpl coordinator;
+    private boolean         subtransaction;
+    private boolean         aborted;
+    private boolean         heuristicDamage;
+    private boolean         completed;
+    private boolean         completing;
 
     /*
         Logger to log transaction messages

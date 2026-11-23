@@ -24,8 +24,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ComputedParamHandler {
 
-    public boolean canHandle(String param);
+    boolean canHandle(String param);
 
-    public Object compute(String param);
+    Object compute(String param);
 
 }

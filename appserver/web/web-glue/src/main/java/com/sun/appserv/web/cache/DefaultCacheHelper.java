@@ -51,8 +51,8 @@ public class DefaultCacheHelper implements CacheHelper {
     // cache manager
     CacheManager manager;
 
-    String attrKeyGenerator = null;
-    boolean isKeyGeneratorChecked = false;
+    String attrKeyGenerator;
+    boolean isKeyGeneratorChecked;
     CacheKeyGenerator keyGenerator;
 
     /**
@@ -183,7 +183,7 @@ public class DefaultCacheHelper implements CacheHelper {
      *
      *  XXX: 04/16/02 right now there is no configurability for this in
      *  ias-web.xml; should add a refresh-field element there:
-     *  <refresh-field name="refresh" scope="request.parameter" />
+     *  &lt;refresh-field name="refresh" scope="request.parameter" />
      */
     public boolean isRefreshNeeded(HttpServletRequest request) {
         boolean result = false;

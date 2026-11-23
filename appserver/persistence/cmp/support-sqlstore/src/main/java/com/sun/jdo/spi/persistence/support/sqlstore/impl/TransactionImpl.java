@@ -117,8 +117,8 @@ public class TransactionImpl
      * Query and Update Statement timeouts for the datastore associated
      * with this transaction
      */
-    private int         queryTimeout = 0;        // No limit
-    private int         updateTimeout = 0;        // No limit
+    private int         queryTimeout;        // No limit
+    private int         updateTimeout;        // No limit
 
     /**
      * Number of threads participating in this transaction.
@@ -141,7 +141,7 @@ public class TransactionImpl
     /**
      * Array of registered Synchronization interfaces.
      */
-    private    Synchronization    synchronization = null;
+    private    Synchronization    synchronization;
 
     private static final int    RESOURCE_START     = 0;
     private static final int    RESOURCE_END     = 1;
@@ -149,40 +149,40 @@ public class TransactionImpl
     /**
      * PersistenceManagerFactory associated with this transaction
      */
-    private PersistenceManagerFactory pmFactory = null;
+    private PersistenceManagerFactory pmFactory;
 
     /**
      * PersistenceManager associated with this transaction (1-1)
      */
-    private PersistenceManager    persistenceManager     = null;
+    private PersistenceManager    persistenceManager;
 
     /**
      * Connection Factory from which this transaction gets Connections
      */
-    private Object     connectionFactory    = null;
+    private Object     connectionFactory;
 
-    private jakarta.transaction.Transaction jta = null;
+    private jakarta.transaction.Transaction jta;
 
     /**
      * Type of the datasource. True if it javax.sql.DataSource
      */
-    private boolean isDataSource = false;
+    private boolean isDataSource;
 
     /** values for the datasource user and user password to access
      * security connections
      */
-    private String         username     = null;
-    private char[]         password     = null;
+    private String         username;
+    private char[]         password;
 
     /**
      * Associated Connection
      */
-    private Connection         _connection         = null;
+    private Connection         _connection;
 
     /**
      * Number of users (or threads) currently using this connection.
      */
-    private int _connectionReferenceCount = 0;
+    private int _connectionReferenceCount;
 
     /**
      * Flag that indicates how to handle objects after commit.
@@ -194,7 +194,7 @@ public class TransactionImpl
      * Flag that indicates how to handle objects after roolback.
      * If true, at rollback instances restore their values and the instances
      */
-    private boolean restoreValues = false;
+    private boolean restoreValues;
 
     /**
      * Flag that indicates type of the transaction.

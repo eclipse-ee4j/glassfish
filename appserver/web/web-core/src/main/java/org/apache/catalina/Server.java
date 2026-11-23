@@ -55,13 +55,13 @@ public interface Server {
      * the corresponding version number, in the format
      * <code>&lt;description&gt;/&lt;version&gt;</code>.
      */
-    public String getInfo();
+    String getInfo();
 
 
     /**
      * Return the global naming resources.
      */
-    public NamingResources getGlobalNamingResources();
+    NamingResources getGlobalNamingResources();
 
 
     /**
@@ -69,14 +69,14 @@ public interface Server {
      *
      * @param globalNamingResources The new global naming resources
      */
-    public void setGlobalNamingResources
+    void setGlobalNamingResources
         (NamingResources globalNamingResources);
 
 
     /**
      * Return the port number we listen to for shutdown commands.
      */
-    public int getPort();
+    int getPort();
 
 
     /**
@@ -84,13 +84,13 @@ public interface Server {
      *
      * @param port The new port number
      */
-    public void setPort(int port);
+    void setPort(int port);
 
 
     /**
      * Return the shutdown command string we are waiting for.
      */
-    public String getShutdown();
+    String getShutdown();
 
 
     /**
@@ -98,7 +98,7 @@ public interface Server {
      *
      * @param shutdown The new shutdown command
      */
-    public void setShutdown(String shutdown);
+    void setShutdown(String shutdown);
 
 
     // --------------------------------------------------------- Public Methods
@@ -109,13 +109,13 @@ public interface Server {
      *
      * @param service The Service to be added
      */
-    public void addService(Service service);
+    void addService(Service service);
 
 
     /**
      * Wait until a proper shutdown command is received, then return.
      */
-    public void await();
+    void await();
 
 
     /**
@@ -124,13 +124,13 @@ public interface Server {
      *
      * @param name Name of the Service to be returned
      */
-    public Service findService(String name);
+    Service findService(String name);
 
 
     /**
      * Return the set of Services defined within this Server.
      */
-    public Service[] findServices();
+    Service[] findServices();
 
 
     /**
@@ -139,7 +139,7 @@ public interface Server {
      *
      * @param service The Service to be removed
      */
-    public void removeService(Service service);
+    void removeService(Service service);
 
     /**
      * Invoke a pre-startup initialization. This is used to allow connectors
@@ -147,6 +147,6 @@ public interface Server {
      *
      * @exception LifecycleException If this server was already initialized.
      */
-    public void initialize()
+    void initialize()
     throws LifecycleException;
 }

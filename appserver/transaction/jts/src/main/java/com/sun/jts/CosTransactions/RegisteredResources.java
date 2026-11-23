@@ -86,13 +86,13 @@ import org.omg.CosTransactions.Vote;
 
 class RegisteredResources {
 
-    private ArrayList resourceObjects = null;
-    private ArrayList resourceStates = null;
-    private CoordinatorLog logRecord = null;
-    private java.lang.Object logSection = null;
-    private java.lang.Object heuristicLogSection = null;
-    private Resource laoResource = null;
-    private CoordinatorImpl coord = null;
+    private ArrayList resourceObjects;
+    private ArrayList resourceStates;
+    private CoordinatorLog logRecord;
+    private java.lang.Object logSection;
+    private java.lang.Object heuristicLogSection;
+    private Resource laoResource;
+    private CoordinatorImpl coord;
     private static boolean lastXAResCommit = Boolean.getBoolean("com.sun.jts.lastagentcommit");
     // START IASRI 4662745
     //private int commitRetries = -1;
@@ -100,7 +100,7 @@ class RegisteredResources {
     // END IASRI 4662745
 
     //introduced for performance - remembers ths number of registered resources
-    private int nRes=0;
+    private int nRes;
 
     // private static String commitRetryVar =
     //     Configuration.getPropertyValue(Configuration.COMMIT_RETRY);

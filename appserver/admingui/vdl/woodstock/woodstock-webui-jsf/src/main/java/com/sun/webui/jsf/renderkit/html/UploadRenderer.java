@@ -92,7 +92,7 @@ public final class UploadRenderer extends FieldRenderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                Upload.class.getName()
+                Upload.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

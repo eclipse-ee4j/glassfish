@@ -19,7 +19,7 @@ package com.sun.enterprise.deployment.web;
 
 /**
  * Objects exhibiting this interface represent a lifecycle listener.
- * This represents the <listener-class> XML element in the servlet spec.
+ * This represents the &lt;listener-class> XML element in the servlet spec.
  *
  * @author Vivek Nagar
  */

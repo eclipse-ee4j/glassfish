@@ -47,7 +47,7 @@ public final class HelpWindowRenderer extends HyperlinkRenderer {
      *
      * @param context faces context
      * @param component UI component
-     * @url URL
+     * URL: URL
      * @return String
      */
     @Override

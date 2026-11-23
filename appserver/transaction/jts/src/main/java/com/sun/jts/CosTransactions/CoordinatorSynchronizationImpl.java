@@ -68,11 +68,11 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
 
 class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
-    private static POA poa = null;
-    private Synchronization thisRef = null;
+    private static POA poa;
+    private Synchronization thisRef;
 
-    private Long           localTID = null;
-    private TopCoordinator coordinator = null;
+    private Long           localTID;
+    private TopCoordinator coordinator;
     /*
         Logger to log transaction messages
     */

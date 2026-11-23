@@ -99,7 +99,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         "com.sun.jts.pi.CLIENT_POLICY_CHECKING";
     public static final String INTEROP_MODE = "com.sun.jts.pi.INTEROP_MODE";
     // The ReferenceFactoryManager from the orb.
-    private static ReferenceFactoryManager rfm = null;
+    private static ReferenceFactoryManager rfm;
 
     /**
      * Logger to log transaction messages
@@ -120,7 +120,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             }
         };
 
-    private static PropagationContext nullContext, dummyContext = null;
+    private static PropagationContext nullContext, dummyContext;
 
     // static initializer block
 
@@ -143,17 +143,17 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         ***/
     }
 
-    private static ORB txOrb = null;
+    private static ORB txOrb;
 
     // instance attributes
 
-    Current pic = null;
-    Codec codec = null;
-    int[] slotIds = null;
-    TSIdentification tsi = null;
-    TSIdentificationImpl tsiImpl = null;
-    Sender sender = null;
-    Receiver receiver = null;
+    Current pic;
+    Codec codec;
+    int[] slotIds;
+    TSIdentification tsi;
+    TSIdentificationImpl tsiImpl;
+    Sender sender;
+    Receiver receiver;
     private boolean checkPolicy = true;
     private boolean interopMode = true;
 

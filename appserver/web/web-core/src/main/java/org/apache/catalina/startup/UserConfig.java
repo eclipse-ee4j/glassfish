@@ -78,12 +78,12 @@ public final class UserConfig
     /**
      * The base directory containing user home directories.
      */
-    private String homeBase = null;
+    private String homeBase;
 
     /**
      * The Host we are associated with.
      */
-    private Host host = null;
+    private Host host;
 
     /**
      * The Java class name of the user database class we should use.

@@ -70,7 +70,7 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
     private String name;
 
     @Param(primary = true, optional = true)
-    private File path = null;
+    private File path;
 
     @Inject
     private ConfigBeansUtilities configBeansUtilities;

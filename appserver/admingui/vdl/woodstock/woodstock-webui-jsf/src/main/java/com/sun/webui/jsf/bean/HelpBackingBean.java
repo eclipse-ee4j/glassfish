@@ -78,47 +78,47 @@ public final class HelpBackingBean {
     /**
      * The theme.
      */
-    private Theme theme = null;
+    private Theme theme;
 
     /**
      * The content tree.
      */
-    private Tree contentsTree = null;
+    private Tree contentsTree;
 
     /**
      * The index tree.
      */
-    private Tree indexTree = null;
+    private Tree indexTree;
 
     /**
      * The search panel.
      */
-    private PanelGroup searchPanel = null;
+    private PanelGroup searchPanel;
 
     /**
      * The search results panel.
      */
-    private PanelGroup searchResultsPanel = null;
+    private PanelGroup searchResultsPanel;
 
     /**
      * The search field.
      */
-    private TextField searchField = null;
+    private TextField searchField;
 
     /**
      * The search button.
      */
-    private Button searchButton = null;
+    private Button searchButton;
 
     /**
      * The help utils.
      */
-    private HelpUtils helpUtils = null;
+    private HelpUtils helpUtils;
 
     /**
      * Tips link.
      */
-    private Hyperlink tipsLink = null;
+    private Hyperlink tipsLink;
 
     /**
      * Help set path.
@@ -128,12 +128,12 @@ public final class HelpBackingBean {
     /**
      * JSP path.
      */
-    private String jspPath = null;
+    private String jspPath;
 
     /**
      * Localized help path.
      */
-    private String localizedHelpPath = null;
+    private String localizedHelpPath;
 
     /**
      * HTTP port.
@@ -143,197 +143,197 @@ public final class HelpBackingBean {
     /**
      * Request scheme.
      */
-    private String requestScheme = null;
+    private String requestScheme;
 
     /**
      * Navigator URL.
      */
-    private String navigatorUrl = null;
+    private String navigatorUrl;
 
     /**
      * Bottom frame URL.
      */
-    private String bottomFrameUrl = null;
+    private String bottomFrameUrl;
 
     /**
      * Button frame URL.
      */
-    private String buttonFrameUrl = null;
+    private String buttonFrameUrl;
 
     /**
      * Button class name.
      */
-    private String buttonClassName = null;
+    private String buttonClassName;
 
     /**
      * Inline help class name.
      */
-    private String inlineHelpClassName = null;
+    private String inlineHelpClassName;
 
     /**
      * Search class name.
      */
-    private String searchClassName = null;
+    private String searchClassName;
 
     /**
      * Step tab class name.
      */
-    private String stepTabClassName = null;
+    private String stepTabClassName;
 
     /**
      * Title class name.
      */
-    private String titleClassName = null;
+    private String titleClassName;
 
     /**
      * Body class name.
      */
-    private String bodyClassName = null;
+    private String bodyClassName;
 
     /**
      * Tip head title.
      */
-    private String tipsHeadTitle = null;
+    private String tipsHeadTitle;
 
     /**
      * Tips title.
      */
-    private String tipsTitle = null;
+    private String tipsTitle;
 
     /**
      * Tips improve.
      */
-    private String tipsImprove = null;
+    private String tipsImprove;
 
     /**
      * Tips improve #1.
      */
-    private String tipsImprove1 = null;
+    private String tipsImprove1;
 
     /**
      * Tips improve #2.
      */
-    private String tipsImprove2 = null;
+    private String tipsImprove2;
 
     /**
      * Tips improve #3.
      */
-    private String tipsImprove3 = null;
+    private String tipsImprove3;
 
     /**
      * Tips improve #4.
      */
-    private String tipsImprove4 = null;
+    private String tipsImprove4;
 
     /**
      * Tips note.
      */
-    private String tipsNote = null;
+    private String tipsNote;
 
     /**
      * Tips note details.
      */
-    private String tipsNoteDetails = null;
+    private String tipsNoteDetails;
 
     /**
      * Tips search.
      */
-    private String tipsSearch = null;
+    private String tipsSearch;
 
     /**
      * Tips search #1.
      */
-    private String tipsSearch1 = null;
+    private String tipsSearch1;
 
     /**
      * Tips search #2.
      */
-    private String tipsSearch2 = null;
+    private String tipsSearch2;
 
     /**
      * Tips search #3.
      */
-    private String tipsSearch3 = null;
+    private String tipsSearch3;
 
     /**
      * Tips search #4.
      */
-    private String tipsSearch4 = null;
+    private String tipsSearch4;
 
     /**
      * Back button text.
      */
-    private String backButtonText = null;
+    private String backButtonText;
 
     /**
      * Forward button text.
      */
-    private String forwardButtonText = null;
+    private String forwardButtonText;
 
     /**
      * Print button text.
      */
-    private String printButtonText = null;
+    private String printButtonText;
 
     /**
      * Contents text.
      */
-    private String contentsText = null;
+    private String contentsText;
 
     /**
      * Index text.
      */
-    private String indexText = null;
+    private String indexText;
 
     /**
      * Search text.
      */
-    private String searchText = null;
+    private String searchText;
 
     /**
      * Close label.
      */
-    private String closeLabel = null;
+    private String closeLabel;
 
     /**
      * Search label.
      */
-    private String searchLabel = null;
+    private String searchLabel;
 
     /**
      * Nav frame title.
      */
-    private String navFrameTitle = null;
+    private String navFrameTitle;
 
     /**
      * Button frame title.
      */
-    private String buttonFrameTitle = null;
+    private String buttonFrameTitle;
 
     /**
      * Content frame title.
      */
-    private String contentFrameTitle = null;
+    private String contentFrameTitle;
 
     /**
      * noFrames.
      */
-    private String noFrames = null;
+    private String noFrames;
 
     /**
      * Button nav head title.
      */
-    private String buttonNavHeadTitle = null;
+    private String buttonNavHeadTitle;
 
     /**
      * navigator head title.
      */
-    private String navigatorHeadTitle = null;
+    private String navigatorHeadTitle;
 
     /**
      * Button body class name.
      */
-    private String buttonBodyClassName = null;
+    private String buttonBodyClassName;
 
     /**
      * Creates a new instance of HelpBackingBean.

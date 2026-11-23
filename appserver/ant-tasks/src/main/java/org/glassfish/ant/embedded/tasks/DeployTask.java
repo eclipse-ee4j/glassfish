@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildException;
 public class DeployTask extends TaskBase {
 
     String serverID = Constants.DEFAULT_SERVER_ID;
-    String app = null; // a default value?
+    String app; // a default value?
     List<String> deployParams = new ArrayList();
 
     public void setServerID(String serverID) {

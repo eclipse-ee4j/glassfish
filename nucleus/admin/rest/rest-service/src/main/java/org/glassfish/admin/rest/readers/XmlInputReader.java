@@ -66,10 +66,10 @@ public class XmlInputReader extends InputReader {
     }
 
     /**
-     * Get the next XML outer token, trimming whitespace. There are two kinds of tokens: the '<' character which begins a
+     * Get the next XML outer token, trimming whitespace. There are two kinds of tokens: the '&lt;' character which begins a
      * markup tag, and the content text between markup tags.
      *
-     * @return A string, or a '<' Character, or null if there is no more source text.
+     * @return A string, or a '&lt;' Character, or null if there is no more source text.
      * @throws InputException
      */
     public Object nextContent() throws InputException {
@@ -128,7 +128,7 @@ public class XmlInputReader extends InputReader {
      * Returns the next XML meta token. This is used for skipping over {@code <!...>} and
      * {@code <?...?>} structures.
      *
-     * @return Syntax characters (<code>< > / = ! ?</code>) are returned as Character, and strings
+     * @return Syntax characters (<code>&lt; > / = ! ?</code>) are returned as Character, and strings
      *         and names are returned as Boolean. We don't care what the values actually are.
      * @throws InputException If a string is not properly closed or if the XML is badly structured.
      */

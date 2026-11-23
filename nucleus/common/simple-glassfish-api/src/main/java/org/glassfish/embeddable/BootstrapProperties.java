@@ -49,11 +49,11 @@ public class BootstrapProperties {
      * Create BootstrapProperties with custom properties.
      * This method does not take a copy of the passed in properties object; instead it just maintains a reference to
      * it, so all semantics of "pass-by-reference" applies.
-     * <p/>
-     * <p/>Custom properties can include GlassFish_Platform,
+     *
+     * <p>Custom properties can include GlassFish_Platform,
      * com.sun.aas.installRoot, com.sun.aas.installRootURI
-     * <p/>
-     * <p/>Custom properties can also include additional properties which are required
+     *
+     * <p>Custom properties can also include additional properties which are required
      * for the plugged in {@link org.glassfish.embeddable.spi.RuntimeBuilder} (if any)
      *
      * @param props Properties object which will back this BootstrapProperties object.
@@ -64,8 +64,8 @@ public class BootstrapProperties {
 
     /**
      * Get the underlying Properties object which backs this BootstrapProperties.
-     * <p/>
-     * <p/> If getProperties().setProperty(key,value) is called, then it will
+     *
+     * <p> If getProperties().setProperty(key,value) is called, then it will
      * add a property to this bootstrap properties.
      *
      * @return The Properties object that is backing this BootstrapProperties.

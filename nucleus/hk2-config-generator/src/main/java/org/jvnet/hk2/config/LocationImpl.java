@@ -27,7 +27,7 @@ class LocationImpl implements Location {
     private final int lineNumber, columnNumber;
     private final String systemId;
 
-    public LocationImpl(Location loc) {
+    LocationImpl(Location loc) {
         this.lineNumber = loc.getLineNumber();
         this.columnNumber = loc.getColumnNumber();
         this.systemId = loc.getSystemId();

@@ -93,7 +93,7 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
     /**
      * Sets the archive uri as defined in the application xml
      * or the full archive path for standalone modules
-     * @path the module path
+     * @param path the module path
      */
     public void setArchiveUri(String path) {
         this.path = path;
@@ -175,7 +175,6 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
 
     /**
      * Sets the module name
-     * @return the module name of this application
      */
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
@@ -224,7 +223,6 @@ public class ModuleDescriptor<T extends RootDeploymentDescriptor> extends Descri
 
 
     /**
-     * @return a meaningful string about myself
      */
     @Override
     public void print(StringBuffer toStringBuffer) {

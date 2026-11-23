@@ -116,7 +116,7 @@ public class JakartaPersistenceIntegrationExtension implements Extension {
             PersistenceDatabaseManagerProvider.class,
             EntityManagerProvider.class,
             EnsureTransactionInterceptor.RunInGlobalTransaction.class,
-            PersistenceUnitCacheProvider.class
+            PersistenceUnitCacheProvider.class,
     };
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery) {

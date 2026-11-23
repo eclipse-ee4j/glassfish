@@ -30,9 +30,9 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ProbeClientMediator {
 
-    public Collection<ProbeClientMethodHandle> registerListener(Object listener);
+    Collection<ProbeClientMethodHandle> registerListener(Object listener);
 
-    public Collection<ProbeClientMethodHandle> registerListener(Object listener, String invokerId);
+    Collection<ProbeClientMethodHandle> registerListener(Object listener, String invokerId);
 
-    public void transformProbes(Object listener, List<FlashlightProbe> probes);
+    void transformProbes(Object listener, List<FlashlightProbe> probes);
 }

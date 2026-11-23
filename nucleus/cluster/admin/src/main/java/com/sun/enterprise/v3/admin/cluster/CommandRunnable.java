@@ -53,7 +53,7 @@ final class CommandRunnable implements Runnable {
      *            on the response queue where it will dequeue CommandRunnables and then
      *            use the getActionReport() method to retrieve the results.
      */
-    public CommandRunnable(String name, CommandInvocation ci, ActionReport report,
+    CommandRunnable(String name, CommandInvocation ci, ActionReport report,
         ArrayBlockingQueue<CommandRunnable> responseQueue) {
         this.name = name;
         this.report = report;

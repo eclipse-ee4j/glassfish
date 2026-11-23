@@ -100,7 +100,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * expects to find a PasswordCredential in the private credentials of the Subject. If not present the login fails. The callback
      * handler is ignored as it is not really relevant on the server side. Finally, the authenticateUser() method is invoked.
      *
-     * @returns true if login succeeds, otherwise an exception is thrown.
+     * @return true if login succeeds, otherwise an exception is thrown.
      * @throws LoginException Thrown if login failed, or on other problems.
      *
      */

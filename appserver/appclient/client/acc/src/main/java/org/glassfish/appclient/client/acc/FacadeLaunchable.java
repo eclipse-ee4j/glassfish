@@ -417,7 +417,7 @@ public class FacadeLaunchable implements Launchable {
                                     groupFacadeURI,
                                     moduleID,
                                     callerSpecifiedMainClassName,
-                                    clientMainClassName
+                                    clientMainClassName,
                             }));
                 }
             } else if (Launchable.LaunchableUtil.matchesName(

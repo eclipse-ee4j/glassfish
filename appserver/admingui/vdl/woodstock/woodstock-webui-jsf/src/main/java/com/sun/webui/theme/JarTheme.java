@@ -112,47 +112,47 @@ public final class JarTheme implements Theme {
     /**
      * Default resource bundle.
      */
-    private ResourceBundle bundle = null;
+    private ResourceBundle bundle;
 
     /**
      * Fallback resource bundle.
      */
-    private ResourceBundle fallbackBundle = null;
+    private ResourceBundle fallbackBundle;
 
     /**
      * Class mapper resource bundle.
      */
-    private ResourceBundle classMapper = null;
+    private ResourceBundle classMapper;
 
     /**
      * Image resources bundle.
      */
-    private ResourceBundle imageResources = null;
+    private ResourceBundle imageResources;
 
     /**
      * JS files bundle.
      */
-    private ResourceBundle jsFiles = null;
+    private ResourceBundle jsFiles;
 
     /**
      * CSS style-sheets bundle.
      */
-    private ResourceBundle stylesheets = null;
+    private ResourceBundle stylesheets;
 
     /**
      * Templates bundle.
      */
-    private ResourceBundle templates = null;
+    private ResourceBundle templates;
 
     /**
      * Global JS files.
      */
-    private String[] globalJSFiles = null;
+    private String[] globalJSFiles;
 
     /**
      * Global CSS style-sheets.
      */
-    private String[] globalStylesheets = null;
+    private String[] globalStylesheets;
 
     /**
      * Theme prefix.
@@ -162,7 +162,7 @@ public final class JarTheme implements Theme {
     /**
      * Theme locale.
      */
-    private Locale locale = null;
+    private Locale locale;
 
     /**
      * Set the theme context.
@@ -668,11 +668,11 @@ public final class JarTheme implements Theme {
      * where the each property is defined as {@code key} with the
      * following suffixes: (i.e. key == "SMALL_ALERT", SMALL_ALERT_ALT)
      * <ul>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.ALT_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.TITLE_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.HEIGHT_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.WIDTH_SUFFIX}</li>
-     * <li>{@link com.sun.webui.jsf.theme.ThemeImage.UNITS_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.ALT_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.TITLE_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.HEIGHT_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.WIDTH_SUFFIX}</li>
+     * <li>{@code com.sun.webui.jsf.theme.ThemeImage.UNITS_SUFFIX}</li>
      * </ul>
      * If {@code key} is not defined {@code key} is returned.
      */

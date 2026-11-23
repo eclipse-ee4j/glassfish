@@ -81,7 +81,7 @@ public class AdminMain {
     private static final String[] SYS_PROPERTIES_TO_SET_FROM_ASENV = {
         INSTALL_ROOT.getSystemPropertyName(),
         CONFIG_ROOT.getSystemPropertyName(),
-        PRODUCT_ROOT.getSystemPropertyName()
+        PRODUCT_ROOT.getSystemPropertyName(),
     };
     private static final LocalStringsImpl strings = new LocalStringsImpl(AdminMain.class);
 

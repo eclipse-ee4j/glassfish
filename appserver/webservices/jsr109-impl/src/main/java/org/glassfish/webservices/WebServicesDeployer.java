@@ -228,7 +228,7 @@ public class WebServicesDeployer extends JavaEEDeployer<WebServicesContainer, We
     /**
      * Loads the meta date associated with the application.
      *
-     * @parameters type type of metadata that this deployer has declared providing.
+     * @param type type of metadata that this deployer has declared providing.
      */
     @Override
     public Object loadMetaData(Class type, DeploymentContext dc) {

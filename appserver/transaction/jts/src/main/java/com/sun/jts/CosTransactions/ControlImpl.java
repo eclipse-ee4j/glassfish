@@ -82,26 +82,26 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
 
 public class ControlImpl extends JControlPOA implements Control {
 
-    private static POA poa = null;
-    private Control thisRef = null;
+    private static POA poa;
+    private Control thisRef;
 
-    protected boolean         temporary = false;
-    protected boolean         inSuspended = false;
+    protected boolean         temporary;
+    protected boolean         inSuspended;
     protected Status          tranState = Status.StatusActive;
-    protected CoordinatorImpl coord = null;
-    protected Coordinator     coordRef = null;
-    protected TerminatorImpl  term = null;
-    protected Terminator      termRef = null;
-    protected ControlImpl     stacked = null;
-    protected GlobalTID       globalTID = null;
-    protected Long            localTID = null;
-    protected boolean         representsRemote = false;
-    protected PropagationContext cachedContext = null;
+    protected CoordinatorImpl coord;
+    protected Coordinator     coordRef;
+    protected TerminatorImpl  term;
+    protected Terminator      termRef;
+    protected ControlImpl     stacked;
+    protected GlobalTID       globalTID;
+    protected Long            localTID;
+    protected boolean         representsRemote;
+    protected PropagationContext cachedContext;
 
     // Transaction checking values
 
-    protected int outgoing = 0;
-    protected int association = 0;
+    protected int outgoing;
+    protected int association;
 
     /**
      * Logger to log transaction messages
@@ -658,7 +658,7 @@ public class ControlImpl extends JControlPOA implements Control {
     /**Sets the state of the transaction as the Control object knows it.
      * No checking is done to verify the state change is valid.
      *
-     * @param int  The new state.
+     * @param newState  The new state.
      *
      *
      */
@@ -806,7 +806,7 @@ public class ControlImpl extends JControlPOA implements Control {
 
     /**Returns the ControlImpl which serves the given object.
      *
-     * @param  The CORBA Object.
+     * @param  control CORBA Object.
      *
      * @return  The ControlImpl object which serves it.
      *

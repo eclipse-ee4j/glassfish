@@ -29,7 +29,7 @@ final class ParentChildren implements Comparable<ParentChildren> {
     final AMXProxy mParent;
     final List<ParentChildren> mChildren;
 
-    public ParentChildren(final AMXProxy parent, final List<ParentChildren> children) {
+    ParentChildren(final AMXProxy parent, final List<ParentChildren> children) {
         mParent = parent;
         mChildren = children;
     }

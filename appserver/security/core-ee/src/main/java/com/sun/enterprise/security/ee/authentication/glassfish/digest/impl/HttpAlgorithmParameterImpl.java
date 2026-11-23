@@ -36,7 +36,7 @@ import java.security.spec.AlgorithmParameterSpec;
  */
 public class HttpAlgorithmParameterImpl implements AlgorithmParameterSpec {
 
-    private HttpServletRequest req = null;
+    private HttpServletRequest req;
 
     public HttpAlgorithmParameterImpl(HttpServletRequest req) {
         this.req = req;

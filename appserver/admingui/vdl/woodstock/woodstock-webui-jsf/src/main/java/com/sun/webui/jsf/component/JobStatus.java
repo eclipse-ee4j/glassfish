@@ -48,7 +48,7 @@ public final class JobStatus extends ImageHyperlink {
     /**
      * numJobs set flag.
      */
-    private boolean numJobsSet = false;
+    private boolean numJobsSet;
 
     /**
      * Default constructor.

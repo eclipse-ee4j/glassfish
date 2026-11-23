@@ -58,13 +58,13 @@ public abstract class Rule {
     /**
      * The Digester with which this Rule is associated.
      */
-    protected Digester digester = null;
+    protected Digester digester;
 
 
     /**
      * The namespace URI for which this Rule is relevant, if any.
      */
-    protected String namespaceURI = null;
+    protected String namespaceURI;
 
 
     // ------------------------------------------------------------- Properties

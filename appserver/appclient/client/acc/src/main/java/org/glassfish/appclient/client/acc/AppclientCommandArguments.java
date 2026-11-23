@@ -89,7 +89,7 @@ public class AppclientCommandArguments {
     private List<String> unrecognizedArgs = new ArrayList<>();
 
     private char[] password;
-    private boolean isPasswordOptionUsed = false;
+    private boolean isPasswordOptionUsed;
 
     private String configPathToUse;
 

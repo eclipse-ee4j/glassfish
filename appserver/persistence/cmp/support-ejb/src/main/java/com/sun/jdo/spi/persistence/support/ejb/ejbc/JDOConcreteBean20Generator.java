@@ -68,13 +68,13 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
     private Map<Method, JDOQLElements> jdoqlElementsMap;
 
     // StringBuffer for cascade-delete operations on ejbRemove
-    private StringBuffer cascadeDelete = null;
+    private StringBuffer cascadeDelete;
 
     // String for getter method body
-    private String gbody = null;
+    private String gbody;
 
     // String for setter method body
-    private String sbody = null;
+    private String sbody;
 
     /**
      * Signature with CVS keyword substitution for identifying the generated code

@@ -43,5 +43,5 @@ public interface DatabaseConstants {
     String JTA_DATASOURCE_JNDI_NAME_OVERRIDE = "org.glassfish.jta.datasource.jndi.name";
 
     // Flag used to indicate a database generation mode.
-    public static final String JAVA_TO_DB_FLAG = "java-to-database"; // NOI18N
+    String JAVA_TO_DB_FLAG = "java-to-database"; // NOI18N
 }

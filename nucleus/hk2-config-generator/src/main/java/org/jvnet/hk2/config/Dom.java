@@ -480,7 +480,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      * This is by definition a subset of the element names as known to the
      * model {#see ConfigModel.getElementNames().
      *
-     * @Return list of elements names associated with this config instance
+     * @return list of elements names associated with this config instance
      */
     public synchronized Set<String> getElementNames() {
         final Set<String> names = new HashSet<>();
@@ -1466,7 +1466,7 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
         return listeners;
     }
 
-    private boolean isCacheSet = false;
+    private boolean isCacheSet;
     private Object cache;
 
     /*

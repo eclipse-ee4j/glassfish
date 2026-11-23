@@ -65,8 +65,8 @@ public class RequestStatsProvider {
     private TimeStatisticImpl requestProcessTime = new TimeStatisticImpl(0L, 0L, 0L, 0L,
             "", "", "", System.currentTimeMillis(), -1L);
 
-    private String virtualServerName = null;
-    private String moduleName = null;
+    private String virtualServerName;
+    private String moduleName;
 
     private ThreadLocal<TimeStatData> timeStatDataLocal = new ThreadLocal<TimeStatData> (){
         TimeStatData tsd;

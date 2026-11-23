@@ -61,7 +61,7 @@ import static org.glassfish.deployment.admin.DeploymentCommandUtils.renameUpload
 public class AddLibraryCommand implements AdminCommand {
 
     @Param(primary=true, multiple=true)
-    File[] files = null;
+    File[] files;
 
     @Param(optional=true, acceptableValues="common, app")
     String type = "common";

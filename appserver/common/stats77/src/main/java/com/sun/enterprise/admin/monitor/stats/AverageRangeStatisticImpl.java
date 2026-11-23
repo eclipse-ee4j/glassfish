@@ -31,7 +31,7 @@ package com.sun.enterprise.admin.monitor.stats;
 public class AverageRangeStatisticImpl implements
     AverageRangeStatistic /*BoundedRangeStatistic*/ {
 
-    private BoundedRangeStatisticImpl boundedRangeStatistic = null;
+    private BoundedRangeStatisticImpl boundedRangeStatistic;
     private long                                numberOfSamples;
     private long                                runningTotal;
 

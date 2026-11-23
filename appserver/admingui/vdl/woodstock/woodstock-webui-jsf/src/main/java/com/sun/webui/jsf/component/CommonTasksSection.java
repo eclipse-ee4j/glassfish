@@ -67,7 +67,7 @@ public final class CommonTasksSection
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String helpText = null;
+    private String helpText;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -77,7 +77,7 @@ public final class CommonTasksSection
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -89,7 +89,7 @@ public final class CommonTasksSection
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The title text to be displayed for the common tasks section.
@@ -101,7 +101,7 @@ public final class CommonTasksSection
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -115,12 +115,12 @@ public final class CommonTasksSection
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Specify the number of task columns to display in the common tasks
@@ -137,7 +137,7 @@ public final class CommonTasksSection
     /**
      * columns set flag.
      */
-    private boolean columnsSet = false;
+    private boolean columnsSet;
 
     /**
      * Creates a new instance of CommonTasksSection.

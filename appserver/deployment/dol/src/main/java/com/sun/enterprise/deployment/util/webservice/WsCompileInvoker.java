@@ -48,7 +48,7 @@ public abstract class WsCompileInvoker {
      * This Map holds all the options to be used while invoking the wscompile tool; the options are set by the client
      * of this interface using the setter methods available in this interface.
      **/
-    protected HashMap wsCompileOptions = null;
+    protected HashMap wsCompileOptions;
 
     /**
      * This specifies the classpath to be used by the wscompile tool - ideally this should at least be set to
@@ -73,7 +73,7 @@ public abstract class WsCompileInvoker {
      * creates the equivalent jaxrpc-config.xml, invokes wscompile with -define option which will generate the WSDL
      * and the mapping file.
      *
-     * @param SEIConfig containing webservice name, package name, namespace, SEI and its implementation
+     * @param config containing webservice name, package name, namespace, SEI and its implementation
      */
     public abstract void generateWSDL(SEIConfig config) throws WsCompileInvokerException, IOException;
 
@@ -82,7 +82,7 @@ public abstract class WsCompileInvoker {
      * The caller sends the required info on WSDL location, package name etc in WSDLConfig argument and this method
      * creates the equivalent jaxrpc-config,xml, invokes wscompile with -import option which will generate the SEI
      * and a template implementation of the SEI.
-     * @param WSDLConfig containing webservice name, package name, and WSDL location
+     * @param config containing webservice name, package name, and WSDL location
      */
 
     public abstract void generateSEI(WSDLConfig config) throws WsCompileInvokerException, IOException;
@@ -92,7 +92,7 @@ public abstract class WsCompileInvoker {
      * package name; The caller sends the required info on WSDL location, package name etc in WSDLConfig argument and
      * this method creates the equivalent jaxrpc-config.xml, invokes wscompile with -gen:client option which will
      * generate all required non-portable client-side artifacts like JAXRPC stubs etc.
-     * @param WSDLConfig containing webservice name, package name, and WSDL location
+     * @param config containing webservice name, package name, and WSDL location
      */
     public abstract void generateClientStubs(WSDLConfig config) throws WsCompileInvokerException, IOException;
 
@@ -104,8 +104,8 @@ public abstract class WsCompileInvoker {
      * to set the option will be setWsCompileOption("-s", "the_path_to_be_used");
      * For options that dont have an operand, the second argument can be null; for example, to invoke the wscompile tool
      * with verbose option, the -verbose option will be set with this call setWsCompileOption("-verbose", null);
-     * @param String option  the wscompile option to be used
-     * @param String operand the operand for the option; null if none;
+     * @param option option  the wscompile option to be used
+     * @param operand operand the operand for the option; null if none;
      */
     public void addWsCompileOption(String option, String operand) {
         if(wsCompileOptions == null) {
@@ -116,9 +116,8 @@ public abstract class WsCompileInvoker {
 
     /**
      * This is used to remove an option that was already set
-     * @param String The option that has to be removed
-     * @returns true If the option was found and removed
-     * @returns false If the option was not found
+     * @param option The option that has to be removed
+     * @return true If the option was found and removed
      */
     public boolean removeWsCompileOption(String option) {
         if( (wsCompileOptions != null) && wsCompileOptions.containsKey(option) ) {
@@ -132,7 +131,7 @@ public abstract class WsCompileInvoker {
      * This is used to set a feature to be used while invoking the wscompile tool; for example to use the -f:wsi feature,
      * the call will be addWsCompileFeature("wsi")
      * This will prefix -f: to the feature and set it as part of the options Map with operand being null
-     * @param String the feature to be set
+     * @param feature the feature to be set
      */
     public void addWsCompileFeature(String feature) {
         addWsCompileOption("-f:"+feature, null);
@@ -141,9 +140,8 @@ public abstract class WsCompileInvoker {
     /**
      * This is used to remove a feature that was set; for example to remove "-f:strict" feature that was set before the
      * call will be removeWsCompileFeature("strict")
-     * @param String the feature to be removed
-     * @returns true if the feature was found and removed
-     * @false false if the feature was not found
+     * @param feature the feature to be removed
+     * @return true if the feature was found and removed
      */
 
     public boolean removeWsCompileFeature(String feature) {

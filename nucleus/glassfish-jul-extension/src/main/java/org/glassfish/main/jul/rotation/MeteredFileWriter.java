@@ -34,7 +34,7 @@ class MeteredFileWriter extends OutputStreamWriter {
      * @param output stream
      * @param encoding {@link Charset} used for encoding.
      */
-    public MeteredFileWriter(final MeteredStream output, final Charset encoding) {
+    MeteredFileWriter(final MeteredStream output, final Charset encoding) {
         super(output, encoding);
         this.output = output;
         this.encoding = encoding;

@@ -21,14 +21,14 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface CallFlowAgent {
 
-    public boolean isEnabled();
+    boolean isEnabled();
 
-    public void entityManagerMethodStart(EntityManagerMethod val);
+    void entityManagerMethodStart(EntityManagerMethod val);
 
-    public void entityManagerMethodEnd();
+    void entityManagerMethodEnd();
 
-    public void entityManagerQueryStart(EntityManagerQueryMethod val);
+    void entityManagerQueryStart(EntityManagerQueryMethod val);
 
-    public void entityManagerQueryEnd();
+    void entityManagerQueryEnd();
 
 }

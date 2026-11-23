@@ -41,7 +41,7 @@ import org.jvnet.hk2.annotations.Service;
  * the class with {@code @NamedResource.ID}.
  * <p>
  * When some code has fully populated an instance of such a {@code @NamedResource} class it invokes the
- * {@link #prepare(java.lang.Object) } method, passing the just-created object. The manager records the new instance and
+ * {@code prepare(java.lang.Object)} method, passing the just-created object. The manager records the new instance and
  * its named resource children, primarily so that authorization-related annotations such as {@code @AccessRequired.To}
  * can refer to such an object. The secure admin infrastructure can then automatically determine the resource name for
  * that instance for use in authorization checks.

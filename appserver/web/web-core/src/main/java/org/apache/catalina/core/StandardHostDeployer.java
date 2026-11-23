@@ -83,7 +83,7 @@ public class StandardHostDeployer implements Deployer {
      * The <code>ContextRuleSet</code> associated with our
      * <code>digester</code> instance.
      */
-    private ContextRuleSet contextRuleSet = null;
+    private ContextRuleSet contextRuleSet;
 
 
      /**
@@ -92,20 +92,20 @@ public class StandardHostDeployer implements Deployer {
      * instance must be appropriately synchronized to prevent simultaneous
      * access by multiple threads.
      */
-    private Digester digester = null;
+    private Digester digester;
 
 
     /**
      * The <code>StandardHost</code> instance we are associated with.
      */
-    protected StandardHost host = null;
+    protected StandardHost host;
 
 
     /**
      * The <code>NamingRuleSet</code> associated with our
      * <code>digester</code> instance.
      */
-    private NamingRuleSet namingRuleSet = null;
+    private NamingRuleSet namingRuleSet;
 
 
     /**
@@ -113,7 +113,7 @@ public class StandardHostDeployer implements Deployer {
      * <code>Context</code> being added in the <code>addChild()</code> method,
      * or <code>null</code> if the original value should remain untouched.
      */
-    private String overrideDocBase = null;
+    private String overrideDocBase;
 
 
     /**
@@ -122,7 +122,7 @@ public class StandardHostDeployer implements Deployer {
      * method, or <code>null</code> if the original value should remain
      * untouched.
      */
-    private String overrideConfigFile = null;
+    private String overrideConfigFile;
 
 
     // -------------------------------------------------------- Depoyer Methods

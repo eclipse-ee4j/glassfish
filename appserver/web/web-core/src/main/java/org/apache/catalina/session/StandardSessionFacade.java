@@ -62,7 +62,7 @@ public class StandardSessionFacade
     /**
      * Wrapped session object.
      */
-    private HttpSession session = null;
+    private HttpSession session;
 
 
     // ---------------------------------------------------- HttpSession Methods

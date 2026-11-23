@@ -20,7 +20,7 @@ class SecurityLifecycleException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public SecurityLifecycleException(Exception ex) {
+    SecurityLifecycleException(Exception ex) {
         this.initCause(ex);
     }
 }

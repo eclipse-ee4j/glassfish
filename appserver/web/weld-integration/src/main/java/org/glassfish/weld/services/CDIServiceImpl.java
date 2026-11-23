@@ -542,10 +542,10 @@ public class CDIServiceImpl implements CDIService {
         private final List<CDIInjectionContext> dependentContexts = new ArrayList<>();
         private CDIAroundConstructCallback cdiAroundConstructCallback;
 
-        public CDIInjectionContextImpl() {
+        CDIInjectionContextImpl() {
         }
 
-        public CDIInjectionContextImpl(InjectionTarget it, CreationalContext cc, T i) {
+        CDIInjectionContextImpl(InjectionTarget it, CreationalContext cc, T i) {
             this.injectionTarget = it;
             this.creationalContext = cc;
             this.instance = i;

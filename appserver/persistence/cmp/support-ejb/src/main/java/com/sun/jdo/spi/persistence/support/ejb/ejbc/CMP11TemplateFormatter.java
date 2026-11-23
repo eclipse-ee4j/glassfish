@@ -77,32 +77,32 @@ class CMP11TemplateFormatter extends CMPTemplateFormatter {
     public final static String signature1_1_ = "signature1_1"; //NOI18N
 
     // finder/selector methods
-    public static MessageFormat querysetignorecacheformatter = null; // statement to set the ignoreCache flag for a JDOQL query
+    public static MessageFormat querysetignorecacheformatter; // statement to set the ignoreCache flag for a JDOQL query
 
     // CMP1.1 formatter
-    public static MessageFormat c11formatter = null; // ejbCreate1_1
-    public static MessageFormat c11unpkformatter = null; // ejbCreateUnknownPK1_1
-    public static MessageFormat postc11formatter = null; // ejbPostCreate1_1
-    public static MessageFormat l11formatter = null; // CMP field load for 1.1
-    public static MessageFormat s11formatter = null; // CMP field store for 1.1
-    public static MessageFormat l11copyformatter = null; // Mutable CMP field load for 1.1
-    public static MessageFormat s11copyformatter = null; // Mutable CMP field store for 1.1
-    public static MessageFormat l11arrayformatter = null; // byte[] CMP field load for 1.1
-    public static MessageFormat s11arrayformatter = null; // byte[] CMP field store for 1.1
-    public static MessageFormat assertpks11formatter = null; // assert not null PK CMP field store for 1.1
-    public static MessageFormat pks11formatter = null; // PK CMP field store for 1.1
-    public static MessageFormat pkstring11formatter = null; // String CMP field store for 1.1
-    public static MessageFormat pkcopy11formatter = null; // Mutable CMP field store for 1.1
-    public static MessageFormat l11Serializableformatter = null; // serializable CMP field load for 1.1
-    public static MessageFormat s11Serializableformatter = null; // serializable CMP field store for 1.1
+    public static MessageFormat c11formatter; // ejbCreate1_1
+    public static MessageFormat c11unpkformatter; // ejbCreateUnknownPK1_1
+    public static MessageFormat postc11formatter; // ejbPostCreate1_1
+    public static MessageFormat l11formatter; // CMP field load for 1.1
+    public static MessageFormat s11formatter; // CMP field store for 1.1
+    public static MessageFormat l11copyformatter; // Mutable CMP field load for 1.1
+    public static MessageFormat s11copyformatter; // Mutable CMP field store for 1.1
+    public static MessageFormat l11arrayformatter; // byte[] CMP field load for 1.1
+    public static MessageFormat s11arrayformatter; // byte[] CMP field store for 1.1
+    public static MessageFormat assertpks11formatter; // assert not null PK CMP field store for 1.1
+    public static MessageFormat pks11formatter; // PK CMP field store for 1.1
+    public static MessageFormat pkstring11formatter; // String CMP field store for 1.1
+    public static MessageFormat pkcopy11formatter; // Mutable CMP field store for 1.1
+    public static MessageFormat l11Serializableformatter; // serializable CMP field load for 1.1
+    public static MessageFormat s11Serializableformatter; // serializable CMP field store for 1.1
 
     // standard 1.1 templates for the corresponding keys, so that a template "xxxTemplate"
     // corresponds to a "xxx" key.
-    public static String one_oneVariablesTemplate = null;
-    public static String ejbRemove1_1Template = null;
-    public static String signature1_1Template = null;
+    public static String one_oneVariablesTemplate;
+    public static String ejbRemove1_1Template;
+    public static String signature1_1Template;
 
-    private static boolean is11HelpersLoaded = false;
+    private static boolean is11HelpersLoaded;
 
     /**
      * Constructs a new <code>CMP11TemplateFormatter</code> instance.

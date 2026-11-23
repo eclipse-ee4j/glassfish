@@ -39,9 +39,9 @@ public class OrderingDescriptor extends Descriptor {
     private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(OrderingDescriptor.class);
 
-    OrderingOrderingDescriptor after = null;
+    OrderingOrderingDescriptor after;
 
-    OrderingOrderingDescriptor before = null;
+    OrderingOrderingDescriptor before;
 
     public OrderingOrderingDescriptor getAfter() {
         return after;
@@ -416,12 +416,12 @@ public class OrderingDescriptor extends Descriptor {
     }
 
     private static class Node {
-        private WebFragmentDescriptor webFragmentDescriptor = null;
+        private WebFragmentDescriptor webFragmentDescriptor;
         private Set<Edge> inEdges = new LinkedHashSet<Edge>();
         private Set<Edge> outEdges = new LinkedHashSet<Edge>();
         // for sorting
-        private boolean afterOthers = false;
-        private boolean beforeOthers = false;
+        private boolean afterOthers;
+        private boolean beforeOthers;
 
         private Node(WebFragmentDescriptor wf) {
             webFragmentDescriptor = wf;
@@ -491,9 +491,9 @@ public class OrderingDescriptor extends Descriptor {
 
     // an edge with data
     private static final class Edge {
-        private Node fromNode = null;
-        private Node toNode = null;
-        private boolean visited = false;
+        private Node fromNode;
+        private Node toNode;
+        private boolean visited;
 
         private Edge(Node from, Node to) {
             fromNode = from;

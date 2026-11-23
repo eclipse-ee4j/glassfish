@@ -34,7 +34,6 @@ public class StatementCacheProbeProvider {
      * <code>poolName</code>has got a statement cache hit event
      *
      * @param poolName for which statement cache hit occurred
-     * @param increment number of times the statement cache was hit
      */
     @Probe(name=JdbcRAConstants.STATEMENT_CACHE_HIT)
     public void statementCacheHitEvent(@ProbeParam("poolName") String poolName,
@@ -49,7 +48,6 @@ public class StatementCacheProbeProvider {
      * <code>poolName</code>has got a statement cache miss event
      *
      * @param poolName for which statement cache miss occurred
-     * @param increment number of times the statement cache was missed
      */
     @Probe(name=JdbcRAConstants.STATEMENT_CACHE_MISS)
     public void statementCacheMissEvent(@ProbeParam("poolName") String poolName,

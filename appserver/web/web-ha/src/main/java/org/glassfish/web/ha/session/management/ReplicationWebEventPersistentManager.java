@@ -162,7 +162,7 @@ public class ReplicationWebEventPersistentManager<T extends Storeable> extends R
     //private static int NUMBER_OF_REQUESTS_BEFORE_FLUSH = 1000;
     //volatile Map<String, String> removedKeysMap = new ConcurrentHashMap<String, String>();
     //private static AtomicInteger requestCounter = new AtomicInteger(0);
-    private static int _messageIDCounter = 0;
+    private static int _messageIDCounter;
     //private AtomicBoolean  timeToChange = new AtomicBoolean(false);
 
 

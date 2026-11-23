@@ -24,7 +24,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /** Determines the behavior of administrative access to GlassFish v3. It should be enhanced to take into account
  *  Role-based Access Control. As of GlassFish v3, this takes care of authentication alone.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  */
 @Contract
 public interface AdminAccessController {
@@ -32,7 +32,7 @@ public interface AdminAccessController {
     /**
      * Represents the possible types of access granted as the result of
      * logging in as an admin user.
-     * <p>
+     *
      * <ul>
      * <li>FULL - the connection should be permitted full admin access, including
      * the ability to change the configuration
@@ -48,7 +48,7 @@ public interface AdminAccessController {
      * be authenticated but there are some places where it just returns.
      * Hence the NONE case.
      */
-    public static enum Access {
+    enum Access {
         FULL,
         READONLY,
         FORBIDDEN,
@@ -87,7 +87,7 @@ public interface AdminAccessController {
      *  this variant should pass the Principal associated with the request as
      *  reported by the secure transport and the value from the X-GlassFish-admin header
      *  (null if no such header exists).
-     * @Param request The Grizzly request containing the admin request
+     * @param request The Grizzly request containing the admin request
      * @throws LoginException if the credentials do not authenticate
      * @throws RemoteAdminAccessException if the request is remote but remote access is disabled
      * @return Subject for an admin user
@@ -107,7 +107,7 @@ public interface AdminAccessController {
      *  this variant should pass the Principal associated with the request as
      *  reported by the secure transport and the value from the X-GlassFish-admin header
      *  (null if no such header exists).
-     * @Param request The Grizzly request containing the admin request
+     * @param request The Grizzly request containing the admin request
      * @param hostname the originating host
      * @throws LoginException if the credentials do not authenticate
      * @throws RemoteAdminAccessException if the request is remote but remote access is disabled

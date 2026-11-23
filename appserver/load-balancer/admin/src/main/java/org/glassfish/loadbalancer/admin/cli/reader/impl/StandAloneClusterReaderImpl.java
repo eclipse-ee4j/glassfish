@@ -112,8 +112,8 @@ public class StandAloneClusterReaderImpl implements ClusterReader {
         }
     }
     // ---- VARIABLE(S) - PRIVATE --------------------------
-    private Domain _domain = null;
-    private ApplicationRegistry _appRegistry = null;
-    private ServerRef _serverRef = null;
-    private Server _server = null;
+    private Domain _domain;
+    private ApplicationRegistry _appRegistry;
+    private ServerRef _serverRef;
+    private Server _server;
 }

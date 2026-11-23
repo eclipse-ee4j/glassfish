@@ -31,7 +31,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class UniqueResourceNameValidator implements ConstraintValidator<UniqueResourceNameConstraint, Resource> {
 
-    Domain domain = null;
+    Domain domain;
 
     public void initialize(final UniqueResourceNameConstraint constraint) {
 

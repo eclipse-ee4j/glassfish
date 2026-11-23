@@ -48,13 +48,13 @@ public class ConfigBean extends Dom implements ConfigView {
     private static final int WAIT_ITERATIONS = Integer.getInteger("org.glassfish.hk2.config.locktimeout.iterations", 100);
 
     private WriteableView writeableView;
-    private volatile boolean writeLock = false;
+    private volatile boolean writeLock;
     private final Map<Class, ConfigBeanInterceptor> optionalFeatures = new HashMap<Class, ConfigBeanInterceptor>();
 
     /**
      * ObjectName will be null until when/if an MBean is registered.
      */
-    private volatile ObjectName objectName = null;
+    private volatile ObjectName objectName;
 
     public ObjectName getObjectName() {
         return objectName;

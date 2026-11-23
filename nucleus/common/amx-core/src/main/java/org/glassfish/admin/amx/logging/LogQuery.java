@@ -64,13 +64,12 @@ public interface LogQuery {
      * <p>
      * Because a log file could be deleted
      * <p>
-     * <b>QUESTIONS TO RESOLVE<b>
+     * <b>QUESTIONS TO RESOLVE</b>
      * <ul>
      * <li>What are the legal keys and values of 'nameValueMap'</li>
      * </ul>
-     * <p>
      *
-     * @param name a specific log file name or {@link LogFileAccess#MOST_RECENT_NAME}
+     *
      * @param startIndex the location within the LogFile to begin.
      * @param searchForward true to move forward, false to move backward from
      *            <code>startIndex</code>
@@ -91,8 +90,8 @@ public interface LogQuery {
      *      Over the wire transmission of 'UnprocessedConfigChange' would require the client to have
      *      its class;
      *      as delivered the Object[] contains only standard JDK types.
-     *      See the Javadoc for {@link LogQueryResult} for the order of values in the Object[].
-     *      Clients with access to the class can use {@link SystemStatus.Helper#toLogQueryResult}
+     *      See the Javadoc for {@code LogQueryResult} for the order of values in the Object[].
+     *      Clients with access to the class can use {@code SystemStatus.Helper#toLogQueryResult}
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO) List<Serializable[]>
     queryServerLog(
@@ -142,7 +141,7 @@ public interface LogQuery {
         @Param(name = "messageID") String messageID);
 
     /** helper class, in particular to convert results from {@link #queryServerLog} */
-    public final class Helper {
+    final class Helper {
 
         private Helper() {
         }

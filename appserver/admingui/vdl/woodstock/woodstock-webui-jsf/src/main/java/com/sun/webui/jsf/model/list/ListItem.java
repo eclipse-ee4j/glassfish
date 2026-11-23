@@ -39,22 +39,22 @@ public final class ListItem {
     /**
      * Description.
      */
-    private String description = null;
+    private String description;
 
     /**
      * Selected flag.
      */
-    private boolean selected = false;
+    private boolean selected;
 
     /**
      * Disabled flag.
      */
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * Is title flag.
      */
-    private boolean title = false;
+    private boolean title;
 
     /**
      * Create a new instance.

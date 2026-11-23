@@ -32,19 +32,19 @@ import org.jvnet.hk2.config.Element;
  * which provides all the {@link IntegrationPoint} information for the
  * module.  Here is an example of what that file might look like:</p>
  *
- *  <p><code><pre>
- * <?xml version="1.0" encoding="UTF-8"?>
+ *  <pre>
+ * &lt;?xml version="1.0" encoding="UTF-8"?>
  *
- * <console-config id="uniqueId">
- *     <integration-point id="someId" type="tree" priority="840"
+ * &lt;console-config id="uniqueId">
+ *     &lt;integration-point id="someId" type="tree" priority="840"
  *             parentId="rootNode" content="/myTreeNode.jsf" />
- *     <integration-point id="anotherId" type="webApplicationTab"
+ *     &lt;integration-point id="anotherId" type="webApplicationTab"
  *             priority="22" parentId="appTab" content="/myTab.jsf" />
- *     <integration-point id="fooId" type="tree" priority="400"
+ *     &lt;integration-point id="fooId" type="tree" priority="400"
  *             parentId="appNode" content="/fooNode.jsf" />
- * </console-config>
+ * &lt;/console-config>
  *
- *  </pre></code></p>
+ *  </pre>
  *
  *  <p>        Normally a <code>console-config.xml</code> file should exist at
  * "<code>META-INF/admingui/console-config.xml</code>" inside your module
@@ -56,7 +56,7 @@ import org.jvnet.hk2.config.Element;
 public class ConsoleConfig {
     /**
      * <p> Accessor for the known Admin Console
-     *     {@link IntegrationPoint}s.<?p>
+     *     {@link IntegrationPoint}s.</p>
      */
     public List<IntegrationPoint> getIntegrationPoints() {
         return this.integrationPoints;

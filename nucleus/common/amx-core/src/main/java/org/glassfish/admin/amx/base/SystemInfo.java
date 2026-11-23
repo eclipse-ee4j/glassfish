@@ -38,25 +38,25 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      * Call supportsFeature() with this value to determine if the server
      * supports clusters.
      */
-    public final String CLUSTERS_FEATURE = "SupportsClusters";
+    String CLUSTERS_FEATURE = "SupportsClusters";
 
     /**
      * Call supportsFeature() with this value to determine if the server
      * supports more than one server.
      */
-    public final String MULTIPLE_SERVERS_FEATURE = "SupportsMultipleServers";
+    String MULTIPLE_SERVERS_FEATURE = "SupportsMultipleServers";
 
     /**
      * Call supportsFeature() with this value to determine if this MBean
      * is running in the Domain Admin Server.
      */
-    public final String RUNNING_IN_DAS_FEATURE = "RunningInDomainAdminServer";
+    String RUNNING_IN_DAS_FEATURE = "RunningInDomainAdminServer";
 
     /**
      * Call supportsFeature() with this value to determine if the
      * high availability feature (HADB) is available.
      */
-    public final String HADB_CONFIG_FEATURE = "HighAvailabilityDatabase";
+    String HADB_CONFIG_FEATURE = "HighAvailabilityDatabase";
 
     /**
      * Query whether a feature is supported. Features require the use
@@ -71,7 +71,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      *
      * @param key the feature name to query
      */
-    public boolean supportsFeature(String key);
+    boolean supportsFeature(String key);
 
 
     /**
@@ -80,7 +80,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      * @return Set
      */
     @ManagedAttribute
-    public String[] getFeatureNames();
+    String[] getFeatureNames();
 
     /**
      * Key for time for server to complete its startup sequence. The presence of this item
@@ -90,7 +90,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      *
      * @see #getPerformanceMillis
      */
-    public static final String STARTUP_SEQUENCE_MILLIS_KEY = "StartupMillis";
+    String STARTUP_SEQUENCE_MILLIS_KEY = "StartupMillis";
 
     /**
      * Return a Map keyed by an arbitrary String denoting some feature. The value
@@ -102,7 +102,7 @@ public interface SystemInfo extends AMXProxy, Singleton, Utility {
      * @return {@code Map<String,Long>}
      */
     @ManagedAttribute
-    public Map<String, Long> getPerformanceMillis();
+    Map<String, Long> getPerformanceMillis();
 
 }
 

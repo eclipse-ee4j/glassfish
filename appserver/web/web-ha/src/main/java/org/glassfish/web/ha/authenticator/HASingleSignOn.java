@@ -36,9 +36,9 @@ import org.glassfish.web.ha.LogFacade;
 public class HASingleSignOn extends GlassFishSingleSignOn {
     private static final Logger logger = LogFacade.getLogger();
 
-    private BackingStore<String, HASingleSignOnEntryMetadata> ssoEntryMetadataBackingStore = null;
+    private BackingStore<String, HASingleSignOnEntryMetadata> ssoEntryMetadataBackingStore;
 
-    private JavaEEIOUtils ioUtils = null;
+    private JavaEEIOUtils ioUtils;
 
     public HASingleSignOn(JavaEEIOUtils ioUtils,
             BackingStore<String, HASingleSignOnEntryMetadata> ssoEntryMetadataBackingStore) {

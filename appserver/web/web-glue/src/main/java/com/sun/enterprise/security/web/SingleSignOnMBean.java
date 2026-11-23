@@ -26,7 +26,7 @@ public interface SingleSignOnMBean {
      *
      * @return Number of sessions participating in SSO
      */
-    public int getActiveSessionCount();
+    int getActiveSessionCount();
 
 
     /**
@@ -34,7 +34,7 @@ public interface SingleSignOnMBean {
      *
      * @return Number of SSO cache hits
      */
-    public int getHitCount();
+    int getHitCount();
 
 
     /**
@@ -42,6 +42,6 @@ public interface SingleSignOnMBean {
      *
      * @return Number of SSO cache misses
      */
-    public int getMissCount();
+    int getMissCount();
 
 }

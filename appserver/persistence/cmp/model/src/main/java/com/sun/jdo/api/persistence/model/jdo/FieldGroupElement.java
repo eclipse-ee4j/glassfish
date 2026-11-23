@@ -151,19 +151,19 @@ public abstract class FieldGroupElement extends PersistenceMemberElement
          * @param action {@link #ADD}, {@link #REMOVE}, or {@link #SET}
          * @exception ModelException if impossible
          */
-        public void changeFields (PersistenceFieldElement[] fields, int action)
+        void changeFields (PersistenceFieldElement[] fields, int action)
             throws ModelException;
 
         /** Get all fields.
          * @return the fields
          */
-        public PersistenceFieldElement[] getFields ();
+        PersistenceFieldElement[] getFields ();
 
         /** Find a field by name.
          * @param name the name to match
          * @return the field, or <code>null</code> if it does not exist
          */
-        public PersistenceFieldElement getField (String name);
+        PersistenceFieldElement getField (String name);
     }
 }
 

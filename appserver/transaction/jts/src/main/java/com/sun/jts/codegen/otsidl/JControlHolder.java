@@ -27,7 +27,7 @@ package com.sun.jts.codegen.otsidl;
 //#-----------------------------------------------------------------------------
 public final class JControlHolder implements org.omg.CORBA.portable.Streamable
 {
-  public com.sun.jts.codegen.otsidl.JControl value = null;
+  public com.sun.jts.codegen.otsidl.JControl value;
 
   public JControlHolder ()
   {

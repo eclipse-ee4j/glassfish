@@ -90,7 +90,7 @@ import static org.glassfish.jdbc.util.JdbcResourcesUtil.getResourcesOfPool;
  * Handles Jdbc connection pool events in the server instance. When user adds a
  * jdbc connection pool , the admin instance emits resource event. The jdbc
  * connection pool events are propagated to this object.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
  *

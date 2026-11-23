@@ -719,7 +719,7 @@ public class ConnectionImpl implements Connection, Linkable {
 
     /**
      * Get the previous ConnectionImpl in a chain.
-     * <p>
+     *
      * @return The previous ConnectionImpl in a chain.
      */
     @Override
@@ -729,7 +729,7 @@ public class ConnectionImpl implements Connection, Linkable {
 
     /**
      * Hook a ConnectionImpl to a chain.
-     * <p>
+     *
      * @param  conn  The ConnectionImpl to hook on the chain.
      */
     @Override
@@ -739,7 +739,7 @@ public class ConnectionImpl implements Connection, Linkable {
 
     /**
      * Get the next ConnectionImpl in a chain.
-     * <p>
+     *
      * @return The next ConnectionImpl in a chain.
      */
     @Override
@@ -749,7 +749,7 @@ public class ConnectionImpl implements Connection, Linkable {
 
     /**
      * Hook a ConnectionImpl to a chain.
-     * <p>
+     *
      * @param  conn  The ConnectionImpl to hook on the chain.
      */
     @Override
@@ -798,7 +798,7 @@ public class ConnectionImpl implements Connection, Linkable {
      * Connection.  Also disassociates this Connection from the
      * transaction.  Throws ... (javax.transaction.xa.XAException(XA_RBROLLBACK))
      * on commit error.
-     * <p>
+     *
      */
     public synchronized void internalCommit() {
         LOG.log(TRACE, "sqlstore.connectionimpl.internalcommit");
@@ -824,7 +824,7 @@ public class ConnectionImpl implements Connection, Linkable {
      * Used by TransactionImpl to rollback the transaction on this
      * Connection.  Also disassociates this Connection from the
      * transaction.
-     * <p>
+     *
      */
     public synchronized void internalRollback() {
         LOG.log(TRACE, "sqlstore.connectionimpl.internalrollback");
@@ -875,7 +875,7 @@ public class ConnectionImpl implements Connection, Linkable {
 
     /**
      * Return a string representation of this ConnectionImpl object.
-     * <p>
+     *
      * @return  String describing contents of this ConnectionImpl
      *          object.
      */

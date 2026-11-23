@@ -34,10 +34,10 @@ import org.jvnet.hk2.config.provider.internal.ConfigThreadContext;
 /**
  * Simple helper for managing work sent to a foreign executor service.
  *
- * <p/>
+ * <p>
  * Has similarities to Fork and Join.
  *
- * <p/>
+ * <p>
  * The implementation is designed such that Tasks-1 are sent to the executor
  * service for possibly another thread to handle.  The last task is executed
  * by the caller thread so that all threads are attempted to be fully utilized
@@ -203,11 +203,11 @@ public class WorkManager implements Executor {
 
 
   private final class Watcher<V> extends FutureTask<V> {
-    public Watcher(Callable<V> task) {
+    Watcher(Callable<V> task) {
       super(task);
     }
 
-    public Watcher(Runnable runnable, V result) {
+    Watcher(Runnable runnable, V result) {
       super(runnable, result);
     }
 

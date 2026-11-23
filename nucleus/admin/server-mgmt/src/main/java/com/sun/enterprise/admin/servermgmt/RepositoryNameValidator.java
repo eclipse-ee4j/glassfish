@@ -30,7 +30,7 @@ import org.xml.sax.InputSource;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Validates the repository name. A repository name must be a - valid file name, - valid xml CDATA value & - valid
+ * Validates the repository name. A repository name must be a - valid file name, - valid xml CDATA value &amp; - valid
  * javax.management.ObjectName property value.
  */
 public class RepositoryNameValidator extends StringValidator {

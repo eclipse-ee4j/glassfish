@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Service;
 public class IsSnifferUserVisibleCommand implements AdminCommand {
 
     @Param(primary=true)
-    public String sniffername = null;
+    public String sniffername;
 
     @Inject
     SnifferManager snifferManager;

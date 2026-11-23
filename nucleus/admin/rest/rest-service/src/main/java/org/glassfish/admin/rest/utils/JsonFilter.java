@@ -77,11 +77,11 @@ public class JsonFilter {
         return this;
     }
 
-    protected static enum Result {
+    protected enum Result {
         Exclude, Include, Deferr
     }
 
-    public static interface Filter {
+    public interface Filter {
         Result filter(String attr);
     }
 
@@ -238,7 +238,7 @@ public class JsonFilter {
     }
 
     public class Scope {
-        private Stack<String> scopeStack = null;
+        private Stack<String> scopeStack;
 
         private Scope() {
             if (filters.size() > 0) {

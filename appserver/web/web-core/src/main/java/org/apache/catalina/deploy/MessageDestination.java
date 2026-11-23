@@ -37,7 +37,7 @@ public class MessageDestination {
     /**
      * The description of this destination.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -51,7 +51,7 @@ public class MessageDestination {
     /**
      * The display name of this destination.
      */
-    private String displayName = null;
+    private String displayName;
 
     public String getDisplayName() {
         return (this.displayName);
@@ -65,7 +65,7 @@ public class MessageDestination {
     /**
      * The large icon of this destination.
      */
-    private String largeIcon = null;
+    private String largeIcon;
 
     public String getLargeIcon() {
         return (this.largeIcon);
@@ -79,7 +79,7 @@ public class MessageDestination {
     /**
      * The name of this destination.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -93,7 +93,7 @@ public class MessageDestination {
     /**
      * The small icon of this destination.
      */
-    private String smallIcon = null;
+    private String smallIcon;
 
     public String getSmallIcon() {
         return (this.smallIcon);

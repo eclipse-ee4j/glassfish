@@ -42,11 +42,11 @@ public class EnterpriseBeanLogger implements Serializable{
 
   protected PortableAdapter[] adapterHome;
 
-  protected boolean dualMode = false;
+  protected boolean dualMode;
 
   protected boolean doPassByValue = true;
 
-  protected int REMOTE_EJB = 0;
+  protected int REMOTE_EJB;
   protected int LOCAL_EJB = 1;
 
   protected boolean outputXML = true;

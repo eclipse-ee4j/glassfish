@@ -90,7 +90,7 @@ public class AuthorizationUtil {
      * deleted state. In our provider implementation, the corresponding policy file is deleted, as the presence of a policy
      * file in the repository is how we persistently remember which policy contexts are in service.
      *
-     * @param String contextId - the module id which serves to identify the corresponding policy context. The name shall not be
+     * @param contextId contextId - the module id which serves to identify the corresponding policy context. The name shall not be
      * null.
      */
     public static void removePolicy(String contextId) throws IASSecurityException {

@@ -583,7 +583,7 @@ public class JavaEETransactionManagerTest {
             XAException.XAER_NOTA,
             XAException.XAER_INVAL,
             XAException.XAER_PROTO,
-            XAException.XAER_DUPID
+            XAException.XAER_DUPID,
         };
 
         for (int errorCode : falures) {
@@ -805,17 +805,17 @@ public class JavaEETransactionManagerTest {
     static class TestSync implements Synchronization {
 
         // Used to validate the calls
-        private boolean fail = false;
-        private TransactionManager t = null;
+        private boolean fail;
+        private TransactionManager t;
 
-        protected boolean called_beforeCompletion = false;
-        protected boolean called_afterCompletion = false;
+        protected boolean called_beforeCompletion;
+        protected boolean called_afterCompletion;
 
-        public TestSync(boolean fail) {
+        TestSync(boolean fail) {
             this.fail = fail;
         }
 
-        public TestSync(TransactionManager t) {
+        TestSync(TransactionManager t) {
             fail = true;
             this.t = t;
         }
@@ -848,7 +848,7 @@ public class JavaEETransactionManagerTest {
     }
 
     static class MyRuntimeException extends RuntimeException {
-        public MyRuntimeException(String msg) {
+        MyRuntimeException(String msg) {
             super(msg);
         }
     }
@@ -857,8 +857,8 @@ public class JavaEETransactionManagerTest {
 
         // allow only one resource in use at a time
         private boolean inUse;
-        private boolean _forgetCalled = false;
-        private boolean _isHeuristic = false;
+        private boolean _forgetCalled;
+        private boolean _isHeuristic;
 
         private int commitErrorCode = 9999;
         private int rollbackErrorCode = 9999;
@@ -1039,7 +1039,7 @@ public class JavaEETransactionManagerTest {
         private final XAResource xaResource;
         private static PoolManagerImpl poolMgr = new PoolManagerImpl();
 
-        public TestResourceHandle(XAResource xaResource) {
+        TestResourceHandle(XAResource xaResource) {
             super(null, new ResourceSpec(new SimpleJndiName("testResource"), 0), null);
             this.xaResource = xaResource;
         }

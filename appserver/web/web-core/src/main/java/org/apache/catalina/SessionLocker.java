@@ -32,10 +32,10 @@ import jakarta.servlet.ServletRequest;
  */
 public interface SessionLocker {
 
-    public void init(Context context);
+    void init(Context context);
 
-    public boolean lockSession(ServletRequest req) throws ServletException;
+    boolean lockSession(ServletRequest req) throws ServletException;
 
-    public void unlockSession(ServletRequest req);
+    void unlockSession(ServletRequest req);
 
 }

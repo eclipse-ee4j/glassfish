@@ -176,7 +176,7 @@ public class DeleteHttpListener implements AdminCommand {
     private static class DeleteProtocol implements SingleConfigCode<Protocols> {
         private final String name;
 
-        public DeleteProtocol(String name) {
+        DeleteProtocol(String name) {
             this.name = name;
         }
 

@@ -47,7 +47,7 @@ public class HttpCacheEntry {
     // XXX: other cacheable response info
     byte[] bytes;
 
-    volatile long expireTime = 0;
+    volatile long expireTime;
 
     /**
      * set the real expire time

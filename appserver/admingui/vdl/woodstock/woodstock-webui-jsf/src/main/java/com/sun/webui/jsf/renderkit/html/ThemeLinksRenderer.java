@@ -55,7 +55,7 @@ public final class ThemeLinksRenderer extends jakarta.faces.render.Renderer {
             Object[] params = {
                 component.toString(),
                 this.getClass().getName(),
-                ThemeLinks.class.getName()
+                ThemeLinks.class.getName(),
             };
             String message = MessageUtil.getMessage(
                     "com.sun.webui.jsf.resources.LogMessages",

@@ -30,7 +30,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * For instance, when the parent contains : <code>
  * &#64;Element("*")
- * List<Extension> getExtensions();
+ * List&lt;Extension&gt; getExtensions();
  * </code>
  *
  * A subclass of Extension can have a single or multiple instances stored in the extensions list. Adding this annotation

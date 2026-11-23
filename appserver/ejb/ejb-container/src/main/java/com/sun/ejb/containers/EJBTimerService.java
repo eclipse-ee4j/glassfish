@@ -97,7 +97,7 @@ public class EJBTimerService {
     // It is NOT intended to be a consistent count of the current number of
     // timed objects, so there is no need to decrement the number when a
     // container is undeployed.
-    protected long totalTimedObjectsInitialized_ = 0;
+    protected long totalTimedObjectsInitialized_;
 
     static final Logger logger =
         LogDomains.getLogger(EJBTimerService.class, LogDomains.EJB_LOGGER);
@@ -1876,7 +1876,7 @@ public class EJBTimerService {
         private final EJBTimerService timerService_;
         private final TimerPrimaryKey timerId_;
 
-        public TaskExpiredWork(EJBTimerService timerService,
+        TaskExpiredWork(EJBTimerService timerService,
                                TimerPrimaryKey timerId) {
             timerService_ = timerService;
             timerId_ = timerId;
@@ -1898,7 +1898,7 @@ public class EJBTimerService {
         private final BaseContainer container_;
         private final EJBTimerService timerService_;
 
-        public TimerSynch(TimerPrimaryKey timerId, int state, Date timeout,
+        TimerSynch(TimerPrimaryKey timerId, int state, Date timeout,
                           BaseContainer container, EJBTimerService timerService) {
             timerId_   = timerId;
             state_     = state;

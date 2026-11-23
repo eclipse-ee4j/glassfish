@@ -101,7 +101,7 @@ public class LogFile implements java.io.Serializable {
             LogParser logParser = LogParserFactory.getInstance().createLogParser(logFile );
             logParser.parseLog(reader, new LogParserListener() {
 
-                long counter = 0;
+                long counter;
 
 
                 @Override

@@ -45,7 +45,7 @@ public interface Auditor
      * @param realm the realm which handled the authentication
      * @param success true if the authentication succeeded, false if denied
      */
-    public void authentication(String user, String realm, boolean success);
+    void authentication(String user, String realm, boolean success);
 
 
     /**
@@ -57,7 +57,7 @@ public interface Auditor
      * @param req the HttpRequest
      * @param success true if the invocation was allowed, false if denied.
      */
-    public void webInvocation(HttpRequest req, boolean success);
+    void webInvocation(HttpRequest req, boolean success);
 
 
 }

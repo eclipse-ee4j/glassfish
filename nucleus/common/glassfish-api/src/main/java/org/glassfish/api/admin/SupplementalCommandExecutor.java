@@ -37,7 +37,7 @@ public interface SupplementalCommandExecutor {
     ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time, AdminCommandContext context,
             ParameterMap parameters, MultiMap<String, File> optionFileMap);
 
-    public interface SupplementalCommand {
+    interface SupplementalCommand {
 
         void execute(AdminCommandContext ctxt);
 

@@ -247,8 +247,8 @@ public class EJBContainerImpl extends EJBContainer {
 
     private static class Cleanup implements Runnable {
 
-        private Thread cleanupThread = null;
-        private EJBContainerImpl container = null;
+        private Thread cleanupThread;
+        private EJBContainerImpl container;
 
         Cleanup(EJBContainerImpl container) {
             this.container = container;

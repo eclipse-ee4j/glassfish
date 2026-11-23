@@ -71,7 +71,7 @@ public class InvocationInfo {
     // Only applies to EJB 3.0 SFSBs
     public EjbRemovalInfo     removalInfo;
 
-    public boolean isTxRequiredLocalCMPField = false;
+    public boolean isTxRequiredLocalCMPField;
 
     public MethodLockInfo methodLockInfo;
 

@@ -34,7 +34,7 @@ public abstract class RuleSetBase implements RuleSet {
      * The namespace URI that all Rule instances created by this RuleSet
      * will be associated with.
      */
-    protected String namespaceURI = null;
+    protected String namespaceURI;
 
 
     // ------------------------------------------------------------- Properties

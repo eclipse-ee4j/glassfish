@@ -28,7 +28,7 @@ import org.jvnet.hk2.annotations.Contract;
  *
  * public class Example implements ConfigListener {
  *
- *  @Inject
+ *  &#64;Inject
  *  MyConfiguredObject o;
  *
  *
@@ -49,5 +49,5 @@ public interface ConfigListener {
      * @return the list of unprocessed events (requiring a restart) or null if all reconfiguration
      * was processed successfully
      */
-    public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) ;
+    UnprocessedChangeEvents changed(PropertyChangeEvent[] events) ;
 }

@@ -50,6 +50,7 @@ import static com.sun.enterprise.admin.servermgmt.util.CommandAction.step;
  * <li>Get the uptime for the current server
  * <li>start the remote Restart command
  * <li>Call uptime in a loop until the uptime number is less than the original uptime
+ * </ul>
  *
  * @author bnevins
  * @author Bill Shannon

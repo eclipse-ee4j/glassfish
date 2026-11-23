@@ -29,7 +29,7 @@ final class WildcardTypeImpl implements WildcardType {
     private final Type[] ub;
     private final Type[] lb;
 
-    public WildcardTypeImpl(Type[] ub, Type[] lb) {
+    WildcardTypeImpl(Type[] ub, Type[] lb) {
         this.ub = ub;
         this.lb = lb;
     }

@@ -115,7 +115,7 @@ public abstract class TaskManager {
      * be added to the already-queued <code>task</code>.
      * </p>
      *
-     * @param task A unique string identifying a task to perform. This is implementation specific to the TaskManager
+     * @param taskName A unique string identifying a task to perform. This is implementation specific to the TaskManager
      * implementation.
      *
      * @param type Optional String identifying the event name within the task in which the given Listeners are associated.

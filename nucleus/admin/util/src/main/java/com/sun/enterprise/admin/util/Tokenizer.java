@@ -17,7 +17,7 @@
 package com.sun.enterprise.admin.util;
 
 public interface Tokenizer {
-    public final static char LITERAL_STRING_DELIM = '\"';
+    char LITERAL_STRING_DELIM = '\"';
 
-    public String[] getTokens();
+    String[] getTokens();
 }

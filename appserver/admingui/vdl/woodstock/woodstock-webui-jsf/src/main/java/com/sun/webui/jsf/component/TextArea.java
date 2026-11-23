@@ -52,7 +52,7 @@ public final class TextArea extends Field {
     /**
      * rows set flag.
      */
-    private boolean rowsSet = false;
+    private boolean rowsSet;
 
     /**
      * Default constructor.

@@ -48,7 +48,7 @@ public class AverageImpl extends AbstractTreeNode implements Average {
 
     AtomicLong times = new AtomicLong(0);
     AtomicLong sum = new AtomicLong(0);
-    private long startTime = 0;
+    private long startTime;
     private AtomicLong lastSampleTime = new AtomicLong(0);
 
     private String NAME = "average";

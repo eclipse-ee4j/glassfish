@@ -29,7 +29,6 @@ public interface InjectionResolverQuery {
    * the annotated annotation.
    *
    * @param component injection target instance
-   * @param onBehalfOf inhabitant doing the injection for
    * @param annotated is the annotated java element {@link java.lang.reflect.Method}
    * or {@link java.lang.reflect.Field}
    * @param genericType the generic type of the expected return

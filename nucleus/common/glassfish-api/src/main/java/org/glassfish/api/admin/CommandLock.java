@@ -39,7 +39,7 @@ public @interface CommandLock {
     /**
      * The type of command lock.
      */
-    public enum LockType {
+    enum LockType {
         NONE, SHARED, EXCLUSIVE
     }
 

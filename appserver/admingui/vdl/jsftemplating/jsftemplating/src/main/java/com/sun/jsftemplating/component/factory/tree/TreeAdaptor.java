@@ -79,7 +79,7 @@ public interface TreeAdaptor {
      *
      * <p>
      * Some useful options for the standard <code>TreeNode</code> component include:
-     * <p>
+     *
      *
      * <ul>
      * <li>text</li>

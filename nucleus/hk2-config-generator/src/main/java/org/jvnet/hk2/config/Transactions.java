@@ -125,7 +125,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
          * @param job contains the specifics of the notification like the events that need to be notified.
          * @return a task that can be run and return an optional value.
          */
-        protected abstract FutureTask<V> prepare(final Job<T, U, V> job);
+        protected abstract FutureTask<V> prepare(Job<T, U, V> job);
 
         /**
          * Adds a job to the notification pump. This job will be processed as soon as all other pending
@@ -201,7 +201,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
         final T listener;
 
-        public ListenerNotifier(T listener) {
+        ListenerNotifier(T listener) {
             this.listener = listener;
         }
 
@@ -339,7 +339,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
         private final CountDownLatch mLatch;
         protected final List<U> mEvents;
 
-        public Job(List<U> events, final CountDownLatch latch ) {
+        Job(List<U> events, final CountDownLatch latch ) {
             mLatch  = latch;
             mEvents = events;
         }
@@ -361,7 +361,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
     private static class TransactionListenerJob extends Job<TransactionListener, PropertyChangeEvent, Void> {
 
-        public TransactionListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
+        TransactionListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
             super(events,  latch);
         }
 
@@ -378,7 +378,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
     private static class UnprocessedEventsJob extends Job<TransactionListener, UnprocessedChangeEvents, Void> {
 
-        public UnprocessedEventsJob(List<UnprocessedChangeEvents> events, CountDownLatch latch) {
+        UnprocessedEventsJob(List<UnprocessedChangeEvents> events, CountDownLatch latch) {
             super(events, latch);
         }
 
@@ -397,7 +397,7 @@ public final class Transactions implements PostConstruct, PreDestroy {
 
         final PropertyChangeEvent[] eventsArray;
 
-        public ConfigListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
+        ConfigListenerJob(List<PropertyChangeEvent> events, CountDownLatch latch) {
             super(events, latch);
             eventsArray = mEvents.toArray(new PropertyChangeEvent[mEvents.size()]);
         }

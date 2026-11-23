@@ -120,7 +120,7 @@ public class ResourceSpec implements Serializable {
 
     /**
      * If the connectionpool exist then hashcode of connectionPoolName is returned.
-     * <p/>
+     * <p>
      * If connectionpool is null return the hashcode of resourceId + resourceIdType
      */
     @Override

@@ -51,7 +51,7 @@ public class ContextsAdapterUtility {
      * @param grizzlyNamingContext {@link org.glassfish.grizzly.http.server.naming.NamingContext}
      * @return {@link Context}
      * @throws IllegalArgumentException if passed Grizzly
-     * {@link final org.glassfish.grizzly.http.server.naming.NamingContext} is
+     * {@link org.glassfish.grizzly.http.server.naming.NamingContext} is
      * of unknown type (wasn't wrapped by this utility class).
      */
     public static Context unwrap(
@@ -91,7 +91,7 @@ public class ContextsAdapterUtility {
      * @param grizzlyDirContext {@link org.glassfish.grizzly.http.server.naming.DirContext}
      * @return {@link DirContext}
      * @throws IllegalArgumentException if passed Grizzly
-     * {@link final org.glassfish.grizzly.http.server.naming.DirContext} is not
+     * {@link org.glassfish.grizzly.http.server.naming.DirContext} is not
      * of unknown type (wasn't wrapped by this utility class).
      */
     public static DirContext unwrap(

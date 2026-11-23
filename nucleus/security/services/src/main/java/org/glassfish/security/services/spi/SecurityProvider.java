@@ -23,5 +23,5 @@ public interface SecurityProvider {
     /**
      * Initialize the security provider instance with the specific security provider configuration.
      */
-    public void initialize(org.glassfish.security.services.config.SecurityProvider providerConfig);
+    void initialize(org.glassfish.security.services.config.SecurityProvider providerConfig);
 }

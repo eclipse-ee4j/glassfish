@@ -66,13 +66,13 @@ public final class Table2Renderer extends RendererBase {
         "onMouseOver",
         "onMouseUp",
         "rules",
-        "summary"
+        "summary",
     };
 
     @Override
     protected String[] getModuleNames(final UIComponent component) {
         return new String[]{
-            "table2"
+            "table2",
         };
     }
 
@@ -167,7 +167,7 @@ public final class Table2Renderer extends RendererBase {
             filterText = Json.createValue(getTheme(context)
                     .getMessage("table.title.filterApplied",
                             new String[]{
-                                component.getFilterText()
+                                component.getFilterText(),
                             }));
         } else {
             filterText = JsonValue.NULL;

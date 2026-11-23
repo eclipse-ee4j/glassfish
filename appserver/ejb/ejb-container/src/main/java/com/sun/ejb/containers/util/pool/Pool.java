@@ -36,10 +36,7 @@ public interface Pool {
     /**
      * Get an object from the pool within the specified time.
      *
-     * @param The amount of time the calling thread agrees to wait.
-     * @param Some value that might be used while creating the object
      * @return an Object or null if an object could not be returned in 'waitForMillis' millisecond.
-     * @exception Throws PoolException if an object cannot be created
      */
     Object getObject(Object param) throws PoolException;
 

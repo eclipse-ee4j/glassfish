@@ -36,7 +36,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The description of this EJB.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -50,7 +50,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The name of the EJB home implementation class.
      */
-    private String home = null;
+    private String home;
 
     public String getHome() {
         return (this.home);
@@ -64,7 +64,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The link to a J2EE EJB definition.
      */
-    private String link = null;
+    private String link;
 
     public String getLink() {
         return (this.link);
@@ -78,7 +78,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The name of the EJB local implementation class.
      */
-    private String local = null;
+    private String local;
 
     public String getLocal() {
         return (this.local);
@@ -92,7 +92,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The name of this EJB.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -106,7 +106,7 @@ public class ContextLocalEjb extends ResourceBase {
     /**
      * The name of the EJB bean implementation class.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);

@@ -42,10 +42,10 @@ import java.util.List;
  */
 public class PropertyResolver {
 
-    private Domain _domain = null;
-    private Cluster _cluster = null;
-    private Server _server = null;
-    private Config _config = null;
+    private Domain _domain;
+    private Cluster _cluster;
+    private Server _server;
+    private Config _config;
 
     public PropertyResolver(Domain domain, String instanceName) {
         _domain = domain;

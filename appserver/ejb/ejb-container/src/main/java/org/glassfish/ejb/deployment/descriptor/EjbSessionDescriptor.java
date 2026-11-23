@@ -170,7 +170,7 @@ public class EjbSessionDescriptor extends EjbDescriptor implements com.sun.enter
 
     /**
      * Useful for certain annotation / .xml processing.  ejb-jar.xml might
-     * not set <session-type> if it's only being used for sparse overriding.
+     * not set &lt;session-type> if it's only being used for sparse overriding.
      */
     public boolean isSessionTypeSet() {
         return sessionTypeIsSet;

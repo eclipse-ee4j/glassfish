@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch;
 
 import org.jvnet.hk2.config.ConfigBean;
 
-/** used internally for the queue {@link PendindingConfigBeans} */
+/** used internally for the queue {@code PendindingConfigBeans} */
 public final class PendingConfigBeanJob
 {
     private final ConfigBean mConfigBean;

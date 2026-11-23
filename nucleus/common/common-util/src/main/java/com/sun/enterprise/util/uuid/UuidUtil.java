@@ -190,7 +190,6 @@ public class UuidUtil
      *
      * @param args
      *
-     * @audience
      */
     public static void main(String[] args) {
         System.out.println(UuidUtil.generateUuidMM());

@@ -59,7 +59,7 @@ public class SecurityConstraint implements Serializable {
      * Was the "all roles" wildcard included in the authorization constraints
      * for this security constraint?
      */
-    private boolean allRoles = false;
+    private boolean allRoles;
 
 
     /**
@@ -68,7 +68,7 @@ public class SecurityConstraint implements Serializable {
      * no roles (signifying no direct access at all) was requested, versus
      * a lack of auth-constraint which implies no access control checking.
      */
-    private boolean authConstraint = false;
+    private boolean authConstraint;
 
 
     /**
@@ -88,7 +88,7 @@ public class SecurityConstraint implements Serializable {
     /**
      * The display name of this security constraint.
      */
-    private String displayName = null;
+    private String displayName;
 
 
     /**

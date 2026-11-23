@@ -99,6 +99,6 @@ interface RequestItem {
      * Returns the item headers.
      * @return The items header object
      */
-    public PartHeaders getHeaders();
+    PartHeaders getHeaders();
 
 }

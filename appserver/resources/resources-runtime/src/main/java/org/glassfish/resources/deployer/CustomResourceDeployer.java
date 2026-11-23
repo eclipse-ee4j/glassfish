@@ -49,14 +49,14 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * Handles custom resource events in the server instance.
- * <p/>
+ * <p>
  * The custom resource events from the admin instance are propagated
  * to this object.
- * <p/>
+ * <p>
  * The methods can potentially be called concurrently, therefore implementation
  * need to be synchronized.
- * <p/>
- * <p/>
+ *
+ * <p>
  * Note: Since a notification is not sent to the user of the custom
  * resources upon undeploy, it is possible that there would be
  * stale objects not being garbage collected. Future versions

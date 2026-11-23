@@ -94,7 +94,7 @@ import static org.glassfish.external.amx.AMX.TYPE_KEY;
 public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl implements StatsProviderManagerDelegate {
 
     protected ProbeClientMediator pcm;
-    MonitoringService monitoringService = null;
+    MonitoringService monitoringService;
     private final MonitoringRuntimeDataRegistry mrdr;
     private final ProbeRegistry probeRegistry;
     private final Domain domain;
@@ -107,12 +107,12 @@ public class StatsProviderManagerDelegateImpl extends MBeanListener.CallbackImpl
     private String TYPE;
     private String NAME;
     private String PARENT_PATH;
-    private boolean AMXReady = false;
+    private boolean AMXReady;
     private StatsProviderRegistry statsProviderRegistry;
     private static final Logger logger = getLogger();
     private static final ResourceBundle rb = logger.getResourceBundle();
     public final static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(StatsProviderManagerDelegateImpl.class);
-    boolean ddebug = false;
+    boolean ddebug;
 
     StatsProviderManagerDelegateImpl(ProbeClientMediator pcm, ProbeRegistry probeRegistry, MonitoringRuntimeDataRegistry mrdr,
             Domain domain, String iName, MonitoringService monitoringService) {

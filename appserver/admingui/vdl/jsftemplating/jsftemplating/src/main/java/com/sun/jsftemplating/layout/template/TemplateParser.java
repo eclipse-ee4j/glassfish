@@ -157,7 +157,7 @@ public class TemplateParser {
      * like like one of these formats:
      * </p>
      *
-     * <code>
+     *
      *    <ul><li>keyName="keyValue"</li>
      *        <li>keyName='keyValue'</li>
      *        <li>"keyValue" (only if defName is supplied)</li>
@@ -166,7 +166,7 @@ public class TemplateParser {
      *        <li>keyName=&gt;$session{sessionKey}</li>
      *        <li>keyName=&gt;$page{pageSessionKey}</li>
      *        <li>keyName=&gt;$pageSession{pageSessionKey}</li></ul>
-     *    </code>
+     *
      *
      * <p>
      * In the first two formats, <code>keyName</code> must consist of letters, numbers, or the underscore '_' character.
@@ -626,12 +626,12 @@ public class TemplateParser {
      * It skips comments of the following types:
      * </p>
      *
-     * <code>
+     *
      *        <ul><li>//        -   Comment extends to the rest of the line.</li>
      *        <li>#        -   Comment extends to the rest of the line.</li>
      *        <li>/*        -   Comment extends until closing '*' and '/'.</li>
      *        <li>&lt;!-- -   Comment extends until closing --&gt;.</li></ul>
-     *    </code>
+     *
      *
      * @param skipChars The white space characters to skip
      *
@@ -765,16 +765,16 @@ public class TemplateParser {
      * this is:
      * </p>
      *
-     * <p>
+     *
      * <ul>
      * <li><code>" \t\r\n"</code></li>
      * </ul>
-     * </p>
+     *
      */
     public static final String SIMPLE_WHITE_SPACE = " \t\r\n";
 
-    private URL _url = null;
-    private InputStream _inputStream = null;
-    private transient BufferedReader _reader = null;
-    private transient Stack<Character> _stack = null;
+    private URL _url;
+    private InputStream _inputStream;
+    private transient BufferedReader _reader;
+    private transient Stack<Character> _stack;
 }

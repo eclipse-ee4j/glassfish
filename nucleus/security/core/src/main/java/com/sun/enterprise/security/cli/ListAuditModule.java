@@ -76,7 +76,7 @@ public class ListAuditModule implements AdminCommand, AdminCommandSecurity.Preau
     private Domain domain;
 
     @AccessRequired.To(value = "read")
-    private SecurityService securityService = null;
+    private SecurityService securityService;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

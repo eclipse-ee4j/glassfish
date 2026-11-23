@@ -90,7 +90,7 @@ class LogFileHandle {
      */
     static String MODE_READWRITENEW = "rw"/*#Frozen*/;    // wb+
 
-    static String dsyncProp = null;
+    static String dsyncProp;
 
     final static String DSYNC_PROPERTY = "com.sun.appserv.transaction.nofdsync";
 
@@ -105,13 +105,13 @@ class LogFileHandle {
 
     /**Instance information.
      */
-    private RandomAccessFile fhandle = null;
-    private FileDescriptor   fd      = null;
-    private byte[] bufferData = null;
-    boolean buffered = false;
+    private RandomAccessFile fhandle;
+    private FileDescriptor   fd;
+    private byte[] bufferData;
+    boolean buffered;
     int bufferUpdateStart = -1;
     int bufferUpdateEnd   = -1;
-    int buffPos = 0;
+    int buffPos;
 
     static {
         dsyncProp = System.getProperty(DSYNC_PROPERTY);

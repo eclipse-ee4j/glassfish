@@ -28,17 +28,17 @@ public final class FilterUtil implements FileFilter {
     /**
      * Filter string.
      */
-    private String filterString = null;
+    private String filterString;
 
     /**
      * Extension pattern.
      */
-    private String extPattern = null;
+    private String extPattern;
 
     /**
      * Name pattern.
      */
-    private String namePattern = null;
+    private String namePattern;
 
     /**
      * Create a new instance.

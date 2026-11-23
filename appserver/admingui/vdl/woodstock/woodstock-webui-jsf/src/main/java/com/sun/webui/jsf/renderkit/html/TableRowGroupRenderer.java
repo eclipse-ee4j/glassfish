@@ -51,12 +51,12 @@ import java.util.Map;
  * Note: Column headers and footers are rendered by TableRowGroupRenderer. Table
  * column footers are rendered by TableRenderer.
  * </p>
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableRowGroupRenderer.level = FINE
  * </pre>
- * </p>
+ *
  * <p>
  * See TLD docs for more information.
  * </p>
@@ -91,7 +91,7 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
         "onMouseOut",
         "onMouseOver",
         "style",
-        "valign"
+        "valign",
     };
 
     @Override
@@ -275,9 +275,10 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * </pre><p>
      * In this case, components would be rendered on separate rows. For example,
      * the HTML would look like:
-     * </p><pre>
+     * </p>
      *
      * <table border="1">
+     * <caption>Rendered HTML</caption>
      * <tr>
      * <th rowspan="2">A</th>
      * <th>1</th>
@@ -295,7 +296,7 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * </tr>
      * </table>
      *
-     * </pre><p>
+     * <p>
      * However, the current implementation will render only the first row, which
      * would look like:
      * </p><pre>
@@ -397,9 +398,10 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * </pre><p>
      * In this case, components would be rendered on separate rows. For example,
      * the HTML would look like:
-     * </p><pre>
+     * </p>
      *
      * <table border="1">
+     * <caption>Rendered HTML</caption>
      * <tr>
      * <th rowspan="2">A</th>
      * <th colspan="2">B</th>
@@ -416,8 +418,6 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * <th>6</th>
      * </tr>
      * </table>
-     *
-     * </pre>
      *
      * @param context FacesContext for the current request.
      * @param component TableRowGroup to be rendered.
@@ -512,9 +512,10 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * </pre><p>
      * In this case, components would be rendered on separate rows. For example,
      * the HTML would look like:
-     * </p><pre>
+     * </p>
      *
      * <table border="1">
+     * <caption>Rendered HTML</caption>
      * <tr>
      * <th rowspan="2">A</th>
      * <th>1</th>
@@ -532,7 +533,7 @@ public final class TableRowGroupRenderer extends jakarta.faces.render.Renderer {
      * </tr>
      * </table>
      *
-     * </pre><p>
+     * <p>
      * However, the current implementation will render only the first row, which
      * would look like:
      * </p><pre>

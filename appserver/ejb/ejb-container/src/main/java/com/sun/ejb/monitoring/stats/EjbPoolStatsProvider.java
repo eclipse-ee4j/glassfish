@@ -61,10 +61,10 @@ public class EjbPoolStatsProvider {
 
     private static final Logger _logger = EjbContainerUtilImpl.getLogger();
 
-    private String appName = null;
-    private String moduleName = null;
-    private String beanName = null;
-    private boolean registered = false;
+    private String appName;
+    private String moduleName;
+    private String beanName;
+    private boolean registered;
     private AbstractPool delegate;
     private long beanId;
 

@@ -34,7 +34,7 @@ public class Location implements ViewCapable, ContextLifecycle {
   public static final String KEY = "org.glassfish.contextpropagation.Location";
   private String origin;
   private String locationId;
-  private short lastChildId = 0;
+  private short lastChildId;
 
   /*
    * Implemented as a ViewCapable custom context so that Location may be

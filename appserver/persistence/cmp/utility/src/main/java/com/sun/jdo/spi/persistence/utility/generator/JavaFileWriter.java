@@ -52,7 +52,7 @@ public interface JavaFileWriter
      * to make use of this comment.
      * @throws IOException If the package cannot be set.
      */
-    public void setPackage (String packageName, String[] comments)
+    void setPackage (String packageName, String[] comments)
         throws IOException;
 
     /** Adds an import statement for this source file.
@@ -64,19 +64,19 @@ public interface JavaFileWriter
      * to make use of this comment.
      * @throws IOException If the import information cannot be added.
      */
-    public void addImport (String importName, String[] comments)
+    void addImport (String importName, String[] comments)
         throws IOException;
 
     /** Adds a class to this source file.
      * @param classWriter The definition of the class.
      * @throws IOException If the class information cannot be added.
      */
-    public void addClass (JavaClassWriter classWriter) throws IOException;
+    void addClass (JavaClassWriter classWriter) throws IOException;
 
     /** Saves the file by writing out the source contents to whatever
      * file (or alternate representation) was specified (usually by the
      * constructor of the implementation class.
      * @throws IOException If the file cannot be saved.
      */
-    public void save () throws IOException;
+    void save () throws IOException;
 }

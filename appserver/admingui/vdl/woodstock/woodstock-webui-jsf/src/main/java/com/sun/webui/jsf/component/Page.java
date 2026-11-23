@@ -57,12 +57,12 @@ public final class Page extends UIComponentBase {
      */
     @Property(name = "frame",
             displayName = "Needs Frame", category = "Appearance")
-    private boolean frame = false;
+    private boolean frame;
 
     /**
      * frame set flag.
      */
-    private boolean frameSet = false;
+    private boolean frameSet;
 
     /**
      * <span>XHTML transitional page or HTML
@@ -85,12 +85,12 @@ public final class Page extends UIComponentBase {
     @Property(name = "xhtml",
             displayName = "XHTML Transitional",
             category = "Appearance")
-    private boolean xhtml = false;
+    private boolean xhtml;
 
     /**
      * xmhtml set flag.
      */
-    private boolean xhtmlSet = false;
+    private boolean xhtmlSet;
 
     /**
      * Create a new instance.

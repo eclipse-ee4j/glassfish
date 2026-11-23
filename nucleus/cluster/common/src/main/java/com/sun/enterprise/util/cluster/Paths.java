@@ -29,7 +29,7 @@ public final class Paths {
     public final static String DAS_PROPS_SUBPATH =  "agent/config/" + DAS_PROPS_FILENAME;
 
     // TODO: the Node class ought to do this!
-    public final static String getNodesDir(final Node node) {
+    public static String getNodesDir(final Node node) {
         if (node == null) // don't do that!
             throw new NullPointerException();
 
@@ -41,11 +41,11 @@ public final class Paths {
         return nodesDir;
     }
 
-    public final static String getNodeDir(final Node node) {
+    public static String getNodeDir(final Node node) {
         return getNodesDir(node) + "/" + node.getName();
     }
 
-    public final static String getDasPropsPath(final Node node) {
+    public static String getDasPropsPath(final Node node) {
         return getNodeDir(node) + "/" + DAS_PROPS_SUBPATH;
     }
 

@@ -36,14 +36,14 @@ public interface SpecialDBOperation {
      * @param identifier Identifier of object used to obtain databaseMetaData.
      * This can be null in non managed environment.
      */
-    public void initialize(DatabaseMetaData metaData,
+    void initialize(DatabaseMetaData metaData,
         String identifier) throws SQLException;
     /**
      * Defines column type for result.
      * @param ps java.sql.PreparedStatement
      * @param columns List of ColumnElement corresponding to select clause
      */
-    public void defineColumnTypeForResult(
+    void defineColumnTypeForResult(
         PreparedStatement ps, List columns) throws SQLException;
 
     /**
@@ -54,7 +54,7 @@ public interface SpecialDBOperation {
      * @param strVal value that needs to bound.
      * @param length length of the column to which strVal is bound.
      */
-    public void bindFixedCharColumn(PreparedStatement ps,
+    void bindFixedCharColumn(PreparedStatement ps,
          int index, String strVal, int length) throws SQLException;
 
 }

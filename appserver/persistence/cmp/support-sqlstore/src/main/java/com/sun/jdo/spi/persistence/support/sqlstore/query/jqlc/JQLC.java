@@ -71,25 +71,25 @@ public class JQLC
     protected Class<?> candidateClass;
 
     /** */
-    protected JQLAST filterAST = null;
+    protected JQLAST filterAST;
 
     /** */
-    protected JQLAST importsAST = null;
+    protected JQLAST importsAST;
 
     /** */
-    protected JQLAST varsAST = null;
+    protected JQLAST varsAST;
 
     /** */
-    protected JQLAST paramsAST = null;
+    protected JQLAST paramsAST;
 
     /** */
-    protected JQLAST orderingAST = null;
+    protected JQLAST orderingAST;
 
     /** */
-    protected JQLAST resultAST = null;
+    protected JQLAST resultAST;
 
     /** */
-    protected JQLAST queryAST = null;
+    protected JQLAST queryAST;
 
     /** */
     private boolean prefetchEnabled;

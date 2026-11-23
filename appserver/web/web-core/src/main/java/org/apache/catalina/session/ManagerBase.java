@@ -75,7 +75,7 @@ public abstract class ManagerBase implements Manager {
 
     // ----------------------------------------------------- Instance Variables
 
-    protected DataInputStream randomIS = null;
+    protected DataInputStream randomIS;
     protected String devRandomSource = "/dev/urandom";
 
     /**
@@ -86,7 +86,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * The debugging detail level for this component.
      */
-    protected int debug = 0;
+    protected int debug;
 
     /**
      * The distributable flag for Sessions created by this Manager. If this flag is set to <code>true</code>, any user
@@ -97,7 +97,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * A String initialization parameter used to increase the entropy of the initialization of our random number generator.
      */
-    protected String entropy = null;
+    protected String entropy;
 
     // START OF 6364900
     /**
@@ -129,7 +129,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * A random number generator to use when generating session identifiers.
      */
-    private Random random = null;
+    private Random random;
 
     /**
      * The Uuid Generator to be used when generating universally unique session identifiers. HERCULES: add
@@ -154,7 +154,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * Number of sessions that have expired.
      */
-    protected int expiredSessions = 0;
+    protected int expiredSessions;
 
     /**
      * The set of currently active Sessions for this Manager, keyed by session identifier.
@@ -162,16 +162,16 @@ public abstract class ManagerBase implements Manager {
     protected Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
 
     // Number of sessions created by this manager
-    protected int sessionCounter = 0;
+    protected int sessionCounter;
 
-    protected volatile int maxActive = 0;
+    protected volatile int maxActive;
 
     protected final Object maxActiveUpdateLock = new Object();
 
     // number of duplicated session ids - anything >0 means we have problems
-    protected int duplicates = 0;
+    protected int duplicates;
 
-    protected boolean initialized = false;
+    protected boolean initialized;
 
     /**
      * The property change support for this component.
@@ -181,7 +181,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * Number of times a session was not created because the maximum number of active sessions had been reached.
      */
-    protected int rejectedSessions = 0;
+    protected int rejectedSessions;
 
     // ------------------------------------------------------- Security classes
     private class PrivilegedSetRandomFile implements PrivilegedAction<DataInputStream> {

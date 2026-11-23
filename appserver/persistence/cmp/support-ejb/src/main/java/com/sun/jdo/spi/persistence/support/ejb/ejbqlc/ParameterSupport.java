@@ -57,7 +57,7 @@ public class ParameterSupport
     /**
      * Returns type of the EJBQL parameter by input parameter declaration
      * string. The specified string denotes a parameter application in EJBQL.
-     * It has the form "?<number>" where <number> is the parameter number
+     * It has the form "?&lt;number&gt;" where &lt;number&gt; is the parameter number
      * starting with 1.
      * @return class instance representing the parameter type.
      */
@@ -83,7 +83,7 @@ public class ParameterSupport
      * Get EJB name corresponding to the EJBQL parameter by input
      * parameter declaration string.
      * @param ejbqlParamDecl denotes a parameter application in EJBQL.
-     * It has the form "?<number>" where <number> is the parameter number
+     * It has the form "?&lt;number&gt;" where &lt;number&gt; is the parameter number
      * starting with 1.
      * @return class instance representing the parameter type.
      */
@@ -106,7 +106,7 @@ public class ParameterSupport
      * Set EJB name corresponding to the EJBQL parameter by input
      * parameter declaration string.
      * @param ejbqlParamDecl denotes a parameter application in EJBQL.
-     * It has the form "?<number>" where <number> is the parameter number
+     * It has the form "?&lt;number&gt;" where &lt;number&gt; is the parameter number
      * starting with 1.
      * @param ejbName
      */
@@ -127,7 +127,7 @@ public class ParameterSupport
     /**
      * Returns the name of the corresponding JDO parameter.
      * The specified string denotes a parameter application in EJBQL.
-     * It has the form "?<number>" where <number> is the parameter number
+     * It has the form "?&lt;number&gt;" where &lt;number&gt; is the parameter number
      * starting with 1.
      * @return name of JDOQL parameter
      */

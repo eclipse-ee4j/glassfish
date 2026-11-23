@@ -68,7 +68,7 @@ public class CreateChildEvent extends EventObjectBase implements UIComponentHold
      * <p>
      * This setter allows extending classes to set this value via this setter. Normally this value is passed into the
      * constructor.
-     * <p>
+     *
      */
     protected void setData(Object data) {
         _data = data;
@@ -87,5 +87,5 @@ public class CreateChildEvent extends EventObjectBase implements UIComponentHold
      * more about what (if anything) this information is used for.
      * </p>
      */
-    private Object _data = null;
+    private Object _data;
 }

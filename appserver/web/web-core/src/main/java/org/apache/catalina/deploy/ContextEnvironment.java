@@ -35,7 +35,7 @@ public class ContextEnvironment extends ResourceBase {
     /**
      * The description of this environment entry.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -49,7 +49,7 @@ public class ContextEnvironment extends ResourceBase {
     /**
      * The name of this environment entry.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -78,7 +78,7 @@ public class ContextEnvironment extends ResourceBase {
     /**
      * The type of this environment entry.
      */
-    private String type = null;
+    private String type;
 
     public String getType() {
         return (this.type);
@@ -92,7 +92,7 @@ public class ContextEnvironment extends ResourceBase {
     /**
      * The value of this environment entry.
      */
-    private String value = null;
+    private String value;
 
     public String getValue() {
         return (this.value);

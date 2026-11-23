@@ -356,10 +356,10 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         String clusterName;
 
         @Param(name = PARAM_NODE, optional = true)
-        String node = null;
+        String node;
 
         @Param(name = PARAM_LBENABLED, optional = true)
-        String lbEnabled = null;
+        String lbEnabled;
 
         @Param(name = PARAM_CHECKPORTS, optional = true, defaultValue = "true")
         boolean checkPorts = true;

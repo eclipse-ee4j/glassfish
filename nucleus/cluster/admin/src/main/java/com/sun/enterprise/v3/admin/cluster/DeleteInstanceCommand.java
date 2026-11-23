@@ -90,7 +90,7 @@ public class DeleteInstanceCommand implements AdminCommand {
     private String nodedir;
     private Logger logger;
     private String instanceHost;
-    private Node theNode = null;
+    private Node theNode;
 
     @Override
     public void execute(AdminCommandContext ctx) {

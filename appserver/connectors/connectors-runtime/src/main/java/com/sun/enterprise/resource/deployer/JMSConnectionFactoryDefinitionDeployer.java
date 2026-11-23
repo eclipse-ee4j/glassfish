@@ -320,7 +320,7 @@ public class JMSConnectionFactoryDefinitionDeployer implements ResourceDeployer<
         private final JMSConnectionFactoryDefinitionDescriptor desc;
         private final SimpleJndiName name;
 
-        public MyJMSConnectionFactoryConnectionPool(JMSConnectionFactoryDefinitionDescriptor desc, SimpleJndiName name) {
+        MyJMSConnectionFactoryConnectionPool(JMSConnectionFactoryDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }

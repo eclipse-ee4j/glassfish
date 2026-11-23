@@ -25,7 +25,7 @@ import java.security.spec.AlgorithmParameterSpec;
  */
 public interface NestedDigestAlgoParam extends DigestAlgorithmParameter {
     /**
-     * @returns array of parameter values.
+     * @return array of parameter values.
      */
-    public AlgorithmParameterSpec[] getNestedParams();
+    AlgorithmParameterSpec[] getNestedParams();
 }

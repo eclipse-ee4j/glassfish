@@ -30,7 +30,7 @@ public class Utility {
 
     // static variables
 
-    private static org.omg.CosTransactions.Current current = null;
+    private static org.omg.CosTransactions.Current current;
 
     /*
      * All Utility methods are static.

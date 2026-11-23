@@ -76,7 +76,7 @@ public class PluginHandlers {
      *
      * @param        ctx The <code>FacesContext</code>.
      *
-     * @returns The <code>ConsolePluginService</code>.
+     * @return The <code>ConsolePluginService</code>.
      */
     public static ConsolePluginService getPluginService(FacesContext ctx) {
         // We need to get the ServletContext to find the Habitat

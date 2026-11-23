@@ -36,7 +36,7 @@ import org.glassfish.api.admin.ParameterMap;
 /**
  * This resource is used to view the current state of a specific job.
  * <h2>Example Interactions</h2>
- * <h4>View a specific detached job</h4>
+ * <h3>View a specific detached job</h3>
  *
  * <div class="codeblock"> $ curl --user admin:admin123 -v \ -H Accept:application/vnd.oracle.glassfish+json \ -H
  * Content-Type:application/vnd.oracle.glassfish+json \ -H X-Requested-By:MyClient \

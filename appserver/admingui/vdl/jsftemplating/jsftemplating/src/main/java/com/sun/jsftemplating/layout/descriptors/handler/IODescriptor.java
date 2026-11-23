@@ -201,11 +201,11 @@ public class IODescriptor implements java.io.Serializable {
         _typeMap.put("Object", Object.class);
     }
 
-    private String _name = null;
-    private String _description = null;
-    private Object _default = null; // Input only
+    private String _name;
+    private String _description;
+    private Object _default; // Input only
     private Class _type = Object.class;
-    private boolean _required = false; // Input only
+    private boolean _required; // Input only
 
     private static final long serialVersionUID = 0xA9B8C7D6E5F40312L;
 }

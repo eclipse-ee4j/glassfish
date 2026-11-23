@@ -47,12 +47,12 @@ public interface CrudResolver {
     <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, Class<T> type);
 
     @Service
-    public static final class DefaultResolver implements CrudResolver {
+    final class DefaultResolver implements CrudResolver {
 
         @Inject
         @Named("type")
         @Optional
-        CrudResolver defaultResolver = null;
+        CrudResolver defaultResolver;
 
         @Override
         public <T extends ConfigBeanProxy> T resolve(AdminCommandContext context, Class<T> type) {

@@ -156,7 +156,7 @@ public class AdminguiThemeContext extends ServletThemeContext {
      * This hold a reference to an instance of JSFThemeContext which
      * will help us implement the functionality of this class.
      */
-    private ThemeContext jsfThemeCtx = null;
+    private ThemeContext jsfThemeCtx;
 
     /**
      * These keys are used when getting the property values

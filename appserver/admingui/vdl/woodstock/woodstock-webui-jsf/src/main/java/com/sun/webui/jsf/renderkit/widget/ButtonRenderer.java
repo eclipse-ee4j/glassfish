@@ -58,7 +58,7 @@ public final class ButtonRenderer extends RendererBase {
         "onMouseUp",
         "onMouseMove",
         "style",
-        "tabIndex"
+        "tabIndex",
     };
 
     @Override
@@ -91,7 +91,7 @@ public final class ButtonRenderer extends RendererBase {
     @Override
     protected String[] getModuleNames(final UIComponent component) {
         return new String[] {
-            "button"
+            "button",
         };
     }
 

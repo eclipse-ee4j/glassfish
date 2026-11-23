@@ -31,7 +31,7 @@ public interface DiagnosticDump
    *
    * @return the dump description.
    */
-  public String getDescription();
+  String getDescription();
 
   /**
    * Gets a list of log message id's that, if logged, should trigger
@@ -39,6 +39,6 @@ public interface DiagnosticDump
    *
    * @return list of message id's that trigger the execution of this dump.
    */
-  public String[] getTriggerMessageIds();
+  String[] getTriggerMessageIds();
 }
 

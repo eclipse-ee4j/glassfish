@@ -1591,7 +1591,7 @@ public class CommandRunnerImpl implements CommandRunner<AdminCommandJob> {
         private final CommandParameters parameters;
         private final MultiMap<String, File> optionNameToUploadedFileMap;
 
-        public DelegatedInjectionResolver(CommandModel model, CommandParameters parameters,
+        DelegatedInjectionResolver(CommandModel model, CommandParameters parameters,
             final MultiMap<String, File> optionNameToUploadedFileMap) {
             super(Param.class);
             this.model = model;
@@ -1700,7 +1700,7 @@ public class CommandRunnerImpl implements CommandRunner<AdminCommandJob> {
         private final Class<? extends AdminCommand> clazz;
         private int hash; //immutable, we can cache it
 
-        public NameCommandClassPair(String name, Class<? extends AdminCommand> clazz) {
+        NameCommandClassPair(String name, Class<? extends AdminCommand> clazz) {
             this.name = name;
             this.clazz = clazz;
             hash = 3;

@@ -42,13 +42,13 @@ public class CounterImpl extends AbstractTreeNode implements Counter {
     /** DEFAULT_VALUE of any statistic is 0 */
     protected static final String NEWLINE = System.getProperty("line.separator");
     private AtomicLong count = new AtomicLong(0);
-    long max = 0;
-    long min = 0;
+    long max;
+    long min;
     private AtomicLong lastSampleTime = new AtomicLong();
     private String DESCRIPTION = "Counter CountStatistic";
     private String UNIT = java.lang.Long.class.toString();
 
-    private long startTime = 0;
+    private long startTime;
 
     public CounterImpl() {
         startTime = System.currentTimeMillis();

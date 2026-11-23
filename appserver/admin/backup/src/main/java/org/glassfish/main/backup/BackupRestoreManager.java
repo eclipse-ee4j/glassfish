@@ -29,7 +29,7 @@ import java.io.File;
 
 abstract class BackupRestoreManager {
 
-    public BackupRestoreManager(BackupRequest req) throws BackupException {
+    BackupRestoreManager(BackupRequest req) throws BackupException {
         if(req == null)
             throw new BackupException("backup-res.InternalError",
                 getClass().getName() + ".ctor: null BackupRequest object");
@@ -99,5 +99,5 @@ abstract class BackupRestoreManager {
 
 
     BackupRequest   request;
-    private boolean wasInitialized = false;
+    private boolean wasInitialized;
 }

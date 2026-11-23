@@ -41,11 +41,11 @@ public interface Pathnames extends AMXProxy, Utility, Singleton
 {
     /** Resolve a path to an ObjectName.  Any aliasing, etc is dealt with.  Return null if failure. */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public ObjectName  resolvePath( final String path );
+    ObjectName  resolvePath( String path );
 
     /** Paths that don't resolve result in a null entry */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public ObjectName[]  resolvePaths( final String[] paths );
+    ObjectName[]  resolvePaths( String[] paths );
 
     /**
         An efficient way to get the list of MBeans from DomainRoot on down to the specified
@@ -54,32 +54,32 @@ public interface Pathnames extends AMXProxy, Utility, Singleton
         If the MBean does not exist, null will be returned.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public ObjectName[] ancestors( final ObjectName objectName );
+    ObjectName[] ancestors( ObjectName objectName );
 
     /**
         Resolves the path to an ObjectName, then calls ancestors(objectName).
         Any aliasing or special handling will be dealt with.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public ObjectName[] ancestors( final String path );
+    ObjectName[] ancestors( String path );
 
     /**
         List descendant ObjectNames.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public ObjectName[]  listObjectNames( final String path, final boolean recursive);
+    ObjectName[]  listObjectNames( String path, boolean recursive);
 
     /**
         List descendant paths.
      */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[] listPaths( final String path, boolean recursive );
+    String[] listPaths( String path, boolean recursive );
 
     @ManagedAttribute
-    public String[] getAllPathnames();
+    String[] getAllPathnames();
 
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[] dump( final String path );
+    String[] dump( String path );
 }
 
 

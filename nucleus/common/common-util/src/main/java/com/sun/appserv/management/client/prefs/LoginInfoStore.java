@@ -39,7 +39,7 @@ public interface LoginInfoStore {
      * @throws StoreException if there is something wrong with reading the store
      * @throws IllegalArgumentException if the parameter host is null
      */
-    public LoginInfo read(final String host, final int port) throws StoreException;
+    LoginInfo read(String host, int port) throws StoreException;
 
     /**
      * Removes the {@link LoginInfo} corresponding to the given host and port, from this store.
@@ -52,7 +52,7 @@ public interface LoginInfoStore {
      *         no such LoginInfo
      * @throws IllegalArgumentException if the parameter host is null
      */
-    public void remove(final String host, final int port) throws StoreException;
+    void remove(String host, int port) throws StoreException;
 
     /**
      * Stores the given LoginInfo in this store. Given LoginInfo may not be null.
@@ -63,7 +63,7 @@ public interface LoginInfoStore {
      * with given host and port
      * @throws IllegalArgumentException if the given LoginInfo is null
      */
-    public void store(final LoginInfo login) throws StoreException;
+    void store(LoginInfo login) throws StoreException;
 
     /**
      * Stores the given LoginInfo in this store. Given LoginInfo may not be null.
@@ -77,7 +77,7 @@ public interface LoginInfoStore {
      * the LoginInfo with given host and port already exists
      * @throws IllegalArgumentException if the given LoginInfo is null
      */
-    public void store(final LoginInfo login, final boolean overwrite) throws StoreException;
+    void store(LoginInfo login, boolean overwrite) throws StoreException;
 
    /**
      * Checks whether a LoginInfo for given host and port exists in this store.
@@ -85,7 +85,7 @@ public interface LoginInfoStore {
      * @param port an integer specifying the port number
      * @throws StoreException if there's any problem reading the store
      */
-    public boolean exists(final String host, final int port) throws StoreException;
+    boolean exists(String host, int port) throws StoreException;
 
     /**
      * A convenience method that returns the Collection of LoginInfo instances stored in this store.
@@ -93,7 +93,7 @@ public interface LoginInfoStore {
      * @return the Collection of LoginInfo instances
      * @throws StoreException if there's any problem reading the store
      */
-    public Collection<LoginInfo> list() throws StoreException;
+    Collection<LoginInfo> list() throws StoreException;
 
     /**
      * A convenience method that returns the number of LoginInfo instances stored in this store.
@@ -101,10 +101,10 @@ public interface LoginInfoStore {
      * @return an integer representing number of stored login information elements, 0 if none
      * @throws StoreException if there's any problem reading the store
      */
-    public int size() throws StoreException;
+    int size() throws StoreException;
 
     /** Returns the name of the store.
      * This is any name that the store implementation wants to use for identification, for instance.
      */
-    public String getName();
+    String getName();
 }

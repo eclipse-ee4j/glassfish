@@ -73,7 +73,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * <code>ResultSet</code> cursor is initially positioned before the first row;
      * the first call to the method <code>next</code> makes the first row the
      * current row; the second call makes the second row the current row, and so on.
-     * <p/>
+     *
      * <P>
      * If an input stream is open for the current row, a call to the method
      * <code>next</code> will implicitly close it. A <code>ResultSet</code> object's
@@ -91,7 +91,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Releases this <code>ResultSet</code> object's database and JDBC resources
      * immediately instead of waiting for this to happen when it is automatically
      * closed.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> A <code>ResultSet</code> object is automatically closed by the
      * <code>Statement</code> object that generated it when that
@@ -312,9 +312,9 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Retrieves the value of the designated column in the current row of this
      * <code>ResultSet</code> object as a stream of ASCII characters. The value can
      * then be read in chunks from the stream. This method is particularly suitable
-     * for retrieving large <char>LONGVARCHAR</char> values. The JDBC driver will do
+     * for retrieving large &lt;char&gt;LONGVARCHAR&lt;/char&gt; values. The JDBC driver will do
      * any necessary conversion from the database format into ASCII.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -336,12 +336,12 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Retrieves the value of the designated column in the current row of this
      * <code>ResultSet</code> object as as a stream of two-byte Unicode characters.
      * The first byte is the high byte; the second byte is the low byte.
-     * <p/>
+     * <p>
      * The value can then be read in chunks from the stream. This method is
      * particularly suitable for retrieving large <code>LONGVARCHAR</code>values.
      * The JDBC driver will do any necessary conversion from the database format
      * into Unicode.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -367,7 +367,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * <code>ResultSet</code> object as a binary stream of uninterpreted bytes. The
      * value can then be read in chunks from the stream. This method is particularly
      * suitable for retrieving large <code>LONGVARBINARY</code> values.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -576,7 +576,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * then be read in chunks from the stream. This method is particularly suitable
      * for retrieving large <code>LONGVARCHAR</code> values. The JDBC driver will do
      * any necessary conversion from the database format into ASCII.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -598,12 +598,12 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Retrieves the value of the designated column in the current row of this
      * <code>ResultSet</code> object as a stream of two-byte Unicode characters. The
      * first byte is the high byte; the second byte is the low byte.
-     * <p/>
+     * <p>
      * The value can then be read in chunks from the stream. This method is
      * particularly suitable for retrieving large <code>LONGVARCHAR</code> values.
      * The JDBC technology-enabled driver will do any necessary conversion from the
      * database format into Unicode.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -629,7 +629,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * <code>byte</code>s. The value can then be read in chunks from the stream.
      * This method is particularly suitable for retrieving large
      * <code>LONGVARBINARY</code> values.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> All the data in the returned stream must be read prior to
      * getting the value of any other column. The next call to a getter method
@@ -651,12 +651,12 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Retrieves the first warning reported by calls on this <code>ResultSet</code>
      * object. Subsequent warnings on this <code>ResultSet</code> object will be
      * chained to the <code>SQLWarning</code> object that this method returns.
-     * <p/>
+     *
      * <P>
      * The warning chain is automatically cleared each time a new row is read. This
      * method may not be called on a <code>ResultSet</code> object that has been
      * closed; doing so will cause an <code>SQLException</code> to be thrown.
-     * <p/>
+     * <p>
      * <B>Note:</B> This warning chain only covers warnings caused by
      * <code>ResultSet</code> methods. Any warning caused by <code>Statement</code>
      * methods (such as reading OUT parameters) will be chained on the
@@ -686,7 +686,7 @@ public abstract class ResultSetWrapper implements ResultSet {
     /**
      * Retrieves the name of the SQL cursor used by this <code>ResultSet</code>
      * object.
-     * <p/>
+     *
      * <P>
      * In SQL, a result table is retrieved through a cursor that is named. The
      * current row of a result set can be updated or deleted using a positioned
@@ -695,12 +695,12 @@ public abstract class ResultSetWrapper implements ResultSet {
      * <code>SELECT</code> statement should be of the form
      * <code>SELECT FOR UPDATE</code>. If <code>FOR UPDATE</code> is omitted, the
      * positioned updates may fail.
-     * <p/>
+     *
      * <P>
      * The JDBC API supports this SQL feature by providing the name of the SQL
      * cursor used by a <code>ResultSet</code> object. The current row of a
      * <code>ResultSet</code> object is also the current row of this SQL cursor.
-     * <p/>
+     *
      * <P>
      * <B>Note:</B> If positioned update is not supported, a
      * <code>SQLException</code> is thrown.
@@ -728,17 +728,17 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Gets the value of the designated column in the current row of this
      * <code>ResultSet</code> object as an <code>Object</code> in the Java
      * programming language.
-     * <p/>
+     *
      * <p>
      * This method will return the value of the given column as a Java object. The
      * type of the Java object will be the default Java object type corresponding to
      * the column's SQL type, following the mapping for built-in types specified in
      * the JDBC specification. If the value is an SQL <code>NULL</code>, the driver
      * returns a Java <code>null</code>.
-     * <p/>
+     *
      * <p>
      * This method may also be used to read database-specific abstract data types.
-     * <p/>
+     * <p>
      * In the JDBC 2.0 API, the behavior of method <code>getObject</code> is
      * extended to materialize data of SQL user-defined types. When a column
      * contains a structured or distinct value, the behavior of this method is as if
@@ -758,16 +758,16 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Gets the value of the designated column in the current row of this
      * <code>ResultSet</code> object as an <code>Object</code> in the Java
      * programming language.
-     * <p/>
+     *
      * <p>
      * This method will return the value of the given column as a Java object. The
      * type of the Java object will be the default Java object type corresponding to
      * the column's SQL type, following the mapping for built-in types specified in
      * the JDBC specification. If the value is an SQL <code>NULL</code>, the driver
      * returns a Java <code>null</code>.
-     * <p/>
+     * <p>
      * This method may also be used to read database-specific abstract data types.
-     * <p/>
+     * <p>
      * In the JDBC 2.0 API, the behavior of the method <code>getObject</code> is
      * extended to materialize data of SQL user-defined types. When a column
      * contains a structured or distinct value, the behavior of this method is as if
@@ -979,23 +979,23 @@ public abstract class ResultSetWrapper implements ResultSet {
     /**
      * Moves the cursor to the given row number in this <code>ResultSet</code>
      * object.
-     * <p/>
+     *
      * <p>
      * If the row number is positive, the cursor moves to the given row number with
      * respect to the beginning of the result set. The first row is row 1, the
      * second is row 2, and so on.
-     * <p/>
+     *
      * <p>
      * If the given row number is negative, the cursor moves to an absolute row
      * position with respect to the end of the result set. For example, calling the
      * method <code>absolute(-1)</code> positions the cursor on the last row;
      * calling the method <code>absolute(-2)</code> moves the cursor to the
      * next-to-last row, and so on.
-     * <p/>
+     *
      * <p>
      * An attempt to position the cursor beyond the first/last row in the result set
      * leaves the cursor before the first row or after the last row.
-     * <p/>
+     *
      * <p>
      * <B>Note:</B> Calling <code>absolute(1)</code> is the same as calling
      * <code>first()</code>. Calling <code>absolute(-1)</code> is the same as
@@ -1020,7 +1020,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * Attempting to move beyond the first/last row in the result set positions the
      * cursor before/after the the first/last row. Calling <code>relative(0)</code>
      * is valid, but does not change the cursor position.
-     * <p/>
+     *
      * <p>
      * Note: Calling the method <code>relative(1)</code> is identical to calling the
      * method <code>next()</code> and calling the method <code>relative(-1)</code>
@@ -1095,7 +1095,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      *
      * @param rows the number of rows to fetch
      * @throws java.sql.SQLException if a database access error occurs or the
-     * condition <code>0 <= rows <= Statement.getMaxRows()</code> is not satisfied
+     * condition <code>0 &lt;= rows &lt;= Statement.getMaxRows()</code> is not satisfied
      * @see #getFetchSize
      * @since 1.2
      */
@@ -1190,7 +1190,7 @@ public abstract class ResultSetWrapper implements ResultSet {
 
     /**
      * Gives a nullable column a null value.
-     * <p/>
+     * <p>
      * The updater methods are used to update column values in the current row or
      * the insert row. The updater methods do not update the underlying database;
      * instead the <code>updateRow</code> or <code>insertRow</code> methods are
@@ -1659,7 +1659,7 @@ public abstract class ResultSetWrapper implements ResultSet {
 
     /**
      * Updates the designated column with a byte array value.
-     * <p/>
+     * <p>
      * The updater methods are used to update column values in the current row or
      * the insert row. The updater methods do not update the underlying database;
      * instead the <code>updateRow</code> or <code>insertRow</code> methods are
@@ -1852,7 +1852,7 @@ public abstract class ResultSetWrapper implements ResultSet {
     /**
      * Refreshes the current row with its most recent value in the database. This
      * method cannot be called when the cursor is on the insert row.
-     * <p/>
+     *
      * <P>
      * The <code>refreshRow</code> method provides a way for an application to
      * explicitly tell the JDBC driver to refetch a row(s) from the database. An
@@ -1860,7 +1860,7 @@ public abstract class ResultSetWrapper implements ResultSet {
      * prefetching is being done by the JDBC driver to fetch the latest value of a
      * row from the database. The JDBC driver may actually refresh multiple rows at
      * once if the fetch size is greater than one.
-     * <p/>
+     *
      * <P>
      * All values are refetched subject to the transaction isolation level and
      * cursor sensitivity. If <code>refreshRow</code> is called after calling an
@@ -1894,11 +1894,11 @@ public abstract class ResultSetWrapper implements ResultSet {
     /**
      * Moves the cursor to the insert row. The current cursor position is remembered
      * while the cursor is positioned on the insert row.
-     * <p/>
+     * <p>
      * The insert row is a special row associated with an updatable result set. It
      * is essentially a buffer where a new row may be constructed by calling the
      * updater methods prior to inserting the row into the result set.
-     * <p/>
+     * <p>
      * Only the updater, getter, and <code>insertRow</code> methods may be called
      * when the cursor is on the insert row. All of the columns in a result set must
      * be given a value each time this method is called before calling

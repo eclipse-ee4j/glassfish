@@ -62,7 +62,7 @@ public class JDBCStore extends StoreBase {
     /**
      * Context name associated with this Store
      */
-    private String name = null;
+    private String name;
 
     /**
      * Name to register for this Store, used for logging.
@@ -77,17 +77,17 @@ public class JDBCStore extends StoreBase {
     /**
      * Connection string to use when connecting to the DB.
      */
-    protected String connString = null;
+    protected String connString;
 
     /**
      * The database connection.
      */
-    private Connection conn = null;
+    private Connection conn;
 
     /**
      * Driver to use.
      */
-    protected String driverName = null;
+    protected String driverName;
 
     // ------------------------------------------------------------- Table & cols
 
@@ -131,32 +131,32 @@ public class JDBCStore extends StoreBase {
     /**
      * Variable to hold the <code>getSize()</code> prepared statement.
      */
-    protected PreparedStatement preparedSizeSql = null;
+    protected PreparedStatement preparedSizeSql;
 
     /**
      * Variable to hold the <code>keys()</code> prepared statement.
      */
-    protected PreparedStatement preparedKeysSql = null;
+    protected PreparedStatement preparedKeysSql;
 
     /**
      * Variable to hold the <code>save()</code> prepared statement.
      */
-    protected PreparedStatement preparedSaveSql = null;
+    protected PreparedStatement preparedSaveSql;
 
     /**
      * Variable to hold the <code>clear()</code> prepared statement.
      */
-    protected PreparedStatement preparedClearSql = null;
+    protected PreparedStatement preparedClearSql;
 
     /**
      * Variable to hold the <code>remove()</code> prepared statement.
      */
-    protected PreparedStatement preparedRemoveSql = null;
+    protected PreparedStatement preparedRemoveSql;
 
     /**
      * Variable to hold the <code>load()</code> prepared statement.
      */
-    protected PreparedStatement preparedLoadSql = null;
+    protected PreparedStatement preparedLoadSql;
 
     // ------------------------------------------------------------- Properties
 

@@ -153,7 +153,7 @@ public class HttpProtocolFinder implements ProtocolFinder {
         int position;
         int state;
 
-        public ParsingState(int position, int state) {
+        ParsingState(int position, int state) {
             this.position = position;
             this.state = state;
         }

@@ -207,7 +207,7 @@ public final class CommandLine implements Iterable<String> {
         return path.normalize().toAbsolutePath().toString();
     }
 
-    static enum CommandFormat {
+    enum CommandFormat {
         /**
          * Execution using Java ProcessBuilder.
          * The ProcessBuilder Automatically escapes spaces and special characters.

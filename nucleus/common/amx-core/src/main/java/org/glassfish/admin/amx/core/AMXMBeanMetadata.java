@@ -52,25 +52,25 @@ public @interface AMXMBeanMetadata {
      */
     boolean immutableMBeanInfo() default true;
 
-    public static final String NULL = "\u0000";
+    String NULL = "\u0000";
 
     /** overrides default type to be used in ObjectName=, ignored if null or empty */
-    public String type() default NULL;
+    String type() default NULL;
 
 
     /** If true, no children are allowed. */
-    public boolean leaf() default false;
+    boolean leaf() default false;
 
 
     /** if true, the MBean is a singleon within its parent's scope */
-    public boolean singleton() default false;
+    boolean singleton() default false;
 
 
     /**
      * if true, the MBean is a global singleton, unique in type among all AMX MBeans.
      * Being a globalSingleton implies being a singleton
      */
-    public boolean globalSingleton() default false;
+    boolean globalSingleton() default false;
 
 }
 

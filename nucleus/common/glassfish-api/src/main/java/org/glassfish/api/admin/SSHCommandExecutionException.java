@@ -55,8 +55,8 @@ public class SSHCommandExecutionException extends CommandException {
         super(msg, cause);
     }
 
-    private String SSHSettings = null;
-    private String fullCommand = null;
+    private String SSHSettings;
+    private String fullCommand;
 
     /*
      * Stores the settings for the SSH connection that apply to node that was used in the command execution

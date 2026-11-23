@@ -77,7 +77,7 @@ public class ListResourceRefs implements AdminCommand, AdminCommandSecurity.Prea
     @AccessRequired.To("read")
     private RefContainer refContainer;
 
-    private List<ResourceRef> resourceRefs = null;
+    private List<ResourceRef> resourceRefs;
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {

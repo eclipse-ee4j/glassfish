@@ -114,8 +114,8 @@ public class SessionAttributeState {
         return sb.toString();
     }
 
-    boolean _dirtyFlag = false;
-    boolean _persistentFlag = false;
-    boolean _deletedFlag = false;
+    boolean _dirtyFlag;
+    boolean _persistentFlag;
+    boolean _deletedFlag;
 
 }

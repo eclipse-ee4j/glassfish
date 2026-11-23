@@ -79,7 +79,7 @@ public class AuthorizationConstraintImpl extends Descriptor implements Authoriza
     /**
      * Adds a role to the authorization constraint.
      *
-     * @param the role to be added.
+     * @param securityRole role to be added.
      */
     @Override
     public void addSecurityRole(SecurityRole securityRole) {
@@ -89,7 +89,7 @@ public class AuthorizationConstraintImpl extends Descriptor implements Authoriza
     /**
      * Adds a role to the authorization constraint
      *
-     * @param the role name to be added
+     * @param roleName role name to be added
      */
     public void addSecurityRole(String roleName) {
         SecurityRoleDescriptor securityRoleDescriptor = new SecurityRoleDescriptor();
@@ -100,7 +100,7 @@ public class AuthorizationConstraintImpl extends Descriptor implements Authoriza
     /**
      * Removes the given role from the authorization constraint.
      *
-     * @param the role to be removed.
+     * @param securityRole role to be removed.
      */
     public void removeSecurityRole(SecurityRole securityRole) {
         getSecurityRoleSet().remove(securityRole);

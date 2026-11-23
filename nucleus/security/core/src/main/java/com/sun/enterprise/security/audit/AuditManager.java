@@ -28,7 +28,7 @@ public interface AuditManager {
     /**
      * Loads all audit modules.
      */
-    public void loadAuditModules();
+    void loadAuditModules();
 
     /**
      * Reports authentication events to registered audit modules.
@@ -37,22 +37,22 @@ public interface AuditManager {
      * @param realm
      * @param success
      */
-    public void authentication(String user, String realm, boolean success);
+    void authentication(String user, String realm, boolean success);
 
     /**
      * Reports server start-up event to registered audit modules.
      */
-    public void serverStarted();
+    void serverStarted();
 
     /**
      * Reports server shutdown event to registered audit modules.
      */
-    public void serverShutdown();
+    void serverShutdown();
 
     /**
      * Returns whether auditing is turned on.
      *
      * @return
      */
-    public boolean isAuditOn();
+    boolean isAuditOn();
 }

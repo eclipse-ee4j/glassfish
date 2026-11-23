@@ -22,21 +22,21 @@ import java.util.Iterator;
 
 class IllegalEscapeSequenceException extends TokenizerException {
 
-    public IllegalEscapeSequenceException(String msg) {
+    IllegalEscapeSequenceException(String msg) {
         super(msg);
     }
 }
 
 class UnterminatedLiteralStringException extends TokenizerException {
 
-    public UnterminatedLiteralStringException(String msg) {
+    UnterminatedLiteralStringException(String msg) {
         super(msg);
     }
 }
 
 class MalformedUnicodeSequenceException extends IllegalEscapeSequenceException {
 
-    public MalformedUnicodeSequenceException(String msg) {
+    MalformedUnicodeSequenceException(String msg) {
         super(msg);
     }
 }
@@ -152,7 +152,7 @@ final class TokenizerInternal {
 
     final static Delim DELIM = Delim.getInstance();
 
-    public TokenizerInternal(String input, String delimiters, char escapeChar, String escapableChars) {
+    TokenizerInternal(String input, String delimiters, char escapeChar, String escapableChars) {
         mDelimiters = delimiters;
         mEscapeChar = escapeChar;
         mEscapableChars = escapableChars;

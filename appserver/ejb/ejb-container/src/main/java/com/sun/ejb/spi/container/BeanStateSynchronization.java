@@ -41,19 +41,19 @@ public interface BeanStateSynchronization {
      * is enabled for the current method and there were no other exceptions set
      * into inv.exception.
      */
-    public void ejb__flush()
+    void ejb__flush()
         throws DuplicateKeyException;
 
     /**
      * On receiving this message the PM would update its master copy
      * by fetching the latest information for the primary key from the database
      */
-    public void ejb__refresh(Object primaryKey);
+    void ejb__refresh(Object primaryKey);
 
 
     /**
      * On receiving this message the PM would delete from its master copy
      * the details related to the primaryKey
      */
-    public void ejb__remove(Object primaryKey);
+    void ejb__remove(Object primaryKey);
 }

@@ -28,34 +28,34 @@ public interface WebModuleReader extends BaseReader {
      *
      * @return String           context root for this web module
      */
-    public String getContextRoot() throws LbReaderException;
+    String getContextRoot() throws LbReaderException;
 
     /**
      * Returns error url for this web module
      *
      * @return  String          This url acts as error page for this module
      */
-    public String getErrorUrl() throws LbReaderException;
+    String getErrorUrl() throws LbReaderException;
 
     /**
      * Returns load balancer enabled flag.
      *
      * @return @boolean         true, if enabled; false, if disabled in LB
      */
-    public boolean getLbEnabled() throws LbReaderException;
+    boolean getLbEnabled() throws LbReaderException;
 
     /**
      * Returns disable timeout for this module
      *
      * @return @String          value must be > 0
      */
-    public String getDisableTimeoutInMinutes() throws LbReaderException;
+    String getDisableTimeoutInMinutes() throws LbReaderException;
 
     /**
      * Returns idempotent url patterns for this module.
      *
      * @return  IdempotentUrlPatternReader[]    list of idempotent url patterns
      */
-    public IdempotentUrlPatternReader[] getIdempotentUrlPattern()
+    IdempotentUrlPatternReader[] getIdempotentUrlPattern()
             throws LbReaderException;
 }

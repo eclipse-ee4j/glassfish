@@ -22,8 +22,8 @@ package org.glassfish.webservices.monitoring;
  */
 final class MessageListenerImpl implements MessageListener {
 
-    private MessageTrace request = null;
-    private MessageTrace respose = null;
+    private MessageTrace request;
+    private MessageTrace respose;
 
     @Override
     public void invocationProcessed(MessageTrace request, MessageTrace response) {

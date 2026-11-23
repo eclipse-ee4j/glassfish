@@ -37,8 +37,8 @@ public class CommandModelData extends CommandModel {
     // use a LinkedHashMap so params appears in the order they are added
     private final Map<String, CommandModel.ParamModel> params = new LinkedHashMap<String, ParamModel>();
     private final String commandName;
-    public boolean managedJob = false;
-    public boolean dashOk = false;
+    public boolean managedJob;
+    public boolean dashOk;
 
     public CommandModelData(String name) {
         commandName = name;
@@ -198,14 +198,14 @@ public class CommandModelData extends CommandModel {
     public static class ParamData implements Param {
         public String _name = "";
         public String _acceptableValues = "";
-        public boolean _optional = false;
+        public boolean _optional;
         public String _shortName = "";
-        public boolean _primary = false;
+        public boolean _primary;
         public String _defaultValue = "";
-        public boolean _password = false;
+        public boolean _password;
         public char _separator = ',';
-        public boolean _multiple = false;
-        public boolean _obsolete = false;
+        public boolean _multiple;
+        public boolean _obsolete;
         public String _alias = "";
 
         @Override

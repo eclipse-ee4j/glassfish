@@ -123,7 +123,7 @@ public class RepositoryConfig extends HashMap<String, Object> {
 
     /**
      * Creates a new instance of RepositoryConfig defined using the system property com.sun.aas.instanceRoot. It is assumed
-     * that this system property is a directory of the form: <repositoryRootDirectory>/<repositoryName>/<instanceName>
+     * that this system property is a directory of the form: &lt;repositoryRootDirectory&gt;/&lt;repositoryName&gt;/&lt;instanceName&gt;
      */
     public RepositoryConfig(String instanceRootString) {
         final File instanceRoot = new File(instanceRootString);

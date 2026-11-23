@@ -38,5 +38,5 @@ public interface ConfigurationPersistence {
      * @throws IOException if the file cannot be opened/written/closed
      * @throws XMLStreamException if the xml cannot be written out successfully
      */
-    public void save(DomDocument doc) throws IOException, XMLStreamException;
+    void save(DomDocument doc) throws IOException, XMLStreamException;
 }

@@ -38,7 +38,7 @@ public interface EmbeddedContainer {
      * be null and the container can use the port for any protocol(s)
      * it needs to.
      */
-    public void bind(Port port, String protocol);
+    void bind(Port port, String protocol);
 
     /**
      * Returns the list of sniffers associated with this container.
@@ -46,20 +46,20 @@ public interface EmbeddedContainer {
      * @return a list of sniffers that will be used when application are
      * deployed to the embedded server.
      */
-    public List<Sniffer> getSniffers();
+    List<Sniffer> getSniffers();
 
     /**
      * Starts the embedded container instance
      *
      * @throws LifecycleException if the container cannot started
      */
-    public void start() throws LifecycleException;
+    void start() throws LifecycleException;
 
     /**
      * Stops the embedded container instance
      *
      * @throws LifecycleException if the container cannot be stopped
      */
-    public void stop() throws LifecycleException;
+    void stop() throws LifecycleException;
 
 }

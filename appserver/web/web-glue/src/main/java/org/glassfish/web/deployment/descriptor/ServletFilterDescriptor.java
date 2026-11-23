@@ -60,7 +60,7 @@ public class ServletFilterDescriptor extends Descriptor implements ServletFilter
         this.setClassName("");
     }
 
-    /** constructor specifying descriptor name (Filter name) & displayName */
+    /** constructor specifying descriptor name (Filter name) &amp; displayName */
     public ServletFilterDescriptor(String className, String name) {
         super(name, ""/*description*/);
         this.setClassName(className);

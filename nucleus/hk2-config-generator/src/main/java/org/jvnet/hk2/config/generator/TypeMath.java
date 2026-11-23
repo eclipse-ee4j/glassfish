@@ -142,7 +142,7 @@ class TypeMath {
         }
     };
 
-    public TypeMath(ProcessingEnvironment env) {
+    TypeMath(ProcessingEnvironment env) {
         this.env = env;
     }
 

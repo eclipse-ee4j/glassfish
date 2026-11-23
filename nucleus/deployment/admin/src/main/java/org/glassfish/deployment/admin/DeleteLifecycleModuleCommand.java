@@ -83,7 +83,7 @@ import org.jvnet.hk2.annotations.Service;
 public class DeleteLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=true)
     public String target = "server";
@@ -100,7 +100,7 @@ public class DeleteLifecycleModuleCommand implements AdminCommand, AdminCommandS
     @Inject
     ServiceLocator habitat;
 
-    private List<String> targets = null;
+    private List<String> targets;
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteLifecycleModuleCommand.class);
 

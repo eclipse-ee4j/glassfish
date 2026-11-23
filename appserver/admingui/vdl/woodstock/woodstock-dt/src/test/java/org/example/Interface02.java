@@ -20,8 +20,8 @@ import com.sun.faces.annotation.Property;
 public interface Interface02 {
 
     @Property(displayName = "The First")
-    public String getOne();
+    String getOne();
 
-    public void setOne(String one);
+    void setOne(String one);
 
 }

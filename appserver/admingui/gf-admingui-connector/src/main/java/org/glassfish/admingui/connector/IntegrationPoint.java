@@ -177,7 +177,7 @@ public class IntegrationPoint implements Serializable {
 
     /**
      * <p> This method should only be called by the
-     *     {@link ConsolePluginService}.  This associates this
+     *     {@code ConsolePluginService}.  This associates this
      *     <code>IntegrationPoint</code> with the {@link ConsoleConfig}
      *     which specified it.</p>
      */
@@ -191,5 +191,5 @@ public class IntegrationPoint implements Serializable {
     private String parentId;
     private String content;
     private int priority;
-    private String configId = null;
+    private String configId;
 }

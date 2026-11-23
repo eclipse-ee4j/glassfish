@@ -373,7 +373,7 @@ public class WarHandler extends AbstractArchiveHandler {
          * object for latter use.
          *
          * @param input InputStream
-         * @exception XMLStreamException;
+         * @exception XMLStreamException
          */
         protected abstract void read(InputStream input) throws XMLStreamException;
 
@@ -444,10 +444,10 @@ public class WarHandler extends AbstractArchiveHandler {
     protected abstract static class WebXmlParser extends BaseXmlParser {
 
         protected boolean delegate = WebappClassLoader.DELEGATE_DEFAULT;
-        protected boolean ignoreHiddenJarFiles = false;
-        protected boolean useBundledJSF = false;
-        protected String extraClassPath = null;
-        protected String versionIdentifier = null;
+        protected boolean ignoreHiddenJarFiles;
+        protected boolean useBundledJSF;
+        protected String extraClassPath;
+        protected String versionIdentifier;
 
         WebXmlParser(ReadableArchive archive) throws IOException {
             if (archive.exists(getXmlFileName())) {
@@ -680,7 +680,7 @@ public class WarHandler extends AbstractArchiveHandler {
          * object for latter use.
          *
          * @param input InputStream
-         * @exception XMLStreamException;
+         * @exception XMLStreamException
          */
         @Override
         protected void read(InputStream input) throws XMLStreamException {

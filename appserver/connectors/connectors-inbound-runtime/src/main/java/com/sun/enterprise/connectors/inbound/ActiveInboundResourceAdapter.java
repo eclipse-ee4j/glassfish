@@ -32,7 +32,7 @@ public interface ActiveInboundResourceAdapter extends ActiveResourceAdapter {
      * @param id   Unique identifier of the endpoint factory.
      * @param info <code>MessageEndpointFactoryInfo</code> object.
      */
-    public void addEndpointFactoryInfo(String id, MessageEndpointFactoryInfo info) ;
+    void addEndpointFactoryInfo(String id, MessageEndpointFactoryInfo info) ;
 
     /**
      * Removes information about an endpoint factory
@@ -40,7 +40,7 @@ public interface ActiveInboundResourceAdapter extends ActiveResourceAdapter {
      * @param id Unique identifier of the endpoint factory to be
      *           removed.
      */
-    public void removeEndpointFactoryInfo(String id);
+    void removeEndpointFactoryInfo(String id);
 
     /**
      * Returns information about endpoint factory.
@@ -57,7 +57,7 @@ public interface ActiveInboundResourceAdapter extends ActiveResourceAdapter {
      * @param poolDescriptor Bean pool descriptor
      * @throws ConnectorRuntimeException
      */
-    public void updateMDBRuntimeInfo(EjbMessageBeanDescriptor descriptor_,
+    void updateMDBRuntimeInfo(EjbMessageBeanDescriptor descriptor_,
            BeanPoolDescriptor poolDescriptor) throws ConnectorRuntimeException ;
 
 
@@ -65,5 +65,5 @@ public interface ActiveInboundResourceAdapter extends ActiveResourceAdapter {
      * validate the activation-spec
      * @param spec activation-spec
      */
-    public void validateActivationSpec(ActivationSpec spec);
+    void validateActivationSpec(ActivationSpec spec);
 }

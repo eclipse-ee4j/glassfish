@@ -85,7 +85,7 @@ public interface DataStructure {
     int getFreeListSize();
 
     /**
-     * remove & destroy all resources from the datastructure.
+     * remove &amp; destroy all resources from the datastructure.
      */
     void removeAll();
 

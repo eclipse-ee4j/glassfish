@@ -356,7 +356,7 @@ public class SSHSession implements AutoCloseable {
         private final InputStream in;
         private final OutputStream out;
 
-        public PumpThread(InputStream in, OutputStream out) {
+        PumpThread(InputStream in, OutputStream out) {
             super("pump thread");
             this.in = in;
             this.out = out;

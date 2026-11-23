@@ -42,7 +42,7 @@ public class PortValidator extends Validator {
     /**
      * Validates the given Port.
      *
-     * @param str Must be the absolute path of the File that will be validated.
+     * @param obj Must be the absolute path of the File that will be validated.
      * @throws InvalidConfigException
      */
     public void validate(Object obj) throws InvalidConfigException {

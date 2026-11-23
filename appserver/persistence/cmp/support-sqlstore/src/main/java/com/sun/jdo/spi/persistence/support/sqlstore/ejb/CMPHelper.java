@@ -52,7 +52,7 @@ public class CMPHelper {
     * particular application server. In a non-managed environment the
     * will throw JDOFatalInternalException for any method invocation.
     */
-    private static ContainerHelper containerHelper = null;
+    private static ContainerHelper containerHelper;
 
     /** This counter is used to populate primary key columns for CMP beans with
      * an unknown Primary Key Class. It is a single counter per vm and is

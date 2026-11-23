@@ -27,7 +27,7 @@ package com.sun.jts.codegen.otsidl;
 //#-----------------------------------------------------------------------------
 public final class CoordinatorResourceHolder implements org.omg.CORBA.portable.Streamable
 {
-  public com.sun.jts.codegen.otsidl.CoordinatorResource value = null;
+  public com.sun.jts.codegen.otsidl.CoordinatorResource value;
 
   public CoordinatorResourceHolder ()
   {

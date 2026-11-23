@@ -23,10 +23,10 @@ import java.util.concurrent.TimeoutException;
 
 public interface GenericEJBHome extends EJBHome {
 
-    public RemoteAsyncResult get(long asyncTaskID) throws RemoteException;
+    RemoteAsyncResult get(long asyncTaskID) throws RemoteException;
 
     // Need to pass TimeUnit as string due to RMI-IIOP enum marshalling problem
-    public RemoteAsyncResult getWithTimeout(long asyncTaskID, long timeoutValue, String timeoutUnit)
+    RemoteAsyncResult getWithTimeout(long asyncTaskID, long timeoutValue, String timeoutUnit)
             throws RemoteException, TimeoutException;
 
     /**
@@ -36,7 +36,7 @@ public interface GenericEJBHome extends EJBHome {
      * @return
      * @throws RemoteException
      */
-    public RemoteAsyncResult cancel(long asyncTaskID) throws RemoteException;
+    RemoteAsyncResult cancel(long asyncTaskID) throws RemoteException;
 
     /**
      *
@@ -44,6 +44,6 @@ public interface GenericEJBHome extends EJBHome {
      * @return if done, RemoteAsyncResult.  Else, returns null.
      * @throws RemoteException
      */
-    public RemoteAsyncResult isDone(long asyncTaskID) throws RemoteException;
+    RemoteAsyncResult isDone(long asyncTaskID) throws RemoteException;
 
 }

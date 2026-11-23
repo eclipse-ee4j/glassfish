@@ -191,7 +191,10 @@ public class AppSpecificConnectorClassLoaderUtil {
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the names of the resource adapters referred to by the given application.
+     *
+     * @param appName the application name
+     * @return names of the referred resource adapters
      */
     public Set<String> getRARsReferredByApplication(String appName) {
         ApplicationInfo appInfo = appRegistry.get(appName);

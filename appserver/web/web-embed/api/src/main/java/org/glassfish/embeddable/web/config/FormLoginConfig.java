@@ -19,7 +19,7 @@ package org.glassfish.embeddable.web.config;
 
 /**
  * Class that is used for configuring form based login, when
- * the authentication method is set to <tt>FORM</tt> in <tt>LoginConfig</tt>.
+ * the authentication method is set to <code>FORM</code> in <code>LoginConfig</code>.
  *
  * @see LoginConfig
  * @see AuthMethod
@@ -33,8 +33,8 @@ public class FormLoginConfig {
     private String errorPage;
 
     /**
-     * Creates an instance of the <tt>FormLoginConfig</tt> with the specified <tt>loginPage</tt> and
-     * <tt>errorPage</tt>
+     * Creates an instance of the <code>FormLoginConfig</code> with the specified <code>loginPage</code> and
+     * <code>errorPage</code>
      *
      * @param loginPage the login page
      * @param errorPage the form error page
@@ -47,7 +47,7 @@ public class FormLoginConfig {
     /**
      * Gets the login page
      *
-     * @return the login page for form based authentication as a <tt>String</tt>
+     * @return the login page for form based authentication as a <code>String</code>
      */
     public String getFormLoginPage() {
         return this.loginPage;
@@ -56,7 +56,7 @@ public class FormLoginConfig {
     /**
      * Get the form error page
      *
-     * @return the error page for form based authentication as a <tt>String</tt>
+     * @return the error page for form based authentication as a <code>String</code>
      */
     public String getFormErrorPage() {
         return this.errorPage;

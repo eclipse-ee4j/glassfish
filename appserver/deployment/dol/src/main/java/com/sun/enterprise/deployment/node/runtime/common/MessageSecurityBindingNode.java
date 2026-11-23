@@ -56,9 +56,9 @@ public class MessageSecurityBindingNode extends DeploymentDescriptorNode<Message
     /**
      * parsed an attribute of an element
      *
-     * @param the element name
-     * @param the attribute name
-     * @param the attribute value
+     * @param elementName element name
+     * @param attributeName attribute name
+     * @param value attribute value
      * @return true if the attribute was processed
      */
     @Override
@@ -80,8 +80,8 @@ public class MessageSecurityBindingNode extends DeploymentDescriptorNode<Message
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for
-     * @param the descriptor to write
+     * @param nodeName name for
+     * @param messageSecurityBindingDesc descriptor to write
      * @return the DOM tree top node
      */
     @Override

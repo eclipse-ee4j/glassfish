@@ -31,7 +31,7 @@ public final class TargetBasedExecutor implements ClusterExecutor {
 
     @Inject
     @Named("GlassFishClusterExecutor")
-    private ClusterExecutor delegate = null;
+    private ClusterExecutor delegate;
 
     @Override
     public ActionReport.ExitCode execute(String commandName, AdminCommand command, AdminCommandContext context, ParameterMap parameters) {

@@ -557,7 +557,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     /** Provides for creating an instance of a VCCache. */
     interface CacheFactory {
         /** @return an instance of a VCCache. */
-        public VCCache create();
+        VCCache create();
     }
 
     /** Provides for creating an instance of a BasicVCCache. */

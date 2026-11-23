@@ -25,5 +25,5 @@ public interface SecurityService {
     /**
      * Initialize the security service instance with the specific security service configuration.
      */
-    public void initialize(SecurityConfiguration securityServiceConfiguration);
+    void initialize(SecurityConfiguration securityServiceConfiguration);
 }

@@ -99,21 +99,21 @@ public final class CreateDomainCommand extends CLICommand {
     @Param(name = INSTANCE_PORT, optional = true)
     private String instancePort;
     @Param(name = SAVE_MASTER_PASSWORD, optional = true, defaultValue = "false")
-    private boolean saveMasterPassword = false;
+    private boolean saveMasterPassword;
     @Param(name = "usemasterpassword", optional = true, defaultValue = "false")
-    private boolean useMasterPassword = false;
+    private boolean useMasterPassword;
     @Param(name = DOMAIN_PROPERTIES, optional = true, separator = ':')
     private Properties domainProperties;
     @Param(name = "keytooloptions", optional = true)
     private String keytoolOptions;
     @Param(name = "savelogin", optional = true, defaultValue = "false")
-    private boolean saveLoginOpt = false;
+    private boolean saveLoginOpt;
     @Param(name = "nopassword", optional = true, defaultValue = "false")
-    private boolean noPassword = false;
+    private boolean noPassword;
     @Param(name = ADMIN_PASSWORD, optional = true, password = true)
-    private String adminPassword = null;
+    private String adminPassword;
     @Param(name = MASTER_PASSWORD, optional = true, password = true)
-    private String masterPassword = null;
+    private String masterPassword;
     @Param(name = "checkports", optional = true, defaultValue = "true")
     private boolean checkPorts = true;
     @Param(name = "domain_name", primary = true)

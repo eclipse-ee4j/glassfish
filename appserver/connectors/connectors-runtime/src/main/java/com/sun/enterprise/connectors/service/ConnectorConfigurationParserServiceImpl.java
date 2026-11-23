@@ -182,7 +182,7 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
 
     /**
      * Return the ActivationSpecClass name for given rar and messageListenerType
-     * @param moduleDir The directory where rar is exploded.
+     * @param rarName name of the rar module.
      * @param messageListenerType MessageListener type
      * @throws  ConnectorRuntimeException If moduleDir is null.
      *          If corresponding rar is not deployed.
@@ -242,7 +242,7 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
      *
      *  @param  rarName name of the rar module.
      *  @param  messageListenerType message listener type.It is uniqie
-     *          across all <messagelistener> sub-elements in <messageadapter>
+     *          across all &lt;messagelistener&gt; sub-elements in &lt;messageadapter&gt;
      *          element in a given rar.
      *  @return Javabean properties with the property names and values
      *          of properties. The property values will be the values
@@ -265,7 +265,7 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
      *  key and datatype as the value.
      *  @param  rarName name of the rar module.
      *  @param  messageListenerType message listener type.It is uniqie
-     *          across all <messagelistener> sub-elements in <messageadapter>
+     *          across all &lt;messagelistener&gt; sub-elements in &lt;messageadapter&gt;
      *          element in a given rar.
      *  @return Properties object with the property names(key) and datatype
      *          of property(as value).
@@ -310,7 +310,7 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
     }
 
     /**
-     * gets the adminObjectClassNames pertaining to a rar & a specific
+     * gets the adminObjectClassNames pertaining to a rar &amp; a specific
      * adminObjectInterfaceName
      *
      * @param rarName resource-adapter name

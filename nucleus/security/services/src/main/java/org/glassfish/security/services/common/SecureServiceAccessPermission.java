@@ -371,7 +371,7 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         private Logger log;
         private LocalStringManagerImpl localStrings;
 
-        public SecurityAccessPermissionCollection(Class clazz, Logger log, LocalStringManagerImpl localStrings) {
+        SecurityAccessPermissionCollection(Class clazz, Logger log, LocalStringManagerImpl localStrings) {
                 perms = new HashMap<String, Permission>(11);
                 all_allowed = false;
                 permClass = clazz;

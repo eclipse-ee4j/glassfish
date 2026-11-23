@@ -34,12 +34,12 @@ import java.io.IOException;
 
 /**
  * This class renders TableActions components.
- * <p>
+ *
  * <pre>
  * java.util.logging.ConsoleHandler.level = FINE
  * com.sun.webui.jsf.renderkit.html.TableActionsRenderer.level = FINE
  * </pre>
- * </p>
+ *
  */
 @Renderer(
         @Renderer.Renders(componentFamily = "com.sun.webui.jsf.TableActions"))

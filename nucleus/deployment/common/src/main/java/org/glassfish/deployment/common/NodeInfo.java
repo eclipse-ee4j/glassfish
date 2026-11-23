@@ -72,7 +72,7 @@ class NodeInfo
 
     private static final Set<NodeInfo> EMPTY_NODEINFO_SET = new HashSet<NodeInfo>();
 
-    public NodeInfo(int api) {
+    NodeInfo(int api) {
         super(api);
     }
 

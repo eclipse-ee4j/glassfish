@@ -114,17 +114,17 @@ public class JavaEETransactionManagerSimplified implements JavaEETransactionMana
     // - connection multiple enlistments and delistments might happen
     // - By setting the System property ALLOW_MULTIPLE_ENLISTS_DELISTS to true
     // - multipleEnlistDelists can be enabled
-    private boolean multipleEnlistDelists = false;
+    private boolean multipleEnlistDelists;
 
     private int transactionTimeout;
     private final ThreadLocal<Integer> txnTmout = new ThreadLocal<>();
 
-    private int purgeCancelledTtransactions = 0;
+    private int purgeCancelledTtransactions;
 
     // admin and monitoring related parameters
     private static final Hashtable<Integer, String> statusMap = new Hashtable<>();
     private final List<Transaction> activeTransactions = Collections.synchronizedList(new ArrayList<>());
-    private boolean monitoringEnabled = false;
+    private boolean monitoringEnabled;
 
     private TransactionServiceProbeProvider monitor;
     private Hashtable<String, Transaction> txnTable;

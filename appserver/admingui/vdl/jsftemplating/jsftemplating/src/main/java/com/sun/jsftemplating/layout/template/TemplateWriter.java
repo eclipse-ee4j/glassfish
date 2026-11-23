@@ -185,7 +185,7 @@ public class TemplateWriter {
      * The <code>PrintWriter</code> used to send output the the <code>OutputStream</code>.
      * </p>
      */
-    private PrintWriter _writer = null;
+    private PrintWriter _writer;
 
     /**
      * <p>

@@ -35,6 +35,6 @@ public interface SecurityProviderConfig extends ConfigBeanProxy {
      * Gets the name of the security provider implementation.
      */
     @Attribute(required=true, key=true)
-    public String getName();
-    public void setName(String value) throws PropertyVetoException;
+    String getName();
+    void setName(String value) throws PropertyVetoException;
 }

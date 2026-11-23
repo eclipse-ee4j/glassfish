@@ -140,8 +140,8 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     private static final String PROBE_PROVIDER_XML_FILE_NAMES = "probe-provider-xml-file-names";
     private static final String DELIMITER = ",";
     private StatsProviderManagerDelegateImpl spmd;
-    private boolean monitoringEnabled = false;
-    private boolean hasDiscoveredXMLProviders = false;
+    private boolean monitoringEnabled;
+    private boolean hasDiscoveredXMLProviders;
 
     @Override
     public void postConstruct() {

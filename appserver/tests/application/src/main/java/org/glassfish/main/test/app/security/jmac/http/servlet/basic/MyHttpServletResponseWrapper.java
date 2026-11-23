@@ -25,7 +25,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 class MyHttpServletResponseWrapper extends HttpServletResponseWrapper {
-    private MyPrintWriter myPrintWriter = null;
+    private MyPrintWriter myPrintWriter;
 
     MyHttpServletResponseWrapper(HttpServletResponse response) {
         super(response);
@@ -48,9 +48,9 @@ class MyHttpServletResponseWrapper extends HttpServletResponseWrapper {
 }
 
 class MyPrintWriter extends PrintWriter {
-    private int count = 0; // count up to '\r'
+    private int count; // count up to '\r'
 
-    public MyPrintWriter(Writer writer) {
+    MyPrintWriter(Writer writer) {
         super(writer);
     }
 

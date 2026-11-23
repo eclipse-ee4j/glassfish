@@ -35,12 +35,12 @@ import org.xml.sax.helpers.XMLReaderFactory;
 public class ParseML{
     private String vendorParserClass =
     "org.apache.xerces.parsers.SAXParser";
-    public static boolean debug = false;
-    boolean inTestcase = false;
-    boolean inTestcaseID = false;
-    boolean gotStatus = false;
-    static Hashtable hash =  null;
-    static Vector[] fileDiffs = null;
+    public static boolean debug;
+    boolean inTestcase;
+    boolean inTestcaseID;
+    boolean gotStatus;
+    static Hashtable hash;
+    static Vector[] fileDiffs;
     String key = "";
     String value = "";
 

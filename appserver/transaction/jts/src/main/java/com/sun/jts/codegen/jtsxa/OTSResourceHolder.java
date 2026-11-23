@@ -27,7 +27,7 @@ package com.sun.jts.codegen.jtsxa;
 //#-----------------------------------------------------------------------------
 public final class OTSResourceHolder implements org.omg.CORBA.portable.Streamable
 {
-  public com.sun.jts.codegen.jtsxa.OTSResource value = null;
+  public com.sun.jts.codegen.jtsxa.OTSResource value;
 
   public OTSResourceHolder ()
   {

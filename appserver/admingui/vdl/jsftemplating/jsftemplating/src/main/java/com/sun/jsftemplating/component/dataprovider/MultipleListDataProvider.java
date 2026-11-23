@@ -166,7 +166,7 @@ public class MultipleListDataProvider extends ObjectListDataProvider {
 
     /**
      * <p>
-     * This sets the <code>Object<code> type contained in the
+     * This sets the <code>Object</code> type contained in the
      *        <code>List</code> that this <code>MulitpleObjectDataProvider</code> represents. This method should only be
      * used when there is one <code>List</code> held by this <code>MultipleListDataProvider</code>. In cases where you have
      * more than one list (and likely you do because you are using this <code>DataProvider</code>), you should use
@@ -578,7 +578,7 @@ public class MultipleListDataProvider extends ObjectListDataProvider {
      * The cached support object for field key manipulation. Must be transient because its content is not Serializable.
      * </p>
      */
-    private transient MultipleObjectFieldKeySupport support = null;
+    private transient MultipleObjectFieldKeySupport support;
 
     /**
      * <p>
@@ -658,7 +658,7 @@ public class MultipleListDataProvider extends ObjectListDataProvider {
      * Type information for the LIsts.
      * </p>
      */
-    private Class[] _types = null;
+    private Class[] _types;
 
     /**
      * <p>

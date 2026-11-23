@@ -54,7 +54,7 @@ public interface JavaClassWriter
      * @throws IOException If the class declaration information cannot be set.
      * @see java.lang.reflect.Modifier
      */
-    public void setClassDeclaration (int modifiers, String className,
+    void setClassDeclaration (int modifiers, String className,
         String[] comments) throws IOException;
 
     /** Sets the superclass of this class.  Note that the name format must
@@ -62,13 +62,13 @@ public interface JavaClassWriter
      * @param name The name of the superclass.
      * @throws IOException If the superclass cannot be set.
      */
-    public void setSuperclass (String name) throws IOException;
+    void setSuperclass (String name) throws IOException;
 
     /** Adds an interface to the list of those implemented by this class.
      * @param name The name of the interface.
      * @throws IOException If the interface cannot be added.
      */
-    public void addInterface (String name) throws IOException;
+    void addInterface (String name) throws IOException;
 
     /** Adds a field to the list of those declared by this class.  Note
      * that the type format must be package style (that is - it can contain
@@ -85,7 +85,7 @@ public interface JavaClassWriter
      * @throws IOException If the field information cannot be added.
      * @see java.lang.reflect.Modifier
      */
-    public void addField (String name, int modifiers, String type,
+    void addField (String name, int modifiers, String type,
         String initialValue, String[] comments) throws IOException;
 
     /** Adds an initializer to this class.
@@ -99,7 +99,7 @@ public interface JavaClassWriter
      * to make use of this comment.
      * @throws IOException If the initializer information cannot be added.
      */
-    public void addInitializer (boolean isStatic, String[] body,
+    void addInitializer (boolean isStatic, String[] body,
         String[] comments) throws IOException;
 
     /** Adds a constructor to this class.  Note that the type format in the
@@ -121,7 +121,7 @@ public interface JavaClassWriter
      * @throws IOException If the constructor information cannot be added.
      * @see java.lang.reflect.Modifier
      */
-    public void addConstructor (String name, int modifiers,
+    void addConstructor (String name, int modifiers,
         String[] parameterNames, String[] parameterTypes, String[] exceptions,
         String[] body, String[] comments) throws IOException;
 
@@ -144,7 +144,7 @@ public interface JavaClassWriter
      * @throws IOException If the method information cannot be added.
      * @see java.lang.reflect.Modifier
      */
-    public void addMethod (String name, int modifiers, String returnType,
+    void addMethod (String name, int modifiers, String returnType,
         String[] parameterNames, String[] parameterTypes, String[] exceptions,
         String[] body, String[] comments) throws IOException;
 
@@ -152,5 +152,5 @@ public interface JavaClassWriter
      * @param classWriter The definition of the inner class.
      * @throws IOException If the class information cannot be added.
      */
-    public void addClass (JavaClassWriter classWriter) throws IOException;
+    void addClass (JavaClassWriter classWriter) throws IOException;
 }

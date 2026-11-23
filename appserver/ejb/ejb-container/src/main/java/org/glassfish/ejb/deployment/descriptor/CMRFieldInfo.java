@@ -28,9 +28,9 @@ import java.lang.reflect.Field;
  */
 
 public final class CMRFieldInfo implements Serializable {
-    public transient Field field = null;
+    public transient Field field;
     public String name;
-    public transient Class type = null;
+    public transient Class type;
     public RelationRoleDescriptor role;
     // foreign key fields corresponding to this CMR field
     public PersistentFieldInfo[] fkeyFields;

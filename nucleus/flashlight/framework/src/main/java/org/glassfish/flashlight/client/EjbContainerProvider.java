@@ -28,7 +28,7 @@ import org.glassfish.external.probe.provider.annotations.ProbeParam;
 public interface EjbContainerProvider<K, V> {
 
     @Probe(name="entry")
-        public void namedEntry(
+        void namedEntry(
             @ProbeParam("method") Method m, @ProbeParam("beanName") String beanName);
 
 

@@ -31,7 +31,7 @@ class StackElement {
     private final AnnotatedElement element;
 
     /** Creates a new instance of StackElement */
-    public StackElement(ElementType type, AnnotatedElement element) {
+    StackElement(ElementType type, AnnotatedElement element) {
         this.type = type;
         this.element = element;
     }

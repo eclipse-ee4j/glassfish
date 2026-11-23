@@ -28,44 +28,44 @@ import java.lang.reflect.Method;
 
 public interface EJBInvocation {
 
-    public EJBContext getEJBContext();
+    EJBContext getEJBContext();
 
     /**
      * This is for EJB JAXWS only.
      *
      * @return the JAXWS message
      */
-    public Object getMessage();
+    Object getMessage();
 
     /**
      * This is for EJB JAXWS only.
      *
      * @param message an unconsumed message
      */
-    public <T> void setMessage(T message);
+    <T> void setMessage(T message);
 
     /**
      *
      * @return true if it is a webservice invocation
      */
-    public boolean isAWebService();
+    boolean isAWebService();
 
     /**
      * @return the Java Method object for this Invocation
      */
-    public Method getMethod();
+    Method getMethod();
 
     /**
      *
      * @return the Method parameters for this Invocation
      */
-    public Object[] getMethodParams();
+    Object[] getMethodParams();
 
     /**
      * Used by Jakarta Authorization implementation to get an enterprise bean instance for the EnterpriseBean policy handler.
      * The Jakarta Authorization implementation should use this method rather than directly accessing the ejb field.
      */
-    public Object getJaccEjb();
+    Object getJaccEjb();
 
     /**
      * Use the underlying container to authorize this invocation
@@ -73,17 +73,17 @@ public interface EJBInvocation {
      * @return true if the invocation was authorized by the underlying container
      * @throws java.lang.Exception TODO, change this to throw some subclass
      */
-    public boolean authorizeWebService(Method m) throws Exception;
+    boolean authorizeWebService(Method m) throws Exception;
 
     /**
      *
      * @return true if the SecurityManager reports that the caller is in role
      */
-    public boolean isCallerInRole(String role);
+    boolean isCallerInRole(String role);
 
-    public void setWebServiceMethod(Method method);
+    void setWebServiceMethod(Method method);
 
-    public Method getWebServiceMethod();
+    Method getWebServiceMethod();
 
-    public void setWebServiceContext(Object webServiceContext);
+    void setWebServiceContext(Object webServiceContext);
 }

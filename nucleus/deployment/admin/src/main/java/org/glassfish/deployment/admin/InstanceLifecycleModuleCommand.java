@@ -61,19 +61,19 @@ import org.jvnet.hk2.config.Transaction;
 public class InstanceLifecycleModuleCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
 
     @Param(primary=true)
-    public String name = null;
+    public String name;
 
     @Param(optional=true)
     public String target = "server";
 
     @Param(optional=true)
-    public String virtualservers = null;
+    public String virtualservers;
 
     @Param(optional=true, defaultValue="true")
     public Boolean enabled = true;
 
     @Param(separator=':')
-    public Properties appprops = null;
+    public Properties appprops;
 
     @Inject
     Deployment deployment;

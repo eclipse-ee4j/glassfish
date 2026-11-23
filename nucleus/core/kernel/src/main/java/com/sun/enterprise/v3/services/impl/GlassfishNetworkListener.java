@@ -355,7 +355,7 @@ public class GlassfishNetworkListener extends GenericGrizzlyListener {
         private final String serverVersion;
         private final String xPoweredBy;
 
-        public GlassfishHttpCodecFilter(
+        GlassfishHttpCodecFilter(
                 final boolean isXPoweredByEnabled,
                 final boolean chunkingEnabled,
                 final int maxHeadersSize,

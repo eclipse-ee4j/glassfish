@@ -24,5 +24,5 @@ package org.glassfish.persistence.ejb.entitybean.container.spi;
 public interface CascadeDeleteNotifier
 {
 
-    public void setCascadeDeleteAfterSuperEJBRemove(boolean value);
+    void setCascadeDeleteAfterSuperEJBRemove(boolean value);
 }

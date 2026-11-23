@@ -42,7 +42,7 @@ public @interface Param {
      *
      * @return the parameter name.
      */
-    public String name() default "";
+    String name() default "";
 
     /**
      * Returns a list of comma separated acceptable values for this parameter. The system will check that one of the value
@@ -50,14 +50,14 @@ public @interface Param {
      *
      * @return the list of comma separated acceptable values
      */
-    public String acceptableValues() default "";
+    String acceptableValues() default "";
 
     /**
      * Returns true if the parameter is optional to the successful invocation of the command
      *
      * @return true if the parameter is optional
      */
-    public boolean optional() default false;
+    boolean optional() default false;
 
     /**
      * Returns the short name associated with the parameter so that the user can specify -p as well as -password when
@@ -65,7 +65,7 @@ public @interface Param {
      *
      * @return the parameter short name
      */
-    public String shortName() default "";
+    String shortName() default "";
 
     /**
      * Returns true if this is the primary parameter for the command which mean that the client does not have to pass the
@@ -73,28 +73,28 @@ public @interface Param {
      *
      * @return true if this is the primary command parameter.
      */
-    public boolean primary() default false;
+    boolean primary() default false;
 
     /**
      * Returns the default value associated with the parameter so that the user can specify
      *
      * @return the parameter default value
      */
-    public String defaultValue() default "";
+    String defaultValue() default "";
 
     /**
      * Returns a class that calculates the default value associated with the parameter.
      *
      * @return a parameter default value calculator
      */
-    public Class<? extends ParamDefaultCalculator> defaultCalculator() default ParamDefaultCalculator.class;
+    Class<? extends ParamDefaultCalculator> defaultCalculator() default ParamDefaultCalculator.class;
 
     /**
      * Returns true if the parameter is a password
      *
      * @return true if the parameter is password
      */
-    public boolean password() default false;
+    boolean password() default false;
 
     /**
      * Returns the character used to separate items in a list. Applies to parameters of type List, Properties, and String[].
@@ -102,14 +102,14 @@ public @interface Param {
      *
      * @return the separator character
      */
-    public char separator() default ',';
+    char separator() default ',';
 
     /**
      * Returns true if multiple instances of the parameter are allowed.
      *
      * @return true if multiple instances are allowed
      */
-    public boolean multiple() default false;
+    boolean multiple() default false;
 
     /**
      * Returns true if this parameter is obsolete. Obsolete parameters produce warnings when used in asadmin, are ignored,
@@ -117,12 +117,12 @@ public @interface Param {
      *
      * @return true if the parameter is obsolete
      */
-    public boolean obsolete() default false;
+    boolean obsolete() default false;
 
     /**
      * Returns an alias for the option. This supports renaming options and supporting both the old name and the new name.
      *
      * @return the parameter alias
      */
-    public String alias() default "";
+    String alias() default "";
 }

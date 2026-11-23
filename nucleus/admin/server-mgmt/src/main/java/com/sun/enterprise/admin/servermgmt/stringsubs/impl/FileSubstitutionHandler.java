@@ -31,7 +31,7 @@ import static java.lang.System.Logger.Level.DEBUG;
 
 /**
  * Abstract class initialize the input file for the string substitution. The sub-classes provides the way to create the
- * {@link Reader} and {@link Writer} for the input & output file.
+ * {@link Reader} and {@link Writer} for the input &amp; output file.
  */
 public abstract class FileSubstitutionHandler implements Substitutable {
 

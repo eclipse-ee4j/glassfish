@@ -118,7 +118,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  *
  * <B>CGI Specification</B>:<br> derived from
  * <a href="http://cgi-spec.golux.com">http://cgi-spec.golux.com</a>.
- * A work-in-progress & expired Internet Draft.  Note no actual RFC describing
+ * A work-in-progress &amp; expired Internet Draft.  Note no actual RFC describing
  * the CGI specification exists.  Where the behavior of this servlet differs
  * from the specification cited above, it is either documented here, a bug,
  * or an instance where the specification cited differs from Best
@@ -161,7 +161,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  * </p>
  * [end excerpt]
  *
- * </p>
+ *
  * <h2> Implementation notes</h2>
  * <p>
  *
@@ -175,7 +175,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  * and stderr (which should not be too hard).
  * <br>
  * If you find your cgi scripts are timing out receiving input, you can set
- * the init parameter <code></code> of your webapps' cgi-handling servlet
+ * the init parameter of your webapps' cgi-handling servlet
  * to be
  * </p>
  * <p>
@@ -213,7 +213,7 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  * <a href="http://cgi-spec.golux.com">http://cgi-spec.golux.com</a>.
  *
  * </p>
- * <p>
+ *
  * <h3>TODO:</h3>
  * <ul>
  * <li> Support for setting headers (for example, Location headers don't work)
@@ -228,11 +228,11 @@ import org.glassfish.web.util.HtmlEntityEncoder;
  * <li> Better documentation
  * <li> Confirm use of ServletInputStream.available() in CGIRunner.run() is
  *      not needed
- * <li> Make checking for "." and ".." in servlet & cgi PATH_INFO less
+ * <li> Make checking for "." and ".." in servlet &amp; cgi PATH_INFO less
  *      draconian
  * <li> [add more to this TODO list]
  * </ul>
- * </p>
+ *
  *
  * @author Martin T Dengler [root@martindengler.com]
  * @author Amy Roh
@@ -247,7 +247,7 @@ public final class CGIServlet extends HttpServlet {
     /* some vars below copied from Craig R. McClanahan's InvokerServlet */
 
     /** the debugging detail level for this servlet. */
-    private int debug = 0;
+    private int debug;
 
     /**
      *  The CGI search path will start at
@@ -656,9 +656,6 @@ public final class CGIServlet extends HttpServlet {
      * Encapsulates the CGI environment and rules to derive
      * that environment from the servlet container and request information.
      *
-     * <p>
-     * </p>
-     *
      * @version  $Revision: 1.4 $, $Date: 2006/09/06 16:02:28 $
      * @since    Tomcat 4.0
      *
@@ -667,37 +664,37 @@ public final class CGIServlet extends HttpServlet {
 
 
         /** context of the enclosing servlet */
-        private ServletContext context = null;
+        private ServletContext context;
 
         /** context path of enclosing servlet */
-        private String contextPath = null;
+        private String contextPath;
 
         /** servlet URI of the enclosing servlet */
-        private String servletPath = null;
+        private String servletPath;
 
         /** pathInfo for the current request */
-        private String pathInfo = null;
+        private String pathInfo;
 
         /** real file system directory of the enclosing servlet's web app */
-        private String webAppRootDir = null;
+        private String webAppRootDir;
 
         /** tempdir for context - used to expand scripts in unexpanded wars */
-        private File tmpDir = null;
+        private File tmpDir;
 
         /** derived cgi environment */
-        private Hashtable<String, String> env = null;
+        private Hashtable<String, String> env;
 
         /** cgi command to be invoked */
-        private String command = null;
+        private String command;
 
         /** cgi command's desired working directory */
-        private File workingDirectory = null;
+        private File workingDirectory;
 
         /** cgi command's command line parameters */
         private ArrayList<String> cmdLineParameters = new ArrayList<String>();
 
         /** whether or not this object is valid or not */
-        private boolean valid = false;
+        private boolean valid;
 
 
         /**
@@ -811,7 +808,7 @@ public final class CGIServlet extends HttpServlet {
          * <LI><b>cgiName</b> = /dir1/realCGIscript
          * <LI><b>name</b> = realCGIscript
          * </ul>
-         * </p>
+         *
          * <p>
          * CGI search algorithm: search the real path below
          *    &lt;my-webapp-root&gt; and find the first non-directory in
@@ -1440,25 +1437,25 @@ public final class CGIServlet extends HttpServlet {
     protected class CGIRunner {
 
         /** script/command to be executed */
-        private String command = null;
+        private String command;
 
         /** environment used when invoking the cgi script */
-        private Hashtable<String, String> env = null;
+        private Hashtable<String, String> env;
 
         /** working directory used when invoking the cgi script */
-        private File wd = null;
+        private File wd;
 
         /** command line parameters to be passed to the invoked script */
-        private ArrayList<String> params = null;
+        private ArrayList<String> params;
 
         /** stdin to be passed to cgi script */
-        private InputStream stdin = null;
+        private InputStream stdin;
 
         /** response object used to set headers & get output stream */
-        private HttpServletResponse response = null;
+        private HttpServletResponse response;
 
         /** boolean tracking whether this object has enough info to run() */
-        private boolean readyToRun = false;
+        private boolean readyToRun;
 
 
 
@@ -1489,7 +1486,7 @@ public final class CGIServlet extends HttpServlet {
 
 
         /**
-         * Checks & sets ready status
+         * Checks &amp; sets ready status
          */
         protected void updateReadyStatus() {
             if (command != null
@@ -1613,7 +1610,7 @@ public final class CGIServlet extends HttpServlet {
          *             container's implementation of the Servlet API methods.
          *     </ul>
          * </UL>
-         * </p>
+         *
          *
          * @exception IOException if problems during reading/writing occur
          *

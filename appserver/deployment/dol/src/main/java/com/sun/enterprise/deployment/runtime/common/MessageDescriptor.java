@@ -33,19 +33,19 @@ public class MessageDescriptor extends RuntimeDescriptor {
 
     private static final String ALL_METHODS = "*";
 
-    private String operationName = null;
-    private MethodDescriptor methodDescriptor = null;
+    private String operationName;
+    private MethodDescriptor methodDescriptor;
     private ArrayList convertedMethodDescs = new ArrayList();
 
     // when this message is defined from client side
-    private ServiceRefPortInfo portInfo = null;
+    private ServiceRefPortInfo portInfo;
 
     // when this message is defined from server side
-    private WebServiceEndpoint endPoint = null;
+    private WebServiceEndpoint endPoint;
 
-    private BundleDescriptor bundleDesc = null;
+    private BundleDescriptor bundleDesc;
 
-    private boolean isConverted = false;
+    private boolean isConverted;
 
     public MessageDescriptor() {}
 

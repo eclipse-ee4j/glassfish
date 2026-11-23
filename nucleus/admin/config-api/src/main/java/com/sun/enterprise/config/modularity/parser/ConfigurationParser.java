@@ -54,7 +54,7 @@ public class ConfigurationParser<C extends ConfigLoader> {
     private static final Logger LOG = ConfigApiLoggerInfo.getLogger();
 
     //TODO Until the TranslatedView issue is fixed this remain true.
-    private static boolean replaceSystemProperties = false;
+    private static boolean replaceSystemProperties;
 
     @Inject
     private ServiceLocator serviceLocator;

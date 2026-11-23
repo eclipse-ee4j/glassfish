@@ -68,7 +68,7 @@ public class Resource {
     private final String resType;
     private final ResourceAttributes attributes = new ResourceAttributes();
     private final Properties props = new Properties();
-    private String sDescription = null;
+    private String sDescription;
 
     public Resource(String type) {
         resType = type;

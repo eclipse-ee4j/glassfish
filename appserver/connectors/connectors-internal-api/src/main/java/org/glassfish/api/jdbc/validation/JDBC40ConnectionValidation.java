@@ -37,7 +37,6 @@ public class JDBC40ConnectionValidation implements ConnectionValidation {
      * Check for validity of <code>java.sql.Connection</code>
      *
      * @param con       <code>java.sql.Connection</code>to be validated
-     * @throws SQLException if the connection is not valid
      */
     public boolean isConnectionValid(Connection con) {
         boolean isValid = false;

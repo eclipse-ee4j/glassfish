@@ -49,7 +49,7 @@ public class DOMWriter {
       "EBCDIC-CP-CA", "EBCDIC-CP-NL", "EBCDIC-CP-DK", "EBCDIC-CP-NO", "EBCDIC-CP-FI", "EBCDIC-CP-SE",
       "EBCDIC-CP-IT", "EBCDIC-CP-ES", "EBCDIC-CP-GB", "EBCDIC-CP-FR", "EBCDIC-CP-AR1",
       "EBCDIC-CP-HE", "EBCDIC-CP-CH", "EBCDIC-CP-ROECE","EBCDIC-CP-YU",
-      "EBCDIC-CP-IS", "EBCDIC-CP-AR2", "UTF-16"
+      "EBCDIC-CP-IS", "EBCDIC-CP-AR2", "UTF-16",
     };
 
    /** Output qualified names */

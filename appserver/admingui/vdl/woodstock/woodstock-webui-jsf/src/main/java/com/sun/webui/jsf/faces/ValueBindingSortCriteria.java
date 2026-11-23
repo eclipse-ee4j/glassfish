@@ -33,7 +33,7 @@ import java.util.Map;
 
 /**
  * The ValueBindingSortCriteria class is an implementation of SortCriteria that
- * simply retrieves the sort value from the {@link ValueBinding}.
+ * simply retrieves the sort value from the {@code ValueBinding}.
  */
 @Component(isTag = false)
 public final class ValueBindingSortCriteria extends SortCriteria {

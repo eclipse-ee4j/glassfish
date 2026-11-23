@@ -88,7 +88,6 @@ public interface InvocationManager {
      * <p>
      * The pushAppEnvironment and popAppEnvironment must be called in pairs and well-nested.
      *
-     * @param env may not be null. Information about the application environment
      */
     void popAppEnvironment();
 

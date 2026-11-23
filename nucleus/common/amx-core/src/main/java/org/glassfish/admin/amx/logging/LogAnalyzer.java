@@ -30,7 +30,7 @@ import org.glassfish.external.arc.Taxonomy;
 
 /**
  * Provides summary information about important logging events.
- * <big>PRELIMINARY--SUBJECT TO CHANGES/ADDITIONS</big>
+ * <strong>PRELIMINARY--SUBJECT TO CHANGES/ADDITIONS</strong>
  *
  * @since AS 9.0
  */
@@ -100,7 +100,7 @@ for (int i = 0; i < infos.length; ++i) {
      * found in {@link LogModuleNames} or any valid Logger name.
      * The corresponding value
      * is the count for that module of the requested level.
-     * <p>
+     *
      *
      * @param timestamp a timestamp as obtained using TIME_STAMP_KEY from one of the Maps
      *            returned by {@link #getErrorInfo}. Note that it is a 'long' not a 'Long' and is
@@ -134,7 +134,7 @@ for (int i = 0; i < infos.length; ++i) {
      * @param numIntervals number of intervals
      */
     @ManagedAttribute
-    void setKeepErrorStatisticsForIntervals(@Param(name = "numIntervals") final int numIntervals);
+    void setKeepErrorStatisticsForIntervals(@Param(name = "numIntervals") int numIntervals);
 
 
     /**
@@ -150,7 +150,7 @@ for (int i = 0; i < infos.length; ++i) {
      * @param minutes The duration of an interval in minutes.
      */
     @ManagedAttribute
-    void setErrorStatisticsIntervalMinutes(@Param(name = "minutes") final long minutes);
+    void setErrorStatisticsIntervalMinutes(@Param(name = "minutes") long minutes);
 
 
     /**

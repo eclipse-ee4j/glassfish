@@ -148,7 +148,7 @@ public class DeploymentUtils {
      * Returns the generated artifacts object from the specified deployment context, creating it there if it does not
      * already exist.
      *
-     * @param app
+     * @param deploymentContext
      * @return
      */
     public static Artifacts generatedArtifacts(final DeploymentContext deploymentContext) {

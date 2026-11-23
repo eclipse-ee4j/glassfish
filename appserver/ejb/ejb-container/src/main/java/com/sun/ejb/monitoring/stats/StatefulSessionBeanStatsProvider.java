@@ -38,8 +38,8 @@ import org.glassfish.gmbal.ManagedObject;
 @ManagedObject
 public class StatefulSessionBeanStatsProvider extends EjbMonitoringStatsProvider {
 
-    private BoundedRangeStatisticImpl methodReadyStat = null;
-    private BoundedRangeStatisticImpl passiveCount = null;
+    private BoundedRangeStatisticImpl methodReadyStat;
+    private BoundedRangeStatisticImpl passiveCount;
 
     private AtomicLong methodReadyCount = new AtomicLong();
     private AtomicLong passivations = new AtomicLong();

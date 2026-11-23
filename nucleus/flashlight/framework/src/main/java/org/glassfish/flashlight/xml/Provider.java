@@ -28,11 +28,11 @@ import java.util.List;
  * @author Mahesh Meswani
  */
 public class Provider {
-    private String moduleProviderName = null;
-    private String moduleName = null;
-    private String probeProviderName = null;
-    private String probeProviderClass = null;
-    private List<XmlProbe> probes = null;
+    private String moduleProviderName;
+    private String moduleName;
+    private String probeProviderName;
+    private String probeProviderClass;
+    private List<XmlProbe> probes;
 
     public String getModuleName() {
         return moduleName;

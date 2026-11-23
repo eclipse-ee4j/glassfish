@@ -20,9 +20,9 @@ import java.util.Enumeration;
 import java.util.Iterator;
 
 /**
- * Adapter class which wraps an <tt>Iterable</tt> over an
- * <tt>Enumeration</tt>, to support foreach-style iteration over the
- * <tt>Enumeration</tt>.
+ * Adapter class which wraps an <code>Iterable</code> over an
+ * <code>Enumeration</code>, to support foreach-style iteration over the
+ * <code>Enumeration</code>.
  */
 public final class IterableAdapter<T> implements Iterable<T> {
 

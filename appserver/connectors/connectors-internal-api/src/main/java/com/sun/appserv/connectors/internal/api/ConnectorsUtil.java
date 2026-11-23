@@ -532,7 +532,7 @@ public class ConnectorsUtil {
      * Provides the list of built in custom resources by
      * resource-type and factory-class-name pair.
      *
-     * @return map of resource-type & factory-class-name
+     * @return map of resource-type &amp; factory-class-name
      */
     public static Map<String, String> getBuiltInCustomResources() {
         Map<String, String> resourcesMap = new HashMap<>();

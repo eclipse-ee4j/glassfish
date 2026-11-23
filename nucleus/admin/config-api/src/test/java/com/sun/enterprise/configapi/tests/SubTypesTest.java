@@ -52,7 +52,7 @@ public class SubTypesTest {
     private static final Class<?>[] expectedClassNames = {
         com.sun.enterprise.config.serverbeans.Applications.class,
         com.sun.enterprise.config.serverbeans.Configs.class,
-        com.sun.enterprise.config.serverbeans.Clusters.class
+        com.sun.enterprise.config.serverbeans.Clusters.class,
     };
 
 

@@ -27,20 +27,20 @@ public interface SecurityRoleMapperFactory {
 
      /**
      * Returns a RoleMapper corresponding to the AppName.
-     * @param The Application Name of this RoleMapper.
+     * @param appName Application Name of this RoleMapper.
      */
     SecurityRoleMapper getRoleMapper(String appName);
 
     /**
      * remove the RoleMapping associated with this application
-     * @param the application name for this RoleMapper
+     * @param appName application name for this RoleMapper
      */
     void removeRoleMapper(String appName);
 
     /**
      * Sets a new RoleMapper for a particular Application
-     * @param the application name
-     * @param the new role mapper
+     * @param appName application name
+     * @param rmap new role mapper
      */
     void setRoleMapper(String appName, SecurityRoleMapper rmap);
 

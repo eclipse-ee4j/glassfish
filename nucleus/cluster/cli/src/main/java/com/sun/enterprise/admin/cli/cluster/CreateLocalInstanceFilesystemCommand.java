@@ -38,12 +38,12 @@ import static com.sun.enterprise.admin.cli.CLIConstants.K_DAS_PROTOCOL;
 /**
  *  This is a local command that creates a local instance.
  *  Create the local directory structure
- *  nodes/<host-name>/
+ *  nodes/&lt;host-name>/
  *   || ---- agent
  *             || ---- config
  *                     | ---- das.properties
- *   || ---- <server-instance-1>
- *   || ---- <server-instance-2>
+ *   || ---- &lt;server-instance-1>
+ *   || ---- &lt;server-instance-2>
  *
  */
 @Service(name = "_create-instance-filesystem")
@@ -58,10 +58,10 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
     String DASProtocol;
     boolean dasIsSecure;
 
-    private File agentConfigDir = null;
-    private File dasPropsFile = null;
+    private File agentConfigDir;
+    private File dasPropsFile;
     private Properties dasProperties;
-    protected boolean setDasDefaultsOnly = false;
+    protected boolean setDasDefaultsOnly;
 
     /**
      */

@@ -39,7 +39,7 @@ public final class CustomObjectInputStream
     /**
      * The class loader we will use to resolve classes.
      */
-    private ClassLoader classLoader = null;
+    private ClassLoader classLoader;
 
 
     /**

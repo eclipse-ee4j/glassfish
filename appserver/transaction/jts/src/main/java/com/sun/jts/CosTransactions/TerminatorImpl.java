@@ -80,13 +80,13 @@ import org.omg.PortableServer.POAPackage.ServantNotActive;
 
 class TerminatorImpl extends TerminatorPOA implements Terminator {
 
-    private static POA poa = null;
-    private org.omg.CosTransactions.Terminator thisRef = null;
+    private static POA poa;
+    private org.omg.CosTransactions.Terminator thisRef;
 
-    CoordinatorTerm coordTerm = null;
+    CoordinatorTerm coordTerm;
 
     // this is needed to cleanup properly on completion and to avoid leaks.
-    ControlImpl control = null;
+    ControlImpl control;
        /*
         Logger to log transaction messages
     */

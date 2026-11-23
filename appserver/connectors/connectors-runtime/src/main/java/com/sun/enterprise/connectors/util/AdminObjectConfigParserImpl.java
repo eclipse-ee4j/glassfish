@@ -57,7 +57,7 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
      * The admin object to be parsed is identified by the moduleDir
      * where ra.xml is present and the adminObject interface.
      * Admin object interface will be unique in a given ra.xml.
-     * <p/>
+     * <p>
      * It throws ConnectorRuntimeException if either or both the
      * parameters are null, if corresponding rar is not deployed,
      * if no adminObjectInterce is found in ra.xml. If rar is deployed
@@ -89,7 +89,7 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
      * The admin object to be parsed is identified by the moduleDir
      * where ra.xml is present and the adminObject interface.
      * Admin object interface will be unique in a given ra.xml.
-     * <p/>
+     * <p>
      * It throws ConnectorRuntimeException if either or both the
      * parameters are null, if corresponding rar is not deployed,
      * if no adminObjectInterce is found in ra.xml. If rar is deployed
@@ -209,7 +209,7 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
     }
 
     /**
-     * gets the adminObjectClassNames pertaining to a rar & a specific
+     * gets the adminObjectClassNames pertaining to a rar &amp; a specific
      * adminObjectInterfaceName
      *
      * @param desc ConnectorDescriptor pertaining to rar.

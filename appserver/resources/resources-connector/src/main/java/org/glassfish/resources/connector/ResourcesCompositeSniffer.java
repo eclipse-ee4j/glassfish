@@ -61,7 +61,7 @@ public class ResourcesCompositeSniffer extends GenericSniffer {
 
     /**
      * Returns the list of Containers that this Sniffer enables.
-     * <p/>
+     * <p>
      * The runtime will look up each container implementing
      * using the names provided in the habitat.
      *

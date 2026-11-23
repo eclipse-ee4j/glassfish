@@ -55,17 +55,17 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 public class HTTPInputArchive extends AbstractReadableArchive {
 
-    private URI archiveURI = null;
-    private URL archiveURL = null;
+    private URI archiveURI;
+    private URL archiveURL;
 
     /** caches the manifest so we read if from the JAR at most once */
-    private Manifest cachedManifest = null;
+    private Manifest cachedManifest;
 
     /** caches the archive size to avoid opening connections to it multiple times. The real cached value will never be -2 */
     private int cachedArchiveSize = -2;
 
     /** caches the list of all entries; reused for subsequent calls to the entries methods */
-    private Collection<String> cachedEntryNames = null;
+    private Collection<String> cachedEntryNames;
 
     /** caches whether or not this archive exists */
     private Boolean exists;

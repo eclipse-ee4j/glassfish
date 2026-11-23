@@ -88,7 +88,7 @@ public class InsnMultiDimArrayNew extends Insn {
     /**
      * Constructor for opc_multianewarray.
      * classOp must be an array class
-     * nDimsOp must be > 0 and <= number of array dimensions for classOp
+     * nDimsOp must be > 0 and &lt;= number of array dimensions for classOp
      */
     public InsnMultiDimArrayNew (ConstClass classOp, int nDimsOp) {
         this(classOp, nDimsOp, NO_OFFSET);

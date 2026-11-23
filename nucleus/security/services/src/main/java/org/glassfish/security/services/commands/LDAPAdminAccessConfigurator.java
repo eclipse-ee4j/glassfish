@@ -72,7 +72,7 @@ import org.jvnet.hk2.config.types.Property;
 
 /**  A convenience command to configure LDAP for administration. There are several properties and attributes that
  *   user needs to remember and that's rather user unfriendly. That's why this command is being developed.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  */
 @Service(name="configure-ldap-for-admin")

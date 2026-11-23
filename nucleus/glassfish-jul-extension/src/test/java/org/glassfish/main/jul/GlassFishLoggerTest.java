@@ -316,7 +316,7 @@ public class GlassFishLoggerTest {
         protected Object[][] getContents() {
             return new Object[][] {
                 {BUNDLE_WITH_PARAMETER, "resourceBundleValue with this parameter: {0}"},
-                {BUNDLE_WITHOUT_PARAMETER, "resourceBundleValue without parameter"}
+                {BUNDLE_WITHOUT_PARAMETER, "resourceBundleValue without parameter"},
             };
         }
     }
@@ -328,7 +328,7 @@ public class GlassFishLoggerTest {
         protected Object[][] getContents() {
             return new Object[][] {
                 {BUNDLE_WITH_PARAMETER, "another {0}."},
-                {BUNDLE_WITHOUT_PARAMETER, "another one."}
+                {BUNDLE_WITHOUT_PARAMETER, "another one."},
             };
         }
 

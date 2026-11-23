@@ -53,7 +53,7 @@ public class ActiveInboundResourceAdapterImpl extends ActiveOutboundResourceAdap
      * Creates an active inbound resource adapter. Sets all RA java bean
      * properties and issues a start.
      *
-     * @param ra         <code>ResourceAdapter<code> java bean.
+     * @param ra         <code>ResourceAdapter</code> java bean.
      * @param desc       <code>ConnectorDescriptor</code> object.
      * @param moduleName Resource adapter module name.
      * @param jcl        <code>ClassLoader</code> instance.

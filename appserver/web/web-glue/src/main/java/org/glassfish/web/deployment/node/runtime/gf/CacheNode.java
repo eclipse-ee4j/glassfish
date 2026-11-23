@@ -46,7 +46,7 @@ public class CacheNode extends RuntimeDescriptorNode<Cache> {
                 CacheMappingNode.class, "addNewCacheMapping");
     }
 
-    protected Cache descriptor = null;
+    protected Cache descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

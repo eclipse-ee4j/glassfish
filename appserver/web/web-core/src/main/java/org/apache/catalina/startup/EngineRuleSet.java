@@ -42,7 +42,7 @@ public class EngineRuleSet extends RuleSetBase {
     /**
      * The matching pattern prefix to use for recognizing our elements.
      */
-    protected String prefix = null;
+    protected String prefix;
 
 
     // ------------------------------------------------------------ Constructor

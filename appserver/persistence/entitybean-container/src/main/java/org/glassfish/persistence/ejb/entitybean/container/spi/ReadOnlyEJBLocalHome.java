@@ -22,6 +22,6 @@ public interface ReadOnlyEJBLocalHome
     extends jakarta.ejb.EJBLocalHome
 {
 
-    public ReadOnlyBeanLocalNotifier getReadOnlyBeanLocalNotifier();
+    ReadOnlyBeanLocalNotifier getReadOnlyBeanLocalNotifier();
 
 }

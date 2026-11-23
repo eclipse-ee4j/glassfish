@@ -28,10 +28,10 @@ import org.glassfish.api.Param;
 public class DeployCommandParameters extends OpsParams {
 
     @Param(optional = true)
-    public String name = null;
+    public String name;
 
     @Param(name = ParameterNames.CONTEXT_ROOT, optional = true)
-    public String contextroot = null;
+    public String contextroot;
 
     public String getContextRoot() {
         return contextroot;
@@ -43,14 +43,14 @@ public class DeployCommandParameters extends OpsParams {
 
     @Param(name = ParameterNames.VIRTUAL_SERVERS, optional = true)
     @I18n("virtualservers")
-    public String virtualservers = null;
+    public String virtualservers;
 
     public String getVirtualServers() {
         return virtualservers;
     }
 
     @Param(name = ParameterNames.LIBRARIES, optional = true)
-    public String libraries = null;
+    public String libraries;
 
     @Param(optional = true, defaultValue = "false")
     public Boolean force = false;
@@ -74,14 +74,14 @@ public class DeployCommandParameters extends OpsParams {
     }
 
     @Param(optional = true)
-    public String retrieve = null;
+    public String retrieve;
 
     public String getRetrieve() {
         return retrieve;
     }
 
     @Param(optional = true)
-    public String dbvendorname = null;
+    public String dbvendorname;
 
     public String getDBVendorName() {
         return dbvendorname;
@@ -99,28 +99,28 @@ public class DeployCommandParameters extends OpsParams {
     public Boolean uniquetablenames;
 
     @Param(name = ParameterNames.DEPLOYMENT_PLAN, optional = true)
-    public File deploymentplan = null;
+    public File deploymentplan;
 
     public File getDeploymentPlan() {
         return deploymentplan;
     }
 
     @Param(name = ParameterNames.ALT_DD, optional = true)
-    public File altdd = null;
+    public File altdd;
 
     public File getAltdd() {
         return altdd;
     }
 
     @Param(name = ParameterNames.RUNTIME_ALT_DD, optional = true)
-    public File runtimealtdd = null;
+    public File runtimealtdd;
 
     public File getRuntimeAltdd() {
         return runtimealtdd;
     }
 
     @Param(name = ParameterNames.ENABLED, optional = true)
-    public Boolean enabled = null;
+    public Boolean enabled;
 
     public Boolean isEnabled() {
         return enabled;
@@ -195,7 +195,7 @@ public class DeployCommandParameters extends OpsParams {
     public Properties property;
 
     @Param(optional = true)
-    public String type = null;
+    public String type;
 
     public String getType() {
         return type;
@@ -217,7 +217,7 @@ public class DeployCommandParameters extends OpsParams {
         return clientJarRequested;
     }
 
-    public String previousContextRoot = null;
+    public String previousContextRoot;
 
     public String getPreviousContextRoot() {
         return previousContextRoot;

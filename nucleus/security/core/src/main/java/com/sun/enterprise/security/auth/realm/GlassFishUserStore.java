@@ -18,7 +18,6 @@
 package com.sun.enterprise.security.auth.realm;
 
 import com.sun.enterprise.security.auth.realm.exceptions.BadRealmException;
-import com.sun.enterprise.security.auth.realm.exceptions.InvalidOperationException;
 import com.sun.enterprise.security.auth.realm.exceptions.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.exceptions.UnsupportedRealmException;
 
@@ -79,7 +78,6 @@ public interface GlassFishUserStore {
      *
      * @param username name of the user in this realm whose group listing is needed.
      * @return enumeration of group names (strings)
-     * @throws InvalidOperationException thrown if the realm does not support this operation
      * @throws NoSuchUserException
      */
     Enumeration<String> getGroupNames(String username) throws NoSuchUserException;

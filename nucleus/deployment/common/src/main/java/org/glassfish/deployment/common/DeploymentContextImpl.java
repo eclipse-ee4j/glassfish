@@ -175,11 +175,11 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     /**
      * Returns the class loader associated to this deployment request. ClassLoader instances are usually obtained by the
      * getClassLoader API on the associated ArchiveHandler for the archive type being deployed.
-     * <p/>
+     * <p>
      * This can return null and the container should allocate a ClassLoader while loading the application.
      *
      * @return a class loader capable of loading classes and resources from the source
-     * @link {org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
+     * See {@code org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
      */
     @Override
     public ClassLoader getFinalClassLoader() {
@@ -189,11 +189,11 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     /**
      * Returns the class loader associated to this deployment request. ClassLoader instances are usually obtained by the
      * getClassLoader API on the associated ArchiveHandler for the archive type being deployed.
-     * <p/>
+     * <p>
      * This can return null and the container should allocate a ClassLoader while loading the application.
      *
      * @return a class loader capable of loading classes and resources from the source
-     * @link {org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
+     * See {@code org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
      */
     @Override
     public ClassLoader getClassLoader() {

@@ -33,7 +33,7 @@ public class ResultsProducer implements Closeable {
     private final XMLStreamReader parser;
     private final File input;
     private final Results results;
-    private boolean done = false;
+    private boolean done;
 
     public ResultsProducer(File inputFile) throws XMLStreamException, FileNotFoundException {
         input = inputFile;
@@ -153,10 +153,10 @@ public class ResultsProducer implements Closeable {
 
     private class Results {
 
-        private int count = 0;
-        private int pass = 0;
-        private int fail = 0;
-        private int didNotRun = 0;
+        private int count;
+        private int pass;
+        private int fail;
+        private int didNotRun;
         private final StringBuilder buffer = new StringBuilder();
     }
 }

@@ -79,7 +79,7 @@ public final class FileStore extends StoreBase {
     /**
      * A File representing the directory in which Sessions are stored.
      */
-    private File directoryFile = null;
+    private File directoryFile;
 
     /**
      * The descriptive information about this implementation.

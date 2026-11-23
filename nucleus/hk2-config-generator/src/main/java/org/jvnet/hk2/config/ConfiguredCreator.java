@@ -29,7 +29,7 @@ class ConfiguredCreator<T> implements Creator<T> {
     private final Creator<T> core;
     private final Dom dom;
 
-    public ConfiguredCreator(Creator<T> core, Dom dom) {
+    ConfiguredCreator(Creator<T> core, Dom dom) {
         this.core = core;
         this.dom = dom;
     }

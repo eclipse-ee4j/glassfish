@@ -45,7 +45,7 @@ public interface SecurityManager {
 
     /**
      * @return A boolean true/false depending on whether or not the caller has the specified role.
-     * @param The EJB developer specified "logical role".
+     * @param role EJB developer specified "logical role".
      */
     boolean isCallerInRole(String role);
 

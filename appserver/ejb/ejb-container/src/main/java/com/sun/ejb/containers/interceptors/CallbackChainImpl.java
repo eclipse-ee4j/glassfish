@@ -26,7 +26,7 @@ class CallbackChainImpl {
 
     protected CallbackInterceptor[] interceptors;
     protected int size;
-    private Method method = null;
+    private Method method;
 
     CallbackChainImpl(CallbackInterceptor[] interceptors) {
         this.interceptors = interceptors;

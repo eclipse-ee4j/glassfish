@@ -77,7 +77,7 @@ public class TextPayloadImpl {
 
         public Iterator<Payload.Part> parts() {
             return new Iterator<Payload.Part>() {
-                private boolean hasReturnedReport = false;
+                private boolean hasReturnedReport;
 
                 public boolean hasNext() {
                     return ! hasReturnedReport;

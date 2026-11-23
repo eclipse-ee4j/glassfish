@@ -128,7 +128,7 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     /**
      * The debugging detail level for this component.
      */
-    private int debug = 0;
+    private int debug;
 
     /**
      * The "enable DNS lookups" flag for this Connector.
@@ -207,13 +207,13 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
      * GlassFish behind a proxy server, so that redirects get constructed accurately. If not specified, the port number
      * specified by the <code>port</code> property is used.
      */
-    private int proxyPort = 0;
+    private int proxyPort;
 
     /**
      * The HTTP scheme to which we should pretend requests to this Connector were directed. This is useful when operating
      * GlassFish behind a proxy server, so that redirects get constructed accurately.
      */
-    private String proxyScheme = null;
+    private String proxyScheme;
 
     /**
      * The redirect port for non-SSL to SSL redirects.
@@ -233,12 +233,12 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     /**
      * The secure connection flag that will be set on all requests received through this connector.
      */
-    private boolean secure = false;
+    private boolean secure;
 
     /**
      * The blocking connection flag that will be set on all requests received through this connector.
      */
-    private boolean blocking = false;
+    private boolean blocking;
 
     /**
      * For jk, do tomcat authentication if true, trust server if false
@@ -269,12 +269,12 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     /**
      * Has this component been initialized yet?
      */
-    protected boolean initialized = false;
+    protected boolean initialized;
 
     /**
      * Has this component been started yet?
      */
-    private boolean started = false;
+    private boolean started;
 
     /**
      * Use TCP no delay ?
@@ -315,7 +315,7 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     /**
      * Flag indicating whether this connector is receiving its requests from a trusted intermediate server
      */
-    protected boolean authPassthroughEnabled = false;
+    protected boolean authPassthroughEnabled;
 
     protected ProxyHandler proxyHandler;
 
@@ -640,14 +640,14 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     }
 
     /**
-     * Return the maximum number of processors allowed, or <0 for unlimited.
+     * Return the maximum number of processors allowed, or &lt;0 for unlimited.
      */
     public int getMaxProcessors() {
         return maxProcessors;
     }
 
     /**
-     * Set the maximum number of processors allowed, or <0 for unlimited.
+     * Set the maximum number of processors allowed, or &lt;0 for unlimited.
      *
      * @param maxProcessors The new maximum processors
      */
@@ -841,7 +841,7 @@ public class Connector implements org.apache.catalina.Connector, Lifecycle {
     /**
      * Set the proxy scheme for this Connector.
      *
-     * @param proxyPort The new proxy scheme or null to unset
+     * @param scheme The new proxy scheme or null to unset
      */
     public void setProxyScheme(String scheme) {
         this.proxyScheme = scheme;

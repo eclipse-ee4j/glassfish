@@ -40,7 +40,7 @@ public enum ConnectionPoolErrorMessages {
 
     private final StringManager localStrings = StringManager.getManager(getClass());
 
-    private ConnectionPoolErrorMessages(String messagekey) {
+    ConnectionPoolErrorMessages(String messagekey) {
         this.message = localStrings.getString(messagekey);
     }
     private final String message;

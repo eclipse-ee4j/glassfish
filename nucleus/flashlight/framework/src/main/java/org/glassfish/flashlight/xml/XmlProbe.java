@@ -28,15 +28,15 @@ import java.util.List;
  * @author Mahesh Meswani
  */
 public class XmlProbe {
-    String probeName = null;
-    String probeMethod = null;
-    List<XmlProbeParam> probeParams = null;
-    boolean hasSelf = false;
-    boolean isHidden = false;
-    boolean stateful = false;
-    boolean statefulReturn = false;
-    boolean statefulException = false;
-    String profileNames = null;
+    String probeName;
+    String probeMethod;
+    List<XmlProbeParam> probeParams;
+    boolean hasSelf;
+    boolean isHidden;
+    boolean stateful;
+    boolean statefulReturn;
+    boolean statefulException;
+    String profileNames;
 
     public String getProbeName() {
         return probeName;

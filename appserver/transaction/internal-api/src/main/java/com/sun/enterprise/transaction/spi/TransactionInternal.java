@@ -30,7 +30,7 @@ public interface TransactionInternal extends Transaction {
      *
      * @param sync - the Synchronization instance.
      */
-    public void registerInterposedSynchronization(Synchronization sync)
+    void registerInterposedSynchronization(Synchronization sync)
         throws RollbackException, IllegalStateException,
         SystemException;
 }

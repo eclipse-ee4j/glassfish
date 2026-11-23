@@ -62,7 +62,7 @@ import static org.glassfish.appclient.server.core.jws.RestrictedContentAdapter.L
  * We cannot create the signed main JAR once and for all because the JNLP
  * document which launches the app might change from one invocation to the next,
  * particularly regarding command-line arguments which appear in the JNLP as
- * <argument> elements.
+ * &lt;argument&gt; elements.
  *
  * @author tjquinn
  */

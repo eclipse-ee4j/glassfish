@@ -28,40 +28,40 @@ public interface ClusterReader extends BaseReader {
      *
      * @return String   name of the cluster
      */
-    public String getName() throws LbReaderException;
+    String getName() throws LbReaderException;
 
     /**
      * Get the instance readers in the cluster
      *
      * @return InstanceReader[]   array of instance readers in the cluser
      */
-    public InstanceReader[] getInstances() throws LbReaderException;
+    InstanceReader[] getInstances() throws LbReaderException;
 
     /**
      * Returns the health checker for the cluster
      *
      * @return HealthCheckerReader health checker information for the cluster
      */
-    public HealthCheckerReader getHealthChecker() throws LbReaderException;
+    HealthCheckerReader getHealthChecker() throws LbReaderException;
 
     /**
      * Returns all the web modules in the cluster
      *
      * @return WebModuleReader[]    array of web module readers in the cluster
      */
-    public WebModuleReader[] getWebModules() throws LbReaderException;
+    WebModuleReader[] getWebModules() throws LbReaderException;
 
     /**
      * Returns the lb policy
      *
      * @return LbPolicy    String
      */
-    public String getLbPolicy() throws LbReaderException;
+    String getLbPolicy() throws LbReaderException;
 
     /**
      * Returns the lb policy module
      *
      * @return LbPolicyModule    String
      */
-    public String getLbPolicyModule() throws LbReaderException;
+    String getLbPolicyModule() throws LbReaderException;
 }

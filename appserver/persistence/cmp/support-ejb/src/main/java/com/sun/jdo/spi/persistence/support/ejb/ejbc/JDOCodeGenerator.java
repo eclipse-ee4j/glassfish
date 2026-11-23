@@ -88,11 +88,11 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
 
     private ArrayList<File> files = new ArrayList<File>();
 
-    private DeploymentContext ctx = null;
-    private ClassLoader loader = null;
+    private DeploymentContext ctx;
+    private ClassLoader loader;
     private JDOConcreteBeanGenerator cmp11Generator;
     private JDOConcreteBeanGenerator cmp20Generator;
-    private EjbBundleDescriptorImpl bundle = null;
+    private EjbBundleDescriptorImpl bundle;
     private NameMapper nameMapper;
     private Model model;
     private EJBMetaDataModelImpl ejbModel;
@@ -101,7 +101,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
     private String generatedXmlsPath;
     private String appName;
     private File classout;
-    private MappingGenerator mappingGenerator = null;
+    private MappingGenerator mappingGenerator;
 
     /**
      * Flag set to <code>true</code> if code generation should proceed
@@ -110,7 +110,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
     private static final boolean ignoreValidationResults = false;//Deployer.getKeepFailedStubsValue();
 
     /** String representing the signatures of generic code-gen files */
-    private static String signatures = null;
+    private static String signatures;
 
     /**
      * @see CMPGenerator#init(org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl, DeploymentContext, String, String)
@@ -134,7 +134,7 @@ public class JDOCodeGenerator implements CMPGenerator, DatabaseConstants {
     /**
      * @see CMPGenerator#init(org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl, ClassLoader, String)
      *
-     * This method should be merged with {@link #init(org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl, DeploymentContext, String)}
+     * This method should be merged with DeploymentContext, String)
      * when TestFramework is fixed for optional pm-descriptors and java2db support.
      *
      * @deprecated

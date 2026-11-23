@@ -76,7 +76,7 @@ public class StandardEngine
      * Host name to use when no server host, or an unknown host,
      * is specified in the request.
      */
-    private String defaultHost = null;
+    private String defaultHost;
 
 
     /**
@@ -89,13 +89,13 @@ public class StandardEngine
     /**
      * The <code>Service</code> that owns this Engine, if any.
      */
-    private Service service = null;
+    private Service service;
 
     /** Allow the base dir to be specified explicitly for
      * each engine. In time we should stop using catalina.base property -
      * otherwise we loose some flexibility.
      */
-    private String baseDir = null;
+    private String baseDir;
 
     /**
      * The JVM Route ID for this Tomcat instance. All Route ID's must be unique

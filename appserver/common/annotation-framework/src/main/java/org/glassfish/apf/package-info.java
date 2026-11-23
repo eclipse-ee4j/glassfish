@@ -44,6 +44,6 @@
  * annotation was defined on.
  * </p>
  * @since 9.0
- * @auther Jerome Dochez
+ * @author Jerome Dochez
  */
 package org.glassfish.apf;

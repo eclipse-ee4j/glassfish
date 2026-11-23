@@ -168,7 +168,7 @@ public class ResourceValidator implements EventListener, ResourceValidatorVisito
 
         private final Application application;
 
-        public ResourceValidatorHandler(DeploymentContext dc) {
+        ResourceValidatorHandler(DeploymentContext dc) {
             this.dc = dc;
             this.application = dc.getModuleMetaData(Application.class);
             DeployCommandParameters commandParams = dc.getCommandParameters(DeployCommandParameters.class);

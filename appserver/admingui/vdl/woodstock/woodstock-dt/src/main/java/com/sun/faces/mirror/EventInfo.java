@@ -30,7 +30,7 @@ public abstract class EventInfo extends FeatureInfo {
     /**
      * Original event info.
      */
-    private EventInfo original = null;
+    private EventInfo original;
 
     /**
      * Get the simple name of the method used to add event listeners.

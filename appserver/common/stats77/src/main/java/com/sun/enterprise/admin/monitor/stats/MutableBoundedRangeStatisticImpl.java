@@ -86,7 +86,7 @@ public class MutableBoundedRangeStatisticImpl implements BoundedRangeStatistic, 
      * </ul>
      * In a real-time system with actual probes for measurement, the lastSampleTime
      * could be different from the instant when this method is called, but that is deemed insignificant.
-     * @param count         long that represents the current value of the Statistic.
+     * @param current         long that represents the current value of the Statistic.
      */
     @Override
     public void setCount(long current) {

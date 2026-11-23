@@ -180,7 +180,7 @@ class DistributedReadOnlyBeanServiceImpl implements DistributedReadOnlyBeanServi
         public ClassLoader loader;
         public ReadOnlyBeanRefreshEventHandler handler;
 
-        public ReadOnlyBeanRefreshHandlerInfo(ClassLoader loader, ReadOnlyBeanRefreshEventHandler handler) {
+        ReadOnlyBeanRefreshHandlerInfo(ClassLoader loader, ReadOnlyBeanRefreshEventHandler handler) {
             this.loader = loader;
             this.handler = handler;
         }

@@ -38,40 +38,40 @@ public interface Realms extends AMXProxy, Utility, Singleton
 {
     /** get the names of all realms */
     @ManagedAttribute
-    public String[] getRealmNames();
+    String[] getRealmNames();
     @ManagedAttribute
-    public String[] getPredefinedAuthRealmClassNames();
+    String[] getPredefinedAuthRealmClassNames();
 
     @ManagedAttribute
-    public String getDefaultRealmName();
+    String getDefaultRealmName();
     @ManagedAttribute
-    public void   setDefaultRealmName(String realmName);
+    void   setDefaultRealmName(String realmName);
 
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
-    public void addUser( String realm, String user, String password, String[] groupList );
+    void addUser( String realm, String user, String password, String[] groupList );
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
-    public void updateUser( String realm, String user, String newUser, String password, String[] groupList );
+    void updateUser( String realm, String user, String newUser, String password, String[] groupList );
     @ManagedOperation(impact=MBeanOperationInfo.ACTION)
-    public void removeUser(String realm, String user);
+    void removeUser(String realm, String user);
 
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[] getUserNames(String realm);
+    String[] getUserNames(String realm);
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[] getGroupNames(String realm);
+    String[] getGroupNames(String realm);
 
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public Map<String,Object> getUserAttributes(final String realm, final String user);
+    Map<String,Object> getUserAttributes(String realm, String user);
 
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[] getGroupNames(String realm, String user);
+    String[] getGroupNames(String realm, String user);
 
     /** @return true if the realm implementation support User Management (add,remove,update user) */
     @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public boolean supportsUserManagement(final String realmName);
+    boolean supportsUserManagement(String realmName);
 
     /** @return the username of any user that uses an empty password */
     @ManagedAttribute
-    public String getAnonymousUser();
+    String getAnonymousUser();
 }
 
 

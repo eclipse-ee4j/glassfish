@@ -50,28 +50,28 @@ public class ManagedConnection implements jakarta.resource.spi.ManagedConnection
     public static final int ISPOOLEDCONNECTION = 1;
     public static final int ISXACONNECTION = 2;
 
-    private boolean isDestroyed = false;
+    private boolean isDestroyed;
     private boolean isUsable = true;
 
     private final int connectionType;
-    private PooledConnection pc = null;
-    private java.sql.Connection actualConnection = null;
+    private PooledConnection pc;
+    private java.sql.Connection actualConnection;
     private Hashtable connectionHandles;
     private PrintWriter logWriter;
     private PasswordCredential passwdCredential;
-    private jakarta.resource.spi.ManagedConnectionFactory mcf = null;
-    private XAResource xar = null;
+    private jakarta.resource.spi.ManagedConnectionFactory mcf;
+    private XAResource xar;
     public ConnectionHolder activeConnectionHandle;
 
     //GJCINT
     private int isolationLevelWhenCleaned;
-    private boolean isClean = false;
+    private boolean isClean;
 
-    private boolean transactionInProgress = false;
+    private boolean transactionInProgress;
 
-    private ConnectionEventListener listener = null;
+    private ConnectionEventListener listener;
 
-    private ConnectionEvent ce = null;
+    private ConnectionEvent ce;
 
     private static Logger _logger;
     static {

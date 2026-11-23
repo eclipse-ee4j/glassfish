@@ -49,7 +49,7 @@ public final class Message extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Identifier for the component associated with this message component.
@@ -60,7 +60,7 @@ public final class Message extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.InputComponentIdsEditor")
             //CHECKSTYLE:ON
-    private String forComponent = null;
+    private String forComponent;
 
     /**
      * Set this attribute to true to display the detailed message.
@@ -68,12 +68,12 @@ public final class Message extends UIComponentBase {
     @Property(name = "showDetail",
             displayName = "Show Detail Message",
             category = "Appearance")
-    private boolean showDetail = false;
+    private boolean showDetail;
 
     /**
      * showDetail set flag.
      */
-    private boolean showDetailSet = false;
+    private boolean showDetailSet;
 
     /**
      * Set this attribute to true to display the summary message.
@@ -81,12 +81,12 @@ public final class Message extends UIComponentBase {
     @Property(name = "showSummary",
             displayName = "Show Summary Message",
             category = "Appearance")
-    private boolean showSummary = false;
+    private boolean showSummary;
 
     /**
      * showSummary set flag.
      */
-    private boolean showSummarySet = false;
+    private boolean showSummarySet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -96,7 +96,7 @@ public final class Message extends UIComponentBase {
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -108,7 +108,7 @@ public final class Message extends UIComponentBase {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Position of this element in the tabbing order of the current document.
@@ -129,7 +129,7 @@ public final class Message extends UIComponentBase {
     /**
      * tabIndex set flag.
      */
-    private boolean tabIndexSet = false;
+    private boolean tabIndexSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -141,12 +141,12 @@ public final class Message extends UIComponentBase {
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible", category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

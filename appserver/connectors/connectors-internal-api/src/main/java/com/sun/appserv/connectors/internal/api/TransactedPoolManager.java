@@ -32,7 +32,7 @@ public interface TransactedPoolManager {
     /**
      * Indicate that a resource is enlisted.<br>
      * Expecting this method is called from the
-     * {@link com.sun.enterprise.resource.ResourceHandle#enlistedInTransaction(Transaction)} method and not directly from a
+     * {@code com.sun.enterprise.resource.ResourceHandle#enlistedInTransaction(Transaction)} method and not directly from a
      * pool manager.
      *
      * @param tran Transaction to which the resource is enlisted
@@ -42,7 +42,7 @@ public interface TransactedPoolManager {
     void resourceEnlisted(Transaction tran, ResourceHandle resource) throws IllegalStateException;
 
     /**
-     * Registers the provided resource with the component & enlists the resource in the transaction
+     * Registers the provided resource with the component &amp; enlists the resource in the transaction
      *
      * @param resource Resource to be registered.
      * @throws PoolingException when unable to register the resource

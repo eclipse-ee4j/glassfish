@@ -32,11 +32,11 @@ public interface JmxBoundedMultiLruCacheMBean extends JmxMultiLruCacheMBean {
     /**
      * Returns the current size of the cache in bytes
      */
-    public Long getCurrentSize();
+    Long getCurrentSize();
 
     /**
      * Returns the upper bound on the cache size
      */
-    public Long getMaxSize();
+    Long getMaxSize();
 
 }

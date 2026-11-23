@@ -586,8 +586,8 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
     }
 
     private static class SunApplicationXmlParser {
-        private XMLStreamReader parser = null;
-        private String compatValue = null;
+        private XMLStreamReader parser;
+        private String compatValue;
 
         SunApplicationXmlParser(File baseDir) throws FileNotFoundException {
             InputStream input = null;

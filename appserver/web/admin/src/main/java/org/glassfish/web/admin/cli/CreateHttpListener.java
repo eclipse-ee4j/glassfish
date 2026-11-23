@@ -105,7 +105,7 @@ public class CreateHttpListener implements AdminCommand {
     @Inject
     Domain domain;
     private static final String DEFAULT_TRANSPORT = "tcp";
-    private NetworkConfig networkConfig = null;
+    private NetworkConfig networkConfig;
 
     private static final Logger logger = LogFacade.getLogger();
 

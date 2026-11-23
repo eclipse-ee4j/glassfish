@@ -26,8 +26,8 @@ import java.util.Vector;
 
 /**
  * Helper class for breaking up a string.
- * <P>
- *<P>
+ *
+ *
  */
 //
 public class StringScanner

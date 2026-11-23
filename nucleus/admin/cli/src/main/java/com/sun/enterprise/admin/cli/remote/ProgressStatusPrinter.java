@@ -47,7 +47,7 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
         private final long pause;
         private volatile boolean stop;
 
-        public Ticker(long pause) {
+        Ticker(long pause) {
             this.pause = pause;
             this.setDaemon(true);
         }
@@ -81,10 +81,10 @@ public class ProgressStatusPrinter implements AdminCommandListener<GfSseInboundE
     private static final char[] spinner = new char[] { '|', '/', '-', '\\' };
 
     private String lastMessage;
-    private int lastMsgLength = 0;
+    private int lastMsgLength;
     private boolean firstPrint = true;
     private int spinnerIndex = -1;
-    private Ticker ticker = null;
+    private Ticker ticker;
 
     private ProgressStatusClient client = new ProgressStatusClient(null);
     private CommandProgress commandProgress;

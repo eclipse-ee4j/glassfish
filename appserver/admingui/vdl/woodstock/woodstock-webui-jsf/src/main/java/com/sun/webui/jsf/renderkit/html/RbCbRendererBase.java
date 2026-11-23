@@ -309,7 +309,7 @@ abstract class RbCbRendererBase extends AbstractRenderer {
         "onMouseOut",
         "onKeyPress",
         "onKeyDown",
-        "onKeyUp"
+        "onKeyUp",
     };
 
     /**

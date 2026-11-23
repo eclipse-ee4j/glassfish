@@ -32,7 +32,7 @@ public final class LazyProperty {
     /**
      * Returns a value lazily. Never returns {@code null}. If it would be {@code null}, it creates and sets the value
      * in a thread-safe way and returns the newly created value.
-     * It's expected that the value set by the {@setter} will be returned by a subsequent call of the {@code getter}.
+     * It's expected that the value set by the {@code setter} will be returned by a subsequent call of the {@code getter}.
      * Therefore subsequent calls to this method would return the value created and set in a previous call.
      *
      * @param <OBJ> Type of the object that getter and setter get value from or set value to

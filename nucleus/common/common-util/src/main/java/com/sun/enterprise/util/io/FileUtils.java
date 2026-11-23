@@ -438,7 +438,7 @@ public final class FileUtils {
 
     /**
      * Deletes a directory and its contents.
-     * <p/>
+     * <p>
      * If this method encounters a symbolic link in the subtree below "parent"
      * then it deletes the link but not any of the files pointed to by the link.
      * Note that whack will delete files if a symbolic link appears in the
@@ -453,7 +453,7 @@ public final class FileUtils {
 
     /**
      * Deletes a directory and its contents.
-     * <p/>
+     * <p>
      * If this method encounters a symbolic link in the subtree below "parent"
      * then it deletes the link but not any of the files pointed to by the link.
      * Note that whack will delete files if a symbolic link appears in the
@@ -1050,7 +1050,7 @@ public final class FileUtils {
         private final File newFile;
         private boolean renameResult;
 
-        public RenameFileWork(File originalFile, File newFile) {
+        RenameFileWork(File originalFile, File newFile) {
             this.originalFile = originalFile;
             this.newFile = newFile;
         }

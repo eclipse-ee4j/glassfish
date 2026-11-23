@@ -85,7 +85,6 @@ public class Addressing extends Descriptor {
 
 
     /**
-     * @return a string describing the values I hold
      */
     @Override
     public void print(StringBuffer toStringBuffer) {

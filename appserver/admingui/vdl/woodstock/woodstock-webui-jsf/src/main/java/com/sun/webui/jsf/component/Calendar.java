@@ -74,7 +74,7 @@ public final class Calendar extends Field
     /**
      * Date converter.
      */
-    private DateConverter dateConverter = null;
+    private DateConverter dateConverter;
 
     /**
      * The date format pattern to use (i.e. {@code yyyy-MM-dd}). The component
@@ -97,7 +97,7 @@ public final class Calendar extends Field
             shortDescription = "The date format pattern to use (e.g., yyyy-MM-dd).",
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.DateFormatPatternsEditor")
             //CHECKSTYLE:ON
-    private String dateFormatPattern = null;
+    private String dateFormatPattern;
 
     /**
      * A message below the text field for the date, indicating the string format
@@ -125,7 +125,7 @@ public final class Calendar extends Field
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String dateFormatPatternHelp = null;
+    private String dateFormatPatternHelp;
 
     /**
      * A {@code java.util.Date} object representing the last selectable day. The
@@ -145,7 +145,7 @@ public final class Calendar extends Field
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private java.util.Date maxDate = null;
+    private java.util.Date maxDate;
 
     /**
      * A {@code java.util.Date} object representing the first selectable day.
@@ -164,7 +164,7 @@ public final class Calendar extends Field
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.binding.ValueBindingPropertyEditor")
             //CHECKSTYLE:ON
-    private java.util.Date minDate = null;
+    private java.util.Date minDate;
 
     /**
      * The {@code java.util.TimeZone} used with this component. Unless set, the
@@ -175,7 +175,7 @@ public final class Calendar extends Field
             displayName = "Time Zone",
             category = "Appearance",
             isHidden = true)
-    private java.util.TimeZone timeZone = null;
+    private java.util.TimeZone timeZone;
 
     /**
      * Creates a new instance of Calendar.

@@ -20,9 +20,9 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 
 /**
  * Descriptor definition for
- * <sun-application-client>
- *   <java-web-start-support>
- *     <jnlp-ref>
+ * &lt;sun-application-client>
+ *   &lt;java-web-start-support>
+ *     &lt;jnlp-ref>
  *
  * @author tjquinn
  */

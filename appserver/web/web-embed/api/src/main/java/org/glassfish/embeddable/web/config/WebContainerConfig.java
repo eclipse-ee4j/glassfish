@@ -23,7 +23,7 @@ import java.net.URL;
 /**
  * Class that is used for configuring WebContainer instances.
  *
- * <p/> Usage example:
+ * <p> Usage example:
  * <pre>
  *      // Create and start Glassfish
  *      GlassFish glassfish = GlassFishRuntime.bootstrap().newGlassFish();
@@ -49,7 +49,7 @@ public class WebContainerConfig {
     private File docRoot;
     private String hostNames = "${com.sun.aas.hostName}";
     private String  listenerName = "embedded-listener";
-    private boolean listings = false;
+    private boolean listings;
     private int port = 8080;
     private String virtualServerId = "server";
 
@@ -91,20 +91,20 @@ public class WebContainerConfig {
     }
 
     /**
-     * Sets the host names of the default <tt>VirtualServer</tt>
+     * Sets the host names of the default <code>VirtualServer</code>
      * (default: <i>localhost</i>).
      *
-     * @param hostNames the host names of the default <tt>VirtualServer</tt> seprated by commas.
+     * @param hostNames the host names of the default <code>VirtualServer</code> seprated by commas.
      */
     public void setHostNames(String hostNames) {
         this.hostNames = hostNames;
     }
 
     /**
-     * Gets the host names of the default <tt>VirtualServer</tt>
+     * Gets the host names of the default <code>VirtualServer</code>
      * (default: <i>localhost</i>).
      *
-     * @return the host names of the default <tt>VirtualServer</tt>
+     * @return the host names of the default <code>VirtualServer</code>
      */
     public String getHostNames() {
         return hostNames;
@@ -144,38 +144,38 @@ public class WebContainerConfig {
     }
 
     /**
-     * Sets the port of the default <tt>WebListener</tt> (default: 8080).
+     * Sets the port of the default <code>WebListener</code> (default: 8080).
      *
-     * @param port the port of the default <tt>WebListener</tt>
+     * @param port the port of the default <code>WebListener</code>
      */
     public void setPort(int port) {
         this.port = port;
     }
 
     /**
-     * Gets the port of the default <tt>WebListener</tt> (default: 8080).
+     * Gets the port of the default <code>WebListener</code> (default: 8080).
      *
-     * @return the port of the default <tt>WebListener</tt>
+     * @return the port of the default <code>WebListener</code>
      */
     public int getPort() {
         return port;
     }
 
     /**
-     * Sets the id of the default <tt>VirtualServer</tt>
+     * Sets the id of the default <code>VirtualServer</code>
      * (default: <i>server</i>).
      *
-     * @param virtualServerId the id of the default <tt>VirtualServer</tt>
+     * @param virtualServerId the id of the default <code>VirtualServer</code>
      */
     public void setVirtualServerId(String virtualServerId) {
         this.virtualServerId = virtualServerId;
     }
 
     /**
-     * Gets the id of the default <tt>VirtualServer</tt>
+     * Gets the id of the default <code>VirtualServer</code>
      * (default: <i>server</i>).
      *
-     * @return the id of the default <tt>VirtualServer</tt>
+     * @return the id of the default <code>VirtualServer</code>
      */
     public String getVirtualServerId() {
         return virtualServerId;

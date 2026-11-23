@@ -465,7 +465,7 @@ public class PersistenceClassElement extends PersistenceElement
          * @return <code>true</code> if there have been (property) changes to
          * this class, <code>false</code> otherwise.
          */
-        public boolean isModified ();
+        boolean isModified ();
 
         /** Set the modified flag for this persistence class to flag.  This is
          * usually set to <code>true</code> by property changes and
@@ -473,14 +473,14 @@ public class PersistenceClassElement extends PersistenceElement
          * @param flag if <code>true</code>, this class is marked as modified;
          * if <code>false</code>, it is marked as unmodified.
          */
-        public void setModified (boolean flag);
+        void setModified (boolean flag);
 
         /** Get the object identity type of this class element.
          * @return the object identity type, one of
          * {@link #APPLICATION_IDENTITY}, {@link #DATABASE_IDENTITY}, or
          * {@link #UNMANAGED_IDENTITY}
          */
-        public int getObjectIdentityType ();
+        int getObjectIdentityType ();
 
         /** Set the object identity type of this class element.
          * @param type - an integer indicating the object identity type, one of:
@@ -488,7 +488,7 @@ public class PersistenceClassElement extends PersistenceElement
          * {@link #UNMANAGED_IDENTITY}
          * @exception ModelException if impossible
          */
-        public void setObjectIdentityType (int type) throws ModelException;
+        void setObjectIdentityType (int type) throws ModelException;
 
         /** Get the fully qualified name of the primary key class for this class
          * element.  This value is only used if
@@ -500,7 +500,7 @@ public class PersistenceClassElement extends PersistenceElement
          * @see #APPLICATION_IDENTITY
          *
          */
-        public String getKeyClass ();
+        String getKeyClass ();
 
         /** Set the primary key class for this class element.
          * @param name - the fully qualified name which represents the primary
@@ -511,45 +511,45 @@ public class PersistenceClassElement extends PersistenceElement
          * @see #setObjectIdentityType
          * @see #APPLICATION_IDENTITY
          */
-        public void setKeyClass (String name) throws ModelException;
+        void setKeyClass (String name) throws ModelException;
 
         /** Change the set of fields.
          * @param fields the new fields
          * @param action {@link #ADD}, {@link #REMOVE}, or {@link #SET}
          * @exception ModelException if impossible
          */
-        public void changeFields (PersistenceFieldElement[] fields, int action)
+        void changeFields (PersistenceFieldElement[] fields, int action)
             throws ModelException;
 
         /** Get all fields.
          * @return the fields
          */
-        public PersistenceFieldElement[] getFields ();
+        PersistenceFieldElement[] getFields ();
 
         /** Find a field by name.
          * @param name the name to match
          * @return the field, or <code>null</code> if it does not exist
          */
-        public PersistenceFieldElement getField (String name);
+        PersistenceFieldElement getField (String name);
 
         /** Change the set of concurrency groups.
          * @param groups the new concurrency groups
          * @param action {@link #ADD}, {@link #REMOVE}, or {@link #SET}
          * @exception ModelException if impossible
          */
-        public void changeConcurrencyGroups (ConcurrencyGroupElement[] groups,
+        void changeConcurrencyGroups (ConcurrencyGroupElement[] groups,
             int action) throws ModelException;
 
         /** Get all concurrency groups.
          * @return the concurrency groups
          */
-        public ConcurrencyGroupElement[] getConcurrencyGroups ();
+        ConcurrencyGroupElement[] getConcurrencyGroups ();
 
         /** Find a concurrency group by name.
          * @param name the name to match
          * @return the concurrency group, or <code>null</code> if it does not
          * exist
          */
-        public ConcurrencyGroupElement getConcurrencyGroup (String name);
+        ConcurrencyGroupElement getConcurrencyGroup (String name);
     }
 }

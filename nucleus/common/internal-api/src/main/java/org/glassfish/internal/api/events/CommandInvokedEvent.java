@@ -33,7 +33,7 @@ import org.glassfish.security.common.UserPrincipal;
  * </p>
  *
  * <ul>
- *   <li>{@link Service} annotation on the class or otherwise register the class as an HK2 service
+ *   <li>{@code Service} annotation on the class or otherwise register the class as an HK2 service
  *   </li>
  *   <li>{@link MessageReceiver} qualifier annotation on the class with the {@link CommandInvokedEvent} message type
  *   </li>

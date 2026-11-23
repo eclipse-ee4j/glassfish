@@ -45,7 +45,7 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 public class MultiReadableArchive extends AbstractReadableArchive {
 
-    private ReadableArchive parentArchive = null;
+    private ReadableArchive parentArchive;
 
     private ReadableArchive[] archives;
 

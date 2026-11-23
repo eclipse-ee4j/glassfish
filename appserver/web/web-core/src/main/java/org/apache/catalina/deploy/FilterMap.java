@@ -44,17 +44,17 @@ public class FilterMap implements Serializable {
     /**
      * The name of the filter with which this filter mapping is associated
      */
-    private String filterName = null;
+    private String filterName;
 
     /**
      * The servlet name for which this filter mapping applies
      */
-    private String servletName = null;
+    private String servletName;
 
     /**
      * The URL pattern for which this filter mapping applies
      */
-    private String urlPattern = null;
+    private String urlPattern;
 
     /**
      * The dispatcher types of this filter mapping

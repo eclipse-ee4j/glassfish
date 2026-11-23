@@ -181,7 +181,7 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter implements Au
      * inside jars inside jars can be deployed...
      */
     private static class InternalJarAdapter extends ReadableArchiveScannerAdapter {
-        public InternalJarAdapter(ReadableArchiveScannerAdapter parent, ReadableArchive archive, URI uri) {
+        InternalJarAdapter(ReadableArchiveScannerAdapter parent, ReadableArchive archive, URI uri) {
             super(parent, archive, uri);
         }
 

@@ -25,7 +25,7 @@ import java.io.InputStream;
  */
 public interface ProprietaryReader<T> {
 
-    boolean isReadable(final Class<?> type, final String contentType);
+    boolean isReadable(Class<?> type, String contentType);
 
     /**
      * Reads and closes the stream, or can transfer both respnsibilities to a returned object.
@@ -35,6 +35,6 @@ public interface ProprietaryReader<T> {
      * @return T
      * @throws IOException
      */
-    T readFrom(final InputStream stream, final String contentType) throws IOException;
+    T readFrom(InputStream stream, String contentType) throws IOException;
 
 }

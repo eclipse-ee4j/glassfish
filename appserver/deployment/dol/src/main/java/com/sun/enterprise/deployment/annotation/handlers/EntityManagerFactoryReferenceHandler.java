@@ -55,7 +55,6 @@ public class EntityManagerFactoryReferenceHandler extends AbstractResourceHandle
      *
      * @param ainfo the annotation information
      * @param rcContexts an array of ResourceContainerContext
-     * @param HandlerProcessingResult
      */
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo, ResourceContainerContext[] rcContexts)

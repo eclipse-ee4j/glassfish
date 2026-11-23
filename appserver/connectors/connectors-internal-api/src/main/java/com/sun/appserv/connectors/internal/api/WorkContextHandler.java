@@ -28,7 +28,7 @@ public interface WorkContextHandler {
      * @param workContextClassName inflow context class name
      * @return boolean indicating whether the workContextClass is supported or not
      */
-    public boolean isContextSupported(boolean strict, String workContextClassName);
+    boolean isContextSupported(boolean strict, String workContextClassName);
 
 
     /**
@@ -36,5 +36,5 @@ public interface WorkContextHandler {
      * @param raName resource-adapter name
      * @param loader class-loader of the resource-adapter
      */
-    public void init(String raName, ClassLoader loader);
+    void init(String raName, ClassLoader loader);
 }

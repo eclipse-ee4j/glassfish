@@ -33,7 +33,7 @@ public class ConstantPool implements VMConstants {
     private Vector<ConstBasic> pool = new Vector<>();
 
     /* uniqifier tables */
-    private boolean hashed = false;
+    private boolean hashed;
     private Hashtable<String, ConstBasic> utfTable = new Hashtable<>(11);
     private Hashtable<String, ConstBasic> unicodeTable = new Hashtable<>(3);
     private Hashtable<String, ConstBasic> stringTable = new Hashtable<>(11);

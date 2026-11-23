@@ -647,7 +647,7 @@ public final class IntrospectionUtils {
     /**
      * Add elements from the classpath <i>cp </i> to a Vector <i>jars </i> as
      * file URLs (We use Vector for JDK 1.1 compat).
-     * <p>
+     *
      *
      * @param jars The jar list
      * @param cp a String classpath of directory or jar file elements

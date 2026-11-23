@@ -22,7 +22,7 @@ package org.glassfish.enterprise.iiop.api;
  */
 public interface IIOPConstants {
 
-    public static final int PASS_BY_VALUE_ID = 0;
+    int PASS_BY_VALUE_ID = 0;
 
-    public static final int PASS_BY_REFERENCE_ID = 1;
+    int PASS_BY_REFERENCE_ID = 1;
 }

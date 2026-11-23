@@ -40,7 +40,7 @@ public class ApplicationParameter implements Serializable {
     /**
      * The description of this environment entry.
      */
-    private String description = null;
+    private String description;
 
     public String getDescription() {
         return (this.description);
@@ -54,7 +54,7 @@ public class ApplicationParameter implements Serializable {
     /**
      * The name of this application parameter.
      */
-    private String name = null;
+    private String name;
 
     public String getName() {
         return (this.name);
@@ -83,7 +83,7 @@ public class ApplicationParameter implements Serializable {
     /**
      * The value of this application parameter.
      */
-    private String value = null;
+    private String value;
 
     public String getValue() {
         return (this.value);

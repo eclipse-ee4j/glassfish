@@ -116,7 +116,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
      * will never be associated with a transaction The typical use case may be to check the original contents of an EIS when
      * a transacted connection is changing the contents, and the tx is yet to be committed.
      *
-     * <p/>
+     * <p>
      * We create a ResourceSpec for a non tx connection with a name ending in __nontx. This is to maintain uniformity with
      * the scheme of having __pm connections. If one were to create a resource with a jndiName ending with __nontx the same
      * functionality might be achieved.

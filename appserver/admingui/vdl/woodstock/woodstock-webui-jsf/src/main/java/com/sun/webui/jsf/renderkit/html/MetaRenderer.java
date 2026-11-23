@@ -39,7 +39,7 @@ public final class MetaRenderer extends AbstractRenderer {
     private static final String[] STRING_ATTRIBUTES = {
         "name",
         "content",
-        "scheme"
+        "scheme",
     };
 
     @Override

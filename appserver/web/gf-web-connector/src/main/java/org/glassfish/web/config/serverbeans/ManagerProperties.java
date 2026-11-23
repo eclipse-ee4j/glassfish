@@ -49,7 +49,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      *         {@link String }
      */
     @Attribute
-    public String getSessionFileName();
+    String getSessionFileName();
 
     /**
      * Sets the value of the sessionFileName property.
@@ -57,7 +57,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setSessionFileName(String value) throws PropertyVetoException;
+    void setSessionFileName(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the reapIntervalInSeconds property.
@@ -66,7 +66,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      *         {@link String }
      */
     @Attribute(defaultValue="60",dataType=Integer.class)
-    public String getReapIntervalInSeconds();
+    String getReapIntervalInSeconds();
 
     /**
      * Sets the value of the reapIntervalInSeconds property.
@@ -74,7 +74,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setReapIntervalInSeconds(String value) throws PropertyVetoException;
+    void setReapIntervalInSeconds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the maxSessions property.
@@ -84,7 +84,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(defaultValue="-1")
     @Max(value=Integer.MAX_VALUE)
-    public String getMaxSessions();
+    String getMaxSessions();
 
     /**
      * Sets the value of the maxSessions property.
@@ -92,7 +92,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setMaxSessions(String value) throws PropertyVetoException;
+    void setMaxSessions(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the sessionIdGeneratorClassname property.
@@ -101,7 +101,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      *         {@link String }
      */
     @Attribute
-    public String getSessionIdGeneratorClassname();
+    String getSessionIdGeneratorClassname();
 
     /**
      * Sets the value of the sessionIdGeneratorClassname property.
@@ -109,7 +109,7 @@ public interface ManagerProperties extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setSessionIdGeneratorClassname(String value) throws PropertyVetoException;
+    void setSessionIdGeneratorClassname(String value) throws PropertyVetoException;
 
 
     /**

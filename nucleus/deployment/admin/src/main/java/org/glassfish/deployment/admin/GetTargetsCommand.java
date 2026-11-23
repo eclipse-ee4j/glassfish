@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Service;
 public class GetTargetsCommand implements AdminCommand {
 
     @Param(optional=true, primary=true)
-    String appName = null;
+    String appName;
 
     @Inject
     Domain domain;

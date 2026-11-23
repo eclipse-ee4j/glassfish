@@ -112,7 +112,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
     @Inject
     private AdminService adminService;
 
-    private SecureAdmin secureAdmin = null;
+    private SecureAdmin secureAdmin;
 
     @AccessRequired.To("update")
     private AuthRealm fileAuthRealm;

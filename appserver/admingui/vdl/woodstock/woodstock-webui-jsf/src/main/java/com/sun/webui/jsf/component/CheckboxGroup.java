@@ -57,7 +57,7 @@ public final class CheckboxGroup extends Selector implements NamingContainer,
     /**
      * columns set flag.
      */
-    private boolean columnsSet = false;
+    private boolean columnsSet;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -71,12 +71,12 @@ public final class CheckboxGroup extends Selector implements NamingContainer,
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default constructor.

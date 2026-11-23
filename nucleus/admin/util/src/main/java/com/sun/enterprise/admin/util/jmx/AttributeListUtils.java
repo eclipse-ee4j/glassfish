@@ -118,7 +118,7 @@ public class AttributeListUtils {
 
     /**
      * JMX 1.2 specification had a weird limitation that a Dynamic MBean may not have an attribute whose name is <b> not a
-     * valid Java identifier <b>. This method is a utility method to convert the any arbitrary name into a String that can
+     * valid Java identifier </b>. This method is a utility method to convert the any arbitrary name into a String that can
      * be a valid JMX 1.2 attribute. Every character in the string passed that is neither a Character.isJavaIdentifierStart
      * nor a Character.isJavaIdentifierPart is replace with a valid character '_'.
      *

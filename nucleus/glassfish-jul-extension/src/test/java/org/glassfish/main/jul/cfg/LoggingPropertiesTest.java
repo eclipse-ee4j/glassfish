@@ -38,6 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class LoggingPropertiesTest {
 
+    /** Number of properties in the test's {@code logging.properties} resource. */
     public static final int PROPERTY_COUNT = 13;
 
     @Test

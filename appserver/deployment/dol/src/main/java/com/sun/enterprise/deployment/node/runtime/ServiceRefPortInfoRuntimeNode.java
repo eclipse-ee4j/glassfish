@@ -93,8 +93,8 @@ public class ServiceRefPortInfoRuntimeNode extends DeploymentDescriptorNode {
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for the descriptor
-     * @param the descriptor to write
+     * @param nodeName name for the descriptor
+     * @param desc descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName,

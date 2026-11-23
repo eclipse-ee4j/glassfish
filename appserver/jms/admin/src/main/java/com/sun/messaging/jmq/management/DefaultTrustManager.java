@@ -42,7 +42,7 @@ import javax.net.ssl.X509TrustManager;
  * firewall and are treated as trusted.
  */
 public class DefaultTrustManager implements X509TrustManager {
-    private boolean debug = false;
+    private boolean debug;
 
     public void checkClientTrusted(X509Certificate[] chain, String authType) {
     }

@@ -106,7 +106,7 @@ public class EJBLocalObjectInvocationHandlerDelegate implements InvocationHandle
         private final Object primaryKey;
         private final boolean isOptionalLocalBusinessView;
         // Used only for SFSBs
-        private long version = 0L;
+        private long version;
 
         SerializableLocalObjectDelegate(long containerId,
                 String intfClassName, Object primaryKey, boolean isOptionalLocalBusView, long version) {

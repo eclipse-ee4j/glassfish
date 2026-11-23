@@ -44,10 +44,10 @@ public abstract class EjbMonitoringStatsProvider {
 
     Map<String, EjbMethodStatsProvider> methodMonitorMap;
 
-    String appName = null;
-    String moduleName = null;
-    String beanName = null;
-    boolean registered = false;
+    String appName;
+    String moduleName;
+    String beanName;
+    boolean registered;
     protected long beanId;
 
     private CountStatisticImpl createStat = new CountStatisticImpl("CreateCount",

@@ -67,8 +67,8 @@ public class ManagedThreadFactoryManager implements ResourceManager {
     private static final LocalStringManagerImpl I18N = new LocalStringManagerImpl(ManagedThreadFactoryManager.class);
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    private String jndiName = null;
-    private String description = null;
+    private String jndiName;
+    private String description;
     private String threadPriority = ""+Thread.NORM_PRIORITY;
     private String virtual = Boolean.FALSE.toString();
     private String contextInfoEnabled = Boolean.TRUE.toString();

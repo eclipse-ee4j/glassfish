@@ -36,8 +36,8 @@ public class SessionConfigDescriptor extends Descriptor implements SessionConfig
     public static final int SESSION_TIMEOUT_DEFAULT = 30;
 
     private int sessionTimeout;
-    private CookieConfig cookieConfig = null;
-    private Set<SessionTrackingMode> trackingModes = null;
+    private CookieConfig cookieConfig;
+    private Set<SessionTrackingMode> trackingModes;
 
     public SessionConfigDescriptor() {
         sessionTimeout = SESSION_TIMEOUT_DEFAULT;

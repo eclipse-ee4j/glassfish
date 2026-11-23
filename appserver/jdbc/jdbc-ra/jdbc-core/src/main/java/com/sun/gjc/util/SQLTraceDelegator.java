@@ -50,7 +50,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
     protected List<SQLTraceListener> sqlTraceListenersList;
     private final SimpleJndiName poolName;
     private InvocationManager invocationManager;
-    private SQLTraceProbeProvider probeProvider = null;
+    private SQLTraceProbeProvider probeProvider;
 
     public SQLTraceProbeProvider getProbeProvider() {
         return probeProvider;

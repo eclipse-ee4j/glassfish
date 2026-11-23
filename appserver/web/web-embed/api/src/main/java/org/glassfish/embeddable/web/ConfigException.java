@@ -19,21 +19,21 @@ package org.glassfish.embeddable.web;
 /**
  * Exception thrown when a web container component fails to be
  * (re)configured, or if it fails to be registered with another web
- * container component because its id (in the case of <tt>VirtualServer</tt>
- * and <tt>WebListener</tt>) or context root (in the case of
- * <tt>Context</tt>) is already taken.
+ * container component because its id (in the case of <code>VirtualServer</code>
+ * and <code>WebListener</code>) or context root (in the case of
+ * <code>Context</code>) is already taken.
  */
 public class ConfigException extends Exception {
 
     /**
-     * Constructs a <tt>ConfigException</tt> with no detail message.
+     * Constructs a <code>ConfigException</code> with no detail message.
      * The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause(Throwable) initCause}.
      */
     protected ConfigException() { }
 
     /**
-     * Constructs a <tt>ConfigException</tt> with the specified detail
+     * Constructs a <code>ConfigException</code> with the specified detail
      * message. The cause is not initialized, and may subsequently be
      * initialized by a call to {@link #initCause(Throwable) initCause}.
      *
@@ -44,7 +44,7 @@ public class ConfigException extends Exception {
     }
 
     /**
-     * Constructs a <tt>ConfigException</tt> with the specified detail
+     * Constructs a <code>ConfigException</code> with the specified detail
      * message and cause.
      *
      * @param  message the detail message
@@ -56,12 +56,12 @@ public class ConfigException extends Exception {
     }
 
     /**
-     * Constructs a <tt>ConfigException</tt> with the specified cause.
+     * Constructs a <code>ConfigException</code> with the specified cause.
      * The detail message is set to:
      * <pre>
      *  (cause == null ? null : cause.toString())</pre>
      * (which typically contains the class and detail message of
-     * <tt>cause</tt>).
+     * <code>cause</code>).
      *
      * @param  cause the cause (which is saved for later retrieval by the
      *         {@link #getCause()} method)

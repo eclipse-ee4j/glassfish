@@ -35,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * <p>This qualifier allows direct injection of the GlassFish built-in MicroProfile JWT authentication mechanism.</p>
  *
- * <h3>Basic Usage</h3>
+ * <h2>Basic Usage</h2>
  * <pre>{@code
  * @ApplicationScoped
  * public class SecurityService {
@@ -48,14 +48,14 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * }
  * }</pre>
  *
- * <h3>Features</h3>
+ * <h2>Features</h2>
  * <ul>
  * <li><strong>Direct Access:</strong> Direct access to the GlassFish JWT authentication mechanism</li>
  * <li><strong>CDI Integration:</strong> Seamless integration with CDI dependency injection</li>
- * <li><strong>Type Safety:</strong> Uses the standard {@link jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism} interface</li>
+ * <li><strong>Type Safety:</strong> Uses the standard {@code jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism} interface</li>
  * </ul>
  *
- * <h3>Combining with Other Mechanisms</h3>
+ * <h2>Combining with Other Mechanisms</h2>
  * <p>The {@code @MicroProfileJwtAuthenticationMechanism} qualifier is complementary to the qualifiers for the standard Jakarta Security
  * mechanisms like the Basic authentication mechanism. It can be combined with the other standard mechanisms
  * in the same {@code HttpAuthenticationMechanismHandler}.</p>
@@ -85,8 +85,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * }</pre>
  *
  * @since GlassFish 8.0
- * @see jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism
- * @see org.eclipse.microprofile.jwt.JsonWebToken
  */
 @Qualifier
 @Retention(RUNTIME)

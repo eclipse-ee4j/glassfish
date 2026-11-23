@@ -93,7 +93,7 @@ public class Main
     /**
      *  The byte code enhancer.
      */
-    private ByteCodeEnhancer enhancer = null;
+    private ByteCodeEnhancer enhancer;
 
 
     /**
@@ -427,7 +427,7 @@ public class Main
      *
      *********************************************************************/
 
-    private final ByteCodeEnhancer createEnhancer (JDOMetaData jdometadata)
+    private ByteCodeEnhancer createEnhancer (JDOMetaData jdometadata)
                                    throws EnhancerUserException,
                                           EnhancerFatalError
     {
@@ -449,7 +449,7 @@ public class Main
      *  @param  filenames  The filenames.
      *********************************************************************/
 
-    private final void enhanceInputFiles(Collection<String> filenames) {
+    private void enhanceInputFiles(Collection<String> filenames) {
         for (Iterator<String> names = filenames.iterator(); names.hasNext();) {
             try {
                 String name = names.next();
@@ -481,7 +481,7 @@ public class Main
      *  @param  in  The input stream of the classfile.
      *********************************************************************/
 
-    private final void enhanceClassFile (InputStream in)
+    private void enhanceClassFile (InputStream in)
     {
 
         OutputStream out = null;
@@ -515,7 +515,7 @@ public class Main
      *  @param  name  The filename of the zipfile.
      *********************************************************************/
 
-    private final void enhanceZipFile (String filename)
+    private void enhanceZipFile (String filename)
     {
 
         ZipInputStream  in = null;
@@ -557,7 +557,7 @@ public class Main
      *  @exception  FileNotFoundException  If the file could not be found.
      *********************************************************************/
 
-    private static final InputStream openFileInputStream (String filename)
+    private static InputStream openFileInputStream (String filename)
                                      throws FileNotFoundException
     {
 
@@ -578,7 +578,7 @@ public class Main
      *  @exception  ClassNotFoundException  If the class could not be found.
      *********************************************************************/
 
-    private final InputStream openClassInputStream (String classname)
+    private InputStream openClassInputStream (String classname)
                               throws IOException,
                                      ClassNotFoundException
     {
@@ -601,7 +601,7 @@ public class Main
      *  @return  Do we have a potential classfile?
      *********************************************************************/
 
-    private static final boolean isClassFileName (String filename)
+    private static boolean isClassFileName (String filename)
     {
 
         return filename.endsWith (".class");
@@ -618,7 +618,7 @@ public class Main
      *  @param  Do we have a potential zipfile?
      *********************************************************************/
 
-    private static final boolean isZipFileName (String filename)
+    private static boolean isZipFileName (String filename)
     {
 
         final int n = filename.length ();
@@ -642,7 +642,7 @@ public class Main
      *  @return  The filename.
      *********************************************************************/
 
-    private static final String createClassFileName (String classname)
+    private static String createClassFileName (String classname)
     {
 
         return classname.replace ('.', '/') + ".class";
@@ -659,7 +659,7 @@ public class Main
      *  @return  The output zipfile name.
      *********************************************************************/
 
-    private final File createZipOutputFile (String zipfilename)
+    private File createZipOutputFile (String zipfilename)
     {
 
         return new File (this.cmdLineOpts.destinationDirectory, new File (zipfilename).getName ());
@@ -678,7 +678,7 @@ public class Main
      *  @exception  IOException  If the file could not be created.
      *********************************************************************/
 
-    private final void createOutputFile (boolean  enhanced,
+    private void createOutputFile (boolean  enhanced,
                                          String   filename,
                                          File     temp)
                        throws IOException
@@ -730,7 +730,7 @@ public class Main
      *  @param  in  The input stream.
      *********************************************************************/
 
-    private final void closeInputStream (InputStream in)
+    private void closeInputStream (InputStream in)
     {
 
         if  (in != null)
@@ -754,7 +754,7 @@ public class Main
      *  @param  in  The output stream.
      *********************************************************************/
 
-    private final void closeOutputStream (OutputStream out)
+    private void closeOutputStream (OutputStream out)
     {
 
         if  (out != null)
@@ -780,7 +780,7 @@ public class Main
      *  @exception  IOException  If an error occured.
      *********************************************************************/
 
-    private static final void createPathOfFile (File file)
+    private static void createPathOfFile (File file)
                               throws IOException
     {
 
@@ -801,7 +801,7 @@ public class Main
      *  @param  ex   An optional exception (can be <code>null</code>).
      *********************************************************************/
 
-    private final void printError (String    msg,
+    private void printError (String    msg,
                                    Throwable ex)
     {
 
@@ -823,7 +823,7 @@ public class Main
      *  @param  msg  The message.
      *********************************************************************/
 
-    private final void printMessage (String msg)
+    private void printMessage (String msg)
     {
 
         this.outMessages.println (msg);
@@ -903,37 +903,37 @@ public class Main
         /**
          *  The destination directory to write the enhanced classes to.
          */
-        String destinationDirectory = null;
+        String destinationDirectory;
 
 
         /**
          *  Do timing messures?
          */
-        boolean doTiming = false;
+        boolean doTiming;
 
 
         /**
          *  Verbose output?
          */
-        boolean verbose = false;
+        boolean verbose;
 
 
         /**
          *  No output at all?
          */
-        boolean quiet = false;
+        boolean quiet;
 
 
         /**
          *  Force a write even if the classfile has not been enhanced?
          */
-        boolean forceWrite = false;
+        boolean forceWrite;
 
 
         /**
          *  Really write the enhanced or not enhanced classes to disk?
          */
-        boolean noWrite = false;
+        boolean noWrite;
 
 
     }  //CmdLineOptions

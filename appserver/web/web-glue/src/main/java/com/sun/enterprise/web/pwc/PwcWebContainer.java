@@ -29,18 +29,18 @@ public class PwcWebContainer implements PwcWebContainerLifecycle {
      * The parent/top-level container in <code>_embedded</code> for virtual
      * servers.
      */
-    private Engine _engine = null;
+    private Engine _engine;
 
    /**
      * The embedded Catalina object.
      */
-    private Embedded _embedded = null;
+    private Embedded _embedded;
 
 
     /**
      * Has this component been started yet?
      */
-    private boolean _started = false;
+    private boolean _started;
 
     public void onInitialization(String rootDir, String instanceName,
                                  boolean useNaming, Logger logger,

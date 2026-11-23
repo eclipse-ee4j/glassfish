@@ -81,7 +81,7 @@ public final class TypeCast
     is correct, and may want to call {@link #checkCollection} instead
     if there is any doubt.
     @param o the Object, which must be a {@link Collection}
-    @return Collection<T>
+    @return Collection&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Collection<T> asCollection(final Object o)
@@ -93,7 +93,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkCollection} instead if there is
     any doubt.
-    @return Collection<T extends Serializable>
+    @return Collection&lt;T extends Serializable&gt;
      */
     public static <T extends Serializable> Collection<T> asSerializableCollection(final Object c)
     {
@@ -144,7 +144,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkList} instead if there is
     any doubt.
-    @return List<T>
+    @return List&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> List<T> asList(final Object list)
@@ -156,7 +156,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call{@link #checkList} instead if there is
     any doubt.
-    @return List<T extends Serializable>
+    @return List&lt;T extends Serializable&gt;
      */
     public static <T extends Serializable> List<T> asSerializableList(final Object list)
     {
@@ -169,7 +169,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkSet} instead if there is
     any doubt.
-    @return Set<T>
+    @return Set&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Set<T> asSet(final Object s)
@@ -181,7 +181,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkSet} instead if there is
     any doubt.
-    @return Set<T>
+    @return Set&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> SortedSet<T> asSortedSet(final Object s)
@@ -193,7 +193,7 @@ public final class TypeCast
     The caller should take appropriate care that the type of element
     is correct, and may want to call {@link #checkSet} instead if there is
     any doubt.
-    @return Set<T extends Serializable>
+    @return Set&lt;T extends Serializable&gt;
      */
     public static <T extends Serializable> Set<T> asSerializableSet(final Object s)
     {
@@ -204,7 +204,7 @@ public final class TypeCast
 
     /**
     The caller should take appropriate care that the type is correct.
-    @return Class<T>
+    @return Class&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> Class<T> asClass(final Class<?> c)
@@ -214,7 +214,7 @@ public final class TypeCast
 
     /**
     The caller should take appropriate care that the type is correct.
-    @return Class<T>
+    @return Class&lt;T&gt;
      */
     @SuppressWarnings("unchecked")  // inherent/unavoidable for this method
     public static <T> T[] asArray(final Object o)
@@ -426,7 +426,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Collection<String>, first verifying that all elements
+    Create a checked Collection&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param c the Collection
     @throws ClassCastException
@@ -437,7 +437,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Set<String>, first verifying that all elements
+    Create a checked Set&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param s the Set
     @throws ClassCastException
@@ -448,7 +448,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked List<String>, first verifying that all elements
+    Create a checked List&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param l the List
     @throws ClassCastException
@@ -470,7 +470,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Collection<String>, first verifying that all elements
+    Create a checked Collection&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param c the Collection
     @throws ClassCastException
@@ -482,7 +482,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked Set<String>, first verifying that all elements
+    Create a checked Set&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param s the Set
     @throws ClassCastException
@@ -494,7 +494,7 @@ public final class TypeCast
     }
 
     /**
-    Create a checked List<String>, first verifying that all elements
+    Create a checked List&lt;String&gt;, first verifying that all elements
     are in fact String.
     @param l the List
     @throws ClassCastException

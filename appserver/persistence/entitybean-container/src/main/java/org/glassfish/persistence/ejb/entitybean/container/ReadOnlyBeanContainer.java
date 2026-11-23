@@ -69,7 +69,7 @@ import org.glassfish.persistence.ejb.entitybean.container.distributed.ReadOnlyBe
 
 public class ReadOnlyBeanContainer extends EntityContainer implements ReadOnlyBeanRefreshEventHandler {
 
-    private long refreshPeriodInMillis = 0;
+    private long refreshPeriodInMillis;
 
     // Sequence number incremented each time a bean-level refresh is requested.
     // PK-level data structure has a corresponding sequence number that is used
@@ -77,12 +77,12 @@ public class ReadOnlyBeanContainer extends EntityContainer implements ReadOnlyBe
     private int beanLevelSequenceNum = 1;
 
     // Last time a bean-level timeout refresh event occurred.
-    private long beanLevelLastRefreshRequestedAt = 0;
+    private long beanLevelLastRefreshRequestedAt;
 
     private volatile long currentTimeInMillis = System.currentTimeMillis();
 
     // timer task for refreshing or null if no refresh.
-    private TimerTask refreshTask = null;
+    private TimerTask refreshTask;
 
     private EJBObjectCache robCache;
 
@@ -96,7 +96,7 @@ public class ReadOnlyBeanContainer extends EntityContainer implements ReadOnlyBe
 
     // Don't make this as a static. In future, we may want to
     // support bean level flag for this
-    private boolean RELATIVE_TIME_CHECK_MODE = false;
+    private boolean RELATIVE_TIME_CHECK_MODE;
 
     protected ReadOnlyBeanContainer(EjbDescriptor desc, ClassLoader loader, SecurityManager sm) throws Exception {
         // super(ContainerType.READ_ONLY, desc, loader);
@@ -801,7 +801,7 @@ public class ReadOnlyBeanContainer extends EntityContainer implements ReadOnlyBe
         long lastRefreshedAt;
         Object value;
 
-        public FinderResultsValue(Object v, long time) {
+        FinderResultsValue(Object v, long time) {
             value = v;
             this.lastRefreshedAt = time;
         }
@@ -819,7 +819,7 @@ public class ReadOnlyBeanContainer extends EntityContainer implements ReadOnlyBe
 
         private int extendedHC;
 
-        public FinderResultsKey(Method method, Object[] params) {
+        FinderResultsKey(Method method, Object[] params) {
             finderMethod = method;
             this.hc = finderMethod.hashCode();
             this.extendedHC = this.hc;

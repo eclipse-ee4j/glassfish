@@ -22,7 +22,7 @@
  * Using the JDK annotation processing tool (apt), a typical invocation would
  * look something like this:
  *
- * See {@link com.sun.faces.mirror.FacesAnnotationProcessorFactory} for a
+ * See {@code com.sun.faces.mirror.FacesAnnotationProcessorFactory} for a
  * description of its options.
  *
  */

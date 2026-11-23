@@ -46,7 +46,7 @@ public class WebRuleSet extends RuleSetBase {
     /**
      * The matching pattern prefix to use for recognizing our elements.
      */
-    protected String prefix = null;
+    protected String prefix;
 
 
     /**
@@ -450,8 +450,8 @@ public class WebRuleSet extends RuleSetBase {
  * only 1 time within the web.xml
  */
 final class SetLoginConfig extends Rule {
-    boolean isLoginConfigSet = false;
-    public SetLoginConfig(Digester digester) {
+    boolean isLoginConfigSet;
+    SetLoginConfig(Digester digester) {
         super(digester);
     }
 
@@ -471,8 +471,8 @@ final class SetLoginConfig extends Rule {
  * only 1 time within the web.xml
  */
 final class SetJspConfig extends Rule {
-    boolean isJspConfigSet = false;
-    public SetJspConfig(Digester digester) {
+    boolean isJspConfigSet;
+    SetJspConfig(Digester digester) {
         super(digester);
     }
 
@@ -492,8 +492,8 @@ final class SetJspConfig extends Rule {
  * only 1 time within the web.xml
  */
 final class SetSessionConfig extends Rule {
-    boolean isSessionConfigSet = false;
-    public SetSessionConfig(Digester digester) {
+    boolean isSessionConfigSet;
+    SetSessionConfig(Digester digester) {
         super(digester);
     }
 
@@ -515,7 +515,7 @@ final class SetSessionConfig extends Rule {
 
 final class SetAuthConstraintRule extends Rule {
 
-    public SetAuthConstraintRule(Digester digester) {
+    SetAuthConstraintRule(Digester digester) {
         super(digester);
     }
 
@@ -537,7 +537,7 @@ final class SetAuthConstraintRule extends Rule {
 
 final class SetDistributableRule extends Rule {
 
-    public SetDistributableRule(Digester digester) {
+    SetDistributableRule(Digester digester) {
         super(digester);
     }
 
@@ -559,12 +559,12 @@ final class SetDistributableRule extends Rule {
 
 final class SetPublicIdRule extends Rule {
 
-    public SetPublicIdRule(Digester digester, String method) {
+    SetPublicIdRule(Digester digester, String method) {
         super(digester);
         this.method = method;
     }
 
-    private String method = null;
+    private String method;
 
     public void begin(Attributes attributes) throws Exception {
 
@@ -600,7 +600,7 @@ final class SetPublicIdRule extends Rule {
 
 final class WrapperCreateRule extends Rule {
 
-    public WrapperCreateRule(Digester digester) {
+    WrapperCreateRule(Digester digester) {
         super(digester);
     }
 

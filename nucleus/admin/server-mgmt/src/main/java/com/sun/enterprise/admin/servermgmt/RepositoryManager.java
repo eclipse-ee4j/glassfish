@@ -179,7 +179,7 @@ public class RepositoryManager extends MasterPasswordFileManager {
     protected static final String CERTUTIL_CMD = System.getProperty(SystemPropertyConstants.NSS_BIN_PROPERTY) + "/certutil";
     protected static final String NEW_LINE = System.getProperty("line.separator");
     private static final StringManager _strMgr = StringManager.getManager(RepositoryManager.class);
-    protected RepositoryManagerMessages _messages = null;
+    protected RepositoryManagerMessages _messages;
     public static final String DEBUG = "Debug";
 
     /**

@@ -401,12 +401,12 @@ public class JavaEETransactionManagerSimplifiedTest {
         protected boolean called_beforeCompletion;
         protected boolean called_afterCompletion;
 
-        public TestSync(boolean fail) {
+        TestSync(boolean fail) {
             this.fail = fail;
         }
 
 
-        public TestSync(TransactionManager t) {
+        TestSync(TransactionManager t) {
             fail = true;
             this.t = t;
         }
@@ -442,7 +442,7 @@ public class JavaEETransactionManagerSimplifiedTest {
 
     static class MyRuntimeException extends RuntimeException {
 
-        public MyRuntimeException(String msg) {
+        MyRuntimeException(String msg) {
             super(msg);
         }
     }

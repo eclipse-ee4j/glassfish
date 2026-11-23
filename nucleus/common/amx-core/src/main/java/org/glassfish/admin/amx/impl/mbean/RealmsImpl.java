@@ -68,7 +68,7 @@ public final class RealmsImpl extends AMXImplBase
         return mgr;
     }
 
-    private volatile boolean    realmsLoaded = false;
+    private volatile boolean    realmsLoaded;
 
     private SecurityService getSecurityService()
     {

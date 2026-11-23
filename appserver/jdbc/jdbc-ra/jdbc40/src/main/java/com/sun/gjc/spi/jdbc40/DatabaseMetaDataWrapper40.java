@@ -47,11 +47,11 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
      * Indicates whether or not this data source supports the SQL <code>ROWID</code>
      * type, and if so the lifetime for which a <code>RowId</code> object remains
      * valid.
-     * <p/>
+     * <p>
      * The returned int values have the following relationship:
      *
      * <pre>
-     * ROWID_UNSUPPORTED < ROWID_VALID_OTHER < ROWID_VALID_TRANSACTION < ROWID_VALID_SESSION < ROWID_VALID_FOREVER
+     * ROWID_UNSUPPORTED &lt; ROWID_VALID_OTHER &lt; ROWID_VALID_TRANSACTION &lt; ROWID_VALID_SESSION &lt; ROWID_VALID_FOREVER
      * </pre>
      *
      * so conditional logic such as
@@ -75,7 +75,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     /**
      * Retrieves the schema names available in this database. The results are
      * ordered by <code>TABLE_CATALOG</code> and <code>TABLE_SCHEM</code>.
-     * <p/>
+     *
      * <P>
      * The schema columns are:
      * <OL>
@@ -134,7 +134,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     /**
      * Retrieves a list of the client info properties that the driver supports. The
      * result set contains the following columns
-     * <p/>
+     *
      * <ol>
      * <li><b>NAME</b> String=> The name of the client info property<br>
      * <li><b>MAX_LEN</b> int=> The maximum length of the value for the property<br>
@@ -143,15 +143,15 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
      * typically contain information as to where this property is stored in the
      * database.
      * </ol>
-     * <p/>
+     * <p>
      * The <code>ResultSet</code> is sorted by the NAME column
-     * <p/>
+     *
      *
      * @throws SQLException if a database access error occurs
-     * <p/>
+     *
      * @return A <code>ResultSet</code> object; each row is a supported client info
      * property
-     * <p/>
+     *
      * @since 1.6
      */
     @Override
@@ -162,12 +162,12 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     /**
      * Retrieves a description of the system and user functions available in the
      * given catalog.
-     * <p/>
+     * <p>
      * Only system and user function descriptions matching the schema and function
      * name criteria are returned. They are ordered by <code>FUNCTION_CAT</code>,
      * <code>FUNCTION_SCHEM</code>, <code>FUNCTION_NAME</code> and
      * <code>SPECIFIC_ NAME</code>.
-     * <p/>
+     *
      * <P>
      * Each function description has the the following columns:
      * <OL>
@@ -189,7 +189,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
      * that may be different then the <code>FUNCTION_NAME</code> for example with
      * overload functions
      * </OL>
-     * <p/>
+     * <p>
      * A user may not have permission to execute any of the functions that are
      * returned by <code>getFunctions</code>
      *
@@ -215,7 +215,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     /**
      * Retrieves a description of the given catalog's system or user function
      * parameters and return type.
-     * <p/>
+     *
      * <P>
      * Only descriptions matching the schema, function and parameter name criteria
      * are returned. They are ordered by <code>FUNCTION_CAT</code>,
@@ -223,7 +223,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
      * <code>SPECIFIC_ NAME</code>. Within this, the return value, if any, is first.
      * Next are the parameter descriptions in call order. The column descriptions
      * follow in column number order.
-     * <p/>
+     *
      * <P>
      * Each row in the <code>ResultSet</code> is a parameter description, column
      * description or return type description with the following fields:
@@ -279,7 +279,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
      * that may be different then the <code>FUNCTION_NAME</code> for example with
      * overload functions
      * </OL>
-     * <p/>
+     *
      * <p>
      * The PRECISION column represents the specified column size for the given
      * parameter or column. For numeric data, this is the maximum precision. For
@@ -315,7 +315,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     /**
      * Returns an object that implements the given interface to allow access to
      * non-standard methods, or standard methods not exposed by the proxy.
-     * <p/>
+     * <p>
      * If the receiver implements the interface then the result is the receiver or a
      * proxy for the receiver. If the receiver is a wrapper and the wrapped object
      * implements the interface then the result is the wrapped object or a proxy for

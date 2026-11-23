@@ -148,20 +148,20 @@ public class Entry {
       return byOrdinal[ordinal];
     }
 
-    private static interface NumberConstants {
-      static final int BYTE_LONG_SHORT = 4;
-      static final char BYTE = 'B';
-      static final char LONG = 'L';
-      static final int SHORT_FLOAT = 5;
-      static final char SHORT = 'S';
-      static final char FLOAT = 'F';
-      static final char DOUBLE = 6;
-      static final int INTEGER = 7;
-      static final int ATOMICLONG_BIGDECIMAL_BIGINTEGER = 10;
-      static final char ATOMICLONG = 'm';
-      static final char BIGDECIMAL = 'D';
-      static final char BIGINTEGER = 'I';
-      static final int ATOMICINTEGER = 13;
+    private interface NumberConstants {
+      int BYTE_LONG_SHORT = 4;
+      char BYTE = 'B';
+      char LONG = 'L';
+      int SHORT_FLOAT = 5;
+      char SHORT = 'S';
+      char FLOAT = 'F';
+      char DOUBLE = 6;
+      int INTEGER = 7;
+      int ATOMICLONG_BIGDECIMAL_BIGINTEGER = 10;
+      char ATOMICLONG = 'm';
+      char BIGDECIMAL = 'D';
+      char BIGINTEGER = 'I';
+      int ATOMICINTEGER = 13;
     };
 
     /**

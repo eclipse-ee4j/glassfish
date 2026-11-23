@@ -45,7 +45,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.HtmlAlignEditor")
             //CHECKSTYLE:ON
-    private String align = null;
+    private String align;
 
     /**
      * Alternative textual description of the image rendered by this component.
@@ -58,7 +58,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String alt = null;
+    private String alt;
 
     /**
      * Specifies the width of the img border in pixels. The default value for
@@ -75,7 +75,7 @@ public class ImageComponent extends UIGraphic {
     /**
      * border set flag.
      */
-    private boolean borderSet = false;
+    private boolean borderSet;
 
     /**
      * Image height override. When specified, the width and height attributes
@@ -94,7 +94,7 @@ public class ImageComponent extends UIGraphic {
     /**
      * height set flag.
      */
-    private boolean heightSet = false;
+    private boolean heightSet;
 
     /**
      * Specifies the amount of white space in pixels to be inserted to the left
@@ -112,7 +112,7 @@ public class ImageComponent extends UIGraphic {
     /**
      * hspace set flag.
      */
-    private boolean hspaceSet = false;
+    private boolean hspaceSet;
 
     /**
      * The identifier of the desired theme image.
@@ -123,7 +123,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.webui.jsf.component.propertyeditors.ThemeIconsEditor")
             //CHECKSTYLE:ON
-    private String icon = null;
+    private String icon;
 
     /**
      * A verbose description of this image.
@@ -134,7 +134,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String longDesc = null;
+    private String longDesc;
 
     /**
      * Scripting code executed when a mouse click occurs over this
@@ -146,7 +146,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onClick = null;
+    private String onClick;
 
     /**
      * Scripting code executed when a mouse double click occurs over this
@@ -158,7 +158,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onDblClick = null;
+    private String onDblClick;
 
     /**
      * Scripting code executed when the user presses a mouse button while the
@@ -170,7 +170,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseDown = null;
+    private String onMouseDown;
 
     /**
      * Scripting code executed when the user moves the mouse pointer while over
@@ -182,7 +182,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseMove = null;
+    private String onMouseMove;
 
     /**
      * Scripting code executed when a mouse out movement occurs over this
@@ -194,7 +194,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOut = null;
+    private String onMouseOut;
 
     /**
      * Scripting code executed when the user moves the mouse pointer into the
@@ -206,7 +206,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseOver = null;
+    private String onMouseOver;
 
     /**
      * Scripting code executed when the user releases a mouse button while the
@@ -218,7 +218,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.JavaScriptPropertyEditor")
             //CHECKSTYLE:ON
-    private String onMouseUp = null;
+    private String onMouseUp;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -230,7 +230,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
             //CHECKSTYLE:ON
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -242,7 +242,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * Sets the value of the title attribute for the HTML element. The specified
@@ -255,7 +255,7 @@ public class ImageComponent extends UIGraphic {
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String toolTip = null;
+    private String toolTip;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -269,12 +269,12 @@ public class ImageComponent extends UIGraphic {
     @Property(name = "visible",
             displayName = "Visible",
             category = "Behavior")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Specifies the amount of white space in pixels to be inserted above and
@@ -292,7 +292,7 @@ public class ImageComponent extends UIGraphic {
     /**
      * vspace set flag.
      */
-    private boolean vspaceSet = false;
+    private boolean vspaceSet;
 
     /**
      * Image width override. When specified, the width and height attributes
@@ -311,7 +311,7 @@ public class ImageComponent extends UIGraphic {
     /**
      * width set flag.
      */
-    private boolean widthSet = false;
+    private boolean widthSet;
 
     /**
      * Construct a new {@code ImageComponent}.

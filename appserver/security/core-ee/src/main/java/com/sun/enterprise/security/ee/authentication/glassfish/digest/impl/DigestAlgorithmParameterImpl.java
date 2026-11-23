@@ -26,7 +26,7 @@ public class DigestAlgorithmParameterImpl implements com.sun.enterprise.security
 
     private byte[] delimiter = ":".getBytes();
     private String algorithm = "";
-    private byte[] data = null;
+    private byte[] data;
     private String name = "";
 
     public DigestAlgorithmParameterImpl(String name, byte[] data) {

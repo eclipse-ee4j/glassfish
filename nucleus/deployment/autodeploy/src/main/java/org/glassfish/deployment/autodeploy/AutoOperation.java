@@ -78,7 +78,7 @@ public abstract class AutoOperation {
             AutoDeployConstants.DEPLOY_FAILED,
             AutoDeployConstants.UNDEPLOYED,
             AutoDeployConstants.UNDEPLOY_FAILED,
-            AutoDeployConstants.PENDING
+            AutoDeployConstants.PENDING,
         };
 
     private File file;

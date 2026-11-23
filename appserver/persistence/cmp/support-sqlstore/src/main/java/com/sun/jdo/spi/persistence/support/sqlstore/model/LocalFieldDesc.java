@@ -194,7 +194,7 @@ public class LocalFieldDesc extends FieldDesc {
             {
                 Long.TYPE, Integer.TYPE, Short.TYPE, Byte.TYPE, Double.TYPE,
                 Float.TYPE, BigInteger.class, BigDecimal.class, Long.class,
-                Integer.class, Short.class, Byte.class, Double.class, Float.class
+                Integer.class, Short.class, Byte.class, Double.class, Float.class,
             };
 
     /**
@@ -207,7 +207,7 @@ public class LocalFieldDesc extends FieldDesc {
             {
                 BigInteger.class, BigDecimal.class, Long.class, Integer.class, Short.class,
                 Byte.class, Double.class, Float.class, Long.TYPE, Integer.TYPE,
-                Short.TYPE, Byte.TYPE, Double.TYPE, Float.TYPE
+                Short.TYPE, Byte.TYPE, Double.TYPE, Float.TYPE,
             };
 
     /**
@@ -220,7 +220,7 @@ public class LocalFieldDesc extends FieldDesc {
             {
                 Double.TYPE, Float.TYPE, Long.TYPE, Integer.TYPE, Short.TYPE,
                 Byte.TYPE,  BigDecimal.class, Double.class, BigInteger.class,
-                Long.class, Integer.class, Short.class, Byte.class
+                Long.class, Integer.class, Short.class, Byte.class,
             };
 
     /**
@@ -233,7 +233,7 @@ public class LocalFieldDesc extends FieldDesc {
             {
                 BigDecimal.class, Double.class, Float.class, BigInteger.class,
                 Long.class, Integer.class, Short.class, Byte.class, Double.TYPE,
-                Float.TYPE, Long.TYPE, Integer.TYPE, Short.TYPE, Byte.TYPE
+                Float.TYPE, Long.TYPE, Integer.TYPE, Short.TYPE, Byte.TYPE,
             };
 
     /**

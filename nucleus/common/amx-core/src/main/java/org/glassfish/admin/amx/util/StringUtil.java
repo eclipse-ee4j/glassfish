@@ -324,7 +324,7 @@ public final class StringUtil
         return stripPrefix(s, prefix);
     }
 
-    private static String NEWLINE_STR = null;
+    private static String NEWLINE_STR;
 
     public static String NEWLINE()
     {

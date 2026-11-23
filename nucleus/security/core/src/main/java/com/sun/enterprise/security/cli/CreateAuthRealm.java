@@ -59,10 +59,10 @@ import org.jvnet.hk2.config.types.Property;
  * [--secure | -s] [--user admin_user] [--passwordfile file_name] [--property (name=value)[:name=value]*] [--echo=false]
  * [--target target(Default server)] auth_realm_name
  *
- * domain.xml element example <auth-realm name="file" classname="com.sun.enterprise.security.auth.realm.file.FileRealm">
- * <property name="file" value="${com.sun.aas.instanceRoot}/config/keyfile"/> <property name="jaas-context" value="fileRealm"/>
- * </auth-realm> Or
- * <auth-realm name="certificate" classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm"> </auth-realm>
+ * domain.xml element example &lt;auth-realm name="file" classname="com.sun.enterprise.security.auth.realm.file.FileRealm">
+ * &lt;property name="file" value="${com.sun.aas.instanceRoot}/config/keyfile"/&gt; &lt;property name="jaas-context" value="fileRealm"/&gt;
+ * &lt;/auth-realm> Or
+ * &lt;auth-realm name="certificate" classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm"> &lt;/auth-realm>
  *
  * @author Nandini Ektare
  */

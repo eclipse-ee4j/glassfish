@@ -63,7 +63,7 @@ public class GetAdminObjectConfigProps implements AdminCommand {
     private String adminObjectClass;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

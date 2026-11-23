@@ -58,7 +58,6 @@ public class ClusterReaderHelper {
      * @return  WebModuleReader[]   Array of the corresponding web module
      *                              reader(s).
      *
-     * @throws  LbReaderException   In case of any error(s).
      */
     public static WebModuleReader[] getWebModules(Domain domain, ApplicationRegistry appRegistry,
             List<ApplicationRef> refs, String target) {

@@ -45,7 +45,7 @@ public interface RuleSet {
      * Return the namespace URI that will be applied to all Rule instances
      * created from this RuleSet.
      */
-    public String getNamespaceURI();
+    String getNamespaceURI();
 
 
     // --------------------------------------------------------- Public Methods
@@ -60,7 +60,7 @@ public interface RuleSet {
      * @param digester Digester instance to which the new Rule instances
      *  should be added.
      */
-    public void addRuleInstances(Digester digester);
+    void addRuleInstances(Digester digester);
 
 
 }

@@ -143,7 +143,7 @@ public interface AuthorizationService extends SecurityService {
      * in service.  Upon calling delete(), the context is taken out of service and the policies
      * are deleted from the Authorization Provider.
      */
-    public interface PolicyDeploymentContext {
+    interface PolicyDeploymentContext {
 
         void addRolePolicy(String role, String resource, String action);
 
@@ -169,7 +169,7 @@ public interface AuthorizationService extends SecurityService {
      * Appends the given <code>{@link org.glassfish.security.services.api.authorization.AzAttributeResolver}</code>
      * instance to the internal ordered list of <code>AzAttributeResolver</code> instances,
      * if not currently in the list based on
-     * <code>{@link org.glassfish.security.services.api.authorization.AzAttributeResolver#equals}</code>.
+     * <code>{@code org.glassfish.security.services.api.authorization.AzAttributeResolver#equals}</code>.
      *
      * @param resolver The <code>AzAttributeResolver</code> instance to append.
      * @return true if the <code>AzAttributeResolver</code> was added,

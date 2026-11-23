@@ -55,7 +55,7 @@ public final class ContentPageTitle extends UIComponentBase
             //CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             //CHECKSTYLE:ON
-    private String helpText = null;
+    private String helpText;
 
     /**
      * Indicates that the page title separator should be displayed, when set to
@@ -65,12 +65,12 @@ public final class ContentPageTitle extends UIComponentBase
      * pageSeparator facet.
      */
     @Property(name = "separator", displayName = "Separator")
-    private boolean separator = false;
+    private boolean separator;
 
     /**
      * Separator set flag.
      */
-    private boolean separatorSet = false;
+    private boolean separatorSet;
 
     /**
      * CSS style(s) to be applied to the outermost HTML element when this
@@ -80,7 +80,7 @@ public final class ContentPageTitle extends UIComponentBase
             displayName = "CSS Style(s)",
             category = "Appearance",
             editorClassName = "com.sun.jsfcl.std.css.CssStylePropertyEditor")
-    private String style = null;
+    private String style;
 
     /**
      * CSS style class(es) to be applied to the outermost HTML element when this
@@ -92,7 +92,7 @@ public final class ContentPageTitle extends UIComponentBase
             // CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StyleClassPropertyEditor")
             //CHECKSTYLE:ON
-    private String styleClass = null;
+    private String styleClass;
 
     /**
      * The text to display as the page title.
@@ -103,7 +103,7 @@ public final class ContentPageTitle extends UIComponentBase
             // CHECKSTYLE:OFF
             editorClassName = "com.sun.rave.propertyeditors.StringPropertyEditor")
             // CHECKSTYLE:ON
-    private String title = null;
+    private String title;
 
     /**
      * Use the visible attribute to indicate whether the component should be
@@ -115,12 +115,12 @@ public final class ContentPageTitle extends UIComponentBase
      * submissions because the HTML is present.
      */
     @Property(name = "visible", displayName = "Visible")
-    private boolean visible = false;
+    private boolean visible;
 
     /**
      * visible set flag.
      */
-    private boolean visibleSet = false;
+    private boolean visibleSet;
 
     /**
      * Default Constructor.

@@ -68,7 +68,7 @@ public class DeleteNetworkListener implements AdminCommand {
     String networkListenerName;
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
-    NetworkListener listenerToBeRemoved = null;
+    NetworkListener listenerToBeRemoved;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
     @Inject

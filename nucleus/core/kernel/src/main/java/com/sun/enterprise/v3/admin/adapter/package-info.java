@@ -18,7 +18,7 @@
  * Provides the Grizzly Adapter functionality for the admin console
  * application in particular. Eventually, this package should contain
  * all admin adapter functionality.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  */
 package com.sun.enterprise.v3.admin.adapter;

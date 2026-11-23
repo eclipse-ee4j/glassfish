@@ -71,13 +71,13 @@ public final class Environment
 
     /* If true, provide timing statistics */
     //@olsen: added support for timing statistics
-    private boolean timingOption = false;
+    private boolean timingOption;
 
     /* If true, provide verbose output */
-    private boolean verboseOption = false;
+    private boolean verboseOption;
 
     /* If true, squash warnings */
-    private boolean quietOption = false;
+    private boolean quietOption;
 
     /* The level of debugging detail to provide - not currently used */
 //@olsen: disabled feature
@@ -86,7 +86,7 @@ public final class Environment
 */
 
     /* If true, perform only a dry run - no output is written to disk */
-    private boolean noWriteOption = false;
+    private boolean noWriteOption;
 
     /* If true, allow java classes to be modified for persistence */
 //@olsen: disabled feature
@@ -121,17 +121,17 @@ public final class Environment
 */
 
     /* If true, forces overwriting all output files. */
-    private boolean forceOverwriteOption = false;
+    private boolean forceOverwriteOption;
 
     /* If true, perform class file updates in-place rather than to the
        destination directory. */
-    private boolean updateInPlaceOption = false;
+    private boolean updateInPlaceOption;
 
     /* The number of errors encountered thus far */
-    private int errorsEncountered = 0;
+    private int errorsEncountered;
 
     /* The out directory specified */
-    private File destinationDirectory = null;
+    private File destinationDirectory;
 
     /* Hash VM class name to ClassControl */
     private Hashtable<String, ClassControl> classMap = new Hashtable<>(11);
@@ -236,7 +236,7 @@ public final class Environment
         return errorsEncountered;
     }
 
-    public final String getLastErrorMessage () {
+    public String getLastErrorMessage () {
         return this.lastErrorMessage;
     }
 

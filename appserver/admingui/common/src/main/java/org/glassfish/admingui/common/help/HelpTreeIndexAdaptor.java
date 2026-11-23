@@ -131,7 +131,7 @@ public class HelpTreeIndexAdaptor extends TreeAdaptorBase {
      *     node model object.</p>
      *
      * <p> Some useful options for the standard <code>TreeNode</code>
-     *     component include:<p>
+     *     component include:
      *
      * <ul><li>text</li>
      *     <li>url</li>

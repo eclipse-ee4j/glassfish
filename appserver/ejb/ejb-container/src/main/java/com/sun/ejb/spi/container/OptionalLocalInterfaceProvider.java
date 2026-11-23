@@ -27,6 +27,6 @@ import java.lang.reflect.Proxy;
  */
 public interface OptionalLocalInterfaceProvider {
 
-    public void setOptionalLocalIntfProxy(Proxy proxy);
+    void setOptionalLocalIntfProxy(Proxy proxy);
 
 }

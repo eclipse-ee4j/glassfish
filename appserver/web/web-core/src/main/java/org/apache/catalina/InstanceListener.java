@@ -35,5 +35,5 @@ public interface InstanceListener {
      *
      * @param event InstanceEvent that has occurred
      */
-    public void instanceEvent(InstanceEvent event);
+    void instanceEvent(InstanceEvent event);
 }

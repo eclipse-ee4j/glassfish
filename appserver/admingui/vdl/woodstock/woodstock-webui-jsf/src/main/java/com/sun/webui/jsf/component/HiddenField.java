@@ -49,12 +49,12 @@ public class HiddenField extends WebuiInput {
     @Property(name = "disabled",
             displayName = "Disabled",
             category = "Behavior")
-    private boolean disabled = false;
+    private boolean disabled;
 
     /**
      * disabled set flag.
      */
-    private boolean disabledSet = false;
+    private boolean disabledSet;
 
     /**
      * Creates a new instance of HiddenField.

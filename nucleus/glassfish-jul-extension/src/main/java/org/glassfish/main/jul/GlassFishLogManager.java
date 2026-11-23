@@ -672,7 +672,8 @@ public class GlassFishLogManager extends LogManager {
     }
 
 
-    @SuppressWarnings("unchecked") // always safe
+    // always safe
+    @SuppressWarnings("unchecked")
     private static <T> T create(final String clazz) {
         trace(GlassFishLogManager.class, () -> "create(clazz=" + clazz + ")");
         try {

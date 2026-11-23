@@ -192,7 +192,7 @@ public class AdministeredObjectDefinitionDeployer implements ResourceDeployer<Ad
         private final AdministeredObjectDefinitionDescriptor desc;
         private final SimpleJndiName name;
 
-        public MyAdministeredObjectResource(AdministeredObjectDefinitionDescriptor desc, SimpleJndiName name) {
+        MyAdministeredObjectResource(AdministeredObjectDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }

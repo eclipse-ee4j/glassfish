@@ -220,12 +220,12 @@ public class ResourcesUtil {
 
     /**
      * Checks if a Resource is enabled.
-     * <p/>
+     * <p>
      * Since 8.1 PE/SE/EE, A resource [except resource adapter configs, connector and
      * JDBC connection pools which are global and hence enabled always] is enabled
      * only when the resource is enabled and there exists a resource ref to this
      * resource in this server instance and that resource ref is enabled.
-     * <p/>
+     * <p>
      * Before a resource is loaded or deployed, it is checked to see if it is
      * enabled.
      *

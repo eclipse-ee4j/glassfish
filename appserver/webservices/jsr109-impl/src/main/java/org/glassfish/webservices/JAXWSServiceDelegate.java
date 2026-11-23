@@ -51,7 +51,7 @@ public class JAXWSServiceDelegate extends Service {
     // location of full wsdl associated with service-ref
     private URL wsdlLocation;
 
-    private boolean fullWsdl = false;
+    private boolean fullWsdl;
 
     // Service method types
     private static final int ADD_PORT = 1;

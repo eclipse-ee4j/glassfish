@@ -52,7 +52,7 @@ public class ConnectorDeploymentDescriptorFile extends DeploymentDescriptorFile 
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
      *
-     * @param the descriptor for which we need the node
+     * @param descriptor descriptor for which we need the node
      */
     @Override
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {

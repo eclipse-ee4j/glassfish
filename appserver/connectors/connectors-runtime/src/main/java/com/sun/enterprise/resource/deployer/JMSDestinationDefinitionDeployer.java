@@ -185,7 +185,7 @@ public class JMSDestinationDefinitionDeployer implements ResourceDeployer<JMSDes
         private final JMSDestinationDefinitionDescriptor desc;
         private final SimpleJndiName name;
 
-        public MyJMSDestinationResource(JMSDestinationDefinitionDescriptor desc, SimpleJndiName name) {
+        MyJMSDestinationResource(JMSDestinationDefinitionDescriptor desc, SimpleJndiName name) {
             this.desc = desc;
             this.name = name;
         }

@@ -33,19 +33,19 @@ public interface ReadOnlyBeanRefreshEventHandler {
      *  the bean's pk
      * @return the application class loader
      */
-    public ClassLoader getClassLoader();
+    ClassLoader getClassLoader();
 
     /**
      * Called from DistributedReadOnlyBeanServiceImpl when a refresh message
      *  arrives at this instance
      * @param pk the primary key that needs to be refreshed
      */
-    public void handleRefreshRequest(Object pk);
+    void handleRefreshRequest(Object pk);
 
     /**
      * Called from DistributedReadOnlyBeanServiceImpl when a refreshAll message
      *  arrives at this instance
      */
-    public void handleRefreshAllRequest();
+    void handleRefreshAllRequest();
 
 }

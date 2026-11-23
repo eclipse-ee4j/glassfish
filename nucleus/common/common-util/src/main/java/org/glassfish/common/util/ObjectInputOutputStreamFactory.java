@@ -31,10 +31,10 @@ public interface ObjectInputOutputStreamFactory
     ObjectInputStream createObjectInputStream(InputStream in) throws IOException;
     ObjectOutputStream createObjectOutputStream(OutputStream out) throws IOException;
 
-    public Class<?> resolveClass(ObjectInputStream in, ObjectStreamClass desc)
+    Class<?> resolveClass(ObjectInputStream in, ObjectStreamClass desc)
             throws IOException, ClassNotFoundException;
 
 
-    public void annotateClass(ObjectOutputStream out, Class<?> cl) throws IOException;
+    void annotateClass(ObjectOutputStream out, Class<?> cl) throws IOException;
 
 }

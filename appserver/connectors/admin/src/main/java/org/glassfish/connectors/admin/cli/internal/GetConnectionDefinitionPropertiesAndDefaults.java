@@ -59,7 +59,7 @@ public class GetConnectionDefinitionPropertiesAndDefaults implements AdminComman
 
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

@@ -37,7 +37,7 @@ public final class IASLogger extends LoggerBase {
     /**
      * The server wide log message handler.
      */
-    Logger _logger = null;
+    Logger _logger;
 
     /**
      * Classname of the object invoking the log method.

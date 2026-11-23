@@ -172,7 +172,7 @@ public final class FileRealmHelper {
      *
      * @param username Name of user to authenticate.
      * @param password Password provided by client.
-     * @returns Array of group names the user belongs to, or null if authentication fails.
+     * @return Array of group names the user belongs to, or null if authentication fails.
      */
     public String[] authenticate(String username, char[] password) {
         User user = userTable.get(username);
@@ -542,7 +542,7 @@ public final class FileRealmHelper {
      *
      * @param name User name.
      * @param ud User object containing info.
-     * @returns String containing a line with encoded user data.
+     * @return String containing a line with encoded user data.
      * @throws IASSecurityException Thrown on failure.
      *
      */
@@ -577,7 +577,7 @@ public final class FileRealmHelper {
      *
      * @param encodedLine A line from the keyfile containing user data.
      * @param newGroupSizeMap Groups found in the encodedLine are added to this map.
-     * @returns FileRealmUser Representing the loaded user.
+     * @return FileRealmUser Representing the loaded user.
      * @throws IllegalArgumentException Thrown on failure.
      *
      */
@@ -645,7 +645,7 @@ public final class FileRealmHelper {
      * @param name User name.
      * @param pwd Cleartext password.
      * @param groups Group membership.
-     * @returns FileRealmUser Representing the created user.
+     * @return FileRealmUser Representing the created user.
      *
      */
     private static User createNewUser(String name, char[] pwd, String[] groups) {

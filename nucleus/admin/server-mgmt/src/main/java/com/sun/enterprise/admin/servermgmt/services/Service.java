@@ -34,7 +34,6 @@ public interface Service {
      * get the dirs with this thread-safe immutable guaranteed object. It saves a LOT of error checking... You should set
      * the variable in the constructor. You are not allowed to change it later
      *
-     * @param dirs
      */
     ServerDirs getServerDirs();
 
@@ -48,7 +47,7 @@ public interface Service {
     /**
      * Sets the additional service properties that are specific to it.
      *
-     * @param must be a colon separated String, if not null. No effect, if null is passed.
+     * @param cds be a colon separated String, if not null. No effect, if null is passed.
      */
     void setServiceProperties(String cds);
 
@@ -65,7 +64,6 @@ public interface Service {
      * parameters received. The creation of service is either successful or not. In other words, the implementations must
      * retain the original state of the operating platform if the service creation is not successful completely.
      *
-     * @param params a Map between Strings that represents the name value pairs required to create the service
      * @throws RuntimeException if there is any error is creation of service
      */
     void createService();

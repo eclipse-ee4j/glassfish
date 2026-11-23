@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class WebTest {
 
-    private static int count = 0;
+    private static int count;
     private static final int EXPECTED_COUNT = 1;
 
     private String contextPath = "test";

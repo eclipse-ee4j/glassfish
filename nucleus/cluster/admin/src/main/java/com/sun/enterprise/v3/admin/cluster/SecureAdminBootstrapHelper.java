@@ -52,7 +52,7 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
     private static final Path[] SECURE_ADMIN_FILE_REL_URIS_TO_COPY = new Path[] {
         DOMAIN_XML_PATH,
         Path.of("config", KEYSTORE_FILENAME_DEFAULT),
-        Path.of("config", TRUSTSTORE_FILENAME_DEFAULT)
+        Path.of("config", TRUSTSTORE_FILENAME_DEFAULT),
     };
     private static final Path[] SECURE_ADMIN_FILE_DIRS_TO_CREATE = new Path[] {Path.of("config")};
 
@@ -189,9 +189,9 @@ public abstract class SecureAdminBootstrapHelper implements AutoCloseable {
             this.remoteInstanceDir = this.remoteNodeDir.resolve(instance);
         }
 
-        abstract void writeToFile(final Path remotePath, final File localFile) throws IOException;
+        abstract void writeToFile(Path remotePath, File localFile) throws IOException;
 
-        abstract void setLastModified(final Path remotePath, final long when) throws IOException;
+        abstract void setLastModified(Path remotePath, long when) throws IOException;
 
         /**
          * Use the node dir if it was specified when the node was created.

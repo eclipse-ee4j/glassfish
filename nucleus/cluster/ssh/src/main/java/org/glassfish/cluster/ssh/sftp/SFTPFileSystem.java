@@ -31,7 +31,7 @@ import java.util.Set;
 class SFTPFileSystem extends FileSystem {
     private final SFTPFileSystemProvider provider;
 
-    public SFTPFileSystem(SFTPFileSystemProvider provider) {
+    SFTPFileSystem(SFTPFileSystemProvider provider) {
         this.provider = provider;
     }
 

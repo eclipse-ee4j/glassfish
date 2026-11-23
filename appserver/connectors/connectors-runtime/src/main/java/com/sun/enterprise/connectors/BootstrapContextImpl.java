@@ -129,8 +129,6 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
      * Retrieves the work manager.
      *
      * @return <code>WorkManager</code> instance.
-     * @see com.sun.enterprise.connectors.work.CommonWorkManager
-     * @see com.sun.enterprise.connectors.work.WorkManagerFactoryImpl
      */
     @Override
     public WorkManager getWorkManager() {

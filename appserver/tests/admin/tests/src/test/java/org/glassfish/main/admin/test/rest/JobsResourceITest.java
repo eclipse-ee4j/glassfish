@@ -132,7 +132,7 @@ public class JobsResourceITest extends RestTestBase {
 
 
     private static class GenericClient extends DomainAdminRestClient {
-        public GenericClient() {
+        GenericClient() {
             super(GlassFishTestEnvironment.createClient(), "", GF_JSON_TYPE);
         }
     }

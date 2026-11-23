@@ -493,7 +493,7 @@ public class CommandResource {
         private String scope;
         private String name;
 
-        public CommandName(String fullName) {
+        CommandName(String fullName) {
             if (fullName == null) {
                 return;
             }

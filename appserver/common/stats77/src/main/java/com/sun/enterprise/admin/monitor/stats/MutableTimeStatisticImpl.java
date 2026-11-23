@@ -43,7 +43,7 @@ public class MutableTimeStatisticImpl implements TimeStatistic, MutableTimeStati
      * <li>The maxTime, minTime and totTime of param must be same</li>
      * </ul>
      *
-     * @param instance of (immutable) {@link TimeStatistic}
+     * @param initial of (immutable) {@link TimeStatistic}
      */
     public MutableTimeStatisticImpl(TimeStatistic initial) {
         this.initial        = initial;

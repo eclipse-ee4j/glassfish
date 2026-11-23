@@ -703,10 +703,10 @@ public class InputJarArchive extends JarArchive implements ReadableArchive {
     static class CollectionWrappedEnumeration<T> extends AbstractCollection<T> {
 
         /** Used only if size is invoked */
-        private ArrayList<T> entries = null;
+        private ArrayList<T> entries;
 
         /** always updated, even if we use the enumeration */
-        private int nextSlot = 0;
+        private int nextSlot;
 
         private final EnumerationFactory<T> factory;
 

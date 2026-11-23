@@ -116,7 +116,7 @@ public class RestSessionManager {
         private final boolean disableRemoteAddressValidation = Boolean.getBoolean(DISABLE_REMOTE_ADDRESS_VALIDATION_PROPERTY_NAME);
         private final Subject subject;
 
-        public SessionData(String sessionId, String remoteAddr, final Subject subject, final int sessionTimeoutInMins) {
+        SessionData(String sessionId, String remoteAddr, final Subject subject, final int sessionTimeoutInMins) {
             this.clientAddress = remoteAddr;
             this.subject = subject;
             inactiveSessionLifeTime = sessionTimeoutInMins * 60000L; // minutes * 60 seconds * 1000 millis

@@ -77,8 +77,8 @@ public class WebServiceEndpointReaderImpl implements WebModuleReader {
         }
     }
     // ---- VARIABLE(S) - PRIVATE -----------------------------
-    private String _name = null;
-    private ApplicationRef _applicationRef = null;
-    private Application _application = null;
-    private WebServiceEndpoint _wsEndpoint = null;
+    private String _name;
+    private ApplicationRef _applicationRef;
+    private Application _application;
+    private WebServiceEndpoint _wsEndpoint;
 }

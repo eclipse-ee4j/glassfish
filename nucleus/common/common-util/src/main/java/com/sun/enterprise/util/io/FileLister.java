@@ -87,9 +87,9 @@ public abstract class FileLister
         }
 
 
-    private        ArrayList<File>        fileList = null;
-    private File                mainRoot         = null;
-    private boolean                keepEmpty         = false;
+    private        ArrayList<File>        fileList;
+    private File                mainRoot;
+    private boolean                keepEmpty;
 }
 
 

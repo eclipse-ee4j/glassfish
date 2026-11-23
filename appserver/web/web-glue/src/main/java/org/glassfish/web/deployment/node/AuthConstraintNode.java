@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
  */
 public class AuthConstraintNode  extends DeploymentDescriptorNode<AuthorizationConstraintImpl> {
 
-    protected AuthorizationConstraintImpl descriptor = null;
+    protected AuthorizationConstraintImpl descriptor;
 
     /**
      * @return the descriptor instance to associate with this XMLNode

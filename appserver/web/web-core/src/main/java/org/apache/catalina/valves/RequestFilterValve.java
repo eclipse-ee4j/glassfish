@@ -95,7 +95,7 @@ public abstract class RequestFilterValve
     /**
      * The comma-delimited set of <code>allow</code> expressions.
      */
-    protected String allow = null;
+    protected String allow;
 
 
     /**
@@ -113,7 +113,7 @@ public abstract class RequestFilterValve
     /**
      * The comma-delimited set of <code>deny</code> expressions.
      */
-    protected String deny = null;
+    protected String deny;
 
 
     // ------------------------------------------------------------- Properties

@@ -25,6 +25,6 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface GlassFishHAReplicaPredictor {
 
-    public HACookieInfo makeCookie(String groupName, Object key, String oldJReplica);
+    HACookieInfo makeCookie(String groupName, Object key, String oldJReplica);
 
 }

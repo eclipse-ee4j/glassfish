@@ -62,7 +62,7 @@ public class CommandThreadPool implements PostConstruct {
     @Inject
     private Logger logger;
 
-    private ExecutorService svc = null;
+    private ExecutorService svc;
 
     public CommandThreadPool() {
     }

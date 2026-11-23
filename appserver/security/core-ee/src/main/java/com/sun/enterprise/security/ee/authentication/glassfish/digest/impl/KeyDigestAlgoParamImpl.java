@@ -27,7 +27,7 @@ public class KeyDigestAlgoParamImpl implements DigestAlgorithmParameter, Key {
 
     private String userName;
     private String realmName;
-    private String algorithm = null;
+    private String algorithm;
     private String name = "A1";
     private static byte[] delimeter = ":".getBytes();
 

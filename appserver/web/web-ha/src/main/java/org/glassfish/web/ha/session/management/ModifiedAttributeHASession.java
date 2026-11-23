@@ -44,7 +44,7 @@ public class ModifiedAttributeHASession extends BaseHASession {
     private static final Logger _logger = HAStoreBase._logger;
 
     private transient Map<String, SessionAttributeState> _attributeStates = new HashMap<String, SessionAttributeState>();
-    private transient boolean _dirtyFlag = false;
+    private transient boolean _dirtyFlag;
 
 
     /** Creates a new instance of ModifiedAttributeHASession */

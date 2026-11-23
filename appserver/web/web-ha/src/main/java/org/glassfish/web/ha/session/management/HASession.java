@@ -28,40 +28,40 @@ public interface HASession extends Session {
     /**
      * this returns the dirty flag
      */
-    public boolean isDirty();
+    boolean isDirty();
 
     /**
      * this sets the dirty flag
      * @param value
      */
-    public void setDirty(boolean value);
+    void setDirty(boolean value);
 
     /**
      * this sets the ssoId
      * @param ssoId
      */
-    public void setSsoId(String ssoId);
+    void setSsoId(String ssoId);
 
     /**
      * this returns the ssoId
      */
-    public String getSsoId();
+    String getSsoId();
 
     /**
      * this returns the user name
      */
-    public String getUserName();
+    String getUserName();
 
     /**
      * this sets the user name
      * @param userName
      */
-    public void setUserName(String userName);
+    void setUserName(String userName);
 
-    public void sync();
-    public long incrementVersion();
-    public void setVersion(long value);
-    public boolean isPersistent();
-    public void setPersistent(boolean value);
+    void sync();
+    long incrementVersion();
+    void setVersion(long value);
+    boolean isPersistent();
+    void setPersistent(boolean value);
 
 }

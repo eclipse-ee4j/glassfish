@@ -453,8 +453,8 @@ public class TimerState {
      */
     static class Blob implements Serializable {
 
-        private byte[] primaryKeyBytes_ = null;
-        private byte[] infoBytes_ = null;
+        private byte[] primaryKeyBytes_;
+        private byte[] infoBytes_;
 
         // Allow deserialization even if the class has changed
         private static final long serialVersionUID = 5022674828003386360L;

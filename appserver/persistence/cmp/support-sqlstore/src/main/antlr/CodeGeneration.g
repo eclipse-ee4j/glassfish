@@ -177,7 +177,7 @@ options
     }
 
     /**
-     * Helper method for checkRetrieveDesc handling operators & and &&.
+     * Helper method for checkRetrieveDesc handling operators &amp; and &amp;&amp;.
      */
     protected void checkAndOpRetrieveDesc(JQLAST op, JQLAST left,
         JQLAST right, Map usedRD) throws RecognitionException
@@ -457,7 +457,7 @@ options
     /**
      * Returns the boolean operation of the equivalent relational expression
      * with swapped arguments.
-     * expr1 > expr2 <=> expr2 < expr1
+     * expr1 &gt; expr2 &lt;=&gt; expr2 &lt; expr1
      */
     protected int getSwappedOp(int operation)
     {
@@ -602,7 +602,7 @@ options
 
     /**
      * Returns the boolean operation used to connect the key field comparison expressions:
-     * l == r is mapped to l.pk1 == r.pk1 & ... & l.pkn == r.pkn => return &
+     * l == r is mapped to l.pk1 == r.pk1 &amp; ... &amp; l.pkn == r.pkn =&gt; return &amp;
      * l != r is mapped to l.pk1 != r.pk1 | ... | l.pkn != r.pkn => return |
      */
     protected int getKeyFieldsComparisonBooleanOp(int operation)

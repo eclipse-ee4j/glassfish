@@ -36,7 +36,7 @@ import java.util.Properties;
  * <h2>Usage</h2>
  * <h3>Outbound</h3> Code (on the client or the server) that needs to place data in the payload or request that
  * earlier-sent data be removed would instantiate an implementation of {@link Payload.Outbound}. (The
- * {@link org.glassfish.admin.payload.PayloadImpl.Outbound} class is such an implementation.) To this Payload.Outbound
+ * {@code org.glassfish.admin.payload.PayloadImpl.Outbound} class is such an implementation.) To this Payload.Outbound
  * object the code can add parts using any of the {@link Outbound#addPart} methods or the {@link Outbound#attachFile} or
  * {@link Outbound#requestFileRemoval} convenience methods. After the code has added all the relevant parts to the
  * payload it invokes the {@link Outbound#writeTo} method to write the outbound payload to an OutputStream. Typically
@@ -44,7 +44,7 @@ import java.util.Properties;
  * server case).
  * <h3>Inbound</h3> Code that needs to read the payload from a request (as the server does) or from a response (as the
  * client does) will instantiate an implementation of {@link Payload.Inbound}. (The
- * {@link org.glassfish.admin.payload.PayloadImpl.Inbound} is such an implementation.
+ * {@code org.glassfish.admin.payload.PayloadImpl.Inbound} is such an implementation.
  * <p>
  * Payload.Inbound exposes the {@link Payload.Inbound#parts()} method which returns an Iterator&lt;Part&gt;. With each
  * {@link Part} available through the iterator the caller can use {@link Part#getContentType()}, {@link Part#getName()},
@@ -82,7 +82,7 @@ public interface Payload {
     /**
      * Public API for outbound Payloads.
      */
-    public interface Outbound {
+    interface Outbound {
 
         /**
          * Count of attached parts
@@ -98,7 +98,7 @@ public interface Payload {
          * @param content String containing the content for the part
          * @throws java.io.IOException
          */
-        void addPart(final String contentType, final String name, final Properties props, final String content) throws IOException;
+        void addPart(String contentType, String name, Properties props, String content) throws IOException;
 
         /**
          * Adds a part of the specified content type, name, and content to the payload.
@@ -109,7 +109,7 @@ public interface Payload {
          * @param content InputStream furnishing the content for this part
          * @throws java.io.IOException
          */
-        void addPart(final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
+        void addPart(String contentType, String name, Properties props, InputStream content) throws IOException;
 
         /**
          * Adds a part of the specified content type, name, and content at a specified position in the parts of the payload.
@@ -121,7 +121,7 @@ public interface Payload {
          * @param content InputStream furnishing the content for this part
          * @throws java.io.IOException
          */
-        void addPart(final int index, final String contentType, final String name, final Properties props, final InputStream content) throws IOException;
+        void addPart(int index, String contentType, String name, Properties props, InputStream content) throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
@@ -139,7 +139,7 @@ public interface Payload {
          * @param file File containing the content for the part
          * @throws java.io.IOException
          */
-        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file) throws IOException;
+        void attachFile(String contentType, URI fileURI, String dataRequestName, File file) throws IOException;
 
         /**
          * Adds a part to the payload of the given content type from the specified file. The name assigned to the new part is
@@ -153,7 +153,7 @@ public interface Payload {
          * @param isRecursive if file is a directory, whether to add its contents as well
          * @throws java.io.IOException
          */
-        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final File file, final boolean isRecursive)
+        void attachFile(String contentType, URI fileURI, String dataRequestName, File file, boolean isRecursive)
                 throws IOException;
 
         /**
@@ -168,7 +168,7 @@ public interface Payload {
          * @param file File containing the content for the part
          * @throws java.io.IOException
          */
-        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file)
+        void attachFile(String contentType, URI fileURI, String dataRequestName, Properties props, File file)
                 throws IOException;
 
         /**
@@ -184,8 +184,8 @@ public interface Payload {
          * @param isRecursive if file is a directory, whether to add its contents as well
          * @throws java.io.IOException
          */
-        void attachFile(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
-                final boolean isRecursive) throws IOException;
+        void attachFile(String contentType, URI fileURI, String dataRequestName, Properties props, File file,
+                boolean isRecursive) throws IOException;
 
         /**
          * Adds a part to the payload that represents a request to remove the specified file, presumably previously transferred
@@ -196,7 +196,7 @@ public interface Payload {
          * @param props Properties to be included with the part
          * @throws IOException
          */
-        void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props) throws IOException;
+        void requestFileRemoval(URI fileURI, String dataRequestName, Properties props) throws IOException;
 
         /**
          * Adds a part to the payload that represents a request to remove the specified file, presumably previously transferred
@@ -208,7 +208,7 @@ public interface Payload {
          * @param isRecursive if fileURI is a directory, whether to remove its contents as well
          * @throws IOException
          */
-        void requestFileRemoval(final URI fileURI, final String dataRequestName, final Properties props, final boolean isRecursive) throws IOException;
+        void requestFileRemoval(URI fileURI, String dataRequestName, Properties props, boolean isRecursive) throws IOException;
 
         /**
          * Adds a part to the payload to request that the specified file be replaced.
@@ -227,8 +227,8 @@ public interface Payload {
          * @param isRecursive
          * @throws IOException
          */
-        void requestFileReplacement(final String contentType, final URI fileURI, final String dataRequestName, final Properties props, final File file,
-                final boolean isRecursive) throws IOException;
+        void requestFileReplacement(String contentType, URI fileURI, String dataRequestName, Properties props, File file,
+                boolean isRecursive) throws IOException;
 
         /**
          * Writes the parts already added to the payload to the specified OutputStream.
@@ -236,7 +236,7 @@ public interface Payload {
          * @param os OutputStream to receive the formatted payload
          * @throws java.io.IOException
          */
-        void writeTo(final OutputStream os) throws IOException;
+        void writeTo(OutputStream os) throws IOException;
 
         /**
          * Returns the content type of the payload, determined by whether there are multiple parts and, if not, if the content
@@ -277,7 +277,7 @@ public interface Payload {
     /**
      * Public API for inbound payloads.
      */
-    public interface Inbound {
+    interface Inbound {
 
         /**
          * Returns the parts from the inbound payload.
@@ -298,7 +298,7 @@ public interface Payload {
     /**
      * Public API for the payload Part.
      */
-    public interface Part {
+    interface Part {
 
         /**
          * Returns the name assigned to the part when it was created.
@@ -334,7 +334,7 @@ public interface Payload {
          * @param os target OutputStream to receive the content of the Part
          * @throws java.io.IOException
          */
-        void copy(final OutputStream os) throws IOException;
+        void copy(OutputStream os) throws IOException;
 
         /**
          * @return true indicates if the Part represents a recursive action

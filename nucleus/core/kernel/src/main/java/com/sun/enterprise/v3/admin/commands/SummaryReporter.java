@@ -35,7 +35,7 @@ class SummaryReporter {
     private final StringManager sm = StringManager.getManager(SummaryReporter.class);
     private final static String secretProperty = "module.core.status";
 
-    public SummaryReporter(final MBeanServerConnection mbsc) {
+    SummaryReporter(final MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
     }
     public String getSummaryReport() throws RuntimeException {

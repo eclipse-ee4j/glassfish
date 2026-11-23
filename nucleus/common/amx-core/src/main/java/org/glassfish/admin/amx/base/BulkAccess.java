@@ -22,7 +22,6 @@ import javax.management.ObjectName;
 import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import org.glassfish.admin.amx.core.AMXProxy;
-import org.glassfish.admin.amx.core.Util;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
@@ -38,7 +37,7 @@ occured.  This is why all results are of type Object[].
 <p>
 Clients wishing to use this interface should note that they may first
 need to obtain an ObjectName[] from a Set or Map of {@link AMXProxy}.  The easiest way
-to do this is to use {@link Util#toObjectNames} followed by
+to do this is to use {@code Util#toObjectNames} followed by
 conversion of the Set to an ObjectName[].
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
@@ -54,7 +53,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return Info[], one for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getAttributes() for multiple MBeans.
@@ -65,7 +64,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return AttributeInfo[][], one AttributeInfo[] for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanAttributeInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanAttributeInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getOperations() for multiple MBeans.
@@ -76,7 +75,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return OperationInfo[][], one OperationInfo[] for each objectName, null if not found
      */
     @ManagedOperation
-    public Object[] bulkGetMBeanOperationInfo(ObjectName[] objectNames);
+    Object[] bulkGetMBeanOperationInfo(ObjectName[] objectNames);
 
     /**
     Call getMBeanInfo().getAttributes() for multiple MBeans, then extracts the
@@ -89,7 +88,7 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return Object[][], one String[] for each objectName, null if not found, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttributeNames(ObjectName[] objectNames);
+    Object[] bulkGetAttributeNames(ObjectName[] objectNames);
 
     /**
     Call getAttribute( attributeName ) for multiple MBeans.
@@ -101,8 +100,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which may be the Attribute value, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttribute(final ObjectName[] objectNames,
-                                     final String attributeName);
+    Object[] bulkGetAttribute(ObjectName[] objectNames,
+                                     String attributeName);
 
     /**
     Call setAttribute( attr ) for multiple MBeans.
@@ -114,8 +113,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, each is null or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkSetAttribute(final ObjectName[] objectNames,
-                                     final Attribute attr);
+    Object[] bulkSetAttribute(ObjectName[] objectNames,
+                                     Attribute attr);
 
     /**
     Call getAttributes( attributeNames ) for multiple MBeans.
@@ -125,8 +124,8 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which may be the AttributeList, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkGetAttributes(final ObjectName[] objectNames,
-                                      final String[] attributeNames);
+    Object[] bulkGetAttributes(ObjectName[] objectNames,
+                                      String[] attributeNames);
 
     /**
     Call invoke( ... ) for multiple MBeans.
@@ -144,9 +143,9 @@ public interface BulkAccess extends AMXProxy, Singleton, Utility
     @return array of Object, which will be the result of the invoke, or a Throwable
      */
     @ManagedOperation
-    public Object[] bulkInvoke(final ObjectName[] objectNames,
-                               final String operationName,
-                               final Object[] args, final String[] types);
+    Object[] bulkInvoke(ObjectName[] objectNames,
+                               String operationName,
+                               Object[] args, String[] types);
 
 }
 

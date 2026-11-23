@@ -26,9 +26,9 @@ public class AppClientSSL {
     private String ssl3TlsCiphers;
     private boolean ssl3Enabled = true;
     private String certNickName;
-    private boolean ssl2Enabled = false;
+    private boolean ssl2Enabled;
     private String ssl2Ciphers;
-    private boolean clientAuthEnabled = false;
+    private boolean clientAuthEnabled;
 
     /**
      * Gets the value of the certNickname property.

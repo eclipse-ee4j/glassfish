@@ -25,6 +25,6 @@ given a name.
  */
 public interface CompositeTypeFromNameCallback
 {
-    public OpenType getOpenTypeFromName(String name);
+    OpenType getOpenTypeFromName(String name);
 
 }

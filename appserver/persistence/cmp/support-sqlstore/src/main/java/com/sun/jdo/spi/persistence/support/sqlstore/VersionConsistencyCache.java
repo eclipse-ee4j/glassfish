@@ -33,14 +33,14 @@ public interface VersionConsistencyCache {
      * @param oid Object id, used as key in inner map.
      * @param sm StateManager bound to <code>oid</code> in inner map.
      */
-    public StateManager put(Class<?> pcType, Object oid, StateManager sm);
+    StateManager put(Class<?> pcType, Object oid, StateManager sm);
 
     /**
      * Returns an SM, if found, else null.
      * @param pcType class of instance, used as key in outer map.
      * @param oid Object id, used as key in inner map.
      */
-    public StateManager get(Class<?> pcType, Object oid);
+    StateManager get(Class<?> pcType, Object oid);
 
     /**
      * Removes entry based on pc and oid.  If map is empty after remove,
@@ -48,18 +48,18 @@ public interface VersionConsistencyCache {
      * @param pcType class of instance, used as key in outer map.
      * @param oid Object id, used as key in inner map.
      */
-    public StateManager remove(Class<?> pcType, Object oid);
+    StateManager remove(Class<?> pcType, Object oid);
 
     /**
      * Informs the cache to expect that the given pcType will be used as a key
      * for the outer map in subsequent <code>putEntry</code> operations.
      * @param pcType class of instance, used as key in outer map.
      */
-    public void addPCType(Class<?> pcType);
+    void addPCType(Class<?> pcType);
 
     /**
      * Removes the map for the given pcType and all its elements.
      * @param pcType class of instance, used as key in outer map.
      */
-    public void removePCType(Class<?> pcType);
+    void removePCType(Class<?> pcType);
 }

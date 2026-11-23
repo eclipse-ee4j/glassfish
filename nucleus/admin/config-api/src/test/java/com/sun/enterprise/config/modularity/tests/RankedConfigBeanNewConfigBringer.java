@@ -34,7 +34,7 @@ public interface RankedConfigBeanNewConfigBringer extends ConfigBeanProxy {
 
 @Service
 @RunLevel(mode = RunLevel.RUNLEVEL_MODE_VALIDATING, value = 4)
-public class RankedConfigBeanNewConfigBringerService extends ConfigBeanInstaller {
+class RankedConfigBeanNewConfigBringerService extends ConfigBeanInstaller {
 
 }
 }

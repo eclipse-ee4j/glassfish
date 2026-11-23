@@ -136,7 +136,7 @@ public class Types {
         }
 
 
-        public BinderArg(GenericDeclaration decl, Type[] args) {
+        BinderArg(GenericDeclaration decl, Type[] args) {
             this(decl.getTypeParameters(), args);
         }
 

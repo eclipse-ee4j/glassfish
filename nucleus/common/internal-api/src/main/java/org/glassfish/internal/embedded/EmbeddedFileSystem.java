@@ -34,12 +34,12 @@ public class EmbeddedFileSystem implements PreDestroy {
      *
      */
     public static class Builder {
-        boolean autoDelete=false;
+        boolean autoDelete;
         boolean readOnly = true;
-        boolean cookedMode=false;
-        File configFile=null;
-        File installRoot=null;
-        File instanceRoot=null;
+        boolean cookedMode;
+        File configFile;
+        File installRoot;
+        File instanceRoot;
 
         // TODO : add some obvious file errors during the build()
 

@@ -27,7 +27,7 @@ public class WebValidatorWithCL extends WebBundleValidator {
     /**
      * visits all entries within the component environment for which
      * isInjectable() == true.
-     * @param the InjectionCapable environment dependency
+     * @param injectable InjectionCapable environment dependency
      */
     protected void accept(InjectionCapable injectable) {
         acceptWithCL(injectable);

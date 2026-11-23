@@ -34,7 +34,7 @@ public interface CLIConstants {
     String OBJECT_TYPE = "objecttype";
 
 
-    public interface WSM {
+    interface WSM {
         String WSM_RA_NAME = "raname";
         String WSM_PRINCIPALS_MAP = "principalsmap";
         String WSM_GROUPS_MAP = "groupsmap";
@@ -42,13 +42,13 @@ public interface CLIConstants {
         String WSM_CREATE_WSM_COMMAND = "create-connector-work-security-map";
     }
 
-    public interface RAC {
+    interface RAC {
         String RAC_RA_NAME = "raname";
         String RAC_THREAD_POOL_ID = "threadpoolid";
         String RAC_CREATE_RAC_COMMAND = "create-resource-adapter-config";
     }
 
-    public interface AOR {
+    interface AOR {
         String AOR_CREATE_COMMAND_NAME = "create-admin-object";
         String AOR_RES_TYPE="restype";
         String AOR_CLASS_NAME = "classname";
@@ -56,7 +56,7 @@ public interface CLIConstants {
         String AOR_JNDI_NAME = "jndi_name";
     }
 
-    public interface SM {
+    interface SM {
         String SM_CREATE_COMMAND_NAME="create-connector-security-map";
         String SM_POOL_NAME = "poolname";
         String SM_PRINCIPALS = "principals";
@@ -66,7 +66,7 @@ public interface CLIConstants {
         String SM_MAP_NAME = "mapname";
     }
 
-    public interface CCP {
+    interface CCP {
         String CCP_RA_NAME = "raname";
         String CCP_CON_DEFN_NAME = "connectiondefinition";
         String CCP_STEADY_POOL_SIZE = "steadypoolsize";
@@ -93,7 +93,7 @@ public interface CLIConstants {
         String CCP_CREATE_COMMAND_NAME="create-connector-connection-pool";
     }
 
-    public interface CR {
+    interface CR {
         String CR_POOL_NAME = "poolname";
         String CR_OBJECT_TYPE = "objecttype";
         String CR_JNDI_NAME = "jndi_name";

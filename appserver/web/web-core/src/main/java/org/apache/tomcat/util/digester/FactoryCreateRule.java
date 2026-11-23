@@ -328,14 +328,14 @@ public class FactoryCreateRule extends Rule {
     /**
      * The attribute containing an override class name if it is present.
      */
-    protected String attributeName = null;
+    protected String attributeName;
 
 
     /**
      * The Java class name of the ObjectCreationFactory to be created.
      * This class must have a no-arguments constructor.
      */
-    protected String className = null;
+    protected String className;
 
 
     /**
@@ -343,7 +343,7 @@ public class FactoryCreateRule extends Rule {
      * as required based on the attributes specified in the matched XML
      * element.
      */
-    protected ObjectCreationFactory creationFactory = null;
+    protected ObjectCreationFactory creationFactory;
 
 
     // --------------------------------------------------------- Public Methods

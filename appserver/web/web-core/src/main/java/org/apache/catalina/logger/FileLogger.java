@@ -72,7 +72,7 @@ public class FileLogger
     /**
      * Has this component been started?
      */
-    private boolean started = false;
+    private boolean started;
 
 
     /**
@@ -84,13 +84,13 @@ public class FileLogger
     /**
      * Should logged messages be date/time stamped?
      */
-    private boolean timestamp = false;
+    private boolean timestamp;
 
 
     /**
      * The PrintWriter to which we are currently logging, if any.
      */
-    private PrintWriter writer = null;
+    private PrintWriter writer;
 
 
     // ------------------------------------------------------------- Properties

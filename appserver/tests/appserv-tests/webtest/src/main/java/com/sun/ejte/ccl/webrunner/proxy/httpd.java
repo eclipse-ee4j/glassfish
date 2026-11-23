@@ -54,7 +54,7 @@ public class httpd implements Runnable,LogMessage
         * @param                s        The string to be converted
         * @return                byte[]
         */
-        private final byte[] toBytes(String s)
+        private byte[] toBytes(String s)
         {
                 byte b[]=s.getBytes();
                 return b;
@@ -462,7 +462,7 @@ public class httpd implements Runnable,LogMessage
         }
 
 
-        private Thread t=null;
+        private Thread t;
 
 
         /**

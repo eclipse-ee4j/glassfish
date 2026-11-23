@@ -45,7 +45,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /** Implements the front end for generating the JVM report. Sends back a String
  * to the asadmin console based on server's locale.
- * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
+ * @author &#2325;&#2375;&#2342;&#2366;&#2352; (km@dev.java.net)
  * @since GlassFish V3
  */
 @Service(name="generate-jvm-report")
@@ -87,7 +87,7 @@ public class GenerateJvmReportCommand implements AdminCommand {
            acceptableValues = "summary, thread, class, memory, log")
     String type;
 
-    private MBeanServer mbs = null;  //needs to be injected, I guess
+    private MBeanServer mbs;  //needs to be injected, I guess
 
     public void execute(AdminCommandContext ctx) {
         prepare();

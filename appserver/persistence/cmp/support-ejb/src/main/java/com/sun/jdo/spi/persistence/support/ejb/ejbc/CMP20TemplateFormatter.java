@@ -109,60 +109,60 @@ class CMP20TemplateFormatter extends CMPTemplateFormatter {
     public final static String signature2_0_ = "signature2_0"; //NOI18N
 
     // getters and setters
-    public static MessageFormat gformatter = null; // CMP field getter
-    public static MessageFormat sformatter = null; // CMP field setter
-    public static MessageFormat copygformatter = null; // Date CMP field uses copygetter
-    public static MessageFormat copysformatter = null; // Date CMP field uses copysetter
-    public static MessageFormat arraygformatter = null; // byte[] CMP field uses arraygetter
-    public static MessageFormat arraysformatter = null; // byte[] CMP field uses arraysetter
-    public static MessageFormat assertpksformatter = null; // assert not null PK field setter
-    public static MessageFormat pksformatter = null; // PK field setter
-    public static MessageFormat pkstringsformatter = null; // String PK CMP field setter (calls trim())
-    public static MessageFormat pkcopysformatter = null; // Mutable PK CMP field setter (calls clone())
-    public static MessageFormat sfldgformatter = null; // Serializable CMP field getter
-    public static MessageFormat sfldsformatter = null; // Serializable CMP field setter
+    public static MessageFormat gformatter; // CMP field getter
+    public static MessageFormat sformatter; // CMP field setter
+    public static MessageFormat copygformatter; // Date CMP field uses copygetter
+    public static MessageFormat copysformatter; // Date CMP field uses copysetter
+    public static MessageFormat arraygformatter; // byte[] CMP field uses arraygetter
+    public static MessageFormat arraysformatter; // byte[] CMP field uses arraysetter
+    public static MessageFormat assertpksformatter; // assert not null PK field setter
+    public static MessageFormat pksformatter; // PK field setter
+    public static MessageFormat pkstringsformatter; // String PK CMP field setter (calls trim())
+    public static MessageFormat pkcopysformatter; // Mutable PK CMP field setter (calls clone())
+    public static MessageFormat sfldgformatter; // Serializable CMP field getter
+    public static MessageFormat sfldsformatter; // Serializable CMP field setter
 
-    public static MessageFormat cmrgformatter = null; // 1-side CMR getter
-    public static MessageFormat cmrsformatter = null; // 1-side CMR setter
-    public static MessageFormat cmrCgformatter = null; // many-side CMR getter
-    public static MessageFormat cmrCsformatter = null; // many-side CMR setter
-    public static MessageFormat cmrcdformatter = null; // cascade-delete for one-one CMR
-    public static MessageFormat cmrcdCformatter = null; // cascade-delete for one-many CMR
+    public static MessageFormat cmrgformatter; // 1-side CMR getter
+    public static MessageFormat cmrsformatter; // 1-side CMR setter
+    public static MessageFormat cmrCgformatter; // many-side CMR getter
+    public static MessageFormat cmrCsformatter; // many-side CMR setter
+    public static MessageFormat cmrcdformatter; // cascade-delete for one-one CMR
+    public static MessageFormat cmrcdCformatter; // cascade-delete for one-many CMR
 
     // 2.0 variables
-    public static MessageFormat cmrvformatter = null; // local cmr variables
-    public static MessageFormat cleancmrformatter = null; // clean collection cmr references
+    public static MessageFormat cmrvformatter; // local cmr variables
+    public static MessageFormat cleancmrformatter; // clean collection cmr references
 
     // 2.0 methods
-    public static MessageFormat cformatter = null; // ejbCreate
-    public static MessageFormat cunpkformatter = null; // ejbCreateUnknownPK
-    public static MessageFormat postcformatter = null; // ejbPostCreate
-    public static MessageFormat rmformatter = null; // ejbRemove
+    public static MessageFormat cformatter; // ejbCreate
+    public static MessageFormat cunpkformatter; // ejbCreateUnknownPK
+    public static MessageFormat postcformatter; // ejbPostCreate
+    public static MessageFormat rmformatter; // ejbRemove
 
     // finder/selector methods
-    public static MessageFormat finderselectorchecklocalformatter  = null; //common body for selector and finder param check for local interface impl class
-    public static MessageFormat finderselectorcheckremoteformatter  = null; //common body for selector and finder param check for remote interface impl class
-    public static MessageFormat preselectformatter = null; // preSelect callback
-    public static MessageFormat multiselectorconvformatter = null; // selector for multi-value-objects body with resultset-conversion
-    public static MessageFormat multiselectorformatter = null; // selector for multi-value-objects body
-    public static MessageFormat multiselectorsetformatter = null; // selector for multi-value-objects body and conversion to Set
-    public static MessageFormat singleselectorreturnconvformatter = null; // selector for single-value-objects body with resultset-conversion
-    public static MessageFormat singleselectorreturnformatter = null; // selector for single-value-objects body with resultset-conversion
-    public static MessageFormat aggregateselectorprimitivereturnformatter = null; // selector for aggregate functions return primitive without object conversion
-    public static MessageFormat aggregateselectorreturnformatter = null; // selector for aggregate functions without object conversion
-    public static MessageFormat aggregateselectorreturnconvformatter = null; // selector for aggregate functions with object conversion
-    public static MessageFormat aggregateselectorreturnbigdecimalconvformatter = null; // selector for aggregate functions with BigDecimal conversion
-    public static MessageFormat aggregateselectorreturnbigintegerconvformatter = null; // selector for aggregate functions with BigInteger conversion
-    public static MessageFormat singleselectorformatter = null; // selector for single-value-objects body
+    public static MessageFormat finderselectorchecklocalformatter; //common body for selector and finder param check for local interface impl class
+    public static MessageFormat finderselectorcheckremoteformatter; //common body for selector and finder param check for remote interface impl class
+    public static MessageFormat preselectformatter; // preSelect callback
+    public static MessageFormat multiselectorconvformatter; // selector for multi-value-objects body with resultset-conversion
+    public static MessageFormat multiselectorformatter; // selector for multi-value-objects body
+    public static MessageFormat multiselectorsetformatter; // selector for multi-value-objects body and conversion to Set
+    public static MessageFormat singleselectorreturnconvformatter; // selector for single-value-objects body with resultset-conversion
+    public static MessageFormat singleselectorreturnformatter; // selector for single-value-objects body with resultset-conversion
+    public static MessageFormat aggregateselectorprimitivereturnformatter; // selector for aggregate functions return primitive without object conversion
+    public static MessageFormat aggregateselectorreturnformatter; // selector for aggregate functions without object conversion
+    public static MessageFormat aggregateselectorreturnconvformatter; // selector for aggregate functions with object conversion
+    public static MessageFormat aggregateselectorreturnbigdecimalconvformatter; // selector for aggregate functions with BigDecimal conversion
+    public static MessageFormat aggregateselectorreturnbigintegerconvformatter; // selector for aggregate functions with BigInteger conversion
+    public static MessageFormat singleselectorformatter; // selector for single-value-objects body
 
     // standard templates for the corresponding keys, so that a template "xxxTemplate"
     // corresponds to a "xxx" key.
-    public static String startCascadeDeleteTemplate = null;
-    public static String endCascadeDeleteTemplate = null;
-    public static String assertInstanceOfLocalInterfaceImplTemplate = null;
-    public static String signature2_0Template = null;
+    public static String startCascadeDeleteTemplate;
+    public static String endCascadeDeleteTemplate;
+    public static String assertInstanceOfLocalInterfaceImplTemplate;
+    public static String signature2_0Template;
 
-    private static boolean is20HelpersLoaded = false;
+    private static boolean is20HelpersLoaded;
 
     /**
      * Constructs a new <code>CMP20TemplateFormatter</code> instance.

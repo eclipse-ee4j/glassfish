@@ -52,7 +52,7 @@ public interface WorkContextMap
    * exists and is read-only.
    * @exception NullPointerException if the property or context is null.
    */
-  public WorkContext put(String key, WorkContext ctx)
+  WorkContext put(String key, WorkContext ctx)
     throws PropertyReadOnlyException;
 
   /**
@@ -104,7 +104,7 @@ public interface WorkContextMap
    *
    * @see org.glassfish.contextpropagation.weblogic.workarea.PropagationMode
    */
-  public WorkContext put(String key, WorkContext ctx,
+  WorkContext put(String key, WorkContext ctx,
                   int propagationMode)
     throws PropertyReadOnlyException;
 
@@ -117,7 +117,7 @@ public interface WorkContextMap
    * @return a {@link WorkContext} value or null if there is
    * none.
    */
-  public WorkContext get(String key);
+  WorkContext get(String key);
 
   /**
    * Get the current {@link WorkContextMap}'s
@@ -131,7 +131,7 @@ public interface WorkContextMap
    * prescribing how the {@link WorkContext} entry should be
    * propagated.
    */
-  public int getPropagationMode(String key);
+  int getPropagationMode(String key);
 
   /**
    * Given a PropagationMode {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode} , this method will iterate
@@ -142,7 +142,7 @@ public interface WorkContextMap
    * @param PropagationMode  {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode} value
    * @return boolean true or false
    */
-  public boolean isPropagationModePresent(int PropagationMode);
+  boolean isPropagationModePresent(int PropagationMode);
 
   /**
    * Remove the context data for key from the current WorkContextMap.
@@ -157,7 +157,7 @@ public interface WorkContextMap
    * @exception PropertyReadOnlyException if a mapping exists but is
    * read-only.
    */
-  public WorkContext remove(String key) throws NoWorkContextException,
+  WorkContext remove(String key) throws NoWorkContextException,
                                         PropertyReadOnlyException;
 
   /**
@@ -167,7 +167,7 @@ public interface WorkContextMap
    *
    * @return a <code>boolean</code> value
    */
-  public boolean isEmpty();
+  boolean isEmpty();
 
   /**
    * Return a iterator for all of the current {@link WorkContext}
@@ -176,7 +176,7 @@ public interface WorkContextMap
    * @return a {@link Iterator} representing the current entries.
    */
   @SuppressWarnings("rawtypes")
-  public Iterator iterator();
+  Iterator iterator();
 
   /**
    * Return a iterator for all of the current {@link WorkContext}
@@ -185,5 +185,5 @@ public interface WorkContextMap
    * @return a {@link Iterator} representing the current keys.
    */
   @SuppressWarnings("rawtypes")
-  public Iterator keys();
+  Iterator keys();
 }

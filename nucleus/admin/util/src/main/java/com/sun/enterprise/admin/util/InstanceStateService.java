@@ -35,19 +35,19 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface InstanceStateService {
 
-    public void addServerToStateService(String instanceName);
+    void addServerToStateService(String instanceName);
 
-    public void addFailedCommandToInstance(String instance, String cmd, ParameterMap params);
+    void addFailedCommandToInstance(String instance, String cmd, ParameterMap params);
 
-    public void removeFailedCommandsForInstance(String instance);
+    void removeFailedCommandsForInstance(String instance);
 
-    public InstanceState.StateType getState(String instanceName);
+    InstanceState.StateType getState(String instanceName);
 
-    public List<String> getFailedCommands(String instanceName);
+    List<String> getFailedCommands(String instanceName);
 
-    public InstanceState.StateType setState(String name, InstanceState.StateType newState, boolean force);
+    InstanceState.StateType setState(String name, InstanceState.StateType newState, boolean force);
 
-    public void removeInstanceFromStateService(String name);
+    void removeInstanceFromStateService(String name);
 
-    public Future<InstanceCommandResult> submitJob(Server server, InstanceCommand ice, InstanceCommandResult r);
+    Future<InstanceCommandResult> submitJob(Server server, InstanceCommand ice, InstanceCommandResult r);
 }

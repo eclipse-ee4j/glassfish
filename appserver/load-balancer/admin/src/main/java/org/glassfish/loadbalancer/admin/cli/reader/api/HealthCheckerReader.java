@@ -30,19 +30,19 @@ public interface HealthCheckerReader extends BaseReader {
      *                          RFC 2396. java.net.URI.resolve(url) shoudl
      *                          return a valid URI.
      */
-    public String getUrl() throws LbReaderException;
+    String getUrl() throws LbReaderException;
 
     /**
      * Health checker runs in the specified interval time.
      *
      * @return String           value must be > 0
      */
-    public String getIntervalInSeconds() throws LbReaderException;
+    String getIntervalInSeconds() throws LbReaderException;
 
     /**
      *  Timeout where a server is considered un healthy.
      *
      * @return String           value must be > 0
      */
-    public String getTimeoutInSeconds() throws LbReaderException;
+    String getTimeoutInSeconds() throws LbReaderException;
 }

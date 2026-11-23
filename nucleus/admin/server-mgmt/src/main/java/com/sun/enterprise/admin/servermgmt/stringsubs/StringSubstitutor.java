@@ -68,7 +68,7 @@ public interface StringSubstitutor {
     List<Property> getDefaultProperties(PropertyType type);
 
     /**
-     * Get's the string-subs definition object. A {@link StringSubsDefiniton} object contains the details of component,
+     * Get's the string-subs definition object. A {@code StringSubsDefiniton} object contains the details of component,
      * groups and files used in substitution.
      *
      * <p>
@@ -89,7 +89,7 @@ public interface StringSubstitutor {
     /**
      * Perform's string substitution for give components.
      *
-     * @param component List of {@link Component} identifiers for which the string substitution has to be performed.
+     * @param components List of {@link Component} identifiers for which the string substitution has to be performed.
      * @throws StringSubstitutionException If any error occurs during substitution.
      */
     void substituteComponents(List<String> components) throws StringSubstitutionException;

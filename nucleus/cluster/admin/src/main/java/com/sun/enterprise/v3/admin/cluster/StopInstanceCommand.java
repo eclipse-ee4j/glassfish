@@ -105,7 +105,7 @@ public class StopInstanceCommand extends StopServer implements AdminCommand {
     private Integer timeout;
     private Logger logger;
     private ActionReport report;
-    private String errorMessage = null;
+    private String errorMessage;
     private String cmdName = "stop-instance";
     private Server instance;
 

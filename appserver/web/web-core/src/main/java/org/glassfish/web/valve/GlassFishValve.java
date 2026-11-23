@@ -48,7 +48,7 @@ public interface GlassFishValve {
      * A valve returns this value to indicate (to the pipeline) that the next
      * valve in the pipeline can be invoked.
      */
-    public static final int INVOKE_NEXT = 1;
+    int INVOKE_NEXT = 1;
 
     /**
      * A valve returns this value to indicate that no further processing
@@ -58,7 +58,7 @@ public interface GlassFishValve {
      * authenticator) may return this value to stop a request from being
      * processed further because the user/password could not be verified.
      */
-    public static final int END_PIPELINE = 2;
+    int END_PIPELINE = 2;
 
 
     //-------------------------------------------------------------- Properties
@@ -66,7 +66,7 @@ public interface GlassFishValve {
     /**
      * Return descriptive information about this Valve implementation.
      */
-    public String getInfo();
+    String getInfo();
 
 
     //---------------------------------------------------------- Public Methods
@@ -120,7 +120,7 @@ public interface GlassFishValve {
      *
      * @return <code>INVOKE_NEXT</code> or <code>END_PIPELINE</code>
      */
-    public int invoke(Request request, Response response)
+    int invoke(Request request, Response response)
         throws IOException, ServletException;
 
 
@@ -132,7 +132,7 @@ public interface GlassFishValve {
      * @exception IOException if an input/output error occurs
      * @exception ServletException if a servlet error occurs
      */
-    public void postInvoke(Request request, Response response)
+    void postInvoke(Request request, Response response)
         throws IOException, ServletException;
 }
 

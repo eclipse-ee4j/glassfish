@@ -70,13 +70,13 @@ public interface AdminCommandEventBroker<T> {
      * @param <T> Type of event
      */
     @FunctionalInterface
-    public interface AdminCommandListener<T> {
+    interface AdminCommandListener<T> {
 
         /** Handle admin command event. */
         void onAdminCommandEvent(String name, T event);
     }
 
-    public static class BrokerListenerRegEvent {
+    class BrokerListenerRegEvent {
         private final AdminCommandEventBroker broker;
         private final AdminCommandListener listener;
 

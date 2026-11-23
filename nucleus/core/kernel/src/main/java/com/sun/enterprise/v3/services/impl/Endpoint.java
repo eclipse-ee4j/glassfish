@@ -31,7 +31,7 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 public abstract class Endpoint {
 
     /**
-     * Creates <tt>Endpoint</tt> based on the passed {@link Adapter} descriptor.
+     * Creates <code>Endpoint</code> based on the passed {@link Adapter} descriptor.
      * @param adapter {@link Adapter}
      * @return {@link Endpoint}, which can be registered on {@link NetworkProxy}.
      */
@@ -77,12 +77,12 @@ public abstract class Endpoint {
 
 
     /**
-     * {@link Adapter} based <tt>Endpoint</tt> implementation.
+     * {@link Adapter} based <code>Endpoint</code> implementation.
      */
     private static class AdapterEndpoint extends Endpoint {
         private final Adapter adapter;
 
-        public AdapterEndpoint(final Adapter adapter) {
+        AdapterEndpoint(final Adapter adapter) {
             this.adapter = adapter;
         }
 

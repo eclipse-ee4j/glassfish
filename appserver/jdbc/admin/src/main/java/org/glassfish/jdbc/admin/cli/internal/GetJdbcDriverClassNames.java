@@ -62,7 +62,7 @@ public class GetJdbcDriverClassNames implements AdminCommand {
     private boolean introspect;
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();

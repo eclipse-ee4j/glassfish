@@ -75,7 +75,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
      * Looks up an ejb reference with the given name.
      * Return null if it is not found.
      *
-     * @param the name of the ejb-reference
+     * @param name name of the ejb-reference
      */
     @Override
     public EjbReferenceDescriptor getEjbReference(String name) {
@@ -123,7 +123,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
      * Looks up an resource reference with the given name.
      * Return null if it is not found.
      *
-     * @param the name of the resource-reference
+     * @param name name of the resource-reference
      */
     @Override
     public ResourceReferenceDescriptor getResourceReference(String name) {

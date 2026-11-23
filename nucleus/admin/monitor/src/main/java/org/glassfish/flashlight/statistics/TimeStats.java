@@ -30,20 +30,20 @@ import org.glassfish.flashlight.datatree.TreeNode;
 
 public interface TimeStats extends TreeNode, TimeStatistic {
 
-    public double getTime();
+    double getTime();
 
-    public void setTime(long time);
+    void setTime(long time);
 
-    public void entry();
+    void entry();
 
-    public void exit();
+    void exit();
 
-    public long getMinimumTime();
+    long getMinimumTime();
 
-    public long getMaximumTime();
+    long getMaximumTime();
 
-    public long getTimesCalled();
+    long getTimesCalled();
 
-    public void setReset(boolean reset);
+    void setReset(boolean reset);
 
 }

@@ -147,7 +147,7 @@ class MethodAnnotater
     /* The maximum amount of stack needed by any specific annotation sequence,
      * less the amount of stack which the annotated instruction is known to
      * need, if any */
-    private short annotationStack = 0;
+    private short annotationStack;
 
     /* If true, the method will contain an unconditional fetch(this) */
 //@olsen: disabled feature
@@ -2433,7 +2433,7 @@ class MethodAnnotater
 
     /* Take all stack elements in fromStack and push them onto toStack
      * such that they are in the same relative stack positions */
-    private final void transferStackArgs(Stack<Integer> fromStack, Stack<Integer> toStack) {
+    private void transferStackArgs(Stack<Integer> fromStack, Stack<Integer> toStack) {
         if (!fromStack.empty()) {
             Integer o = fromStack.pop();
             transferStackArgs(fromStack, toStack);
@@ -2442,7 +2442,7 @@ class MethodAnnotater
     }
 
     /* Make toStack look just like fromStack */
-    private final void copyStack(Stack<Integer> fromStack, Stack<Integer> toStack) {
+    private void copyStack(Stack<Integer> fromStack, Stack<Integer> toStack) {
         while (!toStack.empty()) {
             toStack.pop();
         }
@@ -2454,7 +2454,7 @@ class MethodAnnotater
     }
 
     /* Check that the top nWords worth of types on stack are well defined */
-    private final boolean knownTypes(Stack<Integer> stack, int nWords) {
+    private boolean knownTypes(Stack<Integer> stack, int nWords) {
         // take advantage of Stack's inheritance from Vector
         for (int i=stack.size()-1; i>= 0 && nWords > 0; i--) {
             int words = 0;
@@ -2495,7 +2495,7 @@ class MethodAnnotater
      * Add a list of notes to the note list.
      */
     //@olsen: made final
-    private final void addNoteList(InsnNote note) {
+    private void addNoteList(InsnNote note) {
         insnNotes.put(note.insn, note);
     }
 
@@ -2503,7 +2503,7 @@ class MethodAnnotater
      * Find the note list for the specified instruction.
      */
     //@olsen: made final
-    private final InsnNote getNoteList(Insn insn) {
+    private InsnNote getNoteList(Insn insn) {
         return insnNotes.get(insn);
     }
 }

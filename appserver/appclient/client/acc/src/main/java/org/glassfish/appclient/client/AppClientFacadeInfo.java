@@ -24,7 +24,7 @@ import org.glassfish.appclient.client.acc.AppClientContainer;
  */
 public class AppClientFacadeInfo {
 
-    private static AppClientContainer acc = null;
+    private static AppClientContainer acc;
 
     public static void setACC(final AppClientContainer acc) {
         AppClientFacadeInfo.acc = acc;

@@ -121,7 +121,7 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
      * present.
      *
      * @param o element to be added to this set.
-     * @return <tt>true</tt> if the set did not already contain the specified
+     * @return <code>true</code> if the set did not already contain the specified
      * element.
      * @see java.util.HashSet
      */
@@ -218,9 +218,9 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
      * Adds all of the elements in the specified collection to this collection
      *
      * @param c collection whose elements are to be added to this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      * call.
-     * @throws UnsupportedOperationException if the <tt>addAll</tt> method is
+     * @throws UnsupportedOperationException if the <code>addAll</code> method is
      *            not supported by this collection.
      *
      * @see java.util.AbstractCollection
@@ -332,7 +332,7 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
      * Removes the given element from this set if it is present.
      *
      * @param o object to be removed from this set, if present.
-     * @return <tt>true</tt> if the set contained the specified element.
+     * @return <code>true</code> if the set contained the specified element.
      * @see java.util.HashSet
      */
     @Override
@@ -389,11 +389,11 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
 
     /**
      * Removes from this collection all of its elements that are contained in
-     * the specified collection (optional operation). <p>
+     * the specified collection (optional operation).
      *
      *
      * @param c elements to be removed from this collection.
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      * call.
      *
      * @throws    UnsupportedOperationException removeAll is not supported
@@ -465,10 +465,10 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
      * Retains only the elements in this collection that are contained in the
      * specified collection (optional operation).
      *
-     * @return <tt>true</tt> if this collection changed as a result of the
+     * @return <code>true</code> if this collection changed as a result of the
      *         call.
      *
-     * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
+     * @throws UnsupportedOperationException if the <code>retainAll</code> method
      *            is not supported by this collection.
      *
      * @see java.util.HashSet
@@ -621,9 +621,9 @@ public class HashSet extends java.util.HashSet<Object> implements SCOCollection 
     }
 
     private class SCOHashIterator implements Iterator<Object> {
-        Iterator<?> _iterator = null;
-        HashSet _caller = null;
-        Object lastReturned = null;
+        Iterator<?> _iterator;
+        HashSet _caller;
+        Object lastReturned;
 
         SCOHashIterator(Iterator<?> it, HashSet cl) {
             _iterator = it;

@@ -98,11 +98,11 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
     private static Hashtable logStateHoldertable = new Hashtable();
     private static final java.lang.Object NULL_ENTRY = new java.lang.Object();
 
-    private Hashtable sectionMapping = null;
-    private boolean rewriteRequired  = false;
-    private boolean writeDone = false;
+    private Hashtable sectionMapping;
+    private boolean rewriteRequired;
+    private boolean writeDone;
 
-    private String logPath = null;
+    private String logPath;
 
     /*
         Logger to log transaction messages
@@ -111,8 +111,8 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 
     /**The local transaction identifier for the transaction this object is logging.
      */
-    Long localTID = null;
-    CoordinatorLogStateHolder logStateHolder = null;
+    Long localTID;
+    CoordinatorLogStateHolder logStateHolder;
     private static CoordinatorLogStateHolder defaultLogStateHolder = getStateHolder(defaultstring);
 
     // Static variables to handle byte array formatting.
@@ -1876,13 +1876,13 @@ class CoordinatorLog extends java.lang.Object implements LogUpcallTarget {
 //------------------------------------------------------------------------------
 
 class CoordinatorLogSection extends java.lang.Object {
-    String  sectionName      = null;
+    String  sectionName;
     boolean unwrittenEmpty   = true;
     boolean writtenEmpty     = true;
-    Vector  unwrittenObjects = null;
-    Vector  unwrittenData    = null;
-    Vector  writtenObjects   = null;
-    Vector  writtenData      = null;
+    Vector  unwrittenObjects;
+    Vector  unwrittenData;
+    Vector  writtenObjects;
+    Vector  writtenData;
 
     /**Creates a CoordinatorLogSection with the given name.
      *
@@ -1977,7 +1977,7 @@ class SectionPool {
     static SectionPool SPool = new SectionPool();
 
 
-    public SectionPool() {
+    SectionPool() {
         pool = new Stack();
     }
 
@@ -2023,13 +2023,13 @@ class SectionPool {
 }
 
 class CoordinatorLogStateHolder {
-    LogFile logFile        = null;
-    Log log                = null;
-    Hashtable activeLogs   = null;
-    Hashtable keypointLogs = null;
-    int tranCount          = 0;
-    boolean keypointInProgress = false;
+    LogFile logFile;
+    Log log;
+    Hashtable activeLogs;
+    Hashtable keypointLogs;
+    int tranCount;
+    boolean keypointInProgress;
     // java.lang.Object keypointLock = new java.lang.Object();
-    RWLock keypointLock = null;
-    java.lang.Object keypointStateLock = null;
+    RWLock keypointLock;
+    java.lang.Object keypointStateLock;
 }

@@ -30,8 +30,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface WebServicesContract {
 
-    public ComponentEnvManager getComponentEnvManager();
+    ComponentEnvManager getComponentEnvManager();
 
-    public Logger getLogger();
+    Logger getLogger();
 
 }

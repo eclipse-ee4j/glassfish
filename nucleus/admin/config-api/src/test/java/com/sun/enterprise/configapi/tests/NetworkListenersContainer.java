@@ -43,7 +43,7 @@ public class NetworkListenersContainer implements ConfigListener {
     @Inject
     NetworkListeners httpService;
 
-    volatile boolean received=false;
+    volatile boolean received;
 
     @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {

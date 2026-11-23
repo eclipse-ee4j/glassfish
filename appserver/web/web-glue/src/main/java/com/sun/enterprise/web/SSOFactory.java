@@ -33,6 +33,6 @@ public interface SSOFactory {
      * Creates a SingleSignOn valve
      * @param virtualServerName name of virtual server
      */
-    public GlassFishSingleSignOn createSingleSignOnValve(
+    GlassFishSingleSignOn createSingleSignOnValve(
         String virtualServerName);
 }

@@ -37,7 +37,7 @@ public interface StaticContent extends Content {
      * Returns a File object for the content.
      * @return a File object for the content
      */
-    public File file() throws IOException;
+    File file() throws IOException;
 
     /**
      * Process the static content, adding the correct data to the response.
@@ -46,5 +46,5 @@ public interface StaticContent extends Content {
      * @param gResp the response
      * @throws Exception
      */
-    public void process(String relativeURIString, Request gReq, Response gResp) throws Exception;
+    void process(String relativeURIString, Request gReq, Response gResp) throws Exception;
 }

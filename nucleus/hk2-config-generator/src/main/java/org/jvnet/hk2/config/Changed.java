@@ -28,7 +28,7 @@ public interface Changed {
     /**
      * type of change on a particular instance
      */
-    public static enum TYPE { ADD, REMOVE, CHANGE };
+    enum TYPE { ADD, REMOVE, CHANGE };
 
     /**
      * Notification of a change on a configuration object
@@ -39,6 +39,6 @@ public interface Changed {
      * @param changedType type of the configuration object
      * @param changedInstance changed instance.
      */
-    public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance);
+    <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance);
 
 }

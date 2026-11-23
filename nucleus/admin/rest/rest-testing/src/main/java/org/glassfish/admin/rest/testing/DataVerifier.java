@@ -432,7 +432,7 @@ public class DataVerifier {
     // tbd - speed this up by finding out if the value is exact or flexible (ie. regexp or ignoreExtra) - if exact, then grab it as soon as we have a match
     private class UnorderedArrayMatcher {
 
-        private int matchCount = 0;
+        private int matchCount;
         private ArrayValue want;
         private List<Value> wantValues;
         private JSONArray have;

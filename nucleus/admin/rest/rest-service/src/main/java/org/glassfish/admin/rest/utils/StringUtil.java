@@ -59,10 +59,10 @@ public class StringUtil {
     }
 
     /**
-     * Return the message parts of an action report as a List<String>
+     * Return the message parts of an action report as a List&lt;String&gt;
      *
      * @param actionReport
-     * @return List<String> containing actionReport's message parts.
+     * @return List&lt;String&gt; containing actionReport's message parts.
      */
     public static List<String> getActionReportMessageParts(ActionReport actionReport) {
         List<String> parts = new ArrayList<String>();
@@ -73,7 +73,7 @@ public class StringUtil {
     }
 
     /**
-     * Convert a List<String> to a comma-separated string. This is often used to format strings that are sent to admin
+     * Convert a List&lt;String&gt; to a comma-separated string. This is often used to format strings that are sent to admin
      * commands.
      *
      * @param strings
@@ -95,11 +95,11 @@ public class StringUtil {
     }
 
     /**
-     * Convert a string containing a comma-separated list of strings into a List<String>. This is often used to parse
+     * Convert a string containing a comma-separated list of strings into a List&lt;String&gt;. This is often used to parse
      * strings that are returned from admin commands.
      *
      * @param stringList
-     * @return List<String> containing the strings in stringList.
+     * @return List&lt;String&gt; containing the strings in stringList.
      */
     public static List<String> parseCommaSeparatedStringList(String stringList) {
         List<String> list = new ArrayList<String>();

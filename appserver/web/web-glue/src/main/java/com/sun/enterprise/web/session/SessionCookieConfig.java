@@ -53,7 +53,7 @@ public final class SessionCookieConfig {
      *
      * Default value is JSESSIONID
      */
-    private String _name = null;
+    private String _name;
 
     /**
      * The pathname that is set when the cookie is created.
@@ -63,7 +63,7 @@ public final class SessionCookieConfig {
      * request contains this pathname. If set to / (slash), the browser will
      * send the cookie to all URLs.
      */
-    private String _path = null;
+    private String _path;
 
     /**
      * The expiration time in seconds after which the browser expires
@@ -72,19 +72,19 @@ public final class SessionCookieConfig {
      * The default value is -1 (never expire) will be set in
      * org.apache.catalina.core.SessionCookieConfigImpl
      */
-    private Integer _maxAge = null;
+    private Integer _maxAge;
 
     /**
      * The domain for which the cookie is valid.
      */
-    private String _domain = null;
+    private String _domain;
 
     /**
      * The comment that identifies the session tracking cookie in the
      * browser's cookie file. Applications may choose to provide a more
      * specific name for this cookie.
      */
-    private String _comment = null;
+    private String _comment;
 
     /**
      * When set to "dynamic", the cookie is marked as secure only if the
@@ -106,7 +106,7 @@ public final class SessionCookieConfig {
      * The default value is true will be set in
      * org.apache.catalina.core.SessionCookieConfigImpl
      */
-    private Boolean _httpOnly = null;
+    private Boolean _httpOnly;
 
     /**
      * Construct a new SessionCookieConfig with the specified properties.

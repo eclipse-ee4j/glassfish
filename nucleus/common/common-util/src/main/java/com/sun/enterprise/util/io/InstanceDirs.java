@@ -186,7 +186,7 @@ public final class InstanceDirs {
      * Create a InstanceDir from the more general ServerDirs instance.
      * along with getServerDirs() you can convert freely back and forth
      *
-     * @param aServerDir
+     * @param sd
      */
     public InstanceDirs(ServerDirs sd) {
         dirs = sd;

@@ -121,7 +121,7 @@ import static java.util.logging.Level.WARNING;
 /**
  * This class provides container functionality specific to stateful SessionBeans. At deployment time, one instance of
  * the StatefulSessionContainer is created for each stateful SessionBean type (i.e. deployment descriptor) in a JAR.
- * <p/>
+ * <p>
  * The 5 states of a Stateful EJB (an EJB can be in only 1 state at a time): 1. PASSIVE : has been passivated 2. READY :
  * ready for invocations, no transaction in progress 3. INVOKING : processing an invocation 4. INCOMPLETE_TX : ready for
  * invocations, transaction in progress 5. DESTROYED : does not exist
@@ -219,19 +219,19 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
     private final ArrayList passivationCandidates = new ArrayList();
     private final Object asyncTaskSemaphore = new Object();
 
-    private int asyncTaskCount = 0;
-    private int asyncCummTaskCount = 0;
+    private int asyncTaskCount;
+    private int asyncCummTaskCount;
 
     private int passivationBatchCount = MIN_PASSIVATION_BATCH_COUNT;
 
-    private int containerTrimCount = 0;
+    private int containerTrimCount;
 
     private LruSessionCache sessionBeanCache;
     private BackingStore<Serializable, SimpleMetadata> backingStore;
     private SFSBUUIDUtil<Object> uuidGenerator;
     private final ArrayList scheduledTimerTasks = new ArrayList();
 
-    private int statMethodReadyCount = 0;
+    private int statMethodReadyCount;
 
     private final String ejbName;
 
@@ -2889,7 +2889,7 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
 
     static class EEMRefInfo implements IndirectlySerializable, SerializableObjectFactory {
 
-        private transient int refCount = 0;
+        private transient int refCount;
 
         private final String unitName;
 
@@ -3005,7 +3005,7 @@ public final class StatefulSessionContainer extends BaseContainer implements Cac
 
         private static final long serialVersionUID = 1L;
 
-        public EMNotSerializableException(String className, Throwable th) {
+        EMNotSerializableException(String className, Throwable th) {
             super(className);
             super.initCause(th);
         }

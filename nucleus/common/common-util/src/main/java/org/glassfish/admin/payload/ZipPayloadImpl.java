@@ -127,8 +127,8 @@ class ZipPayloadImpl extends PayloadImpl {
 
         private final ZipInputStream zis;
 
-        private ZipEntry nextEntry = null;
-        private boolean isNextEntryPrefetched = false;
+        private ZipEntry nextEntry;
+        private boolean isNextEntryPrefetched;
 
         private Inbound(final InputStream is) throws IOException {
             zis = new ZipInputStream(new BufferedInputStream(is));

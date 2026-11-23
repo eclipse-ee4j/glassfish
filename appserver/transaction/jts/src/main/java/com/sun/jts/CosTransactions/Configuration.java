@@ -57,18 +57,18 @@ import org.omg.PortableServer.POA;
 //------------------------------------------------------------------------------
 
 public class Configuration extends Object {
-    private static String serverName = null;
-    private static byte[] serverNameByteArray = null;
-    private static org.omg.CORBA.ORB orb = null;
-    private static Properties prop = null;
-    private static TransactionFactory factory = null;
-    private static boolean localFactory = false;
-    private static boolean recoverable = false;
-    private static ProxyChecker checker = null;
-    private static LogFile logFile = null;
+    private static String serverName;
+    private static byte[] serverNameByteArray;
+    private static org.omg.CORBA.ORB orb;
+    private static Properties prop;
+    private static TransactionFactory factory;
+    private static boolean localFactory;
+    private static boolean recoverable;
+    private static ProxyChecker checker;
+    private static LogFile logFile;
     private static Hashtable poas = new Hashtable();
-    private static String dbLogResource = null;
-    private static boolean disableFileLogging = false;
+    private static String dbLogResource;
+    private static boolean disableFileLogging;
 
     // for delegated recovery support
     private static Hashtable logPathToServernametable = new Hashtable();
@@ -91,7 +91,7 @@ public class Configuration extends Object {
      */
     static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
 
-    private static boolean traceOn = false;
+    private static boolean traceOn;
 
    /**The property key used to specify the directory to which trace files and the
      * error log should be written.
@@ -116,7 +116,7 @@ public class Configuration extends Object {
      * transaction logs.
      * <p>
      * The value is <em><b>com.sun.jts.logResource</b></em>.
-     * <p>
+     *
      */
     public final static String DB_LOG_RESOURCE = "com.sun.jts.logResource"/*#Frozen*/;
 
@@ -362,7 +362,7 @@ public class Configuration extends Object {
     /**
      * Sets the Properties object to be used for this JTS instance.
      *
-     * @param prop The Properties.
+     * @param newProp The Properties.
      */
     public static final void setProperties(Properties newProp) {
         // Store the Properties object.
@@ -445,7 +445,7 @@ public class Configuration extends Object {
      * or remote.
      *
      * @param newFactory The TransactionFactory.
-     * @param localFactory Indicates if the factory is local or remote.
+     * @param localTxFactory Indicates if the factory is local or remote.
      */
     public static final void setFactory(TransactionFactory newFactory, boolean localTxFactory) {
         // Store the factory identity and if it is local or not.

@@ -22,6 +22,7 @@ import jakarta.enterprise.inject.spi.AfterBeanDiscovery;
 import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.enterprise.inject.spi.Extension;
 import jakarta.enterprise.inject.spi.configurator.BeanConfigurator;
+import jakarta.nosql.Template;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -71,7 +72,7 @@ public class JNoSqlIntegrationExtension implements Extension {
                         .types(EntityConverter.class),
                 addBean(EventPersistManager.class, afterBeanDiscovery, beanManager),
                 addBean(GlassFishDocumentTemplate.class, afterBeanDiscovery, beanManager)
-                .types(DocumentTemplate.class)
+                .types(DocumentTemplate.class, Template.class)
                 .qualifiers(Default.Literal.INSTANCE, DatabaseQualifier.ofDocument())
         );
         for (BeanConfigurator<?> configurator : configurations) {

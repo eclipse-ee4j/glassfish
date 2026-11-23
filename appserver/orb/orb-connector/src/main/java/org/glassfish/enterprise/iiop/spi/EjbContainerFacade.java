@@ -18,7 +18,11 @@ package org.glassfish.enterprise.iiop.spi;
 
 import com.sun.enterprise.deployment.EjbDescriptor;
 
+import jakarta.ejb.CreateException;
+import jakarta.ejb.RemoveException;
+
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 
 /**
  * Provides ejb-specific services to iiop glue code.
@@ -33,6 +37,50 @@ public interface EjbContainerFacade {
                            String generatedRemoteBusinessIntf);
 
     void releaseTargetObject(Remote remoteObj);
+
+    /**
+     * Creates a stateful session and returns the key that identifies it.
+     * <p>
+     * The rest of this interface is shaped by IIOP, where a session key never
+     * has to be named: the client calls {@code create} on the home, gets back
+     * a reference, and the key travels inside that reference where only the
+     * ORB reads it. A transport that is not IIOP has nowhere to hide it - the
+     * key has to come back as a value the client can hold and send again.
+     * <p>
+     * Only a stateful session container can answer this. Every other container
+     * throws, rather than returning a shared instance and letting a caller
+     * believe it has a conversation. That is also the default: this is a
+     * public SPI, and an implementation written before this method existed
+     * keeps compiling and refuses, as every non-stateful container does.
+     *
+     * @param generatedRemoteBusinessIntf the generated remote business
+     *                                    interface name, or {@code null} to
+     *                                    create through the remote home view
+     * @return the instance key of the new session
+     * @throws CreateException if the bean refused to be created
+     * @throws RemoteException if this container has no stateful sessions
+     */
+    default byte[] createSession(String generatedRemoteBusinessIntf) throws CreateException, RemoteException {
+        throw new RemoteException("this container has no stateful sessions to create");
+    }
+
+    /**
+     * Discards a stateful session, running its pre-destroy callback.
+     * <p>
+     * Removal is idempotent: a session that is already gone is not an error,
+     * because a client that retries a removal after a timeout should not be
+     * told its own cleanup failed.
+     *
+     * @param instanceKey the key returned by {@link #createSession}
+     * @throws RemoteException if this container has no stateful sessions, which
+     *         is also what the default does
+     * @throws RemoveException if the session exists and cannot be removed now:
+     *         it is processing an invocation, it has a transaction in
+     *         progress, or the container is not started
+     */
+    default void removeSession(byte[] instanceKey) throws RemoteException, RemoveException {
+        throw new RemoteException("this container has no stateful sessions to remove");
+    }
 
     String getUseThreadPoolId();
 

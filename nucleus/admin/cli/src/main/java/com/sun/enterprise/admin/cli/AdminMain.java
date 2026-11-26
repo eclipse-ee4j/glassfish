@@ -24,7 +24,6 @@ import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.io.SmartFile;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.lang.Runtime.Version;
 import java.net.ConnectException;
 import java.nio.file.Path;
@@ -35,13 +34,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
-import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
@@ -60,7 +56,6 @@ import static com.sun.enterprise.admin.cli.CLIConstants.WALL_CLOCK_START_PROP;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.FINER;
 import static java.util.logging.Level.FINEST;
-import static java.util.logging.Level.SEVERE;
 import static org.glassfish.embeddable.GlassFishVariable.CONFIG_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.INSTALL_ROOT;
 import static org.glassfish.embeddable.GlassFishVariable.PRODUCT_ROOT;
@@ -230,18 +225,15 @@ public class AdminMain {
         command = args[0];
         int exitCode = executeCommand(args);
 
+        final boolean terse = po != null && po.isTerse();
         switch (exitCode) {
             case SUCCESS:
-                if (!po.isTerse() && logger.isLoggable(FINE)) {
-                    String key = po.isDetachedCommand() ? "CommandSuccessfulStarted" : "CommandSuccessful";
-                    logger.fine(strings.get(key, command));
-                }
+                String key = po.isDetachedCommand() ? "CommandSuccessfulStarted" : "CommandSuccessful";
+                AsadminOutput.message(terse, strings.get(key, command));
                 break;
 
             case WARNING:
-                if (logger.isLoggable(FINE)) {
-                    logger.fine(strings.get("CommandSuccessfulWithWarnings", command));
-                }
+                AsadminOutput.message(terse, strings.get("CommandSuccessfulWithWarnings", command));
                 exitCode = SUCCESS;
                 break;
 
@@ -249,9 +241,7 @@ public class AdminMain {
             case INVALID_COMMAND_ERROR:
             case CONNECTION_ERROR:
             default:
-                if (logger.isLoggable(FINE)) {
-                    logger.fine(strings.get("CommandUnSuccessful", command));
-                }
+                AsadminOutput.message(terse, strings.get("CommandUnSuccessful", command));
                 break;
         }
         CLIUtil.writeCommandToDebugLog(getCommandName(), env, args, exitCode);
@@ -357,8 +347,8 @@ public class AdminMain {
             cliLogger.setLevel(FINE);
         }
         cliLogger.setUseParentHandlers(false);
-        Formatter formatter = env.getLogFormatter();
-        Handler cliHandler = new CLILoggerHandler(formatter == null ? new CLILoggerFormatter() : formatter);
+        // The formatter applies just to diagnostic records, messages for the user stay plain.
+        Handler cliHandler = new CLILoggerHandler(trace, env.getLogFormatter());
         cliHandler.setLevel(cliLogger.getLevel());
         cliLogger.addHandler(cliHandler);
 
@@ -416,54 +406,5 @@ public class AdminMain {
 
     private static boolean isNotEmpty(String s) {
         return s != null && !s.isEmpty();
-    }
-
-
-    /**
-     * A ConsoleHandler that prints all non-SEVERE messages to System.out and
-     * all SEVERE messages to System.err.
-     */
-    private static class CLILoggerHandler extends ConsoleHandler {
-
-        private CLILoggerHandler(final Formatter formatter) {
-            setFormatter(formatter);
-        }
-
-        @Override
-        public void publish(LogRecord logRecord) {
-            if (!isLoggable(logRecord)) {
-                return;
-            }
-            final PrintStream ps = logRecord.getLevel() == SEVERE ? System.err : System.out;
-            ps.print(getFormatter().format(logRecord));
-            ps.flush();
-        }
-    }
-
-    private static class CLILoggerFormatter extends SimpleFormatter {
-        private static final boolean TRACE = env.trace();
-
-        @Override
-        public synchronized String format(LogRecord record) {
-            // this formatter adds blank lines between records
-            if (record.getThrown() == null) {
-                return formatMessage(record) + System.lineSeparator();
-            }
-            // Some messages use exception as a parameter.
-            // If we don't print stacktraces, the cause would be lost.
-            final Object[] parameters;
-            if (record.getParameters() == null) {
-                parameters = new Object[] {record.getThrown()};
-            } else {
-                parameters = new Object[record.getParameters().length + 1];
-                System.arraycopy(record.getParameters(), 0, parameters, 0, parameters.length - 1);
-                parameters[parameters.length - 1] = record.getThrown();
-            }
-            record.setParameters(parameters);
-            if (TRACE) {
-                return super.format(record) + System.lineSeparator();
-            }
-            return formatMessage(record) + " " + record.getThrown().getLocalizedMessage() + System.lineSeparator();
-        }
     }
 }

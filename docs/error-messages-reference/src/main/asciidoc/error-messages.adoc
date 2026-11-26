@@ -7300,11 +7300,6 @@ configurations and try removing the config elements. ::
 +
   Action: Resolve the situation described in the message, if necessary.
 
-[[sthref1422]]NCLS-GFLAUNCHER-00005 JVM invocation command line:\{0} ::
-  Cause: As described in the message.
-+
-  Action: Resolve the situation described in the message, if necessary.
-
 [[sthref1423]]NCLS-MNTG-00000 Caught an Exception: \{0} ::
   Cause: As described in the message.
 +

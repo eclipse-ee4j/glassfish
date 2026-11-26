@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -123,7 +124,7 @@ class GlassFishMainLauncher extends GFLauncher {
 
     private boolean setup;
 
-    private File modulepath;
+    private File[] modulepath;
     private File[] classpath;
 
 
@@ -239,7 +240,7 @@ class GlassFishMainLauncher extends GFLauncher {
         javaExe = resolveJavaExecutable();
 
         final Path installRoot = new File(asenvProps.get(INSTALL_ROOT.getPropertyName())).toPath();
-        modulepath = installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile();
+        modulepath = createModulepath(installRoot.resolve(Path.of("lib", "bootstrap")).toAbsolutePath().normalize().toFile());
         classpath = createClasspath(callerParameters.getInstanceRootDir());
         setCommandLine(prepareCommandLine(callerParameters));
 
@@ -537,6 +538,54 @@ class GlassFishMainLauncher extends GFLauncher {
         } else {
             GFLauncherLogger.setConsoleLevel(java.util.logging.Level.WARNING);
         }
+    }
+
+
+    /**
+     * The launcher puts its bootstrap modules on the module path. A <code>--module-path</code>
+     * jvm-option would replace them (the last <code>--module-path</code> wins) and the server
+     * would not start, so its entries are removed from the jvm-options and appended here.
+     *
+     * @param bootstrapDir <code>lib/bootstrap</code> directory
+     * @return module path entries, bootstrap modules first
+     */
+    private File[] createModulepath(File bootstrapDir) {
+        List<File> all = new ArrayList<>();
+        all.add(bootstrapDir);
+        Iterator<Map.Entry<String, String>> options = jvmOptions.longProps.entrySet().iterator();
+        while (options.hasNext()) {
+            Map.Entry<String, String> option = options.next();
+            String value = getModulePathValue(option.getKey(), option.getValue());
+            if (value == null) {
+                continue;
+            }
+            options.remove();
+            for (String path : value.split(Pattern.quote(File.pathSeparator))) {
+                if (!path.isBlank()) {
+                    all.add(new File(path.trim()));
+                }
+            }
+        }
+        if (all.size() > 1) {
+            LOG.log(INFO, () -> "Adding " + all.subList(1, all.size()) + " from jvm-options to the server module path.");
+        }
+        return all.toArray(File[]::new);
+    }
+
+
+    /**
+     * @param name long jvm-option name, without the leading <code>--</code>
+     * @param value the option value, can be null
+     * @return the value of a <code>--module-path</code> option, null for other options
+     */
+    private static String getModulePathValue(String name, String value) {
+        String option = value == null ? name : name + '=' + value;
+        String prefix = "module-path";
+        if (!option.startsWith(prefix) || option.length() == prefix.length()) {
+            return null;
+        }
+        char separator = option.charAt(prefix.length());
+        return separator == '=' || separator == ' ' ? option.substring(prefix.length() + 1) : null;
     }
 
 

@@ -203,7 +203,7 @@
 
         <!-- Jakarta MVC -->
         <jakarta.mvc-api.version>3.0.1</jakarta.mvc-api.version>
-        <krazo.version>4.0.2</krazo.version>
+        <krazo.version>4.0.3</krazo.version>
 
         <!-- Jakarta SOAP (XML Web Services) -->
         <xmlsec.version>4.0.4</xmlsec.version>
